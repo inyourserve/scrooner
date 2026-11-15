@@ -37,6 +37,7 @@ from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
+from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper import reason_guard as rg
 from scrooner_pipeline.mapper import structural_loader as sl
@@ -233,6 +234,51 @@ def printed_zero_ok(claim: sl.Claim, why: str) -> bool:
         return False
 
 
+def comparative_refusals(
+    conn: psycopg.Connection,
+    company_id: int,
+    rows,
+    periods: dict[int, tuple[date, date, str]],
+    concept_info: dict[int, tuple[str, str]],
+) -> list[dict]:
+    """Comparative-column guard (Ritwik 2026-11-15): a covering no-filing reason (no_public_filing_for_period /
+    no_10k_presents_period) is refused for every period an accepted annual filing of the company prints a column
+    for. Same shape as refuted_map_reasons entries; the cell stays open for the resolver. Read-only."""
+    nf = [
+        r
+        for r in rows
+        if (r.reason_class or "") in cg.NO_FILING_CODES
+        and r.canonical_concept_id in concept_info
+    ]
+    if not nf:
+        return []
+    cols = cg.read_columns(conn, [company_id]).get(company_id, [])
+    out = []
+    for r in nf:
+        cid = r.canonical_concept_id
+        instant = concept_info[cid][1] == "balance_sheet"
+        for pid, (_s, end, ptype) in periods.items():
+            if (ptype == "instant") != instant or not era_holds(
+                r.era_from, r.era_to, end
+            ):
+                continue
+            hit = cg.presenting(cols, end, instant)
+            if hit:
+                out.append(
+                    {
+                        "canonical_concept_id": cid,
+                        "period_id": pid,
+                        "concept": concept_info[cid][0],
+                        "period_end": end.isoformat(),
+                        "accession": hit[0].accession,
+                        "tag": "",
+                        "value": "",
+                        "decision": "comparative_presented",
+                    }
+                )
+    return out
+
+
 def refuted_map_reasons(
     conn: psycopg.Connection,
     company_id: int,
@@ -245,6 +291,7 @@ def refuted_map_reasons(
     """False-reason guard on the serving side (reason_guard): the covering not_presented / combined map rows whose
     cited filing's own column holds evidence of the line, as {canonical_concept_id, period_id, ...}. Those reasons
     are not served (their blanks are dropped, they never forbid a value): the cell stays open. Read-only."""
+    comparative = comparative_refusals(conn, company_id, rows, periods, concept_info)
     cand = []
     for r in rows:
         kind = rg.kind_of(r.decision, r.reason_class)
@@ -252,7 +299,7 @@ def refuted_map_reasons(
         if kind and r.evidence_adsh and cid in concept_info:
             cand.append((r, kind, cid))
     if not cand:
-        return []
+        return comparative
     names = {concept_info[cid][0] for _r, _k, cid in cand}
     ctags = rg.concept_tags(conn, names)
     path = path or resolver_path()
@@ -293,7 +340,7 @@ def refuted_map_reasons(
                     "decision": r.decision,
                 }
             )
-    return out
+    return comparative + out
 
 
 def unclaimed(rows, cells: list[dict], periods, concept_info) -> list[dict]:

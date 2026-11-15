@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
@@ -203,6 +204,8 @@ def eligible_filings(
 NO_FILING = (
     "no_public_filing_for_period"  # = structural_loader.NO_FILING_REASON (tested)
 )
+NO_FILING_CODES = cg.NO_FILING_CODES  # both codes claim no filing presents the period
+COMPARATIVE_PRESENTED = "reason_refused_comparative_presented"
 # = structural_loader.PERIODIC_FORMS (tested): forms that prove the company was filing periodic reports
 PERIODIC_FORMS = (
     "10-K",
@@ -228,11 +231,17 @@ def own_period_reason(
     period_end: date,
     instant: bool,
     earliest_filing: date | None = None,
+    columns: list[cg.Column] | None = None,
+    stmts: tuple[str, ...] | None = None,
 ) -> tuple[str, str | None]:
     """A REASON stays REASON only when its locator accession presents the cell's own period; else UNCHECKED.
     no_public_filing_for_period has no filing of its own period by definition: it stays REASON only when the company's
     earliest 10-K/10-Q/20-F in core.filing (`earliest_filing`) was filed after the period end; otherwise UNCHECKED."""
-    if cls == "REASON" and code == NO_FILING:
+    if cls == "REASON" and code in NO_FILING_CODES:
+        # comparative guard: a filing that prints a column for the period refutes "no filing presents it"; the cell is
+        # open for the resolver to fill from that column, never a reason
+        if cg.presenting(columns or (), period_end, instant, stmts):
+            return "UNCHECKED", COMPARATIVE_PRESENTED
         if earliest_filing is not None and earliest_filing > period_end:
             return cls, code
         return "UNCHECKED", OWN_UNVERIFIED
@@ -823,6 +832,7 @@ def build_rows(
     }
     idx = _locator_index(conn, cited, shown_tags)
     earliest = _earliest_filings(conn, ids)
+    columns = cg.read_columns(conn, ids)
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -968,6 +978,7 @@ def build_rows(
                     e,
                     ptype == "instant",
                     earliest.get(c.company_id),
+                    columns.get(c.company_id),
                 )
                 # reason text only on a non-PROVEN cell; a combined reason quotes the printed label of its evidence
                 reason_text = reason_fields(

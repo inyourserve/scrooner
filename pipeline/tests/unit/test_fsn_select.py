@@ -346,6 +346,11 @@ def test_note_path_never_takes_operating_income_and_holds_negative_interest():
 
 
 @pytest.mark.unit
+def test_no_10k_presents_period_is_a_history_horizon_reason():
+    assert sel.HORIZON_REASONS["no_10k_presents_period"] == "history_horizon"
+    assert sel.REASON_TEXT["no_10k_presents_period"]
+
+
 def test_no_public_filing_for_period_is_a_history_horizon_blank_the_loader_accepts():
     from scrooner_pipeline.normalizer import cell_loader as cl
 

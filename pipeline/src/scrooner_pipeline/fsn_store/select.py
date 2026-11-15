@@ -151,10 +151,14 @@ NOT_IN_TEMPLATE_REASONS = {"period_grain_outside_template": "not_in_template"}
 # blank reason -> cell state, for blanks that are not defects (no defect class, no owner): the company has no
 # public filing for this period (its history window ends before it, or a wrong-entity window was excluded and no
 # comparative of the company's own later filings covers the key). Approver note 2026-11-10 (KDP, IBRX quarters).
-HORIZON_REASONS = {"no_public_filing_for_period": "history_horizon"}
+HORIZON_REASONS = {
+    "no_public_filing_for_period": "history_horizon",
+    "no_10k_presents_period": "history_horizon",
+}
 REASON_TEXT = {
     "period_grain_outside_template": "period grain outside template: multi-year",
     "no_public_filing_for_period": "The company filed no public report for this period (it was not yet a reporting company in this form, or its earlier filings belong to another entity), so no value exists to show.",
+    "no_10k_presents_period": "No annual report (10-K) of the company presents this period; the company registered (Form 10 or S-1) or listed later, so no filing-checked value is shown for it.",
     "cell_proof_disagree": "The independent proof of this cell against the filing disagrees with the stored value, so it is not shown until the disagreement is resolved.",
     "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
     "hybrid_gap_unresolved": "The filing is stored, but this value could not be read from its statements yet; the cause is recorded with the cell.",

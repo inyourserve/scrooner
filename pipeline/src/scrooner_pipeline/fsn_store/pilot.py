@@ -26,6 +26,7 @@ from scrooner_pipeline.common.cell_contract import TP_QTRS, duration_class
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
 from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.fsn_store import select as sel
+from scrooner_pipeline.mapper import comparative_guard as cg
 
 FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
 
@@ -249,6 +250,7 @@ def gap_blank(
     filings: dict[int, Any],
     windows: dict[str, list[tuple[date, date]]] | None = None,
     start: date | None = None,
+    columns: list[Any] | None = None,
 ) -> "sel.Cell":
     """A pilot gap key as a reasoned blank, so a written pair carries every expected key (founder 2026-11-09:
     no fallback; a reasonless gap is written as a blank with a visible reason, never skipped).
@@ -279,7 +281,16 @@ def gap_blank(
     else:  # a multi-year key: its length in quarters (at least 5, so it never reads as a year)
         assert ytd_start is not None
         qtrs = max(5, round(((end - ytd_start).days + 1) / 91.3))
-    if not stored and in_no_filing_window(ddate, windows):
+    if (
+        not stored
+        and grain in ("FY", "I")
+        and cg.presenting(columns or (), end, grain == "I")
+    ):
+        # comparative-column guard: a later 10-K prints a column for this period, so "no public filing" is false
+        refs["comparative_accession"] = cg.presenting(columns or (), end, grain == "I")[
+            0
+        ].accession
+    elif not stored and in_no_filing_window(ddate, windows):
         # approver note 2026-11-10: a key inside an excluded wrong-entity window with no filing of the company's own
         return sel.Cell(
             concept,
@@ -389,6 +400,7 @@ def report_company(
     ).fetchone()
     sector = sector_of(sic)
     hist = history_windows(conn, company_id)
+    cols = cg.read_columns(conn, [company_id]).get(company_id, [])
     tmpl = template(sector)
     data = sel.load_company(conn, company_id)
     cells: list[dict[str, Any]] = []
@@ -524,7 +536,9 @@ def report_company(
             else:
                 cause = "no_face_print_for_period"
             k[cause] += 1
-            blank = gap_blank(concept, grain, end, cause, data["filings"], hist)
+            blank = gap_blank(
+                concept, grain, end, cause, data["filings"], hist, columns=cols
+            )
             gap_rows.append(sel.to_row(blank, company_id, data["filings"]))
             gaps.append(
                 {

@@ -124,3 +124,19 @@ def test_gap_blank_inside_an_exclude_window_is_no_public_filing_for_period():
     assert pl.gap_blank("revenue_resolved", "Q", d(2015, 3, 31), "x", {}, kdp).reason_code == "filing_not_in_store"
     assert pl.gap_blank("revenue_resolved", "Q", d(2018, 9, 30), "x", {}, kdp).reason_code == "filing_not_in_store"
     assert pl.gap_blank("revenue_resolved", "Q", d(2017, 3, 31), "x", {}).reason_code == "filing_not_in_store"
+
+
+@pytest.mark.unit
+def test_gap_blank_refuses_horizon_when_a_later_10k_presents_the_period():
+    from datetime import date as d
+
+    from scrooner_pipeline.fsn_store import pilot as pl
+    from scrooner_pipeline.mapper import comparative_guard as cg
+
+    win = {"exclude": [(d(2013, 1, 1), d(2018, 6, 30))], "predecessor": []}
+    col = [cg.Column("0001-25-1", "10-K", "IS", d(2017, 12, 31), 4, 3)]
+    got = pl.gap_blank("revenue_resolved", "FY", d(2017, 12, 31), "x", {}, win, columns=col)
+    assert got.reason_code != "no_public_filing_for_period"
+    assert got.input_refs["comparative_accession"] == "0001-25-1"
+    # the same cell without that column keeps the horizon blank
+    assert pl.gap_blank("revenue_resolved", "FY", d(2017, 12, 31), "x", {}, win).reason_code == "no_public_filing_for_period"

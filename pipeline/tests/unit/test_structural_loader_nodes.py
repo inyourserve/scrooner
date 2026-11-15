@@ -16,6 +16,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from scrooner_pipeline.common import member_facts as mf
+from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper import era_predictor
 from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper import top100_coverage as tc
@@ -242,7 +243,7 @@ def test_year_before_the_first_10k_is_a_no_filing_claim(tmp_path: Path):
     )
     (r,) = rows
     assert r["decision"] == "not_presented"
-    assert r["reason_class"] == "no_public_filing_for_period"
+    assert r["reason_class"] == "no_10k_presents_period"
 
 
 def test_empty_accession_without_the_flag_or_the_first_10k_is_rejected(tmp_path: Path):
@@ -289,6 +290,8 @@ def test_constants_agree_across_modules():
         == tc.NO_FILING
         == "no_public_filing_for_period"
     )
+    assert sl.NO_10K_REASON == cg.NO_10K_REASON == "no_10k_presents_period"
+    assert tc.NO_FILING_CODES == {sl.NO_FILING_REASON, sl.NO_10K_REASON}
     assert sl.PERIODIC_FORMS == tc.PERIODIC_FORMS
     from scrooner_pipeline.mapper import company_tag_map as ctm
 
@@ -560,3 +563,42 @@ def test_unclaimed_lists_served_cells_without_a_structural_value_claim():
         assert sd.unclaimed(other, cells, periods, info) == [
             {"concept": "accounts_payable", "period_end": "2018-12-31"}
         ]
+
+
+GEV_COLS = [  # FY2024 10-K prints IS/CF for 2024/2023/2022 and the BS at Dec 31 2024 and 2023 (Ritwik, 2026-11-15)
+    cg.Column("0001996810-25-000011", "10-K", "IS", date(2022, 12, 31), 4, 3),
+    cg.Column("0001996810-25-000011", "10-K", "IS", date(2023, 12, 31), 4, 3),
+    cg.Column("0001996810-25-000011", "10-K", "BS", date(2023, 12, 31), 0, 4),
+    cg.Column("0001996810-25-000011", "10-K", "BS", date(2024, 12, 31), 0, 4),
+]
+
+
+def test_comparative_guard_refuses_a_no_filing_reason_a_later_10k_presents():
+    assert cg.presenting(GEV_COLS, date(2022, 12, 31), False)  # opex FY2022: R3
+    assert cg.presenting(GEV_COLS, date(2023, 12, 31), True)  # AR FY2023: R4
+    assert not cg.presenting(GEV_COLS, date(2022, 12, 31), True)  # no BS at Dec 31 2022
+    assert cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), True) is None
+    assert "R3" in cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), False)
+    # statement-specific: a BS-only restriction does not see the IS column
+    assert cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), False, ("BS",)) is None
+
+
+def test_coverage_leaves_a_presented_no_filing_reason_open():
+    pe = date(2022, 12, 31)
+    for code in tc.NO_FILING_CODES:
+        assert tc.own_period_reason(
+            "REASON", code, "x", [], pe, False, date(2025, 2, 6), GEV_COLS
+        ) == ("UNCHECKED", tc.COMPARATIVE_PRESENTED)
+        # the FY2022 balance sheet is not presented: the reason stands
+        assert tc.own_period_reason(
+            "REASON", code, "x", [], pe, True, date(2025, 2, 6), GEV_COLS
+        ) == ("REASON", code)
+
+
+def test_a_stray_value_at_an_earlier_date_is_not_a_printed_column():
+    # GEV: Dec 31 2022 cash/equity/goodwill sit on BS-tagged lines (CF opening balance, equity roll-forward) but the
+    # FY2024 10-K balance sheet prints only 2024 and 2023: 3 of 40 tags is not a column
+    stray = [cg.Column("0001996810-25-000011", "10-K", "BS", date(2022, 12, 31), 0, 4, 3, 40)]
+    assert cg.presenting(stray, date(2022, 12, 31), True) == []
+    full = [cg.Column("0001996810-25-000011", "10-K", "BS", date(2023, 12, 31), 0, 4, 38, 40)]
+    assert cg.presenting(full, date(2023, 12, 31), True)

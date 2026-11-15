@@ -53,6 +53,7 @@ import psycopg
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
+from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper import reason_guard as rg
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper.company_tag_map import STATEMENT_CODE
@@ -79,6 +80,9 @@ BEFORE_FIRST_10K = "before_first_10k"
 NO_FILING_REASON = (
     "no_public_filing_for_period"  # equals era_predictor.NO_FILING_REASON (tested)
 )
+# what the loader writes: no annual filing presents the period (a Form 10 / S-1 may have; core.filing holds none, so
+# "nothing at all was public" cannot be proven here). The legacy NO_FILING_REASON stays valid for old rows.
+NO_10K_REASON = "no_10k_presents_period"  # = comparative_guard.NO_10K_REASON (tested)
 FIRST_10K_RE = re.compile(r"first 10-K \((\d{10}-\d{2}-\d{6})\)")
 # forms whose existence proves the company was filing periodic reports (an S-1 or an 8-K is not one)
 PERIODIC_FORMS = (
@@ -678,7 +682,7 @@ def build_rows(
                         value_row=False,
                     ),
                     "reason": f"no periodic filing exists for the period: {reason}",
-                    "reason_class": NO_FILING_REASON,
+                    "reason_class": NO_10K_REASON,
                 }
             ]
         if c.decision == "combined":
@@ -1267,6 +1271,7 @@ def load(
         )
     earliest: dict[int, date] = {}
     first_filed: dict[str, date] = {}
+    presented_cols: dict[int, list[cg.Column]] = {}
     nf = [(c, cid) for c, _, _, cid, _ in resolved if c.no_filing]
     if nf:
         with conn.cursor() as cur:
@@ -1281,6 +1286,7 @@ def load(
                 (sorted({c.accession for c, _ in nf}),),
             )
             first_filed = {a: d for a, d in cur.fetchall() if d is not None}
+        presented_cols = cg.read_columns(conn, sorted({cid for _, cid in nf}))
     member_rows = {}
     for cid in {r[3] for r in resolved}:
         accs = {
@@ -1332,6 +1338,21 @@ def load(
             )
             if why:
                 reject(f"no_public_filing_for_period not evidenced: {why}")
+                continue
+            home_stmt = STATEMENT_CODE.get(
+                concept_statement.get(
+                    dl.served_concept(c.data_point, set(concept_ids)), ""
+                )
+            )
+            pw = cg.refuse_no_filing_reason(
+                presented_cols.get(cid, ()),
+                c.period_end,
+                c.grain == "I",
+                (home_stmt,) if home_stmt in cg.FACE_STMTS else None,
+            )
+            if pw:
+                stats["refused_comparative"] = stats.get("refused_comparative", 0) + 1
+                reject(f"no-filing reason refused, a filing presents the period: {pw}")
                 continue
         q = quarantined(c)
         if q:
