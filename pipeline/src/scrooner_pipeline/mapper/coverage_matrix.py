@@ -602,7 +602,15 @@ def build_registry(conn: psycopg.Connection) -> dict:
         cur.execute(
             "select metric_name from analytics.metric_definition where status = 'active'"
         )
+        concept_names = {r["data_point_name"] for r in rows}
         for (name,) in cur.fetchall():
+            if name in concept_names:
+                # 2026-11-12..15 nightlies: migration 0122 added the bank concept
+                # net_interest_income, which is also an active metric's name, and the
+                # registry insert died on its unique key (data_point_registry_data_point_name_key).
+                # The registry is keyed by name alone, so the concept row stands for both.
+                logger.warning("coverage_matrix.metric_name_is_concept", name=name)
+                continue
             rows.append(
                 {
                     "data_point_name": name,
@@ -814,6 +822,9 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             ) agg
                 on agg.company_id = c.id and agg.metric_definition_id = md.id
             where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member)) and md.status = 'active'
+              -- a metric sharing a canonical concept's name (net_interest_income) is covered by the
+              -- concept row above: unique (company_id, data_point_name), same rule as build_registry
+              and md.metric_name not in (select name from analytics.canonical_concept)
             """
         )
 

@@ -165,8 +165,10 @@ cur.execute(
       and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
       -- Only filings with work left (2026-11-10). The window is counted in calendar days, so a
       -- Monday night re-selected every Thursday/Friday filer the Friday-Sunday runs had already
-      -- done: run 42712874321 took 1,017 companies, of which about 73% already had their
+      -- done: run 42712874321 took 1,017 companies, of which about 73 percent already had their
       -- filing's facts, and ran out of its 7,000s budget (7,074s), skipping six map stages.
+      -- (No percent sign in this SQL, not even in a comment: psycopg reads it as a placeholder,
+      -- which failed the nightly 2026-11-12..15 with "incomplete placeholder".)
       -- Selected: the filing's facts are not in core.fact yet (companyfacts lags the index by a
       -- day or two), or they arrived in the last 48 hours, so a night that skipped stages for a
       -- company is retried once.
