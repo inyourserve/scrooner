@@ -246,3 +246,22 @@ def test_note_natured_year_fills_from_a_later_note_comparative():
     # a note figure never fills a face data point (PM SG&A 162M)
     out = standard_inputs.comparative_fill(rows('sga_expense', 'SellingGeneralAndAdministrativeExpense'), {'A19': 'SellingGeneralAndAdministrativeExpense|4|40|2017-12-31'}, set())
     assert ('A17', 'sga_expense') not in out
+
+
+def test_total_debt_absence_reads_every_debt_element_and_debt_label():
+    # FTNT FY2019: no borrowings of any kind before its 2021 notes
+    assert _absent([('BS', 'AccountsPayableCurrent', 'Accounts payable', 5)], dp='total_debt')
+    assert not _absent([('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 5)], dp='total_debt')
+    assert not _absent([('BS', 'xyz_SeniorNotes', 'Senior notes, net', 5)], dp='total_debt')
+    assert _absent([('BS', 'OperatingLeaseLiabilityNoncurrent', 'Operating lease liabilities', 5)], dp='total_debt')
+
+
+def test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from():
+    own = dict(filing([('IS', 'Revenues', 'Revenues', 100)]), cik='9', a='A16', p='2016-12-31')
+    gp = dict(data_point='gross_profit', status='not_presented', accession='A16', period_end='2016-12-31', column='own', flags='core', why='')
+    resolve_all.apply_absent_in_own_filing([gp], [own], {}, {})
+    assert 'absent_in_own_filing' in gp['flags']
+    gp['flags'] = 'core'
+    cor = dict(data_point='cost_of_revenue', status='mapped', accession='A16', period_end='2016-12-31', column='own', flags='', why='')
+    resolve_all.apply_absent_in_own_filing([gp, cor], [own], {}, {})
+    assert 'absent_in_own_filing' not in gp['flags']
