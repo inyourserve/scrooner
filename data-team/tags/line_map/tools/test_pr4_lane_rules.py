@@ -269,7 +269,7 @@ def test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from():
 
 def test_eps_printed_only_per_class_is_combined_not_missing():
     # DELL FY2018 R4:29 'Earnings (loss) per share attributable to Dell Technologies Inc.' (DHI Group / Class V members only)
-    f = dict(filing([('IS', 'NetIncomeLoss', 'Net loss', -1), ('IS', 'EarningsPerShareBasicAbstract', 'Earnings (loss) per share attributable to Dell Technologies Inc. - basic', None)]), a='A18')
+    f = dict(filing([('IS', 'NetIncomeLoss', 'Net loss', -1), ('IS', 'EarningsPerShareBasicAbstract', 'Earnings (loss) per share attributable to Dell Technologies Inc. - basic', '')]), a='A18')
     rows = [dict(data_point='basic_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None),
             dict(data_point='diluted_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None)]
     resolve_all.apply_eps_per_class(rows, [f])
