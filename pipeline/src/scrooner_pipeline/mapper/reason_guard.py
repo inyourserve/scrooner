@@ -26,7 +26,14 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
+import csv
+from functools import lru_cache
+from pathlib import Path
+
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
+
+RULINGS_GLOB = "_false-reason-rulings-*.csv"
+RULINGS_DIR = Path(__file__).resolve().parents[4] / "data-team" / "tags" / "line_map"
 
 NOT_PRESENTED = "not_presented"
 COMBINED = "combined"
@@ -40,6 +47,30 @@ class Fact:
     dim: bool
     segments: str
     value: Decimal
+
+
+@lru_cache(maxsize=2)
+def ruled_true_reasons(
+    directory: str | None = None,
+) -> frozenset[tuple[str, str, str]]:
+    """(accession, data_point, tag) the sweep rulings (Dhairya, 2026-11-14, `_false-reason-rulings-*.csv`) judged
+    `true_reason`: the stored fact is a different data point (equity-statement repurchase value, net interest income),
+    or the printed line is wider than the data point. The guard does not refuse a reason on such a tag; the ruling
+    only holds while the resolver still emits the same decision (decision_before == decision_now). Pure file read."""
+    d = Path(directory) if directory else RULINGS_DIR
+    files = sorted(d.glob(RULINGS_GLOB))
+    out: set[tuple[str, str, str]] = set()
+    if not files:
+        return frozenset()
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            if r.get("verdict") == "true_reason" and r.get("decision_before") == r.get(
+                "decision_now"
+            ):
+                for tag in re.split(r"[;,]", r.get("evidence_tags", "")):
+                    if tag.strip():
+                        out.add((r["accession"], r["data_point"], tag.strip()))
+    return frozenset(out)
 
 
 def kind_of(decision: str | None, reason_class: str | None = None) -> str | None:
@@ -65,11 +96,15 @@ def evidence_for(
     tags: set[str],
     text: str,
     facts: dict[str, list[Fact]],
+    ruled: frozenset[str] | set[str] = frozenset(),
 ) -> list[dict[str, Any]]:
     """Evidence rows {tag, value, member} refuting the reason at column `end`; [] when none. Pure.
-    facts: tag -> stored facts of the cited accession. Tags named in `text` are skipped."""
+    facts: tag -> stored facts of the cited accession. Tags named in `text` are skipped, and so are the `ruled` tags
+    (ruled_true_reasons for this accession and data point)."""
     out: list[dict[str, Any]] = []
     for tag in sorted(tags):
+        if tag in ruled:
+            continue
         if re.search(rf"(?<![A-Za-z0-9]){re.escape(tag)}(?![A-Za-z0-9])", text):
             continue
         here = [

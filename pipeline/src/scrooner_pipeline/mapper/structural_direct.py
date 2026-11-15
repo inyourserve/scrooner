@@ -317,6 +317,7 @@ def refuted_map_reasons(
     facts = rg.read_facts(
         conn, company_id, {(t[0].evidence_adsh, g) for t in todo for g in t[6]}
     )
+    ruled = rg.ruled_true_reasons()
     out = []
     for r, kind, cid, pid, end, instant, tags in todo:
         ev = rg.evidence_for(
@@ -326,6 +327,11 @@ def refuted_map_reasons(
             tags,
             f"{r.reason or ''} {r.evidence_plabel or ''}",
             {g: facts.get((r.evidence_adsh, g), []) for g in tags},
+            {
+                g
+                for g in tags
+                if (r.evidence_adsh, rg.base_name(concept_info[cid][0]), g) in ruled
+            },
         )
         if ev:
             out.append(

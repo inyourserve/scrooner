@@ -54,6 +54,7 @@ from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.mapper import comparative_guard as cg
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import reason_guard as rg
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper.company_tag_map import STATEMENT_CODE
@@ -101,6 +102,9 @@ PERIODIC_FORMS = (
 )
 LOADABLE = {"mapped", "component_sum", "combined", "not_presented", "not_in_template"}
 NOT_A_DECISION = {"derived", "derived_not_printed", "no_role"}
+# derived_not_printed rows of these data points are served by mapper/derived_cells (C1 gross profit, C2 total
+# liabilities), which needs the map's not_presented row; other derived rows stay counted, not loaded
+DERIVED_VIA_MAP = ("gross_profit", "total_liabilities")
 SKIP_ACTIONS = {"review_missing_column_value", "no_structural_node"}
 ACCN_RE = dl.ACCN_RE
 STMT_WORDS = {"BS", "IS", "CF", "CI", "EQ", "CP", "UN", "NOTE"}
@@ -376,6 +380,11 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                 if r.get("action", "") in SKIP_ACTIONS:
                     counts["skipped_action"] += 1
                     continue
+                if decision == "derived_not_printed" and dp in DERIVED_VIA_MAP:
+                    # the derived path (mapper/derived_cells.py, rulings C1/C2) derives the value only where the
+                    # company map says the line is NOT PRESENTED: load that statement; the value is never loaded here
+                    decision = "not_presented"
+                    counts["derived_loaded_as_not_presented"] += 1
                 if decision in NOT_A_DECISION:
                     counts[f"skipped_{decision}"] += 1
                     continue
@@ -600,6 +609,7 @@ def reason_evidence(
     }
     pairs = {(c.accession, t) for c in todo for t in tagsets[c]}
     facts = rg.read_facts(conn, company_id, pairs)
+    ruled = rg.ruled_true_reasons()
     found: dict[Claim, list[dict]] = {}
     for c in todo:
         by_tag = {t: facts.get((c.accession, t), []) for t in tagsets[c]}
@@ -610,6 +620,11 @@ def reason_evidence(
             tagsets[c],
             f"{c.path} {c.label}",
             by_tag,
+            {
+                t
+                for t in tagsets[c]
+                if (c.accession, rg.base_name(c.data_point), t) in ruled
+            },
         )
         if ev:
             found[c] = ev
@@ -827,6 +842,19 @@ class Plan:
     merged: list[dict] = field(default_factory=list)  # the company's map after the load
 
 
+# a fix row written FROM an earlier structural run (note `source=line_map`, tools/total_debt.py fills from a later
+# filing's comparative column: NEE FY2018 total debt 63M = the lease part alone, VRTX FY2018) is a stale copy of the
+# resolver, not a reader's call: the current resolver claim of the own filing replaces it, as it does a library row
+LINE_MAP_SOURCE = "source=line_map"
+
+
+def is_hand_fix(r: dict) -> bool:
+    """A hand fix row that wins its cell: a docmap_fix@1 row not generated from an earlier structural run. Pure."""
+    return r["rule_id"] == HAND_FIX_RULE_ID and LINE_MAP_SOURCE not in (
+        r.get("serve_note") or ""
+    )
+
+
 def plan_company(
     existing: list[dict],
     cells: list[tuple[Claim, date, date | None, list[dict]]],
@@ -839,12 +867,13 @@ def plan_company(
     own = [r for r in existing if r["rule_id"] == RULE_ID]
     plan.own_delete = [r["id"] for r in own if _key(r) in keys]
     rest = [r for r in existing if r["rule_id"] != RULE_ID or _key(r) not in keys]
-    fixes = [r for r in rest if r["rule_id"] == HAND_FIX_RULE_ID]
+    fixes = [r for r in rest if is_hand_fix(r)]
     machine = [r for r in rest if r["rule_id"] in MACHINE_RULES]
     library = [
         r
         for r in rest
         if r["rule_id"] not in MACHINE_RULES + (HAND_FIX_RULE_ID, RULE_ID)
+        or (r["rule_id"] == HAND_FIX_RULE_ID and not is_hand_fix(r))
     ]
     spans: dict[str, list[tuple[Any, date, date]]] = {"value": [], "reason": []}
     new_rows: list[dict] = []
@@ -1168,24 +1197,41 @@ def solve_signs(
 def fact_options(
     conn: psycopg.Connection, items: list[tuple[int, str, date]]
 ) -> dict[tuple[int, str, date], set[Decimal]]:
-    """(company id, tag, period end) -> authoritative SEC fact values: instants, and durations of about a year."""
+    """(company id, tag, FSN period end) -> authoritative SEC fact values: instants, and durations of about a year.
+    The resolver's period_end is the FSN date (rounded to a month end); a 52/53-week filer's facts end on the true
+    date (NVDA FY2018: 2018-01-28 for FSN 2018-01-31), so facts match by fsn_end_matches, never by equality. An exact
+    end wins when it holds a value; the rounded match is the fallback (stray instants a few days around a year end
+    never add options beside a real one)."""
     out: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
     if not items:
         return out
     cids = sorted({i[0] for i in items})
     tags = sorted({i[1] for i in items})
     ends = sorted({i[2] for i in items})
+    lo, hi = ends[0] - timedelta(days=16), ends[-1] + timedelta(days=16)
+    want: dict[tuple[int, str], set[date]] = defaultdict(set)
+    for cid, tag, end in items:
+        want[(cid, tag)].add(end)
+    exact: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
+    near: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
     with conn.cursor() as cur:
         cur.execute(
             """select f.company_id, c.tag, p.end_date, f.value
                from core.fact f join core.concept c on c.id = f.concept_id
                  join core.period p on p.id = f.period_id
-               where f.company_id = any(%s) and c.tag = any(%s) and p.end_date = any(%s) and f.is_authoritative
+               where f.company_id = any(%s) and c.tag = any(%s) and p.end_date between %s and %s
+                 and f.is_authoritative
                  and (p.period_type = 'instant' or p.start_date <= p.end_date - 330)""",
-            (cids, tags, ends),
+            (cids, tags, lo, hi),
         )
         for cid, tag, end, v in cur.fetchall():
-            out[(cid, tag, end)].add(Decimal(v))
+            for w in want.get((cid, tag), ()):
+                if end == w:
+                    exact[(cid, tag, w)].add(Decimal(v))
+                elif fsn_end_matches(w, end):
+                    near[(cid, tag, w)].add(Decimal(v))
+    for k in set(exact) | set(near):
+        out[k] = exact.get(k) or near[k]
     return out
 
 
