@@ -45,7 +45,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v21_2026-11-16"
+DETECTOR_VERSION = "cell_proof_v22_2026-11-16"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -393,6 +393,10 @@ class Shown:
     # the cell is a printed zero (ruling 2026-11-14): served as 0 with no fact id, from a line the own filing prints with
     # a dash or 0 (canonical_fact family company_tag_map:printed_zero); the claim's evidence accession is `accession`
     printed_zero: bool = False
+    # (combined line tag, spanned concept names) of the company's 'combined' rows that span this data point in this
+    # era: the data point is split from a note, and the split parts must sum to that printed combined line
+    # (founder decision 2026-11-16; proof/identities._check_splits)
+    combined_splits: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
 
 @dataclass

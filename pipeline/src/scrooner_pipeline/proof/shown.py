@@ -144,6 +144,28 @@ def combined_for(
     )
 
 
+def combined_splits_for(
+    rows: list[tuple[str, tuple[str, ...], date, date | None]],
+    name: str,
+    period_end: date,
+) -> tuple[tuple[str, tuple[str, ...]], ...]:
+    """(combined tag, spanned concepts) of every combined row spanning `name` whose era holds the period end, with at
+    least two spanned concepts (a line over one concept is no split)."""
+    base = _base_name(name)
+    return tuple(
+        sorted(
+            {
+                (t, tuple(comps))
+                for t, comps, a, b in rows
+                if a <= period_end
+                and (b is None or period_end <= b)
+                and len(comps) >= 2
+                and (name in comps or base in comps)
+            }
+        )
+    )
+
+
 def claim_for(
     rows: list[MapRow],
     name: str,
@@ -260,9 +282,19 @@ def component_sum_authority_by_era(
     """Every part is judged from ONE filing's own column, and each filing is read with the parts ITS era names
     (`era_parts_of`: accession -> parts, None = the cell's own claim). The latest filing that prints every part of its
     own era wins (the statement filing first). A part absent from the later filing's era is never counted as 0 there."""
+    printed: dict[str, set[str]] = defaultdict(set)
+    for a, _v, t in copies:
+        printed[a].add(t)
     groups: dict[tuple[tuple[int, str], ...], set[str]] = {}
     for acc in {a for a, _v, _t in copies}:
-        groups.setdefault(era_parts_of.get(acc) or own_parts, set()).add(acc)
+        parts = era_parts_of.get(acc) or own_parts
+        if parts != own_parts and not {t for _s, t in parts} <= printed[acc]:
+            # the filing's own era names a part it does not print for this column (TMO Dec-2020 in the Q2-2021 10-Q:
+            # era part LongTermDebtAndCapitalLeaseObligations, the column prints LongTermDebtNoncurrent): that era
+            # describes the filing's CURRENT columns, not this one. Read the column with the cell's own parts; an
+            # absent era part is never zero here (it made 2,628M of 21,735M)
+            parts = own_parts
+        groups.setdefault(parts, set()).add(acc)
     wins = []
     for parts, accs in groups.items():
         w = component_sum_authority(
@@ -759,6 +791,7 @@ def load_shown(
                 copies=len(copies),
                 claim=claim,
                 combined=combined_for(combined_rows, name, end),
+                combined_splits=combined_splits_for(combined_rows, name, end),
                 zero_parts=zero_parts,
                 printed_zero=pz,
             )

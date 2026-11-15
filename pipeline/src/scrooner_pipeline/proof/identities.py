@@ -530,6 +530,77 @@ def _check_period(
     return out
 
 
+SPLIT_REASON = "split_parts_do_not_sum_to_combined_line"
+
+
+def _check_splits(
+    cells: dict[str, Proof],
+    grain: str,
+    end: date,
+    structures: dict[str, FilingStructure] | None,
+) -> list[tuple[dict[str, Any], dict[str, Proof], str]]:
+    """Founder decision 2026-11-16 (CERTIFICATION-METHOD): a combined face line split into data points from the notes
+    must be the SUM of its parts. For each combined row spanning a served cell (Shown.combined_splits), when every
+    spanned concept is served, PROVEN, printed and read from ONE filing, and that filing prints the combined line in
+    the column, the parts' sum must equal the printed line within the filer's rounding. Judged only for additive
+    splits (parts and line all non-negative): a combined line that nets signed concepts (interest income less
+    interest expense) is not a sum of the shown values. A part that is missing, unproven or from another filing
+    leaves the split unjudged here (that is coverage, not a wrong value)."""
+    out: list[tuple[dict[str, Any], dict[str, Proof], str]] = []
+    if not structures:
+        return out
+    seen: set[tuple[str, tuple[str, ...]]] = set()
+    for p in list(cells.values()):
+        for tag, comps in p.shown.combined_splits:
+            if (tag, comps) in seen:
+                continue
+            seen.add((tag, comps))
+            members = {c: cells.get(base_name(c)) for c in comps}
+            if not all(
+                m is not None and _usable(m) and m.verdict == PROVEN
+                for m in members.values()
+            ):
+                continue
+            accs = {m.shown.accession for m in members.values() if m is not None}
+            acc = next(iter(accs)) if len(accs) == 1 else None
+            st = structures.get(acc or "")
+            if st is None:
+                continue
+            ddate, qtrs = fsn_ddate(end), _qtrs(grain)
+            line = st.value(tag, ddate, qtrs)
+            if line is None:
+                continue
+            vals = [m.shown.value for m in members.values() if m is not None]
+            if line.value < 0 or any(v < 0 for v in vals):
+                continue
+            total = sum(vals, Decimal(0))
+            tol = tolerance([*vals, line.value])
+            for m in members.values():
+                assert m is not None
+                m.checks["split_parts"] = {
+                    "status": "pass" if abs(total - line.value) <= tol else "fail",
+                    "combined_tag": tag,
+                    "combined_line": str(line.value),
+                    "parts_sum": str(total),
+                    "accession": acc,
+                }
+            if abs(total - line.value) <= tol:
+                continue
+            rec = {
+                "name": f"split:{tag}",
+                "source": "split_check",
+                "members": {c: str(m.shown.value) for c, m in members.items() if m},
+                "lhs": str(total),
+                "rhs": str(line.value),
+                "diff": str(total - line.value),
+                "tolerance": str(tol),
+            }
+            out.append(
+                (rec, {c: m for c, m in members.items() if m is not None}, SPLIT_REASON)
+            )
+    return out
+
+
 def apply_identities(
     proofs: list[Proof],
     printed: dict[PrintedKey, Decimal] | None = None,
@@ -555,10 +626,13 @@ def apply_identities(
     for (grain, start, end), cells in by_period.items():
         ni = cells.get("net_income")
         cf_start = cf_start_value(structures, ni) if structures and ni else None
-        for rec, members, reason in _check_period(
-            cells, grain, start, end, printed, cf_start, structures, checks
-        ):
-            if reason == REASON:
+        for rec, members, reason in [
+            *_check_period(
+                cells, grain, start, end, printed, cf_start, structures, checks
+            ),
+            *_check_splits(cells, grain, end, structures),
+        ]:
+            if reason in (REASON, SPLIT_REASON):
                 counts[rec["name"]] += 1
             else:  # one filing column's failed check counts once, however many cells it holds
                 col = (rec["accession"], rec["check_id"], end, _qtrs(grain))
@@ -572,7 +646,7 @@ def apply_identities(
                     p.reason_text = (
                         f"identity {rec['name']} breaks: {rec['lhs']} vs {rec['rhs']} "
                         f"(diff {rec['diff']}, tolerance {rec['tolerance']})"
-                        if reason == REASON
+                        if reason in (REASON, SPLIT_REASON)
                         else f"the filing's own check {rec['check_id']} fails: {rec['lhs']} vs {rec['rhs']} "
                         f"(tolerance {rec['tolerance']})"
                     )
