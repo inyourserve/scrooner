@@ -35,7 +35,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: manual-db-jobs
+  group: standard-extract
   cancel-in-progress: false
 
 env:
