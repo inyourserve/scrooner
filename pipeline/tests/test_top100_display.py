@@ -76,7 +76,14 @@ def test_registration_statement_switch_defaults_to_no(monkeypatch):
 def test_hidden_evidence_and_open_queue():
     rows = [
         _cell("a", 2020, "PROVEN"),
-        _cell("b", 2020, "REASON", "structural_not_presented", _latest_10k="a", _first_10k="z"),
+        _cell(
+            "b",
+            2020,
+            "REASON",
+            "structural_not_presented",
+            _latest_10k="a",
+            _first_10k="z",
+        ),
         _cell("c", 2020, "REASON", "no_10k_presents_period"),
         _cell("c", 2021, "PROVEN"),
         _cell("d", 2020, "UNCHECKED", "no_proof_row"),
@@ -92,7 +99,10 @@ def test_summary_certified_needs_no_open_and_locators():
     class Co:
         rank, ticker, company_id = 1, "T", 1
 
-    ok = [_cell("a", 2020, "PROVEN"), _cell("b", 2020, "REASON", "docmap_not_presented")]
+    ok = [
+        _cell("a", 2020, "PROVEN"),
+        _cell("b", 2020, "REASON", "docmap_not_presented"),
+    ]
     bad = [_cell("a", 2020, "PROVEN", r_page="")]
     for rows, want in ((ok, "yes"), (bad, "no")):
         t100.apply_display(rows)

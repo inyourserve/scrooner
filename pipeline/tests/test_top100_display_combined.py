@@ -26,7 +26,8 @@ def _cell(dp, fy, cls, code="", **kw):
 
 def test_loader_reads_flags_of_the_newest_resolver_file(tmp_path):
     (tmp_path / "resolver-all110-2026-11-14.csv").write_text(
-        HEADER + "1,T,a,2020-12-31,FY,combined,x,,OLD,,,only_combined;only_combined_row,r.36\n"
+        HEADER
+        + "1,T,a,2020-12-31,FY,combined,x,,OLD,,,only_combined;only_combined_row,r.36\n"
     )
     (tmp_path / "resolver-all110-2026-11-20.csv").write_text(
         HEADER
@@ -37,8 +38,16 @@ def test_loader_reads_flags_of_the_newest_resolver_file(tmp_path):
     )
     oc = t100.load_only_combined(tmp_path)
     assert oc == {
-        ("T", "a", "2020-12-31"): ("row", "reported only combined: Total expenses", "ACC1"),
-        ("T", "b", "2021-12-31"): ("years", "reported only combined: Inv income", "ACC2"),
+        ("T", "a", "2020-12-31"): (
+            "row",
+            "reported only combined: Total expenses",
+            "ACC1",
+        ),
+        ("T", "b", "2021-12-31"): (
+            "years",
+            "reported only combined: Inv income",
+            "ACC2",
+        ),
     }
     assert t100.load_only_combined(tmp_path / "none") == {}
 
@@ -68,7 +77,10 @@ def test_only_combined_row_and_years_hide_with_evidence_and_accession():
     assert d[("c", 2020)]["display"] == "OPEN"
     hr, hy = t100.hidden_evidence(rows)
     assert hr[0]["evidence"] == "reported only combined: L1"
-    assert hy[0]["basis"] == "reported_only_combined" and hy[0]["evidence_accession"] == "A3"
+    assert (
+        hy[0]["basis"] == "reported_only_combined"
+        and hy[0]["evidence_accession"] == "A3"
+    )
 
 
 def test_a_row_hide_never_beats_a_shown_value_in_the_same_row():

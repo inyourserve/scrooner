@@ -311,7 +311,9 @@ def year_presence(
     return {
         "presented": bool(presenting),
         "before_first": bool(
-            earliest_filing is not None and period_end < earliest_filing and not presenting
+            earliest_filing is not None
+            and period_end < earliest_filing
+            and not presenting
         ),
         "comparative_only": bool(
             presenting
@@ -1323,7 +1325,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
     periodic filing (row['_before_first_filing']) or carries an evidenced no-period reason is a hidden year (a later
     10-K comparative column makes it presented, so it is never hidden); a row whose every non-hidden-year cell is an
     evidenced not-presented reason is a hidden row; everything else is open."""
-    by_row: dict[tuple[Any, str], list[dict[str, Any]]] = defaultdict(list)
+    by_row: dict[tuple[Any, Any], list[dict[str, Any]]] = defaultdict(list)
     for r in rows:
         no_period = (
             r.get("_before_first_filing") and not REGISTRATION_STATEMENT_PRESENTS_YEAR
@@ -1354,9 +1356,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
         if rest and all(
             c["display"] == HIDDEN_ROW
-            or (
-                c["class"] == "REASON" and c.get("reason_code") in NOT_PRESENTED_CODES
-            )
+            or (c["class"] == "REASON" and c.get("reason_code") in NOT_PRESENTED_CODES)
             for c in rest
         ):
             for c in rest:
@@ -1521,7 +1521,7 @@ def summarize(
             "parts_blank_shown": 0,
         }
     )
-    seen_rows: set[tuple[int, str]] = set()
+    seen_rows: set[tuple[Any, Any]] = set()
     for r in rows:
         d = disp[r["company_id"]]
         d[r["display"]] += 1
