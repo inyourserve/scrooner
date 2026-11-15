@@ -1555,6 +1555,35 @@ def resolve_cells(
                             (x[0] for x in conv),
                             key=lambda f: (f.filing_date, f.fact_id),
                         )
+            if concept == "dividends_per_share_resolved":
+                # A 3-month copy equal to its own filing's YTD value while an
+                # earlier quarter inside that YTD paid a dividend: the YTD
+                # value on the quarter's context (LOGI Oct-Dec 2021 0.95 in
+                # 0001032975-22-000006; the dividend was paid in September).
+                ytd_dup = [
+                    x
+                    for x in conv
+                    if _quarter_repeats_ytd(x[0], same_filing, period_span, quarter_dps)
+                ]
+                if ytd_dup:
+                    conv = [x for x in conv if x not in ytd_dup]
+                    if not conv:
+                        out.append(
+                            CellResult(
+                                concept,
+                                pid,
+                                HIDE_DPS_INVALID,
+                                None,
+                                (),
+                                None,
+                                None,
+                                (),
+                                "the 3-month copy repeats its filing's year-to-date value",
+                            )
+                        )
+                        continue
+                    if not any(x[0] is original for x in conv):
+                        original = conv[0][0]
             if concept == "dividends_per_share_resolved" and len(conv) > 1:
                 # A DPS on a longer context below the sum of the company's own
                 # filed quarters inside it is a quarterly rate on a YTD or
@@ -1842,6 +1871,30 @@ def _ytd_below_quarters(x, quarter_dps) -> bool:
     ]
     need = round(days / 91.3)
     return len(inside) >= need and value < sum(inside, Decimal(0)) - FY_RATE_TOL
+
+
+def _quarter_repeats_ytd(
+    f: SourceFact,
+    same_filing,
+    period_span: Mapping[int, tuple[date | None, date]],
+    quarter_dps: Mapping[tuple[date, date], Decimal],
+) -> bool:
+    if f.start_date is None or not 80 <= (f.end_date - f.start_date).days <= 120:
+        return False
+    for other, vals in same_filing[(f.filing_id, f.tag, f.unit)].items():
+        s_, e_ = period_span.get(other, (None, f.end_date))
+        if s_ is None or e_ != f.end_date or s_ >= f.start_date - timedelta(days=60):
+            continue
+        if f.value not in vals:
+            continue
+        if any(
+            v > 0
+            and qs >= s_ - timedelta(days=7)
+            and qe <= f.start_date + timedelta(days=7)
+            for (qs, qe), v in quarter_dps.items()
+        ):
+            return True
+    return False
 
 
 def _rate_on_longer_context(f: SourceFact, pid: int, same_filing, period_days) -> bool:
@@ -2625,6 +2678,21 @@ def _one_dividend_basis(
                 )
             )
             continue
+        if c.value is not None and _bases_agree_locally(c, span_copies):
+            out.append(
+                CellResult(
+                    c.concept,
+                    c.period_id,
+                    SHOWN,
+                    c.value,
+                    c.source_fact_ids,
+                    c.chosen,
+                    c.factor,
+                    c.candidates,
+                    BASES_AGREE_NOTE,
+                )
+            )
+            continue
         out.append(
             CellResult(
                 c.concept,
@@ -2638,7 +2706,134 @@ def _one_dividend_basis(
                 f"off the company's dividend basis ({basis_tag})",
             )
         )
-    return out
+    return _dps_totals_agree_with_quarters(out, span_copies, basis_tag)
+
+
+BASES_AGREE_NOTE = "declared and paid agree around this period"
+BASES_AGREE_WINDOW_DAYS = 400
+
+
+def _own_vintage_value(
+    copies: list[tuple[SourceFact, Decimal]], tag: str
+) -> Decimal | None:
+    vals = {
+        v
+        for f, v in copies
+        if f.tag == tag and (f.filing_date - f.end_date).days <= OWN_VINTAGE_DAYS
+    }
+    return next(iter(vals)) if len(vals) == 1 else None
+
+
+def _bases_agree_locally(
+    c: CellResult, span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]]
+) -> bool:
+    """Declared and paid are the same number where a company declares and
+    pays in the same quarter (CMI, UNH, NSC, LIN, BAC ...; Verifier run 6).
+    True when, within 400 days of the cell, at least two periods carry
+    own-vintage copies on both tags and every such period agrees, the
+    cell's own period included."""
+    assert c.chosen is not None
+    d, p = (
+        "CommonStockDividendsPerShareDeclared",
+        "CommonStockDividendsPerShareCashPaid",
+    )
+    common = 0
+    for (s_, e_), copies in span_copies.items():
+        if s_ is None or abs((e_ - c.chosen.end_date).days) > BASES_AGREE_WINDOW_DAYS:
+            continue
+        vd, vp = _own_vintage_value(copies, d), _own_vintage_value(copies, p)
+        if vd is None or vp is None:
+            continue
+        if vd != vp:
+            return False
+        common += 1
+    return common >= 2
+
+
+def _dps_totals_agree_with_quarters(
+    cells: list[CellResult],
+    span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
+    basis_tag: str,
+) -> list[CellResult]:
+    """A shown 6M / 9M / annual dividend must equal the company's own shown
+    quarters on its basis (one per end date, a complete chain), or on the
+    Declared basis the declaration instants inside the span (Verifier run 6:
+    AMT FY2022 shows Declared 4.30 = three declarations, the four sum to
+    5.86; AMT FY2023 tags the paid sum 6.31 as Declared, the declarations sum
+    to 6.45). A filed copy equal to that sum is shown instead; otherwise the
+    total is hidden."""
+    concept = "dividends_per_share_resolved"
+    shown = [
+        c
+        for c in cells
+        if c.concept == concept
+        and c.status == SHOWN
+        and c.chosen is not None
+        and c.value is not None
+    ]
+    quarters: dict[date, tuple[date, Decimal]] = {}
+    instants: dict[date, Decimal] = {}
+    for c in shown:
+        assert c.chosen is not None and c.value is not None
+        s_, e_ = c.chosen.start_date, c.chosen.end_date
+        if s_ is not None and 80 <= (e_ - s_).days <= 120:
+            if e_ not in quarters or s_ < quarters[e_][0]:
+                quarters[e_] = (s_, c.value)
+        elif (
+            s_ is None or s_ == e_
+        ) and c.chosen.tag == "CommonStockDividendsPerShareDeclared":
+            instants[e_] = c.value
+    changes: dict[int, CellResult] = {}
+    for c in shown:
+        assert c.chosen is not None and c.value is not None
+        s_, e_ = c.chosen.start_date, c.chosen.end_date
+        if s_ is None or (e_ - s_).days < 150:
+            continue
+        n = round((e_ - s_).days / 91.3)
+        chain = sorted(
+            (qs, qe, v)
+            for qe, (qs, v) in quarters.items()
+            if qs >= s_ - timedelta(days=7) and qe <= e_ + timedelta(days=7)
+        )
+        want: Decimal | None = None
+        how = ""
+        if (
+            len(chain) == n
+            and abs((chain[0][0] - s_).days) <= 7
+            and abs((chain[-1][1] - e_).days) <= 7
+            and all(abs((b[0] - a[1]).days) <= 7 for a, b in itertools.pairwise(chain))
+        ):
+            want = sum((v for _a, _b, v in chain), Decimal(0))
+            how = "quarters"
+        elif basis_tag == "CommonStockDividendsPerShareDeclared":
+            inside = [v for d_, v in instants.items() if s_ < d_ <= e_]
+            if len(inside) >= n:
+                want = sum(inside, Decimal(0))
+                how = "declarations"
+        if want is None or abs(c.value - want) <= YEAR_SOLVE_TOL:
+            continue
+        match = sorted(
+            (
+                (f, v)
+                for f, v in span_copies.get((s_, e_), [])
+                if abs(v - want) <= YEAR_SOLVE_TOL
+            ),
+            key=lambda x: (x[0].filing_date, x[0].fact_id),
+        )
+        if match:
+            f0, v0 = match[0]
+            changes[c.period_id] = CellResult(
+                c.concept, c.period_id, SHOWN, v0, (f0.fact_id,), f0, c.factor,
+                c.candidates, f"equals the sum of its {basis_tag} {how}",
+            )  # fmt: skip
+        else:
+            changes[c.period_id] = CellResult(
+                c.concept, c.period_id, HIDE_DPS_INVALID, None, (), c.chosen, c.factor,
+                c.candidates, f"does not add up to its {basis_tag} {how}",
+            )  # fmt: skip
+    if not changes:
+        return cells
+    return [changes.get(c.period_id, c) if c.concept == concept else c for c in cells]
 
 
 def _agree_tol(
