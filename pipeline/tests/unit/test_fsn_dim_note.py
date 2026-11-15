@@ -26,7 +26,7 @@ def _zst(path: Path, rows: list[list[str]]) -> None:
     path.write_bytes(subprocess.run(["zstd", "-q", "-c"], input=body.encode(), capture_output=True, check=True).stdout)
 
 
-def _period(cache: Path, period: str = "2023q1") -> dict[str, Path]:
+def _period(cache: Path, period: str = "2023q1", adsh: str = ADSH) -> dict[str, Path]:
     """A one-filing period: Revenues on the IS (with a dimensional statement fact), PM R60 amortization by location
     (a NOTE tag: no statement pre row), and a dimensional note fact of a tag no rule names."""
     d = cache / period
@@ -34,22 +34,22 @@ def _period(cache: Path, period: str = "2023q1") -> dict[str, Path]:
     t = {
         "sub": [
             ["adsh", "cik", "form", "aciks", "period", "fy", "fp", "fye", "filed", "accepted"],
-            [ADSH, "1413329", "10-K", "", "20221231", "2022", "FY", "1231", "20230214", "2023-02-14 16:00:00"],
+            [adsh, "1413329", "10-K", "", "20221231", "2022", "FY", "1231", "20230214", "2023-02-14 16:00:00"],
             [OTHER, "999", "10-K", "", "20221231", "2022", "FY", "1231", "20230214", "2023-02-14 16:00:00"],
         ],
         "pre": [
             ["adsh", "report", "line", "stmt", "inpth", "tag", "version", "prole", "plabel", "negating"],
-            [ADSH, "4", "1", "IS", "0", "Revenues", "us-gaap/2022", "", "Net revenues", "0"],
-            [ADSH, "60", "26", "", "0", AM, "us-gaap/2022", "", "Amortization of intangibles", "0"],
+            [adsh, "4", "1", "IS", "0", "Revenues", "us-gaap/2022", "", "Net revenues", "0"],
+            [adsh, "60", "26", "", "0", AM, "us-gaap/2022", "", "Amortization of intangibles", "0"],
         ],
         "num": [
             ["adsh", "tag", "version", "ddate", "qtrs", "uom", "dimh", "iprx", "value", "coreg", "footnote", "durp", "datp", "dcml"],
-            [ADSH, "Revenues", "us-gaap/2022", "20221231", "4", "USD", NO_DIM, "0", "100", "", "", "1", "0", "-6"],
-            [ADSH, "Revenues", "us-gaap/2022", "20221231", "4", "USD", "0xaaa", "0", "60", "", "", "1", "0", "-6"],
-            [ADSH, AM, "us-gaap/2022", "20221231", "4", "USD", "0xbbb", "0", "58000000", "", "", "1", "0", "-6"],
-            [ADSH, AM, "us-gaap/2022", "20221231", "4", "USD", "0xccc", "0", "101000000", "", "", "1", "0", "-6"],
-            [ADSH, "DerivativeNotionalAmount", "invest/2013", "20221231", "0", "USD", "0xddd", "0", "7", "", "", "0", "0", "-6"],
-            [ADSH, AM, "us-gaap/2022", "20221231", "4", "USD", "0xeee", "0", "5", "", "", "1", "0", "-6"],
+            [adsh, "Revenues", "us-gaap/2022", "20221231", "4", "USD", NO_DIM, "0", "100", "", "", "1", "0", "-6"],
+            [adsh, "Revenues", "us-gaap/2022", "20221231", "4", "USD", "0xaaa", "0", "60", "", "", "1", "0", "-6"],
+            [adsh, AM, "us-gaap/2022", "20221231", "4", "USD", "0xbbb", "0", "58000000", "", "", "1", "0", "-6"],
+            [adsh, AM, "us-gaap/2022", "20221231", "4", "USD", "0xccc", "0", "101000000", "", "", "1", "0", "-6"],
+            [adsh, "DerivativeNotionalAmount", "invest/2013", "20221231", "0", "USD", "0xddd", "0", "7", "", "", "0", "0", "-6"],
+            [adsh, AM, "us-gaap/2022", "20221231", "4", "USD", "0xeee", "0", "5", "", "", "1", "0", "-6"],
             [OTHER, AM, "us-gaap/2022", "20221231", "4", "USD", "0xbbb", "0", "9", "", "", "1", "0", "-6"],
         ],
         "cal": [["adsh", "grp", "arc", "negative", "ptag", "pversion", "ctag", "cversion"]],
@@ -234,3 +234,26 @@ def test_insert_only_dry_run_writes_nothing_apply_adds_once_and_rerun_adds_nothi
     assert _one(conn, "select count(*) from fsn.filing") == 1  # no reload, no delete
     # the statement-rule fact the shard stored is untouched
     assert _one(conn, "select value from fsn.value v join fsn.dim d on d.id = v.dim_id where d.dimh = '0xaaa'") == 60
+
+
+@pytest.mark.integration
+def test_a_period_in_both_bucket_folders_is_read_from_both(conn, isolated_database_url, tmp_path):
+    """XOM 0000034088: its filings sit only in predecessors/<set>, beside a cohort folder of the same period."""
+    cid, fid = _seed(conn, isolated_database_url)
+    pred_adsh = "0000034088-23-000020"
+    fid2 = _one(
+        conn,
+        "insert into fsn.filing (accession, company_id, cik, form, period, fsn_set) values (%s, %s, '0000034088', '10-K', '2022-12-31', '2023q1') returning id",
+        (pred_adsh, cid),
+    )
+    conn.commit()
+    base = _period(tmp_path / "base")  # holds ADSH only
+    pred = _period(tmp_path / "pred", adsh=pred_adsh)  # holds pred_adsh only
+    pred_rows = {k: v for k, v in pred.items()}
+
+    def fetch(period, table, cache, prefix):
+        return (pred_rows if prefix else base)[table]
+
+    res = dim_note.run(lambda: psycopg.connect(isolated_database_url), [cid], fetch, tmp_path, apply=False)
+    assert res["rows_to_add"] == 4 and res["per_company"] == {cid: 4}  # 2 per folder: both folders were read
+    assert fid2 != fid

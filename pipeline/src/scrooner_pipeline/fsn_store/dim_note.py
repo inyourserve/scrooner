@@ -233,37 +233,41 @@ def run(
         if periods and fs not in periods:
             continue
         accs = by_set[fs]
-        paths: dict[str, Path] | None = None
+        found = False
+        per_period[fs] = 0
+        # a period can sit in BOTH bucket folders (the cohort extract and the predecessor registrants' extract,
+        # e.g. XOM 0000034088): read every folder that exists, each filing is in at most one
         for prefix in PREFIXES:
             try:
                 paths = {t: fetch(fs, t, cache, prefix) for t in NEED}
-                break
             except FileNotFoundError:
-                paths = None
-        if paths is None:
+                continue
+            found = True
+            try:
+                rows, tags, dims = candidates(paths, set(accs), allow)
+                with connect() as conn, conn.transaction():
+                    if not apply:
+                        conn.execute("set transaction read only")
+                    added, present = _plan(conn, rows, tags, dims, accs, apply=apply)
+            finally:
+                for p in paths.values():
+                    p.unlink(missing_ok=True)
+            for c, n in added.items():
+                per_company[c] += n
+            per_period[fs] += sum(added.values())
+            present_total += present
+            logger.info(
+                "fsn_dim_note.period",
+                period=fs,
+                prefix=prefix,
+                candidates=len(rows),
+                added=sum(added.values()),
+                present=present,
+                apply=apply,
+            )
+        if not found:
+            del per_period[fs]
             missing.append(fs)
-            continue
-        try:
-            rows, tags, dims = candidates(paths, set(accs), allow)
-            with connect() as conn, conn.transaction():
-                if not apply:
-                    conn.execute("set transaction read only")
-                added, present = _plan(conn, rows, tags, dims, accs, apply=apply)
-        finally:
-            for p in paths.values():
-                p.unlink(missing_ok=True)
-        for c, n in added.items():
-            per_company[c] += n
-        per_period[fs] = sum(added.values())
-        present_total += present
-        logger.info(
-            "fsn_dim_note.period",
-            period=fs,
-            candidates=len(rows),
-            added=per_period[fs],
-            present=present,
-            apply=apply,
-        )
     return {
         "mode": "apply" if apply else "dry-run",
         "rows_to_add" if not apply else "rows_added": sum(per_company.values()),
