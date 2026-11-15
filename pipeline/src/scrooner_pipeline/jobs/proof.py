@@ -44,6 +44,12 @@ def run_cmd(
         help="db: read each company's filings from schema fsn (files only for a filing the store lacks, logged); "
         "files: the zstd quarter files.",
     ),
+    full: bool = typer.Option(
+        False,
+        "--full",
+        help="Write every cell's proof. Default with --write is rule-scoped: only cells with no current row or whose "
+        "recorded rules changed are written, unselected legacy rows are stamped with their rule record.",
+    ),
     statement_timeout: str = typer.Option("10min"),
     floor: str = typer.Option(
         None,
@@ -66,6 +72,7 @@ def run_cmd(
                 write=write,
                 floor=date.fromisoformat(floor) if floor else None,
                 fsn_source=fsn_source,
+                scoped=not full,
             )
     except DecompressError as exc:
         typer.echo(f"cell-proof ABORTED, nothing written: {exc}", err=True)

@@ -66,6 +66,7 @@ from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
+from scrooner_pipeline.proof.rules import row_holds_disagree
 
 logger = structlog.get_logger()
 
@@ -622,9 +623,9 @@ def _load_proof_disagree(
     )
     return {
         (n, g, s, e): Decimal(v)
-        for n, g, s, e, v in conn.execute(
+        for n, g, s, e, v, rules in conn.execute(
             """
-            select data_point_name, period_grain, period_start, period_end, shown_value
+            select data_point_name, period_grain, period_start, period_end, shown_value, checks->'rules'
             from analytics.cell_proof
             where company_id = %s and basis = 'latest' and verdict = 'DISAGREE' and shown_value is not null
               and detector_version = %s
@@ -632,6 +633,12 @@ def _load_proof_disagree(
             + still_fails,
             (company_id, DETECTOR_VERSION),
         ).fetchall()
+        # a DISAGREE row of a rule that has since changed is history (proof/rules.py); an unstamped floor row holds
+        if row_holds_disagree(
+            DETECTOR_VERSION,
+            {"rules": rules} if rules is not None else None,
+            DETECTOR_VERSION,
+        )
     }
 
 

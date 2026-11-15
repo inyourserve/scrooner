@@ -43,6 +43,7 @@ from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
+from scrooner_pipeline.proof.rules import row_is_current
 
 CLASSES = ("PROVEN", "REASON", "DERIVED", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
 REASON_STATES = {
@@ -770,7 +771,8 @@ def _fy_periods(
 def load_current_proofs(
     conn: Any, ids: list[int], names: list[str]
 ) -> dict[tuple[int, str, date, date], tuple]:
-    """The verdict of each cell key: its newest analytics.cell_proof row written by the CURRENT detector version.
+    """The verdict of each cell key: its newest analytics.cell_proof row at the CURRENT floor version whose recorded rules
+    are all at their current version (proof/rules.py row_is_current; a row with no record is not current).
     A row of an older detector is history, never the verdict (a held cell is not re-proved, so a pre-R13
     restated_copies_disagree row outlived its rule for 48 MSFT cells)."""
     proofs: dict[tuple[int, str, date, date], tuple] = {}
@@ -787,7 +789,9 @@ def load_current_proofs(
                order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
             (ids[i : i + 10], names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
         ).fetchall():
-            proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+            # ONE-PATH step 1: current = at the floor AND every rule the row used is at its current version
+            if row_is_current(DETECTOR_VERSION, row[13], DETECTOR_VERSION):
+                proofs[(row[0], row[1], row[2], row[3])] = row[4:]
     return proofs
 
 
