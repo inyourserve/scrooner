@@ -1151,7 +1151,10 @@ if __name__ == '__main__':
     rows = apply_ar_related(rows, filings)
     rows += standard_inputs.before_first_10k_rows(rows, filings, compfacts)   # years printed only in the first 10-K's comparative columns
     EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
-    EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
+    _roles = {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}
+    _pz = standard_inputs.printed_zero_inferred(rows, filings, compfacts, memberfacts, _roles)
+    _pz.update(standard_inputs.printed_zero(rows, zlines, _roles))   # the extract's zlines win where present
+    EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in _pz.items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_alt(rows)
     rows = apply_bundled_ap(rows, filings)

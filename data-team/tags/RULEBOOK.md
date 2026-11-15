@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .48, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .49, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -261,6 +261,7 @@ Format: `ID | rule | code | test | date / source`.
 | X37 | A per-share line printed with no consolidated value (ClassOfStock members only) is no single EPS: combined, flag eps_per_class, hidden as reported only per class (DELL FY2017-19 DHI/Class V, GOOG FY2015, V all years) | ra.apply_eps_per_class | pr4::test_eps_printed_only_per_class_is_combined_not_missing | queue 2026-11-16; commit .46 6e252ddc |
 | X38 | Family flags (cf_family) are carried to the output row | ra.family_rows | pr4::test_cf_family_flags_reach_the_output_row | commit .47 |
 | X39 | absent_in_own_filing for current_assets / current_liabilities: no AssetsCurrent / LiabilitiesCurrent fact or line anywhere in the filing (unclassified balance sheet: banks, insurers, REITs, DE, GE FY2015-18) | ra ABSENT_RX | pr4::test_unclassified_balance_sheet_proves_current_subtotals_absent | queue 2026-11-16; commit .48 |
+| X40 | Printed dash inferred from the extract when zlines has no row: a dividends/buybacks face line with no value, no own-period member fact, and a fact of the element in an earlier column of the same filing is a printed dash = 0 (flag printed_zero). Limited to the CF payment lines (other elements carry member-only facts the extract does not hold) | si.printed_zero_inferred, PZ_INFER; ra main (zlines win) | pr4::test_dash_on_a_payment_line_is_inferred_from_the_filings_other_columns | ruling 2026-11-14 printed dash = 0; BA FY2022 and GLW FY2023 read on sec.gov R8/R6; commit .49 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

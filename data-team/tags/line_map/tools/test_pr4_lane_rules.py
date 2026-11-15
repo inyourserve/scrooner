@@ -309,3 +309,20 @@ def test_unclassified_balance_sheet_proves_current_subtotals_absent():
     assert _absent([('BS', 'Assets', 'Total assets', 100)], dp='current_assets')
     assert _absent([('BS', 'Liabilities', 'Total liabilities', 60)], dp='current_liabilities')
     assert not _absent([('BS', 'AssetsCurrent', 'Total current assets', 40)], dp='current_assets')
+
+
+def test_dash_on_a_payment_line_is_inferred_from_the_filings_other_columns():
+    # BA FY2022 R8:40 'Dividends paid': 2022 -, 2021 -, 2020 (1,158); the zlines extract has no row for this filing
+    import standard_inputs
+    f = dict(filing([('CF', 'PaymentsOfDividendsCommonStock', 'Dividends paid', '')]), a='A22', p='2022-12-31')
+    row = dict(data_point='dividends_paid', status='not_presented', accession='A22', column='own')
+    roles = {'dividends_paid': ('CF', ['PaymentsOfDividendsCommonStock'])}
+    pz = standard_inputs.printed_zero_inferred([row], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {}, roles)
+    assert pz[('A22', 'dividends_paid')]['r_line'] == 'R2:1'
+    # an own-period member fact means the year has a value: no dash
+    assert not standard_inputs.printed_zero_inferred([row], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {'A22': 'PaymentsOfDividendsCommonStock|4|9|ClassOfStock=A;'}, roles)
+    # no earlier-column fact: nothing to infer from
+    assert not standard_inputs.printed_zero_inferred([row], [f], {}, {}, roles)
+    # never outside the payment lines (GOOG EPS by class, PSX PP&E)
+    eps = dict(row, data_point='basic_eps')
+    assert not standard_inputs.printed_zero_inferred([eps], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {}, {'basic_eps': ('CF', ['PaymentsOfDividendsCommonStock'])})

@@ -234,6 +234,32 @@ def printed_zero(rows, zlines, roles):
     return out
 
 
+PZ_INFER = {'dividends_paid', 'share_buybacks'}   # cash-flow payment lines only: other elements carry member-only facts the extract does not hold (GOOG EPS by class, PSX PP&E)
+
+
+def printed_zero_inferred(rows, filings, compfacts, memberfacts, roles):
+    """The zlines test read from the standard extract itself (zlines is sparse: 99 filings): a not_presented own row whose role element is a
+    line of its own statement on the own face with NO value, no own-period member fact of the element, and an undimensioned fact of the
+    element in an earlier column of the SAME filing (compfacts): the face prints a dash for the period (BA FY2022 'Dividends paid':
+    2022 -, 2021 -, 2020 1,158). Same return shape as printed_zero."""
+    F = {f['a']: f for f in filings}
+    out = {}
+    for r in rows:
+        if r['data_point'] not in PZ_INFER or r['status'] != 'not_presented' or r['data_point'] not in roles or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        stmt, alts = roles[r['data_point']]
+        f = F[r['accession']]
+        L = {}
+        for x in (f.get('lines') or '').split('~'):
+            p = x.split('|')
+            if len(p) > 8 and p[0] == stmt and p[8] == '': L.setdefault(p[3], p)
+        own_mem = {x.split('|')[0] for x in (memberfacts.get(r['accession']) or '').split('~') if x}
+        earlier = {x.split('|')[0] for x in (compfacts.get(r['accession']) or '').split('~') if x.count('|') == 3 and x.split('|')[3] < str(f['p'])}
+        t = next((t for t in alts if t in L and t not in own_mem and t in earlier), None)
+        if t:
+            p = L[t]
+            out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{p[1]}:{p[2]}", label=p[7])
+    return out
+
 LOCATION_AXES = ('IncomeStatementLocation', 'StatementOfIncomeLocationBalance', 'FiniteLivedIntangibleAssetsByMajorClass')   # CSCO 2014-16, 2022 put the location members on the class axis
 LOCATION_NAME = re.compile(r'(?i)cost|expense|sales|revenue|charges|operating')   # on the class axis every member must name a location (WFC: asset classes)
 
