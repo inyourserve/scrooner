@@ -30,7 +30,7 @@ exit 0
 """
 
 
-def guard(tmp_path, *args, seqs=None):
+def guard(tmp_path, *args, seqs=None, self_workflow=""):
     state = tmp_path / "state"
     state.mkdir(parents=True, exist_ok=True)
     for (wf, status), lines in (seqs or {}).items():
@@ -41,7 +41,7 @@ def guard(tmp_path, *args, seqs=None):
     gh.write_text(STUB)
     gh.chmod(gh.stat().st_mode | stat.S_IEXEC)
     env = dict(os.environ, PATH=f"{bindir}:{os.environ['PATH']}", STATE=str(state), GITHUB_REPOSITORY="o/r",
-               HEAVY_GUARD_POLL_SECONDS="0")
+               HEAVY_GUARD_POLL_SECONDS="0", HEAVY_GUARD_SELF=self_workflow)
     return subprocess.run(["bash", str(GUARD), *args], capture_output=True, text=True, env=env, timeout=60)
 
 
@@ -94,6 +94,17 @@ def test_a_queued_write_does_not_block_the_nightly(tmp_path):
     """Only a write in progress blocks: a queued write starts later and then refuses beside the running nightly."""
     r = guard(tmp_path, "wait-for-write", "5", seqs={("pipeline-fsn-write.yml", "queued"): ["7 queued https://x"]})
     assert r.returncode == 0
+
+
+def test_wait_for_write_waits_for_the_filing_loader_but_not_for_itself(tmp_path):
+    loader = ("pipeline-fsn-load-filings.yml", "in_progress")
+    assert guard(tmp_path, "wait-for-write", "0", seqs={loader: [RUN]}).returncode == 1
+    r = guard(tmp_path / "s", "wait-for-write", "0", seqs={loader: [RUN]}, self_workflow="pipeline-fsn-load-filings.yml")
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_refuse_if_heavy_refuses_while_the_filing_loader_runs(tmp_path):
+    assert guard(tmp_path, "refuse-if-heavy", seqs={("pipeline-fsn-load-filings.yml", "in_progress"): [RUN]}).returncode == 1
 
 
 def _jobs(text: str) -> dict[str, str]:
