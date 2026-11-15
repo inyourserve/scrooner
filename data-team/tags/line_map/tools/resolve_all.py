@@ -382,6 +382,7 @@ def replay_fill(rows, compfacts, instant_dps):
             parts = [RPART.match(p) for p in _split_parts(b.get('nodes') or '')]
             if not parts or not all(parts): continue
             if dp not in standard_inputs.NOTE_FILL_OK and dp not in NOTE_NATURED and not any(m.group(4).startswith('R') for m in parts): continue
+            if dp == 'interest_income' and any(m.group(2) in standard_inputs.WIDER_THAN_INTEREST for m in parts): continue   # wider than interest (label_beyond)
             cv = []
             for m in parts:
                 vals = {D(v) for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4) if t == m.group(2) and int(qq) == q and dd == str(r['period_end'])}

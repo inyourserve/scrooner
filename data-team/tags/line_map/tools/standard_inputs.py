@@ -165,7 +165,7 @@ def related_splits(memberfacts, tag_re):
 
 
 NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares',   # per-share / share counts sit in notes
-                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
+                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest', 'interest_income'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
 FACE_NODE = re.compile(r'\[(R\d|BS parenthetical|BSP)')
 
 
@@ -180,6 +180,9 @@ def _one_element(r):
 WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDecreaseInReceivables', 'IncreaseDecreaseInAccountsAndOtherReceivables', 'IncreaseDecreaseInAccountsAndNotesReceivable'),
            'cf_inventory_change': ('IncreaseDecreaseInInventories', 'IncreaseDecreaseInRetailRelatedInventories'),
            'cf_ap_change': ('IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade')}
+
+
+WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -204,6 +207,7 @@ def comparative_fill(rows, compfacts, instant_dps):
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
                 if r['status'] == 'combined' and tag not in WC_PURE[r['data_point']]: continue
+                if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
                 if len(vals) == 1:

@@ -334,3 +334,16 @@ def test_lines_the_family_excludes_never_block_proven_absence():
     assert _absent([('CF', 'PaymentsToMinorityShareholders', 'Purchase of subsidiary shares from noncontrolling interests', 5)], dp='share_buybacks')
     assert _absent([('CF', 'xyz_DistributionsNci', 'Distributions paid to noncontrolling interests', 5)], dp='dividends_paid')
     assert not _absent([('CF', 'xyz_Buyback', 'Purchases of treasury stock', 5)], dp='share_buybacks')
+
+
+def test_interest_income_fills_from_a_later_note_but_never_from_interest_and_dividends():
+    # GE FY2017: the FY2019 10-K's note holds InvestmentIncomeInterest 105 for 2017; DELL/BLK's InvestmentIncomeInterestAndDividend is wider
+    import standard_inputs
+    def rows(tag):
+        return [dict(cik='1', data_point='interest_income', period_end='2017-12-31', accession='A17', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point='interest_income', period_end='2018-12-31', accession='A18', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point='interest_income', period_end='2019-12-31', accession='A19', status='mapped', tags=tag, nodes=f'{tag}=143 [NOTE]', value='143')]
+    out = standard_inputs.comparative_fill(rows('InvestmentIncomeInterest'), {'A19': 'InvestmentIncomeInterest|4|105|2017-12-31'}, set())
+    assert str(out[('A17', 'interest_income')]['value']).startswith('105')
+    out = standard_inputs.comparative_fill(rows('InvestmentIncomeInterestAndDividend'), {'A19': 'InvestmentIncomeInterestAndDividend|4|105|2017-12-31'}, set())
+    assert ('A17', 'interest_income') not in out
