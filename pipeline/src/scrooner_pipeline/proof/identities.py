@@ -24,12 +24,22 @@ checks.identity = {name, source, members, lhs, rhs, diff, tolerance, ...}.
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Sequence
 from datetime import date
 from decimal import Decimal
 from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common.filer_calc_lift import (  # noqa: F401  (re-exported: tests and shown.py)
+    CHECK_MEMBERS,
+    PARENT_DP,
+    CheckRow,
+    lift_route,
+    lifting_row,
+    related_tags,
+    residual_line_tie,
+)
 from scrooner_pipeline.mapper.dqc_checks import tolerance
 from scrooner_pipeline.proof.fsn import FilingStructure, fsn_ddate
 from scrooner_pipeline.proof.prove import DISAGREE, NOT_PRESENTED, PROVEN, Proof
@@ -84,18 +94,6 @@ NCI_INCOME_TAGS = (
 )
 PRINTED_TAGS: tuple[str, ...] = NCI_INCOME_TAGS
 
-# data points that are members of a filing_check by name (the calc:<parent>:<group> checks are matched by tag)
-CHECK_MEMBERS: dict[str, tuple[str, ...]] = {
-    "bs_assets_eq_liabilities_equity": (
-        "total_assets",
-        "total_liabilities",
-        "stockholders_equity",
-    ),
-    "cf_parts_eq_change": ("cfo", "cash_flow_investing", "cash_flow_financing"),
-    "is_gross_profit": ("revenue", "cost_of_revenue", "gross_profit"),
-    "is_ni_total_minus_nci_eq_parent": ("net_income",),
-    "cross_cf_ni_eq_is_ni": ("net_income",),
-}
 # served members tied to their node in the statement filing
 NODE_MEMBERS = frozenset(
     {
@@ -119,25 +117,6 @@ FALLBACK_COVER: dict[str, tuple[str, ...]] = {
     "operating_income": ("calc:OperatingIncomeLoss:",),
     "balance_sheet": ("bs_assets_eq_liabilities_equity",),
 }
-
-
-class CheckRow:
-    """One fsn.filing_check row of a filing column."""
-
-    __slots__ = ("check_id", "children", "lhs", "ok", "rhs", "stmt", "tol")
-
-    def __init__(
-        self,
-        stmt: str,
-        check_id: str,
-        ok: bool,
-        lhs: Decimal | None,
-        rhs: Decimal | None,
-        tol: Decimal | None,
-        children: tuple[str, ...] = (),
-    ) -> None:
-        self.stmt, self.check_id, self.ok = stmt, check_id, ok
-        self.lhs, self.rhs, self.tol, self.children = lhs, rhs, tol, children
 
 
 # (accession, ddate, qtrs) -> the filing's check rows for that column
@@ -278,75 +257,9 @@ def node_mismatch(
     }
 
 
-def related_tags(row: CheckRow, dp: str, tags: tuple[str, ...]) -> bool:
-    """Is a cell (data point `dp`, source `tags`) a member of this check (named members, or the calc parent / one of
-    its children)?"""
-    if row.check_id in CHECK_MEMBERS:
-        return dp in CHECK_MEMBERS[row.check_id]
-    if row.check_id.startswith("calc:"):
-        parent = row.check_id.split(":")[1]
-        return any(t == parent or t in row.children for t in tags)
-    return False
-
-
 def related(row: CheckRow, dp: str, p: Proof) -> bool:
     """Is the served cell a member of this check (named members, or the calc parent / one of its children)?"""
     return related_tags(row, dp, p.shown.tags)
-
-
-# calc parents that are served totals the named identities (CHECK_MEMBERS) tie by data point
-PARENT_DP: dict[str, str] = {
-    "NetCashProvidedByUsedInOperatingActivities": "cfo",
-    "NetCashProvidedByUsedInInvestingActivities": "cash_flow_investing",
-    "NetCashProvidedByUsedInFinancingActivities": "cash_flow_financing",
-    "Assets": "total_assets",
-    "Liabilities": "total_liabilities",
-    "StockholdersEquity": "stockholders_equity",
-    "GrossProfit": "gross_profit",
-    "NetIncomeLoss": "net_income",
-}
-
-
-def lifting_row(
-    rows: list[CheckRow], failed: CheckRow, dp: str, tags: tuple[str, ...]
-) -> CheckRow | None:
-    """The independent tie that lifts a failed calc group's quarantine, ONLY from the SAME filing column (`rows`).
-    The group's parent total must be tied independently of the failed sum: a printed-totals identity of that column
-    that PASSES and names the parent's data point (cf_parts_eq_change for the three cash-flow totals, the balance-sheet
-    identity, gross profit), or an alternative calc group of the same parent that passes. The failed group then only
-    says the filer's calc linkbase omits a child (LLY CFO 2019: the Elanco discontinued-operations line is no calc
-    child). A cell that is the parent is lifted by that; a CHILD cell needs its own passing tie as well (net income
-    IS = CF), because a failed sum cannot say which child is wrong. Returns the tie row or None. Pure."""
-    if not failed.check_id.startswith("calc:"):
-        return None
-    parent = failed.check_id.split(":")[1]
-    tie: CheckRow | None = None
-    for r in rows:
-        if r is failed or r.check_id == failed.check_id or not r.ok:
-            continue
-        if r.check_id.startswith("calc:"):
-            if r.check_id.split(":")[1] == parent:
-                tie = r
-                break
-        elif PARENT_DP.get(parent) in CHECK_MEMBERS.get(r.check_id, ()):
-            tie = r
-            break
-    if tie is None:
-        return None
-    if parent in tags:
-        return tie
-    own = next(
-        (
-            r
-            for r in rows
-            if r.ok
-            and r.check_id != failed.check_id
-            and not r.check_id.startswith("calc:")
-            and related_tags(r, dp, tags)
-        ),
-        None,
-    )
-    return tie if own is not None else None
 
 
 def failing_unlifted(
@@ -373,6 +286,38 @@ def _usable(p: Proof | None) -> bool:
         and p.verdict != NOT_PRESENTED
         and not p.shown.combined
         and not (p.reason_code and "combined" in p.reason_code)
+    )
+
+
+def _lift_route_in(
+    st: FilingStructure | None,
+    rows: list[CheckRow],
+    failed: CheckRow,
+    dp: str,
+    tags: tuple[str, ...],
+    ddate: date,
+    qtrs: int,
+) -> dict[str, Any] | None:
+    """common/filer_calc_lift.lift_route over this filing's structure (the loader calls the same function)."""
+    if st is None:
+        return lift_route(rows, failed, dp, tags)
+    children: Sequence[tuple[str, bool]] = ()
+    if failed.check_id.startswith("calc:"):
+        _c, parent, grp = (failed.check_id.split(":") + ["", ""])[:3]
+        children = st.calc_groups.get(parent, {}).get(grp) or ()
+
+    def value_of(tag: str) -> Decimal | None:
+        nv = st.value(tag, ddate, qtrs)
+        return None if nv is None else nv.value
+
+    return lift_route(
+        rows,
+        failed,
+        dp,
+        tags,
+        children=children,
+        value_of=value_of,
+        face_tags=[ln.tag for ln in st.lines_on(failed.stmt)],
     )
 
 
@@ -454,18 +399,17 @@ def _check_period(
         rows_of[dp] = rows
         for r in rows:
             if not r.ok and related(r, dp, p):
-                lift = lifting_row(rows, r, dp, p.shown.tags)
-                if lift is not None:
-                    # the filing's own independent tie passes: the failed group is an incomplete calc linkbase
+                route = _lift_route_in(st, rows, r, dp, p.shown.tags, ddate, qtrs)
+                if route is not None:
+                    # the filing's own printed arithmetic ties (route recorded): the failed group is an incomplete
+                    # or mis-weighted calc linkbase, not a wrong value
                     p.checks.setdefault("quarantine_lifted", []).append(
                         {
                             "failed_check": r.check_id,
-                            "lifted_by": lift.check_id,
                             "accession": acc,
                             "lhs": str(r.lhs),
                             "rhs": str(r.rhs),
-                            "tie_lhs": str(lift.lhs),
-                            "tie_rhs": str(lift.rhs),
+                            **route,
                         }
                     )
                     continue

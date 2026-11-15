@@ -27,6 +27,7 @@ VERDICT_SOURCES = (
     "proof/perimeter.py",
     "proof/fsn_db.py",
     "common/filer_xbrl_errors.py",
+    "common/filer_calc_lift.py",
     "common/fsn_dropped_facts.py",
     "common/authority.py",
     "common/presentation_scale.py",
@@ -35,8 +36,8 @@ VERDICT_SOURCES = (
     "common/polarity.py",
 )
 
-PINNED_VERSION = "cell_proof_v20_2026-11-14"
-PINNED_HASH = "17432ad01dc77f0a685df230b22421d74b439ee6bc37d95d0411de461a74534a"
+PINNED_VERSION = "cell_proof_v21_2026-11-16"
+PINNED_HASH = "b724ea589b55c4e794f9f37091caf7ad12193efd8dee5182285a0f2363fcead3"
 
 
 def source_hash() -> str:

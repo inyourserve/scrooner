@@ -45,7 +45,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v20_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v21_2026-11-16"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -522,6 +522,17 @@ def select_position(
     return chosen, None
 
 
+def first_balance_sheet_date(structure: FilingStructure) -> date | None:
+    """The earliest balance-sheet column date the filing prints (the dates it values total assets, or total
+    liabilities and equity). None when it prints none."""
+    dates = {d for (tag, d, q) in structure.num if tag == "Assets" and q == 0} or {
+        d
+        for (tag, d, q) in structure.num
+        if tag == "LiabilitiesAndStockholdersEquity" and q == 0
+    }
+    return min(dates) if dates else None
+
+
 def on_statement_face(
     structure: FilingStructure, stmt: str, nv: NumValue
 ) -> tuple[bool, str]:
@@ -570,6 +581,53 @@ def on_statement_face(
             f"a 10-Q {stmt} prints the 3-month and {ytd}-quarter columns, not {nv.qtrs}",
         )
     return True, f"form {form}: no column rule"
+
+
+# interest lines of a non-operating total: the "other income / expense" data point is the band without them
+INTEREST_BAND_TAGS = frozenset(
+    {
+        "InvestmentIncomeInterest",
+        "InvestmentIncomeInterestAndDividend",
+        "InterestExpenseNonoperating",
+        "InterestExpense",
+        "InterestIncomeOther",
+        "InterestIncomeExpenseNet",
+        "InterestIncomeExpenseNonoperatingNet",
+        "InterestIncomeExpenseNonoperating",
+        "InterestAndDebtExpense",
+        "InterestExpenseDebt",
+        "InterestIncomeOperating",
+    }
+)
+
+
+def non_interest_band(
+    structure: FilingStructure, total_tag: str, ddate: date, qtrs: int, cls: str
+) -> tuple[Decimal, Decimal, list[dict[str, str]]] | None:
+    """The calc children of a printed non-operating total WITHOUT its interest lines, signed by their calc weights:
+    (band sum, rounding tolerance of the parts, parts). None unless the total has at least one interest child and
+    one other child and EVERY child is valued in the column (never a guessed zero). STX FY2026: 'Other expense, net'
+    -404 = interest income 30 - interest expense 284 + band -150 (other 1, debt transactions -151, divestiture 0,
+    swap termination 0); the cell -150 is judged against the band, never against the total that holds interest."""
+    kids = structure.calc_children.get(total_tag) or []
+    if len(kids) < 2 or not any(t in INTEREST_BAND_TAGS for t, _n in kids):
+        return None
+    total = Decimal(0)
+    tol = Decimal(0)
+    parts: list[dict[str, str]] = []
+    for tag, negative in kids:
+        nv = find_value(structure, tag, ddate, qtrs, cls)
+        if nv is None:
+            return None
+        if tag in INTEREST_BAND_TAGS:
+            continue
+        w = Decimal(-1) if negative else Decimal(1)
+        total += w * nv.value
+        tol += Decimal("0.5") * Decimal(10) ** (-(nv.dcml if nv.dcml is not None else -6))
+        parts.append({"tag": tag, "weight": str(w), "value": str(nv.value)})
+    if not parts:
+        return None
+    return total, tol, parts
 
 
 def _check_identity_tie(
@@ -1164,6 +1222,25 @@ def _prove_cell(
                 "why": f"{line.tag} is a line of the {stmt} with no stored value for the column: a printed dash or 0",
             }
             p.reason_text = f"the {stmt} prints {line.tag} with no value for the column; served as 0 (printed_zero)"
+        elif (
+            qtrs == 0
+            and (first := first_balance_sheet_date(structure))
+            and ddate < first
+        ):
+            # the filing's balance sheet starts after this date: the value (CRWD cash 2018-01-31 = 63.2M) is only
+            # the cash-flow opening balance of an earlier column. A date before every balance sheet column of the
+            # filing is a pre-filing period (HIDDEN_YEAR, Dhairya ruling 2026-11-16: a year counts only when a
+            # 10-K, 10-Q, 20-F or 40-F presents it), never a value the proof demands.
+            p.verdict, p.reason_code = NOT_PRESENTED, "pre_filing_period"
+            p.checks["pre_filing"] = {
+                "status": "n/a",
+                "first_balance_sheet_date": str(first),
+                "accession": structure.adsh,
+            }
+            p.reason_text = (
+                f"no balance sheet of {structure.adsh} presents {ddate}: it starts at {first}; "
+                f"a pre-filing period is a hidden year, not a value"
+            )
         else:
             p.verdict, p.reason_code = NOT_PRESENTED, "no_value_for_this_column"
             p.reason_text = f"{line.tag} is presented but carries no value for the column ending {shown.period_end}"
@@ -1201,6 +1278,33 @@ def _prove_cell(
     else:
         p.checks["identity_tie"] = {"status": "n/a"}
     p.checks["components_sum"] = _check_components_sum(structure, line, nv, tol)
+    if (
+        shown.data_point_name.removesuffix("_resolved") == "other_income_expense_net"
+        and not same(shown.value, sign * nv.value, tol)
+        and (band := non_interest_band(structure, line.tag, ddate, qtrs, cls))
+        is not None
+        and same(shown.value, sign * band[0], max(band[1], tol))
+    ):
+        p.checks["non_interest_band"] = {
+            "status": "pass",
+            "total_tag": line.tag,
+            "total": str(nv.value),
+            "band": str(band[0]),
+            "parts": band[2],
+        }
+        p.position_tag = "+".join(x["tag"] for x in band[2])
+        return _finish(
+            p,
+            shown,
+            cls,
+            band[0],
+            nv.uom,
+            nv.dcml,
+            sign,
+            f"the non-interest band lines of the printed {line.tag}",
+            tol_override=max(band[1], tol),
+            single_element=False,
+        )
     return _finish(
         p,
         shown,
