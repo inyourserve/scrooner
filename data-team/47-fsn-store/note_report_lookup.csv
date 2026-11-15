@@ -2637,14 +2637,27 @@ accession,tag,report,n_reports,line,plabel
 0001594805-25-000012,AllocatedShareBasedCompensationExpense,106,1,,
 0001594805-25-000012,AmortizationOfIntangibleAssets,88,1,8,Amortization expense
 0001594805-25-000012,InventoryNet,80,1,,
+0001594805-26-000007,AccountsPayableTradeCurrent,89,1,,
+0001594805-26-000007,AllocatedShareBasedCompensationExpense,102,1,,
 0001594805-26-000007,AmortizationOfIntangibleAssets,85,1,8,Amortization expense
+0001594805-26-000007,InventoryNet,77,1,,
 0001596532-19-000027,AmortizationOfIntangibleAssets,54,1,2,"Intangible asset, accumulated amortization"
+0001596532-19-000027,FinanceLeaseLiabilityCurrent,58,1,,
+0001596532-19-000027,FinanceLeaseLiabilityNoncurrent,2,1,,
+0001596532-19-000027,InterestIncomeOther,52,1,,
 0001596532-20-000024,AmortizationOfIntangibleAssets,56,1,2,"Intangible asset, accumulated amortization"
+0001596532-20-000024,InterestIncomeOther,54,1,,
 0001596532-21-000049,AmortizationOfIntangibleAssets,55,1,1,"Intangible asset, accumulated amortization"
+0001596532-21-000049,InterestIncomeOther,52,1,,
 0001596532-22-000026,AmortizationOfIntangibleAssets,54,1,1,"Intangible asset, accumulated amortization"
+0001596532-22-000026,InterestIncomeOther,50,1,,
 0001596532-23-000016,AmortizationOfIntangibleAssets,46,2,13,"Intangible asset, accumulated amortization"
+0001596532-23-000016,InterestIncomeOther,45,1,,
 0001596532-24-000043,AmortizationOfIntangibleAssets,47,2,13,"Intangible asset, accumulated amortization"
+0001596532-25-000028,InterestIncomeOther,46,1,,
 0001596532-26-000013,AmortizationOfIntangibleAssets,41,1,10,"Intangible asset, accumulated amortization"
+0001596532-26-000013,IncomeTaxesPaidNet,58,1,,
+0001596532-26-000013,InterestIncomeOther,40,1,,
 0001613103-22-000023,PropertyPlantAndEquipmentNet,107,1,10,"Property, plant, and equipment, net"
 0001613103-23-000040,PropertyPlantAndEquipmentNet,111,1,10,"Property, plant, and equipment, net"
 0001628280-16-020309,AmortizationOfIntangibleAssets,45,1,1,Amortization expense related to acquired intangible assets
@@ -2654,6 +2667,8 @@ accession,tag,report,n_reports,line,plabel
 0001628280-19-003050,InterestExpenseDebt,76,1,17,Interest incurred on debt
 0001628280-19-003834,CommonStockDividendsPerShareDeclared,60,1,11,"Common Stock, Dividends, Per Share, Declared"
 0001628280-19-003834,IncomeTaxesPaid,97,1,2,Cash paid for: Income taxes
+0001628280-19-003834,InterestExpense,46,1,,
+0001628280-19-003834,InterestPaidNet,97,1,,
 0001628280-19-003834,InvestmentIncomeInterest,46,1,3,Interest (income)
 0001628280-21-003574,AmortizationOfIntangibleAssets,66,3,7,Amortization of intangibles (Note 10)
 0001628280-21-003574,InterestExpenseDebt,66,1,17,Interest incurred on debt and other
@@ -2661,12 +2676,15 @@ accession,tag,report,n_reports,line,plabel
 0001628280-22-004180,InterestExpenseDebt,64,1,17,Interest incurred on debt and other
 0001628280-23-005061,IncomeTaxesPaid,99,2,24,Income taxes paid
 0001628280-23-005061,InterestExpense,96,2,10,Interest expense
+0001628280-23-005061,InvestmentIncomeInterest,96,1,,
 0001628280-23-005061,WeightedAverageNumberOfDilutedSharesOutstanding,105,1,7,Average common shares outstanding assuming dilution (in shares)
 0001628280-23-005061,WeightedAverageNumberOfSharesOutstandingBasic,105,1,5,Average common shares outstanding (in shares)
 0001628280-23-005434,AmortizationOfIntangibleAssets,63,4,7,Amortization of intangibles (Note 10)
 0001628280-23-005434,InterestExpenseDebt,63,1,17,Interest incurred on debt and other
+0001628280-24-006850,AmortizationOfIntangibleAssets,53,1,,
 0001628280-24-006850,IncomeTaxesPaid,102,2,24,Income taxes paid
 0001628280-24-006850,InterestPaidNet,100,1,7,Interest paid
+0001628280-24-006850,InvestmentIncomeInterest,99,1,,
 0001628280-24-006850,WeightedAverageNumberOfDilutedSharesOutstanding,108,1,7,Average common shares outstanding assuming dilution (in shares)
 0001628280-24-006850,WeightedAverageNumberOfSharesOutstandingBasic,108,1,5,Average common shares outstanding (in shares)
 0001628280-24-007424,AmortizationOfIntangibleAssets,64,4,7,Amortization of intangibles (Note 10)
@@ -2675,22 +2693,27 @@ accession,tag,report,n_reports,line,plabel
 0001628280-25-007732,IncomeTaxesPaid,113,1,7,Income taxes paid
 0001628280-25-007732,InterestExpenseNonoperating,106,2,2,Interest expense
 0001628280-25-007732,InterestPaidNet,107,1,14,Interest paid
+0001628280-25-007732,InvestmentIncomeInterest,106,1,,
 0001628280-25-007732,WeightedAverageNumberOfDilutedSharesOutstanding,115,1,5,Average common shares outstanding assuming dilution (in shares)
 0001628280-25-007732,WeightedAverageNumberOfSharesOutstandingBasic,115,1,3,Average common shares outstanding (in shares)
 0001628280-25-007990,AmortizationOfIntangibleAssets,67,4,7,Amortization of intangibles (Note 10)
 0001628280-25-007990,InterestExpenseDebt,67,1,18,Interest incurred on debt and other
+0001628280-25-056742,AccountsPayableCurrent,59,1,,
 0001628280-25-056742,InvestmentIncomeInterest,45,1,1,Interest income
 0001628280-26-003942,AmortizationOfIntangibleAssets,63,1,17,Amortization expense
 0001628280-26-003942,FinanceLeaseLiability,61,1,,
 0001628280-26-003942,InterestExpenseNonoperating,80,1,2,Interest expense
+0001628280-26-003942,InvestmentIncomeInterest,80,1,,
 0001628280-26-003952,Goodwill,45,1,68,Goodwill
 0001628280-26-003952,IncomeTaxesPaidNet,82,2,14,"Cash paid income taxes, net of refunds"
 0001628280-26-004195,AmortizationOfIntangibleAssets,50,2,22,Intangible asset amortization expense
 0001628280-26-004195,CommonStockSharesOutstanding,84,1,9,"Common stock, shares outstanding (in shares)"
 0001628280-26-004195,IncomeTaxesPaidNet,67,2,2,"Federal and foreign income tax payments made, net of refunds received"
 0001628280-26-004195,InterestPaidNet,73,1,34,Interest payments excluding capitalized interest
+0001628280-26-004195,ResearchAndDevelopmentExpense,45,1,,
 0001628280-26-004195,WeightedAverageNumberOfDilutedSharesOutstanding,47,1,3,Weighted average common shares outstanding for diluted computations (in shares)
 0001628280-26-004195,WeightedAverageNumberOfSharesOutstandingBasic,47,1,1,Weighted average common shares outstanding for basic computations (in shares)
+0001628280-26-004357,AmortizationOfIntangibleAssets,72,1,,
 0001628280-26-004357,CommonStockSharesOutstanding,134,1,8,"Common stock, beginning balance (in shares)"
 0001628280-26-004357,IncomeTaxesPaidNet,80,2,11,Total net income tax payments
 0001628280-26-004357,InterestPaid,112,1,41,"Interest paid, including capitalized interest, operating and investing activities"
@@ -2706,6 +2729,7 @@ accession,tag,report,n_reports,line,plabel
 0001628280-26-008131,CommonStockSharesOutstanding,194,1,9,Total outstanding - balance at December 31 (in shares)
 0001628280-26-008131,Goodwill,171,2,12,Total goodwill
 0001628280-26-008131,ShareBasedCompensation,124,1,4,Total noncash compensation expense related to employee share-based incentive plans
+0001628280-26-010047,AccountsPayableTradeCurrent,77,1,,
 0001628280-26-010047,IncomeTaxesPaidNet,106,2,12,Income tax payments
 0001628280-26-010047,IncreaseDecreaseInAccountsReceivable,126,1,1,(Increase) decrease in trade accounts receivable
 0001628280-26-010047,IncreaseDecreaseInInventories,126,1,2,(Increase) decrease in inventories
@@ -2723,6 +2747,8 @@ accession,tag,report,n_reports,line,plabel
 0001628280-26-019436,CommonStockDividendsPerShareCashPaid,73,1,11,Cash dividends per share (in dollars per share)
 0001628280-26-019436,IncomeTaxesPaidNet,68,1,10,Total income taxes paid
 0001628280-26-057139,LongTermDebt,60,1,14,Subtotal
+0001649338-17-000158,LongTermDebtCurrent,2,1,,
+0001649338-17-000158,LongTermDebtNoncurrent,2,1,,
 0001652044-16-000012,InterestExpense,70,1,2,Interest expense
 0001652044-16-000012,InterestIncomeOther,70,1,1,Interest income
 0001652044-16-000012,OtherNonoperatingIncomeExpense,70,1,7,Other
@@ -2751,6 +2777,7 @@ accession,tag,report,n_reports,line,plabel
 0001652044-25-000014,InterestIncomeOther,74,1,1,Interest income
 0001652044-25-000014,WeightedAverageNumberOfDilutedSharesOutstanding,80,1,30,Number of shares used in per share computation (in shares)
 0001652044-25-000014,WeightedAverageNumberOfSharesOutstandingBasic,80,1,17,Number of shares used in per share computation (in shares)
+0001652044-26-000018,FinanceLeaseLiability,61,1,,
 0001652044-26-000018,IncomeTaxesPaidNet,88,1,12,"Total cash paid for income taxes, net of refunds"
 0001652044-26-000018,InterestExpenseNonoperating,74,1,2,Interest expense
 0001652044-26-000018,InterestIncomeOther,74,1,1,Interest income
@@ -2769,13 +2796,22 @@ accession,tag,report,n_reports,line,plabel
 0001728949-21-000076,CommonStockSharesOutstanding,51,1,1,"Common Stock, Shares, Outstanding, Beginning Balance"
 0001728949-21-000076,DebtLongtermAndShorttermCombinedAmount,56,1,24,"Debt, Long-term and Short-term, Combined Amount"
 0001730168-18-000019,LongTermDebt,50,1,39,Long-term Debt
+0001730168-18-000019,LongTermDebtCurrent,2,1,,
+0001730168-18-000019,LongTermDebtNoncurrent,2,1,,
+0001730168-18-000084,CommonStockDividendsPerShareCashPaid,76,1,,
+0001730168-18-000084,CommonStockDividendsPerShareDeclared,99,1,,
 0001730168-18-000084,DebtLongtermAndShorttermCombinedAmount,74,1,7,Total
 0001730168-18-000084,InterestIncomeOther,58,1,2,Interest income
+0001730168-19-000144,CommonStockDividendsPerShareDeclared,101,1,,
 0001730168-19-000144,DebtLongtermAndShorttermCombinedAmount,79,1,7,Total
 0001730168-19-000144,InterestIncomeOther,63,1,3,Interest income
+0001730168-20-000226,CommonStockDividendsPerShareDeclared,93,1,,
 0001730168-20-000226,DebtLongtermAndShorttermCombinedAmount,75,1,7,Total
 0001730168-20-000226,InterestIncomeOther,58,1,3,Interest income
+0001730168-21-000153,CommonStockDividendsPerShareCashPaid,76,1,,
 0001730168-21-000153,InterestIncomeOther,57,1,7,Interest income
+0001730168-22-000081,LongTermDebtAndCapitalLeaseObligations,2,1,,
+0001730168-22-000081,LongTermDebtAndCapitalLeaseObligationsCurrent,2,1,,
 0001730168-22-000118,InterestIncomeOther,57,1,7,Interest income
 0001730168-23-000096,CommonStockDividendsPerShareCashPaid,73,1,1,Cash dividends per share declared and paid to common stockholders
 0001730168-23-000096,InterestIncomeOther,53,1,7,Interest income
