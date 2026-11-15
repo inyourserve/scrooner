@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
@@ -228,7 +229,13 @@ def eligible_filings(
     (period == year end) or a later one whose face columns still carry the year (one more year for a balance-sheet
     instant, two more for a duration). Pure."""
     span = (366 if instant else 2 * 366) + _DAY_TOL
-    return {acc for p, acc in filings if -_DAY_TOL <= (p - period_end).days <= span}
+    # fsn.filing.period is the SEC's month-end rounding: a 52/53-week year end (NVDA 2026-01-25, AAPL 2026-09-26) sits
+    # up to ~16 days from it, so "own period" is fsn_end_matches, not a plain day window
+    return {
+        acc
+        for p, acc in filings
+        if fsn_end_matches(p, period_end, _DAY_TOL) or 0 < (p - period_end).days <= span
+    }
 
 
 NO_FILING = (
@@ -318,7 +325,8 @@ def year_presence(
         "comparative_only": bool(
             presenting
             and first_period is not None
-            and (first_period - period_end).days > _DAY_TOL
+            and not fsn_end_matches(first_period, period_end, _DAY_TOL)
+            and first_period > period_end
             and presenting[0][1] == min(filings)[1]
         ),
         "first_presenting": presenting[0][1] if presenting else "",
@@ -715,7 +723,10 @@ def reached_by_filing(
         return False
     if not filings:
         return True
-    return end <= max(p for p, _ in filings) + timedelta(days=_DAY_TOL)
+    last = max(p for p, _ in filings)
+    return end <= last + timedelta(days=_DAY_TOL) or fsn_end_matches(
+        last, end, _DAY_TOL
+    )
 
 
 def _fy_periods(
@@ -785,6 +796,41 @@ def _statement_pages(
         if k not in best or (n, acc) > (best[k][0], best[k][1]):
             best[k] = (n, acc, f"R{report}.htm")
     return {k: (v[1], v[2]) for k, v in best.items()}
+
+
+def own_year_page(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]],
+    cid: int,
+    end: date,
+    stmt: str,
+    by_cs: dict[tuple[int, str], list[tuple[date, tuple[str, str]]]] | None = None,
+) -> tuple[str, str]:
+    """The own-year statement page for a cell whose true period end is `end`. stmt_pages is keyed on fsn.filing.period
+    (month-end rounding), so an exact lookup misses every 52/53-week year end; match with fsn_end_matches. Pure."""
+    hit = stmt_pages.get((cid, end, stmt))
+    if hit:
+        return hit
+    for p2, v in sorted(
+        by_cs.get((cid, stmt), ()) if by_cs else _scan(stmt_pages, cid, stmt)
+    ):
+        if fsn_end_matches(p2, end, _DAY_TOL):
+            return v
+    return ("", "")
+
+
+def _scan(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]], cid: int, stmt: str
+) -> list[tuple[date, tuple[str, str]]]:
+    return [(p, v) for (c, p, s), v in stmt_pages.items() if c == cid and s == stmt]
+
+
+def stmt_pages_by_company(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]],
+) -> dict[tuple[int, str], list[tuple[date, tuple[str, str]]]]:
+    out: dict[tuple[int, str], list[tuple[date, tuple[str, str]]]] = defaultdict(list)
+    for (c, p, s), v in stmt_pages.items():
+        out[(c, s)].append((p, v))
+    return out
 
 
 def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIndex:
@@ -901,6 +947,7 @@ def build_rows(
         in_tpl[(cid, dp)] = bool(inn)
 
     stmt_pages = _statement_pages(conn, ids)
+    stmt_by_cs = stmt_pages_by_company(stmt_pages)
     cited = {v[0] for v in stmt_pages.values()}
     cited |= {p[5] for p in proofs.values() if p[5]}
     cited |= {ev[6][0] for evs in tagmap.values() for ev in evs if ev[6][0]}
@@ -1030,8 +1077,8 @@ def build_rows(
                         cls == "PROVEN" and lsrc == "note_fact_report_not_stored"
                     )
                 ):
-                    own_acc, own_page = stmt_pages.get(
-                        (c.company_id, e, dstmt), ("", "")
+                    own_acc, own_page = own_year_page(
+                        stmt_pages, c.company_id, e, dstmt, stmt_by_cs
                     )
                     if own_acc and not acc:
                         acc, page, lsrc = own_acc, own_page, "own_year"
