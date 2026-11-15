@@ -5,6 +5,11 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
+0. **Load the 42 missing filings into fsn.* for the top-110** (pipeline-fsn-load-filings.yml, apply=true).
+   - The list is data-team/strategy/fsn-missing-filings-2026-11-16.csv: 11 recent Q3 10-Qs, MRVL FY2021 10-K, and 10-K/A and 10-Q/A amendments.
+   - The dry run (Actions run 43762675045) writes nothing; its plan is in that run's artifact.
+   - Insert-only for those accessions. It runs on Actions at 2 SEC req/s.
+   - Sentence: "I approve loading the 42 missing filings in fsn-missing-filings-2026-11-16.csv into fsn.* for the top-110."
 1. **Product page hides (storage).** Founder said "Decide later" on 2026-11-16.
    - What: one per-cell display-state table keyed (company, data point, period), holding the hide basis and evidence accession. It supersedes the written-but-unapplied migration 0127 (`shown_from`).
    - Until applied: the coverage export is the source of truth and the stock page shows every line.
@@ -16,5 +21,4 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 - Top-100 per-company reruns on Actions: "complete the task on automation", 2026-11-16.
 - add-dim-notes loads 1 and 2: "Yes, run the load", 2026-11-16.
-- Missing filings into fsn.* for the top-110 (pipeline-fsn-load-filings.yml): "everything approved", 2026-11-14 (FSN ingest of missing filings for the top-110).
 - ONE-PATH steps 1-6 under their gates: approved 2026-11-16 (doc 02 e304d0a9).
