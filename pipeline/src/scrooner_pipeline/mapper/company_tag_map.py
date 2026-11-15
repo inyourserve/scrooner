@@ -838,6 +838,9 @@ def _descendants(arcs: set[tuple[str, str]], tag: str) -> set[str]:
     return seen
 
 
+NOTE_PART_STMTS = frozenset({"UN", "CP", "NOTE"})  # = proof.prove.NOTE_STMTS (tested)
+
+
 def _check_components(
     comps: list[tuple[MapRow, Fact]],
     arcs: dict[str, set[tuple[str, str]]],
@@ -872,6 +875,11 @@ def _check_components(
     ]
     common = set.intersection(*parent_sets)
     if not common:
+        if len(comps) >= 2 and all(r.stmt in NOTE_PART_STMTS for r, _ in comps):
+            # a note breakdown has no statement calc parent (ISRG D&A FY2019: Depreciation 156.7 + Amortization
+            # of intangibles 43.0, both undimensioned note facts). The single-filing, face-or-note, ambiguity and
+            # ancestor checks above hold; the proof judges the sum part by part against the filing (prove_component)
+            return None
         return "components_without_single_calc_parent"
     if not any(all((p, r.tag) in filing_arcs for r, _ in comps) for p in common):
         return "component_not_direct_child_of_parent"
