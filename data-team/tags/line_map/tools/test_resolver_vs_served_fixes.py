@@ -780,3 +780,76 @@ def test_taxes_paid_by_jurisdiction_are_summed_and_parentheses_proven_by_the_int
     mixed = filing([lines[0], lines[1], lines[2], ('CF', 'IncomeTaxPaidStateAndLocalAfterRefundReceived', 'State', 321), lines[4], lines[5]])
     mixed['lines'] = mixed['lines'].replace('|InterestPaidNet|0|0|', '|InterestPaidNet|0|1|')
     assert resolve_all.apply_cash_paid_taxes([dict(row(), accession=mixed['a'])], [mixed], {})[0]['value'] == D(-235)   # mixed signs: as stored
+
+
+# ---- founder decision 2026-11-16: years a later 10-K prints are filled (GEV final draw)
+
+def _replay_rows(later_nodes, later_value, later_status='component_sum', dp='operating_expenses'):
+    base = dict(cik='0001996810', ticker='GEV', flags='', why='', calc_check='')
+    return [dict(base, accession='BEFORE:0001996810:2022-12-31', period_end='2022-12-31', column='own', data_point=dp, status='not_presented', value=None, tags='', nodes=''),
+            dict(base, accession='0001996810-25-000011', period_end='2024-12-31', column='own', data_point=dp, status=later_status, value=later_value, tags='', nodes=later_nodes)]
+
+
+def test_a_later_10k_column_fills_a_year_through_the_parts_of_its_own_cell():
+    comp = {'0001996810-25-000011': 'ResearchAndDevelopmentExpense|4|979000000|2022-12-31~SellingGeneralAndAdministrativeExpense|4|5360000000|2022-12-31'}
+    rows = _replay_rows('ResearchAndDevelopmentExpense=982000000 [R3:11]; SellingGeneralAndAdministrativeExpense=4632000000 [R3:10]', D(5614000000))
+    r = resolve_all.replay_fill(rows, comp, set())[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(6339000000) and r['column'] == 'comparative' and r['accession'] == '0001996810-25-000011'
+    assert r['nodes'] == 'ResearchAndDevelopmentExpense=979000000 [R3.htm:11@0001996810-25-000011]; SellingGeneralAndAdministrativeExpense=5360000000 [R3.htm:10@0001996810-25-000011]'
+    # the coefficients come from the later cell's own arithmetic (printed totals: total costs - cost of sales)
+    rows = _replay_rows('CostsAndExpenses=100 [R3:9]; -CostOfRevenue=60 [R3:3]', D(40))
+    r = resolve_all.replay_fill(rows, {'0001996810-25-000011': 'CostsAndExpenses|4|90|2022-12-31~CostOfRevenue|4|55|2022-12-31'}, set())[0]
+    assert r['value'] == D(35)
+    # a part with no value at the column: no fill
+    rows = _replay_rows('ResearchAndDevelopmentExpense=982000000 [R3:11]; SellingGeneralAndAdministrativeExpense=4632000000 [R3:10]', D(5614000000))
+    assert resolve_all.replay_fill(rows, {'0001996810-25-000011': 'ResearchAndDevelopmentExpense|4|979000000|2022-12-31'}, set())[0]['status'] == 'not_presented'
+    # a member part is not replayed (its earlier-column member fact is not in the extract)
+    rows = _replay_rows('ReceivablesNetCurrent[RelatedPartyTransactionsByRelatedParty=NonrelatedParty]=8000 [R4:9]', D(8000), 'mapped', 'accounts_receivable')
+    assert resolve_all.replay_fill(rows, {'0001996810-25-000011': 'ReceivablesNetCurrent|0|7489|2022-12-31'}, set())[0]['status'] == 'not_presented'
+    # an instant fills from FY-1 only
+    rows = _replay_rows('InventoryNet=9000 [R4:10]', D(9000), 'mapped', 'inventory')
+    assert resolve_all.replay_fill(rows, {'0001996810-25-000011': 'InventoryNet|0|8000|2022-12-31'}, {'inventory'})[0]['status'] == 'not_presented'
+    # a note-only later cell fills a face data point only for per-share and note-natured data points
+    rows = _replay_rows('SellingGeneralAndAdministrativeExpense=162 [NOTE]', D(162), 'mapped', 'sga_expense')
+    assert resolve_all.replay_fill(rows, {'0001996810-25-000011': 'SellingGeneralAndAdministrativeExpense|4|150|2022-12-31'}, set())[0]['status'] == 'not_presented'
+    rows = _replay_rows('IncomeTaxesPaidNet=623 [NOTE]', D(623), 'mapped', 'cash_paid_for_income_taxes')
+    assert resolve_all.replay_fill(rows, {'0001996810-25-000011': 'IncomeTaxesPaidNet|4|91|2022-12-31'}, set())[0]['value'] == D(91)
+
+
+def test_a_combined_later_cell_carries_its_reason_to_the_earlier_column():
+    rows = _replay_rows('InterestAndOtherFinancialCharges=-120 [R3.htm:13]', None, 'combined', 'other_income_expense_net')
+    r = resolve_all.replay_fill(rows, {'0001996810-25-000011': 'InterestAndOtherFinancialCharges|4|151|2022-12-31'}, set())[0]
+    assert r['status'] == 'combined' and r['nodes'] == 'InterestAndOtherFinancialCharges=151 [R3.htm:13@0001996810-25-000011]'
+    assert resolve_all.replay_fill(_replay_rows('InterestAndOtherFinancialCharges=-120 [R3.htm:13]', None, 'combined', 'other_income_expense_net'), {}, set())[0]['status'] == 'not_presented'
+    # a valueless bundled balance-sheet line is on both columns (FY-1 only)
+    rows = _replay_rows('AccountsPayableAndOtherAccruedLiabilitiesCurrent [R4.htm:22]', None, 'combined', 'accounts_payable')
+    rows[0]['period_end'] = '2023-12-31'
+    assert resolve_all.replay_fill(rows, {}, {'accounts_payable'})[0]['status'] == 'combined'
+    rows = _replay_rows('AccountsPayableAndOtherAccruedLiabilitiesCurrent [R4.htm:22]', None, 'combined', 'accounts_payable')
+    assert resolve_all.replay_fill(rows, {}, {'accounts_payable'})[0]['status'] == 'not_presented'   # FY-2: no balance sheet column
+
+
+def test_a_bundled_accounts_payable_line_is_combined():
+    f = filing([('BS', 'AssetsCurrent', 'Total current assets', 100), ('BS', 'AccountsPayableAndOtherAccruedLiabilitiesCurrent', 'Accounts payable and equipment project payables', None),
+                ('BS', 'LiabilitiesCurrent', 'Total current liabilities', 50)])
+    row = dict(accession=f['a'], data_point='accounts_payable', status='not_presented', value=None, tags='', nodes='', why='', flags='', column='own')
+    r = resolve_all.apply_bundled_ap([row], [f])[0]
+    assert r['status'] == 'combined' and r['nodes'] == 'AccountsPayableAndOtherAccruedLiabilitiesCurrent [R2.htm:2]'
+    g = filing([('BS', 'AssetsCurrent', 'Total current assets', 100), ('BS', 'AccountsPayableCurrent', 'Accounts payable and accrued expenses', 7), ('BS', 'LiabilitiesCurrent', 'Total current liabilities', 50)])
+    assert resolve_all.apply_bundled_ap([dict(row, accession=g['a'], status='not_presented', nodes='')], [g])[0]['status'] == 'not_presented'
+
+
+def test_replay_guards():
+    acc = '0001996810-25-000011'
+    two = _replay_rows('ResearchAndDevelopmentExpense=982 [R3:11]', D(982), 'mapped')
+    assert resolve_all.replay_fill(two, {acc: 'ResearchAndDevelopmentExpense|4|979|2022-12-31~ResearchAndDevelopmentExpense|4|970|2022-12-31'}, set())[0]['status'] == 'not_presented'   # two values
+    mixed = _replay_rows('ResearchAndDevelopmentExpense=982 [R3:11]; SellingGeneralAndAdministrativeExpense[EquityComponents=X]=0 [R3:10]', D(982))
+    assert resolve_all.replay_fill(mixed, {acc: 'ResearchAndDevelopmentExpense|4|979|2022-12-31'}, set())[0]['status'] == 'not_presented'   # a member part
+    odd = _replay_rows('ResearchAndDevelopmentExpense=982 [R3:11]; SellingGeneralAndAdministrativeExpense=10 [R3:10]', D(5))   # no sign pattern gives 5
+    assert resolve_all.replay_fill(odd, {acc: 'ResearchAndDevelopmentExpense|4|979|2022-12-31~SellingGeneralAndAdministrativeExpense|4|9|2022-12-31'}, set())[0]['status'] == 'not_presented'
+    flow = _replay_rows('InterestAndOtherFinancialCharges [R3.htm:13]', None, 'combined', 'other_income_expense_net')
+    flow[0]['period_end'] = '2023-12-31'
+    assert resolve_all.replay_fill(flow, {}, set())[0]['status'] == 'not_presented'   # a valueless line is carried only on a balance sheet
+    f = filing([('BS', 'AssetsCurrent', 'Total current assets', 100), ('BS', 'AccountsPayableAndOtherAccruedLiabilitiesCurrent', 'Payables', None), ('BS', 'LiabilitiesCurrent', 'Total current liabilities', 50)])
+    row = dict(accession=f['a'], data_point='accounts_payable', status='not_presented', value=None, tags='', nodes='', why='', flags='', column='own')
+    assert resolve_all.apply_bundled_ap([row], [f])[0]['status'] == 'combined'   # by the element alone

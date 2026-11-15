@@ -2,7 +2,8 @@
 Core statement roles: resolve.py (tree positions); total_debt: total_debt.py; every other data point: rules/roles.csv
 (position = statement + calc parent; the element family only ranks candidates; label demotes, a custom line is accepted
 only when its own label names the role). Output: one row per filing x data point with value or reason."""
-import csv, json, os, re, sys, collections
+import csv, json, os, re, sys, collections, itertools
+from datetime import date
 from decimal import Decimal as D
 sys.path.insert(0, '.')
 from resolve import parse, face, children, resolve, tol, note_facts, DPS as CORE_DPS
@@ -334,6 +335,90 @@ def apply_cash_paid_taxes(rows, filings, notefacts):
                 r['value'] = -D(r['value'])
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
                 r['why'] = (r.get('why') or '') + '; the CF section prints payments in parentheses (its interest paid is printed in parentheses through a negated label and stored positive): served as the payment'
+    return rows
+
+
+RPART = re.compile(r'^(-?)(\w+)=(-?[\d.]+) \[(R\d+(?:\.htm)?:\d+|NOTE|SE|BSP)\]$')
+COMB_NOVAL = re.compile(r'^(-?)(\w+)() \[(R\d+(?:\.htm)?:\d+)\]$')   # same groups as RPART: sign, tag, (no value), location
+NOTE_NATURED = {'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest'}   # data points whose own cells are note facts by nature (§AG)
+REPLAY_SKIP = {'gross_profit', 'total_debt'}   # gross profit is derived (ruling C1), total_debt has its own comparative column
+
+
+def replay_fill(rows, compfacts, instant_dps):
+    """Founder decision 2026-11-16 (every shown cell a proven value) and the GEV final draw (Ritwik, 2026-11-15): a year the own filing
+    does not present, printed by a later 10-K's comparative column, is filled from that column even when the later 10-K's own cell is a
+    sum of several printed lines (GEV FY2022 opex = 'Total costs and expenses' - cost of sales; other income = band lines). The later
+    cell's parts are re-read at the earlier column: every part must have exactly one undimensioned fact at that date, each part keeps
+    the coefficient (+1 / -1) that reproduces the later cell's own value, and member, comparative or prose parts are not replayed.
+    Instants fill from FY-1 only (a balance sheet prints two columns), flows from FY-1 then FY-2."""
+    by = collections.defaultdict(list)
+    for r in rows:
+        if (r.get('column') or 'own') == 'own' and r.get('cik'): by[(r['cik'], r['data_point'])].append(r)
+    for r in rows:
+        dp = r['data_point']
+        if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or dp in REPLAY_SKIP or not r.get('cik'): continue
+        q = 0 if dp in INSTANT_DPS or dp in instant_dps else 4
+        pe = date.fromisoformat(str(r['period_end']))
+        for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:
+            b = next((x for x in by[(r['cik'], dp)] if abs((date.fromisoformat(str(x['period_end'])) - pe).days - 365 * k) <= 45 and x['status'] in ('mapped', 'component_sum', 'combined')), None)
+            if b is None: continue
+            if b['status'] == 'combined':
+                # the later 10-K's cell is a combined line (GEV 'Interest and other financial charges, net'): the same line in the earlier
+                # column is the same reason, not 'no 10-K covers this year'; its value is cited for the split (founder decision 2026-11-16)
+                p0 = _split_parts(b.get('nodes') or '')[0] if b.get('nodes') else ''
+                m = RPART.match(p0) or COMB_NOVAL.match(p0)
+                vals = {D(v) for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4) if m and t == m.group(2) and int(qq) == q and dd == str(r['period_end'])}
+                if m and (len(vals) == 1 or (m.re is COMB_NOVAL and q == 0 and k == 1)):   # a valueless bundled line (GEV AP) is on both balance-sheet columns
+                    vv_ = f"={vals.pop()}" if vals else ''
+                    r.update(status='combined', value=None, accession=b['accession'], column='comparative', tags=m.group(2),
+                             nodes=f"{m.group(2)}{vv_} [{re.sub(r'^R(\d+):', r'R\1.htm:', m.group(4))}@{b['accession']}]",
+                             why=f"the later 10-K {b['accession']} prints the year in its {w} column on the combined line it uses for its own year: " + (b.get('why') or ''))
+                    r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'structure_replay') if x)
+                    break
+                continue
+            if b.get('value') in (None, ''): continue
+            parts = [RPART.match(p) for p in _split_parts(b.get('nodes') or '')]
+            if not parts or not all(parts): continue
+            if dp not in standard_inputs.NOTE_FILL_OK and dp not in NOTE_NATURED and not any(m.group(4).startswith('R') for m in parts): continue
+            cv = []
+            for m in parts:
+                vals = {D(v) for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4) if t == m.group(2) and int(qq) == q and dd == str(r['period_end'])}
+                if len(vals) != 1: break
+                cv.append(vals.pop())
+            else:
+                own_v = [D(m.group(3)) for m in parts]
+                signs = [s for s in itertools.product((1, -1), repeat=len(parts)) if sum(c * v for c, v in zip(s, own_v)) == D(b['value'])] if len(parts) <= 8 else []
+                if len({tuple(s) for s in signs}) != 1:
+                    pref = [s for s in signs if all((c == -1) == (m.group(1) == '-') for c, m in zip(s, parts))]
+                    if len(pref) != 1: continue
+                    signs = pref
+                s = signs[0]
+                val = sum((c * v for c, v in zip(s, cv)), D(0))
+                loc = lambda m: re.sub(r'^R(\d+):', r'R\1.htm:', m.group(4))
+                r.update(status='mapped' if len(parts) == 1 else 'component_sum', value=val, accession=b['accession'], column='comparative',
+                         tags='+'.join(m.group(2) for m in parts),
+                         nodes='; '.join(f"{'-' if c == -1 else ''}{m.group(2)}={v} [{loc(m)}@{b['accession']}]" for c, m, v in zip(s, parts, cv)),
+                         why=f"the own filing does not present the year; the later 10-K {b['accession']} prints it in its {w} column: the parts of that 10-K's own cell ({b.get('tags') or ''}) read at this column (founder decision 2026-11-16)")
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'structure_replay') if x)
+                break
+    return rows
+
+
+AP_BUNDLED_TAG = re.compile(r'^(AccountsPayableAndOtherAccruedLiabilities\w*|AccountsPayableAndAccruedLiabilities\w*)$')
+
+
+def apply_bundled_ap(rows, filings):
+    """Dhairya 2026-11-15 (GEV): a balance-sheet line that prints accounts payable together with other payables ('Accounts payable and
+    equipment project payables', AccountsPayableAndOtherAccruedLiabilitiesCurrent) is combined, never 'no line' (founder decision
+    2026-11-16: combined lines are split from the note where it gives the parts)."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'accounts_payable' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        l = next((l for l in face(parse(F[r['accession']])[0], 'BS') if AP_BUNDLED_TAG.match(l['tag']) or re.match(r'(?i)^(trade )?accounts payable and (?!accrued expenses$)', (l['lb'] or '').strip())), None)
+        if l is None: continue
+        r.update(status='combined', value=None, tags=l['tag'], nodes=f"{l['tag']}{'=' + str(l['val']) if l['val'] is not None else ''} [R{l['rep']}.htm:{l['ln']}]",
+                 why=f"the balance sheet prints accounts payable only inside '{l['lb']}', which holds other payables too: combined (Dhairya 2026-11-15, GEV)")
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'bundled_ap') if x)
     return rows
 
 
@@ -800,6 +885,8 @@ if __name__ == '__main__':
     EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_alt(rows)
+    rows = apply_bundled_ap(rows, filings)
+    rows = replay_fill(rows, compfacts, INSTANT_DPS)
     rows = apply_cash_paid_taxes(rows, filings, notefacts)
     rows = apply_label_beyond(rows, filings, only={'revenue'})   # MPC: ruling 3 sets revenue before gross profit is derived from it
     rows = derive_gross_profit(rows)
