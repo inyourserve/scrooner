@@ -8,6 +8,7 @@ written by scrooner_pipeline.mapper.top100_coverage. Until that column exists th
 nothing to send.
 
 PASS needs all of:
+  0. at least one SHOWN_VALUE row (display_certified needs shown cells);
   1. zero rows with display == OPEN;
   2. every SHOWN_VALUE row has an accession and an R page, and every part in `parts`
      ("Tag=value@accession#Rpage;...") carries both;
@@ -64,6 +65,8 @@ def main() -> int:
 
     counts = Counter(r["display"] for r in rows)
     fails: list[str] = []
+    if not counts.get("SHOWN_VALUE"):
+        fails.append("no shown cells (same as display_certified = no)")
     if counts.get("OPEN"):
         fails.append(f"{counts['OPEN']} OPEN cell(s)")
     no_loc = bad_part = bad_reason = 0
