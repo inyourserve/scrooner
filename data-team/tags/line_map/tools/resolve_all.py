@@ -467,6 +467,35 @@ def apply_other_income_split(rows, filings, notefacts):
     return rows
 
 
+FY_W = re.compile(r"first 10-K \((\d{10}-\d{2}-\d{6})\), and that 10-K's FY-(\d) column")
+VALUED = ('mapped', 'component_sum', 'derived', 'combined')
+
+
+def mark_presented_and_never_reported(rows):
+    """Founder decision 2026-11-16: reasons now only justify hiding, so a reason must say what the filing shows. (1) A year before the
+    first 10-K that this 10-K presents in a comparative column (flows FY-1/FY-2, balance sheet FY-1) is not 'no public filing': the
+    period is presented and the line is not printed for it (_comparative-presented-2026-11-16.csv: PLTR, CRWD, UBER, SNDK); the row
+    cites that 10-K, column comparative, flag line_not_printed. A balance-sheet year the 10-K has no column for (GEV FY2022) stays
+    pre-filing. (2) never_reported: the company reports the data point in no year at all (no value and no combined line in any row),
+    so a hide cannot hide a printed value."""
+    for r in rows:
+        if r['status'] != 'not_presented' or 'before_first_10k' not in (r.get('flags') or ''): continue
+        m = FY_W.search(r.get('why') or '')
+        if not m: continue
+        acc, w = m.group(1), int(m.group(2))
+        if r['data_point'] in INSTANT_DPS and w == 2: continue
+        r.update(accession=acc, column='comparative',
+                 why=f"the 10-K {acc} presents the year in its FY-{w} column but prints no {r['data_point']} line for it")
+        r['flags'] = ';'.join(x for x in dict.fromkeys(((r.get('flags') or '').replace('before_first_10k', 'line_not_printed')).split(';')) if x)
+    seen = collections.defaultdict(bool)
+    for r in rows:
+        if r['status'] in VALUED: seen[(r.get('cik'), r['data_point'])] = True
+    for r in rows:
+        if r['status'] == 'not_presented' and not seen[(r.get('cik'), r['data_point'])]:
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'never_reported') if x)
+    return rows
+
+
 def apply_alt(rows):
     """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
     for r in rows:
@@ -995,6 +1024,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
+    rows = mark_presented_and_never_reported(rows)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

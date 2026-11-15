@@ -891,3 +891,17 @@ def test_other_income_line_holding_interest_is_split_by_its_own_breakdown():
     assert hr[0]['value'] == D(78) and hr[1]['status'] == 'not_presented'   # net interest is no interest-income figure
     odd = dict(base, data_point='other_income_expense_net', status='mapped', value=D(500), tags='T', nodes='OtherNonoperatingIncomeExpense=1158 [R2.htm:2]')
     assert resolve_all.apply_other_income_split([odd], [f], {f['a']: 'InvestmentIncomeInterest|4|449'})[0]['value'] == D(500)   # value is not the line: not split
+
+
+def test_presented_period_reason_and_never_reported_mark():
+    why = lambda w: f"no 10-K covers this year: it is before the company's first 10-K (0001321655-21-000011), and that 10-K's FY-{w} column does not print the line"
+    base = dict(cik='0001321655', ticker='PLTR', flags='before_first_10k', column='own', value=None, tags='', nodes='')
+    rows = [dict(base, accession='BEFORE:x:2019-12-31', period_end='2019-12-31', data_point='inventory', status='not_presented', why=why(1)),
+            dict(base, accession='BEFORE:x:2018-12-31', period_end='2018-12-31', data_point='inventory', status='not_presented', why=why(2)),
+            dict(base, accession='BEFORE:x:2018-12-31', period_end='2018-12-31', data_point='dividends_paid', status='not_presented', why=why(2)),
+            dict(base, accession='a', period_end='2021-12-31', data_point='dividends_paid', status='mapped', value=D(5), flags='', why='')]
+    rows = resolve_all.mark_presented_and_never_reported(rows)
+    assert rows[0]['accession'] == '0001321655-21-000011' and rows[0]['column'] == 'comparative' and 'line_not_printed' in rows[0]['flags'] and 'before_first_10k' not in rows[0]['flags']
+    assert rows[1]['accession'].startswith('BEFORE:') and 'before_first_10k' in rows[1]['flags']   # no balance-sheet column for FY-2: pre-filing
+    assert 'line_not_printed' in rows[2]['flags']                                                   # a flow year FY-2 is presented
+    assert 'never_reported' in rows[0]['flags'] and 'never_reported' not in rows[2]['flags']       # dividends are reported in another year
