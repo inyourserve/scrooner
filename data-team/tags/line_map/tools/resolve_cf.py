@@ -32,7 +32,8 @@ CAPEX = ['PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsToAcquireProduct
          'PaymentsToDevelopRealEstateAssets', 'PaymentsForProceedsFromNuclearFuel', 'PaymentsToAcquireTransportationEquipment', 'PaymentsToAcquireMachineryAndEquipment',
          'PaymentsToAcquireBuildings', 'PaymentsToAcquireLandHeldForUse', 'PaymentsToAcquireOtherPropertyPlantAndEquipmentExcludingBuildings',
          'PaymentsForRepurchaseOfPropertyPlantAndEquipment']
-CAPEX_LABEL = re.compile(r'(?i)capital expenditure|purchases? of (property|premises|equipment|fixed assets)|additions? to (property|plant|premises|equipment|fixed)|(acquisition|purchase)s? of (property|premises|equipment)|nuclear fuel|capitalized software|software development|(expenditures|investment) (for|in) (property|plant|equipment|software)')
+CAPEX_LABEL = re.compile(r'(?i)capital expenditure|purchases? (of|related to) (property|premises|equipment|fixed assets)|additions? to (property|plant|premises|equipment|fixed)|(acquisition|purchase)s? of (property|premises|equipment)|nuclear fuel|capitalized software|software development|(expenditures|investment) (for|in) (property|plant|equipment|software)')
+CAPEX_PPE_INTANG = re.compile(r'(?i)^purchases? (of|related to) (property|premises)[\w ,]*equipment and intangible')   # labels are cut at 60 characters; NVDA FY2015-23 custom line = the PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets perimeter (FY2024+ PaymentsToAcquireProductiveAssets, same label)
 CORE_PPE = {'PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsToAcquireProductiveAssets', 'PaymentsToAcquireOtherPropertyPlantAndEquipment', 'PaymentsForCapitalImprovements',
             'PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets', 'PaymentsToAcquireOtherProductiveAssets', 'PaymentsToAcquireTransportationEquipment', 'PaymentsToAcquireMachineryAndEquipment', 'PaymentsToAcquireBuildings'}
 HARD_NOT = re.compile(r'(?i)proceeds|received|sale of|disposal|oil and gas|acreage|businesses|business combinations')
@@ -132,7 +133,7 @@ def resolve_cf(f, notes):
     inv = in_sec('I')
     mem = [l for l in inv if l['tag'] in CAPEX and not HARD_NOT.search(l['lb'])]
     if not any(l['tag'] in CORE_PPE for l in mem):   # an extension line counts only when no standard PP&E line is on the section (VLO prints a VIE capex line beside PP&E: inside the standard family, not added)
-        mem += [l for l in inv if l['custom'] and CAPEX_LABEL.search(l['lb']) and not CAPEX_NOT.search(l['lb'])]
+        mem += [l for l in inv if l['custom'] and CAPEX_LABEL.search(l['lb']) and (not CAPEX_NOT.search(l['lb']) or CAPEX_PPE_INTANG.search(l['lb']))]
     tagset = {l['tag'] for l in mem}
     if 'PaymentsToAcquirePropertyPlantAndEquipment' in tagset:   # a productive-assets line beside a PP&E line is something else (MCD restaurant purchases)
         mem = [l for l in mem if l['tag'] != 'PaymentsToAcquireProductiveAssets']

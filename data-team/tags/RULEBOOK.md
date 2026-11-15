@@ -1,0 +1,528 @@
+# Line-map resolver rulebook
+
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .47, 2026-11-16). The code and its tests are the authority; this file points to them.
+
+## 1. Purpose
+
+- This is the one index of every rule the resolver applies, with its code location, its test, its date and its source.
+- If this file and the code disagree, the code wins. Fix this file.
+- To add a rule, put three things in one commit: the code, a mutation-checked test, and a row here.
+
+Abbreviations:
+- **Files.** `ra` = tools/resolve_all.py, `rc` = tools/resolve.py (core), `rcf` = tools/resolve_cf.py, `ris` = tools/resolve_is.py, `rbs` = tools/resolve_bs.py, `td` = tools/total_debt.py, `si` = tools/standard_inputs.py, `roles` = rules/roles.csv.
+- **Tests.** `fill` = test_fill_rules.py, `pol` = test_polarity.py, `pr4` = test_pr4_lane_rules.py, `tcf` = test_resolve_cf.py, `tis` = test_resolve_is.py, `rvs` = test_resolver_vs_served_fixes.py, `cap` = test_capitalization_debt.py.
+- **Test column.** "—" means no test was found by grep (listed again in section 7).
+- **Source column.**
+  - "Dhairya", "founder", "Verifier", "Ritwik" and "register item N" are quoted exactly as the code comment or docstring says them.
+  - `commit .NN` means the date and source come from the git subject or body of that resolver version (`git log -- data-team/tags/line_map/`).
+  - The code and the commits date some rulings 2026-11-16 although the commits are dated 2026-11-15. Both are copied as written.
+
+## 2. Input contract (the standard extract)
+
+Read-only FSN queries, all built by `tools/standard_run.py` (`sql` → run → `assemble` → `sql-le` → `assemble`):
+- **Batches.** 4 CIKs per batch, with `statement_timeout` 55s.
+- **Forms.** Every query reads `form in ('10-K','20-F','40-F')` and `period >= '2014-06-01'`.
+- **Undimensioned facts.** `dim_id=0`, `coalesce(coreg,'')=''` (co-registrant facts are never read, except by the legal-entity query) and `ddate = period`. `qtrs` is 0 for BS and 4 for IS and CF.
+
+| file (cwd) | from | format |
+|---|---|---|
+| `filings.json` | extract.sql + extract_bs.sql | list of `{cik (10-digit), a (accession), p (period), fd (filed), lines, calc, cpv?}` |
+| `lines` | extract.sql | `stmt\|report\|line\|tag\|custom(0/1)\|negating(0/1)\|prole\|label(≤60 chars; \| and ~ blanked)\|value` joined by `~`. stmt is BS/IS/CF only, no parenthetical (`not inpth`). value is the own-column undimensioned fact or empty. The face is the report with the most valued lines (`rc.face`) |
+| `calc` | extract.sql | `grp\|parent\|child\|weight~...`, only arcs whose parent is a face line |
+| `cpv` | extract_bs.sql | `report\|line\|tag\|label\|segments\|value~...`: share values (uom shares) of the BS parenthetical at the BS date, with dimensions (ClassOfStock) |
+| `notefacts.json` | extract_notefacts.sql `vals` + extract_facelines.sql `vals` (merged by `si.merge_rows`) | `{acc: 'tag\|qtrs\|value~...'}`: undimensioned own-column facts, qtrs 0/4. Covers the roles.csv elements, rules/extract_families.txt, `%Accretion%`, plus every face-line element and custom family-named element (facelines) |
+| `memberfacts.json` | extract_notefacts.sql `mvals` | `{acc: 'tag\|qtrs\|value\|Axis=Member;~...'}`: own-column facts with exactly one member, on a statement line. Axes: EquityComponents, RelatedPartyTransactionsByRelatedParty, Scenario, plus amortization by IncomeStatementLocation / StatementOfIncomeLocationBalance / FiniteLivedIntangibleAssetsByMajorClass, buybacks by ClassOfStock, capex by ConsolidatedEntities, and CostOf*, revenue and interest expense by ProductOrService on an IS line |
+| `compfacts.json` | `cvals` of both queries | `{acc: 'tag\|qtrs\|value\|ddate~...'}`: undimensioned facts of earlier columns, `ddate` within 3 years 2 months before the period |
+| `zlines.json` | extract_notefacts.sql `zlines` | `{acc: 'tag\|stmt\|report\|line\|label~...'}`: family-element lines with no own-period fact in any dimension but values in other columns (printed dash) |
+| `clines.json` | extract_facelines.sql `clines` | `{acc: 'tag\|report\|line\|label~...'}`: CI-statement lines of `ComprehensiveIncome*` elements. CI lines are never in `lines` |
+| `lentity.json` | extract_legalentity.sql (only for `si.no_face_value` filings) | `{acc: 'tag\|qtrs\|value\|member\|coreg~...'}`: face values carrying one LegalEntity member |
+| `tk.csv` | hand | `ticker,cik10` per line |
+| `instances/` (env `INSTANCE_CACHE`) | `instance_evidence.py fetch` (sec.gov only, ≤3 req/s, SEC_USER_AGENT) | per-accession JSON: finance-lease ExtensibleList `fl_loc` (in/out/none), pre-842 CapitalLeaseObligations facts by BalanceSheetLocationAxis. `td.load_evidence` also reads the committed `exam/eras/inputs-notes-eras.jsonl`, `exam/inputs/notes.jsonl` and `line_map/_lease-locations-pre842-2026-11-14.csv` |
+
+**Input-contract rule: a company's filings (Dhairya 2026-11-16, founder direction "one scalable definition"; commit 48be1944).** Every extract query selects annual reports (10-K, 20-F, 40-F; period ≥ 2014-06-01) by `fsn.filing.company_id` of the listed CIKs, never by a hand list of CIKs. Predecessor-CIK reports therefore join their company: AVGO 1441634/1649338, MRVL 1058057, LIN 884905 (Praxair), DIS 1001039, GOOG 1288776, BLK 1364742, XOM 34088. The emitted `cik` is the listed CIK, so the resolver groups them with the successor. The listed (successor) CIK wins a shared period. When Engineering's `company_filings(company_id)` lands (current CIK plus predecessor CIKs within their `core.company_history_source` windows), the extract calls it instead of the inline subquery. A company's inputs are re-extracted whenever a new annual report is loaded; check `fsn.filing` against the inputs, not an old file.
+
+**Rule files:**
+- `rules/roles.csv`
+- `rules/polarity.csv`
+- `rules/fsn_dropped_facts.csv`: filing-checked facts the FSN set does not store. Added to the member or note facts.
+- `rules/filer_xbrl_errors.csv`: printed value overrides XBRL. An empty `xbrl_value` means the fact is printed but missing.
+- `rules/extract_families.txt`: the extract's element regex beyond roles.csv. `si.build_sql` drops an exact tag that a family covers.
+
+**Env overrides:** ROLES_CSV, POLARITY_CSV, FSN_DROPPED_FACTS, FILER_XBRL_ERRORS, INSTANCE_CACHE, and MEMBERFACTS_JSON / COMPFACTS_JSON / ZLINES_JSON / CLINES_JSON / LENTITY_JSON (each a path).
+
+**Run** (from the directory holding the extract files):
+`env -i PATH=$PATH HOME=$HOME FSN_DROPPED_FACTS=<wt>/data-team/tags/line_map/rules/fsn_dropped_facts.csv python3 <wt>/data-team/tags/line_map/tools/resolve_all.py VERSION OUT.csv`
+- It writes `OUT.csv` (the spec below) and `resolved_all.csv` (internal columns: ticker, cik, accession, period_end, data_point, status, tags, value, r_page, nodes, why, source, calc_check, flags).
+
+## 3. Output grammar
+
+**Columns:** `cik,ticker,data_point,period_end,grain,decision,nodes,value,accession,column,calc_check,flags,resolver_version`
+- `grain`: `I` for instants (the INSTANT set in ra main), else `FY`.
+- `value`: integral, else normalised Decimal. Empty for combined, not_presented and no_role.
+- `column`: `own` or `comparative`. For comparative, `accession` is the later filing.
+- `accession`: emptied for `BEFORE:` rows (a year that no 10-K covers).
+- `flags`: the source token first, then the rule flags, joined by `;`.
+
+**Decisions:**
+
+| decision | value | meaning |
+|---|---|---|
+| `mapped` | yes | one node holds the role |
+| `component_sum` | yes | the sum of the listed nodes |
+| `derived_not_printed` | yes | status `derived`: computed from the same filing's nodes (C1 GP, C2 TL, parent equity) |
+| `combined` | no | printed only inside a wider line |
+| `not_presented` | no | no node of the role (with the reason in `why`) |
+| `no_role` | no | rule gap, never a served reason |
+
+**Node grammar** (`ra.NODE_GRAMMAR`, `ra.normalize_nodes`):
+`[-]Tag[Axis=Member][=value] [Rn.htm[:line] | NOTE | SE | BSP][@ACC]`
+- Parts are joined by `; `.
+- `SE` is the statement of equity, `BSP` the BS parenthetical, `NOTE` an undimensioned note fact.
+- `@ACC` means the figure is read from another filing's column.
+- A derived GP lists its source cells' parts, signed.
+- Any other prose found inside a location bracket moves to `why` (`node notes:`).
+- The `nodes` column is `<parts> | why: <reason>`. Extra evidence is appended to why as ` | reported only combined: <line>`, ` | absent in own filing ...` or ` | filer XBRL error: ...`.
+
+**Calc check:**
+- `calc <root>: ok|FAIL`, one entry per BS L&SE tree and CF change-in-cash tree.
+- `finalize_calc` rewrites a FAIL whose missing child is tagged in another column to `skipped: child missing (...)`.
+- Other appended texts: `GP corroboration: ...`, `total liabilities derived ... corroborates ...`, `Liabilities fact v vs derived d: explained|DISAGREE`.
+
+**Source tokens:**
+- `core`: rc tree.
+- `core_fallback`: a roles.csv `fallback=Y` row, or the TL / NI fallbacks.
+- `roles`: a roles.csv role, or the IS family.
+- `bs_family`, `cf_family`, `total_debt`, `before_first_10k`.
+
+**Flags the code can set** (cf_family flags reach the output since .47; before that `ra.family_rows` dropped them):
+
+| flag | set by | meaning |
+|---|---|---|
+| `DERIVED` | rc | value derived (TL from L&SE, parent equity = incl-NCI − NCI) |
+| `hint_only` | rc | node found by tag only, no calc arc to its parent (current subtotals, CF totals) |
+| `hint_ranked` | rc | cost of revenue found by role, the tag only ranked it |
+| `cor_indeterminate` | rc | cost lines interleaved with the filer's own lines: no COR total |
+| `rule:not_printed_statement_role` | ra.run | GP / opex / OI / COR with no node on a read IS: not_presented |
+| `face`, `note`, `class_sum`, `unclassified` | rbs (rule) | BS-family pick: face line, BS-date note fact, ClassOfStock sum, unclassified-BS reason |
+| `cash_face_subtotal` | rbs | cash climbed to the face total labelled cash and cash equivalents |
+| `label_parenthetical` | rbs | that total's label carries a parenthetical (e.g. includes restricted cash) |
+| `includes_restricted` | rbs | the only cash total on the face includes restricted cash |
+| `header_sum` | rbs | inventory = the lines under an 'Inventories:' header |
+| `band` | ris | value read from the OI→pretax band |
+| `identity_break` | ris | OI + signed band ≠ pretax (filer sign error, T 2019) |
+| `presented_within_expenses` | ris | other income printed outside the band (BMY ruling) |
+| `other_part_no_fact` | ris | an other-income part has no fact: not_presented |
+| `note_only` | ris | value is the undimensioned note fact (gross IE / II / D&A / amortization) |
+| `ci_no_nci_line` | ris | CI incl NCI served as parent: the filing has no NCI |
+| `ci_incl_nci` | ris | only the CI incl NCI is printed: combined point reason |
+| `da_incl_accretion` | ris | D&A line holds accretion or impairment: combined |
+| `amort_by_note_equality` | ris | generic amortization line proven by equality with the intangible note fact |
+| `generic_amortization` | ris | generic amortization line not proven: no_role (reader check) |
+| `class_member_sum` | rcf alt → ra.apply_alt | buybacks = ClassOfStock members, last resort |
+| `polarity_flip` | ra.apply_polarity, ra.apply_cash_paid_taxes | sign normalised to the concept's (rules/polarity.csv) |
+| `printed_zero` | ra.fill_printed_zero_and_comparative | a printed dash or zero served as 0 |
+| `comparative_fill` | fill, replay, GP derive | value from a later 10-K's FY-1 / FY-2 column |
+| `structure_replay` | ra.replay_fill | the later cell's parts re-read at the earlier column |
+| `ar_related_sum`, `ap_related_sum` | ra.apply_ar_related / apply_ap_related | trade + related-party face lines summed |
+| `bundled_ap` | ra.apply_bundled_ap | AP printed only inside 'AP and other payables' |
+| `member_sum` | ra.apply_complement_interest (and rcf, dropped) | a member and its complement summed |
+| `interest_split` | ra.apply_other_income_split | other income less its own interest parts; the interest cells served |
+| `tax_jurisdiction_sum` | ra.apply_cash_paid_taxes | federal + state + foreign taxes paid |
+| `expenses_by_nature` | ra.apply_expenses_by_nature | IS by nature, no SG&A |
+| `cor_member_sum` | ra.apply_cost_and_opex | COR from ProductOrService members (product/service or matrix) |
+| `printed_total_expenses` | ra.apply_cost_and_opex | opex = a printed 'Total expenses' (PLD) |
+| `opex_from_printed_totals` | ra.apply_cost_and_opex | opex = GP − OI, or costs total − COR |
+| `opex_component_lines` | ra.apply_cost_and_opex | opex = the operating lines up to the first nonoperating line (KLAC) |
+| `derived_not_printed` | ra.derive_gross_profit | GP = revenue − COR (C1) |
+| `gp_corroboration_disagree` | ra.derive_gross_profit | an unpresented GrossProfit fact differs |
+| `gp_filer_fact_excludes_da` | ra.derive_gross_profit | the difference equals D&A (SCCO) |
+| `revenue_above_other_income` | ra.apply_label_beyond | revenue = sales lines above 'Total revenues and other income' |
+| `label_beyond` | ra.apply_label_beyond | the label names items beyond the data point: combined |
+| `ci_parent_line` | ra.apply_ci_parent | the CI statement's parent line served |
+| `note_split` | ra.apply_note_split | the narrow note fact split out of a combined line |
+| `tl_corroborated` / `tl_corroboration_disagree` | ra.apply_tl_corroboration | derived TL checked against the Liabilities fact |
+| `coregistrant_face` | ra main | the face is a predecessor co-registrant's: reason |
+| `filer_xbrl_error` | ra main | the node is a listed filer XBRL error; the printed value is served |
+| `location_total` | ra main | amortization = total by income-statement location |
+| `member_face_fact` | ra main | the only own-period fact carries an equity-column member |
+| `before_first_10k` | si.before_first_10k_rows | year before the first 10-K: no 10-K covers it |
+| `line_not_printed` | ra.mark_presented_and_never_reported | the first 10-K presents the year but prints no line |
+| `only_combined` + `only_combined_row` / `only_combined_years` | ra.mark_presented_and_never_reported | combined cell no note splits |
+| `never_reported` | ra.mark_presented_and_never_reported | the company reports the data point in no year |
+| `absent_in_own_filing` | ra.apply_absent_in_own_filing | absence from the own 10-K proven |
+| total_debt free-text flags | td | `<tag> has no value in this column`, `READER CHECK: ...`, `... inside a debt line ...: not added`, `debt_incl_repos (ruling 2026-11-14 d)` |
+
+**How the display layer reads the flags:**
+- `only_combined_row`: the company never reports the pure figure, so the whole row is hidden. `only_combined_years`: only those years are hidden. Evidence is `reported only combined: <line>` (Dhairya ruling 2026-11-16). `pipeline/.../mapper/top100_coverage.py` `load_only_combined` / `apply_display` turns these into HIDDEN_ROW / HIDDEN_YEAR. An `only_combined_row` row that shows any value is reopened as OPEN.
+- `absent_in_own_filing`: per the ra docstring, "the display hides such a cell as HIDDEN_YEAR with the 10-K's accession as evidence". Buybacks and dividends are never shown as 0 without a printed dash. No pipeline reader of this flag was found by grep at this commit.
+- `before_first_10k`: no periodic filing presents the year (pre-filing, HIDDEN_YEAR). `structural_loader.py` requires the first-10-K accession. `scripts/ci/top100_gate.py` fails the gate on a shown cell with this reason.
+- `line_not_printed`: the first 10-K presents the year (column comparative) but prints no line. It is an evidenced reason, not a "no public filing" reason.
+- `never_reported`: marks reason rows of a data point the company reports in no year, so that a hide never hides a printed value. No pipeline reader was found by grep.
+
+## 4. Pass order (ra `__main__`)
+
+1. Load filings, notefacts and tk.csv, then member / comp / z / c / lentity facts (`_read`).
+2. `si.fsn_dropped_facts`: add the rules/fsn_dropped_facts.csv rows to the member or note facts.
+3. `td.total_debt_all`: total_debt for both BS columns (own, comparative) from `si.debt_vals` and the instance evidence.
+4. Build the extract-derived rule inputs:
+   - `EXT['lt']` = `si.amortization_location_total`
+   - `EXT['cor']` = `si.product_service_cor`
+   - `EXT['cor_mx']` = `si.cost_member_sums` (minus the cor accessions)
+   - `EXT['gp']` = `si.gross_profit_facts`
+   - `EXT['comp']` = compfacts
+5. `si.member_facts`: member-only face facts are appended as note facts. `MF` keeps their lineage.
+6. Related-party splits: `EXT['ap']` and `EXT['ar']` = `si.related_splits`.
+7. `si.legal_entity_faces`:
+   - A single non-co-registrant LegalEntity member fills the face (`fill_face_values`).
+   - A co-registrant, or several members, goes to PRED.
+8. `si.apply_filer_errors`: the printed value replaces the XBRL value in the face lines and note facts.
+9. `run()`: per filing:
+   - the core tree (`rc.resolve`) and total_debt;
+   - the BS/CF family rows (`family_rows`) replace their roles rows;
+   - roles.csv `role()`, with fallback rows only when the core gives `no_role`;
+   - the TL / NI fallbacks;
+   - not_printed_statement_role.
+10. PRED rows become not_presented `coregistrant_face`.
+11. `resolve_is.apply`: the IS family replaces other income, IE, II, CI, D&A and amortization where it is decisive.
+12. `apply_complement_interest` (CAT finance arm + complement).
+13. `apply_other_income_split` (other income less its interest parts; serves the IE / II cells).
+14. `apply_ci_parent` (CI statement parent line).
+15. `apply_cost_and_opex` (product/service and matrix COR; opex from printed totals, lines or a combined costs total).
+16. `apply_expenses_by_nature` (SG&A not_presented).
+17. `apply_ap_related`, then `apply_ar_related`.
+18. `si.before_first_10k_rows`: rows for the years the first 10-K prints only as comparatives.
+19. Build the fill inputs: `EXT['cf']` = `si.comparative_fill` and `EXT['pz']` = `si.printed_zero`.
+20. `fill_printed_zero_and_comparative`: printed dash = 0; comparative fill; total_debt comparative column.
+21. `apply_alt`: class-member sums only where no fill served.
+22. `apply_bundled_ap`.
+23. `replay_fill`: later 10-K cell parts at the earlier column. It runs before the note split.
+24. `apply_note_split`.
+25. `apply_cash_paid_taxes`.
+26. `apply_label_beyond(only={'revenue'})`: ruling 3 sets revenue before GP.
+27. `derive_gross_profit`.
+28. `apply_tl_corroboration`.
+29. `apply_polarity`.
+30. Mark nodes that are listed filer XBRL errors (flag + evidence).
+31. Amortization location total: fill not_presented rows, or replace a smaller face part.
+32. COP AR: a note-fact AR is replaced by the face element's member-only fact.
+33. `apply_label_beyond` (all data points).
+34. `ci_incl_nci`: the node cites the CI statement line (`si.ci_face_lines`).
+35. Lineage of member-only face facts (`member_face_fact`).
+36. `finalize_calc` on every calc_check.
+37. `normalize_nodes`: one grammar; a count of bad nodes goes to stderr.
+38. `mark_presented_and_never_reported` (`line_not_printed`, `only_combined*`, `never_reported`).
+39. `apply_absent_in_own_filing`.
+40. Blank the `BEFORE:` accessions, then write `resolved_all.csv` and `OUT.csv`.
+
+## 5. Rulings by data point
+
+Format: `ID | rule | code | test | date / source`.
+
+### 5.0 Cross-cutting
+
+| ID | rule | code | test | date / source |
+|---|---|---|---|---|
+| X01 | Position decides; the tag only ranks nodes that already hold the role; a custom line counts only when its own label names the role | rc docstring, ra.role, rbs.pick | rvs::test_receivable_from_a_sale_of_rights_is_not_accounts_receivable (partial) | 2026-11-13 STRUCTURAL-MAPPING approved (README, Dhairya 2026-11-13) |
+| X02 | The face is the report with the most valued lines of the statement | rc.face | — (implicit in every test) | source: code (no ruling cited) |
+| X03 | Calc group = the group whose children tie to the parent's printed value, then the one with the most children on the face | rc.children | rc tests via resolve | source: code (no ruling cited) |
+| X04 | Tolerance = half a unit of each value's rounding | rc.tol/unit | — | source: code (no ruling cited) |
+| X05 | Duplicate note facts: the most precise value wins, then the most frequent, then the larger (order-independent) | rc.note_facts | — | source: code (CVS, JPM, CB examples) |
+| X06 | Note facts (§AG): undimensioned consolidated fact at the own column; instants at qtrs 0, durations at qtrs 4 | ra.role, rbs.note_value | rvs::test_bank_note_facts_... | §AG (rbs docstring; commit e3d1bfdd) |
+| X07 | Polarity: one sign per concept (rules/polarity.csv). A `mapped` single-element value of a `+`/normalise=Y concept that is < 0 is flipped, flag `polarity_flip`. Component sums keep their computed sign | ra.apply_polarity | pol::test_expense_on_a_reversed_element_..., pol::test_signed_concepts_and_component_sums_keep_their_sign | Ruling 2026-11-14 (commits b3c06739, 2931baaf) |
+| X08 | Printed dash = 0: a role element printed on the own face with no own-period fact in any dimension and values in other columns → 0, `printed_zero` | ra.fill_printed_zero_and_comparative, si.printed_zero | fill::test_printed_dash_is_zero_and_comparative_fills_... (si.printed_zero itself untested) | Rulings 2026-11-14 (Dhairya) |
+| X09 | Comparative fill: a not_presented own cell takes the later 10-K's FY-1 (instants) or FY-1 then FY-2 (flows) column when that 10-K resolves the data point to ONE element on its face (or note for NOTE_FILL_OK) with one fact at the date; column=comparative | si.comparative_fill + ra.fill_printed_zero_and_comparative | fill::test_printed_dash_..., pr4::test_combined_working_capital_cell_takes_the_later_pure_element | Rulings 2026-11-14 (commits 973de0de, 8af83577) |
+| X10 | Comparative fill keeps the later cell's calc sign (value = −fact when the later cell negated it, MDT OTTI) | si.comparative_fill | — | commit .21 (86947a8e) |
+| X11 | NOTE_FILL_OK: per-share, share counts, amortization, SBC, taxes paid and interest paid fill from a later 10-K's note column | si.NOTE_FILL_OK | — | Dhairya ruling 2026-11-16: never hide a year a later filing prints |
+| X12 | A note figure never fills a face data point (PM SG&A 162M) | si.comparative_fill FACE_NODE | — | source: code (PM example) |
+| X13 | Replay fill: a later 10-K's component cell is re-read part by part at the earlier column. Each part needs exactly one undimensioned fact; signs reproduce the later value; no member, comparative or prose parts; instants FY-1 only; a note-only later cell replays only NOTE_FILL_OK/NOTE_NATURED. Flags `comparative_fill;structure_replay` | ra.replay_fill | rvs::test_a_later_10k_column_fills_a_year_through_the_parts_of_its_own_cell, rvs::test_replay_guards | Founder decision 2026-11-16; GEV final draw (Ritwik, 2026-11-15); commit .32 |
+| X14 | A combined later cell carries its combined line (with the column's value) to the earlier year instead of "no 10-K covers this year" | ra.replay_fill | rvs::test_a_combined_later_cell_carries_its_reason_to_the_earlier_column | founder decision 2026-11-16; commit .32 |
+| X15 | Replay skips gross_profit (derived, C1) and total_debt (own comparative column) | ra.REPLAY_SKIP | rvs::test_replay_guards (partial) | source: code (ruling C1 named) |
+| X16 | Note split: a combined own cell takes the undimensioned fact of the data point's NARROW element (own filing, else the next 10-K's note FY-1 column). Guards: never larger than its line; never coarser-rounded than the line; D&A at least half the line. Flag `note_split` | ra.apply_note_split, ra.NARROW | rvs::test_combined_line_split_by_the_note_fact_of_the_narrow_element | founder decision 2026-11-16: combined lines split; commit .36 |
+| X17 | only_combined: every combined cell no note splits gets `only_combined` + `_row` (pure figure never reported) or `_years`, and why `reported only combined: <line>` | ra.mark_presented_and_never_reported | rvs::test_unsplit_combined_cells_are_marked_only_combined | Dhairya ruling 2026-11-16; commit .37 |
+| X18 | never_reported: not_presented rows of a (company, dp) with no valued or combined row in any year | ra.mark_presented_and_never_reported | rvs::test_presented_period_reason_and_never_reported_mark | founder decision 2026-11-16; commit .34 |
+| X19 | Years before the first 10-K: one not_presented row per dp and year the first 10-K prints as FY-1 (BS and flows) or FY-2 (flows), inside the extract window; flag `before_first_10k` | si.before_first_10k_rows | — (the function itself is untested) | commit .20 (0161a21e) |
+| X20 | line_not_printed: a before_first_10k year the first 10-K presents in a printed column cites that 10-K (column comparative). An instant at FY-2 stays pre-filing | ra.mark_presented_and_never_reported | rvs::test_presented_period_reason_and_never_reported_mark | Founder decision 2026-11-16; commit .34 |
+| X21 | Column-printed guard: a column counts as printed when ≥ half the statement's valued face elements have a fact at its date | ra.column_printed | rvs::test_a_column_counts_as_printed_from_half_the_statement | Engineering's no-filing guard (10f6146e); commit .36 |
+| X22 | absent_in_own_filing: own not_presented (not pre-filing) is flagged only when: no face line on ANY statement under dp_elements (roles alternatives + combined_if + CF lists + WC + NARROW); no custom CF line whose label names it (buybacks / dividends / SBC / capex; share-count lines excluded); no undimensioned fact of those elements; no later 10-K fact for the year | ra.apply_absent_in_own_filing, ra.dp_elements | pr4::test_absence_proven_..., pr4::test_absence_not_claimed_* (4), pr4::test_share_count_line_does_not_block_proven_absence | Dhairya ruling 2026-11-16 (the 706 gap years); commits .42, .43 |
+| X23 | A cell whose node is a listed filer XBRL error serves the printed value, flag `filer_xbrl_error` + evidence | si.apply_filer_errors, ra main | rvs::test_filer_xbrl_error_serves_the_printed_value, rvs::test_filer_missing_fact_takes_the_printed_value | Dhairya ruling 2026-11-14 (si docstring); commits .22, .23 |
+| X24 | FSN-dropped facts (rules/fsn_dropped_facts.csv) enter the member facts (with segment) or note facts | si.fsn_dropped_facts | rvs::test_fsn_dropped_facts_are_added_to_the_member_facts | commit .25 (no ruling cited) |
+| X25 | Member-only face fact: a tag with no undimensioned own fact and exactly one single-member statement-line fact is the consolidated value. Rejected: equity component columns (AOCI, Treasury, NCI, APIC, Parent); revenue ProductOrService rows; ClassOfStock; shares equal to issued (incl. rounded with treasury); class-share filings | si.member_facts | rvs::test_revenue_table_member_is_never_the_consolidated_revenue, rvs::test_class_member_repurchase_line_is_a_last_resort_sum | source: code (_member-face-facts-2026-11-14.csv; commit 17a89ebf) |
+| X26 | Member-only lineage: node `tag[Axis=Member]=v [Rn.htm:line \| SE \| NOTE]`, flag `member_face_fact` | ra main | — | commit .23 (958ed907) |
+| X27 | Node grammar (every part `[-]Tag[Axis=Member][=value] [LOC][@ACC]`) | ra.normalize_nodes | rvs::test_every_node_shape_lands_in_the_grammar, rvs::test_sbc_note_fact_node_has_no_prose | Dhairya 2026-11-14; commit .24 |
+| X28 | Never sum an incomplete calc group: a failing child tagged in another column → `skipped: child missing`; a caption tagged nowhere or a footing group stands | ra.finalize_calc | rvs::test_incomplete_calc_group_is_skipped_never_summed, rvs::test_calc_check_names_children_without_a_value | Ruling 2026-11-14; commit .24 |
+| X29 | Label beyond: a mapped own line whose label names items beyond the dp ('and other', '& other', 'others') → combined, `label_beyond`. 'Other X' where X is the dp itself (WITHIN map) is inside it | ra.apply_label_beyond | fill::test_a_line_whose_label_names_items_beyond_the_data_point_is_combined | Ruling 2026-11-14 (Dhairya; MSFT certified by Ritwik); commit 3bd7ec4a |
+| X30 | Legal-entity face: a face whose values all carry one LegalEntity member is filled by the filer's member. A co-registrant's (CEG FY2021 predecessor) or several members → not_presented, `coregistrant_face` | si.legal_entity_faces, fill_face_values, ra main PRED | — | ruling 2026-11-14 (c49a03eb, Dhairya dry-run ruling 3) |
+| X31 | Forms 20-F and 40-F are annual reports that present their years (SHOP) | extract*.sql `form in (...)` | — | commit .35 (Dhairya ruling 2026-11-16 per commit) |
+| X32 | Statement roles with no node on a read IS (revenue resolved): GP, opex, OI, COR → not_presented, `rule:not_printed_statement_role` | ra.run | — | rule C1/S12 generalised; commit .2 (4290eace) |
+| X33 | roles.csv `fallback=Y` rows apply only when the core tree gives no_role | ra.run | — | source: code (format doc: filings without calc arcs) |
+| X34 | Family rows (bs_family, cf_family) replace the roles rows of their data points | ra.family_rows/run | tcf/rvs via resolve_cf | commits e3d1bfdd, 660e0521 |
+| X35 | apply_alt: a family's last-resort value (class sums) applies only where no fill served the year | ra.apply_alt | rvs::test_buyback_combined_by_element_or_by_label_and_alt_only_after_fill | source: code (no ruling cited); commit .29 |
+| X36 | absent_in_own_filing also covers the pattern-read data points: total_debt (no element matching total_debt.DEBT anywhere, no BS line labelled as debt; operating leases and accrued interest excluded) and gross_profit (no GrossProfit anywhere and no valued cost of revenue in the same filing to derive it from) | ra.apply_absent_in_own_filing (ABSENT_RX, ABSENT_STMT, ABSENT_LABEL) | pr4::test_total_debt_absence_reads_every_debt_element_and_debt_label, pr4::test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from | Dhairya ruling 2026-11-16; commit .45 0dc73dbe |
+| X37 | A per-share line printed with no consolidated value (ClassOfStock members only) is no single EPS: combined, flag eps_per_class, hidden as reported only per class (DELL FY2017-19 DHI/Class V, GOOG FY2015, V all years) | ra.apply_eps_per_class | pr4::test_eps_printed_only_per_class_is_combined_not_missing | queue 2026-11-16; commit .46 6e252ddc |
+| X38 | Family flags (cf_family) are carried to the output row | ra.family_rows | pr4::test_cf_family_flags_reach_the_output_row | commit .47 |
+
+### 5.1 Core statements (rc.resolve; source `core`)
+
+| ID | rule | code | test | date / source |
+|---|---|---|---|---|
+| C01 | total_assets = the face total before the liabilities section equal to L&SE (Assets preferred) | rc.resolve | rvs::test_total_assets_anchor_is_the_liabilities_and_capital_line_not_the_last_printed_total | source: code |
+| C02 | L&SE anchor: LiabilitiesAndStockholdersEquity, else `LiabilitiesAnd*(Equity\|Capital)*` (PLD LiabilitiesAndPartnersCapital), else the last total | rc.resolve | same | commit .21 (no ruling cited) |
+| C03 | total_liabilities = the `Liabilities` calc child of L&SE, or the child whose children include LiabilitiesCurrent | rc.resolve | cap/pr4 via resolve | source: code |
+| C04 | TL not printed: DERIVED = L&SE − equity-side calc children (equity incl NCI, or parent + NCI + mezzanine), from this tree only | rc.resolve | pr4::test_redeemable_line_after_the_liabilities_is_temporary_equity | rulings C2 (format doc); flag DERIVED |
+| C05 | A Redeemable/Temporary line after the last liability is temporary equity. 'Mandatorily redeemable' is a liability wherever printed. A redeemable line among the liabilities is a liability | rc.resolve mezz_side | pr4::test_redeemable_line_after_..., pr4::test_mandatorily_redeemable_..., pr4::test_redeemable_line_among_the_liabilities_stays_a_liability | PR #6 bs_derive (Verifier, KMB 2024-03-31), ported 2026-11-15 |
+| C06 | stockholders_equity = the parent-equity subtotal node (StockholdersEquity, or a subtotal under the incl-NCI total), never a component line | rc.resolve | — | ruling 5 (README 2026-11-13) |
+| C07 | Only the incl-NCI equity is printed and NCI lines exist → DERIVED incl-NCI − NCI. No NCI line → the printed total is parent equity. NCI with nothing to subtract → combined | rc.resolve | — | Dhairya ruling 2026-11-13: parent equity excludes NCI |
+| C08 | mezzanine_and_nci: other calc children of L&SE / incl-NCI (internal, not output) | rc.resolve | — | source: code |
+| C09 | current_assets / current_liabilities = AssetsCurrent / LiabilitiesCurrent as a calc child of the asset root / TL node, else by tag (`hint_only`) | rc.resolve | — | source: code |
+| C10 | GP = GrossProfit, else a node with one +1 revenue-like and −1 cost children labelled 'Gross' | rc.resolve | — | source: code |
+| C11 | Excise/sales tax under GP is a revenue deduction only when a net-revenue line follows it (PM); else it sits in COR (MO) | rc.resolve | — | source: code (README "MO vs PM" fix) |
+| C12 | COR = the −1 children of GP | rc.resolve | — | source: code |
+| C13 | OI = OperatingIncomeLoss, else a +/− node labelled operating income, never a pretax node | rc.resolve | tis::test_finance_lease_interest_is_gross_interest_and_operating_losses_is_not_operating_income | source: code |
+| C14 | Revenue = GP's +1 child, else OI's single +1 child, else the bank shape, else pretax's single +1 operating child, else the top line climbed through +1 parents | rc.resolve | — | source: code |
+| C15 | No calc arc for the top line: the first printed total equal to the sum of the lines above it (ORCL 2024) | rc.resolve | — | source: code (README defect fix) |
+| C16 | Label demotes, never promotes: a 'revenues and other income' total → its single sales child | rc.resolve | — | ruling 3 (README 2026-11-13) |
+| C17 | Revenue after provisions descends to its +1 child (AXP) | rc.resolve | — | source: code |
+| C18 | A revenue line that is a +1 child of an all-additive revenue total climbs to it (ORCL) | rc.resolve | — | source: code |
+| C19 | Bank IS without a revenue total: revenue = net interest income + noninterest income (COF) | rc.resolve | — | source: code |
+| C20 | No GP: cost-of-sales lines leading the band are the block up to the last one; scattered lines (UNH) → only those lines | rc.resolve | — | BKNG test (Dhairya 2026-11-13) |
+| C21 | Cost-of-sales lines interleaved with the filer's custom cost lines (ORCL) → COR not_presented `cor_indeterminate` | rc.resolve | — | source: code |
+| C22 | Cost of sales by label only (MCD food & paper) shapes the opex band but gives no COR value | rc.resolve | — | source: code (README ruling 1) |
+| C23 | COR nodes that are all children of one printed COR subtotal → the subtotal (VLO) | rc.cor_top | — | source: code |
+| C24 | COS nature: a CostOf* tag or a label starting 'cost(s) of' / 'food & paper', excluding business-combination / merger / restructuring costs (TMUS) | rc.COS_LABEL/cos_nature | — | source: code |
+| C25 | opex = −Σ(weight × value) of the lines between GP/revenue and OI; a single expense node → mapped | rc.resolve | — | S12/§AE (format doc) |
+| C26 | Only gains/other income between GP and OI → opex not_presented (LMT) | rc.resolve | tis::test_opex_is_not_presented_when_only_other_income_sits_between_gross_profit_and_oi | commit .19 (no ruling cited) |
+| C27 | A band line with no consolidated value → opex combined ('a line between the top line and OI has no consolidated value') | rc.resolve | rvs::test_printed_totals_cover_a_valueless_line_inside_them (follow-up) | source: code |
+| C28 | Bank opex = NoninterestExpense | rc.resolve | — | ruling: bank opex = NoninterestExpense (code) |
+| C29 | net_income = NetIncomeLoss (parent) | rc.resolve | — | source: code |
+| C30 | Pretax / tax by position: the node that subtracts IncomeTax (any IS node, COP incl-NCI); tax = its −1 child, pretax = its +1 BeforeIncomeTax child | rc.resolve | cap::test_pretax_is_found_by_position_under_any_node_that_subtracts_tax | commit 17a89ebf (pretax by position) |
+| C31 | cfo / cfi / cff = section totals as calc children of the change-in-cash root (continuing totals when only those), else by tag `hint_only` | rc.resolve | — | source: code |
+| C32 | Calc check of L&SE and change-in-cash on the filer's own numbers; children with no value named | rc.resolve | rvs::test_calc_check_names_children_without_a_value | commit .24 |
+
+### 5.2 Core fallbacks (ra.run, `core_fallback`)
+
+| ID | rule | code | test | date / source |
+|---|---|---|---|---|
+| F01 | roles.csv fallback rows (pretax, tax, NI, COR, opex, cfo, cfi, cff) apply only when the tree gives no_role | roles fallback=Y | — | roles.csv ruling column ('insurer benefits+expenses; bank noninterest expense ruling' for opex) |
+| F02 | No calc arcs, TL: the printed Liabilities total, else DERIVED L&SE − printed equity (incl NCI, or parent + NCI) − temporary/redeemable | ra.run | — | C2 (code comment); commit e937abe5 |
+| F03 | NI: the IS ends at ProfitLoss with no NCI line → ProfitLoss is the parent NI | ra.run | — | source: code; roles.csv net_income ruling |
+| F04 | NI = income available to common: the line before preferred dividends (ProfitLoss − NCI) is net income (AVGO) | ra.run | rvs::test_net_income_is_the_line_before_preferred_dividends | commit .21 (no ruling cited) |
+| F05 | A printed zero NCI is no part (one-tag node) | ra.run | rvs::test_net_income_with_a_zero_nci_line_is_one_node | commit .23 |
+
+### 5.3 Income-statement data points
+
+| ID | dp | rule | code | test | date / source |
+|---|---|---|---|---|---|
+| I01 | revenue | Sales / operating-revenue lines above 'Total revenues and other income' are revenue, `revenue_above_other_income`; runs before GP | ra.apply_label_beyond(only revenue) | rvs::test_gross_profit_is_derived_from_the_revenue_ruling_3_sets | ruling 3; commit .31 (MPC) |
+| I02 | cost_of_revenue | Product and service lines carrying only ProductOrService members → member sum, the filing's own member names, face lines cited; `cor_member_sum` | ra.apply_cost_and_opex, si.product_service_cor | rvs::test_product_service_cor_keeps_the_filings_member_names, rvs::test_cor_member_nodes_are_parseable_... | source: code (commit 7c138721 review_rule); .23 member names |
+| I03 | cost_of_revenue | Matrix IS (MAR): one cost line carrying ProductOrService column members → their sum when it ties to the costs total with the other cost lines AND its label names COR AND no other line does | ra.apply_cost_and_opex, si.cost_member_sums | — | ruling 2026-11-14 (c49a03eb dry-run ruling 4) |
+| I04 | cost_of_revenue | roles.csv fallback: the single printed COR line | roles cost_of_revenue | — | roles.csv |
+| I05 | gross_profit | Not printed: DERIVED revenue − COR from the same filing, `derived_not_printed` | ra.derive_gross_profit | fill::test_gross_profit_not_printed_is_derived_and_corroborated | Ruling C1 (Dhairya 2026-11-14) |
+| I06 | gross_profit | Both from the same later 10-K column (COP 2016-17): cite it, column comparative, when that column's revenue ties to the own revenue cell | ra.derive_gross_profit | fill::test_gross_profit_rulings_scco_explained_difference_and_cop_later_column | Ruling C1, 2026-11-14 (commit .20) |
+| I07 | gross_profit | The later column sums every revenue element and reads the Including/ExcludingAssessedTax twin | ra.derive_gross_profit | rvs::test_comparative_revenue_sums_every_element_and_reads_the_assessed_tax_twin | commit .31 (MPC) |
+| I08 | gross_profit | Unpresented GrossProfit fact: equal → ok; = GP − D&A → explained `gp_filer_fact_excludes_da` (SCCO, SAB 11.B); else `gp_corroboration_disagree` | ra.derive_gross_profit | fill::test_gross_profit_not_printed_..., fill::test_gross_profit_rulings_scco_... | Dhairya rulings 2026-11-14 (commit .20) |
+| I09 | operating_expenses | No node: GP − OI (PEP), or CostsAndExpenses − COR (QCOM), `opex_from_printed_totals`; skipped for the LMT reason | ra.apply_cost_and_opex | fill::test_opex_from_printed_totals_when_the_tree_has_no_node | source: code (commit 7c138721) |
+| I10 | operating_expenses | The combined 'line has no consolidated value' reason is also replaced from printed totals (ABBV, ACN, CAT, GLW, RTX 2015, SCCO) | ra.apply_cost_and_opex | rvs::test_printed_totals_cover_a_valueless_line_inside_them | false-reason sweep 2026-11-14 (commit .29) |
+| I11 | operating_expenses | 'Total (operating) expenses' between 'Total revenues' and an OI line is opex (PLD), `printed_total_expenses`; never 'Total costs and expenses' | ra.apply_cost_and_opex | rvs::test_printed_total_expenses_line_is_the_opex | commit .26 (no ruling cited) |
+| I12 | operating_expenses | No costs total and no OI: the ≥2 operating lines after COR up to the first nonoperating line (KLAC), `opex_component_lines` | ra.apply_cost_and_opex | rvs::test_operating_lines_without_..., rvs::test_opex_lines_rule_needs_two_lines_and_no_oi | false-reason sweep 2026-11-14 |
+| I13 | operating_expenses | The only expense total also holds COR or nonoperating lines → combined, naming them | ra.apply_cost_and_opex | rvs::test_a_costs_total_holding_cost_of_revenue_makes_opex_combined | false-reason sweep 2026-11-14 |
+| I14 | operating_expenses | Fallback: OperatingExpenses / BenefitsLossesAndExpenses (insurer) / NoninterestExpense | roles operating_expenses | — | roles.csv ('insurer benefits+expenses; bank noninterest expense ruling') |
+| I15 | sga_expense | SG&A line; G&A + S&M when both printed; never G&A alone while S&M is printed | roles sga_expense | — | MSFT ruling (roles.csv) |
+| I16 | sga_expense | PM/MO 'Marketing, administration and research costs' → combined | roles combined_if | pr4::test_marketing_administration_and_research_line_is_combined_sga | queue 2026-11-16 (roles.csv); commit .41 |
+| I17 | sga_expense | A lone GeneralAndAdministrativeExpense note fact is never SG&A | ra.role | pr4::test_lone_general_and_administrative_note_fact_is_never_sga | commit .41 (PM FY2014 165M) |
+| I18 | sga_expense | IS by nature (a personnel line spanning functions) and no SG&A line → not_presented `expenses_by_nature`; never built from mixed parts | ra.apply_expenses_by_nature | rvs::test_expenses_by_nature_have_no_sga | Dhairya ruling 2026-11-14 (c) |
+| I19 | research_and_development | The R&D line; custom label '^research and development'; note fact allowed | roles | — | roles.csv |
+| I20 | interest_expense | Gross. Band lines classified IE (tag/label); several IE lines summed | ris.resolve_band, kind | tis::test_other_income_excludes_separately_printed_interest_... | rulings (Dhairya 2026-11-14) ris docstring |
+| I21 | interest_expense | Net line only: the gross note fact (InterestExpense / ...Nonoperating / ...Debt / InterestAndDebtExpense), preferring a tag other than the net line's own (LIN); none → combined | ris.resolve_band | tis::test_interest_net_line_takes_the_gross_note_fact, rvs::test_net_interest_line_takes_a_gross_note_tag_other_than_its_own | per-series ruling (code); commit .21 |
+| I22 | interest_expense | 'Interest expense to affiliates' beside a net line is a part: the net-line path (CEG) | ris.resolve_band | tis::test_affiliate_interest_beside_a_net_line_is_a_part_not_the_data_point | commit b1f5b59b (dry run, no ruling cited) |
+| I23 | interest_expense | Capitalized interest is neither other income nor gross IE (SCCO); finance-lease interest is gross IE | ris.kind | tis::test_capitalized_interest_..., tis::test_finance_lease_interest_is_gross_interest_... | commit .21 |
+| I24 | interest_expense | Finance-arm part + its complement ('Interest expense of X' / 'excluding X', or members AllOtherExcluding<X> + X) → sum, `member_sum` | ra.apply_complement_interest | rvs::test_interest_expense_of_the_finance_arm_..., rvs::test_complement_pair_needs_both_parts_... | Ruling 2026-11-14 (Dhairya, CAT); member-sum ruling 4 |
+| I25 | interest_expense / interest_income | A combined face line beside the gross note fact → the note fact (role path) | ra.role | — | per-series ruling (code, KLAC) |
+| I26 | interest_income | Band II lines; net/mixed line only → II note fact (II_NOTE), else combined | ris.resolve_band | tis::test_other_income_excludes_... | Dhairya 2026-11-14 |
+| I27 | interest_income | Label naming dividends / investment / 'and other', or the element InvestmentIncomeNet / InterestAndDividendIncome* / ..., → combined | ra.apply_label_beyond II_BEYOND_TAG | fill::test_a_line_whose_label_names_items_beyond_... | Ruling 2026-11-14 |
+| I28 | other_income_expense_net | The band lines (OI→pretax) that are not IE/II, subtotals removed, signed by calc weight toward pretax | ris.band, resolve_band | tis::test_other_income_excludes_..., tis::test_band_line_takes_its_calc_weight_..., tis::test_printed_total_with_a_plain_label_role_is_a_subtotal_of_the_band | Dhairya 2026-11-14; ruling 2026-11-14 (resolver-vs-served) |
+| I29 | other_income_expense_net | A mixed line, or a single NonoperatingIncomeExpense total → combined | ris.resolve_band | tis::test_single_nonoperating_total_with_interest_is_combined | Dhairya 2026-11-14 |
+| I30 | other_income_expense_net | No OI line: the band starts after the costs total and after the operating lines that follow it (restructuring, impairment) (DIS, NEM) | ris.band | rvs::test_no_oi_band_starts_after_the_operating_lines_after_the_costs_total | ruling 2026-11-14 (a), DIS |
+| I31 | other_income_expense_net | OI + signed band ≠ pretax → flag `identity_break`, value kept | ris.resolve_band | tis::test_identity_break_is_flagged_not_dropped | commit .21 |
+| I32 | other_income_expense_net | A line labelled other income/expense outside the band is the data point wherever printed, income convention, `presented_within_expenses`; a revenue-table member row takes its member fact | ris.resolve_band, member_row_value | rvs::test_other_income_expense_printed_inside_total_expenses_..., rvs::test_revenue_member_row_takes_its_member_fact, rvs::test_other_income_label_may_cite_its_note | ruling 2026-11-14 (BMY, supersedes 'inside operating costs -> not_presented') |
+| I33 | other_income_expense_net | Guards: the alternate-sign valueless twin is the same line; a dash in the band defers to printed-zero; a part with no fact → not_presented `other_part_no_fact` | ris.resolve_band | rvs::test_other_income_guards_twin_dash_and_incomplete_group | commit .27 |
+| I34 | other_income_expense_net | A line whose own calc breakdown names interest parts with undimensioned values → the line less those parts, `interest_split`; the interest cells take the same note amounts where still a reason | ra.apply_other_income_split | rvs::test_other_income_line_holding_interest_is_split_..., rvs::test_combined_other_income_line_is_split_by_its_breakdown | Dhairya ruling 2026-11-16 (PANW, BMY); founder decision: combined lines are split, not chosen |
+| I35 | other_income_expense_net | Dividends and investment gains (InvestmentIncomeInterestAndDividend, ...Dividend, ...Net) are not interest | ra.PURE_II | rvs::test_other_income_line_holding_interest_... | QCOM, NEM, CAT (code) |
+| I36 | income_before_tax | 'before income and mining tax and other items' is the pretax line when the 'other items' are the tax and equity income below it (NEM) | ra.apply_label_beyond | rvs::test_pretax_line_naming_the_equity_income_below_it_is_not_combined | false-reason sweep (commit .29) |
+| I37 | income_before_tax | Pretax tags exclude OCI and benefit-plan tags | ris.PRETAX | — | commit .21 |
+| I38 | comprehensive_income | Parent ComprehensiveIncomeNetOfTax (CI or IS line), else the note fact | ris.resolve_ci | tis::test_comprehensive_income_including_nci_is_a_point_reason | Dhairya 2026-11-14 |
+| I39 | comprehensive_income | Only incl-NCI printed and NCI exists → combined point reason `ci_incl_nci`, citing the CI statement line | ris.resolve_ci, ra main ci_face_lines | tis::test_comprehensive_income_including_nci_is_a_point_reason | ruling: point reason (code) |
+| I40 | comprehensive_income | Incl-NCI with no NCI element or a zero NCI → the parent's figure, `ci_no_nci_line` | ris.resolve_ci | tis::test_comprehensive_income_including_nci_is_the_parent_when_the_filing_has_no_nci | ruling 2026-11-14 (Dhairya) |
+| I41 | comprehensive_income | The CI statement's parent line (the element, or labelled 'attributable to <company>', not NCI) with an own fact, or parent-scoped members all equal (WFC FY2021) → served, `ci_parent_line` | ra.apply_ci_parent | rvs::test_ci_parent_line_printed_on_the_ci_statement_is_served | Ruling 2026-11-14 (PM); commit .25 |
+| I42 | comprehensive_income | ComprehensiveIncomeFromContinuingOperations serves only when the filing reports no discontinued operations (ADI FY2014-16) | ra.role | pr4::test_continuing_operations_ci_total_serves_only_without_discontinued_operations | roles.csv ADI FY2015 R3; commit .42 |
+| I43 | depreciation_and_amortization | The CF (then IS) D&A total line; labels naming accretion/impairment/discounts/leases etc. excluded | ris.resolve_da | tis::test_da_with_accretion_is_combined_... | rulings (Dhairya 2026-11-14) |
+| I44 | depreciation_and_amortization | An accretion-tagged line printed 'Depreciation and amortization' is the D&A line only when the filing reports no accretion (ARO accretion fact or CF accretion line); else combined `da_incl_accretion` (DUK) | ris.resolve_da, accretion_reported | tis::test_accretion_tag_printed_as_plain_..., tis::test_accretion_tag_is_combined_when_the_filing_reports_accretion | ruling 2026-11-14: label plus evidence (DUK) |
+| I45 | depreciation_and_amortization | Acquired-loan accretable yield and equity accretion are not accretion evidence | ris.ACC_EVID | — | rulings 2026-11-14 (commit aa4063c2) |
+| I46 | depreciation_and_amortization | A CF line that includes other-income D&A yields to the IS D&A line (UBER) | ris.resolve_da WIDER_DA | rvs::test_cf_da_that_includes_other_income_da_yields_to_the_is_line | ruling 2026-11-14 e |
+| I47 | depreciation_and_amortization | A partial D&A line (depreciation only, or excluding intangibles) + the intangible amortization line(s), or + a generic line proven by note equality | ris.resolve_da | tis::test_generic_amortization_line_equal_to_the_rounded_note_fact_... (amort) | source: code |
+| I48 | depreciation_and_amortization | Separate depreciation and amortization CF lines → sum. No face total → the D&A note fact `note_only` | ris.resolve_da | — | source: code |
+| I49 | depreciation_and_amortization | 'Depreciation, amortization, and other' → combined (label_beyond); 'other amortization' is within | ra.apply_label_beyond WITHIN | fill::test_a_line_whose_label_... | Ruling 2026-11-14 |
+| I50 | depreciation_and_amortization | Note split guard: D&A is the bulk (≥ half) of a 'D&A and other' line (VLO) | ra.apply_note_split | rvs::test_combined_line_split_by_the_note_fact_... | founder decision 2026-11-16 |
+| I51 | amortization_of_intangibles | Intangible amortization only; capitalized software excluded (S5/TXN); incentive (MA), right-of-use (AVGO) and cost-excluded (STX) lines excluded | ris.resolve_amort | tis::test_da_with_accretion_..._excludes_capitalized_software, rvs::test_amortization_excludes_incentive_right_of_use_... | Dhairya 2026-11-14 (S5); commit .21 |
+| I52 | amortization_of_intangibles | A generic CF amortization line (or a duplicate label) equal to the intangible note fact within the note's rounding → served, `amort_by_note_equality` | ris.proven_amort, note_close | tis::test_generic_amortization_line_equal_..., tis::test_note_equality_respects_the_note_rounding | commit b1cbde0b (no ruling cited) |
+| I53 | amortization_of_intangibles | Generic line not proven → no_role `generic_amortization` (reader check) | ris.resolve_amort | — | source: code |
+| I54 | amortization_of_intangibles | Reported by IS location only: the members' sum (or the total member), `location_total`; a face part smaller than the location total is replaced (CSCO) | si.amortization_location_total, ra main | rvs::test_location_total_keeps_its_axis, rvs::test_amortization_by_location_without_a_total_is_summed_when_corroborated | ruling 2026-11-14 (PM FY2022); CSCO (commit bbd55672) |
+| I55 | basic/diluted_eps, weighted_basic/diluted_shares | EPS / weighted-share lines (IS or EPS note); BasicAndDiluted elements accepted | roles | — | roles.csv |
+
+### 5.4 Balance-sheet family (rbs, `bs_family`)
+
+| ID | dp | rule | code | test | date / source |
+|---|---|---|---|---|---|
+| B01 | all BS family | Position, not calc descent: current items are printed above AssetsCurrent (liabilities: between the asset total and LiabilitiesCurrent); unclassified BS → the whole side | rbs.regions, resolve_family | — | rbs docstring (commit e3d1bfdd) |
+| B02 | all BS family | Pick order: alternatives in rank → custom label (one line) → note fact at qtrs 0 → combined_if | rbs.pick | — | roles.csv; rbs docstring |
+| B03 | all BS family | An undimensioned BS-date fact beats a combined caption (bank goodwill; DIS payable inside payable+accrued) | rbs.pick | — | source: code |
+| B04 | current_assets / current_liabilities | Unclassified BS (no AssetsCurrent / LiabilitiesCurrent) → not_presented | rbs.resolve_family | — | Dhairya ruling 2026-11-14 |
+| B05 | cash_and_equivalents | Cash = the BS face TOTAL labelled cash and cash equivalents: climb from a component to its calc parent, `cash_face_subtotal` (AXP 2023 46,596; BAC) | rbs.cash_subtotal | — | Ruling 2026-11-14 (Dhairya, AXP); commit 2249780f |
+| B06 | cash_and_equivalents | No cash-and-equivalents total on the face: 'Total cash, cash equivalents, and restricted cash' is the cell, `includes_restricted` (WFC, PGR) | rbs.cash_subtotal | — | Ruling 2026-11-14 (WFC, PGR); commit 955a7fb7 |
+| B07 | cash_and_equivalents | A label parenthetical is disclosure, flagged `label_parenthetical`; a total naming short-term investments stays out; cash + ST investments in one line → combined | rbs.cash_subtotal, roles | — | rulings 2026-11-14 |
+| B08 | cash_and_equivalents | A restricted-cash-inclusive note fact is never the note cash fact | rbs.note_value | — | source: code |
+| B09 | accounts_receivable | The trade receivable line in current assets (AR single-line ruling: the trade line when trade and other are separate) | roles, rbs.pick | fill::test_trade_and_other_is_receivables_when_it_is_the_only_receivables_line | AR single-line ruling (commit 81756554) |
+| B10 | accounts_receivable | 'Trade and other' is combined only when the face also prints a separate trade line | ra.apply_label_beyond | fill::test_trade_and_other_is_receivables_... | rulings (commit 81756554) |
+| B11 | accounts_receivable | AR mirrors AP: + a current line labelled receivable from related parties or affiliates; member splits (Nonrelated + Related) summed; mixed / 'other (incl. related)' / 'due from' without 'receivable' not added; `ar_related_sum` | ra.apply_ar_related, si.related_splits | fill::test_receivables_and_payables_include_the_related_party_face_line | Ruling 2026-11-14 (AR mirrors AP) |
+| B12 | accounts_receivable | A receivable from a sale of rights is not AR (MO 2022-23) | rbs.SALE_RECV | rvs::test_receivable_from_a_sale_of_rights_is_not_accounts_receivable | commit .22 |
+| B13 | accounts_receivable | A note-fact AR is replaced by the face element's member-only fact (COP AR) | ra main | — | source: code |
+| B14 | inventory | Component lines (finished goods, gross) are never the role when a total of the family is printed | rbs.pick COMPONENT | — | rbs docstring |
+| B15 | inventory | Lines under an 'Inventories:' header with no total → component_sum `header_sum`; inventory elements or class-named custom lines; bounded by a reported InventoryNet (CEG RECs excluded) | rbs.inventory_header_sum | — | Ruling 2026-11-14 (Dhairya, FCX) |
+| B16 | accounts_payable | AP = every accounts-payable face line: trade + related-party payable line, or the Nonrelated + Related members; 'due to' without 'payable' (DELL) and 'including related' (SCCO) not added; `ap_related_sum` | ra.apply_ap_related | fill::test_receivables_and_payables_include_... | Ruling 2026-11-14 (Dhairya) |
+| B17 | accounts_payable | Related split ignores an EquityMethodInvestee member equal to RelatedParty (WDC) | si.related_splits | rvs::test_related_party_split_ignores_an_equal_equity_method_investee_member | commit .29 |
+| B18 | accounts_payable | Payable + accrued in one line → combined (roles combined_if) | roles | tcf::test_combined_payable_is_a_reason (CF analogue) | roles.csv |
+| B19 | accounts_payable | 'Accounts payable and <other payables>' (AccountsPayableAndOtherAccrued*/AndAccrued*) → combined `bundled_ap`, never 'no line' | ra.apply_bundled_ap | rvs::test_a_bundled_accounts_payable_line_is_combined | Dhairya 2026-11-15 (GEV) |
+| B20 | goodwill | The goodwill line; goodwill + intangibles in one line → combined; bank goodwill = BS-date fact | roles, rbs | — | roles.csv; rbs docstring |
+| B21 | intangible_assets | Intangibles excluding goodwill; combined with goodwill → combined; else the BS-date note fact | roles, rbs | — | roles.csv |
+| B22 | ppe_net | Net PP&E line (finance-lease ROU inclusive tag accepted; REIT RealEstateInvestmentPropertyNet) | roles | — | roles.csv |
+| B23 | shares_outstanding | The undimensioned CommonStockSharesOutstanding at the BS date (BSP), never the dei cover count | rbs.shares, roles | rvs::test_every_node_shape_lands_in_the_grammar (node shape) | ruling (roles.csv) |
+| B24 | shares_outstanding | Else the sum over ClassOfStock members of the BS parenthetical (preferred / treasury / restricted / unvested / nonvoting excluded), `class_sum` | rbs.shares | — | rbs docstring |
+| B25 | total_liabilities | A derived TL beside an undimensioned Liabilities fact: equal → the fact is served, `tl_corroborated`; differs by a printed mezzanine/NCI line → explained; else `tl_corroboration_disagree` | ra.apply_tl_corroboration | rvs::test_derived_total_liabilities_is_corroborated_by_the_liabilities_fact | Dhairya 2026-11-16 (Engineering loader round dd7995b5) |
+| B26 | deposits, loans_net, noninterest_expense, noninterest_income, total_interest_income, net_interest_income | Bank totals by element and label (note_ok N except loans_net) | roles | — | roles.csv |
+| B27 | provision_for_credit_losses, loans_net | Note facts (§AG): bank-loan elements anywhere; trade elements (ProvisionForDoubtfulAccounts, NotesReceivableNet) only on a bank face (net interest printed); served after a later 10-K's printed line (alt) | ra.role BANK_NOTE, bank_face | rvs::test_bank_note_facts_are_served_after_the_fill_and_trade_elements_only_on_a_bank_face | Ruling 2026-11-14 (Dhairya); roles.csv §AG (Dhairya 2026-11-14) |
+
+### 5.5 Cash-flow family (rcf, `cf_family`; sign = the raw XBRL fact, never the printed sign)
+
+| ID | dp | rule | code | test | date / source |
+|---|---|---|---|---|---|
+| K01 | all CF family | Sections by position: a line belongs to the next section total below it | rcf.sections | tcf::test_capex_sums_the_investing_section_... | rcf docstring |
+| K02 | all CF family | Value is the raw fact sign (Payments* positive = cash out; IncreaseDecrease* positive = balance rose) | rcf docstring | tcf::test_sign_is_the_raw_fact_not_the_printed_sign | rcf docstring; polarity.csv `raw` |
+| K03 | capex | Every capital-purchase line of the investing section (CAPEX list), proceeds/disposal/oil-gas/acreage/business excluded | rcf.resolve_cf | tcf::test_capex_sums_the_investing_section_... | register 2026-11-04 item 3 |
+| K04 | capex | A custom line counts (label) only when no standard PP&E line is on the section (VLO VIE line) | rcf.resolve_cf | tcf::test_capex_sums_..._ignores_vie_extension_... | source: code |
+| K05 | capex | A productive-assets line beside a PP&E line is something else (MCD) | rcf.resolve_cf | — | source: code |
+| K06 | capex | A member whose calc parent is also a member is inside it | rcf.resolve_cf | — | source: code |
+| K07 | capex | Capex line also holding investments, when it is the only capex line → combined (PSX, COP); a combined segment line beside others stays in the sum (NEE) | rcf.resolve_cf | rvs::test_capex_line_that_also_holds_investments_is_combined_only_when_it_is_the_only_capex_line | founder ruling 2026-11-01 item 3; Dhairya ruling: NEE capex = sum of the segment lines |
+| K08 | capex | A member-only capex line beside valued ones: ConsolidatedEntities members served only when they tie to the investing total; else not_presented (never an incomplete group) | rcf.resolve_cf, entity_member_tie | rvs::test_entity_member_capex_..., rvs::test_a_member_only_capex_line_beside_a_valued_one_is_never_left_out, rvs::test_complement_pair_..._tie_needs_known_directions | member-sum ruling 2026-11-14 (Dhairya) |
+| K09 | capex | Investing capex lines with member facts only → the filing's undimensioned capex-class fact (VLO 2019-25) | rcf.resolve_cf | rvs::test_member_only_capex_lines_take_the_filings_capex_fact | ruling 2026-11-14 (code); commit .26 |
+| K10 | share_buybacks | Own common stock in the financing section (PaymentsForRepurchaseOfCommonStock/Equity, or a custom repurchase label), never withholding, excise, options, subsidiary, preferred, ASR/forward | rcf.resolve_cf BUY_LABEL/BUY_NOT | tcf::test_buyback_excludes_excise_tax_..., pr4::test_plain_repurchase_line_stays_mapped | register item 4 |
+| K11 | share_buybacks | Label naming withholding / surrendered shares / warrants inside a repurchase tag → combined (MCK, JPM) | rcf BUY_COMBINED | pr4::test_repurchase_including_shares_surrendered_..., pr4::test_treasury_stock_and_warrants_line_is_combined | PR #4 lane rules (Verifier 2026-11-08), ported 2026-11-15 |
+| K12 | share_buybacks | Stock bought under equity plans is not a buyback (MU FY2014) | rcf BUY_SBC_PLAN | pr4::test_stock_bought_under_equity_plans_is_not_a_buyback | PR #4 (Verifier 2026-11-08) |
+| K13 | share_buybacks | Only PaymentsRelatedToCommonStockRepurchaseAndTaxWithholding... or a withholding label → combined (MS) | rcf.resolve_cf | rvs::test_repurchase_line_with_employee_tax_withholdings_is_combined_not_missing | false-reason sweep (commit .29) |
+| K14 | share_buybacks | A net treasury purchase line ('Net dispositions (purchases) ... for treasury', GE FY2017-19) → combined | rcf BUY_NET | pr4::test_net_treasury_purchases_line_is_combined_buybacks | commit .43 (no ruling cited) |
+| K15 | share_buybacks | A line with ClassOfStock member facts only → class sum, last resort after the comparative fill (V 2016; DELL later figure wins) | rcf class_member_lines → ra.apply_alt | rvs::test_class_member_repurchase_line_is_a_last_resort_sum, rvs::test_buyback_combined_..._alt_only_after_fill | commit .29 (no ruling cited) |
+| K16 | share_buybacks | No face line → the note fact | rcf.resolve_cf | — | §AG |
+| K17 | dividends_paid | The financing common-dividend line, or the unlabelled total with no common line; REIT/MLP distributions count; never NCI, preferred, subsidiary, JV, affiliate | rcf DIV_LABEL/DIV_NOT | tcf::test_buyback_excludes_..._dividend_excludes_nci, pr4::test_reit_distributions_to_stockholders_stay_mapped | roles.csv; rcf |
+| K18 | dividends_paid | The common-dividend note fact beats a custom face line | rcf.resolve_cf | tcf::test_note_common_dividend_beats_custom_face_line | source: code |
+| K19 | dividends_paid | Declared-not-paid and distribution to an affiliate are never the cash dividend (BXP, TMUS FY2014) | rcf DIV_NONCASH | pr4::test_declared_but_not_paid_..., pr4::test_distribution_to_affiliate_is_no_common_dividend | PR #4 (Verifier 2026-11-08) |
+| K20 | dividends_paid | A preferred-only label → not_presented (no common dividend line), even without a preferred fact (TMUS, BA) | rcf.resolve_cf | pr4::test_preferred_only_dividend_line_is_no_common_dividend_... | PR #4 (Verifier 2026-11-08) |
+| K21 | dividends_paid | 'Dividends and distributions' to stockholders and LP-unit holders → combined (BXP, AVGO FY2016-19) | rcf DIV_UNITS | pr4::test_dividends_and_distributions_to_unit_holders_is_combined | PR #4 (Verifier 2026-11-08) |
+| K22 | dividends_paid | A single generic dividend line while the filing reports preferred dividends and prints no preferred line → combined (BAC, GE; WELL 2014-18) | rcf.resolve_cf | tcf::test_generic_dividend_line_holding_preferred_is_combined, rvs::test_reit_distribution_line_is_combined_while_preferred_dividends_are_paid | Dhairya ruling 2026-11-14 b |
+| K23 | dividends_paid | Combined distribution line split by the PaymentsOfDividendsCommonStock note fact (WELL) | ra.apply_note_split | rvs::test_combined_line_split_by_the_note_fact_... | founder decision 2026-11-16 |
+| K24 | sbc | The CFO ShareBasedCompensation add-back; one custom SBC-labelled line not naming another item; else the note fact | rcf.resolve_cf | tcf::test_aggregate_on_face_detail_in_note | source: code |
+| K25 | sbc | A ShareBasedCompensation line whose label names no compensation/expense and differs from the SBC expense fact → the note fact (MA FY2014-16) | rcf.resolve_cf | tcf::test_share_based_payments_line_that_is_not_the_expense_takes_the_note_fact | SBC ruling (code); commit aa4063c2 |
+| K26 | cf_ar_change, cf_inventory_change, cf_ap_change | The operating-section family line (first by rank); one custom label line; else the undimensioned note fact (face aggregates only) | rcf.resolve_cf WC | tcf::test_aggregate_on_face_detail_in_note | source: code |
+| K27 | same | Two disagreeing note facts → no_role 'READER CHECK ambiguous note facts' | rcf.resolve_cf | — | source: code |
+| K28 | same | Combined element (payable+accrued etc.) → combined | rcf WC comb | tcf::test_combined_payable_is_a_reason | roles.csv |
+| K29 | same | A line under another element whose label starts with the item and names more → combined (ADI); brokerage / write-down / reserve lines never count | rcf WC_HEAD | pr4::test_ap_line_naming_more_items_..., pr4::test_inventory_write_down_..., pr4::test_brokerage_receivables_... | queue 2026-11-16 (code); commit .40 |
+| K30 | cf_ar_change | A receivables line filed under IncreaseDecreaseInOtherReceivables (GEV), never other / vendor / related | rcf.resolve_cf | — | source: code |
+| K31 | same | A combined own WC cell takes the pure element a later 10-K prints for the year (TSLA FY2015-16); never a later combined element | si.comparative_fill WC_PURE, ra.fill_printed_zero_and_comparative | pr4::test_combined_working_capital_cell_takes_the_later_pure_element, pr4::test_..._never_takes_a_later_combined_element | commit .40 |
+| K32 | cash_paid_for_income_taxes | Supplemental or note fact (IncomeTaxesPaidNet, IncomeTaxesPaid) | roles | — | roles.csv |
+| K33 | cash_paid_for_income_taxes | Federal + state/local + foreign lines only → their sum, `tax_jurisdiction_sum`; parentheses proven as presentation by the interest-paid line printed negated and stored positive → served positive `polarity_flip`; else a negative stays (AMD) | ra.apply_cash_paid_taxes | rvs::test_taxes_paid_by_jurisdiction_are_summed_and_parentheses_proven_... | false-reason sweep 2026-11-15, UNP FY2025 (code) |
+| K34 | cash_paid_for_income_taxes | GE FY2014-16 IncomeTaxesPaidNet stored negative: printed value served | rules/filer_xbrl_errors.csv | rvs::test_filer_xbrl_error_... | Dhairya ruling 2026-11-14 |
+| K35 | cash_paid_for_interest | InterestPaidNet wins (DQC_0065) | roles | — | roles.csv |
+| K36 | cfo, cash_flow_investing, cash_flow_financing | Fallback by element / label | roles fallback | — | roles.csv |
+| K40 | capex | A custom line 'Purchases of / related to property and equipment and intangible assets' is capex: the same perimeter as PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets (NVDA FY2015-23; FY2024+ files the same label under PaymentsToAcquireProductiveAssets). Labels are cut at 60 characters, so no end anchor | rcf CAPEX_PPE_INTANG | pr4::test_custom_ppe_and_intangibles_purchase_line_is_capex | queue 2026-11-16; commit .47 |
+
+### 5.6 total_debt (td; `total_debt`; founder perimeter: total_debt includes finance and capital leases)
+
+| ID | rule | code | test | date / source |
+|---|---|---|---|---|
+| D01 | Debt-role face nodes in the liabilities region (after Assets, before the equity / commitments / temporary-equity lines); interest payable, operating lease and fair value excluded | td.run DEBT/NOTDEBT | cap tests | td docstring (commit 79a0c0a3) |
+| D02 | Utility capitalization section: a standard debt element after the first equity line is still debt; custom lines there are not | td.run | cap::test_utility_capitalization_debt_after_the_equity_line_is_debt | commit 17a89ebf (NEE; no ruling cited) |
+| D03 | Debt to affiliates / related parties when its own label names debt (TMUS) | td AFFIL | cap::test_debt_to_affiliates_is_debt_when_its_label_names_debt | source: code |
+| D04 | A custom line whose label or section header names debt (not interest / operating) | td LABEL_DEBT | — | source: code |
+| D05 | Fed funds purchased and repos are never debt: a debt total holding them is opened into its other parts when all are printed, else combined `debt_incl_repos` (COF) | td REPO | rvs::test_debt_total_holding_fed_funds_and_repos_takes_its_other_parts | Dhairya ruling 2026-11-14 d |
+| D06 | Dedupe through the calc tree: a node whose calc parent is a selected debt node is inside it | td.run | — | td docstring |
+| D07 | Both BS columns: own and comparative (330-400 days back); several facts → the most precise | td.run | — | source: code |
+| D08 | A face debt line whose tag or label names leases already holds them: nothing added | td.run on_face_lease | — | td docstring; perimeter spec (02c6e5a3, IBM) |
+| D09 | A face lease line that is one part only → add the other part (total − face part, else the note part) unless the filing places it in a debt line; pre-842 capital part needs a non-debt calc parent, else READER CHECK | td.run | rvs::test_face_lease_part_adds_the_other_part | Dhairya 2026-11-14: one figure per location member (VRTX, ANET) |
+| D10 | Note finance lease: added when ExtensibleList 'out', or no list and its calc parents are not debt nodes; not added when 'in' or under a debt node | td.run | — | td docstring |
+| D11 | No list and no calc arc: inside when face LTD = note LongTermDebt + lease; or when the company's other filings say 'in' (IBM); or equal to a face debt line (COF); or a debt-and-finance-lease total exists; else added 'location by absence: CHECK' | td.run | rvs::test_company_lease_location_from_its_other_filings, rvs::test_note_finance_lease_equal_to_a_face_debt_line_is_inside_it | commit .22 (rulings a-e; d for COF) |
+| D12 | Pre-842 capital leases: located by the instance BalanceSheetLocationAxis member (outside → added, debt member → skipped), then a calc arc, then a lease-named debt line; none → not added, READER CHECK | td.run, LEASES | — | Dhairya 2026-11-14 MSFT FY2016; commit 3304a77c |
+| D13 | Pre-842 capital lease = present value Current + Noncurrent, not the gross CapitalLeaseObligations total (AMZN) | td.run | cap::test_pre842_capital_lease_is_the_present_value_not_the_gross_total | commit .31 |
+| D14 | The current portion of LTD is debt wherever printed: a LongTermDebtNoncurrent claim with no current part takes the note LongTermDebtCurrent unless a calc arc places it in a claimed line (AMZN) | td.run | cap::test_current_ltd_inside_accrued_and_build_to_suit_obligations_are_debt | Dhairya 2026-11-16 (AMZN) (a) |
+| D15 | Pre-842 build-to-suit FinanceLeaseObligations are financing obligations, added when no ASC 842 finance lease exists | td.run | cap::test_current_ltd_inside_accrued_and_build_to_suit_... | Dhairya 2026-11-16 (AMZN) (b) |
+| D16 | The own filing presents no debt line → the total_debt rule on the next 10-K's comparative column | ra.fill_printed_zero_and_comparative | — | ruling 2026-11-14 (code) |
+| D17 | A debt node with no value in the column is flagged, not guessed | td.run | — | source: code |
+
+## 6. New company type checklist
+
+Check these first when a new industry or filer type appears.
+
+| type | check first | rule / flag | example in code |
+|---|---|---|---|
+| Bank | revenue = NII + noninterest income; opex = NoninterestExpense; provision and loans from note facts only on a bank face; repos are not debt; cash may be CashAndDueFromBanks below a cash total; the band identity guard | C19, C28, B27, D05, B05, I28 (identity guard) | COF, BAC, GS 2016, C 2023, MS loans, WFC bank face, AXP |
+| Insurer | opex fallback BenefitsLossesAndExpenses; no inventory or COR (reasons, never_reported) | F01/I14, X18 | PGR (cash), CB (other income) |
+| REIT | distributions count as dividends; combined while preferred is outstanding; note split by the common-dividend fact; ppe = RealEstateInvestmentPropertyNet; 'Total expenses' opex | K17, K22, K23, B22, I11 | WELL 2014-18, PLD |
+| MLP / LP units | L&SE anchor LiabilitiesAndPartnersCapital; dividends to holders and unit holders combined | C02, K21 | PLD, BXP, AVGO FY2016-19 |
+| Utility | capitalization section debt; D&A accretion evidence; dividends incl preferred | D02, I44, K22 | NEE, DUK |
+| Foreign 20-F / 40-F | forms read as annual reports; comparative columns present years | X31, X09, X20 | SHOP (20-F FY2015, 40-F FY2016-23) |
+| Foreign private issuers with no XBRL in FSN | out of scope of the extract | — | BNS, AEM (excluded from the dry run) |
+| 52/53-week filer | year matching uses ±45 days (fill, replay) and 330-400 days (note split, total_debt, pre-filing) | X09, X13, X16, D07, X19 | — (the code cites no example) |
+| Predecessor / spin-off / new CIK | years before the first 10-K are filled from its comparative columns or flagged before_first_10k / line_not_printed; predecessor years of re-registered companies fill | X19, X20, X09 | GEV FY2022-23, CRWD, SNDK, PLTR, UBER; DIS, AVGO, LIN, BLK, GOOG, DELL (commit .20) |
+| Co-registrant / combined filing | legal-entity face filled by the filer's member; predecessor co-registrant face → coregistrant_face; the extract drops coreg facts | X30 | CEG FY2021 (Constellation Energy Generation LLC) |
+| Dual / multi-class stock | shares = ClassOfStock sum from the BSP; class-member buybacks a last resort; one class is never the total | B24, K15, X25 | META, V 2016, DELL FY2017/FY2020 |
+| Unclassified balance sheet | current subtotals not_presented; current items read from the whole side | B04, B01 | banks, insurers (rbs docstring: JPM, GS, AXP) |
+| Matrix / member-only faces | COR from ProductOrService members; capex members tie to the total; CI parent members | I02, I03, K08, I41 | MAR, GE, TMUS, DIS, VLO, WFC FY2021 |
+| Expenses by nature | no SG&A | I18 | BKNG |
+| Finance arm | IE = finance-arm part + complement | I24 | CAT |
+
+**Worked example: the 20-company dry run.** The task said ranks 111-130; git says ranks 117-137 (commits b1f5b59b and c49a03eb, 2026-11-14).
+
+1. **Choose.**
+   - The 20 companies were SNOW ABNB CME NET HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK PWR GD MELI ELV USB ICE.
+   - Ranks already in the 110 (ADP, SYK, GLW, LOW, SBUX) were skipped, and so were foreign private issuers (BNS, AEM).
+2. **Extract.**
+   - `python3 tools/standard_run.py sql "<ciks>" OUT`, then run the four read-only queries per 4-CIK batch and save them as `{lines,bs,notes,face}.jsonl`.
+   - `standard_run.py assemble OUT`.
+   - `standard_run.py sql-le OUT`, run `le-00.sql` and save it as `le.jsonl`, then `assemble` again.
+   - `python3 tools/instance_evidence.py fetch OUT/filings.json OUT/instances` (sec.gov only, ≤3 req/s).
+3. **Resolve.** `cd OUT` and run the command in section 2 with `tk.csv`. Output: `resolver-dry20-ranks117-137-2026-11-14.csv` (215 filings, 11,609 cells).
+4. **Read.**
+   - Value / reason / no_role shares (74.3 / 25.5 / no_role 16 → 0 after the rulings). Gaps by business mix are expected.
+   - PROVEN signed agreement against `analytics.cell_proof` (98.92%, 2,843/2,874).
+   - Each disagreement classified in `_dry-run-proven-disagreements-2026-11-14.csv`. Columns: ticker, data_point, period_end, served, served_tag, decision, value, kind, nodes, flags, class.
+5. **Rule.** Each class went to Dhairya (c49a03eb):
+   - DUK D&A / COR: already as ruled, so the disagreements were reclassified.
+   - CEG legal-entity faces → X30.
+   - MAR matrix cost line → I03.
+   - FCX inventory header → B15.
+   - Instance-evidence step for total_debt.
+   - The CEG affiliate interest fix came in the same run → I22.
+6. **Encode.**
+   - Each ruling became code, a mutation-checked test and a commit.
+   - The rerun of the 20 gave no_role 0.
+   - The 110 output was byte-identical (no regression).
+   - Remaining items are listed by ruling (capex perimeter 17, DUK D&A 9, DUK dividends incl. preferred 4, DUK 2018 COR 1).
+
+## 7. Rules with no test found (grep over tools/test_*.py)
+
+C06, C07, C09-C12, C14-C24, C28, C29, C31; F01, F02, F03; X02, X04, X05, X10, X11, X12, X19 (`si.before_first_10k_rows`), X26, X30, X31, X32, X33; I03 (MAR matrix, `si.cost_member_sums`), I04, I14, I15, I19, I25 (role-path gross note beside a combined line), I37, I45, I48, I53, I55; B01-B08 (incl. cash_subtotal and includes_restricted), B13, B14, B15 (header_sum), B20-B22, B24 (class_sum), B26; K05, K06, K16, K27, K30, K32, K35, K36; D04, D06, D07, D08, D10, D12 (BalanceSheetLocationAxis), D16, D17.
+
+Partial coverage:
+- X08: `si.printed_zero` is untested; only the fill pass is tested, with injected EXT.
+- I39: the CI-line citation from `si.ci_face_lines` in the main block is untested.
+- I54: only `amortization_location_total` is tested, not the main-block replacement.
+
+Other findings:
+- (fixed in .47) the `cf_family` flags now reach the output: pr4::test_cf_family_flags_reach_the_output_row.
+- `ris.resolve_ci` looks for `st == 'CI'` lines, but extract.sql reads BS/IS/CF only. CI-statement evidence arrives through notefacts and clines.

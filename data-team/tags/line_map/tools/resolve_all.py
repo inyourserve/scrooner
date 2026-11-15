@@ -948,7 +948,7 @@ def family_rows(f, notes, raw):
     for dp, r in resolve_bs.resolve_family(f, resolve_bs.notes_for(bsraw)).items():
         out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=';'.join(x for x in (r.get('rule', ''), r.get('flags', '')) if x))
     for dp, r in resolve_cf.resolve_cf(f, notes).items():
-        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='', alt=r.get('alt'))
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags=r.get('flags', ''), alt=r.get('alt'))
     return out
 def descendants(arcs, root, onface):
     out, stack = set(), [root]

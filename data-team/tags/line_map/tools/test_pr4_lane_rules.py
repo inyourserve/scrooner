@@ -5,7 +5,8 @@ from resolve_cf import resolve_cf
 
 
 def filing(lines):
-    s = '~'.join(f"{x[0]}|2|{i + 1}|{x[1]}|0|0|terseLabel|{x[2]}|{x[3]}" for i, x in enumerate(lines))
+    # a 5th element True marks an extension (custom) element
+    s = '~'.join(f"{x[0]}|2|{i + 1}|{x[1]}|{int(len(x) > 4 and x[4])}|0|terseLabel|{x[2]}|{x[3]}" for i, x in enumerate(lines))
     return dict(cik='1', a='0000000001-26-000001', p='2025-12-31', fd='2026-02-01', lines=s, calc='')
 
 
@@ -280,3 +281,24 @@ def test_eps_printed_only_per_class_is_combined_not_missing():
     r = dict(data_point='basic_eps', status='not_presented', accession='A20', column='own', flags='', why='', value=None)
     resolve_all.apply_eps_per_class([r], [f2])
     assert r['status'] == 'not_presented'
+
+
+def test_custom_ppe_and_intangibles_purchase_line_is_capex():
+    # NVDA FY2021 R8:21 nvda_PurchasesOfPropertyAndEquipmentAndIntangibleAssets 'Purchases related to property and equipment and intangible a' (cut at 60)
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5822),
+                ('CF', 'PurchasesOfPropertyAndEquipmentAndIntangibleAssets', 'Purchases related to property and equipment and intangible a', 1128, True),
+                ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -19675)])
+    c = resolve_cf(f, {})['capex']
+    assert c['status'] == 'mapped' and c['value'] == 1128
+    # an intangibles-only purchase line stays out
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5822),
+                ('CF', 'xyz_PurchasesOfIntangibles', 'Purchases of intangible assets', 50, True),
+                ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -19675)])
+    assert resolve_cf(f, {})['capex']['status'] == 'not_presented'
+
+
+def test_cf_family_flags_reach_the_output_row():
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 100),
+                ('CF', 'PaymentsForRepurchaseOfCommonStock', 'Share repurchases, including shares surrendered for tax withholding', 1639),
+                ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -40)])
+    assert resolve_all.family_rows(f, {}, '')['share_buybacks']['flags'] == 'buyback_label_combined'
