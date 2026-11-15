@@ -14,6 +14,8 @@ from collections import defaultdict
 from datetime import date
 from decimal import Decimal
 
+from typing import Any
+
 import psycopg
 
 from scrooner_pipeline.common.authority import (
@@ -38,10 +40,14 @@ HISTORY_FLOOR = date(2015, 1, 1)
 
 
 # one company_tag_map row that can drive a claim: (id, decision, stmt, tag, concept, parent, sign,
-# era_from, era_to)
-MapRow = tuple[
-    int, str, str, str | None, str | None, str | None, int, date, date | None
-]
+# era_from, era_to[, rule_id]); the rule_id (index 9) is optional in tests
+MapRow = tuple[Any, ...]
+STRUCTURAL_RULE_PREFIX = "company_tag_map.structural"
+
+
+def is_structural(r: MapRow) -> bool:
+    """A row written by the structural resolver (the filing's own structure), not a docmap remnant."""
+    return len(r) > 9 and str(r[9] or "").startswith(STRUCTURAL_RULE_PREFIX)
 
 
 def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
@@ -50,7 +56,7 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
     with conn.cursor() as cur:
         cur.execute(
             """
-            select m.id, m.decision, m.stmt, m.tag, cc.name, pc.name, m.sign, m.era_from, m.era_to
+            select m.id, m.decision, m.stmt, m.tag, cc.name, pc.name, m.sign, m.era_from, m.era_to, m.rule_id
             from analytics.company_tag_map m
             left join analytics.canonical_concept cc on cc.id = m.canonical_concept_id
             left join analytics.canonical_concept pc on pc.id = m.parent_concept_id
@@ -169,6 +175,11 @@ def claim_for(
         key=lambda r: (r[7], r[0]),
         reverse=True,
     )
+    # a docmap concept-row remnant whose era also holds the cell never overrides the structural (resolver) row of the
+    # same cell: STX OI&E FY2026 (true end 2026-07-03) was judged against the remnant's total line, not the
+    # resolver's decision (backstop beside the loader's era cut, NVDA-STX-PERIOD-KEY-TRACE-2026-11-16)
+    if any(is_structural(r) for r in concept):
+        concept = [r for r in concept if is_structural(r)]
     if concept:
         stmt = concept[0][2]
         tags = tuple(dict.fromkeys(r[3] for r in concept if r[2] == stmt and r[3]))

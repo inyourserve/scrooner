@@ -181,3 +181,20 @@ def test_note_parts_need_no_single_calc_parent():
     other = Fact(D("1"), 3, date(2019, 12, 31), False, 8, "A-2")
     mixed = [note[0], (note[1][0], other)]
     assert _check_components(mixed, arcs) == "components_from_different_filings"
+
+
+def test_claim_prefers_the_structural_row_over_a_docmap_remnant():
+    from scrooner_pipeline.proof.shown import claim_for
+
+    era = date(2026, 7, 1)
+    name = "other_income_expense_net"
+    remnant = (1, "concept", "IS", "NonoperatingIncomeExpense", name, None, 1, era, None, "docmap@1")
+    structural = (
+        2, "concept", "IS", "OtherNonoperatingIncomeExpense", name, None, 1,
+        date(2025, 7, 1), None, "company_tag_map.structural@1",
+    )  # fmt: skip
+    got = claim_for([remnant, structural], name, date(2026, 7, 3))
+    assert got is not None and got.tags == ("OtherNonoperatingIncomeExpense",)
+    # no structural row: the remnant still claims
+    got = claim_for([remnant], name, date(2026, 7, 3))
+    assert got is not None and got.tags == ("NonoperatingIncomeExpense",)
