@@ -1,0 +1,181 @@
+name: Top-100 per-company flow (scripts/top100_flow.sh)
+
+# Manual only (a schedule is deliberately NOT enabled: every run WRITES production data: docmap-load, structural-load,
+# tagmap-plan --apply, proof --write, era-guard, certified-guard restore). The founder dispatches it.
+# One matrix job per company runs scripts/top100_flow.sh with TOP100_CI=1 (the single source of the chain; CI mode only
+# swaps the Mac worktree/venv/.env plumbing for the runner checkout). Each job uploads its run folder (before-images
+# bi_a/bi_b, proof jsonl, coverage CSVs, regressions). The aggregate job joins the per-company result lines into a job
+# summary + artifact. It never commits to main.
+# Company list: `company_ids` (comma-separated core.company ids) OR, if empty, `csv_path` (column company_id).
+on:
+  workflow_dispatch:
+    inputs:
+      company_ids:
+        description: "Comma-separated core.company ids (e.g. 2733,3,1204). Empty = read csv_path"
+        default: ""
+      csv_path:
+        description: "Repo CSV with a company_id column, used when company_ids is empty"
+        default: "data-team/strategy/top100-coverage-summary.csv"
+      only_open:
+        description: "With csv_path: only rows where pct_proven_plus_reason < 100"
+        type: boolean
+        default: true
+      parallel:
+        description: "Companies at once, 1..20 (jobs also wait while pg_stat_activity > 80; data loads stay within 70)"
+        default: "8"
+
+permissions:
+  contents: read
+  actions: read
+
+# Same queue as the other manual DB jobs: never beside the nightly refresh or another manual heavy run.
+concurrency:
+  group: manual-db-jobs
+  cancel-in-progress: false
+
+jobs:
+  wait-for-fsn-write:
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      # secrets and production writes only from main via workflow_dispatch (never a fork PR, never another branch)
+      - name: Refuse anything but a dispatch on main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ] || [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; then
+            echo "::error::production flow runs only from workflow_dispatch on main (ref $GITHUB_REF, event $GITHUB_EVENT_NAME)"; exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
+  plan:
+    needs: wait-for-fsn-write
+    name: Resolve company list
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+      count: ${{ steps.m.outputs.count }}
+    env:
+      IDS_INPUT: ${{ inputs.company_ids }}
+      CSV_PATH: ${{ inputs.csv_path }}
+      ONLY_OPEN: ${{ inputs.only_open }}
+      PARALLEL: ${{ inputs.parallel }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - id: m
+        run: |
+          set -eu
+          case "$PARALLEL" in ''|*[!0-9]*) echo "::error::parallel must be a number"; exit 1;; esac
+          if [ "$PARALLEL" -lt 1 ] || [ "$PARALLEL" -gt 20 ]; then echo "::error::parallel must be 1..20"; exit 1; fi
+          python3 - <<'PYEOF' >> "$GITHUB_OUTPUT"
+          import csv, json, os, re, sys
+          ids = os.environ["IDS_INPUT"].strip()
+          if ids:
+              if not re.fullmatch(r"[0-9]+(,[0-9]+)*", ids):
+                  sys.exit("company_ids must match ^[0-9]+(,[0-9]+)*$")
+              lst = ids.split(",")
+          else:
+              p = os.environ["CSV_PATH"]
+              if not re.fullmatch(r"[A-Za-z0-9_./-]+", p) or ".." in p or not os.path.isfile(p):
+                  sys.exit(f"csv_path not a repo file: {p}")
+              lst = []
+              for r in csv.DictReader(open(p)):
+                  pct = r.get("pct_proven_plus_reason")
+                  if os.environ["ONLY_OPEN"] == "true" and pct not in (None, "") and float(pct) >= 100:
+                      continue
+                  lst.append(r["company_id"].strip())
+          lst = list(dict.fromkeys(lst))
+          if not lst or len(lst) > 256 or not all(x.isdigit() for x in lst):
+              sys.exit(f"bad company list ({len(lst)})")
+          print("matrix=" + json.dumps({"include": [{"id": x} for x in lst]}))
+          print("count=" + str(len(lst)))
+          PYEOF
+
+  flow:
+    name: company ${{ matrix.id }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ fromJSON(inputs.parallel) }}
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      TOP100_CI: "1"
+      CID: ${{ matrix.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ensure zsh and zstd (the flow script is zsh; proof refuses to run without zstd)
+        run: |
+          if ! command -v zsh >/dev/null || ! command -v zstd >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq zsh zstd
+          fi
+      - run: uv sync --project pipeline --locked
+      - name: Run the chain (connection preflight is inside the script and waits while pg_stat_activity > 80)
+        run: |
+          echo "code: $(git rev-parse HEAD)"
+          zsh scripts/top100_flow.sh "$CID" "c$CID"
+      - name: Record a result line if the chain died before its own
+        if: always()
+        run: |
+          mkdir -p .runs/top100_flow
+          if ! grep -q "$(printf '\t')$CID$(printf '\t')" .runs/top100_flow/flow_results.tsv 2>/dev/null; then
+            printf '%s\t%s\tNO_RESULT_LINE (chain exited early; see artifact logs)\n' "$(date -u +%H:%MZ)" "$CID" >> .runs/top100_flow/flow_results.tsv
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flow-${{ matrix.id }}
+          include-hidden-files: true
+          path: |
+            .runs/top100_flow/run_c${{ matrix.id }}/
+            .runs/top100_flow/regressions/
+            .runs/top100_flow/flow_results.tsv
+          if-no-files-found: ignore
+
+  aggregate:
+    name: Aggregate result lines
+    needs: [plan, flow]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: flow-*
+          path: parts
+      - name: Summarize (no commit to main)
+        run: |
+          mkdir -p summary
+          find parts -name flow_results.tsv -exec cat {} + | sort -t "$(printf '\t')" -k2,2n -u > summary/body.tsv || true
+          { printf 'time\tcompany_id\tticker cells pct open-or-FULL [HELD]\n'; cat summary/body.tsv; } > summary/flow_results.tsv
+          {
+            echo "### Top-100 flow results ($(wc -l < summary/body.tsv) of ${{ needs.plan.outputs.count }} companies)"
+            echo '```'; cat summary/flow_results.tsv; echo '```'
+            echo "FULL: $(grep -c ' FULL' summary/body.tsv || true); HELD_CERTIFIED: $(grep -c HELD_CERTIFIED summary/body.tsv || true); NO_RESULT_LINE: $(grep -c NO_RESULT_LINE summary/body.tsv || true)"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flow-summary
+          path: summary/

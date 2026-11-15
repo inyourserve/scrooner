@@ -7,23 +7,30 @@
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:$PATH
 set -u; setopt pipefail
 command -v zstd >/dev/null || { echo "zstd missing"; exit 90; }
+# CI mode (GitHub Actions, TOP100_CI=1): the checkout of origin/main is the worktree, the venv is pipeline/.venv from
+# `uv sync`, secrets come from the job env, and the Mac-only pieces (disk floor, worktree add/remove, .env) are skipped.
+# The chain below is identical in both modes.
+CI_MODE=${TOP100_CI:-}
 IDS=${1:?ids}; TAG=${2:?tag}
 REPO=$(cd "$(dirname "$0")/.." && pwd); S=$REPO/.runs/top100_flow; mkdir -p $S
 W=$S/wt-$TAG; O=$S/run_$TAG; rm -rf $O; mkdir -p $O
 NOFILE=2115436,1996810,1594805,2023554,2012383
 cd $REPO
+[ -z "$CI_MODE" ] && {
 # disk floor (Dhairya 2026-11-14): a full disk hangs a process silently, so a run waits while free space on the
 # volume is under FREE_FLOOR_GB (default 8) and never starts a worktree below it
 FLOOR=${FREE_FLOOR_GB:-8}
 while [ "$(df -g $S | awk 'NR==2{print $4}')" -lt "$FLOOR" ]; do echo "$(date -u +%H:%MZ) $TAG waiting: free < ${FLOOR}GB" >> $S/disk_wait.log; sleep 120; done
 # every exit, clean or failed, removes this run's own worktree (and only it); a run never touches another run's tree
-trap 'cd $REPO && git worktree remove --force $W 2>/dev/null; git worktree prune 2>/dev/null' EXIT
+[ -z "$CI_MODE" ] && trap 'cd $REPO && git worktree remove --force $W 2>/dev/null; git worktree prune 2>/dev/null' EXIT
 # parallel workers fetch at once; a ref-lock collision is retried, never fatal
 for t in 1 2 3 4 5 6; do git fetch -q 2>/dev/null && break; sleep $((RANDOM % 7 + 2)); done
 for t in 1 2 3; do rm -rf $W; git worktree prune 2>/dev/null; git worktree add -q --detach $W origin/main 2>/dev/null && break; sleep $((RANDOM % 5 + 2)); done
 [ -d $W/pipeline ] || exit 2
 ln -s $REPO/pipeline/.venv $W/pipeline/.venv; cd $W
 set -a; source $REPO/pipeline/.env; set +a
+}
+[ -n "$CI_MODE" ] && { W=$REPO; cd $W; }
 export SCROONER_RULES_ENABLED=company_tag_map.select@1 PYTHONPATH=pipeline/src
 PY=$W/pipeline/.venv/bin/python
 echo "code: $(git rev-parse --short HEAD)"
@@ -84,5 +91,5 @@ for r in csv.DictReader(open('$CV/top100-coverage-summary.csv')):
         print(r['ticker'], r['cells'], r['pct_proven_plus_reason'], 'FULL' if oc==0 and int(r['cells'] or 0)>0 else 'open=%d'%oc)" 2>&1)
   echo "$(date -u +%H:%MZ)\t$c\t$line${HELD[$c]:+ ${HELD[$c]}}" | tee -a $S/flow_results.tsv
 done
-cd $REPO && git worktree remove --force $W 2>/dev/null; git worktree prune
+[ -z "$CI_MODE" ] && { cd $REPO && git worktree remove --force $W 2>/dev/null; git worktree prune; }
 echo DONE
