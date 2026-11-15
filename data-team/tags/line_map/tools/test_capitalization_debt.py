@@ -46,6 +46,8 @@ def test_pre842_capital_lease_is_the_present_value_not_the_gross_total():
     vals = [dict(a=f['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in (('CapitalLeaseObligations', 7452), ('CapitalLeaseObligationsCurrent', 3027), ('CapitalLeaseObligationsNoncurrent', 4212))))]
     own = next(r for r in total_debt.run([f], vals, {}) if r['column'] == 'own')
     assert D(own['value']) == D(8235 + 7239), own
+    # the nodes cite the present-value parts, not CapitalLeaseObligations (whose stored fact is the gross 7,452: AMZN perimeter DISAGREE)
+    assert own['tags'].split('+') == ['LongTermDebtNoncurrent', 'CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent'], own['tags']
 
 
 if __name__ == '__main__':

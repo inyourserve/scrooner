@@ -303,6 +303,40 @@ def apply_complement_interest(rows, filings, memberfacts):
     return rows
 
 
+TAX_JUR = ('IncomeTaxPaidFederalAfterRefundReceived', 'IncomeTaxPaidStateAndLocalAfterRefundReceived', 'IncomeTaxPaidForeignAfterRefundReceived')
+
+
+def apply_cash_paid_taxes(rows, filings, notefacts):
+    """cash_paid_for_income_taxes (false-reason sweep 2026-11-15, UNP FY2025): the CF supplemental section prints taxes paid by
+    jurisdiction only, federal + state and local + foreign (the ASU 2023-09 split, complete by its own definition): their sum.
+    Sign: a filer that prints the 'Cash paid during the year for:' amounts in parentheses has its parentheses proven as presentation
+    when the same section's interest-paid line is printed negative through a negated label while stored as the positive
+    payment (UNP: '(1,311)' printed, InterestPaidNet 1,311 with a negated label; its tax lines print '(543)' stored -543); then the taxes-paid figure is a payment and is served positive (flag
+    polarity_flip). Without that proof a negative stays (a net refund is negative: AMD FY2018)."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'cash_paid_for_income_taxes' or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        cf = [l for l in face(parse(F[r['accession']])[0], 'CF') if l['val'] is not None]
+        ip = next((l for l in cf if l['tag'] == 'InterestPaidNet'), None)
+        proven = ip is not None and ip['neg'] and ip['val'] > 0   # printed in parentheses through a negated label, stored as the positive payment
+        jur = [l for l in cf if l['tag'] in TAX_JUR]
+        if r['status'] == 'not_presented' and len({l['tag'] for l in jur}) == 3 and len(jur) == 3:
+            neg = all(l['val'] <= 0 for l in jur) and proven
+            v = sum((l['val'] for l in jur), D(0))
+            r.update(status='component_sum', value=-v if neg else v, tags='+'.join(l['tag'] for l in jur), r_page=f"R{jur[0]['rep']}.htm",
+                     nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in jur),
+                     why='the CF supplemental section prints income taxes paid by jurisdiction only (federal + state and local + foreign, a complete split): their sum'
+                         + ('; the section prints payments in parentheses (its interest paid is printed (1,311) through a negated label and stored positive), so the sum is served positive' if neg else ''))
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'tax_jurisdiction_sum', 'polarity_flip' if neg else '') if x)
+        elif r['status'] == 'mapped' and r.get('value') is not None and D(r['value']) < 0 and proven:
+            t = (r.get('tags') or '').split('+')[0]
+            if any(l['tag'] == t and l['val'] == D(r['value']) for l in cf):
+                r['value'] = -D(r['value'])
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
+                r['why'] = (r.get('why') or '') + '; the CF section prints payments in parentheses (its interest paid is printed in parentheses through a negated label and stored positive): served as the payment'
+    return rows
+
+
 def apply_alt(rows):
     """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
     for r in rows:
@@ -436,11 +470,18 @@ def derive_gross_profit(rows):
             why = 'the income statement prints no gross profit; revenue and cost of revenue are printed in the same filing: revenue - cost of revenue (ruling C1)'
         elif cc == 'comparative':
             x = cor['accession']; xr = own_by_acc.get((x, 'revenue'))
-            t = standard_inputs._one_element(xr) if xr and xr['status'] == 'mapped' else None
-            if t is None: continue
-            vals = {D(vv) for tt, q, vv, dd in standard_inputs._facts(comp.get(x), 4) if tt == t and int(q) == 4 and dd == str(r['period_end'])} if t else set()
-            if len(vals) != 1: continue
-            rv = vals.pop()
+            ts = ([standard_inputs._one_element(xr)] if xr['status'] == 'mapped' else (xr.get('tags') or '').split('+')) if xr and xr['status'] in ok_st else []
+            if not ts or not all(ts): continue
+            rv = D(0); ok_ = True
+            for t_ in ts:   # each revenue element of the later filing's cell at this year's column (MPC: sales + sales to related parties)
+                # MPC FY2018 10-K: the FY2017 column of the 'Sales and other operating revenues' row is filed under the row's
+                # IncludingAssessedTax twin (both elements are face lines of that row); the revenue tie below still guards it
+                twin = {t_, re.sub(r'(Ex|In)cludingAssessedTax$', lambda m_: 'IncludingAssessedTax' if m_.group(1) == 'Ex' else 'ExcludingAssessedTax', t_)}
+                vals = {D(vv) for tt, q, vv, dd in standard_inputs._facts(comp.get(x), 4) if tt in twin and int(q) == 4 and dd == str(r['period_end'])}
+                if len(vals) != 1: ok_ = False; break
+                rv += vals.pop()
+            if not ok_: continue
+            t = '+'.join(ts)
             if abs(rv - D(rev['value'])) > tol(rv, D(rev['value'])): continue   # one revenue definition: the later column ties to the own revenue cell (not MPC, NEM)
             v = rv - D(cor['value']); src = x
             nodes = f"revenue {t}={rv}; -cost_of_revenue={cor['value']} [comparative column of {x}]"
@@ -464,7 +505,7 @@ OTHER_BEYOND = re.compile(r'(?i)\b(and|&|,)\s+other\b|\bothers?\s*$')
 WITHIN = {'revenue': r'other (operating )?(revenues?|sales)', 'intangible_assets': r'other intangible', 'ppe_net': r'other property',
           'capex': r'other property', 'depreciation_and_amortization': r'other amortization', 'goodwill': r'other intangible'}
 II_BEYOND_TAG = re.compile(r'^(InvestmentIncomeNet|InvestmentIncomeInterestAndDividend|InterestAndDividendIncome\w*|InvestmentIncomeNonoperating)$')
-def apply_label_beyond(rows, filings):
+def apply_label_beyond(rows, filings, only=None):
     """Ruling 2026-11-14 (Dhairya; MSFT certified by Ritwik): a line whose label (or, for a note fact, whose element) names
     items beyond the data point is combined: 'Depreciation, amortization, and other' (D&A), 'Interest and dividends income' /
     'Investment income' (interest income), 'Receivables - trade and other', 'Repurchase of ... shares and other', 'Total
@@ -474,6 +515,7 @@ def apply_label_beyond(rows, filings):
     cache = {}
     for r in rows:
         dp = r['data_point']
+        if only is not None and dp not in only: continue
         if r['status'] != 'mapped' or (r.get('column') or 'own') != 'own' or dp in ('other_income_expense_net', 'comprehensive_income'): continue
         nodes = r.get('nodes') or ''
         m = re.match(r'-?(\w+)=[-\d.]+ \[R(\d+)(?:\.htm)?:(\d+)\]', nodes)
@@ -758,6 +800,8 @@ if __name__ == '__main__':
     EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_alt(rows)
+    rows = apply_cash_paid_taxes(rows, filings, notefacts)
+    rows = apply_label_beyond(rows, filings, only={'revenue'})   # MPC: ruling 3 sets revenue before gross profit is derived from it
     rows = derive_gross_profit(rows)
     rows = apply_polarity(rows)
     for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence

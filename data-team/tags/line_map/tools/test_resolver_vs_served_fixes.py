@@ -714,3 +714,69 @@ def test_complement_pair_needs_both_parts_and_tie_needs_known_directions():
         assert resolve_cf(g, {})['capex']['status'] == 'not_presented'
     finally:
         resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
+
+
+# ---- top-100 open cells, 2026-11-15
+
+def test_gross_profit_is_derived_from_the_revenue_ruling_3_sets():
+    # MPC FY2018: revenue is the sales lines (95,750 + 754), not 'Total revenues and other income' 97,102
+    f = filing([('IS', 'RevenueFromContractWithCustomerExcludingAssessedTax', 'Sales and other operating revenues', 95750), ('IS', 'RevenueFromRelatedParties', 'Sales to related parties', 754),
+                ('IS', 'OtherOperatingIncome', 'Other income', 598), ('IS', 'RevenuesAndOtherIncome', 'Total revenues and other income', 97102),
+                ('IS', 'CostOfGoodsAndServicesSold', 'Cost of revenues', 85456)])
+    base = dict(accession=f['a'], cik='1', ticker='X', period_end='2025-12-31', column='own', flags='', calc_check='', why='')
+    rows = [dict(base, data_point='revenue', status='mapped', value=D(97102), tags='RevenuesAndOtherIncome', nodes='RevenuesAndOtherIncome=97102 [R2.htm:4]'),
+            dict(base, data_point='cost_of_revenue', status='mapped', value=D(85456), tags='CostOfGoodsAndServicesSold', nodes='CostOfGoodsAndServicesSold=85456 [R2.htm:5]'),
+            dict(base, data_point='gross_profit', status='not_presented', value=None, tags='', nodes='')]
+    rows = resolve_all.apply_label_beyond(rows, [f], only={'revenue'})
+    assert rows[0]['value'] == D(96504)
+    g = [r for r in resolve_all.derive_gross_profit(rows) if r['data_point'] == 'gross_profit'][0]
+    assert g['value'] == D(11048)
+    # only= keeps the other data points for the full pass
+    other = dict(base, data_point='cost_of_revenue', status='mapped', value=D(97102), tags='RevenuesAndOtherIncome', nodes='RevenuesAndOtherIncome=97102 [R2.htm:4]')
+    assert resolve_all.apply_label_beyond([dict(other)], [f], only={'revenue'})[0]['status'] == 'mapped'
+    assert resolve_all.apply_label_beyond([dict(other)], [f])[0]['status'] == 'combined'
+
+
+def test_comparative_revenue_sums_every_element_and_reads_the_assessed_tax_twin():
+    # MPC FY2017 from the FY2018 10-K: the sales row's FY2017 column is filed as ...IncludingAssessedTax
+    later = '0000000002-26-000002'
+    base = dict(cik='1', ticker='X', flags='', calc_check='', why='')
+    rows = [dict(base, accession='0000000001-26-000001', period_end='2017-12-31', column='own', data_point='revenue', status='component_sum', value=D(74733), tags='A+RevenueFromRelatedParties', nodes=''),
+            dict(base, accession=later, period_end='2017-12-31', column='comparative', data_point='cost_of_revenue', status='mapped', value=D(66519), tags='CostOfGoodsAndServicesSold', nodes=''),
+            dict(base, accession='0000000001-26-000001', period_end='2017-12-31', column='own', data_point='gross_profit', status='not_presented', value=None, tags='', nodes=''),
+            dict(base, accession=later, period_end='2018-12-31', column='own', data_point='revenue', status='component_sum', value=D(96504), tags='RevenueFromContractWithCustomerExcludingAssessedTax+RevenueFromRelatedParties', nodes='')]
+    old = dict(resolve_all.EXT)
+    try:
+        resolve_all.EXT['comp'] = {later: 'RevenueFromContractWithCustomerIncludingAssessedTax|4|74104|2017-12-31~RevenueFromRelatedParties|4|629|2017-12-31'}
+        resolve_all.EXT['gp'] = {}
+        g = [r for r in resolve_all.derive_gross_profit([dict(r) for r in rows]) if r['data_point'] == 'gross_profit'][0]
+        assert g['value'] == D(8214) and g['column'] == 'comparative'
+        resolve_all.EXT['comp'] = {later: 'RevenueFromContractWithCustomerIncludingAssessedTax|4|74104|2017-12-31'}   # one element missing: no derivation
+        rows[0] = dict(rows[0], value=D(74104))   # even where the present element alone would tie
+        g = [r for r in resolve_all.derive_gross_profit([dict(r) for r in rows]) if r['data_point'] == 'gross_profit'][0]
+        assert g['status'] == 'not_presented'
+    finally:
+        resolve_all.EXT.clear(); resolve_all.EXT.update(old)
+
+
+def test_taxes_paid_by_jurisdiction_are_summed_and_parentheses_proven_by_the_interest_line():
+    lines = [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Operating', 9000), ('CF', 'CashPaidAbstract', 'Cash paid during the year for:', None),
+             ('CF', 'IncomeTaxPaidFederalAfterRefundReceived', 'Federal income taxes, net of refunds', -543),
+             ('CF', 'IncomeTaxPaidStateAndLocalAfterRefundReceived', 'Total state income taxes, net of refunds', -321),
+             ('CF', 'IncomeTaxPaidForeignAfterRefundReceived', 'Foreign income taxes, net of refunds', -13), ('CF', 'InterestPaidNet', 'Interest, net of amounts capitalized', 1311)]
+    f = filing(lines); f['lines'] = f['lines'].replace('|InterestPaidNet|0|0|', '|InterestPaidNet|0|1|')   # UNP: printed (1,311) through a negated label
+    row = lambda: dict(accession=f['a'], data_point='cash_paid_for_income_taxes', status='not_presented', value=None, tags='', nodes='', why='', flags='', column='own')
+    r = resolve_all.apply_cash_paid_taxes([row()], [f], {})[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(877) and 'polarity_flip' in r['flags']
+    g = filing(lines)   # no negated interest label: the sign is not proven, the sum keeps the stored sign
+    r = resolve_all.apply_cash_paid_taxes([dict(row(), accession=g['a'])], [g], {})[0]
+    assert r['value'] == D(-877)
+    h = filing(lines[:4] + lines[5:]); h['lines'] = h['lines'].replace('|InterestPaidNet|0|0|', '|InterestPaidNet|0|1|')   # no foreign line: not complete
+    assert resolve_all.apply_cash_paid_taxes([dict(row(), accession=h['a'])], [h], {})[0]['status'] == 'not_presented'
+    m = dict(row(), status='mapped', value=D(-1486), tags='IncomeTaxesPaidNet')
+    k = filing([lines[0], lines[1], ('CF', 'IncomeTaxesPaidNet', 'Income taxes, net of refunds', -1486), lines[5]]); k['lines'] = k['lines'].replace('|InterestPaidNet|0|0|', '|InterestPaidNet|0|1|')
+    assert resolve_all.apply_cash_paid_taxes([dict(m, accession=k['a'])], [k], {})[0]['value'] == D(1486)
+    assert resolve_all.apply_cash_paid_taxes([dict(m, accession=k['a'], tags='IncomeTaxesPaid')], [k], {})[0]['value'] == D(-1486)   # not the printed line
+    mixed = filing([lines[0], lines[1], lines[2], ('CF', 'IncomeTaxPaidStateAndLocalAfterRefundReceived', 'State', 321), lines[4], lines[5]])
+    mixed['lines'] = mixed['lines'].replace('|InterestPaidNet|0|0|', '|InterestPaidNet|0|1|')
+    assert resolve_all.apply_cash_paid_taxes([dict(row(), accession=mixed['a'])], [mixed], {})[0]['value'] == D(-235)   # mixed signs: as stored

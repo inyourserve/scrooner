@@ -175,7 +175,11 @@ def run(filings, vals, flloc):
                 elif cl:
                     if pars & tags: flags.append('capital lease inside a debt line (calc parent): not added')
                     elif pars and pars & set(onbs):
-                        nodes.append(('CapitalLeaseObligations', cl, 'NOTE', f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"))
+                        why_ = f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"
+                        if both:   # cite the present-value parts under their own elements (AMZN 2016: CapitalLeaseObligations is the gross 9,406)
+                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')]
+                        else:
+                            nodes.append(('CapitalLeaseObligations', cl, 'NOTE', why_))
                     else:
                         # no location evidence: TMUS, WFC, CVS and DIS keep capital leases inside their debt-note
                         # totals, so absence is not evidence for capital leases; a reader decides
