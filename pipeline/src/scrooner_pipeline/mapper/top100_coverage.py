@@ -142,7 +142,11 @@ NOT_PRESENTED_CODES = {
 # evidenced no filing presents the period (no_10k_presents_period is written by structural_loader / structural_direct;
 # the guard that refuses the reason when a later 10-K presents the period lives there; here it is re-checked, never
 # duplicated: a year that a periodic report presents is never hidden)
-NO_PERIOD_CODES = {"no_public_filing_for_period", "no_10k_presents_period"}
+NO_PERIOD_CODES = {
+    "no_public_filing_for_period",
+    "no_10k_presents_period",
+    "pre_filing_period",  # proof v21: no balance sheet of the shown filing presents the date (CRWD cash 2018-01-31)
+}
 WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
 
 
