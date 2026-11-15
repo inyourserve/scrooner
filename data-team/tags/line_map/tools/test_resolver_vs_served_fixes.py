@@ -950,3 +950,14 @@ def test_a_column_counts_as_printed_from_half_the_statement():
     assert 'before_first_10k' in r['flags'] and r['accession'].startswith('BEFORE')   # under half the statement: not a printed column
     r = resolve_all.mark_presented_and_never_reported([row()], [f], {f['a']: 'Revenues|4|9|2024-12-31~CostOfRevenue|4|5|2024-12-31'})[0]
     assert 'line_not_printed' in r['flags']
+
+
+def test_unsplit_combined_cells_are_marked_only_combined():
+    base = dict(cik='1', ticker='X', column='own', why='', flags='', tags='', value=None)
+    rows = [dict(base, accession='a', period_end='2020-12-31', data_point='cf_ap_change', status='combined', nodes='IncreaseDecreaseInAccountsPayableAndAccruedLiabilities=5 [R6.htm:16]'),
+            dict(base, accession='b', period_end='2021-12-31', data_point='cf_ap_change', status='mapped', value=D(3), nodes='IncreaseDecreaseInAccountsPayable=3 [R6.htm:16]'),
+            dict(base, accession='a', period_end='2020-12-31', data_point='capex', status='combined', nodes='PaymentsToAcquireProductiveAssets=9 [R6.htm:20]')]
+    rows = resolve_all.mark_presented_and_never_reported(rows)
+    assert 'only_combined' in rows[0]['flags'] and 'only_combined_years' in rows[0]['flags'] and rows[0]['why'].endswith('reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities')
+    assert 'only_combined_row' in rows[2]['flags']
+    assert 'only_combined' not in rows[1]['flags']

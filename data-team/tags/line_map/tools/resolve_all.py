@@ -504,6 +504,17 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
         r.update(accession=acc, column='comparative',
                  why=f"the 10-K {acc} presents the year in its FY-{w} column but prints no {r['data_point']} line for it")
         r['flags'] = ';'.join(x for x in dict.fromkeys(((r.get('flags') or '').replace('before_first_10k', 'line_not_printed')).split(';')) if x)
+    # Dhairya ruling 2026-11-16: a combined cell no note splits is hidden with evidence 'reported only combined: <line>'; the whole row
+    # when the company never reports the pure figure (no value in any year), else only those years
+    pure = collections.defaultdict(bool)
+    for r in rows:
+        if r['status'] in ('mapped', 'component_sum', 'derived'): pure[(r.get('cik'), r['data_point'])] = True
+    for r in rows:
+        if r['status'] != 'combined': continue
+        p0 = _split_parts(r.get('nodes') or '')[0] if r.get('nodes') else ''
+        line = re.match(r'^-?(\w+)', p0).group(1) if re.match(r'^-?(\w+)', p0) else (r.get('tags') or '')
+        r['why'] = (r.get('why') or '') + f" | reported only combined: {line}"
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'only_combined', 'only_combined_years' if pure[(r.get('cik'), r['data_point'])] else 'only_combined_row') if x)
     seen = collections.defaultdict(bool)
     for r in rows:
         if r['status'] in VALUED: seen[(r.get('cik'), r['data_point'])] = True
