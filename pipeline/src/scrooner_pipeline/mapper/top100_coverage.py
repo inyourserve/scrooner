@@ -1180,6 +1180,7 @@ def build_rows(
                 )
     resolve_derived(rows, load_input_prints(conn, rows))
     attach_only_combined(rows, load_only_combined())
+    attach_absent_in_own(rows, load_absent_in_own())
     apply_display(rows)
     note = {
         c.company_id: (
@@ -1387,6 +1388,86 @@ def attach_only_combined(
                 r["accession"] = hit[2]
 
 
+ABSENT_EVIDENCE = "absent in own filing: no face line and no undimensioned fact in the year's own annual report"
+_VALUED_DECISIONS = ("mapped", "component_sum", "derived_not_printed", "combined")
+
+
+def load_absent_in_own(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str], tuple[dict[str, str], list[date]]]:
+    """(ticker, data_point) -> ({period_end: own accession} for cells the CURRENT resolver (newest resolver-all110-*.csv)
+    decides `not_presented` in the year's own 10-K, the resolver periods where the line IS printed). The resolver has no
+    flag literally named absent_in_own_filing: the meaning is decision = not_presented, column = own, and not a
+    before_first_10k / line_not_printed pre-filing year (those are other hides). `accession` is the evidence column.
+    The printed periods feed the later-filing guard. Missing file: empty."""
+    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    absent: dict[tuple[str, str], dict[str, str]] = defaultdict(dict)
+    printed: dict[tuple[str, str], list[date]] = defaultdict(list)
+    if not files:
+        return {}
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            key = (r["ticker"], r["data_point"])
+            if r.get("decision") in _VALUED_DECISIONS:
+                printed[key].append(date.fromisoformat(r["period_end"]))
+                continue
+            flags = (r.get("flags") or "").split(";")
+            if (
+                r.get("decision") != "not_presented"
+                or r.get("column") != "own"
+                or "before_first_10k" in flags
+                or "line_not_printed" in flags
+                or not r.get("accession")
+            ):
+                continue
+            absent[key][r["period_end"]] = r["accession"]
+    return {k: (v, printed.get(k, [])) for k, v in absent.items()}
+
+
+def attach_absent_in_own(
+    rows: list[dict[str, Any]],
+    absent: dict[tuple[str, str], tuple[dict[str, str], list[date]]],
+) -> None:
+    """Mark each non-value cell the resolver decides not_presented in its own annual report as `_absent_own`, carrying
+    the resolver accession as evidence (Dhairya 2026-11-16). Matching is only_combined's: same ticker and data point,
+    exact period or fsn_end_matches, exactly one candidate. Guard, never hide a year a later annual report prints for
+    the data point: a later resolver period inside the span eligible_filings gives (the later report's own column; it
+    carries the year as a comparative) where the line is printed keeps the cell open, so the resolver fills it. Pure."""
+    for r in rows:
+        if r["class"] in ("PROVEN", "DERIVED"):
+            continue
+        got = absent.get((r["ticker"], r["data_point"]))
+        if not got:
+            continue
+        cells, printed = got
+        end = date.fromisoformat(r["period_end"])
+        acc = cells.get(r["period_end"])
+        if acc is None:
+            near = [
+                a
+                for d, a in cells.items()
+                if fsn_end_matches(date.fromisoformat(d), end)
+            ]
+            acc = near[0] if len(near) == 1 else None
+        if acc is None:
+            continue
+        instant = r["data_point"] in INSTANT_DPS
+        later = [
+            d
+            for d in printed
+            if d > end
+            and not fsn_end_matches(d, end, _DAY_TOL)
+            and eligible_filings([(d, "L")], end, instant)
+        ]
+        if later:
+            continue
+        r["_absent_own"] = True
+        r["_oc_accession"] = acc
+        r["evidence"] = r.get("evidence") or ABSENT_EVIDENCE
+        if not r.get("accession"):
+            r["accession"] = acc
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
     a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
@@ -1406,6 +1487,8 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             r["display"] = HIDDEN_YEAR
         elif r.get("_only_combined") == "row":
             r["display"] = HIDDEN_ROW
+        elif r.get("_absent_own"):
+            r["display"] = HIDDEN_YEAR
         elif no_period and not r.get("_presented"):
             r["display"] = HIDDEN_YEAR
         elif (
@@ -1508,6 +1591,8 @@ def hidden_evidence(
                     if r.get("_before_first_filing")
                     else "reported_only_combined"
                     if r.get("_only_combined")
+                    else "absent_in_own_filing"
+                    if r.get("_absent_own")
                     else "first_report_comparative_only"
                     if r.get("_comparative_only")
                     else "evidenced_no_period_reason",
