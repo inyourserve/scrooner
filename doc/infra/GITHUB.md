@@ -62,6 +62,21 @@ These are disabled: every root job is skipped unless the repository variable `AL
 
 `pipeline-recompute.yml` (production; full-population metric recompute, last run 10-21): Engineering to say whether the new path still needs it.
 
+## Protecting `main` (founder approved 2026-11-16; needs the repository admin)
+
+Why: 13 red CI runs in a row on `main` on 11-14, all from direct pushes made before CI ran. The settings below make every change land through a PR that auto-merges once CI is green.
+
+1. Settings → General → Pull Requests: tick **Allow auto-merge** and **Automatically delete head branches**.
+2. Settings → Rules → Rulesets → **New branch ruleset**:
+   - Name: `main`. Enforcement: **Active**. Target branches: **Include default branch**.
+   - Tick **Restrict deletions** and **Block force pushes**.
+   - Tick **Require a pull request before merging**, with 0 required approvals. Agents can't approve, and Claude Approvals or CI is the gate.
+   - Tick **Require status checks to pass**, then add `Detect changed areas`, `Python tests and correctness lint`, `Migrations, documentation, and secrets` and `Next.js frontend tests and production build`. A job skipped by the change filter counts as passing.
+     - Leave **Require branches to be up to date** off. Many sessions land at once; with it on, every PR would need a rebase after each merge.
+   - **Bypass list:** add **GitHub Actions** (app) with "Always" (or "For pull requests only" if the next item is used instead). This lets the hourly coverage commit and the top100-flow certification requests keep pushing straight to `main` with `GITHUB_TOKEN`.
+     - If the app can't be added, route both through a PR: set `gh pr merge --auto`, with a bot token or a GitHub App, since `GITHUB_TOKEN` PRs don't trigger CI.
+3. Agents then land work like this: `git push origin HEAD:work/<owner>/<topic>`, then `gh pr create --fill`, then `gh pr merge --auto --squash`. Nothing pushes to `main` directly any more. Update root `CLAUDE.md` ("A commit on main is pushed in the same turn") at the same time.
+
 ## Branches
 
 Agents push `work/<owner>/<topic>` and land through a PR. Merged branches are deleted. Verifier evidence branches use `verify/<date>-<topic>`. Long-term history goes under `archive/`.
