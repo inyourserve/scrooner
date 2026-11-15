@@ -620,11 +620,14 @@ def reason_evidence(
             tagsets[c],
             f"{c.path} {c.label}",
             by_tag,
-            {
-                t
-                for t in tagsets[c]
-                if (c.accession, rg.base_name(c.data_point), t) in ruled
-            },
+            rg.ruled_tags(
+                ruled,
+                c.accession,
+                rg.base_name(c.data_point),
+                {c.period_end.year},
+                rg.kind_of(c.decision) or rg.COMBINED,
+                tagsets[c],
+            ),
         )
         if ev:
             found[c] = ev
@@ -848,11 +851,14 @@ class Plan:
 LINE_MAP_SOURCE = "source=line_map"
 
 
+def hand_fix_wins(rule_id: str, serve_note: str | None) -> bool:
+    """THE predicate (loader and direct serving): a docmap_fix@1 row not generated from an earlier structural run wins
+    its cell. Pure."""
+    return rule_id == HAND_FIX_RULE_ID and LINE_MAP_SOURCE not in (serve_note or "")
+
+
 def is_hand_fix(r: dict) -> bool:
-    """A hand fix row that wins its cell: a docmap_fix@1 row not generated from an earlier structural run. Pure."""
-    return r["rule_id"] == HAND_FIX_RULE_ID and LINE_MAP_SOURCE not in (
-        r.get("serve_note") or ""
-    )
+    return hand_fix_wins(r["rule_id"], r.get("serve_note"))
 
 
 def plan_company(
@@ -1199,9 +1205,9 @@ def fact_options(
 ) -> dict[tuple[int, str, date], set[Decimal]]:
     """(company id, tag, FSN period end) -> authoritative SEC fact values: instants, and durations of about a year.
     The resolver's period_end is the FSN date (rounded to a month end); a 52/53-week filer's facts end on the true
-    date (NVDA FY2018: 2018-01-28 for FSN 2018-01-31), so facts match by fsn_end_matches, never by equality. An exact
-    end wins when it holds a value; the rounded match is the fallback (stray instants a few days around a year end
-    never add options beside a real one)."""
+    date (NVDA FY2018: 2018-01-28 for FSN 2018-01-31), so facts match by fsn_end_matches, never by equality. Every
+    matching end contributes (a stray fact dated on the month end must not hide the true 52/53-week fact): the sign
+    solve only accepts a combination that sums to the resolver's value, so extra candidates are safe."""
     out: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
     if not items:
         return out
@@ -1212,8 +1218,6 @@ def fact_options(
     want: dict[tuple[int, str], set[date]] = defaultdict(set)
     for cid, tag, end in items:
         want[(cid, tag)].add(end)
-    exact: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
-    near: dict[tuple[int, str, date], set[Decimal]] = defaultdict(set)
     with conn.cursor() as cur:
         cur.execute(
             """select f.company_id, c.tag, p.end_date, f.value
@@ -1226,12 +1230,8 @@ def fact_options(
         )
         for cid, tag, end, v in cur.fetchall():
             for w in want.get((cid, tag), ()):
-                if end == w:
-                    exact[(cid, tag, w)].add(Decimal(v))
-                elif fsn_end_matches(w, end):
-                    near[(cid, tag, w)].add(Decimal(v))
-    for k in set(exact) | set(near):
-        out[k] = exact.get(k) or near[k]
+                if end == w or fsn_end_matches(w, end):
+                    out[(cid, tag, w)].add(Decimal(v))
     return out
 
 

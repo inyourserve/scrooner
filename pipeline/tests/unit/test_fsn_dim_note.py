@@ -257,3 +257,16 @@ def test_a_period_in_both_bucket_folders_is_read_from_both(conn, isolated_databa
     res = dim_note.run(lambda: psycopg.connect(isolated_database_url), [cid], fetch, tmp_path, apply=False)
     assert res["rows_to_add"] == 4 and res["per_company"] == {cid: 4}  # 2 per folder: both folders were read
     assert fid2 != fid
+
+
+@pytest.mark.unit
+def test_comparative_column_member_facts_are_candidates_too(tmp_path):
+    """No ddate filter: a prior-year column of the filing (GEV AR 7,409 + 80 at the FY-1 date) is kept like the own period."""
+    files = _period(tmp_path / "c")
+    rows = [r.split("\t") for r in subprocess.run(["zstd", "-dc", str(files["num"])], capture_output=True, check=True).stdout.decode().splitlines()]
+    prior = [*rows[3]]
+    prior[3] = "20211231"  # the AmortizationOfIntangibleAssets / CostOfSales row, one fiscal year earlier
+    prior[8] = "55000000"
+    _zst(files["num"], [*rows, prior])
+    got, _, _ = dim_note.candidates(files, {ADSH})
+    assert {(r["ddate"], r["value"]) for r in got if r["dimh"] == "0xbbb"} == {("20221231", "58000000"), ("20211231", "55000000")}

@@ -1,0 +1,334 @@
+rank,ticker,company_id,data_point,fiscal_year,period_end,reason_code,earliest_filing_date,earliest_10k_presenting,basis,evidence,evidence_accession
+3,GOOG,9,depreciation_and_amortization,2015,2015-12-31,line_presented_combined,2015-10-29,0001652044-16-000012,reported_only_combined,reported only combined: DepreciationandImpairmentonDispositionofPropertyandEquipment,0001652044-16-000012
+3,GOOG,9,depreciation_and_amortization,2016,2016-12-31,line_presented_combined,2015-10-29,0001652044-17-000008,reported_only_combined,reported only combined: DepreciationandImpairmentonDispositionofPropertyandEquipment,0001652044-17-000008
+3,GOOG,9,depreciation_and_amortization,2017,2017-12-31,line_presented_combined,2015-10-29,0001652044-18-000007,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-18-000007
+3,GOOG,9,depreciation_and_amortization,2018,2018-12-31,line_presented_combined,2015-10-29,0001652044-19-000004,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-19-000004
+3,GOOG,9,depreciation_and_amortization,2019,2019-12-31,line_presented_combined,2015-10-29,0001652044-20-000008,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-20-000008
+3,GOOG,9,depreciation_and_amortization,2020,2020-12-31,line_presented_combined,2015-10-29,0001652044-21-000010,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-21-000010
+3,GOOG,9,depreciation_and_amortization,2021,2021-12-31,line_presented_combined,2015-10-29,0001652044-22-000019,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-22-000019
+3,GOOG,9,depreciation_and_amortization,2022,2022-12-31,line_presented_combined,2015-10-29,0001652044-23-000016,reported_only_combined,reported only combined: DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment,0001652044-23-000016
+4,MSFT,4,other_income_expense_net,2024,2024-06-30,line_presented_combined,1994-02-14,0000950170-24-087843,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000950170-24-087843
+5,AMZN,2328,depreciation_and_amortization,2018,2018-12-31,no_proof_row,1997-08-14,0001018724-19-000004,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001018724-19-000004
+6,META,5050,interest_expense,2020,2020-12-31,line_presented_combined,2012-07-31,0001326801-21-000014,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-21-000014
+6,META,5050,interest_expense,2021,2021-12-31,line_presented_combined,2012-07-31,0001326801-22-000018,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-22-000018
+6,META,5050,interest_expense,2022,2022-12-31,line_presented_combined,2012-07-31,0001326801-23-000013,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-23-000013
+6,META,5050,interest_income,2020,2020-12-31,line_presented_combined,2012-07-31,0001326801-21-000014,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-21-000014
+6,META,5050,interest_income,2021,2021-12-31,line_presented_combined,2012-07-31,0001326801-22-000018,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-22-000018
+6,META,5050,interest_income,2022,2022-12-31,line_presented_combined,2012-07-31,0001326801-23-000013,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-23-000013
+6,META,5050,other_income_expense_net,2020,2020-12-31,not_in_template_but_in_template,2012-07-31,0001326801-21-000014,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-21-000014
+6,META,5050,other_income_expense_net,2021,2021-12-31,not_in_template_but_in_template,2012-07-31,0001326801-22-000018,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-22-000018
+6,META,5050,other_income_expense_net,2022,2022-12-31,not_in_template_but_in_template,2012-07-31,0001326801-23-000013,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001326801-23-000013
+8,TSLA,4945,depreciation_and_amortization,2018,2018-12-31,line_presented_combined,2010-08-13,0001564590-19-003165,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001564590-19-003165
+8,TSLA,4945,depreciation_and_amortization,2019,2019-12-31,line_presented_combined,2010-08-13,0001564590-20-004475,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001564590-20-004475
+8,TSLA,4945,depreciation_and_amortization,2020,2020-12-31,line_presented_combined,2010-08-13,0001564590-21-004599,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001564590-21-004599
+8,TSLA,4945,depreciation_and_amortization,2021,2021-12-31,line_presented_combined,2010-08-13,0000950170-22-000796,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0000950170-22-000796
+8,TSLA,4945,depreciation_and_amortization,2022,2022-12-31,line_presented_combined,2010-08-13,0000950170-23-001409,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0000950170-23-001409
+8,TSLA,4945,depreciation_and_amortization,2023,2023-12-31,line_presented_combined,2010-08-13,0001628280-24-002390,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001628280-24-002390
+8,TSLA,4945,depreciation_and_amortization,2024,2024-12-31,line_presented_combined,2010-08-13,0001104659-25-042659,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001628280-25-003063
+8,TSLA,4945,depreciation_and_amortization,2025,2025-12-31,line_presented_combined,2010-08-13,0001104659-26-053166,reported_only_combined,reported only combined: DepreciationAmortizationAndImpairment,0001628280-26-003952
+10,LLY,666,comprehensive_income,2017,2017-12-31,line_presented_combined,1994-03-25,0000059478-18-000089,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000059478-18-000089
+10,LLY,666,comprehensive_income,2018,2018-12-31,line_presented_combined,1994-03-25,0000059478-19-000082,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000059478-19-000082
+10,LLY,666,comprehensive_income,2019,2019-12-31,line_presented_combined,1994-03-25,0000059478-20-000057,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000059478-20-000057
+10,LLY,666,comprehensive_income,2020,2020-12-31,line_presented_combined,1994-03-25,0000059478-21-000083,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000059478-21-000083
+10,LLY,666,comprehensive_income,2021,2021-12-31,line_presented_combined,1994-03-25,0000059478-22-000068,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000059478-22-000068
+15,AMD,85,cf_ap_change,2016,2016-12-31,line_presented_combined,1994-03-07,0000002488-17-000043,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000002488-17-000043
+17,V,5718,interest_expense,2019,2019-09-30,no_proof_row,2007-12-21,0001403161-19-000050,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001403161-19-000050
+17,V,5718,interest_expense,2020,2020-09-30,no_proof_row,2007-12-21,0001403161-20-000070,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001403161-20-000070
+17,V,5718,interest_expense,2021,2021-09-30,no_proof_row,2007-12-21,0001403161-21-000060,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001403161-21-000060
+17,V,5718,other_income_expense_net,2015,2015-09-30,no_proof_row,2007-12-21,0001403161-15-000013,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001403161-15-000013
+22,INTC,643,other_income_expense_net,2016,2016-12-31,era_unmapped,1994-03-25,0000050863-17-000012,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0000050863-17-000012
+22,INTC,643,other_income_expense_net,2022,2022-12-31,era_unmapped,1994-03-25,0000050863-23-000006,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000050863-23-000006
+24,PLTR,4969,accounts_payable,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,accounts_receivable,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,amortization_of_intangibles,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,basic_eps,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,capex,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cash_and_equivalents,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cash_flow_financing,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cash_flow_investing,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cash_paid_for_income_taxes,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cash_paid_for_interest,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cf_ap_change,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cf_ap_change,2025,2025-12-31,not_in_template_but_in_template,2020-11-13,0001321655-26-000011,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001321655-26-000011
+24,PLTR,4969,cf_ar_change,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cf_inventory_change,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cfo,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,comprehensive_income,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,cost_of_revenue,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,current_assets,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,current_liabilities,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,depreciation_and_amortization,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,diluted_eps,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,dividends_paid,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,dividends_per_share,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,goodwill,2018,2018-12-31,no_public_filing_for_period,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,gross_profit,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,income_before_tax,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,income_tax_expense,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,interest_expense,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,interest_income,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,inventory,2018,2018-12-31,no_public_filing_for_period,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,net_income,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,operating_expenses,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,operating_income,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,other_income_expense_net,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,ppe_net,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,research_and_development,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,revenue,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,sbc,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,sga_expense,2017,2017-12-22,era_unmapped,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,share_buybacks,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,shares_outstanding,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,stockholders_equity,2018,2018-12-31,no_proof_row,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,total_assets,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,total_debt,2018,2018-12-31,no_public_filing_for_period,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,total_liabilities,2018,2018-12-31,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,weighted_basic_shares,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+24,PLTR,4969,weighted_diluted_shares,2017,2017-12-22,reason_own_filing_unverified,2020-11-13,,before_first_periodic_filing,,
+29,PG,1042,cf_ap_change,2015,2015-06-30,line_presented_combined,1994-02-09,0000080424-15-000070,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-15-000070
+29,PG,1042,cf_ap_change,2016,2016-06-30,line_presented_combined,1994-02-09,0000080424-16-000212,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-16-000212
+29,PG,1042,cf_ap_change,2017,2017-06-30,line_presented_combined,1994-02-09,0000080424-17-000047,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-17-000047
+29,PG,1042,cf_ap_change,2018,2018-06-30,line_presented_combined,1994-02-09,0000080424-18-000055,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-18-000055
+29,PG,1042,cf_ap_change,2019,2019-06-30,line_presented_combined,1994-02-09,0000080424-19-000050,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-19-000050
+29,PG,1042,cf_ap_change,2020,2020-06-30,line_presented_combined,1994-02-09,0000080424-20-000053,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-20-000053
+29,PG,1042,cf_ap_change,2021,2021-06-30,line_presented_combined,1994-02-09,0000080424-21-000100,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-21-000100
+29,PG,1042,cf_ap_change,2022,2022-06-30,line_presented_combined,1994-02-09,0000080424-22-000064,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-22-000064
+29,PG,1042,cf_ap_change,2023,2023-06-30,line_presented_combined,1994-02-09,0000080424-23-000073,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0000080424-23-000073
+36,GE,608,dividends_paid,2015,2015-12-31,line_presented_combined,1994-03-11,0000040545-16-000145,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-16-000145
+36,GE,608,dividends_paid,2016,2016-12-31,line_presented_combined,1994-03-11,0000040545-17-000010,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-17-000010
+36,GE,608,dividends_paid,2017,2017-12-31,line_presented_combined,1994-03-11,0000040545-18-000014,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-18-000014
+36,GE,608,dividends_paid,2018,2018-12-31,line_presented_combined,1994-03-11,0000040545-19-000014,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-19-000014
+36,GE,608,dividends_paid,2019,2019-12-31,line_presented_combined,1994-03-11,0000040545-20-000009,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-20-000009
+36,GE,608,dividends_paid,2020,2020-12-31,line_presented_combined,1994-03-11,0000040545-21-000011,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-21-000011
+36,GE,608,dividends_paid,2021,2021-12-31,line_presented_combined,1994-03-11,0000040545-22-000008,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-22-000008
+36,GE,608,dividends_paid,2022,2022-12-31,line_presented_combined,1994-03-11,0000040545-23-000023,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-23-000023
+36,GE,608,dividends_paid,2023,2023-12-31,line_presented_combined,1994-03-11,0000040545-24-000027,reported_only_combined,reported only combined: PaymentsOfOrdinaryDividends,0000040545-24-000027
+36,GE,608,other_income_expense_net,2020,2020-12-31,not_in_template_but_in_template,1994-03-11,0000040545-21-000011,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-21-000011
+36,GE,608,other_income_expense_net,2021,2021-12-31,not_in_template_but_in_template,1994-03-11,0000040545-22-000008,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-22-000008
+36,GE,608,other_income_expense_net,2022,2022-12-31,not_in_template_but_in_template,1994-03-11,0000040545-23-000023,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-23-000023
+36,GE,608,other_income_expense_net,2023,2023-12-31,not_in_template_but_in_template,1994-03-11,0000040545-24-000027,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-24-000027
+36,GE,608,other_income_expense_net,2024,2024-12-31,line_presented_combined,1994-03-11,0000040545-25-000015,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-25-000015
+36,GE,608,other_income_expense_net,2025,2025-12-31,line_presented_combined,1994-03-11,0000040545-26-000008,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000040545-26-000008
+37,AMAT,134,interest_income,2021,2021-10-31,line_presented_combined,1994-02-28,0000006951-21-000043,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0000006951-21-000043
+41,DELL,3083,accounts_payable,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,accounts_receivable,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,cash_and_equivalents,2015,2015-01-30,reason_own_filing_unverified,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,current_assets,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,current_liabilities,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,dividends_paid,2015,2015-01-30,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,dividends_paid,2016,2016-01-29,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,dividends_per_share,2015,2015-01-30,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,dividends_per_share,2016,2016-01-29,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,goodwill,2015,2015-01-30,reason_own_filing_unverified,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,interest_income,2015,2015-01-30,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,interest_income,2016,2016-01-29,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,inventory,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,ppe_net,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,shares_outstanding,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,stockholders_equity,2015,2015-01-30,era_unmapped,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,total_assets,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,total_debt,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,total_liabilities,2015,2015-01-30,no_10k_presents_period,2016-06-10,,before_first_periodic_filing,,
+41,DELL,3083,weighted_basic_shares,2015,2015-01-30,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,weighted_basic_shares,2016,2016-01-29,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,weighted_diluted_shares,2015,2015-01-30,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+41,DELL,3083,weighted_diluted_shares,2016,2016-01-29,structural_not_presented,2016-06-10,0001571996-17-000004,first_report_comparative_only,,0001571996-17-000004
+44,RTX,1123,interest_expense,2025,2025-12-31,line_presented_combined,1994-03-31,0000101829-26-000006,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000101829-26-000006
+47,WFC,1010,comprehensive_income,2020,2020-12-31,line_presented_combined,1994-03-08,0000072971-21-000197,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000072971-21-000197
+49,GEV,4015,accounts_payable,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,accounts_receivable,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,accounts_receivable,2023,2023-12-31,company_tag_map:not_presented,2024-04-30,0001996810-25-000011,first_report_comparative_only,,0001996810-25-000011
+49,GEV,4015,cash_and_equivalents,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,current_assets,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,current_liabilities,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,goodwill,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,inventory,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,ppe_net,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,shares_outstanding,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,shares_outstanding,2023,2023-12-31,company_tag_map:not_presented,2024-04-30,0001996810-25-000011,first_report_comparative_only,,0001996810-25-000011
+49,GEV,4015,stockholders_equity,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,total_assets,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,total_debt,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+49,GEV,4015,total_liabilities,2022,2022-12-31,no_public_filing_for_period,2024-04-30,,before_first_periodic_filing,,
+50,AMGN,1207,depreciation_and_amortization,2019,2019-12-31,no_proof_row,1994-05-12,0000318154-20-000017,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-20-000017
+50,AMGN,1207,depreciation_and_amortization,2020,2020-12-31,no_proof_row,1994-05-12,0000318154-21-000010,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-21-000010
+50,AMGN,1207,depreciation_and_amortization,2021,2021-12-31,no_proof_row,1994-05-12,0000318154-22-000010,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-22-000010
+50,AMGN,1207,depreciation_and_amortization,2022,2022-12-31,no_proof_row,1994-05-12,0000318154-23-000017,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-23-000017
+50,AMGN,1207,depreciation_and_amortization,2023,2023-12-31,no_proof_row,1994-05-12,0000318154-24-000011,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-24-000011
+50,AMGN,1207,depreciation_and_amortization,2024,2024-12-31,line_presented_combined,1994-05-12,0000318154-25-000010,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-25-000010
+50,AMGN,1207,depreciation_and_amortization,2025,2025-12-31,line_presented_combined,1994-05-12,0000318154-26-000010,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0000318154-26-000010
+50,AMGN,1207,interest_income,2015,2015-12-31,line_presented_combined,1994-05-12,0000318154-16-000031,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-16-000031
+50,AMGN,1207,interest_income,2016,2016-12-31,line_presented_combined,1994-05-12,0000318154-17-000004,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-17-000004
+50,AMGN,1207,interest_income,2017,2017-12-31,line_presented_combined,1994-05-12,0000318154-18-000004,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-18-000004
+50,AMGN,1207,interest_income,2018,2018-12-31,line_presented_combined,1994-05-12,0000318154-19-000008,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-19-000008
+50,AMGN,1207,interest_income,2019,2019-12-31,line_presented_combined,1994-05-12,0000318154-20-000017,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-20-000017
+50,AMGN,1207,interest_income,2020,2020-12-31,line_presented_combined,1994-05-12,0000318154-21-000010,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-21-000010
+50,AMGN,1207,interest_income,2021,2021-12-31,line_presented_combined,1994-05-12,0000318154-22-000010,reported_only_combined,reported only combined: InterestExpenseDebt,0000318154-22-000010
+50,AMGN,1207,other_income_expense_net,2015,2015-12-31,not_in_template_but_in_template,1994-05-12,0000318154-16-000031,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-16-000031
+50,AMGN,1207,other_income_expense_net,2016,2016-12-31,not_in_template_but_in_template,1994-05-12,0000318154-17-000004,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-17-000004
+50,AMGN,1207,other_income_expense_net,2017,2017-12-31,not_in_template_but_in_template,1994-05-12,0000318154-18-000004,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-18-000004
+50,AMGN,1207,other_income_expense_net,2018,2018-12-31,not_in_template_but_in_template,1994-05-12,0000318154-19-000008,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-19-000008
+50,AMGN,1207,other_income_expense_net,2019,2019-12-31,not_in_template_but_in_template,1994-05-12,0000318154-20-000017,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-20-000017
+50,AMGN,1207,other_income_expense_net,2020,2020-12-31,not_in_template_but_in_template,1994-05-12,0000318154-21-000010,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0000318154-21-000010
+51,CRWD,2726,accounts_payable,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,accounts_receivable,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,cash_and_equivalents,2018,2018-01-31,reason_own_filing_unverified,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,cash_paid_for_income_taxes,2018,2018-01-31,company_tag_map:not_presented,2019-07-19,0001535527-20-000006,first_report_comparative_only,,0001535527-20-000006
+51,CRWD,2726,cash_paid_for_interest,2018,2018-01-31,company_tag_map:not_presented,2019-07-19,0001535527-20-000006,first_report_comparative_only,,0001535527-20-000006
+51,CRWD,2726,comprehensive_income,2018,2018-01-31,company_tag_map:not_presented,2019-07-19,0001535527-20-000006,first_report_comparative_only,,0001535527-20-000006
+51,CRWD,2726,comprehensive_income,2019,2019-01-31,company_tag_map:not_presented,2019-07-19,0001535527-20-000006,first_report_comparative_only,,0001535527-20-000006
+51,CRWD,2726,comprehensive_income,2021,2021-01-31,line_presented_combined,2019-07-19,0001535527-21-000007,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0001535527-21-000007
+51,CRWD,2726,current_assets,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,current_liabilities,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,goodwill,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,inventory,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,ppe_net,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,shares_outstanding,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,stockholders_equity,2018,2018-01-31,era_unmapped,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,total_assets,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,total_debt,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+51,CRWD,2726,total_liabilities,2018,2018-01-31,no_public_filing_for_period,2019-07-19,,before_first_periodic_filing,,
+52,LIN,4841,interest_income,2016,2016-12-31,line_presented_combined,2017-10-30,0000884905-17-000007,reported_only_combined,reported only combined: InterestAndDebtExpense,0001628280-19-003050
+52,LIN,4841,interest_income,2017,2017-12-31,line_presented_combined,2017-10-30,0000884905-18-000014,reported_only_combined,reported only combined: InterestAndDebtExpense,0001628280-19-003050
+52,LIN,4841,interest_income,2018,2018-12-31,line_presented_combined,2017-10-30,0001628280-19-003050,reported_only_combined,reported only combined: InterestAndDebtExpense,0001628280-19-003050
+53,ANET,3418,depreciation_and_amortization,2018,2018-12-31,era_unmapped,2014-08-08,0001596532-19-000027,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-19-000027
+53,ANET,3418,depreciation_and_amortization,2019,2019-12-31,era_unmapped,2014-08-08,0001596532-20-000024,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-20-000024
+53,ANET,3418,depreciation_and_amortization,2020,2020-12-31,era_unmapped,2014-08-08,0001596532-21-000049,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-21-000049
+53,ANET,3418,depreciation_and_amortization,2021,2021-12-31,era_unmapped,2014-08-08,0001596532-22-000026,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-22-000026
+53,ANET,3418,depreciation_and_amortization,2022,2022-12-31,era_unmapped,2014-08-08,0001596532-23-000016,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-23-000016
+53,ANET,3418,depreciation_and_amortization,2023,2023-12-31,era_unmapped,2014-08-08,0001596532-24-000043,reported_only_combined,reported only combined: DepreciationDepletionAndAmortization,0001596532-24-000043
+54,SHOP,3398,interest_expense,2015,2015-12-31,reason_refused_comparative_presented,2016-02-17,0001594805-16-000019,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-16-000019
+54,SHOP,3398,interest_expense,2016,2016-12-31,reason_refused_comparative_presented,2016-02-17,0001594805-17-000007,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-17-000007
+54,SHOP,3398,interest_expense,2017,2017-12-31,reason_refused_comparative_presented,2016-02-17,0001594805-18-000009,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-18-000009
+54,SHOP,3398,interest_expense,2018,2018-12-31,reason_refused_comparative_presented,2016-02-17,0001594805-19-000010,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-19-000010
+54,SHOP,3398,interest_expense,2023,2023-12-31,reason_refused_comparative_presented,2016-02-17,0001594805-24-000007,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-24-000007
+54,SHOP,3398,interest_expense,2024,2024-12-31,line_presented_combined,2016-02-17,0001594805-25-000012,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-25-000012
+54,SHOP,3398,interest_expense,2025,2025-12-31,line_presented_combined,2016-02-17,0001594805-26-000007,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-26-000007
+54,SHOP,3398,interest_income,2018,2018-12-31,era_unmapped,2016-02-17,0001594805-19-000010,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-20-000010
+54,SHOP,3398,interest_income,2019,2019-12-31,era_unmapped,2016-02-17,0001594805-20-000010,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001594805-20-000010
+56,IBM,644,comprehensive_income,2015,2015-12-31,line_presented_combined,1994-03-28,0001047469-16-010329,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0001047469-16-010329
+56,IBM,644,comprehensive_income,2016,2016-12-31,line_presented_combined,1994-03-28,0001047469-17-001061,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0001047469-17-001061
+57,C,1586,interest_income,2023,2023-12-31,no_proof_row,1994-03-31,0000831001-24-000033,reported_only_combined,reported only combined: InterestAndDividendIncomeOperating,0000831001-24-000033
+58,AXP,108,share_buybacks,2018,2018-12-31,predictor_candidate,1994-03-31,0000004962-19-000018,reported_only_combined,reported only combined: PaymentsForRepurchasesOfCommonSharesAndOther,0000004962-19-000018
+58,AXP,108,share_buybacks,2019,2019-12-31,line_presented_combined,1994-03-31,0000004962-20-000030,reported_only_combined,reported only combined: PaymentsForRepurchasesOfCommonSharesAndOther,0000004962-20-000030
+58,AXP,108,share_buybacks,2020,2020-12-31,line_presented_combined,1994-03-31,0000004962-21-000013,reported_only_combined,reported only combined: PaymentsForRepurchasesOfCommonSharesAndOther,0000004962-21-000013
+58,AXP,108,share_buybacks,2021,2021-12-31,line_presented_combined,1994-03-31,0000004962-22-000008,reported_only_combined,reported only combined: PaymentsForRepurchasesOfCommonSharesAndOther,0000004962-22-000008
+58,AXP,108,share_buybacks,2022,2022-12-31,no_proof_row,1994-03-31,0000004962-23-000006,reported_only_combined,reported only combined: PaymentsForRepurchaseOfCommonStock,0000004962-23-000006
+58,AXP,108,share_buybacks,2023,2023-12-31,no_proof_row,1994-03-31,0000004962-24-000013,reported_only_combined,reported only combined: PaymentsForRepurchaseOfCommonStock,0000004962-24-000013
+58,AXP,108,share_buybacks,2024,2024-12-31,no_proof_row,1994-03-31,0000004962-25-000016,reported_only_combined,reported only combined: PaymentsForRepurchaseOfCommonStock,0000004962-25-000016
+58,AXP,108,share_buybacks,2025,2025-12-31,no_proof_row,1994-03-31,0000004962-26-000080,reported_only_combined,reported only combined: PaymentsForRepurchaseOfCommonStock,0000004962-26-000080
+59,MRVL,2683,interest_income,2026,2026-01-31,line_presented_combined,2014-03-27,0001835632-26-000011,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0001835632-26-000011
+59,MRVL,2683,other_income_expense_net,2026,2026-01-31,not_in_template_but_in_template,2014-03-27,0001835632-26-000011,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0001835632-26-000011
+60,CRM,3569,cf_ap_change,2015,2015-01-31,line_presented_combined,2004-08-25,0001108524-15-000008,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-15-000008
+60,CRM,3569,cf_ap_change,2016,2016-01-31,line_presented_combined,2004-08-25,0001108524-16-000053,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-16-000053
+60,CRM,3569,cf_ap_change,2017,2017-01-31,line_presented_combined,2004-08-25,0001108524-17-000006,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-17-000006
+60,CRM,3569,cf_ap_change,2018,2018-01-31,line_presented_combined,2004-08-25,0001108524-18-000011,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-18-000011
+60,CRM,3569,cf_ap_change,2021,2021-01-31,line_presented_combined,2004-08-25,0001108524-21-000014,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-22-000008
+60,CRM,3569,cf_ap_change,2022,2022-01-31,line_presented_combined,2004-08-25,0001108524-22-000013,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-22-000013
+60,CRM,3569,cf_ap_change,2023,2023-01-31,line_presented_combined,2004-08-25,0001108524-23-000011,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-23-000011
+60,CRM,3569,cf_ap_change,2024,2024-01-31,line_presented_combined,2004-08-25,0001108524-24-000005,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-24-000005
+60,CRM,3569,cf_ap_change,2025,2025-01-31,line_presented_combined,2004-08-25,0001108524-25-000006,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-25-000006
+60,CRM,3569,cf_ap_change,2026,2026-01-31,line_presented_combined,2004-08-25,0001108524-26-000060,reported_only_combined,reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,0001108524-26-000060
+60,CRM,3569,interest_income,2015,2015-01-31,era_unmapped,2004-08-25,0001108524-15-000008,reported_only_combined,reported only combined: InvestmentIncomeNet,0001108524-15-000008
+60,CRM,3569,interest_income,2016,2016-01-31,era_unmapped,2004-08-25,0001108524-16-000053,reported_only_combined,reported only combined: InvestmentIncomeNet,0001108524-16-000053
+60,CRM,3569,interest_income,2017,2017-01-31,era_unmapped,2004-08-25,0001108524-17-000006,reported_only_combined,reported only combined: InvestmentIncomeNet,0001108524-17-000006
+60,CRM,3569,interest_income,2018,2018-01-31,era_unmapped,2004-08-25,0001108524-18-000011,reported_only_combined,reported only combined: InvestmentIncomeNet,0001108524-18-000011
+60,CRM,3569,interest_income,2019,2019-01-31,era_unmapped,2004-08-25,0001108524-19-000009,reported_only_combined,reported only combined: InvestmentIncomeNet,0001108524-19-000009
+63,DIS,5261,sga_expense,2023,2023-09-30,era_unmapped,2014-05-06,0001744489-23-000216,reported_only_combined,reported only combined: SellingGeneralAndAdministrativeExpense,0001744489-23-000216
+64,SNDK,4227,accounts_payable,2023,2023-06-30,no_public_filing_for_period,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,accounts_receivable,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,cash_and_equivalents,2023,2023-06-30,no_proof_row,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,current_assets,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,current_liabilities,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,goodwill,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,inventory,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,ppe_net,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,share_buybacks,2023,2023-06-30,docmap_fix_not_presented,2025-03-07,0002023554-25-000034,first_report_comparative_only,,0002023554-25-000034
+64,SNDK,4227,shares_outstanding,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,stockholders_equity,2023,2023-06-30,no_proof_row,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,total_assets,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,total_debt,2023,2023-06-30,no_public_filing_for_period,2025-03-07,,before_first_periodic_filing,,
+64,SNDK,4227,total_liabilities,2023,2023-06-30,reason_own_filing_unverified,2025-03-07,,before_first_periodic_filing,,
+74,TMUS,4630,interest_expense,2022,2022-12-31,line_presented_combined,2006-05-12,0001283699-23-000016,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-23-000016
+74,TMUS,4630,interest_expense,2023,2023-12-31,line_presented_combined,2006-05-12,0001283699-24-000008,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-24-000008
+74,TMUS,4630,interest_expense,2024,2024-12-31,line_presented_combined,2006-05-12,0001283699-25-000012,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-25-000012
+74,TMUS,4630,interest_expense,2025,2025-12-31,line_presented_combined,2006-05-12,0001283699-26-000010,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-26-000010
+74,TMUS,4630,interest_income,2022,2022-12-31,line_presented_combined,2006-05-12,0001283699-23-000016,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-23-000016
+74,TMUS,4630,interest_income,2023,2023-12-31,line_presented_combined,2006-05-12,0001283699-24-000008,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-24-000008
+74,TMUS,4630,interest_income,2024,2024-12-31,line_presented_combined,2006-05-12,0001283699-25-000012,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-25-000012
+74,TMUS,4630,interest_income,2025,2025-12-31,line_presented_combined,2006-05-12,0001283699-26-000010,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001283699-26-000010
+78,WELL,1421,operating_expenses,2019,2019-12-31,not_in_template_but_in_template,1994-04-29,0000766704-20-000015,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-20-000015
+78,WELL,1421,operating_expenses,2020,2020-12-31,not_in_template_but_in_template,1994-04-29,0000766704-21-000018,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-21-000018
+78,WELL,1421,operating_expenses,2021,2021-12-31,not_in_template_but_in_template,1994-04-29,0000766704-22-000013,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-22-000013
+78,WELL,1421,operating_expenses,2022,2022-12-31,not_in_template_but_in_template,1994-04-29,0000766704-23-000010,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-23-000010
+78,WELL,1421,operating_expenses,2023,2023-12-31,not_in_template_but_in_template,1994-04-29,0000766704-24-000008,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-24-000008
+78,WELL,1421,operating_expenses,2024,2024-12-31,not_in_template_but_in_template,1994-04-29,0000766704-25-000009,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-25-000009
+78,WELL,1421,operating_expenses,2025,2025-12-31,not_in_template_but_in_template,1994-04-29,0000766704-26-000010,reported_only_combined,reported only combined: CostsAndExpenses,0000766704-26-000010
+80,DHR,1190,dividends_paid,2019,2019-12-31,no_proof_row,1994-03-23,0000313616-20-000041,reported_only_combined,reported only combined: PaymentsOfDividends,0000313616-20-000041
+80,DHR,1190,dividends_paid,2020,2020-12-31,no_proof_row,1994-03-23,0000313616-21-000045,reported_only_combined,reported only combined: PaymentsOfDividends,0000313616-21-000045
+80,DHR,1190,dividends_paid,2021,2021-12-31,no_proof_row,1994-03-23,0000313616-22-000061,reported_only_combined,reported only combined: PaymentsOfDividends,0000313616-22-000061
+80,DHR,1190,dividends_paid,2022,2022-12-31,no_proof_row,1994-03-23,0000313616-23-000087,reported_only_combined,reported only combined: PaymentsOfDividends,0000313616-23-000087
+80,DHR,1190,dividends_paid,2023,2023-12-31,no_proof_row,1994-03-23,0000313616-24-000052,reported_only_combined,reported only combined: PaymentsOfDividends,0000313616-24-000052
+83,ETN,2852,interest_expense,2015,2015-12-31,line_presented_combined,2012-11-14,0001551182-16-000041,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-16-000041
+83,ETN,2852,interest_expense,2016,2016-12-31,line_presented_combined,2012-11-14,0001551182-17-000014,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-17-000014
+83,ETN,2852,interest_expense,2017,2017-12-31,line_presented_combined,2012-11-14,0001551182-18-000074,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-18-000074
+83,ETN,2852,interest_expense,2018,2018-12-31,line_presented_combined,2012-11-14,0001551182-19-000045,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-19-000045
+83,ETN,2852,interest_expense,2022,2022-12-31,line_presented_combined,2012-11-14,0001551182-23-000004,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-23-000004
+83,ETN,2852,interest_expense,2023,2023-12-31,line_presented_combined,2012-11-14,0001551182-24-000006,reported_only_combined,reported only combined: InterestIncomeExpenseNet,0001551182-24-000006
+84,BA,207,comprehensive_income,2015,2015-12-31,line_presented_combined,1994-03-17,0000012927-16-000099,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000012927-16-000099
+84,BA,207,comprehensive_income,2016,2016-12-31,line_presented_combined,1994-03-17,0000012927-17-000006,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000012927-17-000006
+84,BA,207,comprehensive_income,2017,2017-12-31,line_presented_combined,1994-03-17,0000012927-18-000007,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000012927-18-000007
+84,BA,207,comprehensive_income,2018,2018-12-31,line_presented_combined,1994-03-17,0000012927-19-000010,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000012927-19-000010
+84,BA,207,comprehensive_income,2019,2019-12-31,line_presented_combined,1994-03-17,0000012927-20-000014,reported_only_combined,reported only combined: ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,0000012927-20-000014
+85,ISRG,2540,amortization_of_intangibles,2025,2025-12-31,not_in_template_but_in_template,2000-08-14,0001035267-26-000010,reported_only_combined,reported only combined: AmortizationOfIntangibleAssetsContractAcquisitionAndOtherAssets,0001035267-26-000010
+86,NOW,5480,interest_income,2015,2015-12-31,line_presented_combined,2012-08-10,0001373715-16-000324,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-16-000324
+86,NOW,5480,interest_income,2016,2016-12-31,line_presented_combined,2012-08-10,0001373715-17-000026,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-17-000026
+86,NOW,5480,interest_income,2017,2017-12-31,line_presented_combined,2012-08-10,0001373715-18-000058,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-18-000058
+86,NOW,5480,interest_income,2018,2018-12-31,line_presented_combined,2012-08-10,0001373715-19-000070,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-19-000070
+86,NOW,5480,interest_income,2019,2019-12-31,line_presented_combined,2012-08-10,0001373715-20-000072,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-20-000072
+86,NOW,5480,interest_income,2020,2020-12-31,line_presented_combined,2012-08-10,0001373715-21-000061,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0001373715-21-000061
+86,NOW,5480,other_income_expense_net,2015,2015-12-31,era_unmapped,2012-08-10,0001373715-16-000324,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-16-000324
+86,NOW,5480,other_income_expense_net,2016,2016-12-31,era_unmapped,2012-08-10,0001373715-17-000026,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-17-000026
+86,NOW,5480,other_income_expense_net,2017,2017-12-31,era_unmapped,2012-08-10,0001373715-18-000058,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-18-000058
+86,NOW,5480,other_income_expense_net,2018,2018-12-31,era_unmapped,2012-08-10,0001373715-19-000070,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-19-000070
+86,NOW,5480,other_income_expense_net,2019,2019-12-31,era_unmapped,2012-08-10,0001373715-20-000072,reported_only_combined,reported only combined: NonoperatingIncomeExpense,0001373715-20-000072
+86,NOW,5480,other_income_expense_net,2020,2020-12-31,no_proof_row,2012-08-10,0001373715-21-000061,reported_only_combined,reported only combined: OtherNonoperatingIncomeExpense,0001373715-21-000061
+88,UBER,2787,accounts_payable,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,accounts_receivable,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,cash_and_equivalents,2017,2017-12-31,reason_own_filing_unverified,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,cf_inventory_change,2017,2017-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,cf_inventory_change,2018,2018-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,current_assets,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,current_liabilities,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,dividends_paid,2017,2017-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,dividends_paid,2018,2018-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,dividends_per_share,2017,2017-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,dividends_per_share,2018,2018-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,goodwill,2017,2017-12-31,reason_own_filing_unverified,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,inventory,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,inventory,2018,2018-12-31,structural_not_presented,2019-06-04,0001543151-20-000010,first_report_comparative_only,,0001543151-20-000010
+88,UBER,2787,ppe_net,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,shares_outstanding,2017,2017-12-31,era_unmapped,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,stockholders_equity,2017,2017-12-31,era_unmapped,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,total_assets,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,total_debt,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+88,UBER,2787,total_liabilities,2017,2017-12-31,no_10k_presents_period,2019-06-04,,before_first_periodic_filing,,
+89,ACN,5943,depreciation_and_amortization,2020,2020-08-31,no_proof_row,2009-10-19,0001467373-20-000376,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-20-000376
+89,ACN,5943,depreciation_and_amortization,2021,2021-08-31,no_proof_row,2009-10-19,0001467373-21-000229,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-21-000229
+89,ACN,5943,depreciation_and_amortization,2022,2022-08-31,no_proof_row,2009-10-19,0001467373-22-000295,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-22-000295
+89,ACN,5943,depreciation_and_amortization,2023,2023-08-31,no_proof_row,2009-10-19,0001467373-23-000324,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-23-000324
+89,ACN,5943,depreciation_and_amortization,2024,2024-08-31,not_in_template_but_in_template,2009-10-19,0001467373-24-000278,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-24-000278
+89,ACN,5943,depreciation_and_amortization,2025,2025-08-31,line_presented_combined,2009-10-19,0001467373-25-000217,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-25-000217
+89,ACN,5943,depreciation_and_amortization,2026,2026-08-31,line_presented_combined,2009-10-19,0001467373-26-000049,reported_only_combined,reported only combined: DepreciationAmortizationAndOther,0001467373-26-000049
+91,MPC,2376,operating_expenses,2015,2015-12-31,era_unmapped,2011-08-09,0001510295-16-000078,reported_only_combined,reported only combined: CostsAndExpenses,0001510295-16-000078
+91,MPC,2376,operating_expenses,2016,2016-12-31,era_unmapped,2011-08-09,0001510295-17-000017,reported_only_combined,reported only combined: CostsAndExpenses,0001510295-17-000017
+92,VLO,2529,depreciation_and_amortization,2025,2025-12-31,not_in_template_but_in_template,1997-06-27,0001628280-26-011499,reported_only_combined,reported only combined: DepreciationAmortizationAndAccretionNet,0001628280-26-011499
+94,VRTX,1700,interest_expense,2015,2015-12-31,line_presented_combined,1996-05-14,0000875320-16-000067,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-16-000067
+94,VRTX,1700,interest_expense,2016,2016-12-31,line_presented_combined,1996-05-14,0000875320-17-000017,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-17-000017
+94,VRTX,1700,interest_expense,2017,2017-12-31,line_presented_combined,1996-05-14,0000875320-18-000009,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-18-000009
+94,VRTX,1700,interest_expense,2018,2018-12-31,line_presented_combined,1996-05-14,0000875320-19-000006,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-19-000006
+94,VRTX,1700,interest_income,2015,2015-12-31,line_presented_combined,1996-05-14,0000875320-16-000067,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-16-000067
+94,VRTX,1700,interest_income,2016,2016-12-31,line_presented_combined,1996-05-14,0000875320-17-000017,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-17-000017
+94,VRTX,1700,interest_income,2017,2017-12-31,line_presented_combined,1996-05-14,0000875320-18-000009,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-18-000009
+94,VRTX,1700,interest_income,2018,2018-12-31,line_presented_combined,1996-05-14,0000875320-19-000006,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0000875320-19-000006
+98,NEM,4077,interest_income,2015,2015-12-31,line_presented_combined,2002-03-27,0001558370-16-003258,reported_only_combined,reported only combined: InterestIncomeExpenseNonoperatingNet,0001558370-16-003258

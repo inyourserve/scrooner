@@ -961,3 +961,15 @@ def test_unsplit_combined_cells_are_marked_only_combined():
     assert 'only_combined' in rows[0]['flags'] and 'only_combined_years' in rows[0]['flags'] and rows[0]['why'].endswith('reported only combined: IncreaseDecreaseInAccountsPayableAndAccruedLiabilities')
     assert 'only_combined_row' in rows[2]['flags']
     assert 'only_combined' not in rows[1]['flags']
+
+
+def test_derived_total_liabilities_is_corroborated_by_the_liabilities_fact():
+    f = filing([('BS', 'LiabilitiesCurrent', 'Current liabilities', 17437), ('BS', 'RedeemableNoncontrollingInterestEquityCarryingAmount', 'Redeemable NCI', 245)])
+    row = lambda v: dict(accession=f['a'], column='own', data_point='total_liabilities', status='derived', value=D(v), tags='', nodes='x', why='', flags='', calc_check='')
+    r = resolve_all.apply_tl_corroboration([row(95243)], {f['a']: 'Liabilities|0|95243'}, [f])[0]
+    assert r['status'] == 'mapped' and r['nodes'] == 'Liabilities=95243 [NOTE]' and 'corroborates' in r['calc_check']
+    r = resolve_all.apply_tl_corroboration([row(95488)], {f['a']: 'Liabilities|0|95243'}, [f])[0]
+    assert r['status'] == 'derived' and 'explained' in r['calc_check'] and 'tl_corroboration_disagree' not in r['flags']   # differs by the redeemable NCI
+    r = resolve_all.apply_tl_corroboration([row(96000)], {f['a']: 'Liabilities|0|95243'}, [f])[0]
+    assert 'tl_corroboration_disagree' in r['flags']
+    assert resolve_all.apply_tl_corroboration([row(95243)], {}, [f])[0]['status'] == 'derived'

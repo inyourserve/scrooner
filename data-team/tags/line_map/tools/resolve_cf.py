@@ -40,7 +40,12 @@ CAPEX_NOT = re.compile(r'(?i)proceeds|sale of|disposal|oil and gas|acreage|busin
 BUY_LABEL = re.compile(r'(?i)(repurchase|purchases?|acquisition|retirement|buyback).*(common|treasury|capital stock|shares|own stock|stock)|treasury (stock|shares)')
 BUY_NOT = re.compile(r'(?i)withh|excise|tax|employee|option|exercise|subsidiar|noncontrolling|preferred|swap|accelerated|forward|proceeds|issuance|settlement')
 DIV_LABEL = re.compile(r'(?i)dividends?|distributions?')
-DIV_NOT = re.compile(r'(?i)noncontrolling|non-controlling|minority|subsidiar|preferred|redeemable|unitholders? of|joint venture|partner.*other')
+DIV_NOT = re.compile(r'(?i)noncontrolling|non-controlling|minority|subsidiar|preferred|redeemable|unitholders? of|joint venture|partner.*other|\bto (an )?affiliates?\b')   # TMUS FY2014 'Distribution to affiliate' (Deutsche Telekom): not a common dividend
+# PR #4 lane rules (cf_family_replay buyback_class / dividend_class, Verifier 2026-11-08), ported 2026-11-15:
+BUY_SBC_PLAN = re.compile(r'(?i)under (the )?(equity|employee|stock|incentive|compensation)( compensation| incentive| purchase)? plans?|for (delivery|settlement) under')   # MU FY2014 'Cash paid to purchase common stock under equity plans': not a buyback
+BUY_COMBINED = re.compile(r'(?i)includ\w*\b.*\b(withh|surrender|tax)|\bwarrants?\b')   # MCK 'Share repurchases, including shares surrendered for tax withholding'; JPM 'Treasury stock and warrants repurchased'
+DIV_NONCASH = re.compile(r'(?i)\bnot\s+(yet\s+)?paid\b|\bunpaid\b|^(?!.*\b(paid|payments?)\b).*\b(declared|payable)\b')   # BXP 'declared but not paid': a non-cash disclosure
+DIV_UNITS = re.compile(r'(?i)\bdividends?\s+and\s+distributions?\b|\bdistributions?\s+and\s+dividends?\b|exchangeable (limited )?partnership units')   # BXP / AVGO FY2016-19: stockholders AND partnership-unit holders in one line
 SBC_LABEL = re.compile(r'(?i)(stock|share|equity)[- ]based (compensation|payment)|stock compensation')
 WC = {
     'cf_ar_change': dict(fam=['IncreaseDecreaseInAccountsReceivable', 'IncreaseDecreaseInReceivables', 'IncreaseDecreaseInAccountsAndOtherReceivables', 'IncreaseDecreaseInAccountsAndNotesReceivable'],
@@ -49,6 +54,10 @@ WC = {
     'cf_ap_change': dict(fam=['IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade'],
                          comb=['IncreaseDecreaseInAccountsPayableAndAccruedLiabilities', 'IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities'], label=r'(?i)^(trade )?accounts payable[ ,]*(trade)?$'),
 }
+
+WC_HEAD = {'cf_ar_change': r'(?i)^(\(increase\)|increase|decrease|change in)?\s*(trade )?(accounts |notes )?receivables?\b',
+           'cf_inventory_change': r'(?i)^(\(increase\)|increase|decrease|change in)?\s*inventor(y|ies)\b',
+           'cf_ap_change': r'(?i)^(increase|decrease|change in)?\s*(trade )?accounts payable\b'}
 
 def fmt(ls):
     return '; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ls)
@@ -166,7 +175,14 @@ def resolve_cf(f, notes):
     bb = [l for l in fin if l['tag'] in ('PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity')]
     if not bb:
         bb = [l for l in fin if l['custom'] and BUY_LABEL.search(l['lb']) and not BUY_NOT.search(l['lb'])]
-    if bb:
+    sbcp = [l for l in bb if BUY_SBC_PLAN.search(l['lb'] or '')]
+    bbc = [l for l in bb if l not in sbcp and BUY_COMBINED.search(l['lb'] or '')]
+    bb = [l for l in bb if l not in sbcp and l not in bbc]
+    if bbc:
+        put('share_buybacks', 'combined', bbc[0]['tag'], None, fmt(bbc[:1]), f"CF financing prints '{bbc[0]['lb']}': the repurchase of common stock together with another item in one line (a combined line is a reason, never a value)", flags='buyback_label_combined')
+    elif sbcp and not bb:
+        put('share_buybacks', 'not_presented', '', None, fmt(sbcp), f"the only repurchase-tagged financing line '{sbcp[0]['lb']}' is stock bought for equity compensation plans, not a repurchase program", flags='buyback_sbc_plan_only')
+    elif bb:
         put('share_buybacks', 'mapped' if len(bb) == 1 else 'component_sum', '+'.join(l['tag'] for l in bb), sum(l['val'] for l in bb), fmt(bb), 'CF financing: repurchase of own common stock (register item 4)')
     else:
         n = note(['PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity'])
@@ -188,13 +204,20 @@ def resolve_cf(f, notes):
     cus = [l for l in fin if l['custom'] and DIV_LABEL.search(l['lb']) and not DIV_NOT.search(l['lb'])]
     ncom = note(['PaymentsOfDividendsCommonStock'])
     pick = com or tot or ([] if ncom else (cus if len(cus) == 1 else []))
+    if pick:   # declared but not paid (a non-cash disclosure) and a distribution to an affiliate are never the common cash dividend
+        pick = [l for l in pick if not DIV_NONCASH.search(l['lb'] or '') and not re.search(r'(?i)\bto (an )?affiliates?\b', l['lb'] or '')]
+    if pick and all(re.search(r'(?i)preferred', l['lb'] or '') and not re.search(r'(?i)common', l['lb'] or '') for l in pick):
+        put('dividends_paid', 'not_presented', '', None, fmt(pick), f"the financing dividend line '{pick[0]['lb']}' is preferred dividends; no common dividend line", flags='dividends_preferred_only'); pick = None
+    elif pick and any(DIV_UNITS.search(l['lb'] or '') for l in pick):
+        u = next(l for l in pick if DIV_UNITS.search(l['lb'] or ''))
+        put('dividends_paid', 'combined', u['tag'], None, fmt([u]), f"the financing line '{u['lb']}' pays common holders and partnership-unit holders in one figure: common dividends are not printed", flags='dividends_incl_unit_distributions'); pick = None
     # preferred inside a single generic dividend line: the data point is common dividends (roles.csv: never preferred). When the
     # filing reports preferred dividends and the financing section prints no separate preferred line, a generic line ('Cash
     # dividends paid', BAC; 'Dividends paid to shareholders', GE) holds both: combined. A label naming only common stays mapped;
     # a label naming only preferred means no common dividend line (BA, TMUS)
     pref = [l for l in L if l['val'] and re.search(r'Preferred\w*Dividend|Dividend\w*Preferred', l['tag']) and (not re.search(r'OtherAdjustments', l['tag']) or re.search(r'(?i)preferred', l['lb'] or ''))]  # 'and other adjustments' counts only when its label names preferred (GOOG's Class C adjustment does not)
     cfpref = [l for l in fin if re.search(r'Preferred', l['tag']) and re.search(r'Dividend', l['tag']) or (DIV_LABEL.search(l['lb'] or '') and re.search(r'(?i)preferred', l['lb'] or '') and not re.search(r'(?i)common', l['lb'] or ''))]
-    if len(pick) == 1 and pick[0]['tag'] in ('PaymentsOfOrdinaryDividends', 'PaymentsOfDividends', 'CashDistributionsToStockholders', 'PaymentsOfCapitalDistribution') and pref:   # WELL 2014-18 'Cash distributions to stockholders' while preferred was outstanding (Dhairya ruling 2026-11-14 b)
+    if pick and len(pick) == 1 and pick[0]['tag'] in ('PaymentsOfOrdinaryDividends', 'PaymentsOfDividends', 'CashDistributionsToStockholders', 'PaymentsOfCapitalDistribution') and pref:   # WELL 2014-18 'Cash distributions to stockholders' while preferred was outstanding (Dhairya ruling 2026-11-14 b)
         lb = pick[0]['lb'] or ''
         names_c, names_p = bool(re.search(r'(?i)common', lb)), bool(re.search(r'(?i)preferred', lb))
         if names_p and not names_c:
@@ -247,6 +270,8 @@ def resolve_cf(f, notes):
         if n: put(dp, 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]', 'undimensioned consolidated note fact at the filing own column (par. AG); the face prints only aggregates')
         else:
             cm = [l for l in op if l['tag'] in spec['comb']]
+            if not cm:   # a line under another element whose label starts with the item and names more (ADI FY2015-16 'Accounts payable, deferred income and accrued liabilities')
+                cm = [l for l in op if l['tag'] not in spec['fam'] and (m := re.match(WC_HEAD[dp], l['lb'] or '')) and re.search(r'(?i)\band\b|,(?!\s*net\b)', l['lb'][m.end():]) and not re.search(r'(?i)broker|clients|clearing|write-?downs?|reserves?|obsolesc|provision|impairment|allowance|credit loss|bad debt|doubtful', l['lb'])][:1]
             if cm: put(dp, 'combined', cm[0]['tag'], cm[0]['val'], fmt(cm[:1]), f"CF face prints only the combined line {cm[0]['tag']} '{cm[0]['lb']}'")
             else: put(dp, 'not_presented', '', None, '', f'no {dp} line in the operating section nor an undimensioned note fact')
     return out

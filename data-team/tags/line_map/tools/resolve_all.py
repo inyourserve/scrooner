@@ -44,8 +44,10 @@ def fill_printed_zero_and_comparative(rows, td):
     for (a, col), t in td.items():
         if col == 'comparative': by[t['ticker']].append(t)
     for r in rows:
-        if r['status'] != 'not_presented': continue
         k = (r['accession'], r['data_point'])
+        # a combined own working-capital line yields to the pure element a later 10-K prints for the year (TSLA FY2015-16 'Inventories and operating lease vehicles'; standard_inputs.WC_PURE)
+        if r['status'] == 'combined' and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
+        if r['status'] != 'not_presented': continue
         if k in pz:
             z = pz[k]
             r.update(status='mapped', value=D(0), tags=z['tag'], nodes=f"{z['tag']}=0 [{z['r_line']}]",
@@ -582,6 +584,33 @@ def apply_note_split(rows, notefacts, compfacts=None):
     return rows
 
 
+MEZZ = re.compile(r'^(TemporaryEquity\w*|RedeemableNoncontrollingInterest\w*|MinorityInterest)$')
+
+
+def apply_tl_corroboration(rows, notefacts, filings):
+    """Dhairya 2026-11-16 (Engineering loader round dd7995b5; the gross-profit corroboration rule applied to total liabilities): a
+    total_liabilities cell derived from the balance sheet beside an undimensioned Liabilities fact of the same filing. Equal: the fact
+    is served (a reported value), the derivation recorded as its corroboration. Different: the difference is explained when it equals
+    a printed mezzanine / redeemable or noncontrolling-interest line (scope), else the cell is flagged DISAGREE for a reader."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'total_liabilities' or r['status'] != 'derived' or (r.get('column') or 'own') != 'own' or r.get('value') in (None, ''): continue
+        v = note_facts(notefacts.get(r['accession'])).get(('Liabilities', 0))
+        if v is None: continue
+        d = D(r['value'])
+        if abs(v - d) <= tol(v, d):
+            r['calc_check'] = ';'.join(x for x in (r.get('calc_check', ''), f"total liabilities derived {d} from the balance sheet corroborates the filing's Liabilities fact {v}") if x)
+            r.update(status='mapped', value=v, tags='Liabilities', nodes=f"Liabilities={v} [NOTE]",
+                     why="undimensioned Liabilities fact of the filing, equal to the total derived from its balance sheet (corroborated)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'tl_corroborated') if x)
+            continue
+        bs = {l['tag']: l['val'] for l in face(parse(F[r['accession']])[0], 'BS') if l['val'] is not None} if r['accession'] in F else {}
+        why = next((f"explained: the Liabilities fact differs by {t} {x} (scope)" for t, x in bs.items() if MEZZ.match(t) and abs(abs(v - d) - abs(x)) <= tol(v, d, x)), None)
+        r['calc_check'] = ';'.join(y for y in (r.get('calc_check', ''), f"Liabilities fact {v} vs derived {d}: " + (why or 'DISAGREE')) if y)
+        if not why: r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'tl_corroboration_disagree') if y)
+    return rows
+
+
 def apply_alt(rows):
     """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
     for r in rows:
@@ -1052,6 +1081,7 @@ if __name__ == '__main__':
     rows = apply_cash_paid_taxes(rows, filings, notefacts)
     rows = apply_label_beyond(rows, filings, only={'revenue'})   # MPC: ruling 3 sets revenue before gross profit is derived from it
     rows = derive_gross_profit(rows)
+    rows = apply_tl_corroboration(rows, notefacts, filings)
     rows = apply_polarity(rows)
     for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence
         for (a, tag, q), e in FERR.items():

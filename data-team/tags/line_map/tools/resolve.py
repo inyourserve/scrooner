@@ -134,7 +134,15 @@ def resolve(f):
             l_ = by[liab[0]]; put('total_liabilities', 'mapped', [dict(node(l_, 'liabilities subtotal'), st='BS')], l_['val'], f"BS R{l_['rep']} line {l_['ln']}: calc child of {lse['tag']}")
         elif chf:
             # not printed: DERIVED = L&SE - equity-side children (equity incl NCI, or parent equity + NCI + mezzanine), only from this tree
-            eqside = [c for c, w in chf if (is_eq(c) or re.search(r'Temporary|Redeemable|Noncontrolling', c)) and c != 'CommitmentsAndContingencies']
+            MZ = r'Temporary|Redeemable|Noncontrolling'
+            def mezz_side(c):
+                # PR #6 bs_derive (Verifier, KMB 2024-03-31), ported 2026-11-15: a Redeemable/Temporary line after the last liability is
+                # temporary equity; 'mandatorily redeemable' (ASC 480) is a liability wherever printed, and so is a redeemable line
+                # printed AMONG the liabilities (another liability line after it)
+                if not re.search(MZ, c) or re.search(r'(?i)mandatorily', c + ' ' + (by[c]['lb'] or '')): return False
+                if 'Noncontrolling' in c: return True
+                return not any(d != c and by[d]['ln'] > by[c]['ln'] and not is_eq(d) and not re.search(MZ, d) and d != 'CommitmentsAndContingencies' for d, _ in chf)
+            eqside = [c for c, w in chf if (is_eq(c) or mezz_side(c)) and c != 'CommitmentsAndContingencies']
             liabside = [c for c, w in chf if c not in eqside and c != 'CommitmentsAndContingencies']
             if eqside and liabside:
                 v = lsev - sum(by[c]['val'] * w for c, w in chf if c in eqside)

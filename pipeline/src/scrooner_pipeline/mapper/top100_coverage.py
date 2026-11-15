@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
@@ -112,7 +113,39 @@ CSV_COLUMNS = [
     "value_source",
     "docmap_status",
     "parts",
+    "display",
 ]
+
+
+# Display layer (founder 2026-11-16, doc 02): coverage = a real proven value in EVERY shown cell. A reason is no longer
+# a covered shown cell: a row the company never reports is hidden, years before its first filing are hidden, and
+# every other non-value cell is open work. Method: data-team/strategy/approvals/CERTIFICATION-METHOD-2026-11-16.md.
+SHOWN_VALUE, HIDDEN_ROW, HIDDEN_YEAR, OPEN = (
+    "SHOWN_VALUE",
+    "HIDDEN_ROW",
+    "HIDDEN_YEAR",
+    "OPEN",
+)
+# THE SWITCH. Ruling (Dhairya, 2026-11-16): a year counts as presented only when a PERIODIC report (10-K, 10-Q, 20-F,
+# 40-F, comparative columns included) presents it. A year that appears only in a Form 10, S-1 or F-1 is a pre-filing
+# year and is HIDDEN_YEAR (GEV FY2022 balance-sheet cells). Default False. True would let a registration statement
+# present a year; the pre-filing rule then cannot be proven from periodic filings and is switched off (only an
+# evidenced no-period reason hides a year).
+REGISTRATION_STATEMENT_PRESENTS_YEAR = False
+# reason codes that evidence "the company does not present this line" (a row is hidden only when EVERY year is one)
+NOT_PRESENTED_CODES = {
+    "structural_not_presented",
+    "docmap_not_presented",
+    "company_tag_map:not_presented",
+    "docmap_fix_not_presented",
+}
+# evidenced no filing presents the period (no_10k_presents_period is written by structural_loader / structural_direct;
+# the guard that refuses the reason when a later 10-K presents the period lives there; here it is re-checked, never
+# duplicated: a year that a periodic report presents is never hidden)
+# the proof's own verdict for a year before the filing history (NOT_PRESENTED pre_filing_period, detector v21)
+PRE_FILING_CODE = "pre_filing_period"
+NO_PERIOD_CODES = {"no_public_filing_for_period", "no_10k_presents_period"}
+WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
 
 
 def candidates(dp: str) -> list[str]:
@@ -198,7 +231,13 @@ def eligible_filings(
     (period == year end) or a later one whose face columns still carry the year (one more year for a balance-sheet
     instant, two more for a duration). Pure."""
     span = (366 if instant else 2 * 366) + _DAY_TOL
-    return {acc for p, acc in filings if -_DAY_TOL <= (p - period_end).days <= span}
+    # fsn.filing.period is the SEC's month-end rounding: a 52/53-week year end (NVDA 2026-01-25, AAPL 2026-09-26) sits
+    # up to ~16 days from it, so "own period" is fsn_end_matches, not a plain day window
+    return {
+        acc
+        for p, acc in filings
+        if fsn_end_matches(p, period_end, _DAY_TOL) or 0 < (p - period_end).days <= span
+    }
 
 
 NO_FILING = (
@@ -250,13 +289,59 @@ def own_period_reason(
     return cls, code
 
 
+# annual reports: 10-K, 20-F and 40-F families all count as periodic filings (resolver .34, Dhairya 2026-11-16)
+ANNUAL_FORMS = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+)
+
+
+def year_presence(
+    filings: list[tuple[date, str]],
+    earliest_filing: date | None,
+    period_end: date,
+    instant: bool,
+) -> dict[str, Any]:
+    """How the company's annual reports (10-K / 20-F / 40-F) present the year ending `period_end`. Pure.
+    presented: some annual report's face columns carry it (a later comparative column counts).
+    before_first: it ends before the company's first periodic filing and no annual report presents it.
+    comparative_only: the FIRST annual report presents it only as a comparative column (the year ends before that
+    report's own fiscal year); first_presenting is the earliest accession that carries it (the evidence column is
+    the period end). From the first report's own fiscal year onward this is false: every shown cell must hold a value."""
+    ok = eligible_filings(filings, period_end, instant)
+    presenting = sorted((p, a) for p, a in filings if a in ok)
+    first_period = min((p for p, _ in filings), default=None)
+    return {
+        "presented": bool(presenting),
+        "before_first": bool(
+            earliest_filing is not None
+            and period_end < earliest_filing
+            and not presenting
+        ),
+        "comparative_only": bool(
+            presenting
+            and first_period is not None
+            and not fsn_end_matches(first_period, period_end, _DAY_TOL)
+            and first_period > period_end
+            and presenting[0][1] == min(filings)[1]
+        ),
+        "first_presenting": presenting[0][1] if presenting else "",
+    }
+
+
 def _annual_filings(conn: Any, ids: list[int]) -> dict[int, list[tuple[date, str]]]:
     out: dict[int, list[tuple[date, str]]] = defaultdict(list)
     for cid, period, acc in conn.execute(
         """select company_id, period, accession from fsn.filing
            where company_id = any(%s) and period is not null
-             and form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')""",
-        (ids,),
+             and form = any(%s)""",
+        (ids, list(ANNUAL_FORMS)),
     ).fetchall():
         out[cid].append((period, acc))
     return out
@@ -640,7 +725,10 @@ def reached_by_filing(
         return False
     if not filings:
         return True
-    return end <= max(p for p, _ in filings) + timedelta(days=_DAY_TOL)
+    last = max(p for p, _ in filings)
+    return end <= last + timedelta(days=_DAY_TOL) or fsn_end_matches(
+        last, end, _DAY_TOL
+    )
 
 
 def _fy_periods(
@@ -675,18 +763,20 @@ def load_current_proofs(
     A row of an older detector is history, never the verdict (a held cell is not re-proved, so a pre-R13
     restated_copies_disagree row outlived its rule for 48 MSFT cells)."""
     proofs: dict[tuple[int, str, date, date], tuple] = {}
-    for row in conn.execute(
-        """select distinct on (company_id, data_point_name, period_start, period_end)
-                  company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
-                  shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line, checks
-           from analytics.cell_proof
-           where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
-             and detector_version = %s
-             and period_grain in ('FY', 'I') and period_end >= %s
-           order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
-        (ids, names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
-    ).fetchall():
-        proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+    # chunked by company: one scan over the whole top-100 dropped the pooled connection (3 of 3 runs, 2026-11-16)
+    for i in range(0, len(ids), 10):
+        for row in conn.execute(
+            """select distinct on (company_id, data_point_name, period_start, period_end)
+                      company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
+                      shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line, checks
+               from analytics.cell_proof
+               where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
+                 and detector_version = %s
+                 and period_grain in ('FY', 'I') and period_end >= %s
+               order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
+            (ids[i : i + 10], names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
+        ).fetchall():
+            proofs[(row[0], row[1], row[2], row[3])] = row[4:]
     return proofs
 
 
@@ -708,6 +798,41 @@ def _statement_pages(
         if k not in best or (n, acc) > (best[k][0], best[k][1]):
             best[k] = (n, acc, f"R{report}.htm")
     return {k: (v[1], v[2]) for k, v in best.items()}
+
+
+def own_year_page(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]],
+    cid: int,
+    end: date,
+    stmt: str,
+    by_cs: dict[tuple[int, str], list[tuple[date, tuple[str, str]]]] | None = None,
+) -> tuple[str, str]:
+    """The own-year statement page for a cell whose true period end is `end`. stmt_pages is keyed on fsn.filing.period
+    (month-end rounding), so an exact lookup misses every 52/53-week year end; match with fsn_end_matches. Pure."""
+    hit = stmt_pages.get((cid, end, stmt))
+    if hit:
+        return hit
+    for p2, v in sorted(
+        by_cs.get((cid, stmt), ()) if by_cs else _scan(stmt_pages, cid, stmt)
+    ):
+        if fsn_end_matches(p2, end, _DAY_TOL):
+            return v
+    return ("", "")
+
+
+def _scan(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]], cid: int, stmt: str
+) -> list[tuple[date, tuple[str, str]]]:
+    return [(p, v) for (c, p, s), v in stmt_pages.items() if c == cid and s == stmt]
+
+
+def stmt_pages_by_company(
+    stmt_pages: dict[tuple[int, date, str], tuple[str, str]],
+) -> dict[tuple[int, str], list[tuple[date, tuple[str, str]]]]:
+    out: dict[tuple[int, str], list[tuple[date, tuple[str, str]]]] = defaultdict(list)
+    for (c, p, s), v in stmt_pages.items():
+        out[(c, s)].append((p, v))
+    return out
 
 
 def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIndex:
@@ -824,6 +949,7 @@ def build_rows(
         in_tpl[(cid, dp)] = bool(inn)
 
     stmt_pages = _statement_pages(conn, ids)
+    stmt_by_cs = stmt_pages_by_company(stmt_pages)
     cited = {v[0] for v in stmt_pages.values()}
     cited |= {p[5] for p in proofs.values() if p[5]}
     cited |= {ev[6][0] for evs in tagmap.values() for ev in evs if ev[6][0]}
@@ -953,8 +1079,8 @@ def build_rows(
                         cls == "PROVEN" and lsrc == "note_fact_report_not_stored"
                     )
                 ):
-                    own_acc, own_page = stmt_pages.get(
-                        (c.company_id, e, dstmt), ("", "")
+                    own_acc, own_page = own_year_page(
+                        stmt_pages, c.company_id, e, dstmt, stmt_by_cs
                     )
                     if own_acc and not acc:
                         acc, page, lsrc = own_acc, own_page, "own_year"
@@ -1004,6 +1130,10 @@ def build_rows(
                         ),
                         label,
                     )
+                ef_ = earliest.get(c.company_id)
+                ann = annual.get(c.company_id, [])
+                yp = year_presence(ann, ef_, e, ptype == "instant")
+                in_window = [(p_, a_) for p_, a_ in ann if p_.year >= FIRST_FY - 1]
                 shown = (
                     svalue
                     if svalue is not None
@@ -1035,9 +1165,18 @@ def build_rows(
                         "docmap_status": dm["status"],
                         "parts": parts,
                         "_parts_blank": parts_blank,
+                        "_before_first_filing": yp["before_first"],
+                        "_comparative_only": yp["comparative_only"],
+                        "_presented": yp["presented"],
+                        "_earliest_filing": ef_.isoformat() if ef_ else "",
+                        "_first_presenting": yp["first_presenting"],
+                        "_latest_10k": max(ann)[1] if ann else "",
+                        "_first_10k": min(in_window)[1] if in_window else "",
                     }
                 )
     resolve_derived(rows, load_input_prints(conn, rows))
+    attach_only_combined(rows, load_only_combined())
+    apply_display(rows)
     note = {
         c.company_id: (
             "TEMPLATE_UNAVAILABLE"
@@ -1182,6 +1321,227 @@ def resolve_derived(
             r["class"], r["reason_code"] = "UNCHECKED", DERIVED_UNPROVEN
 
 
+RESOLVER_DIR = Path("data-team/tags/line_map")
+OC_EVIDENCE_RE = re.compile(r"reported only combined: ([^|,]*)")
+
+
+def load_only_combined(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str, str], tuple[str, str, str]]:
+    """(ticker, data_point, period_end) -> (hide kind 'row'|'years', evidence text, accession) from the CURRENT resolver
+    file on main (the newest resolver-all110-*.csv; the flags are read, never recomputed, and no resolver version is
+    pinned). only_combined_row: the company never reports the pure figure in any year; only_combined_years: it does in
+    other years (Dhairya 2026-11-16). Missing file or no flags: empty."""
+    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    out: dict[tuple[str, str, str], tuple[str, str, str]] = {}
+    if not files:
+        return out
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            flags = (r.get("flags") or "").split(";")
+            if "only_combined" not in flags or r.get("grain") != "FY":
+                continue
+            kind = "row" if "only_combined_row" in flags else "years"
+            m = OC_EVIDENCE_RE.search(r.get("nodes") or "")
+            line = (m.group(1).strip() if m else "") or "unnamed line"
+            out[(r["ticker"], r["data_point"], r["period_end"])] = (
+                kind,
+                f"reported only combined: {line}",
+                r.get("accession") or "",
+            )
+    return out
+
+
+def attach_only_combined(
+    rows: list[dict[str, Any]],
+    oc: dict[tuple[str, str, str], tuple[str, str, str]],
+) -> None:
+    """Carry the resolver's only_combined hide, its evidence text and its accession on each flagged non-value cell. The
+    combined printed number stays in the data as evidence and is never shown as the standard data point. Pure."""
+    # the resolver keys on the FSN month end (ADI 2016-10-31), a cell on the true 52/53-week end (2016-10-29): match with
+    # fsn_end_matches on the same ticker and data point, and only when exactly one resolver period matches
+    by_key: dict[tuple[str, str], list[tuple[date, tuple[str, str, str]]]] = (
+        defaultdict(list)
+    )
+    for (tk, dp, pe), v in oc.items():
+        by_key[(tk, dp)].append((date.fromisoformat(pe), v))
+    for r in rows:
+        if r["class"] in ("PROVEN", "DERIVED"):
+            continue
+        hit = oc.get((r["ticker"], r["data_point"], r["period_end"]))
+        if hit is None:
+            end = date.fromisoformat(r["period_end"])
+            near = [
+                v
+                for d, v in by_key.get((r["ticker"], r["data_point"]), ())
+                if fsn_end_matches(d, end)
+            ]
+            hit = near[0] if len(near) == 1 else None
+        if hit:
+            r["_only_combined"], r["evidence"], r["_oc_accession"] = hit
+            if not r.get("accession"):
+                r["accession"] = hit[2]
+
+
+def apply_display(rows: list[dict[str, Any]]) -> None:
+    """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
+    a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
+    periodic filing (row['_before_first_filing']) or carries an evidenced no-period reason is a hidden year (a later
+    10-K comparative column makes it presented, so it is never hidden); a row whose every non-hidden-year cell is an
+    evidenced not-presented reason is a hidden row; everything else is open."""
+    by_row: dict[tuple[Any, Any], list[dict[str, Any]]] = defaultdict(list)
+    for r in rows:
+        no_period = (
+            r.get("_before_first_filing") and not REGISTRATION_STATEMENT_PRESENTS_YEAR
+        ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
+        if r["class"] in ("PROVEN", "DERIVED"):
+            r["display"] = SHOWN_VALUE
+        elif r["class"] == "REASON" and r.get("reason_code") == "zz":
+            r["display"] = HIDDEN_YEAR
+        elif r.get("_only_combined") == "years":
+            r["display"] = HIDDEN_YEAR
+        elif r.get("_only_combined") == "row":
+            r["display"] = HIDDEN_ROW
+        elif no_period and not r.get("_presented"):
+            r["display"] = HIDDEN_YEAR
+        elif (
+            # Dhairya 2026-11-16: the FIRST annual report presents the year only as a comparative column and no line
+            # is printed there (an evidenced reason, no value): hidden for that row, evidenced by that accession
+            r.get("_comparative_only")
+            and r["class"] == "REASON"
+            and (
+                r.get("reason_code") in NO_PERIOD_CODES
+                or r.get("reason_code") in NOT_PRESENTED_CODES
+            )
+        ):
+            r["display"] = HIDDEN_YEAR
+        else:
+            r["display"] = OPEN
+        by_row[(r["company_id"], r.get("data_point"))].append(r)
+    for cells in by_row.values():
+        rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
+        if rest and all(
+            c["display"] == HIDDEN_ROW
+            or (c["class"] == "REASON" and c.get("reason_code") in NOT_PRESENTED_CODES)
+            for c in rest
+        ):
+            for c in rest:
+                c["display"] = HIDDEN_ROW
+        elif any(c["display"] == SHOWN_VALUE for c in cells):
+            # the resolver says the pure figure is never reported but a value is shown in this row: a contradiction
+            # that stays visible as open work, never a silent hide
+            for c in cells:
+                if c["display"] == HIDDEN_ROW and c.get("_only_combined") == "row":
+                    c["display"] = OPEN
+        elif not rest and cells:
+            # every year is before the first filing: nothing of this row can be shown
+            for c in cells:
+                c["display"] = HIDDEN_ROW
+
+
+def work_type(r: dict[str, Any]) -> str:
+    """The work an OPEN cell needs: combined_split (printed combined, split from notes), gap_fill (an evidenced reason
+    or a gap inside a row that must carry a value), proof (value served or candidate, not proven), blank, held. Pure."""
+    cls, code = r["class"], r["reason_code"]
+    if cls == "HELD":
+        return "held"
+    if cls == "BLANK":
+        return "blank"
+    if cls == "REASON":
+        return "combined_split" if code in {COMBINED, *COMBINED_CLASSES} else "gap_fill"
+    return "proof"  # UNCHECKED, DISAGREE
+
+
+HIDDEN_ROW_COLUMNS = [
+    "rank",
+    "ticker",
+    "company_id",
+    "data_point",
+    "years",
+    "reason_codes",
+    "method",
+    "latest_10k",
+    "first_10k",
+    "cell_evidence_accessions",
+    "both_10ks_cited",
+    "evidence",
+]
+HIDDEN_YEAR_COLUMNS = [
+    "rank",
+    "ticker",
+    "company_id",
+    "data_point",
+    "fiscal_year",
+    "period_end",
+    "reason_code",
+    "earliest_filing_date",
+    "earliest_10k_presenting",
+    "basis",
+    "evidence",
+    "evidence_accession",
+]
+
+
+def hidden_evidence(
+    rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Evidence the certifier checks (method points 4 and 5): per hidden row the latest and first in-window 10-K and the
+    accessions the cells cite; per hidden year the first filing and the earliest 10-K presenting it. 'method' is the
+    stored evidence kind (locator source), so a row whose cells do not cite both 10-Ks is visible as
+    both_10ks_cited = no and still needs the face-and-notes check. Pure."""
+    groups: dict[tuple[Any, str], list[dict[str, Any]]] = defaultdict(list)
+    years_out = []
+    for r in rows:
+        if r["display"] == HIDDEN_ROW:
+            groups[(r["company_id"], r["data_point"])].append(r)
+        elif r["display"] == HIDDEN_YEAR:
+            years_out.append(
+                {
+                    **{k: r[k] for k in HIDDEN_YEAR_COLUMNS if k in r},
+                    "earliest_filing_date": r.get("_earliest_filing") or "",
+                    "earliest_10k_presenting": r.get("_first_presenting") or "",
+                    "basis": "before_first_periodic_filing"
+                    if r.get("_before_first_filing")
+                    else "reported_only_combined"
+                    if r.get("_only_combined")
+                    else "first_report_comparative_only"
+                    if r.get("_comparative_only")
+                    else "evidenced_no_period_reason",
+                    "evidence": r.get("evidence") or "",
+                    "evidence_accession": r.get("_oc_accession")
+                    or r.get("_first_presenting")
+                    or "",
+                }
+            )
+    rows_out = []
+    for cells in groups.values():
+        c0 = cells[0]
+        accs = sorted({c["accession"] for c in cells if c.get("accession")})
+        latest, first = c0.get("_latest_10k", ""), c0.get("_first_10k", "")
+        rows_out.append(
+            {
+                **{k: c0[k] for k in ("rank", "ticker", "company_id", "data_point")},
+                "years": ",".join(str(c["fiscal_year"]) for c in cells),
+                "reason_codes": ",".join(sorted({c["reason_code"] for c in cells})),
+                "method": ",".join(
+                    sorted({c.get("locator_source") or "none" for c in cells})
+                ),
+                "latest_10k": latest,
+                "first_10k": first,
+                "cell_evidence_accessions": ",".join(accs),
+                "evidence": " || ".join(
+                    sorted({c["evidence"] for c in cells if c.get("evidence")})
+                ),
+                "both_10ks_cited": "yes"
+                if latest and first and latest in accs and first in accs
+                else "no",
+            }
+        )
+    return sorted(rows_out, key=lambda r: (r["rank"], r["data_point"])), sorted(
+        years_out, key=lambda r: (r["rank"], r["data_point"], r["fiscal_year"])
+    )
+
+
 def pageless_counts(rows: list[dict[str, Any]]) -> dict[int, dict[str, int]]:
     """Per company: PROVEN / REASON / DERIVED cells with no r_page, and the component parts whose page is blank
     (the page gate, Ritwik 2026-11-14). Pure."""
@@ -1210,14 +1570,40 @@ def summarize(
     notes: dict[int, str],
     as_of: str,
 ) -> list[dict[str, Any]]:
+    if any("display" not in r for r in rows):
+        apply_display(rows)
     by: dict[int, dict[str, int]] = defaultdict(lambda: dict.fromkeys(CLASSES, 0))
     for r in rows:
         by[r["company_id"]][r["class"]] += 1
     pl = pageless_counts(rows)
+    disp: dict[int, dict[str, int]] = defaultdict(
+        lambda: {
+            SHOWN_VALUE: 0,
+            OPEN: 0,
+            HIDDEN_ROW: 0,
+            HIDDEN_YEAR: 0,
+            "rows": 0,
+            "pageless_shown": 0,
+            "parts_blank_shown": 0,
+        }
+    )
+    seen_rows: set[tuple[Any, Any]] = set()
+    for r in rows:
+        d = disp[r["company_id"]]
+        d[r["display"]] += 1
+        key = (r["company_id"], r.get("data_point"))
+        if r["display"] == HIDDEN_ROW and key not in seen_rows:
+            seen_rows.add(key)
+            d["rows"] += 1
+        if r["display"] == SHOWN_VALUE:
+            d["pageless_shown"] += 0 if r.get("r_page") and r.get("accession") else 1
+            d["parts_blank_shown"] += r.get("_parts_blank", 0) or 0
     out = []
     for c in companies:
         t = by.get(c.company_id, dict.fromkeys(CLASSES, 0))
         total = sum(t.values())
+        dd = disp.get(c.company_id)
+        shown = (dd[SHOWN_VALUE] + dd[OPEN]) if dd else 0
         out.append(
             {
                 "rank": c.rank,
@@ -1226,6 +1612,23 @@ def summarize(
                 "cells": total,
                 **t,
                 **pl.get(c.company_id, dict.fromkeys(PAGELESS_COLS, 0)),
+                "shown_cells": shown,
+                "shown_values": dd[SHOWN_VALUE] if dd else 0,
+                "open_shown": dd[OPEN] if dd else 0,
+                "hidden_rows": dd["rows"] if dd else 0,
+                "hidden_years": dd[HIDDEN_YEAR] if dd else 0,
+                "pageless_shown": dd["pageless_shown"] if dd else 0,
+                "parts_blank_shown": dd["parts_blank_shown"] if dd else 0,
+                "pct_shown_values": f"{100 * dd[SHOWN_VALUE] / shown:.1f}"
+                if dd and shown
+                else "",
+                "display_certified": "yes"
+                if dd
+                and shown
+                and dd[OPEN] == 0
+                and dd["pageless_shown"] == 0
+                and dd["parts_blank_shown"] == 0
+                else "no",
                 "pct_proven_plus_reason": f"{100 * (t['PROVEN'] + t['REASON'] + t['DERIVED']) / total:.1f}"
                 if total
                 else "",
@@ -1241,6 +1644,46 @@ def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> Non
         w = csv.DictWriter(fh, fieldnames=columns, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
+
+
+OPEN_COLUMNS = [
+    "work",
+    "rank",
+    "ticker",
+    "company_id",
+    "data_point",
+    "fiscal_year",
+    "period_end",
+    "class",
+    "reason_code",
+    "reason",
+    "shown_value",
+    "accession",
+    "r_page",
+    "parts",
+]
+SUMMARY_DISPLAY_COLS = [
+    "shown_cells",
+    "shown_values",
+    "open_shown",
+    "hidden_rows",
+    "hidden_years",
+    "pct_shown_values",
+    "pageless_shown",
+    "parts_blank_shown",
+    "display_certified",
+]
+
+
+def open_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """One row per OPEN cell with its work type: the work queue. Pure."""
+    return [
+        {**r, "work": work_type(r)}
+        for r in sorted(
+            (r for r in rows if r["display"] == OPEN),
+            key=lambda r: (r["rank"], r["data_point"], r["fiscal_year"]),
+        )
+    ]
 
 
 def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
@@ -1270,10 +1713,24 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
         *CLASSES,
         *PAGELESS_COLS,
         "pct_proven_plus_reason",
+        *SUMMARY_DISPLAY_COLS,
         "note",
         "as_of",
     ]
     write_csv(out_dir / "top100-coverage-summary.csv", summary, scols)
+    oq = open_rows(rows)
+    stamp = now.strftime("%Y%m%dT%H%MZ")
+    write_csv(out_dir / f"top100-open-shown-cells-{stamp}.csv", oq, OPEN_COLUMNS)
+    hr, hy = hidden_evidence(rows)
+    write_csv(out_dir / f"top100-hidden-rows-{stamp}.csv", hr, HIDDEN_ROW_COLUMNS)
+    write_csv(out_dir / f"top100-hidden-years-{stamp}.csv", hy, HIDDEN_YEAR_COLUMNS)
+    wt = {k: sum(1 for r in oq if r["work"] == k) for k in WORK_TYPES}
+    print(
+        f"display: shown values {sum(r['shown_values'] for r in summary)} of "
+        f"{sum(r['shown_cells'] for r in summary)} shown cells; open {len(oq)} {wt}; "
+        f"hidden rows {sum(r['hidden_rows'] for r in summary)}, hidden years {sum(r['hidden_years'] for r in summary)}; "
+        f"certified {sum(1 for r in summary if r['display_certified'] == 'yes')}"
+    )
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     pc = sum(1 for r in rows if r.get("parts"))
     pb = sum(r.get("_parts_blank", 0) for r in rows)
