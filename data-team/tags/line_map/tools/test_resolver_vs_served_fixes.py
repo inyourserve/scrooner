@@ -853,3 +853,41 @@ def test_replay_guards():
     f = filing([('BS', 'AssetsCurrent', 'Total current assets', 100), ('BS', 'AccountsPayableAndOtherAccruedLiabilitiesCurrent', 'Payables', None), ('BS', 'LiabilitiesCurrent', 'Total current liabilities', 50)])
     row = dict(accession=f['a'], data_point='accounts_payable', status='not_presented', value=None, tags='', nodes='', why='', flags='', column='own')
     assert resolve_all.apply_bundled_ap([row], [f])[0]['status'] == 'combined'   # by the element alone
+
+
+def test_other_income_line_holding_interest_is_split_by_its_own_breakdown():
+    # Dhairya ruling 2026-11-16: BMY FY2023 'Other (income)/expense, net' 1,158 = interest income 449 - interest expense 1,166 + other
+    calc = '~'.join(['1|OtherNonoperatingIncomeExpense|InvestmentIncomeInterest|1', '1|OtherNonoperatingIncomeExpense|InterestExpense|-1',
+                     '1|OtherNonoperatingIncomeExpense|GainLossOnInvestments|1', '1|OtherNonoperatingIncomeExpense|InvestmentIncomeDividend|1'])
+    f = filing([('IS', 'Revenues', 'Total Revenues', 45006), ('IS', 'OtherNonoperatingIncomeExpense', 'Other (income)/expense, net', 1158)], calc)
+    base = dict(accession=f['a'], column='own', flags='', why='')
+    def run(notes, ii_status='not_presented'):
+        rows = [dict(base, data_point='other_income_expense_net', status='mapped', value=D(1158), tags='OtherNonoperatingIncomeExpense', nodes='OtherNonoperatingIncomeExpense=1158 [R2.htm:2]'),
+                dict(base, data_point='interest_income', status=ii_status, value=None, tags='', nodes=''),
+                dict(base, data_point='interest_expense', status='mapped', value=D(1166), tags='InterestExpense', nodes='InterestExpense=1166 [NOTE]')]
+        return resolve_all.apply_other_income_split(rows, [f], {f['a']: notes})
+    rows = run('InvestmentIncomeInterest|4|449~InterestExpense|4|1166~InvestmentIncomeDividend|4|30')
+    assert rows[0]['value'] == D(1875) and rows[0]['status'] == 'component_sum' and 'interest_split' in rows[0]['flags']   # the dividend stays in other income
+    assert rows[0]['nodes'] == 'OtherNonoperatingIncomeExpense=1158 [R2.htm:2]; -InvestmentIncomeInterest=449 [NOTE]; InterestExpense=1166 [NOTE]'
+    assert rows[1]['status'] == 'mapped' and rows[1]['value'] == D(449)   # the interest part serves interest_income
+    assert rows[2]['value'] == D(1166)                                    # an interest row already served is kept
+    assert run('InvestmentIncomeInterest|4|449', 'combined')[1]['value'] == D(449)
+    # no breakdown value: the line is served under the label rule
+    rows = run('GainLossOnInvestments|4|700')
+    assert rows[0]['status'] == 'mapped' and rows[0]['value'] == D(1158) and rows[1]['status'] == 'not_presented'
+    # the line served with its calc-weight sign (-1): the split keeps that sign
+    g = dict(base, data_point='other_income_expense_net', status='mapped', value=D(-1158), tags='OtherNonoperatingIncomeExpense', nodes='OtherNonoperatingIncomeExpense=1158 [R2.htm:2]')
+    r = resolve_all.apply_other_income_split([g], [f], {f['a']: 'InvestmentIncomeInterest|4|449'})[0]
+    assert r['value'] == D(-709)
+    assert run('InvestmentIncomeInterest|4|0')[0]['status'] == 'mapped'   # a zero interest part: nothing to split
+    rows = run('InvestmentIncomeInterest|4|449~InterestExpense|4|1166')
+    rows2 = resolve_all.apply_other_income_split([dict(rows[0], status='mapped', value=D(1158), nodes='OtherNonoperatingIncomeExpense=1158 [R2.htm:2]'),
+                                                   dict(base, data_point='interest_expense', status='mapped', value=D(1100), tags='X', nodes='X=1100 [R2.htm:9]')], [f], {f['a']: 'InterestExpense|4|1166'})
+    assert rows2[1]['value'] == D(1100)   # a served interest row is never overwritten
+    h = filing([('IS', 'Revenues', 'Total Revenues', 45006), ('IS', 'OtherNonoperatingIncomeExpense', 'Other income, net', 80)], '1|OtherNonoperatingIncomeExpense|InterestIncomeExpenseNet|1')
+    hr = [dict(base, accession=h['a'], data_point='other_income_expense_net', status='mapped', value=D(80), tags='T', nodes='OtherNonoperatingIncomeExpense=80 [R2.htm:2]'),
+          dict(base, accession=h['a'], data_point='interest_income', status='not_presented', value=None, tags='', nodes='')]
+    hr = resolve_all.apply_other_income_split(hr, [h], {h['a']: 'InterestIncomeExpenseNet|4|2'})
+    assert hr[0]['value'] == D(78) and hr[1]['status'] == 'not_presented'   # net interest is no interest-income figure
+    odd = dict(base, data_point='other_income_expense_net', status='mapped', value=D(500), tags='T', nodes='OtherNonoperatingIncomeExpense=1158 [R2.htm:2]')
+    assert resolve_all.apply_other_income_split([odd], [f], {f['a']: 'InvestmentIncomeInterest|4|449'})[0]['value'] == D(500)   # value is not the line: not split

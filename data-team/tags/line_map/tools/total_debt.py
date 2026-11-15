@@ -17,6 +17,9 @@ DEBT = re.compile(r'^(ShortTermBorrowings|OtherShortTermBorrowings|CommercialPap
                   r'SeniorNotes\w*|ConvertibleNotesPayable\w*|ConvertibleDebt\w*|ConvertibleLongTermNotesPayable|SecuredDebt\w*|UnsecuredDebt\w*|OtherLongTermDebt\w*|'
                   r'SubordinatedDebt\w*|DebtLongtermAndShorttermCombinedAmount|UnsecuredLongTermDebt|SecuredLongTermDebt|LongTermNotesAndLoans|LongTermLoansPayable|ShortTermNonBankLoansAndNotesPayable|OtherBorrowings|BankBorrowings|FederalHomeLoanBankAdvances\w*|AdvancesFromFederalHomeLoanBanks|LongTermFederalHomeLoanBankAdvances\w*|'
                   r'FinanceLeaseLiability\w*|CapitalLeaseObligations\w*|DebtInstrumentCarryingAmount|LongTermDebtFairValue)$')
+CURRENT_DEBT = {'ShortTermBorrowings', 'OtherShortTermBorrowings', 'CommercialPaper', 'DebtCurrent', 'LongTermDebtCurrent', 'LongTermDebtAndCapitalLeaseObligationsCurrent',
+                'ShortTermBankLoansAndNotesPayable', 'LinesOfCreditCurrent', 'NotesPayableCurrent', 'LongTermNotesPayableCurrent', 'ConvertibleDebtCurrent',
+                'DebtCurrentAndFinanceLeaseLiability', 'LongTermDebtCurrentAndFinanceLeaseLiability', 'SecuredDebtCurrent', 'UnsecuredDebtCurrent', 'ConvertibleNotesPayableCurrent', 'OtherLongTermDebtCurrent', 'LoansPayableCurrent'}
 DEBT_MEMBER = re.compile(r'(?i)(Debt|Borrowing|NotesPayable|CommercialPaper|LineOfCredit|Bonds)')
 LEASES = {}
 NOTDEBT = re.compile(r'(?i)interest payable|accrued interest|operating lease|FairValue|DebtInstrumentCarryingAmount')
@@ -184,6 +187,16 @@ def run(filings, vals, flloc):
                         # no location evidence: TMUS, WFC, CVS and DIS keep capital leases inside their debt-note
                         # totals, so absence is not evidence for capital leases; a reader decides
                         flags.append(f'READER CHECK: capital lease {cl} in a note with no location member, calc arc or lease-named debt line: not added')
+            # Dhairya 2026-11-16 (AMZN): (a) the current portion of long-term debt is debt wherever it is printed: a claim of the
+            # noncurrent element with no current debt part takes the note's LongTermDebtCurrent (AMZN prints it inside 'Accrued expenses
+            # and other'), unless a calc arc places it inside a claimed line; (b) pre-842 build-to-suit 'finance lease obligations' are
+            # financing obligations like capital leases: added when the filing has no ASC 842 finance lease (FinanceLeaseLiability)
+            nt = {t for t, *_ in nodes}
+            if 'LongTermDebtNoncurrent' in nt and not nt & CURRENT_DEBT and vv[col].get('LongTermDebtCurrent') and not any(c == 'LongTermDebtCurrent' for p in tags for g in arcs.get(p, {}).values() for c, _ in g):
+                nodes.append(('LongTermDebtCurrent', vv[col]['LongTermDebtCurrent'], 'NOTE', 'current portion of long-term debt printed inside a non-debt line: debt wherever it sits (ruling 2026-11-16)'))
+            if not any(t.startswith('FinanceLeaseLiability') for t in nt) and not fl and not on_face_lease:
+                for t in ('FinanceLeaseObligationsCurrent', 'FinanceLeaseObligationsNoncurrent'):
+                    if vv[col].get(t): nodes.append((t, vv[col][t], 'NOTE', 'pre-842 build-to-suit finance lease obligation: a financing obligation (ruling 2026-11-16)'))
             total = sum((v for _, v, *_ in nodes), D(0))
             if repo_comb:
                 out.append(dict(cik=f['cik'], accession=f['a'], filing_period=f['p'], column=kind, period_end=col, status='combined',

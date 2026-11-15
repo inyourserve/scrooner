@@ -422,6 +422,51 @@ def apply_bundled_ap(rows, filings):
     return rows
 
 
+# pure interest elements: dividends and investment gains (InvestmentIncomeInterestAndDividend, InvestmentIncomeDividend,
+# InvestmentIncomeNet: QCOM, NEM, CAT) are not interest and stay in other income
+PURE_II = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOther|InterestIncomeOperating|InterestIncomeNonoperating|InterestIncome|InterestIncomeExpenseNet|InterestIncomeExpenseNonoperatingNet|InterestIncomeDueToEmploymentTaxRefund)$')
+NET_II = re.compile(r'^InterestIncomeExpense\w*Net$')
+
+
+def apply_other_income_split(rows, filings, notefacts):
+    """Dhairya ruling 2026-11-16 (PANW, BMY; founder decision: combined lines are split, not chosen): an other-income line whose own
+    calc breakdown in the filing names interest income or interest expense with undimensioned values (PANW 'Other income, net' =
+    InterestIncomeOther 363.5 + other; BMY 'Other (income)/expense, net' = InvestmentIncomeInterest 449 - InterestExpense 1,166 + other)
+    serves other_income_expense_net as the line less those interest parts, every part cited; interest_income / interest_expense serve
+    the same note amounts (their own rows). Without such a breakdown the line is served under the label rule."""
+    F = {f['a']: f for f in filings}
+    by = {(x['accession'], x['data_point']): x for x in rows if (x.get('column') or 'own') == 'own'}
+    for r in rows:
+        if r['data_point'] != 'other_income_expense_net' or r['status'] != 'mapped' or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        ps = _split_parts(r.get('nodes') or '')
+        m = re.match(r'^(\w+)=(-?[\d.]+) \[(R\d+(?:\.htm)?:\d+)\]$', ps[0]) if len(ps) == 1 else None
+        if not m or D(m.group(2)) == 0: continue
+        tag, lv = m.group(1), D(m.group(2))
+        sg = D(r['value']) / lv if r.get('value') not in (None, '') else None
+        if sg not in (D(1), D(-1)): continue
+        L, arcs = parse(F[r['accession']])
+        notes = note_facts(notefacts.get(r['accession']))
+        kids = [(c, w) for g in arcs.get(tag, {}).values() for c, w in g]
+        ints = [(c, w, notes.get((c, 4))) for c, w in kids if (resolve_is.IE_TAG.match(c) or PURE_II.match(c)) and notes.get((c, 4)) is not None]
+        if not ints or all(v == 0 for _, _, v in ints): continue
+        val = sg * (lv - sum((w * v for _, w, v in ints), D(0)))
+        r.update(status='component_sum', value=val, tags='+'.join([tag] + [c for c, _, _ in ints]),
+                 nodes='; '.join([f"{'-' if sg < 0 else ''}{tag}={lv} [{re.sub(r'^R(\d+):', r'R\1.htm:', m.group(3))}]"] +
+                                 [f"{'-' if -sg * w < 0 else ''}{c}={v} [NOTE]" for c, w, v in ints]),
+                 why=(r.get('why') or '') + "; the line holds interest (its calc breakdown in the filing names " + ', '.join(c for c, _, _ in ints) + "): other income is the line less the interest parts, served on their own data points (ruling 2026-11-16)")
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'interest_split') if x)
+        # the interest parts serve their own data points where those are still a reason (ruling: both from the same filing)
+        for dp_, pick in (('interest_income', lambda c: PURE_II.match(c) and not NET_II.match(c)), ('interest_expense', lambda c: resolve_is.IE_TAG.match(c))):
+            got = [(c, v) for c, w, v in ints if pick(c)]
+            x = by.get((r['accession'], dp_))
+            if len(got) == 1 and x is not None and x['status'] in ('not_presented', 'combined') and (x.get('column') or 'own') == 'own':
+                c, v = got[0]
+                x.update(status='mapped', value=abs(v), tags=c, nodes=f"{c}={v} [NOTE]",
+                         why=f"the interest part of '{tag}' as its calc breakdown in the filing names it (ruling 2026-11-16: the combined line split)")
+                x['flags'] = ';'.join(y for y in (x.get('flags', ''), 'interest_split') if y)
+    return rows
+
+
 def apply_alt(rows):
     """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
     for r in rows:
@@ -874,7 +919,8 @@ if __name__ == '__main__':
     import resolve_is
     resolve_is.MEMBER_FACTS = memberfacts
     rows = resolve_is.apply(rows, filings, notefacts, tick)
-    rows = apply_complement_interest(rows, filings, memberfacts)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = apply_complement_interest(rows, filings, memberfacts)
+    rows = apply_other_income_split(rows, filings, notefacts)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_ci_parent(rows, clines, notefacts, memberfacts)
     rows = apply_cost_and_opex(rows, filings)
     rows = apply_expenses_by_nature(rows, filings)

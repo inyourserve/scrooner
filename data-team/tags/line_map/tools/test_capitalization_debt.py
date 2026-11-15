@@ -50,6 +50,37 @@ def test_pre842_capital_lease_is_the_present_value_not_the_gross_total():
     assert own['tags'].split('+') == ['LongTermDebtNoncurrent', 'CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent'], own['tags']
 
 
+
+def test_current_ltd_inside_accrued_and_build_to_suit_obligations_are_debt():
+    # Dhairya 2026-11-16, AMZN FY2016: LTD 7,694 + capital leases 3,997 + 5,080 + current LTD 1,056 (inside 'Accrued expenses and other')
+    # + pre-842 finance lease obligations 144 + 2,439 = 20,410
+    calc = 'g|OtherLiabilitiesNoncurrent|CapitalLeaseObligationsNoncurrent|1'
+    face_ = [('BS', 'Assets', 'Total assets', 83), ('BS', 'AccruedLiabilitiesCurrent', 'Accrued expenses and other', 13739), ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 7694),
+             ('BS', 'OtherLiabilitiesNoncurrent', 'Other long-term liabilities', 12607), ('BS', 'StockholdersEquity', 'Total stockholders equity', 19)]
+    notes = (('CapitalLeaseObligations', 9406), ('CapitalLeaseObligationsCurrent', 3997), ('CapitalLeaseObligationsNoncurrent', 5080), ('LongTermDebtCurrent', 1056),
+             ('FinanceLeaseObligationsCurrent', 144), ('FinanceLeaseObligationsNoncurrent', 2439))
+    f = _f(face_, calc)
+    vals = [dict(a=f['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in notes))]
+    own = next(r for r in total_debt.run([f], vals, {}) if r['column'] == 'own')
+    assert D(own['value']) == D(20410), own
+    # a current-debt line already claimed: the note's current portion is not added again
+    g = _f(face_[:2] + [('BS', 'DebtCurrent', 'Short-term debt', 1056)] + face_[2:], calc)
+    vals = [dict(a=g['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in notes))]
+    own = next(r for r in total_debt.run([g], vals, {}) if r['column'] == 'own')
+    assert D(own['value']) == D(20410), own
+    # an ASC 842 finance lease beside them: the pre-842 obligations are not added
+    vals = [dict(a=f['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in notes + (('FinanceLeaseLiability', 500),)))]
+    own = next(r for r in total_debt.run([f], vals, {}) if r['column'] == 'own')
+    assert 'FinanceLeaseObligationsCurrent' not in own['tags'], own
+    # the long-term line is the total including the current portion (no noncurrent element): nothing added
+    h = _f([face_[0], face_[1], ('BS', 'LongTermDebt', 'Long-term debt', 8750)] + face_[3:], calc)
+    vals = [dict(a=h['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in notes))]
+    assert 'LongTermDebtCurrent' not in next(r for r in total_debt.run([h], vals, {}) if r['column'] == 'own')['tags']
+    # a calc arc places the current portion inside a claimed line: not added again
+    k = _f(face_, calc + '~g|LongTermDebtNoncurrent|LongTermDebtCurrent|1')
+    vals = [dict(a=k['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in notes))]
+    assert 'LongTermDebtCurrent' not in next(r for r in total_debt.run([k], vals, {}) if r['column'] == 'own')['tags']
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):
