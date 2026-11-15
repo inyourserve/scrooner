@@ -326,3 +326,11 @@ def test_dash_on_a_payment_line_is_inferred_from_the_filings_other_columns():
     # never outside the payment lines (GOOG EPS by class, PSX PP&E)
     eps = dict(row, data_point='basic_eps')
     assert not standard_inputs.printed_zero_inferred([eps], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {}, {'basic_eps': ('CF', ['PaymentsOfDividendsCommonStock'])})
+
+
+def test_lines_the_family_excludes_never_block_proven_absence():
+    # BA FY2023 'Treasury shares issued for 401(k) contribution'; PM FY2018 subsidiary shares from NCI; TSLA NCI distributions
+    assert _absent([('CF', 'Employee401kTreasuryStockContributionNoncashExpense', 'Treasury shares issued for 401(k) contribution', 1515)], dp='share_buybacks')
+    assert _absent([('CF', 'PaymentsToMinorityShareholders', 'Purchase of subsidiary shares from noncontrolling interests', 5)], dp='share_buybacks')
+    assert _absent([('CF', 'xyz_DistributionsNci', 'Distributions paid to noncontrolling interests', 5)], dp='dividends_paid')
+    assert not _absent([('CF', 'xyz_Buyback', 'Purchases of treasury stock', 5)], dp='share_buybacks')

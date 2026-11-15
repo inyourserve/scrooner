@@ -567,6 +567,9 @@ def dp_elements(dp):
 
 ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$'), 'current_assets': re.compile(r'^AssetsCurrent$'), 'current_liabilities': re.compile(r'^LiabilitiesCurrent$')}   # data points read by pattern (total_debt.py) or by the core statement tree
 ABSENT_STMT = {'total_debt': 'BS'}
+# a line the family itself excludes never blocks absence (BA 'Treasury shares issued for 401(k) contribution', AMD 'Issuance of treasury stock
+# to partially settle debt', PM 'Sale (purchase) of subsidiary shares to/(from) noncontrolling interests')
+ABSENT_NOT = {'share_buybacks': re.compile(resolve_cf.BUY_NOT.pattern + r'|issued|contribution|non-?cash'), 'dividends_paid': resolve_cf.DIV_NOT}
 ABSENT_LABEL = {'total_debt': total_debt.LABEL_DEBT, 'share_buybacks': resolve_cf.BUY_LABEL, 'dividends_paid': resolve_cf.DIV_LABEL, 'sbc': resolve_cf.SBC_LABEL, 'capex': resolve_cf.CAPEX_LABEL}
 
 
@@ -592,7 +595,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         L = [x.split('|') for x in (f.get('lines') or '').split('~')]
         if any(len(p) > 3 and inE(p[3]) for p in L): continue
         lab = ABSENT_LABEL.get(r['data_point'])
-        if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
+        if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not (ABSENT_NOT.get(r['data_point']) and ABSENT_NOT[r['data_point']].search(p[7])) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
         if any(inE(t) for t, _q in nf): continue
         pe = str(r['period_end'])
