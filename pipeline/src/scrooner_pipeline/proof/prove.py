@@ -37,6 +37,7 @@ from scrooner_pipeline.common.polarity import apply_polarity
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
+from scrooner_pipeline.proof.rules import RULES_KEY, rules_used
 
 RULE_ID = "proof.cell_proof@1"
 # Bump whenever a rule changes what a verdict means: a row written by an older detector is history, never the
@@ -45,7 +46,10 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v22_2026-11-16"
+# ONE-PATH step 1 (2026-11-16): this string is now the FLOOR, kept at v21. The v22 changes (era-parts component-sum
+# authority, split parts) are rule-scoped changes in proof/rules.py, not a floor bump: only the cells that used those
+# rules are re-proved. Bump the floor only for a breaking change no rule owns.
+DETECTOR_VERSION = "cell_proof_v21_2026-11-16"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -440,7 +444,11 @@ class Proof:
             "fsn_label": self.fsn_label,
             "fsn_calc_parent": self.fsn_calc_parent,
             "position_is_expected_line": self.position_is_expected_line,
-            "checks": self.checks,
+            # the rules this verdict used, recorded from what ran (proof/rules.py); a copy, p.checks stays check-only
+            "checks": {
+                **self.checks,
+                RULES_KEY: rules_used(self.shown, self.checks),
+            },
             "verdict": self.verdict,
             "reason_code": self.reason_code,
             "reason_text": self.reason_text,

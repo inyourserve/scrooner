@@ -37,7 +37,13 @@ from scrooner_pipeline.proof.identities import (
     load_printed,
 )
 from scrooner_pipeline.proof.perimeter import apply_perimeter
-from scrooner_pipeline.proof.prove import Proof, prove_cell
+from scrooner_pipeline.proof.prove import DETECTOR_VERSION, RULE_ID, Proof, prove_cell
+from scrooner_pipeline.proof.rules import (
+    RULES_KEY,
+    reproof_rules,
+    rules_used,
+    stored_rules,
+)
 from scrooner_pipeline.proof.shown import (
     HISTORY_FLOOR,
     group_by_accession,
@@ -249,6 +255,69 @@ def write_proofs(conn: psycopg.Connection, proofs: list[Proof]) -> int:
     return len(rows)
 
 
+def scope_proofs(
+    conn: psycopg.Connection,
+    company_id: int,
+    proofs: list[Proof],
+    floor: date | None = None,
+) -> tuple[list[Proof], list[tuple[int, dict[str, int]]], int, Counter]:
+    """Rule-scoped re-prove (ONE-PATH step 1). Split a company's fresh proofs against its stored rows:
+    to_write  cells with no stored row, a row of another floor version, or a row whose rules moved (reproof_rules);
+    to_stamp  (row id, rule record) of unselected LEGACY rows (no record yet): their verdict stands, the record is added;
+    kept      unselected rows that already carry a current record (untouched);
+    why       count of the rules that selected cells.
+    The proofs are all computed (identities need the whole period); only the writes are scoped, so a selected cell's
+    verdict is exactly what a full re-prove writes."""
+    stored: dict[tuple, tuple[int, str, dict]] = {}
+    for rid, name, grain, start, end, dv, checks in conn.execute(
+        """select id, data_point_name, period_grain, period_start, period_end, detector_version, checks
+           from analytics.cell_proof
+           where company_id = %s and basis = 'latest' and rule_id = %s and period_end >= %s""",
+        (company_id, RULE_ID, floor or HISTORY_FLOOR),
+    ).fetchall():
+        stored[(name, grain, start, end)] = (rid, dv, checks or {})
+    to_write: list[Proof] = []
+    to_stamp: list[tuple[int, dict[str, int]]] = []
+    kept = 0
+    why: Counter = Counter()
+    for p in proofs:
+        s = p.shown
+        row = stored.get(
+            (s.data_point_name, s.period_grain, s.period_start, s.period_end)
+        )
+        if row is None or row[1] != DETECTOR_VERSION:
+            to_write.append(p)
+            why["no_current_floor_row"] += 1
+            continue
+        rid, _dv, checks = row
+        rec = stored_rules(checks)
+        reasons = reproof_rules(rec, s, checks)
+        if reasons:
+            to_write.append(p)
+            why.update(reasons)
+        elif rec is None:
+            to_stamp.append((rid, rules_used(s, checks)))
+        else:
+            kept += 1
+    return to_write, to_stamp, kept, why
+
+
+def stamp_rules(
+    conn: psycopg.Connection, stamps: list[tuple[int, dict[str, int]]]
+) -> int:
+    """Add the rule record to legacy rows whose rules are unchanged. Touches only checks->'rules'; verdict, value and
+    proved_at stay as they were."""
+    rows = [{"id": i, "rec": json.dumps(r)} for i, r in stamps]
+    with conn.transaction(), conn.cursor() as cur:
+        for k in range(0, len(rows), 5000):
+            cur.executemany(
+                "update analytics.cell_proof set checks = jsonb_set(coalesce(checks, '{}'::jsonb), "
+                f"'{{{RULES_KEY}}}', %(rec)s::jsonb) where id = %(id)s and not (checks ? '{RULES_KEY}')",
+                rows[k : k + 5000],
+            )
+    return len(rows)
+
+
 def purge_unserved(
     conn: psycopg.Connection,
     company_id: int,
@@ -260,9 +329,6 @@ def purge_unserved(
     total_debt 2015 stayed PROVEN after the era guard unserved it) are deleted. DISAGREE rows stay (the mapper's
     proof guard reads them to keep a wrong value held) and NOT_PRESENTED rows stay (a stored reason for a blank).
     Returns the number of rows deleted."""
-    from scrooner_pipeline.proof.prove import RULE_ID
-    from scrooner_pipeline.proof.shown import HISTORY_FLOOR
-
     served = {
         (
             p.shown.data_point_name,
@@ -304,6 +370,7 @@ def run(
     write: bool = False,
     floor: date | None = None,
     fsn_source: str = "db",
+    scoped: bool = False,
 ) -> dict[str, Any]:
     # reads run in autocommit: one transaction across companies and FSN downloads held
     # AccessShareLocks on canonical_fact for 19 min and blocked a migration ALTER (2026-11-01)
@@ -326,6 +393,7 @@ def run(
     identity_breaks: Counter = Counter()
     reasons: Counter = Counter()
     per_company: dict[str, dict[str, int]] = {}
+    scope_why: Counter = Counter()
     report = report_path.open("a") if report_path else None
     try:
         for cik in sorted(ciks):
@@ -351,7 +419,21 @@ def run(
                 identity_breaks.update(id_counts)
                 apply_perimeter(proofs, structures)  # total_debt perimeter (audit R07)
                 if write and proofs:
-                    write_proofs(conn, proofs)
+                    if scoped:
+                        to_write, to_stamp, kept, why = scope_proofs(
+                            conn, company_id, proofs, floor
+                        )
+                        write_proofs(conn, to_write)
+                        stamp_rules(conn, to_stamp)
+                        for k, v in (
+                            ("rewritten", len(to_write)),
+                            ("stamped", len(to_stamp)),
+                            ("kept", kept),
+                        ):
+                            totals[k] = totals.get(k, 0) + v
+                        scope_why.update(why)
+                    else:
+                        write_proofs(conn, proofs)
                 if write:
                     totals["purged_unserved"] = totals.get(
                         "purged_unserved", 0
@@ -382,6 +464,8 @@ def run(
     totals["verdicts"] = dict(verdicts)
     totals["identity_breaks"] = dict(identity_breaks)
     totals["reasons"] = dict(reasons.most_common())
+    if scoped:
+        totals["scope_reasons"] = dict(scope_why.most_common())
     totals["fsn_source"] = fsn_source
     totals["fsn_db_fallbacks"] = len(cache.fallbacks)
     totals["fsn_quarters_missing"] = sorted(cache.missing_quarters)

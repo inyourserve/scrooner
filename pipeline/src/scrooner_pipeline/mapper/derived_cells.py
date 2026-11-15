@@ -38,6 +38,7 @@ from scrooner_pipeline.proof.identities import (
     TEMP_EQUITY_TOTAL_TAG,
 )
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
+from scrooner_pipeline.proof.rules import row_is_current
 
 LABEL = "derived_not_printed"
 OPERAND_TAGS: tuple[str, ...] = (
@@ -75,15 +76,17 @@ def load_proven(
     if conn.execute("select to_regclass('analytics.cell_proof')").fetchone()[0] is None:
         return {}
     out: dict[ProvenKey, set[Decimal]] = defaultdict(set)
-    for n, g, s, e, v in conn.execute(
+    for n, g, s, e, v, checks in conn.execute(
         """
-        select data_point_name, period_grain, period_start, period_end, shown_value
+        select data_point_name, period_grain, period_start, period_end, shown_value, checks
         from analytics.cell_proof
         where company_id = %s and basis = 'latest' and verdict = 'PROVEN' and shown_value is not null
           and detector_version = %s
         """,
         (company_id, DETECTOR_VERSION),
     ).fetchall():
+        if not row_is_current(DETECTOR_VERSION, checks, DETECTOR_VERSION):
+            continue
         out[(_base(n), g, s, e)].add(Decimal(v))
     return out
 

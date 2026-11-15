@@ -58,6 +58,8 @@ if [ -n "$RES" ]; then
   grep -iE "structural-load|written|exceptions" $O/1s.txt | head -2 | cut -c1-220
 fi
 plan() { mkdir -p $O/bi_$1; PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map tagmap-plan --company-ids $IDS --apply --coverage-gate --coverage-gate-scope concept --docmap-reads $R --before-image-dir $O/bi_$1 > $O/plan_$1.txt 2> $O/plan_$1.err || { tail -3 $O/plan_$1.err; exit 21; }; }
+# proof --write is rule-scoped by default (ONE-PATH step 1, proof/rules.py): it writes only cells with no current row or
+# whose recorded rules changed, and stamps untouched legacy rows with their rule record. `--full` rewrites every cell.
 proof() { for c in ${(s:,:)CIKS}; do PGOPTIONS=$PG $PY -c "import sys; from scrooner_pipeline.jobs.proof import app; sys.argv=['p','run','--ciks','$c','--report','$O/proof_$1_$c.jsonl','--write']; app()" > $O/proof_$1_$c.log 2>&1 || { tail -2 $O/proof_$1_$c.log; exit 31; }; grep "cell-proof:" $O/proof_$1_$c.log | cut -c1-200; done; }
 plan a; proof a
 PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map era-guard --company-ids $IDS --apply > $O/guard.txt 2>&1 || { tail -3 $O/guard.txt; exit 41; }
