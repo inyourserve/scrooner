@@ -45,9 +45,22 @@ Last full audit: [`GITHUB-INFRA-AUDIT-2026-11-16.md`](../../data-team/strategy/G
 | `pipeline-cells-proof.yml` | `scrooner-proof` over a company list | proof tables |
 | `pipeline-fsn-extract-predecessors.yml` | FSN extract for predecessor CIKs | Supabase Storage |
 
-### Manual: the old path (retirement proposed in the 11-16 audit, founder decides)
+### Retired 2026-11-16 (founder-approved cleanup)
 
-`pipeline-fsn-write.yml` (production), `pipeline-fsn-cohort.yml`, `pipeline-fsn-pilot.yml`, `pipeline-cells-load.yml` and `cells-load-stage.yml` (production), `pipeline-certify.yml`, `pipeline-recompute.yml` (production), `bs-port-gate.yml`, `cf-port-regression-gate.yml`.
+These are disabled: every root job is skipped unless the repository variable `ALLOW_RETIRED_WORKFLOWS` is `'true'`. The files will be deleted from 2026-11-23, provided nothing needed them during the week.
+
+| File | Was |
+|---|---|
+| `pipeline-fsn-write.yml` | old 1,000-company FSN-store production write |
+| `pipeline-fsn-cohort.yml` | FSN-store cohort dry run |
+| `pipeline-fsn-pilot.yml` | FSN-store pilot |
+| `pipeline-cells-load.yml` and `cells-load-stage.yml` | per-family cell-file production load (superseded 11-04) |
+| `pipeline-certify.yml` | old certification invariants (now top100-flow requests) |
+| `bs-port-gate.yml`, `cf-port-regression-gate.yml` | old lane port gates, never passed |
+
+### Manual, under review
+
+`pipeline-recompute.yml` (production; full-population metric recompute, last run 10-21): Engineering to say whether the new path still needs it.
 
 ## Branches
 

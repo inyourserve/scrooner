@@ -33,6 +33,8 @@ def _runs(cond: str | None, stage: str) -> bool:
         return True
     expr = (
         cond.replace("inputs.stage", repr(stage))
+        # retired 2026-11-16: the workflow runs only when this variable is 'true'; judge the stages as if re-enabled
+        .replace("vars.ALLOW_RETIRED_WORKFLOWS", "'true'")
         .replace("||", " or ")
         .replace("&&", " and ")
         .replace("always()", "True")

@@ -1,3 +1,6 @@
+# RETIRED 2026-11-16 (founder-approved cleanup, GITHUB-INFRA-AUDIT-2026-11-16.md): old FSN-store / cell-family path,
+# replaced by top100-flow.yml. Called only by pipeline-cells-load.yml, whose jobs are skipped unless repository variable ALLOW_RETIRED_WORKFLOWS is 'true'.
+# The file is removed after a week (from 2026-11-23) if nothing needed it. Map: doc/infra/GITHUB.md.
 name: Cell files load stage (called)
 
 # One family of pipeline-cells-load.yml: plan on every shard, then apply on every shard.
