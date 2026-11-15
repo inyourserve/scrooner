@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .51, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .52, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -403,6 +403,7 @@ Format: `ID | rule | code | test | date / source`.
 | B25 | total_liabilities | A derived TL beside an undimensioned Liabilities fact: equal → the fact is served, `tl_corroborated`; differs by a printed mezzanine/NCI line → explained; else `tl_corroboration_disagree` | ra.apply_tl_corroboration | rvs::test_derived_total_liabilities_is_corroborated_by_the_liabilities_fact | Dhairya 2026-11-16 (Engineering loader round dd7995b5) |
 | B26 | deposits, loans_net, noninterest_expense, noninterest_income, total_interest_income, net_interest_income | Bank totals by element and label (note_ok N except loans_net) | roles | — | roles.csv |
 | B27 | provision_for_credit_losses, loans_net | Note facts (§AG): bank-loan elements anywhere; trade elements (ProvisionForDoubtfulAccounts, NotesReceivableNet) only on a bank face (net interest printed); served after a later 10-K's printed line (alt) | ra.role BANK_NOTE, bank_face | rvs::test_bank_note_facts_are_served_after_the_fill_and_trade_elements_only_on_a_bank_face | Ruling 2026-11-14 (Dhairya); roles.csv §AG (Dhairya 2026-11-14) |
+| B28 | loans_net | Card Member loans are loans; Card Member receivables are not. A loans line printed with class members only (AXP 'Financing receivables, net', NotesReceivableNet) = the loan classes (every member not named a receivable), net, flag member_sum, only when all classes plus the other calc children of Assets tie to total assets; otherwise open. The extract carries NotesReceivableNet by FinancingReceivable class (extract_notefacts.sql mem) | ra.apply_member_loans | pr4::test_card_member_loans_are_the_loan_classes_of_a_member_only_line_when_classes_tie_to_total_assets | Dhairya ruling 2026-11-16 (AXP); commit .52 |
 
 ### 5.5 Cash-flow family (rcf, `cf_family`; sign = the raw XBRL fact, never the printed sign)
 

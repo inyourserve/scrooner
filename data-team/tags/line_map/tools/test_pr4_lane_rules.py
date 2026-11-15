@@ -347,3 +347,22 @@ def test_interest_income_fills_from_a_later_note_but_never_from_interest_and_div
     assert str(out[('A17', 'interest_income')]['value']).startswith('105')
     out = standard_inputs.comparative_fill(rows('InvestmentIncomeInterestAndDividend'), {'A19': 'InvestmentIncomeInterestAndDividend|4|105|2017-12-31'}, set())
     assert ('A17', 'interest_income') not in out
+
+
+def test_card_member_loans_are_the_loan_classes_of_a_member_only_line_when_classes_tie_to_total_assets():
+    # AXP FY2022 R2: 'Financing receivables, net' (NotesReceivableNet) by class: Card Member loans 104,217, receivables 57,384, other 5,357
+    lines = [('BS', 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'Total cash and cash equivalents', 33914),
+             ('BS', 'NotesReceivableNet', 'Financing receivables, net', ''), ('BS', 'DebtAndEquitySecuritiesAvailableForSale', 'Investment securities', 4578),
+             ('BS', 'PropertyPlantAndEquipmentNet', 'Premises and equipment', 5215), ('BS', 'OtherAssets', 'Other assets', 17689), ('BS', 'Assets', 'Total assets', 228354)]
+    f = dict(filing(lines), a='A22')
+    f['calc'] = '~'.join(f"1|Assets|{t}|1" for t in ('CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'NotesReceivableNet', 'DebtAndEquitySecuritiesAvailableForSale', 'PropertyPlantAndEquipmentNet', 'OtherAssets'))
+    seg = 'FinancingReceivableRecordedInvestmentByClassOfFinancingReceivable'
+    mf = {'A22': f'NotesReceivableNet|0|104217|{seg}=CardmemberLoans;~NotesReceivableNet|0|57384|{seg}=CardMemberReceivables;~NotesReceivableNet|0|5357|{seg}=OtherLoans;'}
+    def run(mf):
+        r = dict(data_point='loans_net', status='not_presented', accession='A22', column='own', flags='roles', why='', value=None)
+        resolve_all.apply_member_loans([r], [f], mf)
+        return r
+    r = run(mf)
+    assert r['status'] == 'component_sum' and r['value'] == 104217 + 5357 and 'member_sum' in r['flags'] and 'CardMemberReceivables' in r['why']
+    # classes that do not tie to total assets: stays open
+    assert run({'A22': mf['A22'].replace('|5357|', '|5000|')})['status'] == 'not_presented'

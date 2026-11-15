@@ -527,6 +527,41 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     return rows
 
 
+LOAN_AXIS = re.compile(r'^\w*FinancingReceivable\w*=([^;=]+);$')
+
+
+def apply_member_loans(rows, filings, memberfacts):
+    """Dhairya ruling 2026-11-16 (AXP): Card Member loans are loans; Card Member RECEIVABLES (charge balances due in full) are not.
+    When the balance-sheet loans line ('Financing receivables, net', NotesReceivableNet) prints no consolidated value and its facts
+    carry financing-receivable class members only, loans_net = the loan members (every member not named a receivable), net, flag
+    member_sum, and only when ALL the line's members plus the other calc children of Assets tie to the printed total assets
+    (AXP FY2022: 228,354 - 61,396 other assets = 104,217 + 57,384 + 5,357). Without the tie the cell stays open."""
+    F_ = {f['a']: f for f in filings}
+    alts = [t for R in ROLES if R['data_point'] == 'loans_net' for a in R['alternatives'].split('|') for t in a.split('+') if t]
+    for r in rows:
+        if r['data_point'] != 'loans_net' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
+        f = F_[r['accession']]
+        L, arcs = parse(f)
+        bs = {l['tag']: l for l in face(L, 'BS')}
+        line = next((bs[t] for t in alts if t in bs and bs[t]['val'] is None), None)
+        if not line or 'Assets' not in bs or bs['Assets']['val'] is None: continue
+        mem = {}
+        for x in (memberfacts.get(r['accession']) or '').split('~'):
+            p = x.split('|')
+            if len(p) == 4 and p[0] == line['tag'] and p[1] == '0' and LOAN_AXIS.match(p[3]): mem[LOAN_AXIS.match(p[3]).group(1)] = D(p[2])
+        loans = {m: v for m, v in mem.items() if not re.search(r'(?i)receivable', m)}
+        if not loans or len(loans) == len(mem): continue
+        kids = [c for c, w in (children(arcs, 'Assets', {t: l for t, l in bs.items() if l['val'] is not None}) or []) if c != line['tag']]
+        if not kids or any(bs.get(c) is None or bs[c]['val'] is None for c in kids): continue
+        tot = sum(bs[c]['val'] for c in kids) + sum(mem.values())
+        if abs(tot - bs['Assets']['val']) > tol(bs['Assets']['val']): continue
+        r.update(status='component_sum', value=sum(loans.values()), tags='+'.join(f"{line['tag']}[{m}]" for m in loans),
+                 nodes='; '.join(f"{line['tag']}[FinancingReceivableClass={m}]={v} [R{line['rep']}.htm:{line['ln']}]" for m, v in loans.items()),
+                 why=f"'{line['lb']}' prints its classes only; loans = {', '.join(loans)} (receivable classes {', '.join(m for m in mem if m not in loans)} excluded); all classes with the other assets tie to total assets {bs['Assets']['val']} (ruling 2026-11-16)")
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'member_sum') if x)
+    return rows
+
+
 EPS_TAGS = {'basic_eps': ('EarningsPerShareBasic', 'IncomeLossFromContinuingOperationsPerBasicShare', 'EarningsPerShareBasicAndDiluted'),
             'diluted_eps': ('EarningsPerShareDiluted', 'IncomeLossFromContinuingOperationsPerDilutedShare', 'EarningsPerShareBasicAndDiluted')}
 
@@ -1227,6 +1262,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
+    rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
