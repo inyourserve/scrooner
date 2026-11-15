@@ -221,3 +221,14 @@ def test_continuing_operations_ci_total_serves_only_without_discontinued_operati
     assert r['status'] == 'mapped' and r['value'] == D(814553)
     r = resolve_all.role(f, L, arcs, {('ComprehensiveIncomeFromContinuingOperations', 4): D(814553), ('IncomeLossFromDiscontinuedOperationsNetOfTax', 4): D(5)}, R)
     assert r['status'] == 'not_presented'
+
+
+def test_net_treasury_purchases_line_is_combined_buybacks():
+    # GE FY2017 R6:40 ProceedsFromRepurchaseOfEquity 'Net dispositions (purchases) of GE shares for treasury' -2,550
+    b = resolve_cf(fin(('CF', 'ProceedsFromRepurchaseOfEquity', 'Net dispositions (purchases) of GE shares for treasury', -2550)), {})['share_buybacks']
+    assert b['status'] == 'combined' and b['value'] is None and 'dispositions/issuances, net' in b['why']
+
+
+def test_share_count_line_does_not_block_proven_absence():
+    # DHR FY2015 CF 'Shares held as Treasury shares' (a share count, StockRedeemed...Shares)
+    assert _absent([('CF', 'StockRedeemedThroughDistributionOfABusinessDuringPeriodShares', 'Shares held as Treasury shares', 26)], dp='share_buybacks')

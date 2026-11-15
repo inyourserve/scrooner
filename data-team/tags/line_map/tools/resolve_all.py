@@ -565,7 +565,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         L = [x.split('|') for x in (f.get('lines') or '').split('~')]
         if any(len(p) > 3 and p[3] in E for p in L): continue
         lab = ABSENT_LABEL.get(r['data_point'])
-        if lab and any(len(p) > 7 and p[0] == 'CF' and lab.search(p[7]) for p in L): continue
+        if lab and any(len(p) > 7 and p[0] == 'CF' and lab.search(p[7]) and not p[3].endswith('Shares') for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
         if any(t in E for t, _q in nf): continue
         pe = str(r['period_end'])

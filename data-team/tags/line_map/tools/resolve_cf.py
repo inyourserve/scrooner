@@ -46,6 +46,7 @@ BUY_SBC_PLAN = re.compile(r'(?i)under (the )?(equity|employee|stock|incentive|co
 BUY_COMBINED = re.compile(r'(?i)includ\w*\b.*\b(withh|surrender|tax)|\bwarrants?\b')   # MCK 'Share repurchases, including shares surrendered for tax withholding'; JPM 'Treasury stock and warrants repurchased'
 DIV_NONCASH = re.compile(r'(?i)\bnot\s+(yet\s+)?paid\b|\bunpaid\b|^(?!.*\b(paid|payments?)\b).*\b(declared|payable)\b')   # BXP 'declared but not paid': a non-cash disclosure
 DIV_UNITS = re.compile(r'(?i)\bdividends?\s+and\s+distributions?\b|\bdistributions?\s+and\s+dividends?\b|exchangeable (limited )?partnership units')   # BXP / AVGO FY2016-19: stockholders AND partnership-unit holders in one line
+BUY_NET = re.compile(r'(?i)(sales?|dispositions?|issuances?)\s*\(purchases?\)|purchases?\s*\((sales?|dispositions?|issuances?)\)|\bnet (dispositions?|purchases?|sales?)\b|purchases?,?\s+net\b')
 SBC_LABEL = re.compile(r'(?i)(stock|share|equity)[- ]based (compensation|payment)|stock compensation')
 WC = {
     'cf_ar_change': dict(fam=['IncreaseDecreaseInAccountsReceivable', 'IncreaseDecreaseInReceivables', 'IncreaseDecreaseInAccountsAndOtherReceivables', 'IncreaseDecreaseInAccountsAndNotesReceivable'],
@@ -187,6 +188,8 @@ def resolve_cf(f, notes):
     else:
         n = note(['PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity'])
         comb = [l for l in fin if l['tag'].startswith('PaymentsRelatedToCommonStockRepurchase') or (BUY_LABEL.search(l['lb']) and re.search(r'(?i)withh|employee tax', l['lb']))]
+        if not comb:   # a net line: purchases of treasury shares net of dispositions/issuances (GE FY2017 'Net dispositions (purchases) of GE shares for treasury')
+            comb = [l for l in fin if re.search(r'(?i)treasury|own (stock|shares)|common (stock|shares)', l['lb'] or '') and BUY_NET.search(l['lb'] or '')]
         cls = class_member_lines(f, cf, sec, ('PaymentsForRepurchaseOfCommonStock',))
         # a line carrying ClassOfStock members only: their sum is a last resort, after a later 10-K's consolidated figure for the year
         # (the comparative fill; DELL FY2017 class sum 711 where the FY2019 10-K prints 611)
@@ -196,7 +199,7 @@ def resolve_cf(f, notes):
                    flags='class_member_sum') if cls else None
         if n: put('share_buybacks', 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]', 'undimensioned consolidated note fact at the filing own column (par. AG)')
         elif comb:
-            put('share_buybacks', 'combined', comb[0]['tag'], None, fmt(comb[:1]), f"CF financing prints '{comb[0]['lb']}' only: it holds the repurchase of common stock together with employee tax withholdings (a combined line is a reason, never a value)")
+            put('share_buybacks', 'combined', comb[0]['tag'], None, fmt(comb[:1]), f"CF financing prints '{comb[0]['lb']}' only: it holds the repurchase of common stock together with " + ('dispositions/issuances, net' if BUY_NET.search(comb[0]['lb'] or '') else 'employee tax withholdings') + " (a combined line is a reason, never a value)")
         else: put('share_buybacks', 'not_presented', '', None, '', 'no own-stock repurchase line in the financing section nor an undimensioned note fact', alt=alt)
     # ---- dividends: financing section; common (or the unlabelled total) beside no separate common line
     com = [l for l in fin if l['tag'] in ('PaymentsOfDividendsCommonStock', 'PaymentsOfOrdinaryDividends')]
