@@ -530,3 +530,32 @@ Partial coverage:
 Other findings:
 - (fixed in .47) the `cf_family` flags now reach the output: pr4::test_cf_family_flags_reach_the_output_row.
 - `ris.resolve_ci` looks for `st == 'CI'` lines, but extract.sql reads BS/IS/CF only. CI-statement evidence arrives through notefacts and clines.
+
+## 8. Knowledge inventory (counted 2026-11-16, before the taxonomy ingest)
+
+The rulings in section 5 are the decisions; most of what the resolver knows sits in data tables and code lists. Counted from main and a read-only DB query, 2026-11-16:
+
+| Store | Count | Where |
+|---|---|---|
+| Rulings indexed (sections 5.0-5.6) | 213 | this file |
+| Resolver tests | 139 | data-team/tags/line_map/tools/test_*.py |
+| roles.csv data-point rows / distinct elements they name | 45 / 150 | line_map/rules/roles.csv |
+| Element lists in code (CF families, NARROW splits) / union the resolver reads for absence proofs | 34 + 20 / 171 | resolve_cf.CAPEX, WC; resolve_all.NARROW, dp_elements |
+| Pattern families (total_debt.DEBT and extract families) | 68 families | line_map/rules/extract_families.txt; total_debt.py |
+| Polarity rules | 26 | line_map/rules/polarity.csv |
+| Filer XBRL errors / dropped FSN facts (proven against R pages) | 6 / 5 | line_map/rules/filer_xbrl_errors.csv, fsn_dropped_facts.csv |
+| Predictor rules (IS / BS / CF / notes / per-share / bank / insurer / company) | 249 / 209 / 200 / 50 / 23 / 17 / 1 / 26 = 775 | data-team/tags/rules/*.csv |
+| DQC checks implemented | 40 | data-team/tags/rules/dqc.csv |
+| Standard tag library (statement, us-gaap tag) rows; FSN statement tag CSVs; company overrides | 469; 103; 21 | data-team/tags/library/ |
+| Tag cards / playbooks / decision records | 32 / 11 / 21 | data-team/tags/cards, playbooks, decisions |
+| Filing lessons ledger entries | 235 | data-team/22-FILING-LESSONS-LEDGER.md |
+| Mind entries (shared team memory) | 258 | mind/entries |
+| Company doc-maps (one per top-110 company) / rows | 110 / 7,083 | data-team/companies/reads/*-docmap-*.csv |
+| analytics.company_tag_map rows / companies | 74,204 / 110 | DB |
+| Resolver run: companies / annual filings / face lines read / output cells | 109 / 1,252 / 145,765 / 68,903 | run inputs (standard extract) and resolver-all110-2026-11-14.csv |
+| FSN store: annual filings / companies / distinct tags (custom) / values / face lines / calc arcs | 11,388 / 1,005 / 1,724,875 (1,625,217) / ~39.2M / ~8.6M / ~6.7M | DB fsn.* (estimates for the large tables) |
+
+Gaps this inventory shows:
+- **Element meaning.** It sits in hand lists (150 + 171 elements), not in the official taxonomy. The FASB ingest (2014-2026 elements, balance and period type, calc and definition arcs, deprecation chains) goes to data-team/tags/taxonomy/ and replaces the hand lists as the source of element families.
+- **DQC.** 40 of the XBRL US DQC rules are implemented; the full set is being ingested with its element lists.
+- **Libraries.** Two libraries describe elements: data-team/tags/library/ and line_map/rules. They are being unified into one, the library the resolver reads.
