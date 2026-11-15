@@ -437,12 +437,12 @@ def apply_other_income_split(rows, filings, notefacts):
     F = {f['a']: f for f in filings}
     by = {(x['accession'], x['data_point']): x for x in rows if (x.get('column') or 'own') == 'own'}
     for r in rows:
-        if r['data_point'] != 'other_income_expense_net' or r['status'] != 'mapped' or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        if r['data_point'] != 'other_income_expense_net' or r['status'] not in ('mapped', 'combined') or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
         ps = _split_parts(r.get('nodes') or '')
         m = re.match(r'^(\w+)=(-?[\d.]+) \[(R\d+(?:\.htm)?:\d+)\]$', ps[0]) if len(ps) == 1 else None
         if not m or D(m.group(2)) == 0: continue
         tag, lv = m.group(1), D(m.group(2))
-        sg = D(r['value']) / lv if r.get('value') not in (None, '') else None
+        sg = D(r['value']) / lv if r.get('value') not in (None, '') else (D(1) if r['status'] == 'combined' else None)   # a combined line is cited at its own sign
         if sg not in (D(1), D(-1)): continue
         L, arcs = parse(F[r['accession']])
         notes = note_facts(notefacts.get(r['accession']))
@@ -471,19 +471,36 @@ FY_W = re.compile(r"first 10-K \((\d{10}-\d{2}-\d{6})\), and that 10-K's FY-(\d)
 VALUED = ('mapped', 'component_sum', 'derived', 'combined')
 
 
-def mark_presented_and_never_reported(rows):
+CF_FAMILY = set(resolve_cf.DPS) | {'cfo', 'cash_flow_investing', 'cash_flow_financing', 'cash_paid_for_income_taxes', 'cash_paid_for_interest', 'depreciation_and_amortization'}
+
+
+def column_printed(f, dp, dd, compfacts):
+    """Engineering's no-filing guard (10f6146e): a filing prints a column of a statement when at least half of that statement's valued
+    face elements have a fact at the column's date. The statement is the data point's: balance sheet for instants, cash flow for the
+    cash-flow family, income statement otherwise."""
+    if f is None: return True
+    st = 'BS' if dp in INSTANT_DPS else 'CF' if dp in CF_FAMILY else 'IS'
+    tags = {l['tag'] for l in face(parse(f)[0], st) if l['val'] is not None}
+    if not tags: return True
+    have = {t for t, q, v, d in standard_inputs._facts(compfacts.get(f['a']), 4) if d == dd}
+    return len(tags & have) * 2 >= len(tags)
+
+
+def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     """Founder decision 2026-11-16: reasons now only justify hiding, so a reason must say what the filing shows. (1) A year before the
     first 10-K that this 10-K presents in a comparative column (flows FY-1/FY-2, balance sheet FY-1) is not 'no public filing': the
     period is presented and the line is not printed for it (_comparative-presented-2026-11-16.csv: PLTR, CRWD, UBER, SNDK); the row
     cites that 10-K, column comparative, flag line_not_printed. A balance-sheet year the 10-K has no column for (GEV FY2022) stays
     pre-filing. (2) never_reported: the company reports the data point in no year at all (no value and no combined line in any row),
     so a hide cannot hide a printed value."""
+    F_ = {f['a']: f for f in (filings or [])}
     for r in rows:
         if r['status'] != 'not_presented' or 'before_first_10k' not in (r.get('flags') or ''): continue
         m = FY_W.search(r.get('why') or '')
         if not m: continue
         acc, w = m.group(1), int(m.group(2))
         if r['data_point'] in INSTANT_DPS and w == 2: continue
+        if filings is not None and not column_printed(F_.get(acc), r['data_point'], str(r['period_end']), compfacts or {}): continue   # Engineering's no-filing guard: < 50% of the statement
         r.update(accession=acc, column='comparative',
                  why=f"the 10-K {acc} presents the year in its FY-{w} column but prints no {r['data_point']} line for it")
         r['flags'] = ';'.join(x for x in dict.fromkeys(((r.get('flags') or '').replace('before_first_10k', 'line_not_printed')).split(';')) if x)
@@ -493,6 +510,64 @@ def mark_presented_and_never_reported(rows):
     for r in rows:
         if r['status'] == 'not_presented' and not seen[(r.get('cik'), r['data_point'])]:
             r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'never_reported') if x)
+    return rows
+
+
+# founder decision 2026-11-16 (split combined lines from the note): a combined face line beside an undimensioned note fact of the data
+# point's own narrow element; the role stops at the combined line before it reads the notes, so the narrow fact was never served
+NARROW = {'depreciation_and_amortization': ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'],
+          'amortization_of_intangibles': ['AmortizationOfIntangibleAssets'],
+          'dividends_paid': ['PaymentsOfDividendsCommonStock'],
+          'share_buybacks': ['PaymentsForRepurchaseOfCommonStock'],
+          'capex': ['PaymentsToAcquirePropertyPlantAndEquipment'],
+          'cf_ap_change': ['IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade'],
+          'cf_ar_change': ['IncreaseDecreaseInAccountsReceivable'],
+          'accounts_payable': ['AccountsPayableCurrent', 'AccountsPayableTradeCurrent'],
+          'cash_and_equivalents': ['CashAndCashEquivalentsAtCarryingValue'],
+          'interest_expense': ['InterestExpense', 'InterestExpenseNonoperating', 'InterestExpenseDebt'],
+          'interest_income': ['InvestmentIncomeInterest', 'InterestIncomeOther', 'InterestIncomeNonoperating'],
+          'operating_expenses': ['OperatingExpenses'],
+          'sga_expense': ['SellingGeneralAndAdministrativeExpense']}
+
+
+def apply_note_split(rows, notefacts, compfacts=None):
+    """A combined own cell whose filing reports the data point's own narrow element as an undimensioned fact (§AG) serves that fact:
+    the part of the combined line the note names (WFC 'Depreciation, amortization and accretion' -> DepreciationAndAmortization;
+    WELL 'Cash distributions to stockholders' -> PaymentsOfDividendsCommonStock). The part never exceeds the line it sits in."""
+    own = collections.defaultdict(list)
+    for x in rows:
+        if (x.get('column') or 'own') == 'own' and x.get('cik'): own[(x['cik'], x['data_point'])].append(x)
+    nxt_of = {}
+    for (cik, dp_), lst in own.items():
+        lst = sorted(lst, key=lambda x: str(x['period_end']))
+        for a_, b_ in zip(lst, lst[1:]):
+            if 330 <= (date.fromisoformat(str(b_['period_end'])) - date.fromisoformat(str(a_['period_end']))).days <= 400: nxt_of[(cik, dp_, str(a_['period_end']))] = b_
+    for r in rows:
+        dp = r['data_point']
+        if r['status'] != 'combined' or dp not in NARROW or (r.get('column') or 'own') != 'own': continue
+        notes = note_facts(notefacts.get(r['accession']))
+        q = 0 if dp in INSTANT_DPS else 4
+        line = re.match(r'^-?(\w+)(?:=(-?[\d.]+))?', _split_parts(r.get('nodes') or '')[0]) if r.get('nodes') else None
+        lt, lv = (line.group(1), D(line.group(2)) if line.group(2) else None) if line else (None, None)
+        hit = next(((t, notes[(t, q)]) for t in NARROW[dp] if t != lt and notes.get((t, q)) is not None), None)
+        src = None
+        if hit is None and compfacts is not None:
+            # GEV FY2024 AP: the next 10-K's note prints the narrow element in its FY-1 column (AccountsPayableTradeCurrent 2024-12-31)
+            nxt = nxt_of.get((r.get('cik'), dp, str(r['period_end'])))
+            if nxt is not None:
+                vals = {t: {D(v_) for t_, qq, v_, dd in standard_inputs._facts(compfacts.get(nxt['accession']), 4) if t_ == t and int(qq) == q and dd == str(r['period_end'])} for t in NARROW[dp] if t != lt}
+                hit = next(((t, vs.pop()) for t, vs in vals.items() if len(vs) == 1), None)
+                src = nxt['accession'] if hit else None
+        if hit is None: continue
+        t, v = hit
+        if lv is not None and abs(v) > abs(lv): continue   # a part is never larger than the line that holds it
+        from resolve import unit
+        if lv is not None and lv != 0 and unit(v) > unit(lv): continue   # a rounded narrative figure is not a table part (WFC premises depreciation '$1.2 billion')
+        if dp == 'depreciation_and_amortization' and lv is not None and abs(v) < abs(lv) / 2: continue   # D&A is the bulk of a 'D&A and other' line (VLO FY2025 63 of 2,6xx)
+        r.update(status='mapped', value=v, tags=t, nodes=f"{t}={v} [NOTE{'@' + src if src else ''}]",
+                 **({'accession': src, 'column': 'comparative'} if src else {}),
+                 why=f"the face prints only the combined line {lt or ''}; the filing reports {t} as an undimensioned fact: the data point's part of that line (founder decision 2026-11-16: combined lines split)")
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'note_split') if x)
     return rows
 
 
@@ -961,7 +1036,8 @@ if __name__ == '__main__':
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_alt(rows)
     rows = apply_bundled_ap(rows, filings)
-    rows = replay_fill(rows, compfacts, INSTANT_DPS)
+    rows = replay_fill(rows, compfacts, INSTANT_DPS)   # before the note split: an earlier year keeps the printed combined line (GEV AP FY2023)
+    rows = apply_note_split(rows, notefacts, compfacts)
     rows = apply_cash_paid_taxes(rows, filings, notefacts)
     rows = apply_label_beyond(rows, filings, only={'revenue'})   # MPC: ruling 3 sets revenue before gross profit is derived from it
     rows = derive_gross_profit(rows)
@@ -1024,7 +1100,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
-    rows = mark_presented_and_never_reported(rows)
+    rows = mark_presented_and_never_reported(rows, filings, compfacts)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

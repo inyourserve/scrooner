@@ -905,3 +905,48 @@ def test_presented_period_reason_and_never_reported_mark():
     assert rows[1]['accession'].startswith('BEFORE:') and 'before_first_10k' in rows[1]['flags']   # no balance-sheet column for FY-2: pre-filing
     assert 'line_not_printed' in rows[2]['flags']                                                   # a flow year FY-2 is presented
     assert 'never_reported' in rows[0]['flags'] and 'never_reported' not in rows[2]['flags']       # dividends are reported in another year
+
+
+# ---- founder decision 2026-11-16, priority 2: combined lines split
+
+def test_combined_line_split_by_the_note_fact_of_the_narrow_element():
+    base = dict(cik='1', ticker='WELL', column='own', flags='', why='', tags='')
+    row = lambda **k: dict(base, accession='a1', period_end='2014-12-31', data_point='dividends_paid', status='combined', value=None,
+                           nodes='CashDistributionsToStockholders=1035069000 [R6.htm:46]', **k)
+    r = resolve_all.apply_note_split([row()], {'a1': 'PaymentsOfDividendsCommonStock|4|969661000'})[0]
+    assert r['status'] == 'mapped' and r['value'] == D(969661000) and 'note_split' in r['flags']
+    assert resolve_all.apply_note_split([row()], {'a1': 'PaymentsOfDividendsCommonStock|4|2000123000'})[0]['status'] == 'combined'   # larger than the line
+    assert resolve_all.apply_note_split([row()], {'a1': 'PaymentsOfDividendsCommonStock|4|900123000'})[0]['status'] == 'mapped'
+    rounded = dict(row(), nodes='CashDistributionsToStockholders=1035069000 [R6.htm:46]')
+    assert resolve_all.apply_note_split([rounded], {'a1': 'PaymentsOfDividendsCommonStock|4|1000000000'})[0]['status'] == 'combined'   # narrative '$1.0 billion'
+    da = dict(row(), data_point='depreciation_and_amortization', nodes='DepreciationAmortizationAndAccretionNet=2600 [R9.htm:6]')
+    assert resolve_all.apply_note_split([da], {'a1': 'DepreciationAndAmortization|4|63'})[0]['status'] == 'combined'   # D&A is the bulk of the line
+    # the next 10-K's note column (GEV FY2024 AP from the FY2025 note)
+    ap = [dict(base, accession='a1', period_end='2024-12-31', data_point='accounts_payable', status='combined', value=None, nodes='AccountsPayableAndOtherAccruedLiabilitiesCurrent [R4.htm:22]'),
+          dict(base, accession='a2', period_end='2025-12-31', data_point='accounts_payable', status='mapped', value=D(5721), nodes='AccountsPayableTradeCurrent=5721 [NOTE]')]
+    r = resolve_all.apply_note_split(ap, {}, {'a2': 'AccountsPayableTradeCurrent|0|4966|2024-12-31'})[0]
+    assert r['value'] == D(4966) and r['accession'] == 'a2' and r['column'] == 'comparative'
+    ap[0].update(status='combined', value=None, accession='a1', column='own', nodes='AccountsPayableAndOtherAccruedLiabilitiesCurrent [R4.htm:22]')
+    assert resolve_all.apply_note_split(ap[:1], {}, {'a2': 'AccountsPayableTradeCurrent|0|4966|2024-12-31'})[0]['status'] == 'combined'   # no next year
+    far = [dict(ap[0]), dict(ap[1], period_end='2026-12-31')]
+    assert resolve_all.apply_note_split(far, {}, {'a2': 'AccountsPayableTradeCurrent|0|4966|2024-12-31'})[0]['status'] == 'combined'   # two years on is not the next 10-K
+
+
+def test_combined_other_income_line_is_split_by_its_breakdown():
+    f = filing([('IS', 'Revenues', 'Revenues', 10), ('IS', 'NonoperatingIncomeExpense', 'Interest and other income, net', 72900000)], '1|NonoperatingIncomeExpense|InvestmentIncomeInterest|1')
+    row = dict(accession=f['a'], column='own', flags='', why='', data_point='other_income_expense_net', status='combined', value=None, tags='', nodes='NonoperatingIncomeExpense=72900000 [R2.htm:2]')
+    r = resolve_all.apply_other_income_split([row], [f], {f['a']: 'InvestmentIncomeInterest|4|56200000'})[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(16700000)
+
+
+def test_a_column_counts_as_printed_from_half_the_statement():
+    f = filing([('IS', 'Revenues', 'Revenues', 10), ('IS', 'CostOfRevenue', 'Cost', 6), ('IS', 'NetIncomeLoss', 'Net income', 2)])
+    assert resolve_all.column_printed(f, 'revenue', '2024-12-31', {f['a']: 'Revenues|4|9|2024-12-31~CostOfRevenue|4|5|2024-12-31'})
+    assert not resolve_all.column_printed(f, 'revenue', '2024-12-31', {f['a']: 'Revenues|4|9|2024-12-31'})
+    assert resolve_all.column_printed(f, 'inventory', '2024-12-31', {})   # no balance-sheet lines in the fixture: not decidable, kept
+    why = "no 10-K covers this year: it is before the company's first 10-K (0000000001-26-000001), and that 10-K's FY-1 column does not print the line"
+    row = lambda: dict(cik='1', ticker='X', accession='BEFORE:1:2024-12-31', period_end='2024-12-31', data_point='revenue', status='not_presented', flags='before_first_10k', why=why, column='own', value=None)
+    r = resolve_all.mark_presented_and_never_reported([row()], [f], {f['a']: 'Revenues|4|9|2024-12-31'})[0]
+    assert 'before_first_10k' in r['flags'] and r['accession'].startswith('BEFORE')   # under half the statement: not a printed column
+    r = resolve_all.mark_presented_and_never_reported([row()], [f], {f['a']: 'Revenues|4|9|2024-12-31~CostOfRevenue|4|5|2024-12-31'})[0]
+    assert 'line_not_printed' in r['flags']
