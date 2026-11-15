@@ -2812,16 +2812,24 @@ accession,tag,report,n_reports,line,plabel
 0001730168-21-000153,InterestIncomeOther,57,1,7,Interest income
 0001730168-22-000081,LongTermDebtAndCapitalLeaseObligations,2,1,,
 0001730168-22-000081,LongTermDebtAndCapitalLeaseObligationsCurrent,2,1,,
+0001730168-22-000118,Amortizationofacquisitionrelatedintangibleassetscostofproductssold,5,1,,
+0001730168-22-000118,Amortizationofacquisitionrelatedintangibleassetsoperatingexpenses,5,1,,
 0001730168-22-000118,InterestIncomeOther,57,1,7,Interest income
+0001730168-23-000096,Amortizationofacquisitionrelatedintangibleassetscostofproductssold,5,1,,
+0001730168-23-000096,Amortizationofacquisitionrelatedintangibleassetsoperatingexpenses,5,1,,
 0001730168-23-000096,CommonStockDividendsPerShareCashPaid,73,1,1,Cash dividends per share declared and paid to common stockholders
 0001730168-23-000096,InterestIncomeOther,53,1,7,Interest income
 0001730168-24-000099,CommonStockDividendsPerShareCashPaid,59,1,1,Dividends per share to common stockholders
 0001730168-24-000099,CommonStockDividendsPerShareDeclared,69,1,10,Common dividends declared (in dollars per share)
 0001730168-24-000099,StockholdersEquityNoteStockSplitConversionRatio1,32,2,3,"Stock Split, Conversion Ratio"
+0001730168-24-000139,Amortizationofacquisitionrelatedintangibleassetscostofproductssold,5,1,,
+0001730168-24-000139,Amortizationofacquisitionrelatedintangibleassetsoperatingexpenses,5,1,,
 0001730168-24-000139,CommonStockDividendsPerShareCashPaid,85,1,1,Cash dividends per share declared and paid to common stockholders
 0001730168-24-000139,InterestIncomeOther,63,1,5,Interest income
 0001730168-25-000021,DebtLongtermAndShorttermCombinedAmount,50,1,75,"Debt, Long-Term and Short-Term, Combined Amount"
 0001730168-25-000121,AmortizationOfIntangibleAssets,95,1,38,Amortization of Intangible Assets
+0001730168-25-000121,Amortizationofacquisitionrelatedintangibleassetscostofproductssold,5,1,,
+0001730168-25-000121,Amortizationofacquisitionrelatedintangibleassetsoperatingexpenses,5,1,,
 0001730168-25-000121,CommonStockDividendsPerShareCashPaid,83,1,1,Cash dividends per share declared and paid to common stockholders
 0001730168-25-000121,DebtLongtermAndShorttermCombinedAmount,80,1,96,"Debt, Long-Term and Short-Term, Combined Amount"
 0001730168-25-000121,InterestIncomeOther,63,1,5,Interest income
@@ -2866,4 +2874,7 @@ accession,tag,report,n_reports,line,plabel
 0001835632-23-000013,LongTermDebt,51,2,18,Net carrying amount of debt
 0001835632-24-000009,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,99,1,3,Income (loss) before income taxes
 0001996810-25-000011,AllocatedShareBasedCompensationExpense,113,3,17,Share-based compensation expense (pre-tax)
+0001996810-25-000011,FinanceLeaseLiability,77,1,,
+0001996810-26-000015,AccountsPayableTradeCurrent,86,1,,
 0001996810-26-000015,AllocatedShareBasedCompensationExpense,115,1,1,Share-based compensation expense (pre-tax)
+0001996810-26-000015,FinanceLeaseLiability,74,1,,
