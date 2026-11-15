@@ -164,7 +164,8 @@ def related_splits(memberfacts, tag_re):
     return out
 
 
-NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares'}   # per-share / share counts sit in notes
+NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares',   # per-share / share counts sit in notes
+                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
 FACE_NODE = re.compile(r'\[(R\d|BS parenthetical|BSP)')
 
 

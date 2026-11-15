@@ -232,3 +232,17 @@ def test_net_treasury_purchases_line_is_combined_buybacks():
 def test_share_count_line_does_not_block_proven_absence():
     # DHR FY2015 CF 'Shares held as Treasury shares' (a share count, StockRedeemed...Shares)
     assert _absent([('CF', 'StockRedeemedThroughDistributionOfABusinessDuringPeriodShares', 'Shares held as Treasury shares', 26)], dp='share_buybacks')
+
+
+def test_note_natured_year_fills_from_a_later_note_comparative():
+    # TSLA FY2017 amortization: the FY2019 10-K maps its own year from the note and holds AmortizationOfIntangibleAssets 40 for 2017
+    import standard_inputs
+    def rows(dp, tag):
+        return [dict(cik='1', data_point=dp, period_end='2017-12-31', accession='A17', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point=dp, period_end='2018-12-31', accession='A18', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point=dp, period_end='2019-12-31', accession='A19', status='mapped', tags=tag, nodes=f'{tag}=44 [NOTE]', value='44')]
+    out = standard_inputs.comparative_fill(rows('amortization_of_intangibles', 'AmortizationOfIntangibleAssets'), {'A19': 'AmortizationOfIntangibleAssets|4|40|2017-12-31'}, set())
+    assert str(out[('A17', 'amortization_of_intangibles')]['value']).startswith('40')
+    # a note figure never fills a face data point (PM SG&A 162M)
+    out = standard_inputs.comparative_fill(rows('sga_expense', 'SellingGeneralAndAdministrativeExpense'), {'A19': 'SellingGeneralAndAdministrativeExpense|4|40|2017-12-31'}, set())
+    assert ('A17', 'sga_expense') not in out
