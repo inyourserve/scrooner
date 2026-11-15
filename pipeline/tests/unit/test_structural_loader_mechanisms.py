@@ -180,28 +180,6 @@ def test_rulings_files_merge_and_the_newest_ruling_of_a_key_wins(tmp_path: Path)
     assert KEY not in _load_rulings(tmp_path)
 
 
-def test_clip_leaves_no_remnant_holding_a_52_53_week_end_past_the_fsn_month_end():
-    from scrooner_pipeline.common.fsn_dates import era_holds
-    from scrooner_pipeline.mapper import docmap_loader as dl
-
-    row = {
-        "id": 1,
-        "era_from": date(2014, 7, 1),
-        "era_to": None,
-        "canonical_concept_id": 7,
-        "parent_concept_id": None,
-    }
-    spans = [(7, date(2025, 7, 1), date(2026, 6, 30))]
-    kept, _, _, extras = dl.clip_rows([row], spans)
-    rows = kept + extras
-    true_end = date(2026, 7, 3)  # STX FY2026: FSN 2026-06-30
-    assert not any(era_holds(r["era_from"], r["era_to"], true_end) for r in rows)
-    # the next fiscal year's end is still held by the open remainder
-    assert any(era_holds(r["era_from"], r["era_to"], date(2027, 7, 2)) for r in rows)
-    # an era end that is not a month end keeps the plain next-day start
-    assert dl._after_era_end(date(2026, 6, 15)) == date(2026, 6, 16)
-
-
 def test_direct_serving_uses_the_same_hand_fix_predicate():
     from types import SimpleNamespace
 

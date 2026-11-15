@@ -38,7 +38,6 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.common import instance_facts
-from scrooner_pipeline.common.fsn_dates import nearest_month_ends
 from scrooner_pipeline.mapper import era_extend
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_plan import (
@@ -494,18 +493,6 @@ def _key(r: dict) -> int | None:
     return r["canonical_concept_id"] or r["parent_concept_id"]
 
 
-def _after_era_end(b: date) -> date:
-    """First day a clipped remainder may start after an era ending `b`. An FSN era ends on a month end (the SEC rounds
-    period ends), while a 52/53-week year ends up to ~15 days later (STX FY2026: FSN 2026-06-30, true 2026-07-03);
-    a remainder starting b+1 would literally hold that true end and beat the era (era_holds is month-end tolerant, a
-    literal remainder is not). So when `b` is a month end the remainder starts after every date that rounds to it. Pure."""
-    d = b + timedelta(days=1)
-    if (b + timedelta(days=1)).day == 1:  # b is a month end
-        while b in nearest_month_ends(d):
-            d += timedelta(days=1)
-    return d
-
-
 def clip_rows(
     rows: list[dict], spans: list[tuple[Any, date, date]]
 ) -> tuple[list[dict], list[tuple[int, date, date | None]], list[int], list[dict]]:
@@ -530,9 +517,7 @@ def clip_rows(
                 if lo < a:
                     nxt.append((lo, a - timedelta(days=1)))
                 if hi is None or hi > b:
-                    start = _after_era_end(b)
-                    if hi is None or hi >= start:
-                        nxt.append((start, hi))
+                    nxt.append((b + timedelta(days=1), hi))
             pieces = nxt
         if pieces == [(r["era_from"], r["era_to"])]:
             kept.append(r)
