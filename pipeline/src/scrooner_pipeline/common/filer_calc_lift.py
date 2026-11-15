@@ -59,8 +59,6 @@ class CheckRow:
         self.lhs, self.rhs, self.tol, self.children = lhs, rhs, tol, children
 
 
-
-
 def related_tags(row: CheckRow, dp: str, tags: tuple[str, ...]) -> bool:
     """Is a cell (data point `dp`, source `tags`) a member of this check (named members, or the calc parent / one of
     its children)?"""
@@ -70,7 +68,6 @@ def related_tags(row: CheckRow, dp: str, tags: tuple[str, ...]) -> bool:
         parent = row.check_id.split(":")[1]
         return any(t == parent or t in row.children for t in tags)
     return False
-
 
 
 # calc parents that are served totals the named identities (CHECK_MEMBERS) tie by data point
@@ -190,8 +187,6 @@ def residual_line_tie(
                     "residual": str(residual),
                 }
     return None
-
-
 
 
 def lift_route(

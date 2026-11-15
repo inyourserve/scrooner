@@ -623,7 +623,9 @@ def non_interest_band(
             continue
         w = Decimal(-1) if negative else Decimal(1)
         total += w * nv.value
-        tol += Decimal("0.5") * Decimal(10) ** (-(nv.dcml if nv.dcml is not None else -6))
+        tol += Decimal("0.5") * Decimal(10) ** (
+            -(nv.dcml if nv.dcml is not None else -6)
+        )
         parts.append({"tag": tag, "weight": str(w), "value": str(nv.value)})
     if not parts:
         return None
