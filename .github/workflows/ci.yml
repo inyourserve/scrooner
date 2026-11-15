@@ -178,6 +178,12 @@ jobs:
           # than the server and wrote a setting the server rejects.
           export PATH="$PWD/scripts/ci/pgbin:$PATH"
           bash scripts/verify_backup_restore.sh
+      - name: Reject new files over 10 MB
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: python scripts/ci/check_large_files.py
       - name: Check local documentation links
         run: python scripts/check_docs.py
       - name: Check common secret patterns

@@ -32,7 +32,7 @@ Last full audit: [`GITHUB-INFRA-AUDIT-2026-11-16.md`](../../data-team/strategy/G
 |---|---|---|---|
 | `pipeline-refresh.yml` | daily 12:23 | the nightly SEC refresh: collect, normalize, map, coverage | dev database |
 | `pipeline-sanity.yml` | daily 15:17 | yfinance cross-check gate (validation only, never a stored value) | sanity tables |
-| `top100-coverage-hourly.yml` | hourly :17, opt-in | rebuilds `data-team/strategy/top100-coverage*.csv` from proof verdicts, read-only session | commits to `main` |
+| `top100-coverage-hourly.yml` | hourly :17, opt-in | rebuilds `data-team/strategy/top100-coverage*.csv` from proof verdicts, read-only session | commits the summary to `main` every hour and the full CSV daily (00:17) or on dispatch; the full CSV is also an artifact each run (90 days) |
 | `workflow-health-check.yml` | daily 19:41 | judges every scheduled workflow's latest runs | the alarm issue |
 | `live-sec-verification.yml` | weekly Mon 11:17 | live sec.gov contract tests | nothing |
 | `pipeline-tag-library.yml` | weekly Sun 23:00 | SEC tag library rebuild (old system; review pending) | dev database |
@@ -68,4 +68,4 @@ Agents push `work/<owner>/<topic>` and land through a PR. Merged branches are de
 
 ## Generated files in git
 
-Git keeps two kinds of file: inputs the code reads (for example the resolver CSVs in `data-team/tags/line_map/`) and evidence a decision cites. Run outputs go to workflow artifacts or Supabase Storage. A file over 10 MB needs a reason in its commit message.
+Git keeps two kinds of file: inputs the code reads (for example the resolver CSVs in `data-team/tags/line_map/`) and evidence a decision cites. Run outputs go to workflow artifacts or Supabase Storage. CI rejects any NEW file over 10 MB (`scripts/ci/check_large_files.py`) unless it is listed, with a reason, in `.github/large-files-allowlist.txt`. History is not rewritten; old blobs stay.
