@@ -52,25 +52,51 @@ class Fact:
 @lru_cache(maxsize=2)
 def ruled_true_reasons(
     directory: str | None = None,
-) -> frozenset[tuple[str, str, str]]:
-    """(accession, data_point, tag) the sweep rulings (Dhairya, 2026-11-14, `_false-reason-rulings-*.csv`) judged
-    `true_reason`: the stored fact is a different data point (equity-statement repurchase value, net interest income),
-    or the printed line is wider than the data point. The guard does not refuse a reason on such a tag; the ruling
-    only holds while the resolver still emits the same decision (decision_before == decision_now). Pure file read."""
+) -> dict[tuple[str, str, int, str], str]:
+    """(accession, data_point, fiscal_year, tag) -> the decision ruled on (`not_presented` / `combined`) for every
+    sweep ruling (Dhairya, 2026-11-14, `_false-reason-rulings-*.csv`) judging `true_reason`: the stored fact is a
+    different data point (equity-statement repurchase value, net interest income), or the printed line is wider than
+    the data point. ALL rulings files are merged, oldest to newest, the newest ruling of a key winning (a later
+    ruling with another verdict removes the key). The ruling holds only while the CURRENT decision equals the
+    ruled one: see `is_ruled`. Pure file read."""
     d = Path(directory) if directory else RULINGS_DIR
-    files = sorted(d.glob(RULINGS_GLOB))
-    out: set[tuple[str, str, str]] = set()
-    if not files:
-        return frozenset()
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
-            if r.get("verdict") == "true_reason" and r.get("decision_before") == r.get(
-                "decision_now"
-            ):
+    out: dict[tuple[str, str, int, str], str] = {}
+    for f in sorted(d.glob(RULINGS_GLOB)):
+        with f.open(newline="") as fh:
+            for r in csv.DictReader(fh):
                 for tag in re.split(r"[;,]", r.get("evidence_tags", "")):
-                    if tag.strip():
-                        out.add((r["accession"], r["data_point"], tag.strip()))
-    return frozenset(out)
+                    if not tag.strip():
+                        continue
+                    key = (
+                        r["accession"],
+                        r["data_point"],
+                        int(r["fiscal_year"]),
+                        tag.strip(),
+                    )
+                    if r.get("verdict") == "true_reason":
+                        out[key] = r.get("decision_now", "")
+                    else:
+                        out.pop(key, None)
+    return out
+
+
+def ruled_tags(
+    ruled: dict[tuple[str, str, int, str], str],
+    accession: str,
+    data_point: str,
+    fiscal_years: set[int],
+    decision: str,
+    tags: set[str],
+) -> set[str]:
+    """The tags of `tags` ruled a true reason for this filing, data point and year (any of `fiscal_years`), while `decision` (the current
+    resolver decision, `not_presented` or `combined`) is the one ruled on. Pure."""
+    return {
+        t
+        for t in tags
+        if any(
+            ruled.get((accession, data_point, y, t)) == decision for y in fiscal_years
+        )
+    }
 
 
 def kind_of(decision: str | None, reason_class: str | None = None) -> str | None:

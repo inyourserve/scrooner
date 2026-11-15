@@ -35,7 +35,11 @@ from scrooner_pipeline.common.authority import face_column_eligible, latest_elig
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
-from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
+from scrooner_pipeline.common.fsn_dates import (
+    era_holds,
+    fsn_end_matches,
+    nearest_month_ends,
+)
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper import docmap_loader as dl
@@ -176,7 +180,7 @@ def pick_claim(
 
 def _fix_covers(rows, concept_id: int, end: date) -> bool:
     return any(
-        r.rule_id == FIX_RULE_ID
+        sl.hand_fix_wins(r.rule_id, r.serve_note)
         and r.decision != "excluded"
         and concept_id in (r.canonical_concept_id, r.parent_concept_id)
         and era_holds(r.era_from, r.era_to, end)
@@ -327,11 +331,14 @@ def refuted_map_reasons(
             tags,
             f"{r.reason or ''} {r.evidence_plabel or ''}",
             {g: facts.get((r.evidence_adsh, g), []) for g in tags},
-            {
-                g
-                for g in tags
-                if (r.evidence_adsh, rg.base_name(concept_info[cid][0]), g) in ruled
-            },
+            rg.ruled_tags(
+                ruled,
+                r.evidence_adsh,
+                rg.base_name(concept_info[cid][0]),
+                {x.year for x in nearest_month_ends(end) | {end}},
+                kind,
+                tags,
+            ),
         )
         if ev:
             out.append(

@@ -50,15 +50,15 @@ def test_fact_options_match_a_52_53_week_end_by_its_fsn_month_end():
     assert got[(1, "LongTermDebt", date(2018, 1, 31))] == {Decimal(1985)}
 
 
-def test_fact_options_prefer_the_exact_end_over_a_stray_nearby_one():
+def test_fact_options_keep_the_true_52_53_week_fact_beside_a_stray_month_end_one():
     conn = _Conn(
         [
-            (1, "T", date(2018, 1, 31), Decimal(5)),
-            (1, "T", date(2018, 2, 2), Decimal(9)),
+            (1, "T", date(2018, 1, 31), Decimal(5)),  # stray fact on the FSN month end
+            (1, "T", date(2018, 1, 28), Decimal(9)),  # the true 52/53-week column
         ]
     )
     got = sl.fact_options(conn, [(1, "T", date(2018, 1, 31))])
-    assert got[(1, "T", date(2018, 1, 31))] == {Decimal(5)}
+    assert got[(1, "T", date(2018, 1, 31))] == {Decimal(5), Decimal(9)}
 
 
 def test_fact_options_do_not_reach_a_different_year():
@@ -118,37 +118,87 @@ def _rulings(d: Path, *rows: dict) -> None:
             w.writerow({k: r.get(k, "") for k in cols})
 
 
-def test_ruled_true_reasons_are_read_and_filter_the_guard(tmp_path: Path):
-    ok = {
-        "ticker": "AMZN",
-        "data_point": "share_buybacks",
-        "accession": "0001018724-19-000004",
-        "evidence_tags": "StockRepurchasedDuringPeriodValue",
-        "decision_before": "not_presented",
-        "decision_now": "not_presented",
-        "verdict": "true_reason",
-    }
+RULED = {
+    "ticker": "AMZN",
+    "data_point": "share_buybacks",
+    "fiscal_year": "2018",
+    "accession": "0001018724-19-000004",
+    "evidence_tags": "StockRepurchasedDuringPeriodValue",
+    "decision_before": "not_presented",
+    "decision_now": "not_presented",
+    "verdict": "true_reason",
+}
+KEY = ("0001018724-19-000004", "share_buybacks", 2018, RULED["evidence_tags"])
+
+
+def _load_rulings(d: Path):
+    rg.ruled_true_reasons.cache_clear()
+    got = rg.ruled_true_reasons(str(d))
+    rg.ruled_true_reasons.cache_clear()
+    return got
+
+
+def test_ruled_true_reasons_filter_the_guard_by_year_and_current_decision(
+    tmp_path: Path,
+):
     _rulings(
-        tmp_path,
-        ok,
-        {**ok, "data_point": "other", "verdict": "reason_corrected"},
-        {**ok, "data_point": "changed", "decision_now": "mapped"},
+        tmp_path, RULED, {**RULED, "data_point": "x", "verdict": "reason_corrected"}
     )
-    rg.ruled_true_reasons.cache_clear()
-    got = rg.ruled_true_reasons(str(tmp_path))
-    rg.ruled_true_reasons.cache_clear()
-    assert got == {
-        (
-            "0001018724-19-000004",
-            "share_buybacks",
-            "StockRepurchasedDuringPeriodValue",
-        )
-    }
-    tag = "StockRepurchasedDuringPeriodValue"
+    got = _load_rulings(tmp_path)
+    assert got == {KEY: "not_presented"}
+    tag = RULED["evidence_tags"]
+    ask = lambda years, dec: rg.ruled_tags(  # noqa: E731
+        got, KEY[0], KEY[1], years, dec, {tag}
+    )
+    assert ask({2018}, "not_presented") == {tag}
+    assert ask({2017, 2018}, "not_presented") == {tag}
+    assert ask({2019}, "not_presented") == set()  # another fiscal year
+    assert ask({2018}, "combined") == set()  # the resolver decision changed
     facts = {tag: [rg.Fact(date(2018, 12, 31), 4, False, "", Decimal(0))]}
     args = ("not_presented", date(2018, 12, 31), False, {tag}, "", facts)
     assert rg.evidence_for(*args)
     assert rg.evidence_for(*args, {tag}) == []
+
+
+def test_rulings_files_merge_and_the_newest_ruling_of_a_key_wins(tmp_path: Path):
+    _rulings(tmp_path, RULED)
+    other = {**RULED, "data_point": "other_dp"}
+    cols = list(RULED)
+    with (tmp_path / "_false-reason-rulings-2026-11-20.csv").open(
+        "w", newline=""
+    ) as fh:
+        w = csv.DictWriter(fh, fieldnames=cols)
+        w.writeheader()
+        w.writerow(other)  # a later partial sweep: only a new key
+    assert set(_load_rulings(tmp_path)) == {KEY, (KEY[0], "other_dp", 2018, KEY[3])}
+    with (tmp_path / "_false-reason-rulings-2026-11-21.csv").open(
+        "w", newline=""
+    ) as fh:
+        w = csv.DictWriter(fh, fieldnames=cols)
+        w.writeheader()
+        w.writerow({**RULED, "verdict": "reason_corrected"})  # overturns the first
+    assert KEY not in _load_rulings(tmp_path)
+
+
+def test_direct_serving_uses_the_same_hand_fix_predicate():
+    from types import SimpleNamespace
+
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    def row(note):
+        return SimpleNamespace(
+            rule_id=sl.HAND_FIX_RULE_ID,
+            serve_note=note,
+            decision="concept",
+            canonical_concept_id=7,
+            parent_concept_id=None,
+            era_from=date(2018, 1, 1),
+            era_to=date(2018, 12, 31),
+        )
+
+    end = date(2018, 12, 31)
+    assert sd._fix_covers([row("a reader's read")], 7, end)
+    assert not sd._fix_covers([row("fill; source=line_map; comparative")], 7, end)
 
 
 def _fix_row(note: str) -> dict:
