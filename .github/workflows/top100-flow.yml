@@ -136,6 +136,24 @@ jobs:
         run: |
           echo "code: $(git rev-parse HEAD)"
           zsh scripts/top100_flow.sh "$CID" "c$CID"
+      - name: Gate (display column of top100_coverage decides; SKIP until that column exists; nothing is sent early)
+        # Reads only this run's coverage CSV (no DB). Writes .runs/top100_flow/publish_c<id>/ with gate.json and, on PASS,
+        # the certification csv + request md. A FAIL or SKIP does not fail the job: it is a result, shown in the summary.
+        run: |
+          set -u
+          O=".runs/top100_flow/run_c$CID"
+          CV="$O/coverage"; [ -d "$O/coverage_held" ] && CV="$O/coverage_held"
+          OUT=".runs/top100_flow/publish_c$CID"; mkdir -p "$OUT"
+          TAB=$(printf '\t')
+          LINE=$(grep "$TAB$CID$TAB" .runs/top100_flow/flow_results.tsv | tail -1 || true)
+          case "$LINE" in
+            *HELD_CERTIFIED*|*RESTORE_FAILED*|*REPROOF_FAILED*|*GUARD_ERROR*|"")
+              echo "gate not run: flow line is '$LINE'"; echo '{"decision":"SKIP","reason":"flow line not clean"}' > "$OUT/gate.json"; exit 0;;
+          esac
+          [ -f "$CV/top100-coverage.csv" ] || { echo "gate not run: no coverage csv"; echo '{"decision":"SKIP","reason":"no coverage csv"}' > "$OUT/gate.json"; exit 0; }
+          RES=$(ls data-team/tags/line_map/resolver-all110-*.csv 2>/dev/null | sort | tail -1 || true)
+          python3 -I scripts/ci/top100_gate.py --coverage-csv "$CV/top100-coverage.csv" --company-id "$CID" \
+            --out-dir "$OUT" --resolver "$RES" || echo "gate exit $? (1 FAIL, 3 SKIP, 2 error): nothing sent"
       - name: Record a result line if the chain died before its own
         if: always()
         run: |
@@ -151,12 +169,66 @@ jobs:
           path: |
             .runs/top100_flow/run_c${{ matrix.id }}/
             .runs/top100_flow/regressions/
+            .runs/top100_flow/publish_c${{ matrix.id }}/
             .runs/top100_flow/flow_results.tsv
           if-no-files-found: ignore
 
+  publish:
+    # Least privilege: only this job holds contents: write, and it holds no DB secret and runs no chain code.
+    # It commits the gate's files (named paths only) for companies whose gate said PASS.
+    name: publish ${{ matrix.id }}
+    needs: [plan, flow]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      CID: ${{ matrix.id }}
+    steps:
+      - name: Refuse anything but a dispatch on main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ] || [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; then
+            echo "::error::publish runs only from workflow_dispatch on main"; exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: flow-${{ matrix.id }}
+          path: part
+      - name: Commit certification files on PASS
+        run: |
+          set -u
+          G=$(find part -name gate.json -path "*publish_c$CID/*" | head -1 || true)
+          if [ -z "$G" ]; then echo "no gate.json (flow job produced no artifact): nothing to publish"; exit 0; fi
+          DEC=$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['decision'])" "$G")
+          echo "gate decision for $CID: $DEC"
+          [ "$DEC" = PASS ] || exit 0
+          D=$(dirname "$G")
+          mkdir -p data-team/strategy/certification data-team/strategy/approvals/requests
+          cp "$D"/*-coverage-*.csv data-team/strategy/certification/
+          cp "$D"/*-request-*.md data-team/strategy/approvals/requests/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data-team/strategy/certification/*-coverage-*.csv data-team/strategy/approvals/requests/*-request-*.md
+          git commit -q -m "Certification request from top100-flow: company $CID passed the display gate ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+          # up to 16 jobs push at once; only new files are added, so a rebase never conflicts
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && { echo pushed; exit 0; }
+            sleep $((RANDOM % 8 + 2))
+          done
+          echo "::error::push failed after retries"; exit 1
+
   aggregate:
     name: Aggregate result lines
-    needs: [plan, flow]
+    needs: [plan, flow, publish]
     if: always() && needs.plan.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
