@@ -2296,6 +2296,7 @@ accession,tag,report,n_reports,line,plabel
 0001413329-25-000013,ResearchAndDevelopmentExpense,116,1,2,Research and development expense
 0001413329-25-000013,WeightedAverageNumberOfDilutedSharesOutstanding,92,1,7,Weighted-average shares for diluted EPS (in shares)
 0001413329-25-000013,WeightedAverageNumberOfSharesOutstandingBasic,92,1,5,Weighted-average shares for basic EPS (in shares)
+0001437749-22-002494,AccountsPayableCurrent,80,1,,
 0001437749-22-002494,ShareBasedCompensation,49,1,9,"Total stock-based compensation, before tax"
 0001437749-23-002959,ShareBasedCompensation,49,1,9,"Total stock-based compensation, before tax"
 0001437749-24-003599,InvestmentIncomeInterest,70,1,5,Interest income [a]
@@ -2322,6 +2323,7 @@ accession,tag,report,n_reports,line,plabel
 0001510295-16-000078,ShareBasedCompensation,151,1,1,Stock-based compensation expense
 0001510295-17-000017,DebtCurrent,5,1,,
 0001510295-17-000017,IncomeTaxesPaidNet,143,1,3,Net income taxes paid to taxing authorities
+0001510295-17-000017,InterestExpenseDebt,100,1,,
 0001510295-17-000017,InterestPaidNet,143,1,2,Interest paid (net of amounts capitalized)
 0001510295-17-000017,InvestmentIncomeInterest,100,1,12,Interest income
 0001510295-17-000017,LongTermDebtAndCapitalLeaseObligations,5,1,,
@@ -2367,6 +2369,7 @@ accession,tag,report,n_reports,line,plabel
 0001510295-25-000012,ShareBasedCompensation,158,1,1,Share-based compensation expense
 0001510295-26-000009,AmortizationOfIntangibleAssets,119,1,2,Amortization expense
 0001510295-26-000009,IncomeTaxesPaidNet,141,1,16,Income taxes paid to taxing authorities
+0001510295-26-000009,InterestExpenseDebt,102,1,,
 0001510295-26-000009,InterestPaidNet,141,1,12,Interest paid (net of amounts capitalized)
 0001510295-26-000009,InvestmentIncomeInterest,102,1,1,Interest income
 0001510295-26-000009,ShareBasedCompensation,161,1,1,Share-based compensation expense
@@ -2397,19 +2400,33 @@ accession,tag,report,n_reports,line,plabel
 0001551152-26-000008,IncomeTaxesPaidNet,98,1,10,"Income Taxes Paid, Net"
 0001551182-16-000041,IncomeTaxesPaid,76,1,1,Income taxes paid
 0001551182-16-000041,InterestPaid,55,1,1,Interest paid on debt
+0001551182-17-000014,AllocatedShareBasedCompensationExpense,81,1,,
+0001551182-17-000014,AmortizationOfIntangibleAssets,53,1,,
 0001551182-17-000014,IncomeTaxesPaid,85,1,1,Income taxes paid
 0001551182-17-000014,InterestPaid,57,1,1,Interest paid on debt
+0001551182-18-000074,AllocatedShareBasedCompensationExpense,95,1,,
+0001551182-18-000074,AmortizationOfIntangibleAssets,53,1,,
 0001551182-18-000074,IncomeTaxesPaid,78,1,1,Income taxes paid
 0001551182-18-000074,InterestPaid,57,1,1,Interest paid on debt
+0001551182-19-000045,AllocatedShareBasedCompensationExpense,101,1,,
+0001551182-19-000045,AmortizationOfIntangibleAssets,58,1,,
 0001551182-19-000045,InterestPaid,62,1,1,Interest paid on debt
+0001551182-20-000050,AllocatedShareBasedCompensationExpense,103,1,,
+0001551182-20-000050,AmortizationOfIntangibleAssets,54,1,,
 0001551182-20-000050,IncomeTaxesPaid,84,1,1,Income taxes paid
 0001551182-20-000050,InterestPaid,67,1,1,Interest paid on debt
+0001551182-21-000022,AmortizationOfIntangibleAssets,53,1,,
 0001551182-21-000022,IncomeTaxesPaid,83,1,1,Income taxes paid
+0001551182-21-000022,InterestExpense,110,1,,
 0001551182-21-000022,InterestPaid,62,1,1,Interest paid on debt
+0001551182-22-000004,AmortizationOfIntangibleAssets,55,1,,
 0001551182-22-000004,IncomeTaxesPaid,85,1,1,Income taxes paid
+0001551182-22-000004,InterestExpense,112,1,,
 0001551182-22-000004,InterestPaid,64,1,1,Interest paid on debt
+0001551182-23-000004,AmortizationOfIntangibleAssets,53,1,,
 0001551182-23-000004,IncomeTaxesPaid,83,1,1,Income taxes paid
 0001551182-23-000004,InterestPaid,62,1,1,Interest paid on debt
+0001551182-24-000006,AmortizationOfIntangibleAssets,56,1,,
 0001551182-24-000006,IncomeTaxesPaid,87,1,1,Income taxes paid
 0001551182-24-000006,InterestPaid,66,1,1,Interest paid on debt
 0001551182-25-000006,IncomeTaxesPaid,92,1,1,Income taxes paid
@@ -2432,16 +2449,21 @@ accession,tag,report,n_reports,line,plabel
 0001558370-20-001041,InvestmentIncomeInterest,103,1,3,Interest
 0001558370-20-001334,CommonStockSharesOutstanding,145,1,3,"Common stock, outstanding (in shares)"
 0001558370-20-001781,AmortizationOfIntangibleAssets,54,1,17,Amortization expense
+0001558370-20-001781,Goodwill,54,1,,
+0001558370-20-001781,GrossProfit,86,1,,
 0001558370-20-014436,AmortizationOfIntangibleAssets,113,1,2,Amortization expense of other intangible assets
 0001558370-20-014436,IncomeTaxesPaidNet,82,1,17,Income taxes
 0001558370-20-014436,InterestPaidNet,82,1,15,Interest
 0001558370-20-014436,InvestmentIncomeInterest,152,2,13,Interest income
 0001558370-21-001489,CommonStockSharesOutstanding,145,1,3,"Common stock, outstanding (in shares)"
 0001558370-21-001894,AmortizationOfIntangibleAssets,52,1,17,Amortization expense
+0001558370-21-001894,Goodwill,52,1,,
 0001558370-21-016864,AmortizationOfIntangibleAssets,111,1,2,Amortization expense of other intangible assets
 0001558370-21-016864,IncomeTaxesPaidNet,77,1,17,Income taxes
 0001558370-21-016864,InterestPaidNet,77,1,15,Interest
 0001558370-22-001584,CommonStockSharesOutstanding,153,1,8,"Common stock, outstanding (in shares)"
+0001558370-22-001584,LongTermDebtNoncurrent,117,1,,
+0001558370-22-001584,ShortTermBorrowings,4,1,,
 0001558370-22-002968,AmortizationOfIntangibleAssets,54,1,17,Amortization expense
 0001558370-22-018703,AmortizationOfIntangibleAssets,114,1,2,Amortization expense of other intangible assets
 0001558370-22-018703,IncomeTaxesPaidNet,81,1,2,Cash paid for income taxes
