@@ -1,0 +1,38 @@
+from datetime import date
+from decimal import Decimal
+from types import SimpleNamespace
+
+from scrooner_pipeline.mapper import structural_direct as sd
+from scrooner_pipeline.mapper import structural_loader as sl
+
+
+def test_direct_fix_covers_agrees_with_loader_on_stale_line_map_fix():
+    row = SimpleNamespace(
+        rule_id=sd.FIX_RULE_ID, decision="mapped", canonical_concept_id=7,
+        parent_concept_id=None, era_from=date(2018, 1, 1), era_to=date(2018, 12, 31),
+        serve_note="structural line_map total_debt (tools/total_debt.py); source=line_map; replace",
+    )
+    assert not sl.is_hand_fix({"rule_id": row.rule_id, "serve_note": row.serve_note})
+    # serving side should agree: a stale line_map copy is not a hand fix that wins the cell
+    assert not sd._fix_covers([row], 7, date(2018, 12, 31))
+
+
+class _Cur:
+    def __init__(self, rows): self.rows = rows
+    def __enter__(self): return self
+    def __exit__(self, *a): return False
+    def execute(self, *a): pass
+    def fetchall(self): return self.rows
+
+
+class _Conn:
+    def __init__(self, rows): self.rows = rows
+    def cursor(self): return _Cur(self.rows)
+
+
+def test_fact_options_stray_exact_instant_beats_true_52week_end():
+    # NVDA-like: FSN 2018-01-31, true FY end 2018-01-28 holds the real balance; a stray instant on 01-31
+    conn = _Conn([(1, "Liabilities", date(2018, 1, 28), Decimal("100")),
+                  (1, "Liabilities", date(2018, 1, 31), Decimal("5"))])
+    got = sl.fact_options(conn, [(1, "Liabilities", date(2018, 1, 31))])
+    assert Decimal("100") in got[(1, "Liabilities", date(2018, 1, 31))]
