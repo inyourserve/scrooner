@@ -107,6 +107,16 @@ def test_refuse_if_heavy_refuses_while_the_filing_loader_runs(tmp_path):
     assert guard(tmp_path, "refuse-if-heavy", seqs={("pipeline-fsn-load-filings.yml", "in_progress"): [RUN]}).returncode == 1
 
 
+def test_refuse_if_heavy_skips_the_calling_workflow(tmp_path):
+    """The onboarding workflows run refuse-if-heavy while they are themselves in progress: their own run must not
+    refuse them (HEAVY_GUARD_SELF), but any other heavy workflow still does."""
+    own = ("onboard-company-filings.yml", "in_progress")
+    assert guard(tmp_path / "a", "refuse-if-heavy", seqs={own: [RUN]}).returncode == 1
+    assert guard(tmp_path / "b", "refuse-if-heavy", seqs={own: [RUN]}, self_workflow="onboard-company-filings.yml").returncode == 0
+    other = ("pipeline-refresh.yml", "in_progress")
+    assert guard(tmp_path / "c", "refuse-if-heavy", seqs={other: [RUN]}, self_workflow="onboard-company-filings.yml").returncode == 1
+
+
 def _jobs(text: str) -> dict[str, str]:
     """Top-level jobs of a workflow file -> their text (no YAML parser in the locked dependencies)."""
     body = text.split("\njobs:\n", 1)[1]

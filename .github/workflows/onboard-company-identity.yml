@@ -1,0 +1,161 @@
+name: Onboard companies, step 1 (company, CIK, predecessor windows)
+
+# Manual only. Playbook doc/playbook/COMPANY-ONBOARDING.md step 1. Input: tickers and/or CIKs.
+#   apply=false (default): writes NOTHING. Resolves the list, reads sec.gov (data.sec.gov submissions and the 8-K12B
+#     headers, at most 2 requests per second through the shared per-machine limiter), proposes predecessor windows,
+#     classifies no-filing companies, and dry-runs the reviewed history CSV (rolled back). Artifacts only.
+#   apply=true: MAIN ONLY, PRODUCTION WRITE. Runs `scrooner-bootstrap submissions --ciks` and
+#     `scrooner-normalize identity --ciks` (creates core.company, core.listing, core.filing; --ciks is always set, so the
+#     normalizer's empty-list fallback is never reached), then applies `history_csv` (if given) to core.company_history_source.
+# Predecessor detection (scrooner_pipeline.onboarding.predecessors) only PROPOSES rows: proposed_history_sources.csv
+# and review_queue.csv in the run artifact. A person or agent reviews them (fills klass A/B/C), commits the file, and
+# dispatches this workflow again with history_csv=<repo path> (and apply=true) to apply it. An unreviewed row (empty
+# klass) is refused. After new history rows, rerun this workflow so identity routes the predecessor's filings.
+# SEC rate: this one job is the only SEC fetcher in the run, at most 2 req/s (SEC_MAX_REQUESTS_PER_SECOND and
+# SCROONER_EDGAR_MAX_RPS are both 2). The limiter lock is per machine; steps run one after another, so the run is
+# <= 2 req/s. Nothing else here runs a second SEC fetcher; the whole repo budget is 4 req/s, so never run two
+# onboarding SEC jobs on different runners without max-parallel 2 (the filings workflow caps itself that way).
+# Queue: manual-db-jobs (never beside top100-flow, cells-load, cells-proof). The guard (scripts/ci/heavy_job_guard.sh)
+# treats this workflow as a heavy job: apply refuses to start while any other heavy job runs or is queued.
+on:
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Comma-separated tickers (resolved through SEC company_tickers.json); optional if ciks is given"
+        default: ""
+      ciks:
+        description: "Comma-separated CIKs (10 digits or fewer); optional if tickers is given"
+        default: ""
+      history_csv:
+        description: "Repo path of a REVIEWED history-source CSV under data-team/ to dry-run or apply (empty = none)"
+        default: ""
+      apply:
+        description: "true = write (main only): bootstrap submissions, identity, history rows; false = read-only proposals and dry runs"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: manual-db-jobs
+  cancel-in-progress: false
+
+env:
+  MAX_BACKENDS: "60"
+
+jobs:
+  wait-for-fsn-write:
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - name: Refuse an apply from anything but a dispatch on main
+        env:
+          APPLY: ${{ inputs.apply }}
+        run: |
+          if [ "$APPLY" = "true" ] && { [ "$GITHUB_REF" != "refs/heads/main" ] || [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; }; then
+            echo "::error::apply runs only from workflow_dispatch on main (ref $GITHUB_REF, event $GITHUB_EVENT_NAME)"; exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          HEAVY_GUARD_SELF: onboard-company-identity.yml
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
+  identity:
+    name: Resolve, propose predecessors, identity
+    needs: wait-for-fsn-write
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    defaults:
+      run:
+        shell: bash
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      SCROONER_EDGAR_MAX_RPS: "2"
+      SEC_MAX_REQUESTS_PER_SECOND: "2"
+      TICKERS: ${{ inputs.tickers }}
+      CIKS: ${{ inputs.ciks }}
+      HISTORY_CSV: ${{ inputs.history_csv }}
+      APPLY: ${{ inputs.apply }}
+      PYTHONPATH: pipeline/src
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate inputs
+        run: |
+          set -eu
+          [ -n "$TICKERS$CIKS" ] || { echo "::error::give tickers or ciks"; exit 1; }
+          printf '%s' "$TICKERS" | grep -Eq '^[A-Za-z0-9.,\ -]*$' || { echo "::error::tickers: letters, digits, dot, dash, comma"; exit 1; }
+          printf '%s' "$CIKS" | grep -Eq '^[0-9,\ ]*$' || { echo "::error::ciks must be digits and commas"; exit 1; }
+          if [ -n "$HISTORY_CSV" ]; then
+            printf '%s' "$HISTORY_CSV" | grep -Eq '^data-team/[A-Za-z0-9_./-]+\.csv$' || { echo "::error::history_csv must be a repo path under data-team/"; exit 1; }
+            case "$HISTORY_CSV" in *..*) echo "::error::no .. in history_csv"; exit 1;; esac
+            [ -f "$HISTORY_CSV" ] || { echo "::error::$HISTORY_CSV not found in this checkout"; exit 1; }
+          fi
+      - name: No other heavy database job running or queued (apply only)
+        if: ${{ inputs.apply }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAVY_GUARD_SELF: onboard-company-identity.yml
+        run: scripts/ci/heavy_job_guard.sh refuse-if-heavy
+      - name: Connection headroom
+        run: |
+          set -eu
+          used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")
+          echo "client backends now: $used; this run holds at most 2"
+          if [ $((used + 2)) -gt "$MAX_BACKENDS" ]; then echo "::error::$used + 2 would exceed $MAX_BACKENDS of 90"; exit 1; fi
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Resolve the company list (tickers through SEC company_tickers.json, one request)
+        run: |
+          set -eu
+          mkdir -p out
+          uv run --project pipeline python -m scrooner_pipeline.onboarding.ciks resolve --tickers "$TICKERS" --ciks "$CIKS" > out/ciks.txt
+          echo "CIKS_RESOLVED=$(cat out/ciks.txt)" >> "$GITHUB_ENV"
+          echo "companies: $(cat out/ciks.txt)"
+      - name: Bootstrap submissions (PRODUCTION WRITE to raw.*)
+        if: ${{ inputs.apply }}
+        run: uv run --project pipeline scrooner-bootstrap submissions --ciks "$CIKS_RESOLVED"
+      - name: Identity (PRODUCTION WRITE to core.company, core.listing, core.filing; --ciks is never empty)
+        if: ${{ inputs.apply }}
+        run: uv run --project pipeline scrooner-normalize identity --ciks "$CIKS_RESOLVED"
+      - name: Propose predecessor windows (read-only; sec.gov at <= 2 requests/s; nothing is written to the database)
+        run: |
+          set -eu
+          ids=$(uv run --project pipeline python -m scrooner_pipeline.onboarding.ciks ids --ciks "$CIKS_RESOLVED")
+          echo "core.company ids: ${ids:-none yet}"
+          if [ -z "$ids" ]; then echo "no core.company row yet; run with apply=true first" | tee out/predecessors.txt; exit 0; fi
+          uv run --project pipeline python -m scrooner_pipeline.onboarding.predecessors --company-ids "$ids" --out-dir out --cache .cache/onboard-submissions
+      - name: No-filing check (read-only; replaces the NOFILE list in scripts/top100_flow.sh)
+        run: |
+          set -eu
+          ids=$(uv run --project pipeline python -m scrooner_pipeline.onboarding.ciks ids --ciks "$CIKS_RESOLVED")
+          if [ -z "$ids" ]; then echo "no core.company row yet; run with apply=true first" | tee out/no_filing.txt; exit 0; fi
+          uv run --project pipeline python -m scrooner_pipeline.onboarding.no_filing --company-ids "$ids" --explain > out/no_filing_ciks.txt 2> out/no_filing.txt
+          cat out/no_filing.txt; echo "no-filing CIKs: $(cat out/no_filing_ciks.txt)"
+      - name: History rows, dry run (reviewed CSV, rolled back)
+        if: ${{ !inputs.apply && inputs.history_csv != '' }}
+        run: uv run --project pipeline python -m scrooner_pipeline.onboarding.history_apply "$HISTORY_CSV" | tee out/history_dry_run.txt
+      - name: History rows, apply (PRODUCTION WRITE to core.company_history_source; idempotent)
+        if: ${{ inputs.apply && inputs.history_csv != '' }}
+        run: uv run --project pipeline python -m scrooner_pipeline.onboarding.history_apply "$HISTORY_CSV" --apply | tee out/history_apply.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: onboard-identity-${{ github.run_id }}
+          path: out/
+          if-no-files-found: ignore
+          retention-days: 30
