@@ -570,6 +570,25 @@ def companies_by_ticker(conn: psycopg.Connection) -> dict[str, set[tuple[int, st
     return by_ticker
 
 
+def select_docmaps(
+    files: list[Path],
+    by_ticker: dict[str, set[tuple[int, str]]],
+    tickers: set[str] | None,
+    company_ids: set[int] | None,
+) -> list[Path]:
+    """Keep the docmap files of the named tickers and/or company ids (both given: either matches). No filter: all."""
+    if tickers is None and company_ids is None:
+        return files
+    want = {t.upper() for t in (tickers or set())}
+    ids = company_ids or set()
+    keep = []
+    for p in files:
+        t = p.name.split("-docmap-")[0].upper()
+        if t in want or any(cid in ids for cid, _ in by_ticker.get(t, set())):
+            keep.append(p)
+    return keep
+
+
 def _base(name: str) -> str:
     return {"revenue_sanity_resolved": "revenue"}.get(
         name, name.removesuffix("_resolved")
@@ -711,6 +730,8 @@ def load(
     predictor_eras: Path | None = None,
     predictor_concepts: set[str] | None = None,
     no_filing_ciks: set[str] | None = None,
+    tickers: set[str] | None = None,
+    company_ids: set[int] | None = None,
 ) -> dict:
     """Plan (and with apply, write) every docmap in `paths`. One transaction per company; a company whose rows fail
     validation or era overlap is skipped whole and listed.
@@ -718,7 +739,8 @@ def load(
     become era_extend@1 / tag_expert_predictor CANDIDATE slices (era_guard.hold_unproven decides them after the cell
     proof). predictor_concepts (base names, e.g. total_debt, interest_expense) reloads only those concepts: only their
     predictor and guard rows are replaced. no_filing_ciks: companies with no 10-K before their listing: the uncovered
-    years are reasoned blanks no_public_filing_for_period."""
+    years are reasoned blanks no_public_filing_for_period.
+    tickers / company_ids: load only the docmap files of those companies (None = every file, the existing behaviour)."""
     from scrooner_pipeline.mapper import era_predictor
 
     preds = era_predictor.read_predictions(predictor_eras) if predictor_eras else {}
@@ -728,10 +750,12 @@ def load(
         cur.execute("select name, id, statement from analytics.canonical_concept")
         cc = cur.fetchall()
     by_ticker = companies_by_ticker(conn)
+    files = select_docmaps(files, by_ticker, tickers, company_ids)
+    stats_files = len(files)
     concept_ids = {n: i for n, i, _ in cc}
     concept_statement = {n: s for n, _, s in cc}
     stats: dict[str, Any] = {
-        "files": len(files),
+        "files": stats_files,
         "rows": 0,
         "rejects": [],
         "conflicts": [],

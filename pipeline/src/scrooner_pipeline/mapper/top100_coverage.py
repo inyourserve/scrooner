@@ -22,6 +22,7 @@ listed in the summary as TEMPLATE_UNAVAILABLE with zero cells, never guessed.
 from __future__ import annotations
 
 import csv
+import json
 import re
 from collections import defaultdict
 from dataclasses import dataclass
@@ -355,6 +356,105 @@ def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> Non
         w.writerows(rows)
 
 
+SUMMARY_COLUMNS = [
+    "rank",
+    "ticker",
+    "company_id",
+    "cells",
+    *CLASSES,
+    "pct_proven_plus_reason",
+    "note",
+    "as_of",
+]
+PER_COMPANY_SUBDIR = "per-company"
+
+
+def run_company(
+    conn: Any,
+    company: Company,
+    reads_dir: Path,
+    today: date,
+    per_dir: Path,
+    as_of: str,
+) -> int:
+    """Per-company mode: this company's rows (queries filter by its company_id only) to <per_dir>/<id>.csv, plus
+    <id>.json with its template note and as_of. Written last and atomically, so a half-run company has no file."""
+    rows, notes = build_rows(conn, [company], reads_dir, today)
+    per_dir.mkdir(parents=True, exist_ok=True)
+    csv_tmp = per_dir / f"{company.company_id}.csv.tmp"
+    write_csv(csv_tmp, rows, CSV_COLUMNS)
+    meta_tmp = per_dir / f"{company.company_id}.json.tmp"
+    meta_tmp.write_text(
+        json.dumps({"note": notes.get(company.company_id, ""), "as_of": as_of})
+    )
+    csv_tmp.replace(per_dir / f"{company.company_id}.csv")
+    meta_tmp.replace(per_dir / f"{company.company_id}.json")
+    return len(rows)
+
+
+def merge_per_company(
+    out_dir: Path, per_dir: Path, companies: list[Company]
+) -> tuple[int, dict[str, int], list[int]]:
+    """Build top100-coverage.csv and the summary from the per-company files (no database). A company without its
+    per-company files is listed in `missing` and nothing is written."""
+    missing = [
+        c.company_id
+        for c in companies
+        if not (per_dir / f"{c.company_id}.csv").exists()
+        or not (per_dir / f"{c.company_id}.json").exists()
+    ]
+    if missing:
+        return 0, {}, missing
+    rows: list[dict[str, Any]] = []
+    notes: dict[int, str] = {}
+    as_ofs: list[str] = []
+    for c in companies:
+        with (per_dir / f"{c.company_id}.csv").open(newline="") as fh:
+            rows += list(csv.DictReader(fh))
+        meta = json.loads((per_dir / f"{c.company_id}.json").read_text())
+        if meta["note"]:
+            notes[c.company_id] = meta["note"]
+        as_ofs.append(meta["as_of"])
+    srows = [{**r, "company_id": int(r["company_id"])} for r in rows]
+    summary = summarize(srows, companies, notes, max(as_ofs) if as_ofs else "")
+    write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
+    write_csv(out_dir / "top100-coverage-summary.csv", summary, SUMMARY_COLUMNS)
+    tot = {k: sum(r[k] for r in summary) for k in CLASSES}
+    return len(rows), tot, []
+
+
+def main_company(
+    per_dir: Path, shards: Path, reads_dir: Path, company_ids: list[int]
+) -> int:
+    """Per-company mode entry: one connection, read-only, only these companies (each by its own company_id)."""
+    from scrooner_pipeline.db.connection import get_connection
+
+    by_id = {c.company_id: c for c in load_top(shards, 10**9)}
+    unknown = [i for i in company_ids if i not in by_id]
+    if unknown:
+        print(f"company ids not in {shards}: {unknown}")
+        return 2
+    now = datetime.now(timezone.utc)
+    as_of = now.strftime("%Y-%m-%dT%H:%MZ")
+    with get_connection() as conn:
+        conn.execute("set transaction read only")
+        conn.execute("set statement_timeout = '10min'")
+        for i in company_ids:
+            n = run_company(conn, by_id[i], reads_dir, now.date(), per_dir, as_of)
+            print(f"{i} {by_id[i].ticker}: {n} cells")
+    return 0
+
+
+def main_merge(out_dir: Path, per_dir: Path, shards: Path, n: int = 100) -> int:
+    companies = load_top(shards, n)
+    count, tot, missing = merge_per_company(out_dir, per_dir, companies)
+    if missing:
+        print(f"merge refused: no per-company files for {len(missing)} companies: {missing[:20]}")
+        return 1
+    print(f"top100 coverage merged: {count} cells {tot}")
+    return 0
+
+
 def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     from scrooner_pipeline.db.connection import get_connection
 
@@ -367,17 +467,7 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
     summary = summarize(rows, companies, notes, as_of)
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
-    scols = [
-        "rank",
-        "ticker",
-        "company_id",
-        "cells",
-        *CLASSES,
-        "pct_proven_plus_reason",
-        "note",
-        "as_of",
-    ]
-    write_csv(out_dir / "top100-coverage-summary.csv", summary, scols)
+    write_csv(out_dir / "top100-coverage-summary.csv", summary, SUMMARY_COLUMNS)
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     print(f"top100 coverage as of {as_of}: {len(rows)} cells {tot}")
     return 0

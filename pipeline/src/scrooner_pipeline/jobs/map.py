@@ -207,6 +207,16 @@ def docmap_load_cmd(
         "--no-filing-ciks",
         help="Comma-separated CIKs with no 10-K before their listing: uncovered years become no_public_filing_for_period reasons.",
     ),
+    tickers: str = typer.Option(
+        "",
+        "--tickers",
+        help="Comma-separated tickers: load only these companies' docmap files (default: every file in the directory).",
+    ),
+    company_ids: str = typer.Option(
+        "",
+        "--company-ids",
+        help="Comma-separated core.company ids: load only these companies' docmap files (default: every file).",
+    ),
 ) -> None:
     """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
     default: plans, validates and lists conflicts, writes nothing."""
@@ -225,6 +235,8 @@ def docmap_load_cmd(
             }
             or None,
             no_filing_ciks={c.strip() for c in no_filing_ciks.split(",") if c.strip()},
+            tickers={t.strip() for t in tickers.split(",") if t.strip()} or None,
+            company_ids={int(x) for x in company_ids.split(",") if x.strip()} or None,
         )
     write_listing(conflicts_out, stats["conflicts"])
     if rejects_out:
@@ -246,6 +258,66 @@ def docmap_load_cmd(
         if c["added"] or c["removed"] or c["library_cut"] or c["library_deleted"]
     )
     typer.echo(f"changed company ids: {','.join(map(str, changed))}")
+    if (tickers.strip() or company_ids.strip()) and (
+        stats["files"] == 0 or stats["blocked"]
+    ):
+        # a per-company run that loaded nothing (no docmap file / ambiguous ticker) must not look like a success
+        typer.echo("ERROR docmap-load: selected company has no loadable docmap", err=True)
+        raise typer.Exit(3)
+
+
+@app.command(
+    "run-companies",
+    context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+)
+def run_companies_cmd(
+    ctx: typer.Context,
+    step: str = typer.Option(
+        ..., "--step", help="docmap-load | tagmap-plan | era-guard | tagmap-dedupe | proof"
+    ),
+    company_ids: str = typer.Option("", "--company-ids", help="Comma-separated core.company ids."),
+    ids_file: Path = typer.Option(None, "--ids-file", help="File of company ids (one or more per line)."),
+    workers: int = typer.Option(1, "--workers"),
+    state_dir: Path = typer.Option(..., "--state-dir", help="Markers, locks and logs live here."),
+    max_connections: int = typer.Option(8, "--max-connections", help="Total connections this runner may hold (one per worker)."),
+    pause_above: int = typer.Option(60, "--pause-above", help="Pause new starts while pg_stat_activity exceeds this."),
+    retries: int = typer.Option(3, "--retries"),
+    wall_clock: float = typer.Option(3600.0, "--wall-clock-seconds", help="Per-company process cap."),
+    statement_timeout: str = typer.Option("10min", "--statement-timeout", help="Per-company session statement_timeout."),
+) -> None:
+    """Run one top-1000 build step per company, resumable and shardable. Step arguments follow the options
+    (placeholders {company_id} {cik} {ticker} {step_dir} {state_dir}). See jobs/run_companies.py."""
+    from scrooner_pipeline.jobs import run_companies as rc
+
+    ids = rc.parse_ids(company_ids, ids_file)
+    if not ids:
+        typer.echo("ERROR no company ids", err=True)
+        raise typer.Exit(2)
+    try:
+        companies = rc.lookup_companies(ids) if step == "proof" or any("{cik}" in a or "{ticker}" in a for a in ctx.args) else [rc.Company(i) for i in ids]
+        report = rc.run_companies(
+            companies,
+            step,
+            list(ctx.args),
+            state_dir,
+            workers=workers,
+            max_connections=max_connections,
+            retries=retries,
+            wall_clock=wall_clock,
+            statement_timeout=statement_timeout,
+            wait_for_db=rc.db_gate(rc.count_pg_connections, pause_above),
+        )
+    except rc.PreflightError as exc:
+        typer.echo(f"ERROR {exc}", err=True)
+        raise typer.Exit(2) from exc
+    typer.echo(
+        f"run-companies {step}: done={len(report.of('done'))} skipped={len(report.of('skipped'))} "
+        f"locked={len(report.of('locked'))} failed={len(report.of('failed'))}"
+    )
+    failed = sorted(report.of("failed"))
+    if failed:
+        typer.echo(f"failed company ids: {','.join(map(str, failed))}")
+        raise typer.Exit(1)
 
 
 @app.command("era-guard")
