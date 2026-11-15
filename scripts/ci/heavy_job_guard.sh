@@ -26,8 +26,12 @@ HEAVY_WORKFLOWS=(
   pipeline-cells-load.yml
   pipeline-cells-proof.yml
   cells-load-stage.yml
+  pipeline-fsn-load-filings.yml
 )
-WRITE_WORKFLOW=pipeline-fsn-write.yml
+# FSN-write marker: wait-for-write waits on every workflow listed here. pipeline-fsn-load-filings.yml
+# (the filing loader, fsn.* only) is one, so the top-100 flow and the nightly jobs wait for it. A workflow
+# does not wait for itself: it sets HEAVY_GUARD_SELF to its own file name.
+WRITE_WORKFLOWS=(pipeline-fsn-write.yml pipeline-fsn-load-filings.yml)
 ACTIVE_STATUSES=(in_progress queued waiting pending requested)
 POLL_SECONDS="${HEAVY_GUARD_POLL_SECONDS:-60}"
 
@@ -63,6 +67,16 @@ refuse_if_heavy() {
   echo "no heavy database job is running or queued"
 }
 
+write_listing() {
+  # Active runs of every FSN-write workflow except HEAVY_GUARD_SELF; non-zero if any gh call fails.
+  local workflow out=""
+  for workflow in "${WRITE_WORKFLOWS[@]}"; do
+    [ "$workflow" = "${HEAVY_GUARD_SELF:-}" ] && continue
+    out+="$(active_runs "$workflow")"$'\n' || return 1
+  done
+  printf '%s' "$out"
+}
+
 wait_for_write() {
   # Fails CLOSED: a GitHub API error is "unknown", never "no write" (it waits and asks again).
   # Bounded: after max_minutes of wall-clock time it exits 1, so a hung write fails the
@@ -70,7 +84,7 @@ wait_for_write() {
   local max_minutes=${1:-330} start=$SECONDS listing runs waited state
   while :; do
     waited=$((SECONDS - start))
-    if listing=$(active_runs "$WRITE_WORKFLOW"); then
+    if listing=$(write_listing); then
       runs=$(grep -E ' in_progress ' <<<"$listing" || true)
       if [ -z "$runs" ]; then
         echo "no FSN production write in progress"
@@ -79,7 +93,7 @@ wait_for_write() {
       state="in progress: $runs"
     else
       state="unknown (the GitHub API call failed)"
-      echo "::warning::could not list $WRITE_WORKFLOW runs; treating a write as possibly in progress"
+      echo "::warning::could not list the FSN write workflow runs; treating a write as possibly in progress"
     fi
     if [ "$waited" -ge $((max_minutes * 60)) ]; then
       echo "::error::after ${max_minutes} minutes an FSN production write is still $state"

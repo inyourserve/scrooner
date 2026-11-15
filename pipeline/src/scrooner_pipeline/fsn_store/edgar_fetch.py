@@ -38,10 +38,18 @@ class EdgarClient:
     common.sec_client, so this and any other SEC job on the machine share one budget) at 4 requests/s,
     and retry with backoff on 429/5xx/transport errors (collector.retry.HTTP_RETRY)."""
 
-    def __init__(
-        self, user_agent: str, max_per_second: float = MAX_REQUESTS_PER_SECOND
-    ):
+    def __init__(self, user_agent: str, max_per_second: float | None = None):
+        import os
+
         import httpx
+
+        if max_per_second is None:
+            # SCROONER_EDGAR_MAX_RPS lowers the rate (the filing-loader workflow sets 2); never above 4
+            max_per_second = float(
+                os.environ.get("SCROONER_EDGAR_MAX_RPS") or MAX_REQUESTS_PER_SECOND
+            )
+        if max_per_second <= 0:
+            raise ValueError("SCROONER_EDGAR_MAX_RPS must be positive")
 
         from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 

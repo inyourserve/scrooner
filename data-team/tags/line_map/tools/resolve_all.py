@@ -10,7 +10,7 @@ from resolve import parse, face, children, resolve, tol, note_facts, DPS as CORE
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
 INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
-import resolve_bs, resolve_cf, resolve_is, standard_inputs
+import resolve_bs, resolve_cf, resolve_is, standard_inputs, total_debt
 FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
 POLARITY = {r['data_point']: r for r in csv.DictReader(open(os.environ.get('POLARITY_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'polarity.csv'))))}
 def apply_polarity(rows):
@@ -526,6 +526,62 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     return rows
 
 
+def dp_elements(dp):
+    """Every element the resolver reads for a data point: the role alternatives and combined lines (rules/roles.csv), plus the CF family
+    lists (resolve_cf). Empty when the data point has no element list: absence is then never claimed."""
+    out = set()
+    for R in ROLES:
+        if R['data_point'] == dp:
+            for alt in (R.get('alternatives') or '').split('|') + (R.get('combined_if') or '').split('|'):
+                out |= {t for t in alt.split('+') if t}
+    cf = {'capex': resolve_cf.CAPEX,
+          'share_buybacks': ['PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity', 'PaymentsRelatedToCommonStockRepurchaseAndTaxWithholdingForShareBasedCompensation'],
+          'dividends_paid': ['PaymentsOfDividendsCommonStock', 'PaymentsOfOrdinaryDividends', 'PaymentsOfDividends', 'PaymentsOfCapitalDistribution', 'CashDistributionsToStockholders'],
+          'sbc': ['ShareBasedCompensation', 'AllocatedShareBasedCompensationExpense']}
+    out |= set(cf.get(dp, []))
+    if dp in resolve_cf.WC: out |= set(resolve_cf.WC[dp]['fam']) | set(resolve_cf.WC[dp]['comb'])
+    out |= set(NARROW.get(dp, []))
+    return out
+
+
+ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$')}   # data points read by pattern (total_debt.py) or by the core statement tree
+ABSENT_STMT = {'total_debt': 'BS'}
+ABSENT_LABEL = {'total_debt': total_debt.LABEL_DEBT, 'share_buybacks': resolve_cf.BUY_LABEL, 'dividends_paid': resolve_cf.DIV_LABEL, 'sbc': resolve_cf.SBC_LABEL, 'capex': resolve_cf.CAPEX_LABEL}
+
+
+def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
+    """Dhairya ruling 2026-11-16 (the 706 gap years): a not_presented cell of the own 10-K is flagged absent_in_own_filing only when the
+    resolver proves absence from that filing: no face line on ANY statement under the data point's elements (valued or not), no custom
+    face line whose label names it (CF families), no undimensioned fact of those elements in the filing, and no later 10-K holding a
+    fact of those elements for the year (that year is filled or replayed instead, never hidden). The display hides such a cell as
+    HIDDEN_YEAR with the 10-K's accession as evidence; buybacks and dividends are never shown as 0 without a printed dash."""
+    F_ = {f['a']: f for f in filings}
+    later = collections.defaultdict(list)
+    for f in filings: later[f['cik']].append(f)
+    cor_valued = {r['accession']: True for r in rows if r['data_point'] == 'cost_of_revenue' and r['status'] in VALUED and (r.get('column') or 'own') == 'own'}
+    for r in rows:
+        if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
+        if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed')): continue
+        E = dp_elements(r['data_point'])
+        rx = ABSENT_RX.get(r['data_point'])
+        if not E and not rx: continue
+        inE = (lambda t: t in E or bool(rx and rx.match(t)))
+        if r['data_point'] == 'gross_profit' and cor_valued.get(r['accession']): continue   # derivable from revenue and cost of revenue
+        f = F_[r['accession']]
+        L = [x.split('|') for x in (f.get('lines') or '').split('~')]
+        if any(len(p) > 3 and inE(p[3]) for p in L): continue
+        lab = ABSENT_LABEL.get(r['data_point'])
+        if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
+        nf = note_facts(notefacts.get(r['accession']))
+        if any(inE(t) for t, _q in nf): continue
+        pe = str(r['period_end'])
+        if any(g['a'] != f['a'] and g['p'] > f['p'] and any(len(x) == 4 and inE(x[0]) and x[3] == pe for x in (y.split('|') for y in (compfacts.get(g['a']) or '').split('~')))
+               for g in later[f['cik']]): continue
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'absent_in_own_filing') if x)
+        r['why'] = (r.get('why') or '') + f" | absent in own filing {r['accession']}: no face line on any statement, no undimensioned fact of {len(E)} element(s), no later 10-K fact for the year"
+    return rows
+
+
 # founder decision 2026-11-16 (split combined lines from the note): a combined face line beside an undimensioned note fact of the data
 # point's own narrow element; the role stops at the combined line before it reads the notes, so the narrow fact was never served
 NARROW = {'depreciation_and_amortization': ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'],
@@ -927,6 +983,8 @@ def role(f, L, arcs, notes, R):
         q = 0 if (stmt == 'BS' or dp in INSTANT_DPS) else 4
         for parts in alts:
             if dp in BANK_NOTE and any(not BANK_NOTE[dp].match(t) for t in parts) and not bank_face(L): continue
+            if dp == 'sga_expense' and list(parts) == ['GeneralAndAdministrativeExpense']: continue
+            if list(parts) == ['ComprehensiveIncomeFromContinuingOperations'] and any('DiscontinuedOperation' in t and v for (t, _q), v in notes.items()): continue   # continuing-operations CI is the total only with no discontinued operations   # a lone G&A note fact is a component, never SG&A (PM FY2014 165M beside 'Marketing, administration and research costs' 6.7B)
             vs = [notes.get((t, q)) for t in parts]
             if all(v is not None for v in vs):
                 hit = dict(status='mapped' if len(parts) == 1 else 'component_sum', tags='+'.join(parts), value=sum(vs), r_page='NOTE', nodes='; '.join(f"{t}={v} [NOTE]" for t, v in zip(parts, vs)),
@@ -1142,6 +1200,7 @@ if __name__ == '__main__':
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
+    rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

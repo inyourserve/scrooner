@@ -153,3 +153,115 @@ def test_combined_working_capital_cell_never_takes_a_later_combined_element():
                  nodes='IncreaseDecreaseInAccountsPayableAndAccruedLiabilities=5 [R7.htm:12]', value='5')]
     comp = {'A16': 'IncreaseDecreaseInAccountsPayableAndAccruedLiabilities|4|4|2015-12-31'}
     assert ('A15', 'cf_ap_change') not in standard_inputs.comparative_fill(rows, comp, set())
+
+
+# ---- sga_expense: PM/MO 'Marketing, administration and research costs' (queue 2026-11-16)
+import resolve_all
+from decimal import Decimal as D
+
+
+def _sga(lines, notes):
+    f = filing(lines)
+    L, arcs = resolve.parse(f)
+    return resolve_all.role(f, L, arcs, notes, next(r for r in resolve_all.ROLES if r['data_point'] == 'sga_expense'))
+
+
+def test_marketing_administration_and_research_line_is_combined_sga():
+    # PM FY2017 R4:5 MarketingAdministrationAndResearchCosts 6,725; the G&A note fact (164) is not SG&A
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316), ('IS', 'MarketingAdministrationAndResearchCosts', 'Marketing, administration and research costs', 6725),
+              ('IS', 'OperatingIncomeLoss', 'Operating income', 11503)], {('GeneralAndAdministrativeExpense', 4): D(164)})
+    assert r['status'] == 'combined' and r['tags'] == 'MarketingAdministrationAndResearchCosts'
+
+
+def test_lone_general_and_administrative_note_fact_is_never_sga():
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316), ('IS', 'OperatingIncomeLoss', 'Operating income', 11503)], {('GeneralAndAdministrativeExpense', 4): D(164)})
+    assert r['status'] == 'not_presented' and r['value'] is None
+    # the full SG&A note fact still serves
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316)], {('SellingGeneralAndAdministrativeExpense', 4): D(6000)})
+    assert r['status'] == 'mapped' and r['value'] == D(6000)
+
+
+# ---- Dhairya ruling 2026-11-16: absent_in_own_filing (a gap year inside a valued row hides only on proven absence)
+def _absent(lines, notes='', later_comp='', dp='cash_paid_for_interest'):
+    own = dict(filing(lines), cik='9', a='A16', p='2016-09-30')
+    nxt = dict(filing([('CF', 'NetIncomeLoss', 'Net income', 1)]), cik='9', a='A17', p='2017-09-30')
+    row = dict(data_point=dp, status='not_presented', accession='A16', period_end='2016-09-30', column='own', flags='roles', why='no line')
+    resolve_all.apply_absent_in_own_filing([row], [own, nxt], {'A16': notes}, {'A17': later_comp})
+    return 'absent_in_own_filing' in row['flags']
+
+
+def test_absence_proven_when_no_face_line_no_fact_and_no_later_fact():
+    # QCOM FY2016 10-K: no interest-paid line, no InterestPaid/InterestPaidNet fact (FY2015 printed 8M)
+    assert _absent([('IS', 'Revenues', 'Revenues', 100)])
+
+
+def test_absence_not_claimed_when_an_undimensioned_fact_exists():
+    assert not _absent([('IS', 'Revenues', 'Revenues', 100)], notes='InterestPaidNet|4|8000000')
+
+
+def test_absence_not_claimed_when_any_statement_prints_the_element():
+    assert not _absent([('BS', 'InterestPaidNet', 'Interest paid', None)])
+
+
+def test_absence_not_claimed_when_a_later_10k_prints_the_year():
+    # a comparative year is filled or replayed, never hidden
+    assert not _absent([('IS', 'Revenues', 'Revenues', 100)], later_comp='InterestPaidNet|4|7000000|2016-09-30')
+
+
+def test_absence_not_claimed_for_a_custom_financing_line_naming_buybacks():
+    assert not _absent([('CF', 'xyz_SharesBoughtBack', 'Purchases of common stock', 50)], dp='share_buybacks')
+    assert _absent([('CF', 'ProceedsFromIssuanceOfLongTermDebt', 'Proceeds from debt', 50)], dp='share_buybacks')
+
+
+def test_continuing_operations_ci_total_serves_only_without_discontinued_operations():
+    # ADI FY2015 R3: adi_ComprehensiveIncomeFromContinuingOperations 814,553, no discontinued operations
+    R = next(r for r in resolve_all.ROLES if r['data_point'] == 'comprehensive_income')
+    f = filing([('IS', 'Revenues', 'Revenues', 100)]); L, arcs = resolve.parse(f)
+    r = resolve_all.role(f, L, arcs, {('ComprehensiveIncomeFromContinuingOperations', 4): D(814553)}, R)
+    assert r['status'] == 'mapped' and r['value'] == D(814553)
+    r = resolve_all.role(f, L, arcs, {('ComprehensiveIncomeFromContinuingOperations', 4): D(814553), ('IncomeLossFromDiscontinuedOperationsNetOfTax', 4): D(5)}, R)
+    assert r['status'] == 'not_presented'
+
+
+def test_net_treasury_purchases_line_is_combined_buybacks():
+    # GE FY2017 R6:40 ProceedsFromRepurchaseOfEquity 'Net dispositions (purchases) of GE shares for treasury' -2,550
+    b = resolve_cf(fin(('CF', 'ProceedsFromRepurchaseOfEquity', 'Net dispositions (purchases) of GE shares for treasury', -2550)), {})['share_buybacks']
+    assert b['status'] == 'combined' and b['value'] is None and 'dispositions/issuances, net' in b['why']
+
+
+def test_share_count_line_does_not_block_proven_absence():
+    # DHR FY2015 CF 'Shares held as Treasury shares' (a share count, StockRedeemed...Shares)
+    assert _absent([('CF', 'StockRedeemedThroughDistributionOfABusinessDuringPeriodShares', 'Shares held as Treasury shares', 26)], dp='share_buybacks')
+
+
+def test_note_natured_year_fills_from_a_later_note_comparative():
+    # TSLA FY2017 amortization: the FY2019 10-K maps its own year from the note and holds AmortizationOfIntangibleAssets 40 for 2017
+    import standard_inputs
+    def rows(dp, tag):
+        return [dict(cik='1', data_point=dp, period_end='2017-12-31', accession='A17', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point=dp, period_end='2018-12-31', accession='A18', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point=dp, period_end='2019-12-31', accession='A19', status='mapped', tags=tag, nodes=f'{tag}=44 [NOTE]', value='44')]
+    out = standard_inputs.comparative_fill(rows('amortization_of_intangibles', 'AmortizationOfIntangibleAssets'), {'A19': 'AmortizationOfIntangibleAssets|4|40|2017-12-31'}, set())
+    assert str(out[('A17', 'amortization_of_intangibles')]['value']).startswith('40')
+    # a note figure never fills a face data point (PM SG&A 162M)
+    out = standard_inputs.comparative_fill(rows('sga_expense', 'SellingGeneralAndAdministrativeExpense'), {'A19': 'SellingGeneralAndAdministrativeExpense|4|40|2017-12-31'}, set())
+    assert ('A17', 'sga_expense') not in out
+
+
+def test_total_debt_absence_reads_every_debt_element_and_debt_label():
+    # FTNT FY2019: no borrowings of any kind before its 2021 notes
+    assert _absent([('BS', 'AccountsPayableCurrent', 'Accounts payable', 5)], dp='total_debt')
+    assert not _absent([('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 5)], dp='total_debt')
+    assert not _absent([('BS', 'xyz_SeniorNotes', 'Senior notes, net', 5)], dp='total_debt')
+    assert _absent([('BS', 'OperatingLeaseLiabilityNoncurrent', 'Operating lease liabilities', 5)], dp='total_debt')
+
+
+def test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from():
+    own = dict(filing([('IS', 'Revenues', 'Revenues', 100)]), cik='9', a='A16', p='2016-12-31')
+    gp = dict(data_point='gross_profit', status='not_presented', accession='A16', period_end='2016-12-31', column='own', flags='core', why='')
+    resolve_all.apply_absent_in_own_filing([gp], [own], {}, {})
+    assert 'absent_in_own_filing' in gp['flags']
+    gp['flags'] = 'core'
+    cor = dict(data_point='cost_of_revenue', status='mapped', accession='A16', period_end='2016-12-31', column='own', flags='', why='')
+    resolve_all.apply_absent_in_own_filing([gp, cor], [own], {}, {})
+    assert 'absent_in_own_filing' not in gp['flags']
