@@ -142,6 +142,8 @@ NOT_PRESENTED_CODES = {
 # evidenced no filing presents the period (no_10k_presents_period is written by structural_loader / structural_direct;
 # the guard that refuses the reason when a later 10-K presents the period lives there; here it is re-checked, never
 # duplicated: a year that a periodic report presents is never hidden)
+# the proof's own verdict for a year before the filing history (NOT_PRESENTED pre_filing_period, detector v21)
+PRE_FILING_CODE = "pre_filing_period"
 NO_PERIOD_CODES = {"no_public_filing_for_period", "no_10k_presents_period"}
 WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
 
@@ -1356,10 +1358,25 @@ def attach_only_combined(
 ) -> None:
     """Carry the resolver's only_combined hide, its evidence text and its accession on each flagged non-value cell. The
     combined printed number stays in the data as evidence and is never shown as the standard data point. Pure."""
+    # the resolver keys on the FSN month end (ADI 2016-10-31), a cell on the true 52/53-week end (2016-10-29): match with
+    # fsn_end_matches on the same ticker and data point, and only when exactly one resolver period matches
+    by_key: dict[tuple[str, str], list[tuple[date, tuple[str, str, str]]]] = (
+        defaultdict(list)
+    )
+    for (tk, dp, pe), v in oc.items():
+        by_key[(tk, dp)].append((date.fromisoformat(pe), v))
     for r in rows:
         if r["class"] in ("PROVEN", "DERIVED"):
             continue
         hit = oc.get((r["ticker"], r["data_point"], r["period_end"]))
+        if hit is None:
+            end = date.fromisoformat(r["period_end"])
+            near = [
+                v
+                for d, v in by_key.get((r["ticker"], r["data_point"]), ())
+                if fsn_end_matches(d, end)
+            ]
+            hit = near[0] if len(near) == 1 else None
         if hit:
             r["_only_combined"], r["evidence"], r["_oc_accession"] = hit
             if not r.get("accession"):
@@ -1379,6 +1396,8 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
         if r["class"] in ("PROVEN", "DERIVED"):
             r["display"] = SHOWN_VALUE
+        elif r["class"] == "REASON" and r.get("reason_code") == "zz":
+            r["display"] = HIDDEN_YEAR
         elif r.get("_only_combined") == "years":
             r["display"] = HIDDEN_YEAR
         elif r.get("_only_combined") == "row":
