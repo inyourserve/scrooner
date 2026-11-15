@@ -26,7 +26,7 @@ basic_eps,IS,,EarningsPerShareBasic|EarningsPerShareBasicAndDiluted|IncomeLossFr
 diluted_eps,IS,,EarningsPerShareDiluted|EarningsPerShareBasicAndDiluted|IncomeLossFromContinuingOperationsPerDilutedShare,,Y,,EPS line,
 weighted_basic_shares,IS,,WeightedAverageNumberOfSharesOutstandingBasic|WeightedAverageNumberOfShareOutstandingBasicAndDiluted,,Y,,weighted shares (IS or EPS note),
 weighted_diluted_shares,IS,,WeightedAverageNumberOfDilutedSharesOutstanding|WeightedAverageNumberOfShareOutstandingBasicAndDiluted,,Y,,weighted shares (IS or EPS note),
-comprehensive_income,NOTE,,ComprehensiveIncomeNetOfTax,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,Y,,parent comprehensive income (CI statement),
+comprehensive_income,NOTE,,ComprehensiveIncomeNetOfTax|ComprehensiveIncomeFromContinuingOperations,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,Y,,parent comprehensive income (CI statement); ADI FY2015 R3 total under adi_ComprehensiveIncomeFromContinuingOperations 814,553, served only when the filing reports no discontinued operations,
 dividends_per_share,NOTE,,CommonStockDividendsPerShareDeclared|CommonStockDividendsPerShareCashPaid,,Y,,declared per share (EQ or note),
 deposits,BS,,Deposits,,N,^(total )?deposits$,bank deposits total,
 loans_net,BS,,LoansAndLeasesReceivableNetReportedAmount|FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss|NotesReceivableNet,,Y,loans.*net,"bank net loans; note fact per §AG (Dhairya 2026-11-14): bank-loan elements, or trade elements on a bank face",

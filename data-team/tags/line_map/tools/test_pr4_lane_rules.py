@@ -179,3 +179,45 @@ def test_lone_general_and_administrative_note_fact_is_never_sga():
     # the full SG&A note fact still serves
     r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316)], {('SellingGeneralAndAdministrativeExpense', 4): D(6000)})
     assert r['status'] == 'mapped' and r['value'] == D(6000)
+
+
+# ---- Dhairya ruling 2026-11-16: absent_in_own_filing (a gap year inside a valued row hides only on proven absence)
+def _absent(lines, notes='', later_comp='', dp='cash_paid_for_interest'):
+    own = dict(filing(lines), cik='9', a='A16', p='2016-09-30')
+    nxt = dict(filing([('CF', 'NetIncomeLoss', 'Net income', 1)]), cik='9', a='A17', p='2017-09-30')
+    row = dict(data_point=dp, status='not_presented', accession='A16', period_end='2016-09-30', column='own', flags='roles', why='no line')
+    resolve_all.apply_absent_in_own_filing([row], [own, nxt], {'A16': notes}, {'A17': later_comp})
+    return 'absent_in_own_filing' in row['flags']
+
+
+def test_absence_proven_when_no_face_line_no_fact_and_no_later_fact():
+    # QCOM FY2016 10-K: no interest-paid line, no InterestPaid/InterestPaidNet fact (FY2015 printed 8M)
+    assert _absent([('IS', 'Revenues', 'Revenues', 100)])
+
+
+def test_absence_not_claimed_when_an_undimensioned_fact_exists():
+    assert not _absent([('IS', 'Revenues', 'Revenues', 100)], notes='InterestPaidNet|4|8000000')
+
+
+def test_absence_not_claimed_when_any_statement_prints_the_element():
+    assert not _absent([('BS', 'InterestPaidNet', 'Interest paid', None)])
+
+
+def test_absence_not_claimed_when_a_later_10k_prints_the_year():
+    # a comparative year is filled or replayed, never hidden
+    assert not _absent([('IS', 'Revenues', 'Revenues', 100)], later_comp='InterestPaidNet|4|7000000|2016-09-30')
+
+
+def test_absence_not_claimed_for_a_custom_financing_line_naming_buybacks():
+    assert not _absent([('CF', 'xyz_SharesBoughtBack', 'Purchases of common stock', 50)], dp='share_buybacks')
+    assert _absent([('CF', 'ProceedsFromIssuanceOfLongTermDebt', 'Proceeds from debt', 50)], dp='share_buybacks')
+
+
+def test_continuing_operations_ci_total_serves_only_without_discontinued_operations():
+    # ADI FY2015 R3: adi_ComprehensiveIncomeFromContinuingOperations 814,553, no discontinued operations
+    R = next(r for r in resolve_all.ROLES if r['data_point'] == 'comprehensive_income')
+    f = filing([('IS', 'Revenues', 'Revenues', 100)]); L, arcs = resolve.parse(f)
+    r = resolve_all.role(f, L, arcs, {('ComprehensiveIncomeFromContinuingOperations', 4): D(814553)}, R)
+    assert r['status'] == 'mapped' and r['value'] == D(814553)
+    r = resolve_all.role(f, L, arcs, {('ComprehensiveIncomeFromContinuingOperations', 4): D(814553), ('IncomeLossFromDiscontinuedOperationsNetOfTax', 4): D(5)}, R)
+    assert r['status'] == 'not_presented'
