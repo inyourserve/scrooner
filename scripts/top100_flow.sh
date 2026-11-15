@@ -66,7 +66,8 @@ mkdir -p $O/coverage; PYTHONPATH=pipeline/src PGOPTIONS="-c default_transaction_
 typeset -A HELD
 for c in ${(s:,:)IDS}; do
   tk=$(q "select primary_ticker from core.company where id = $c"); ck=$(q "select cik from core.company where id = $c")
-  cert=$(ls data-team/strategy/approvals/$tk-certificate-*.md(N) 2>/dev/null | sort | tail -1)
+  # (N) on an array glob: no certificate -> empty array -> skip (a bare `ls` of an empty glob lists the cwd instead)
+  certs=(data-team/strategy/approvals/${tk}-certificate-*.md(N)); cert=${certs[-1]:-}
   [ -n "$cert" ] || continue
   ccsv=$(grep -oE "data-team/strategy/certification/$tk-coverage-[0-9-]+\.csv" $cert | head -1)
   [ -n "$ccsv" ] && [ -f "$ccsv" ] || { echo "certified $tk: certified csv not found in $cert"; HELD[$c]=NOCSV; continue; }
