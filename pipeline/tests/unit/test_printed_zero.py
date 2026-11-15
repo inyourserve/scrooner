@@ -51,8 +51,8 @@ def test_printed_zero_serves_only_a_flagged_mapped_zero_with_no_stored_fact():
     assert not sd.printed_zero_ok(
         _claim(value="5"), sd.NO_STORED_FACT
     )  # node 0, value not
-    # only a mapped claim
-    assert not sd.printed_zero_ok(_claim(decision="component_sum"), sd.NO_STORED_FACT)
+    # only a mapped claim (component sums have their own ruling, 2026-11-16, tested below)
+    assert not sd.printed_zero_ok(_claim(decision="combined"), sd.NO_STORED_FACT)
 
 
 def _zero_structure():
@@ -79,3 +79,31 @@ def test_proof_accepts_a_printed_zero_only_as_zero_and_only_when_flagged():
     )
     assert five.verdict != pv.PROVEN
     assert Decimal(0) == ok.position_value and ADSH and FY_END
+
+
+def _sum(**kw) -> sl.Claim:
+    base = dict(
+        data_point="total_debt",
+        decision="component_sum",
+        parts=((1, None, "ConvertibleDebtCurrent"), (1, None, "LongTermDebt")),
+        stmts=("BS", "BS"),
+        locs=((4, 18), (4, 20)),
+        value="1988000000",
+        node_values=("0.0000", "1988000000.0000"),
+        flags="total_debt",
+    )
+    base.update(kw)
+    return _claim(**base)
+
+
+def test_a_dash_part_inside_a_component_sum_serves_as_zero_with_no_stored_fact():
+    """Dhairya 2026-11-16: NVDA FY2019 ConvertibleDebtCurrent printed as a dash inside total debt."""
+    c = _sum()
+    assert sd.printed_zero_ok(c, sd.NO_STORED_FACT, 0)
+    assert not sd.printed_zero_ok(c, sd.NO_STORED_FACT, 1)  # a printed 1,988 is no zero
+    # a stored fact is read as any other part
+    assert not sd.printed_zero_ok(c, "two fsn values for the part", 0)
+    # a NOTE part has no face line to cite
+    assert not sd.printed_zero_ok(_sum(stmts=("NOTE", "BS")), sd.NO_STORED_FACT, 0)
+    no_page = replace(c, locs=((None, None), (4, 20)))
+    assert not sd.printed_zero_ok(no_page, sd.NO_STORED_FACT, 0)

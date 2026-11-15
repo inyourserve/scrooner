@@ -220,17 +220,28 @@ PRINTED_ZERO = "printed_zero"
 NO_STORED_FACT = "no stored fact for the part in that filing and column"
 
 
-def printed_zero_ok(claim: sl.Claim, why: str) -> bool:
+def printed_zero_ok(claim: sl.Claim, why: str, i: int = 0) -> bool:
     """Ruling 2026-11-14 (Dhairya): a line printed on the face with a dash or a zero is served as 0 with no fact id,
-    the resolver's R page and line being the evidence. Only for a `mapped` claim flagged printed_zero whose value and
-    node are exactly 0 and whose filing stores no fact for the part (a stored fact is read as any other part). Pure."""
-    if (
-        claim.decision != "mapped"
-        or PRINTED_ZERO not in {f.strip() for f in claim.flags.split(";")}
-        or why != NO_STORED_FACT
-    ):
+    the resolver's R page and line being the evidence. For a `mapped` claim flagged printed_zero whose value and node
+    are exactly 0. Ruling 2026-11-16 (Dhairya): the same for a part of a `component_sum` (a dash inside the sum,
+    NVDA FY2019 ConvertibleDebtCurrent): part `i`'s node is exactly 0 and printed on an R page (never a NOTE part).
+    Both only when the filing stores no fact for the part (a stored fact is read as any other part). Pure."""
+    if why != NO_STORED_FACT:
         return False
     try:
+        if claim.decision == "component_sum":
+            rp = claim.locs[i][0] if i < len(claim.locs) else None
+            return (
+                i < len(claim.node_values)
+                and claim.node_values[i] != ""
+                and Decimal(claim.node_values[i]) == 0
+                and rp is not None
+                and claim.stmts[i] != "NOTE"
+            )
+        if claim.decision != "mapped" or PRINTED_ZERO not in {
+            f.strip() for f in claim.flags.split(";")
+        }:
+            return False
         return Decimal(claim.value) == 0 and all(
             Decimal(v) == 0 for v in claim.node_values if v
         )
@@ -706,7 +717,7 @@ def direct_cells(
                     )
                     used_dropped.append(drop)
                     continue
-                if isinstance(got, str) and printed_zero_ok(c, got):
+                if isinstance(got, str) and printed_zero_ok(c, got, i):
                     parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
                     continue
                 if isinstance(got, str):
@@ -757,7 +768,8 @@ def direct_cells(
         for df in used_dropped:
             note += "; " + df.note()
         if zero_src:
-            rp, ln = c.locs[0] if c.locs else (None, None)
+            zi = next(i for i, p in enumerate(parts) if p[3] == PRINTED_ZERO)
+            rp, ln = c.locs[zi] if zi < len(c.locs) else (None, None)
             note += f"; printed_zero: the line is printed with a dash or 0 (R{rp}:{ln}), served as 0 with no fact id"
         fid = meta[c.accession][0]
         cells.append(
