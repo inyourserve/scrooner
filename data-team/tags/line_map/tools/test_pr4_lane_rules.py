@@ -153,3 +153,29 @@ def test_combined_working_capital_cell_never_takes_a_later_combined_element():
                  nodes='IncreaseDecreaseInAccountsPayableAndAccruedLiabilities=5 [R7.htm:12]', value='5')]
     comp = {'A16': 'IncreaseDecreaseInAccountsPayableAndAccruedLiabilities|4|4|2015-12-31'}
     assert ('A15', 'cf_ap_change') not in standard_inputs.comparative_fill(rows, comp, set())
+
+
+# ---- sga_expense: PM/MO 'Marketing, administration and research costs' (queue 2026-11-16)
+import resolve_all
+from decimal import Decimal as D
+
+
+def _sga(lines, notes):
+    f = filing(lines)
+    L, arcs = resolve.parse(f)
+    return resolve_all.role(f, L, arcs, notes, next(r for r in resolve_all.ROLES if r['data_point'] == 'sga_expense'))
+
+
+def test_marketing_administration_and_research_line_is_combined_sga():
+    # PM FY2017 R4:5 MarketingAdministrationAndResearchCosts 6,725; the G&A note fact (164) is not SG&A
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316), ('IS', 'MarketingAdministrationAndResearchCosts', 'Marketing, administration and research costs', 6725),
+              ('IS', 'OperatingIncomeLoss', 'Operating income', 11503)], {('GeneralAndAdministrativeExpense', 4): D(164)})
+    assert r['status'] == 'combined' and r['tags'] == 'MarketingAdministrationAndResearchCosts'
+
+
+def test_lone_general_and_administrative_note_fact_is_never_sga():
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316), ('IS', 'OperatingIncomeLoss', 'Operating income', 11503)], {('GeneralAndAdministrativeExpense', 4): D(164)})
+    assert r['status'] == 'not_presented' and r['value'] is None
+    # the full SG&A note fact still serves
+    r = _sga([('IS', 'GrossProfit', 'Gross profit', 18316)], {('SellingGeneralAndAdministrativeExpense', 4): D(6000)})
+    assert r['status'] == 'mapped' and r['value'] == D(6000)

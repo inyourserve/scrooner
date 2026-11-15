@@ -927,6 +927,7 @@ def role(f, L, arcs, notes, R):
         q = 0 if (stmt == 'BS' or dp in INSTANT_DPS) else 4
         for parts in alts:
             if dp in BANK_NOTE and any(not BANK_NOTE[dp].match(t) for t in parts) and not bank_face(L): continue
+            if dp == 'sga_expense' and list(parts) == ['GeneralAndAdministrativeExpense']: continue   # a lone G&A note fact is a component, never SG&A (PM FY2014 165M beside 'Marketing, administration and research costs' 6.7B)
             vs = [notes.get((t, q)) for t in parts]
             if all(v is not None for v in vs):
                 hit = dict(status='mapped' if len(parts) == 1 else 'component_sum', tags='+'.join(parts), value=sum(vs), r_page='NOTE', nodes='; '.join(f"{t}={v} [NOTE]" for t, v in zip(parts, vs)),
