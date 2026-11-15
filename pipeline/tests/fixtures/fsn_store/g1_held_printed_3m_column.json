@@ -1,0 +1,1757 @@
+{
+ "fixture": "G1 held printed 3-month column (FSN-STORE-DESIGN section 4; Dhairya 2026-11-01)",
+ "source": "is_core 77f5846a derived cells over a held column; FSN sub/num rows of the companies' 10-Qs around each quarter (bucket fsn-notes, undimensioned only); original-filing gates from the 77f5846a slot run (is_filing_slots of commit 78ca35e)",
+ "cases": [
+  {
+   "case": "net_income_resolved:1227:2023-04-01..2023-06-30",
+   "company_id": 1227,
+   "canonical_concept": "net_income_resolved",
+   "period_grain": "Q",
+   "period_start": "2023-04-01",
+   "period_end": "2023-06-30",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "160000000",
+    "formula": "6M_YTD - 3M_YTD",
+    "inputs": [
+     "323000000",
+     "163000000"
+    ],
+    "input_accessions": [
+     "0000352541-23-000091",
+     "0000352541-23-000059"
+    ]
+   },
+   "slot_tags": [
+    "NetIncomeLoss"
+   ],
+   "filings": [
+    {
+     "accession": "0000352541-23-000059",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230331",
+     "filed": "20230505",
+     "accepted": "2023-05-05 11:39:00.0",
+     "fy": "2023",
+     "fp": "Q1",
+     "fsn_set": "2023q2",
+     "aciks": "52485 107832",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "192000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "163000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-23-000091",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230630",
+     "filed": "20230804",
+     "accepted": "2023-08-04 11:55:00.0",
+     "fy": "2023",
+     "fp": "Q2",
+     "fsn_set": "2023q3",
+     "aciks": "52485 107832",
+     "role": "original",
+     "slot_gate_77f5846a": "G1_printed_line",
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "323000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "351000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-23-000108",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230930",
+     "filed": "20231103",
+     "accepted": "2023-11-03 11:54:00.0",
+     "fy": "2023",
+     "fp": "Q3",
+     "fsn_set": "2023q4",
+     "aciks": "52485 107832",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "579000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "582000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-24-000089",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20240630",
+     "filed": "20240802",
+     "accepted": "2024-08-02 11:52:00.0",
+     "fy": "2024",
+     "fp": "Q2",
+     "fsn_set": "2024q3",
+     "aciks": "52485 107832",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "323000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20240630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "245000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-24-000104",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20240930",
+     "filed": "20241101",
+     "accepted": "2024-11-01 11:39:00.0",
+     "fy": "2024",
+     "fp": "Q3",
+     "fsn_set": "2024q4",
+     "aciks": "52485 107832",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "582000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20240930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "540000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "derived_or_blank",
+    "value_if_same_basis": "160000000",
+    "blank_reasons_otherwise": [
+     "mixed_vintage_inputs",
+     "no_basis_witness"
+    ],
+    "why": "no filing of the company has an undimensioned 3-month value for the slot tag at this period end, so there is no printed candidate and the held-column rule does not apply"
+   }
+  },
+  {
+   "case": "net_income_resolved:1227:2023-07-01..2023-09-30",
+   "company_id": 1227,
+   "canonical_concept": "net_income_resolved",
+   "period_grain": "Q",
+   "period_start": "2023-07-01",
+   "period_end": "2023-09-30",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "259000000",
+    "formula": "9M_YTD - 6M_YTD",
+    "inputs": [
+     "582000000",
+     "323000000"
+    ],
+    "input_accessions": [
+     "0000352541-23-000108",
+     "0000352541-23-000091"
+    ]
+   },
+   "slot_tags": [
+    "NetIncomeLoss"
+   ],
+   "filings": [
+    {
+     "accession": "0000352541-23-000059",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230331",
+     "filed": "20230505",
+     "accepted": "2023-05-05 11:39:00.0",
+     "fy": "2023",
+     "fp": "Q1",
+     "fsn_set": "2023q2",
+     "aciks": "52485 107832",
+     "role": "earlier_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "192000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "163000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-23-000091",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230630",
+     "filed": "20230804",
+     "accepted": "2023-08-04 11:55:00.0",
+     "fy": "2023",
+     "fp": "Q2",
+     "fsn_set": "2023q3",
+     "aciks": "52485 107832",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "323000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "351000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-23-000108",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20230930",
+     "filed": "20231103",
+     "accepted": "2023-11-03 11:54:00.0",
+     "fy": "2023",
+     "fp": "Q3",
+     "fsn_set": "2023q4",
+     "aciks": "52485 107832",
+     "role": "original",
+     "slot_gate_77f5846a": "G1_printed_line",
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20220930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "579000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "582000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-24-000089",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20240630",
+     "filed": "20240802",
+     "accepted": "2024-08-02 11:52:00.0",
+     "fy": "2024",
+     "fp": "Q2",
+     "fsn_set": "2024q3",
+     "aciks": "52485 107832",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "323000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20240630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "245000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0000352541-24-000104",
+     "cik": "0000352541",
+     "name": "ALLIANT ENERGY CORP",
+     "form": "10-Q",
+     "period": "20240930",
+     "filed": "20241101",
+     "accepted": "2024-11-01 11:39:00.0",
+     "fy": "2024",
+     "fp": "Q3",
+     "fsn_set": "2024q4",
+     "aciks": "52485 107832",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20230930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "582000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "NetIncomeLoss",
+       "ddate": "20240930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "540000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "derived_or_blank",
+    "value_if_same_basis": "259000000",
+    "blank_reasons_otherwise": [
+     "mixed_vintage_inputs",
+     "no_basis_witness"
+    ],
+    "why": "no filing of the company has an undimensioned 3-month value for the slot tag at this period end, so there is no printed candidate and the held-column rule does not apply"
+   }
+  },
+  {
+   "case": "revenue_sanity_resolved:3922:2019-04-01..2019-06-30",
+   "company_id": 3922,
+   "canonical_concept": "revenue_sanity_resolved",
+   "period_grain": "Q",
+   "period_start": "2019-04-01",
+   "period_end": "2019-06-30",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "0",
+    "formula": "6M_YTD - 3M_YTD",
+    "inputs": [
+     "0",
+     "0"
+    ],
+    "input_accessions": [
+     "0001564590-19-028999",
+     "0001564590-19-016211"
+    ]
+   },
+   "slot_tags": [
+    "RevenueFromContractWithCustomerExcludingAssessedTax"
+   ],
+   "filings": [
+    {
+     "accession": "0001564590-19-016211",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190331",
+     "filed": "20190507",
+     "accepted": "2019-05-07 07:51:00.0",
+     "fy": "2019",
+     "fp": "Q1",
+     "fsn_set": "2019q2",
+     "aciks": "",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "1510000.0000",
+       "dcml": "-3"
+      }
+     ]
+    },
+    {
+     "accession": "0001564590-19-028999",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190630",
+     "filed": "20190806",
+     "accepted": "2019-08-06 08:04:00.0",
+     "fy": "2019",
+     "fp": "Q2",
+     "fsn_set": "2019q3",
+     "aciks": "",
+     "role": "original",
+     "slot_gate_77f5846a": "G1_printed_total",
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "2378000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "2400000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "3888000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "3900000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      }
+     ]
+    },
+    {
+     "accession": "0001564590-19-040692",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190930",
+     "filed": "20191106",
+     "accepted": "2019-11-06 08:35:00.0",
+     "fy": "2019",
+     "fp": "Q3",
+     "fsn_set": "2019q4",
+     "aciks": "",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "3888000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "3900000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "derived_or_blank",
+    "value_if_same_basis": "0",
+    "blank_reasons_otherwise": [
+     "mixed_vintage_inputs",
+     "no_basis_witness"
+    ],
+    "why": "no filing of the company has an undimensioned 3-month value for the slot tag at this period end, so there is no printed candidate and the held-column rule does not apply"
+   }
+  },
+  {
+   "case": "revenue_sanity_resolved:3922:2019-07-01..2019-09-30",
+   "company_id": 3922,
+   "canonical_concept": "revenue_sanity_resolved",
+   "period_grain": "Q",
+   "period_start": "2019-07-01",
+   "period_end": "2019-09-30",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "0",
+    "formula": "9M_YTD - 6M_YTD",
+    "inputs": [
+     "0",
+     "0"
+    ],
+    "input_accessions": [
+     "0001564590-19-040692",
+     "0001564590-19-028999"
+    ]
+   },
+   "slot_tags": [
+    "RevenueFromContractWithCustomerExcludingAssessedTax"
+   ],
+   "filings": [
+    {
+     "accession": "0001564590-19-016211",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190331",
+     "filed": "20190507",
+     "accepted": "2019-05-07 07:51:00.0",
+     "fy": "2019",
+     "fp": "Q1",
+     "fsn_set": "2019q2",
+     "aciks": "",
+     "role": "earlier_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180331",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "1510000.0000",
+       "dcml": "-3"
+      }
+     ]
+    },
+    {
+     "accession": "0001564590-19-028999",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190630",
+     "filed": "20190806",
+     "accepted": "2019-08-06 08:04:00.0",
+     "fy": "2019",
+     "fp": "Q2",
+     "fsn_set": "2019q3",
+     "aciks": "",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "2378000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "2400000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "3888000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "3900000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      }
+     ]
+    },
+    {
+     "accession": "0001564590-19-040692",
+     "cik": "0001636282",
+     "name": "AEGLEA BIOTHERAPEUTICS, INC.",
+     "form": "10-Q",
+     "period": "20190930",
+     "filed": "20191106",
+     "accepted": "2019-11-06 08:35:00.0",
+     "fy": "2019",
+     "fp": "Q3",
+     "fsn_set": "2019q4",
+     "aciks": "",
+     "role": "original",
+     "slot_gate_77f5846a": "G1_printed_total",
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "3888000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20180930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "3900000.0000",
+       "dcml": "-5"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+       "ddate": "20190930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "0.0000",
+       "dcml": "32767"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "derived_or_blank",
+    "value_if_same_basis": "0",
+    "blank_reasons_otherwise": [
+     "mixed_vintage_inputs",
+     "no_basis_witness"
+    ],
+    "why": "no filing of the company has an undimensioned 3-month value for the slot tag at this period end, so there is no printed candidate and the held-column rule does not apply"
+   }
+  },
+  {
+   "case": "revenue_sanity_resolved:5448:2020-08-02..2020-10-31",
+   "company_id": 5448,
+   "canonical_concept": "revenue_sanity_resolved",
+   "period_grain": "Q",
+   "period_start": "2020-08-02",
+   "period_end": "2020-10-31",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "92665000",
+    "formula": "6M_YTD - 3M_YTD",
+    "inputs": [
+     "180115000",
+     "87450000"
+    ],
+    "input_accessions": [
+     "0001558370-21-016596",
+     "0001558370-21-012327"
+    ]
+   },
+   "slot_tags": [
+    "RevenueFromContractWithCustomerIncludingAssessedTax",
+    "Revenues"
+   ],
+   "filings": [
+    {
+     "accession": "0001558370-20-014262",
+     "cik": "0001368622",
+     "name": "AEROVIRONMENT INC",
+     "form": "10-Q",
+     "period": "20201031",
+     "filed": "20201209",
+     "accepted": "2020-12-08 18:20:00.0",
+     "fy": "2021",
+     "fp": "Q2",
+     "fsn_set": "2020q4",
+     "aciks": "",
+     "role": "original",
+     "slot_gate_77f5846a": "hold_multiple_roots",
+     "prints_this_quarter": [
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      }
+     ],
+     "num_undimensioned": [
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "83271000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "83271000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "83271000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "83271000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "83271000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "170182000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "170182000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "170182000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "170182000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20191031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "170182000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "Revenues",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      }
+     ]
+    },
+    {
+     "accession": "0001558370-21-012327",
+     "cik": "0001368622",
+     "name": "AEROVIRONMENT INC",
+     "form": "10-Q",
+     "period": "20210731",
+     "filed": "20210909",
+     "accepted": "2021-09-08 18:04:00.0",
+     "fy": "2022",
+     "fp": "Q1",
+     "fsn_set": "2021q3",
+     "aciks": "",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20200731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "87450000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20200731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "87450000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20200731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "87450000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20200731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "87450000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20200731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "87450000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20210731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "101009000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20210731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "101009000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20210731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "101009000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20210731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "101009000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20210731",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "101009000.0000",
+       "dcml": "-3"
+      }
+     ]
+    },
+    {
+     "accession": "0001558370-21-016596",
+     "cik": "0001368622",
+     "name": "AEROVIRONMENT INC",
+     "form": "10-Q",
+     "period": "20211031",
+     "filed": "20211208",
+     "accepted": "2021-12-07 21:44:00.0",
+     "fy": "2022",
+     "fp": "Q2",
+     "fsn_set": "2021q4",
+     "aciks": "",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      }
+     ],
+     "num_undimensioned": [
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "92665000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20201031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "180115000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "122008000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "122008000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "122008000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "122008000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "122008000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "223017000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "1",
+       "value": "223017000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "2",
+       "value": "223017000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "3",
+       "value": "223017000.0000",
+       "dcml": "-3"
+      },
+      {
+       "tag": "RevenueFromContractWithCustomerIncludingAssessedTax",
+       "ddate": "20211031",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "4",
+       "value": "223017000.0000",
+       "dcml": "-3"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "value",
+    "value": "92665000.0000",
+    "accession": "0001558370-21-016596",
+    "condition": "the line of that filing maps to the concept (its line_map decides)",
+    "why": "the latest accepted print of the 3-month column wins (a later 10-Q's comparative column)"
+   }
+  },
+  {
+   "case": "operating_income_resolved:5904:2021-07-01..2021-09-30",
+   "company_id": 5904,
+   "canonical_concept": "operating_income_resolved",
+   "period_grain": "Q",
+   "period_start": "2021-07-01",
+   "period_end": "2021-09-30",
+   "lane_77f5846a": {
+    "state": "derived",
+    "value": "0",
+    "formula": "9M_YTD - 6M_YTD",
+    "inputs": [
+     "-69000000",
+     "-69000000"
+    ],
+    "input_accessions": [
+     "0001451505-21-000086",
+     "0001451505-21-000071"
+    ]
+   },
+   "slot_tags": [
+    "OperatingIncomeLoss"
+   ],
+   "filings": [
+    {
+     "accession": "0001451505-21-000071",
+     "cik": "0001451505",
+     "name": "TRANSOCEAN LTD.",
+     "form": "10-Q",
+     "period": "20210630",
+     "filed": "20210803",
+     "accepted": "2021-08-03 16:23:00.0",
+     "fy": "2021",
+     "fp": "Q2",
+     "fsn_set": "2021q3",
+     "aciks": "",
+     "role": "ytd_input",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20200630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-264000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20200630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-463000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20210630",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-2000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20210630",
+       "qtrs": "2",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-69000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0001451505-21-000086",
+     "cik": "0001451505",
+     "name": "TRANSOCEAN LTD.",
+     "form": "10-Q",
+     "period": "20210930",
+     "filed": "20211102",
+     "accepted": "2021-11-02 16:21:00.0",
+     "fy": "2021",
+     "fp": "Q3",
+     "fsn_set": "2021q4",
+     "aciks": "",
+     "role": "original",
+     "slot_gate_77f5846a": "G1_printed_line",
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20200930",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "4000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20200930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-459000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20210930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-69000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    },
+    {
+     "accession": "0001451505-22-000101",
+     "cik": "0001451505",
+     "name": "TRANSOCEAN LTD.",
+     "form": "10-Q",
+     "period": "20220930",
+     "filed": "20221104",
+     "accepted": "2022-11-04 16:48:00.0",
+     "fy": "2022",
+     "fp": "Q3",
+     "fsn_set": "2022q4",
+     "aciks": "",
+     "role": "later_filing",
+     "slot_gate_77f5846a": null,
+     "prints_this_quarter": [],
+     "num_undimensioned": [
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20210930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "-69000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20220930",
+       "qtrs": "1",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "53000000.0000",
+       "dcml": "-6"
+      },
+      {
+       "tag": "OperatingIncomeLoss",
+       "ddate": "20220930",
+       "qtrs": "3",
+       "uom": "USD",
+       "dimn": "0",
+       "coreg": "",
+       "iprx": "0",
+       "value": "31000000.0000",
+       "dcml": "-6"
+      }
+     ]
+    }
+   ],
+   "expected_fsn_select": {
+    "state": "derived_or_blank",
+    "value_if_same_basis": "0",
+    "blank_reasons_otherwise": [
+     "mixed_vintage_inputs",
+     "no_basis_witness"
+    ],
+    "why": "no filing of the company has an undimensioned 3-month value for the slot tag at this period end, so there is no printed candidate and the held-column rule does not apply"
+   }
+  }
+ ]
+}
