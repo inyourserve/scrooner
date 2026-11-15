@@ -31,3 +31,6 @@ All checks were made against the SEC filing itself (sec.gov R pages and XBRL), n
 1. **Locator gap to close (does not block, because the value is verified and the cell has a locator):** in the `parts` column of total_debt FY2016, the two capital-lease parts end in an empty R page (`...@0001564590-17-014900#`). Fill them with `R102`.
 2. **Scope:** this certifies the evidence for the cells listed. It does not authorize any production write: the load still needs the founder's own typed words in the session that applies it (CLAUDE.md).
 3. **Change control:** a change to any of these 552 cells, a proof-version bump that changes a verdict, or a new filing period voids this certificate for the affected cells until they are re-sampled.
+
+
+**Status update 2026-11-16:** superseded for display by the founder decision of 2026-11-16 (doc 02, 438677db): shown cells must hold values, and reasons no longer count. The PROVEN-cell evidence above stands. MSFT is re-certified on the new display export; see CERTIFICATION-METHOD-2026-11-16.md.
