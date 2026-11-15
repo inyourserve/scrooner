@@ -748,18 +748,20 @@ def load_current_proofs(
     A row of an older detector is history, never the verdict (a held cell is not re-proved, so a pre-R13
     restated_copies_disagree row outlived its rule for 48 MSFT cells)."""
     proofs: dict[tuple[int, str, date, date], tuple] = {}
-    for row in conn.execute(
-        """select distinct on (company_id, data_point_name, period_start, period_end)
-                  company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
-                  shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line, checks
-           from analytics.cell_proof
-           where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
-             and detector_version = %s
-             and period_grain in ('FY', 'I') and period_end >= %s
-           order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
-        (ids, names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
-    ).fetchall():
-        proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+    # chunked by company: one scan over the whole top-100 dropped the pooled connection (3 of 3 runs, 2026-11-16)
+    for i in range(0, len(ids), 10):
+        for row in conn.execute(
+            """select distinct on (company_id, data_point_name, period_start, period_end)
+                      company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
+                      shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line, checks
+               from analytics.cell_proof
+               where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
+                 and detector_version = %s
+                 and period_grain in ('FY', 'I') and period_end >= %s
+               order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
+            (ids[i : i + 10], names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
+        ).fetchall():
+            proofs[(row[0], row[1], row[2], row[3])] = row[4:]
     return proofs
 
 
