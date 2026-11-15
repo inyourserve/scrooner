@@ -18,9 +18,35 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+  # Which suites does this change need? (2026-11-16) Most pushes to main are data-team/pipeline commits that never
+  # touch the Next.js app, yet every one ran the full npm ci + lint + test + build. The Python code READS data-team/
+  # and doc/ files (resolver CSVs, rulings, fix rows), so Python runs for everything except changes confined to the
+  # app, design system or mind. Anything we cannot classify (new branch, force push, workflow edits) runs everything.
+  # A job skipped by `if:` reports as skipped, which branch protection treats as passing.
+  changes:
+    name: Detect changed areas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      python: ${{ steps.c.outputs.python }}
+      app: ${{ steps.c.outputs.app }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: c
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: python3 scripts/ci/changed_areas.py >> "$GITHUB_OUTPUT"
+
   python:
     name: Python tests and correctness lint
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # A real Postgres for the DB-backed tests (added 2026-11-03). Before this, every
     # test that needs SCROONER_TEST_DATABASE_URL was skipped in CI (107 of them), so
     # no SQL path had ever run here. Never mark a failing DB test as skipped to get green.
@@ -79,7 +105,10 @@ jobs:
 
   app:
     name: Next.js frontend tests and production build
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
