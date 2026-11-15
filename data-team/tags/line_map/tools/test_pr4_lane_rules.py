@@ -265,3 +265,18 @@ def test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from():
     cor = dict(data_point='cost_of_revenue', status='mapped', accession='A16', period_end='2016-12-31', column='own', flags='', why='')
     resolve_all.apply_absent_in_own_filing([gp, cor], [own], {}, {})
     assert 'absent_in_own_filing' not in gp['flags']
+
+
+def test_eps_printed_only_per_class_is_combined_not_missing():
+    # DELL FY2018 R4:29 'Earnings (loss) per share attributable to Dell Technologies Inc.' (DHI Group / Class V members only)
+    f = dict(filing([('IS', 'NetIncomeLoss', 'Net loss', -1), ('IS', 'EarningsPerShareBasicAbstract', 'Earnings (loss) per share attributable to Dell Technologies Inc. - basic', None)]), a='A18')
+    rows = [dict(data_point='basic_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None),
+            dict(data_point='diluted_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None)]
+    resolve_all.apply_eps_per_class(rows, [f])
+    assert rows[0]['status'] == 'combined' and 'eps_per_class' in rows[0]['flags'] and 'per class of stock' in rows[0]['why']
+    assert rows[1]['status'] == 'not_presented'   # no diluted line printed at all
+    # a valued per-share line is never touched
+    f2 = dict(filing([('IS', 'EarningsPerShareBasic', 'Basic EPS', '6.38')]), a='A20')
+    r = dict(data_point='basic_eps', status='not_presented', accession='A20', column='own', flags='', why='', value=None)
+    resolve_all.apply_eps_per_class([r], [f2])
+    assert r['status'] == 'not_presented'

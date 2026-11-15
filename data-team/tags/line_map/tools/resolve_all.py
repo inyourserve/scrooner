@@ -526,6 +526,27 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     return rows
 
 
+EPS_TAGS = {'basic_eps': ('EarningsPerShareBasic', 'IncomeLossFromContinuingOperationsPerBasicShare', 'EarningsPerShareBasicAndDiluted'),
+            'diluted_eps': ('EarningsPerShareDiluted', 'IncomeLossFromContinuingOperationsPerDilutedShare', 'EarningsPerShareBasicAndDiluted')}
+
+
+def apply_eps_per_class(rows, filings):
+    """A per-share line the income statement prints with no consolidated value (its facts carry ClassOfStock members only: DELL FY2017-19
+    DHI Group / Class V, GOOG FY2015 Class A and B / Class C) is no single EPS: combined, flag eps_per_class, so the year hides as
+    'reported only per class' instead of reading as a missing line. Own 10-K cells still not_presented only."""
+    F_ = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] not in EPS_TAGS or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
+        L = [x.split('|') for x in (F_[r['accession']].get('lines') or '').split('~')]
+        hit = next((p for p in L if len(p) > 8 and p[0] == 'IS' and (p[3] in EPS_TAGS[r['data_point']] or p[3] == ('EarningsPerShareBasicAbstract' if r['data_point'] == 'basic_eps' else 'EarningsPerShareDilutedAbstract'))
+                    and p[8] in ('', None)), None)
+        if not hit: continue
+        r.update(status='combined', tags=hit[3], value=None, r_page=f"R{hit[1]}.htm", nodes=f"{hit[3]} [R{hit[1]}.htm:{hit[2]}]",
+                 why=f"the income statement prints '{hit[7]}' per class of stock only (no consolidated per-share fact): no single {r['data_point']}")
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'eps_per_class') if x)
+    return rows
+
+
 def dp_elements(dp):
     """Every element the resolver reads for a data point: the role alternatives and combined lines (rules/roles.csv), plus the CF family
     lists (resolve_cf). Empty when the data point has no element list: absence is then never claimed."""
@@ -1199,6 +1220,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
+    rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     for r in rows:
