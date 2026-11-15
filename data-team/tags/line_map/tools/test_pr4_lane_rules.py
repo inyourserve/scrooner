@@ -101,3 +101,55 @@ def test_mandatorily_redeemable_is_a_liability_wherever_printed():
 def test_redeemable_line_among_the_liabilities_stays_a_liability():
     among = KMB[:5] + [KMB[6], KMB[5]] + KMB[7:]
     assert _tl(among)['value'] == 15908
+
+
+# ---- working-capital line combined by its label under another element (queue 2026-11-16, ADI FY2015-16)
+def _wc(*lines):
+    head = [('CF', 'NetIncomeLoss', 'Net income', 700), ('CF', 'IncreaseDecreaseInAccountsReceivable', 'Accounts receivable', 71)]
+    return resolve_cf(filing(head + list(lines) + [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 907),
+                                                   ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing', -50)]), {})
+
+
+def test_ap_line_naming_more_items_under_a_custom_element_is_combined():
+    # ADI FY2015 R7:19 DecreaseIncreaseInAccountsPayableDeferredIncomeAndAccruedLiabilities 'Accounts payable, deferred income and accrued liabilities' 56,614
+    r = _wc(('CF', 'DecreaseIncreaseInAccountsPayableDeferredIncomeAndAccruedLiabilities', 'Accounts payable, deferred income and accrued liabilities', 56614))['cf_ap_change']
+    assert r['status'] == 'combined' and 'DecreaseIncreaseInAccountsPayableDeferredIncomeAndAccruedLiabilities' in r['nodes']
+
+
+def test_inventory_write_down_line_is_never_the_combined_inventory_line():
+    # TSLA 'Inventory and purchase commitments write-downs' is a non-cash adjustment, not the inventory change
+    r = _wc(('CF', 'InventoryWriteDown', 'Inventory and purchase commitments write-downs', 100))['cf_inventory_change']
+    assert r['status'] == 'not_presented'
+
+
+def test_brokerage_receivables_line_is_not_trade_receivables():
+    # SCHW 'Receivables from brokerage clients' (IncreaseDecreaseInBrokerageReceivables)
+    head = [('CF', 'NetIncomeLoss', 'Net income', 700)]
+    r = resolve_cf(filing(head + [('CF', 'IncreaseDecreaseInBrokerageReceivables', 'Receivables from brokerage clients, brokers, dealers and clearing organizations', -44),
+                                  ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 907)]), {})['cf_ar_change']
+    assert r['status'] == 'not_presented'
+
+
+def test_combined_working_capital_cell_takes_the_later_pure_element():
+    # TSLA FY2015 'Inventories and operating lease vehicles' (own, combined); the FY2016 10-K prints IncreaseDecreaseInInventories for FY2015
+    import standard_inputs
+    rows = [dict(cik='1', data_point='cf_inventory_change', period_end='2015-12-31', accession='A15', status='combined', tags='X', nodes='X=1 [R7.htm:12]', value=None),
+            dict(cik='1', data_point='cf_inventory_change', period_end='2016-12-31', accession='A16', status='mapped', tags='IncreaseDecreaseInInventories',
+                 nodes='IncreaseDecreaseInInventories=632867000 [R7.htm:12]', value='632867000')]
+    comp = {'A16': 'IncreaseDecreaseInInventories|4|369364000|2015-12-31'}
+    out = standard_inputs.comparative_fill(rows, comp, set())
+    assert out[('A15', 'cf_inventory_change')]['value'] in ('369364000', 369364000) or str(out[('A15', 'cf_inventory_change')]['value']).startswith('369364000')
+    # a combined cell of another data point never takes a later figure (AVGO dividends incl. preferred)
+    for r in rows: r['data_point'] = 'dividends_paid'
+    rows[1]['tags'] = 'PaymentsOfDividends'; rows[1]['nodes'] = 'PaymentsOfDividends=1 [R7.htm:30]'
+    comp = {'A16': 'PaymentsOfDividends|4|369364000|2015-12-31'}
+    assert ('A15', 'dividends_paid') not in standard_inputs.comparative_fill(rows, comp, set())
+
+
+def test_combined_working_capital_cell_never_takes_a_later_combined_element():
+    import standard_inputs
+    rows = [dict(cik='1', data_point='cf_ap_change', period_end='2015-12-31', accession='A15', status='combined', tags='X', nodes='X=1 [R7.htm:12]', value=None),
+            dict(cik='1', data_point='cf_ap_change', period_end='2016-12-31', accession='A16', status='mapped', tags='IncreaseDecreaseInAccountsPayableAndAccruedLiabilities',
+                 nodes='IncreaseDecreaseInAccountsPayableAndAccruedLiabilities=5 [R7.htm:12]', value='5')]
+    comp = {'A16': 'IncreaseDecreaseInAccountsPayableAndAccruedLiabilities|4|4|2015-12-31'}
+    assert ('A15', 'cf_ap_change') not in standard_inputs.comparative_fill(rows, comp, set())

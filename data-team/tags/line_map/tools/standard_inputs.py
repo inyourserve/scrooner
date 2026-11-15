@@ -176,6 +176,11 @@ def _one_element(r):
     return m.group(1) if m else None
 
 
+WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDecreaseInReceivables', 'IncreaseDecreaseInAccountsAndOtherReceivables', 'IncreaseDecreaseInAccountsAndNotesReceivable'),
+           'cf_inventory_change': ('IncreaseDecreaseInInventories', 'IncreaseDecreaseInRetailRelatedInventories'),
+           'cf_ap_change': ('IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade')}
+
+
 def comparative_fill(rows, compfacts, instant_dps):
     """rows: resolver rows (run + family replacement). For every own row 'not_presented', the later 10-Ks of the same company (next = FY-1, then FY-2) are
     looked at in order (instants: FY-1 only; the later filing must resolve the data point on its face, R page or BS parenthetical, except
@@ -189,13 +194,15 @@ def comparative_fill(rows, compfacts, instant_dps):
     for lst in by.values():
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
-            if r['status'] != 'not_presented': continue
+            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in WC_PURE):
+                continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
                 b = next((x for x in lst if abs((date.fromisoformat(str(x['period_end'])) - date.fromisoformat(str(r['period_end']))).days - 365 * k) <= 45), None)   # a missing year is not FY-1
                 if b is None: continue
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
+                if r['status'] == 'combined' and tag not in WC_PURE[r['data_point']]: continue
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
                 if len(vals) == 1:

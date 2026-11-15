@@ -55,6 +55,10 @@ WC = {
                          comb=['IncreaseDecreaseInAccountsPayableAndAccruedLiabilities', 'IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities'], label=r'(?i)^(trade )?accounts payable[ ,]*(trade)?$'),
 }
 
+WC_HEAD = {'cf_ar_change': r'(?i)^(\(increase\)|increase|decrease|change in)?\s*(trade )?(accounts |notes )?receivables?\b',
+           'cf_inventory_change': r'(?i)^(\(increase\)|increase|decrease|change in)?\s*inventor(y|ies)\b',
+           'cf_ap_change': r'(?i)^(increase|decrease|change in)?\s*(trade )?accounts payable\b'}
+
 def fmt(ls):
     return '; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ls)
 
@@ -266,6 +270,8 @@ def resolve_cf(f, notes):
         if n: put(dp, 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]', 'undimensioned consolidated note fact at the filing own column (par. AG); the face prints only aggregates')
         else:
             cm = [l for l in op if l['tag'] in spec['comb']]
+            if not cm:   # a line under another element whose label starts with the item and names more (ADI FY2015-16 'Accounts payable, deferred income and accrued liabilities')
+                cm = [l for l in op if l['tag'] not in spec['fam'] and (m := re.match(WC_HEAD[dp], l['lb'] or '')) and re.search(r'(?i)\band\b|,(?!\s*net\b)', l['lb'][m.end():]) and not re.search(r'(?i)broker|clients|clearing|write-?downs?|reserves?|obsolesc|provision|impairment|allowance|credit loss|bad debt|doubtful', l['lb'])][:1]
             if cm: put(dp, 'combined', cm[0]['tag'], cm[0]['val'], fmt(cm[:1]), f"CF face prints only the combined line {cm[0]['tag']} '{cm[0]['lb']}'")
             else: put(dp, 'not_presented', '', None, '', f'no {dp} line in the operating section nor an undimensioned note fact')
     return out

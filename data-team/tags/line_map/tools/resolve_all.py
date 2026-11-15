@@ -44,8 +44,10 @@ def fill_printed_zero_and_comparative(rows, td):
     for (a, col), t in td.items():
         if col == 'comparative': by[t['ticker']].append(t)
     for r in rows:
-        if r['status'] != 'not_presented': continue
         k = (r['accession'], r['data_point'])
+        # a combined own working-capital line yields to the pure element a later 10-K prints for the year (TSLA FY2015-16 'Inventories and operating lease vehicles'; standard_inputs.WC_PURE)
+        if r['status'] == 'combined' and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
+        if r['status'] != 'not_presented': continue
         if k in pz:
             z = pz[k]
             r.update(status='mapped', value=D(0), tags=z['tag'], nodes=f"{z['tag']}=0 [{z['r_line']}]",
