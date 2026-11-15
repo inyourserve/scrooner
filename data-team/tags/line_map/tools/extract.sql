@@ -1,5 +1,8 @@
+-- input contract (Dhairya 2026-11-16): filings are selected by fsn.filing.company_id, so predecessor-CIK annual reports
+-- (AVGO 1441634/1649338, MRVL 1058057, LIN 884905, DIS 1001039, GOOG 1288776, BLK) join their company; cik is the listed CIK; the listed (successor) CIK wins a shared period. Switch to Engineering's company_filings(company_id) when it lands.
 set statement_timeout='115s';
-with fl as (select id, cik, accession, period, fy, filed from fsn.filing where cik::bigint in (__CIKS__) and form in ('10-K','20-F','40-F') and period>='2014-06-01'),
+with fl as (select id, (select min(h.cik) from fsn.filing h where h.company_id=fsn.filing.company_id and h.cik::bigint in (__CIKS__)) cik, accession, period, fy, filed from fsn.filing where company_id in (select g.company_id from fsn.filing g where g.cik::bigint in (__CIKS__)) and form in ('10-K','20-F','40-F')
+  and (cik::bigint in (__CIKS__) or not exists (select 1 from fsn.filing s where s.company_id=fsn.filing.company_id and s.period=fsn.filing.period and s.form in ('10-K','20-F','40-F') and s.cik::bigint in (__CIKS__))) and period>='2014-06-01'),
 ln as (select l.filing_id, l.stmt, l.report, l.line, l.inpth, t.tag, t.custom, l.negating, l.prole, replace(replace(left(coalesce(l.plabel,''),60),'|',' '),'~',' ') lb, l.tag_id
  from fsn.line l join fl on fl.id=l.filing_id join fsn.tag t on t.id=l.tag_id where l.stmt in ('BS','IS','CF') and not l.inpth),
 lv as (select ln.*, (select v.value from fsn.value v join fl f2 on f2.id=ln.filing_id where v.filing_id=ln.filing_id and v.tag_id=ln.tag_id and v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=f2.period and v.qtrs=(case when ln.stmt='BS' then 0 else 4 end) limit 1) val from ln),
