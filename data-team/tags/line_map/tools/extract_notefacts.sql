@@ -19,7 +19,7 @@
 -- Families: the element regex of rules/roles.csv plus the balance-sheet / cash-flow family modules; mvals also takes the AP/AR names.
 set statement_timeout='55s';
 with rx as (select '^(/* element families from rules/roles.csv */)$'::text r),
-fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form='10-K' and period>='2014-06-01'),
+fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form in ('10-K','20-F','40-F') and period>='2014-06-01'),
 tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
 tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' or tag ~ '^(InterestExpense\w*|InterestAndDebtExpense|FinancingInterestExpense)$' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals
