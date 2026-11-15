@@ -382,6 +382,7 @@ def replay_fill(rows, compfacts, instant_dps):
             parts = [RPART.match(p) for p in _split_parts(b.get('nodes') or '')]
             if not parts or not all(parts): continue
             if dp not in standard_inputs.NOTE_FILL_OK and dp not in NOTE_NATURED and not any(m.group(4).startswith('R') for m in parts): continue
+            if dp == 'interest_income' and any(m.group(2) in standard_inputs.WIDER_THAN_INTEREST for m in parts): continue   # wider than interest (label_beyond)
             cv = []
             for m in parts:
                 vals = {D(v) for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4) if t == m.group(2) and int(qq) == q and dd == str(r['period_end'])}
@@ -526,6 +527,27 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     return rows
 
 
+EPS_TAGS = {'basic_eps': ('EarningsPerShareBasic', 'IncomeLossFromContinuingOperationsPerBasicShare', 'EarningsPerShareBasicAndDiluted'),
+            'diluted_eps': ('EarningsPerShareDiluted', 'IncomeLossFromContinuingOperationsPerDilutedShare', 'EarningsPerShareBasicAndDiluted')}
+
+
+def apply_eps_per_class(rows, filings):
+    """A per-share line the income statement prints with no consolidated value (its facts carry ClassOfStock members only: DELL FY2017-19
+    DHI Group / Class V, GOOG FY2015 Class A and B / Class C) is no single EPS: combined, flag eps_per_class, so the year hides as
+    'reported only per class' instead of reading as a missing line. Own 10-K cells still not_presented only."""
+    F_ = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] not in EPS_TAGS or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
+        L = [x.split('|') for x in (F_[r['accession']].get('lines') or '').split('~')]
+        hit = next((p for p in L if len(p) > 8 and p[0] == 'IS' and (p[3] in EPS_TAGS[r['data_point']] or p[3] == ('EarningsPerShareBasicAbstract' if r['data_point'] == 'basic_eps' else 'EarningsPerShareDilutedAbstract'))
+                    and p[8] in ('', None)), None)
+        if not hit: continue
+        r.update(status='combined', tags=hit[3], value=None, r_page=f"R{hit[1]}.htm", nodes=f"{hit[3]} [R{hit[1]}.htm:{hit[2]}]",
+                 why=f"the income statement prints '{hit[7]}' per class of stock only (no consolidated per-share fact): no single {r['data_point']}")
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'eps_per_class') if x)
+    return rows
+
+
 def dp_elements(dp):
     """Every element the resolver reads for a data point: the role alternatives and combined lines (rules/roles.csv), plus the CF family
     lists (resolve_cf). Empty when the data point has no element list: absence is then never claimed."""
@@ -544,8 +566,11 @@ def dp_elements(dp):
     return out
 
 
-ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$')}   # data points read by pattern (total_debt.py) or by the core statement tree
+ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$'), 'current_assets': re.compile(r'^AssetsCurrent$'), 'current_liabilities': re.compile(r'^LiabilitiesCurrent$')}   # data points read by pattern (total_debt.py) or by the core statement tree
 ABSENT_STMT = {'total_debt': 'BS'}
+# a line the family itself excludes never blocks absence (BA 'Treasury shares issued for 401(k) contribution', AMD 'Issuance of treasury stock
+# to partially settle debt', PM 'Sale (purchase) of subsidiary shares to/(from) noncontrolling interests')
+ABSENT_NOT = {'share_buybacks': re.compile(resolve_cf.BUY_NOT.pattern + r'|issued|contribution|non-?cash'), 'dividends_paid': resolve_cf.DIV_NOT}
 ABSENT_LABEL = {'total_debt': total_debt.LABEL_DEBT, 'share_buybacks': resolve_cf.BUY_LABEL, 'dividends_paid': resolve_cf.DIV_LABEL, 'sbc': resolve_cf.SBC_LABEL, 'capex': resolve_cf.CAPEX_LABEL}
 
 
@@ -571,7 +596,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         L = [x.split('|') for x in (f.get('lines') or '').split('~')]
         if any(len(p) > 3 and inE(p[3]) for p in L): continue
         lab = ABSENT_LABEL.get(r['data_point'])
-        if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
+        if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not (ABSENT_NOT.get(r['data_point']) and ABSENT_NOT[r['data_point']].search(p[7])) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
         if any(inE(t) for t, _q in nf): continue
         pe = str(r['period_end'])
@@ -927,7 +952,7 @@ def family_rows(f, notes, raw):
     for dp, r in resolve_bs.resolve_family(f, resolve_bs.notes_for(bsraw)).items():
         out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=';'.join(x for x in (r.get('rule', ''), r.get('flags', '')) if x))
     for dp, r in resolve_cf.resolve_cf(f, notes).items():
-        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='', alt=r.get('alt'))
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags=r.get('flags', ''), alt=r.get('alt'))
     return out
 def descendants(arcs, root, onface):
     out, stack = set(), [root]
@@ -1130,7 +1155,10 @@ if __name__ == '__main__':
     rows = apply_ar_related(rows, filings)
     rows += standard_inputs.before_first_10k_rows(rows, filings, compfacts)   # years printed only in the first 10-K's comparative columns
     EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
-    EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
+    _roles = {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}
+    _pz = standard_inputs.printed_zero_inferred(rows, filings, compfacts, memberfacts, _roles)
+    _pz.update(standard_inputs.printed_zero(rows, zlines, _roles))   # the extract's zlines win where present
+    EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in _pz.items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_alt(rows)
     rows = apply_bundled_ap(rows, filings)
@@ -1199,6 +1227,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
+    rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     for r in rows:

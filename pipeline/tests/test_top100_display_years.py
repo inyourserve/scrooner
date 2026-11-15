@@ -59,3 +59,15 @@ def test_20f_and_40f_are_periodic_filings_for_first_filing_and_presents():
     assert yp["presented"] and not yp["before_first"] and yp["comparative_only"]
     pre = t100.year_presence(one, date(2017, 3, 1), date(2013, 12, 31), False)
     assert pre["before_first"] and not pre["presented"]
+
+
+def test_proof_pre_filing_period_is_a_hidden_year_unless_a_periodic_report_presents_it():
+    # CRWD cash 2018-01-31: the proof says no balance sheet of the shown filing presents the date
+    cell = _cell("cash_and_equivalents", 2018, "REASON", "pre_filing_period", _presented=False)
+    shown = _cell("cash_and_equivalents", 2020, "PROVEN")
+    t100.apply_display([cell, shown])
+    assert cell["display"] == "HIDDEN_YEAR"
+    # a periodic report that does present the year keeps it open work (never a silent hide)
+    seen = _cell("cash_and_equivalents", 2018, "REASON", "pre_filing_period", _presented=True)
+    t100.apply_display([seen, _cell("cash_and_equivalents", 2020, "PROVEN")])
+    assert seen["display"] == "OPEN"

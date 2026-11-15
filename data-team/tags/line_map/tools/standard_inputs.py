@@ -165,7 +165,7 @@ def related_splits(memberfacts, tag_re):
 
 
 NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares',   # per-share / share counts sit in notes
-                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
+                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest', 'interest_income'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
 FACE_NODE = re.compile(r'\[(R\d|BS parenthetical|BSP)')
 
 
@@ -180,6 +180,9 @@ def _one_element(r):
 WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDecreaseInReceivables', 'IncreaseDecreaseInAccountsAndOtherReceivables', 'IncreaseDecreaseInAccountsAndNotesReceivable'),
            'cf_inventory_change': ('IncreaseDecreaseInInventories', 'IncreaseDecreaseInRetailRelatedInventories'),
            'cf_ap_change': ('IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade')}
+
+
+WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -204,6 +207,7 @@ def comparative_fill(rows, compfacts, instant_dps):
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
                 if r['status'] == 'combined' and tag not in WC_PURE[r['data_point']]: continue
+                if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
                 if len(vals) == 1:
@@ -233,6 +237,32 @@ def printed_zero(rows, zlines, roles):
             out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{x[2]}:{x[3]}", label=x[4])
     return out
 
+
+PZ_INFER = {'dividends_paid', 'share_buybacks'}   # cash-flow payment lines only: other elements carry member-only facts the extract does not hold (GOOG EPS by class, PSX PP&E)
+
+
+def printed_zero_inferred(rows, filings, compfacts, memberfacts, roles):
+    """The zlines test read from the standard extract itself (zlines is sparse: 99 filings): a not_presented own row whose role element is a
+    line of its own statement on the own face with NO value, no own-period member fact of the element, and an undimensioned fact of the
+    element in an earlier column of the SAME filing (compfacts): the face prints a dash for the period (BA FY2022 'Dividends paid':
+    2022 -, 2021 -, 2020 1,158). Same return shape as printed_zero."""
+    F = {f['a']: f for f in filings}
+    out = {}
+    for r in rows:
+        if r['data_point'] not in PZ_INFER or r['status'] != 'not_presented' or r['data_point'] not in roles or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        stmt, alts = roles[r['data_point']]
+        f = F[r['accession']]
+        L = {}
+        for x in (f.get('lines') or '').split('~'):
+            p = x.split('|')
+            if len(p) > 8 and p[0] == stmt and p[8] == '': L.setdefault(p[3], p)
+        own_mem = {x.split('|')[0] for x in (memberfacts.get(r['accession']) or '').split('~') if x}
+        earlier = {x.split('|')[0] for x in (compfacts.get(r['accession']) or '').split('~') if x.count('|') == 3 and x.split('|')[3] < str(f['p'])}
+        t = next((t for t in alts if t in L and t not in own_mem and t in earlier), None)
+        if t:
+            p = L[t]
+            out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{p[1]}:{p[2]}", label=p[7])
+    return out
 
 LOCATION_AXES = ('IncomeStatementLocation', 'StatementOfIncomeLocationBalance', 'FiniteLivedIntangibleAssetsByMajorClass')   # CSCO 2014-16, 2022 put the location members on the class axis
 LOCATION_NAME = re.compile(r'(?i)cost|expense|sales|revenue|charges|operating')   # on the class axis every member must name a location (WFC: asset classes)

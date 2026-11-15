@@ -12,6 +12,8 @@ from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 
 logger = structlog.get_logger()
 
+SEC_RATE_CEILING = 4.0  # root CLAUDE.md: at most 4 SEC requests per second
+
 DEFAULT_RATE_LIMITER_LOCK_PATH = (
     Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock"
 )
@@ -41,7 +43,9 @@ class SECClient:
     """
 
     def __init__(self) -> None:
-        self._rate_limiter = _RateLimiter(settings.sec_max_requests_per_second)
+        self._rate_limiter = _RateLimiter(
+            min(settings.sec_max_requests_per_second, SEC_RATE_CEILING)
+        )
         self._client = httpx.Client(
             headers={
                 "User-Agent": settings.sec_user_agent,

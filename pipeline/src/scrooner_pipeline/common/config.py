@@ -52,9 +52,9 @@ class Settings(BaseSettings):
     alpaca_api_key: str | None = None
     alpaca_api_secret: str | None = None
 
-    # Doc 07 §3: SEC's own ceiling is 10 req/s; doc 02 locks a deliberate
-    # buffer under it. Don't raise this just because 10 is technically allowed.
-    sec_max_requests_per_second: float = 8.0
+    # Root CLAUDE.md hard rule: SEC access is at most 4 requests per second in total (SEC's own ceiling is
+    # 10/s). SECClient clamps any configured value to SEC_RATE_CEILING, so an env override cannot exceed it.
+    sec_max_requests_per_second: float = 4.0
 
     # Day 4: local cache dir for bulk zips (companyfacts.zip/submissions.zip),
     # keyed by date since SEC recompiles them nightly (doc 07 §5). Without

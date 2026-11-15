@@ -144,7 +144,11 @@ NOT_PRESENTED_CODES = {
 # duplicated: a year that a periodic report presents is never hidden)
 # the proof's own verdict for a year before the filing history (NOT_PRESENTED pre_filing_period, detector v21)
 PRE_FILING_CODE = "pre_filing_period"
-NO_PERIOD_CODES = {"no_public_filing_for_period", "no_10k_presents_period"}
+NO_PERIOD_CODES = {
+    "no_public_filing_for_period",
+    "no_10k_presents_period",
+    PRE_FILING_CODE,  # no balance sheet of the shown filing presents the date (CRWD cash 2018-01-31)
+}
 WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
 
 

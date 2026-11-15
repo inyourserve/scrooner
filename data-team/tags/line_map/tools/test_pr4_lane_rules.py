@@ -5,7 +5,8 @@ from resolve_cf import resolve_cf
 
 
 def filing(lines):
-    s = '~'.join(f"{x[0]}|2|{i + 1}|{x[1]}|0|0|terseLabel|{x[2]}|{x[3]}" for i, x in enumerate(lines))
+    # a 5th element True marks an extension (custom) element
+    s = '~'.join(f"{x[0]}|2|{i + 1}|{x[1]}|{int(len(x) > 4 and x[4])}|0|terseLabel|{x[2]}|{x[3]}" for i, x in enumerate(lines))
     return dict(cik='1', a='0000000001-26-000001', p='2025-12-31', fd='2026-02-01', lines=s, calc='')
 
 
@@ -265,3 +266,84 @@ def test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from():
     cor = dict(data_point='cost_of_revenue', status='mapped', accession='A16', period_end='2016-12-31', column='own', flags='', why='')
     resolve_all.apply_absent_in_own_filing([gp, cor], [own], {}, {})
     assert 'absent_in_own_filing' not in gp['flags']
+
+
+def test_eps_printed_only_per_class_is_combined_not_missing():
+    # DELL FY2018 R4:29 'Earnings (loss) per share attributable to Dell Technologies Inc.' (DHI Group / Class V members only)
+    f = dict(filing([('IS', 'NetIncomeLoss', 'Net loss', -1), ('IS', 'EarningsPerShareBasicAbstract', 'Earnings (loss) per share attributable to Dell Technologies Inc. - basic', '')]), a='A18')
+    rows = [dict(data_point='basic_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None),
+            dict(data_point='diluted_eps', status='not_presented', accession='A18', column='own', flags='roles', why='', value=None)]
+    resolve_all.apply_eps_per_class(rows, [f])
+    assert rows[0]['status'] == 'combined' and 'eps_per_class' in rows[0]['flags'] and 'per class of stock' in rows[0]['why']
+    assert rows[1]['status'] == 'not_presented'   # no diluted line printed at all
+    # a valued per-share line is never touched
+    f2 = dict(filing([('IS', 'EarningsPerShareBasic', 'Basic EPS', '6.38')]), a='A20')
+    r = dict(data_point='basic_eps', status='not_presented', accession='A20', column='own', flags='', why='', value=None)
+    resolve_all.apply_eps_per_class([r], [f2])
+    assert r['status'] == 'not_presented'
+
+
+def test_custom_ppe_and_intangibles_purchase_line_is_capex():
+    # NVDA FY2021 R8:21 nvda_PurchasesOfPropertyAndEquipmentAndIntangibleAssets 'Purchases related to property and equipment and intangible a' (cut at 60)
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5822),
+                ('CF', 'PurchasesOfPropertyAndEquipmentAndIntangibleAssets', 'Purchases related to property and equipment and intangible a', 1128, True),
+                ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -19675)])
+    c = resolve_cf(f, {})['capex']
+    assert c['status'] == 'mapped' and c['value'] == 1128
+    # an intangibles-only purchase line stays out
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5822),
+                ('CF', 'xyz_PurchasesOfIntangibles', 'Purchases of intangible assets', 50, True),
+                ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -19675)])
+    assert resolve_cf(f, {})['capex']['status'] == 'not_presented'
+
+
+def test_cf_family_flags_reach_the_output_row():
+    f = filing([('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 100),
+                ('CF', 'PaymentsForRepurchaseOfCommonStock', 'Share repurchases, including shares surrendered for tax withholding', 1639),
+                ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -40)])
+    assert resolve_all.family_rows(f, {}, '')['share_buybacks']['flags'] == 'buyback_label_combined'
+
+
+def test_unclassified_balance_sheet_proves_current_subtotals_absent():
+    # GE FY2015-18: no AssetsCurrent / LiabilitiesCurrent anywhere in the filing
+    assert _absent([('BS', 'Assets', 'Total assets', 100)], dp='current_assets')
+    assert _absent([('BS', 'Liabilities', 'Total liabilities', 60)], dp='current_liabilities')
+    assert not _absent([('BS', 'AssetsCurrent', 'Total current assets', 40)], dp='current_assets')
+
+
+def test_dash_on_a_payment_line_is_inferred_from_the_filings_other_columns():
+    # BA FY2022 R8:40 'Dividends paid': 2022 -, 2021 -, 2020 (1,158); the zlines extract has no row for this filing
+    import standard_inputs
+    f = dict(filing([('CF', 'PaymentsOfDividendsCommonStock', 'Dividends paid', '')]), a='A22', p='2022-12-31')
+    row = dict(data_point='dividends_paid', status='not_presented', accession='A22', column='own')
+    roles = {'dividends_paid': ('CF', ['PaymentsOfDividendsCommonStock'])}
+    pz = standard_inputs.printed_zero_inferred([row], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {}, roles)
+    assert pz[('A22', 'dividends_paid')]['r_line'] == 'R2:1'
+    # an own-period member fact means the year has a value: no dash
+    assert not standard_inputs.printed_zero_inferred([row], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {'A22': 'PaymentsOfDividendsCommonStock|4|9|ClassOfStock=A;'}, roles)
+    # no earlier-column fact: nothing to infer from
+    assert not standard_inputs.printed_zero_inferred([row], [f], {}, {}, roles)
+    # never outside the payment lines (GOOG EPS by class, PSX PP&E)
+    eps = dict(row, data_point='basic_eps')
+    assert not standard_inputs.printed_zero_inferred([eps], [f], {'A22': 'PaymentsOfDividendsCommonStock|4|1158|2020-12-31'}, {}, {'basic_eps': ('CF', ['PaymentsOfDividendsCommonStock'])})
+
+
+def test_lines_the_family_excludes_never_block_proven_absence():
+    # BA FY2023 'Treasury shares issued for 401(k) contribution'; PM FY2018 subsidiary shares from NCI; TSLA NCI distributions
+    assert _absent([('CF', 'Employee401kTreasuryStockContributionNoncashExpense', 'Treasury shares issued for 401(k) contribution', 1515)], dp='share_buybacks')
+    assert _absent([('CF', 'PaymentsToMinorityShareholders', 'Purchase of subsidiary shares from noncontrolling interests', 5)], dp='share_buybacks')
+    assert _absent([('CF', 'xyz_DistributionsNci', 'Distributions paid to noncontrolling interests', 5)], dp='dividends_paid')
+    assert not _absent([('CF', 'xyz_Buyback', 'Purchases of treasury stock', 5)], dp='share_buybacks')
+
+
+def test_interest_income_fills_from_a_later_note_but_never_from_interest_and_dividends():
+    # GE FY2017: the FY2019 10-K's note holds InvestmentIncomeInterest 105 for 2017; DELL/BLK's InvestmentIncomeInterestAndDividend is wider
+    import standard_inputs
+    def rows(tag):
+        return [dict(cik='1', data_point='interest_income', period_end='2017-12-31', accession='A17', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point='interest_income', period_end='2018-12-31', accession='A18', status='not_presented', tags='', nodes='', value=None),
+                dict(cik='1', data_point='interest_income', period_end='2019-12-31', accession='A19', status='mapped', tags=tag, nodes=f'{tag}=143 [NOTE]', value='143')]
+    out = standard_inputs.comparative_fill(rows('InvestmentIncomeInterest'), {'A19': 'InvestmentIncomeInterest|4|105|2017-12-31'}, set())
+    assert str(out[('A17', 'interest_income')]['value']).startswith('105')
+    out = standard_inputs.comparative_fill(rows('InvestmentIncomeInterestAndDividend'), {'A19': 'InvestmentIncomeInterestAndDividend|4|105|2017-12-31'}, set())
+    assert ('A17', 'interest_income') not in out

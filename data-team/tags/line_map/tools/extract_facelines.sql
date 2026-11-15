@@ -7,7 +7,8 @@
 -- ComprehensiveIncome* elements (standard_inputs.ci_face_lines: the CI-incl-NCI point reason cites its line).
 set statement_timeout='55s';
 with rx as (select '^(/* element families from rules/roles.csv */)$'::text r),
-fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form in ('10-K','20-F','40-F') and period>='2014-06-01'),
+fl as (select id, accession, period from fsn.filing where company_id in (select g.company_id from fsn.filing g where g.cik::bigint in (/* CIKs */)) and form in ('10-K','20-F','40-F')
+  and (cik::bigint in (/* CIKs */) or not exists (select 1 from fsn.filing s where s.company_id=fsn.filing.company_id and s.period=fsn.filing.period and s.form in ('10-K','20-F','40-F') and s.cik::bigint in (/* CIKs */))) and period>='2014-06-01'),
 ct as (select distinct fl.id fid, t.id, t.tag from fl join fsn.line l on l.filing_id=fl.id and l.stmt in ('BS','IS','CF') join fsn.tag t on t.id=l.tag_id
          where t.custom or not (t.tag ~ (select r from rx) or t.tag like '%Accretion%')
        union select distinct v.filing_id, t.id, t.tag from fsn.value v join fl on fl.id=v.filing_id
