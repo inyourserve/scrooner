@@ -1161,9 +1161,21 @@ accession,tag,report,n_reports,line,plabel
 0000723125-15-000112,AmortizationOfIntangibleAssets,78,1,12,Amortization expense for intangible assets
 0000723125-16-000269,AccountsPayableTradeCurrent,79,1,,
 0000723125-16-000269,AmortizationOfIntangibleAssets,77,1,11,Amortization expense for intangible assets
+0000723125-17-000131,AccountsPayableTradeCurrent,83,1,,
+0000723125-17-000131,AmortizationOfIntangibleAssets,81,1,,
+0000723125-18-000092,AccountsPayableTradeCurrent,79,1,,
+0000723125-18-000092,ResearchAndDevelopmentExpense,2,1,,
+0000723125-18-000092,SellingGeneralAndAdministrativeExpense,2,1,,
+0000723125-19-000094,AccountsPayableTradeCurrent,78,1,,
+0000723125-20-000082,AccountsPayableTradeCurrent,74,1,,
+0000723125-21-000065,AccountsPayableTradeCurrent,79,1,,
 0000723125-21-000065,AmortizationOfIntangibleAssets,75,1,12,Amortization of Intangible Assets
+0000723125-22-000048,AccountsPayableTradeCurrent,78,1,,
 0000723125-22-000048,AmortizationOfIntangibleAssets,74,1,12,Amortization of Intangible Assets
+0000723125-23-000054,AccountsPayableTradeCurrent,82,1,,
 0000723125-24-000027,AmortizationOfIntangibleAssets,74,1,16,Amortization of Intangible Assets
+0000723125-25-000028,AccountsPayableTradeCurrent,76,1,,
+0000723125-25-000028,AmortizationOfIntangibleAssets,75,1,,
 0000731766-16-000058,AmortizationOfIntangibleAssets,62,1,1,Amortization of Intangible Assets
 0000731766-17-000009,AmortizationOfIntangibleAssets,56,1,10,Amortization of Intangible Assets
 0000731766-18-000005,AmortizationOfIntangibleAssets,53,1,6,Amortization of Intangible Assets
@@ -1172,9 +1184,13 @@ accession,tag,report,n_reports,line,plabel
 0000731766-21-000013,AmortizationOfIntangibleAssets,53,1,5,Amortization of Intangible Assets
 0000731766-22-000008,AmortizationOfIntangibleAssets,52,1,5,Amortization of Intangible Assets
 0000731766-23-000008,AmortizationOfIntangibleAssets,54,1,5,Amortization of Intangible Assets
+0000731766-23-000008,InventoryNet,42,1,,
 0000731766-24-000081,AmortizationOfIntangibleAssets,56,1,3,Amortization of Intangible Assets
+0000731766-24-000081,InventoryNet,44,1,,
 0000731766-25-000063,AmortizationOfIntangibleAssets,57,1,3,Amortization of Intangible Assets
+0000731766-25-000063,InventoryNet,45,1,,
 0000731766-26-000062,AmortizationOfIntangibleAssets,59,1,3,Amortization of Intangible Assets
+0000731766-26-000062,InventoryNet,46,1,,
 0000732712-18-000009,AmortizationOfIntangibleAssets,61,1,1,Amortization expense for other intangible assets
 0000732712-18-000009,IncomeTaxesPaidNet,106,2,1,"Income taxes, net of amounts refunded"
 0000732712-18-000009,InterestPaidNet,119,1,2,"Interest, net of amounts capitalized"
@@ -1260,6 +1276,7 @@ accession,tag,report,n_reports,line,plabel
 0000753308-18-000013,Goodwill,43,1,14,Goodwill
 0000753308-19-000039,AllocatedShareBasedCompensationExpense,78,1,2,Stock based compensation costs
 0000753308-19-000039,AmortizationOfIntangibleAssets,45,1,25,Amortization expense
+0000753308-19-000039,FinanceLeaseLiability,87,1,,
 0000753308-19-000039,Goodwill,45,1,17,Goodwill
 0000753308-20-000021,AllocatedShareBasedCompensationExpense,77,1,11,Stock based compensation costs
 0000753308-20-000021,AmortizationOfIntangibleAssets,44,1,26,Amortization expense
@@ -1270,17 +1287,29 @@ accession,tag,report,n_reports,line,plabel
 0000753308-21-000014,WeightedAverageNumberOfSharesOutstandingBasic,78,1,6,Weighted-average number of common shares outstanding - basic
 0000753308-22-000014,AllocatedShareBasedCompensationExpense,82,1,7,Stock based compensation costs
 0000753308-22-000014,AmortizationOfIntangibleAssets,43,1,27,Amortization expense
+0000753308-22-000014,CommercialPaper,6,1,,
 0000753308-22-000014,FinanceLeaseLiability,66,1,,
+0000753308-22-000014,LongTermDebtCurrent,6,1,,
+0000753308-22-000014,LongTermDebtNoncurrent,6,1,,
+0000753308-22-000014,OtherShortTermBorrowings,6,1,,
 0000753308-22-000014,WeightedAverageNumberOfDilutedSharesOutstanding,80,1,6,Weighted-average number of common shares outstanding  assuming dilution
 0000753308-22-000014,WeightedAverageNumberOfSharesOutstandingBasic,80,1,4,Weighted-average number of common shares outstanding  basic
 0000753308-23-000019,AllocatedShareBasedCompensationExpense,84,1,7,Stock based compensation costs
 0000753308-23-000019,AmortizationOfIntangibleAssets,43,1,26,Amortization expense
+0000753308-23-000019,CommercialPaper,6,1,,
 0000753308-23-000019,FinanceLeaseLiability,68,1,,
+0000753308-23-000019,LongTermDebtCurrent,6,1,,
+0000753308-23-000019,LongTermDebtNoncurrent,6,1,,
+0000753308-23-000019,OtherShortTermBorrowings,6,1,,
 0000753308-23-000019,WeightedAverageNumberOfDilutedSharesOutstanding,82,1,6,Weighted-average number of common shares outstanding  assuming dilution
 0000753308-23-000019,WeightedAverageNumberOfSharesOutstandingBasic,82,1,4,Weighted-average number of common shares outstanding  basic
 0000753308-24-000008,AllocatedShareBasedCompensationExpense,98,1,7,Stock based compensation costs
 0000753308-24-000008,AmortizationOfIntangibleAssets,45,1,28,Amortization expense
+0000753308-24-000008,CommercialPaper,6,1,,
 0000753308-24-000008,FinanceLeaseLiability,82,1,,
+0000753308-24-000008,LongTermDebtCurrent,6,1,,
+0000753308-24-000008,LongTermDebtNoncurrent,6,1,,
+0000753308-24-000008,OtherShortTermBorrowings,6,1,,
 0000753308-24-000008,WeightedAverageNumberOfDilutedSharesOutstanding,96,1,6,Weighted-average number of common shares outstanding  assuming dilution
 0000753308-24-000008,WeightedAverageNumberOfSharesOutstandingBasic,96,1,4,Weighted-average number of common shares outstanding  basic
 0000753308-25-000011,AllocatedShareBasedCompensationExpense,98,1,7,Stock based compensation costs
@@ -1288,7 +1317,9 @@ accession,tag,report,n_reports,line,plabel
 0000753308-25-000011,WeightedAverageNumberOfDilutedSharesOutstanding,97,1,6,Weighted-average number of common shares outstanding  assuming dilution
 0000753308-25-000011,WeightedAverageNumberOfSharesOutstandingBasic,97,1,4,Weighted-average number of common shares outstanding  basic
 0000753308-26-000015,AllocatedShareBasedCompensationExpense,97,1,7,Stock based compensation costs
+0000753308-26-000015,AmortizationOfIntangibleAssets,53,1,,
 0000753308-26-000015,FinanceLeaseLiability,81,1,,
+0000753308-26-000015,IncomeTaxesPaidNet,75,1,,
 0000753308-26-000015,WeightedAverageNumberOfDilutedSharesOutstanding,95,1,6,Weighted-average number of common shares outstanding  assuming dilution
 0000753308-26-000015,WeightedAverageNumberOfSharesOutstandingBasic,95,1,4,Weighted-average number of common shares outstanding  basic
 0000764180-16-000128,AmortizationOfIntangibleAssets,51,2,12,Amortization of intangibles
@@ -1328,30 +1359,50 @@ accession,tag,report,n_reports,line,plabel
 0000764180-21-000037,AssetImpairmentandBusinessExitCosts,52,1,,
 0000764180-21-000037,CommonStockSharesOutstanding,76,1,4,"Beginning balance, Shares Outstanding (in shares)"
 0000764180-21-000037,GoodwillImpairmentLoss,50,1,,
+0000764180-21-000037,InterestExpense,105,1,,
+0000764180-21-000037,InterestIncomeOther,105,1,,
+0000764180-21-000037,ResearchAndDevelopmentExpense,105,1,,
 0000764180-21-000037,WeightedAverageNumberOfDilutedSharesOutstanding,80,1,6,Weighted-average shares for diluted EPS (in shares)
 0000764180-21-000037,WeightedAverageNumberOfSharesOutstandingBasic,80,1,4,Weighted-average shares for basic EPS (in shares)
 0000764180-22-000019,AmortizationOfIntangibleAssets,49,3,18,Amortization of intangibles
 0000764180-22-000019,CommonStockSharesOutstanding,75,1,4,"Beginning balance, Shares Outstanding (in shares)"
 0000764180-22-000019,GoodwillImpairmentLoss,49,1,,
+0000764180-22-000019,InterestExpense,105,1,,
+0000764180-22-000019,InterestIncomeOther,105,1,,
+0000764180-22-000019,ResearchAndDevelopmentExpense,105,1,,
 0000764180-22-000019,WeightedAverageNumberOfDilutedSharesOutstanding,79,1,7,Weighted-average shares for diluted EPS (in shares)
 0000764180-22-000019,WeightedAverageNumberOfSharesOutstandingBasic,79,1,5,Weighted-average shares for basic EPS (in shares)
 0000764180-23-000020,AmortizationOfIntangibleAssets,47,3,29,Amortization of intangibles
 0000764180-23-000020,CommonStockSharesOutstanding,67,1,4,"Beginning balance, Shares Outstanding (in shares)"
 0000764180-23-000020,GoodwillImpairmentLoss,47,1,,
+0000764180-23-000020,InterestIncomeOther,95,1,,
+0000764180-23-000020,ReceivablesNetCurrent,44,1,,
+0000764180-23-000020,ResearchAndDevelopmentExpense,95,1,,
 0000764180-23-000020,WeightedAverageNumberOfDilutedSharesOutstanding,71,1,7,Weighted-average shares for diluted EPS (in shares)
 0000764180-23-000020,WeightedAverageNumberOfSharesOutstandingBasic,71,1,5,Weighted-average shares for basic EPS (in shares)
 0000764180-24-000018,AmortizationOfIntangibleAssets,56,3,32,Amortization of intangibles
 0000764180-24-000018,CommonStockSharesOutstanding,74,1,4,"Beginning balance, Shares Outstanding (in shares)"
 0000764180-24-000018,GoodwillImpairmentLoss,56,1,,
+0000764180-24-000018,InterestIncomeOther,102,1,,
+0000764180-24-000018,ReceivablesNetCurrent,52,1,,
+0000764180-24-000018,ResearchAndDevelopmentExpense,102,1,,
 0000764180-24-000018,WeightedAverageNumberOfDilutedSharesOutstanding,78,1,7,Weighted-average shares for diluted EPS (in shares)
 0000764180-24-000018,WeightedAverageNumberOfSharesOutstandingBasic,78,1,6,Weighted-average shares for basic EPS (in shares)
 0000764180-25-000019,AmortizationOfIntangibleAssets,64,3,36,Amortization of intangibles
 0000764180-25-000019,CommonStockSharesOutstanding,83,1,4,"Beginning balance, Shares Outstanding (in shares)"
 0000764180-25-000019,GoodwillImpairmentLoss,65,1,,
+0000764180-25-000019,InterestExpenseNonoperating,113,1,,
+0000764180-25-000019,InterestIncomeOther,113,1,,
+0000764180-25-000019,ReceivablesNetCurrent,59,1,,
+0000764180-25-000019,ResearchAndDevelopmentExpense,99,1,,
 0000764180-25-000019,WeightedAverageNumberOfDilutedSharesOutstanding,88,1,7,Weighted-average shares for diluted EPS (in shares)
 0000764180-25-000019,WeightedAverageNumberOfSharesOutstandingBasic,88,1,6,Weighted-average shares for basic EPS (in shares)
 0000764180-26-000017,AmortizationOfIntangibleAssets,56,3,39,Amortization of intangibles
 0000764180-26-000017,CommonStockSharesOutstanding,76,1,4,"Beginning balance, Shares Outstanding (in shares)"
+0000764180-26-000017,InterestExpenseNonoperating,107,1,,
+0000764180-26-000017,InterestIncomeOther,107,1,,
+0000764180-26-000017,ReceivablesNetCurrent,50,1,,
+0000764180-26-000017,ResearchAndDevelopmentExpense,93,1,,
 0000764180-26-000017,WeightedAverageNumberOfDilutedSharesOutstanding,81,1,7,Weighted-average shares for diluted EPS (in shares)
 0000764180-26-000017,WeightedAverageNumberOfSharesOutstandingBasic,81,1,6,Weighted-average shares for basic EPS (in shares)
 0000766704-16-000055,CommonStockDividendsPerShareCashPaid,77,2,12,Dividends declared and paid per common share
@@ -1442,6 +1493,8 @@ accession,tag,report,n_reports,line,plabel
 0000858877-26-000132,IncomeTaxesPaidNet,121,2,20,Cash paid for income taxes
 0000875320-18-000009,CapitalLeaseObligationsCurrent,5,1,,
 0000875320-18-000009,CapitalLeaseObligationsNoncurrent,5,1,,
+0000875320-21-000006,FinanceLeaseLiabilityCurrent,72,1,,
+0000875320-22-000007,FinanceLeaseLiabilityCurrent,73,1,,
 0000875320-24-000062,AmortizationOfIntangibleAssets,72,1,13,Amortization of intangible assets
 0000875320-25-000053,AmortizationOfIntangibleAssets,76,1,10,Amortization of intangible assets
 0000875320-26-000056,AmortizationOfIntangibleAssets,73,1,8,Amortization of intangible assets
