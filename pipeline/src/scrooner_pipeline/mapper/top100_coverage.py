@@ -1124,6 +1124,7 @@ def build_rows(
                     }
                 )
     resolve_derived(rows, load_input_prints(conn, rows))
+    attach_only_combined(rows, load_only_combined())
     apply_display(rows)
     note = {
         c.company_id: (
@@ -1269,6 +1270,53 @@ def resolve_derived(
             r["class"], r["reason_code"] = "UNCHECKED", DERIVED_UNPROVEN
 
 
+RESOLVER_DIR = Path("data-team/tags/line_map")
+OC_EVIDENCE_RE = re.compile(r"reported only combined: ([^|,]*)")
+
+
+def load_only_combined(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str, str], tuple[str, str, str]]:
+    """(ticker, data_point, period_end) -> (hide kind 'row'|'years', evidence text, accession) from the CURRENT resolver
+    file on main (the newest resolver-all110-*.csv; the flags are read, never recomputed, and no resolver version is
+    pinned). only_combined_row: the company never reports the pure figure in any year; only_combined_years: it does in
+    other years (Dhairya 2026-11-16). Missing file or no flags: empty."""
+    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    out: dict[tuple[str, str, str], tuple[str, str, str]] = {}
+    if not files:
+        return out
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            flags = (r.get("flags") or "").split(";")
+            if "only_combined" not in flags or r.get("grain") != "FY":
+                continue
+            kind = "row" if "only_combined_row" in flags else "years"
+            m = OC_EVIDENCE_RE.search(r.get("nodes") or "")
+            line = (m.group(1).strip() if m else "") or "unnamed line"
+            out[(r["ticker"], r["data_point"], r["period_end"])] = (
+                kind,
+                f"reported only combined: {line}",
+                r.get("accession") or "",
+            )
+    return out
+
+
+def attach_only_combined(
+    rows: list[dict[str, Any]],
+    oc: dict[tuple[str, str, str], tuple[str, str, str]],
+) -> None:
+    """Carry the resolver's only_combined hide, its evidence text and its accession on each flagged non-value cell. The
+    combined printed number stays in the data as evidence and is never shown as the standard data point. Pure."""
+    for r in rows:
+        if r["class"] in ("PROVEN", "DERIVED"):
+            continue
+        hit = oc.get((r["ticker"], r["data_point"], r["period_end"]))
+        if hit:
+            r["_only_combined"], r["evidence"], r["_oc_accession"] = hit
+            if not r.get("accession"):
+                r["accession"] = hit[2]
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
     a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
@@ -1282,6 +1330,10 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
         if r["class"] in ("PROVEN", "DERIVED"):
             r["display"] = SHOWN_VALUE
+        elif r.get("_only_combined") == "years":
+            r["display"] = HIDDEN_YEAR
+        elif r.get("_only_combined") == "row":
+            r["display"] = HIDDEN_ROW
         elif no_period and not r.get("_presented"):
             r["display"] = HIDDEN_YEAR
         elif (
@@ -1301,11 +1353,20 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
     for cells in by_row.values():
         rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
         if rest and all(
-            c["class"] == "REASON" and c.get("reason_code") in NOT_PRESENTED_CODES
+            c["display"] == HIDDEN_ROW
+            or (
+                c["class"] == "REASON" and c.get("reason_code") in NOT_PRESENTED_CODES
+            )
             for c in rest
         ):
             for c in rest:
                 c["display"] = HIDDEN_ROW
+        elif any(c["display"] == SHOWN_VALUE for c in cells):
+            # the resolver says the pure figure is never reported but a value is shown in this row: a contradiction
+            # that stays visible as open work, never a silent hide
+            for c in cells:
+                if c["display"] == HIDDEN_ROW and c.get("_only_combined") == "row":
+                    c["display"] = OPEN
         elif not rest and cells:
             # every year is before the first filing: nothing of this row can be shown
             for c in cells:
@@ -1337,6 +1398,7 @@ HIDDEN_ROW_COLUMNS = [
     "first_10k",
     "cell_evidence_accessions",
     "both_10ks_cited",
+    "evidence",
 ]
 HIDDEN_YEAR_COLUMNS = [
     "rank",
@@ -1349,6 +1411,8 @@ HIDDEN_YEAR_COLUMNS = [
     "earliest_filing_date",
     "earliest_10k_presenting",
     "basis",
+    "evidence",
+    "evidence_accession",
 ]
 
 
@@ -1372,9 +1436,15 @@ def hidden_evidence(
                     "earliest_10k_presenting": r.get("_first_presenting") or "",
                     "basis": "before_first_periodic_filing"
                     if r.get("_before_first_filing")
+                    else "reported_only_combined"
+                    if r.get("_only_combined")
                     else "first_report_comparative_only"
                     if r.get("_comparative_only")
                     else "evidenced_no_period_reason",
+                    "evidence": r.get("evidence") or "",
+                    "evidence_accession": r.get("_oc_accession")
+                    or r.get("_first_presenting")
+                    or "",
                 }
             )
     rows_out = []
@@ -1393,6 +1463,9 @@ def hidden_evidence(
                 "latest_10k": latest,
                 "first_10k": first,
                 "cell_evidence_accessions": ",".join(accs),
+                "evidence": " || ".join(
+                    sorted({c["evidence"] for c in cells if c.get("evidence")})
+                ),
                 "both_10ks_cited": "yes"
                 if latest and first and latest in accs and first in accs
                 else "no",
