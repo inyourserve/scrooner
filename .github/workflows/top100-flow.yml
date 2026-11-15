@@ -136,6 +136,12 @@ jobs:
         run: |
           echo "code: $(git rev-parse HEAD)"
           zsh scripts/top100_flow.sh "$CID" "c$CID"
+      - name: Open-shown cells of this company (published whether the gate passes or fails)
+        if: always()
+        run: |
+          O=".runs/top100_flow/run_c$CID"
+          CV="$O/coverage"; [ -d "$O/coverage_held" ] && CV="$O/coverage_held"
+          python3 -I scripts/ci/top100_open_shown.py "$CV" "$CID" ".runs/top100_flow/publish_c$CID" || echo "no open-shown file produced (nothing will be published or deleted)"
       - name: Gate (display column of top100_coverage decides; SKIP until that column exists; nothing is sent early)
         # Reads only this run's coverage CSV (no DB). Writes .runs/top100_flow/publish_c<id>/ with gate.json and, on PASS,
         # the certification csv + request md. A FAIL or SKIP does not fail the job: it is a result, shown in the summary.
@@ -203,6 +209,33 @@ jobs:
         with:
           name: flow-${{ matrix.id }}
           path: part
+      - name: Commit open-shown cells (pass or fail; file removed when 0 OPEN)
+        run: |
+          set -u
+          J=$(find part -name open-shown.json -path "*publish_c$CID/*" | head -1 || true)
+          if [ -z "$J" ]; then echo "no open-shown.json (chain produced no export): leaving open-shown/ untouched"; exit 0; fi
+          D=$(dirname "$J")
+          read -r TK N < <(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(d['ticker'], d['open'])" "$J")
+          case "$TK" in *[!A-Za-z0-9.-]*|"") echo "::error::bad ticker '$TK'"; exit 1;; esac
+          F="data-team/strategy/open-shown/$TK.csv"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$N" -gt 0 ]; then
+            mkdir -p data-team/strategy/open-shown
+            cp "$D/open-shown.csv" "$F"
+            git add "$F"
+          elif [ -f "$F" ]; then
+            git rm -q "$F"
+          else
+            echo "$TK: 0 OPEN and no file: nothing to do"; exit 0
+          fi
+          if git diff --cached --quiet; then echo "$TK: open-shown unchanged"; exit 0; fi
+          git commit -q -m "Open shown cells for $TK: $N (top100-flow run $GITHUB_RUN_ID)"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && { echo pushed; exit 0; }
+            sleep $((RANDOM % 8 + 2))
+          done
+          echo "::error::push failed after retries"; exit 1
       - name: Commit certification files on PASS
         run: |
           set -u
