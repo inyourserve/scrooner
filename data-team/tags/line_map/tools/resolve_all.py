@@ -565,7 +565,7 @@ def dp_elements(dp):
     return out
 
 
-ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$')}   # data points read by pattern (total_debt.py) or by the core statement tree
+ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$'), 'current_assets': re.compile(r'^AssetsCurrent$'), 'current_liabilities': re.compile(r'^LiabilitiesCurrent$')}   # data points read by pattern (total_debt.py) or by the core statement tree
 ABSENT_STMT = {'total_debt': 'BS'}
 ABSENT_LABEL = {'total_debt': total_debt.LABEL_DEBT, 'share_buybacks': resolve_cf.BUY_LABEL, 'dividends_paid': resolve_cf.DIV_LABEL, 'sbc': resolve_cf.SBC_LABEL, 'capex': resolve_cf.CAPEX_LABEL}
 

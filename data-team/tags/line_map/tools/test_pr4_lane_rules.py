@@ -302,3 +302,10 @@ def test_cf_family_flags_reach_the_output_row():
                 ('CF', 'PaymentsForRepurchaseOfCommonStock', 'Share repurchases, including shares surrendered for tax withholding', 1639),
                 ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -40)])
     assert resolve_all.family_rows(f, {}, '')['share_buybacks']['flags'] == 'buyback_label_combined'
+
+
+def test_unclassified_balance_sheet_proves_current_subtotals_absent():
+    # GE FY2015-18: no AssetsCurrent / LiabilitiesCurrent anywhere in the filing
+    assert _absent([('BS', 'Assets', 'Total assets', 100)], dp='current_assets')
+    assert _absent([('BS', 'Liabilities', 'Total liabilities', 60)], dp='current_liabilities')
+    assert not _absent([('BS', 'AssetsCurrent', 'Total current assets', 40)], dp='current_assets')

@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .47, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .48, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -260,6 +260,7 @@ Format: `ID | rule | code | test | date / source`.
 | X36 | absent_in_own_filing also covers the pattern-read data points: total_debt (no element matching total_debt.DEBT anywhere, no BS line labelled as debt; operating leases and accrued interest excluded) and gross_profit (no GrossProfit anywhere and no valued cost of revenue in the same filing to derive it from) | ra.apply_absent_in_own_filing (ABSENT_RX, ABSENT_STMT, ABSENT_LABEL) | pr4::test_total_debt_absence_reads_every_debt_element_and_debt_label, pr4::test_gross_profit_absence_needs_no_cost_of_revenue_to_derive_from | Dhairya ruling 2026-11-16; commit .45 0dc73dbe |
 | X37 | A per-share line printed with no consolidated value (ClassOfStock members only) is no single EPS: combined, flag eps_per_class, hidden as reported only per class (DELL FY2017-19 DHI/Class V, GOOG FY2015, V all years) | ra.apply_eps_per_class | pr4::test_eps_printed_only_per_class_is_combined_not_missing | queue 2026-11-16; commit .46 6e252ddc |
 | X38 | Family flags (cf_family) are carried to the output row | ra.family_rows | pr4::test_cf_family_flags_reach_the_output_row | commit .47 |
+| X39 | absent_in_own_filing for current_assets / current_liabilities: no AssetsCurrent / LiabilitiesCurrent fact or line anywhere in the filing (unclassified balance sheet: banks, insurers, REITs, DE, GE FY2015-18) | ra ABSENT_RX | pr4::test_unclassified_balance_sheet_proves_current_subtotals_absent | queue 2026-11-16; commit .48 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 
