@@ -20,7 +20,7 @@ Read-only audit by the GitHub-ops cloud session (data collected 2026-11-15 ~20:4
 | top100-coverage-hourly.yml | :17 hourly, opt-in var | never ran | - | - | KEEP, confirm first run (var set 20:27Z) |
 | pipeline-refresh.yml | nightly 12:23Z | 6/13/1 | 1 h 57 | 11-15 red | FIX: two root causes fixed in PR #15 |
 | pipeline-sanity.yml | nightly 15:17Z | 5/14/0 | 2 h 08 | red since 10-31 | FIX: real data regression, needs an owner (see 2) |
-| workflow-health-check.yml | weekly | 0/11/0 | 11 s | red always | FIX: it fails whenever any scheduled workflow ever failed, so it is a permanent alarm. Make it judge each workflow's latest run only |
+| workflow-health-check.yml | weekly | 0/11/0 | 11 s | red always | FIX: it was right (the nightlies really were red), but a red X on a weekly meta-job reached nobody. It now runs daily, ignores cancelled runs, and keeps one open alarm issue (PR #15) |
 | live-sec-verification.yml | weekly | 12/0/0 | 18 s | 11-09 | KEEP |
 | pipeline-cells-proof.yml | dispatch | 15/3/2 | 5 min | 11-14 | KEEP while proof runs outside top100-flow; then MERGE-INTO top100-flow |
 | pipeline-fsn-extract-predecessors.yml | dispatch | 3/0/1 | 4 min | 11-09 | KEEP (predecessor backfill) |
@@ -76,7 +76,7 @@ Rule proposed: git keeps inputs the code reads and evidence a decision cites; ru
 ## 6. Scheduled jobs
 
 - `pipeline-refresh` (daily) and `pipeline-sanity` (daily): needed, both red; refresh fixed in PR #15, sanity needs a data owner.
-- `workflow-health-check` (weekly): permanently red, gives no signal. Fix as above.
+- `workflow-health-check`: correct but unseen; now daily with an alarm issue (PR #15).
 - `pipeline-tag-library` (weekly, 3 h): ask Engineering if it still feeds anything.
 - `live-sec-verification` (weekly): green, useful.
 - `top100-coverage-hourly`: new; watch size (section 5).
@@ -85,7 +85,7 @@ Rule proposed: git keeps inputs the code reads and evidence a decision cites; ru
 
 1. Merge PR #15 (nightly refresh back to green; Next.js suite only on app changes).
 2. Sanity gate: Engineering decides re-baseline vs real regression (margins missing up 1,500 since 11-08).
-3. Fix workflow-health-check to judge latest runs only (PR, this session).
+3. workflow-health-check: daily, ignores cancelled runs, opens one alarm issue (PR #15).
 4. Stop red pushes to main: 13 consecutive red CI runs on 11-14. Proposal: agents push to a branch and land through a PR with auto-merge on green (branch protection change: founder).
 5. Retire the old-path workflows: fsn-write, fsn-cohort, fsn-pilot, cells-load(+stage), certify, bs-port-gate, cf-port-regression-gate (founder; 3 of them can write production).
 6. Delete 184 merged or patch-equivalent branches and the 5 `worktree-agent-*` branches (founder).
