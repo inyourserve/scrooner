@@ -4,7 +4,7 @@ from datetime import date
 
 from scrooner_pipeline.mapper import top100_coverage as t100
 
-DP = "cash_paid_for_interest"
+DP = "operating_income"  # a VERIFIED_ABSENT_HIDE data point
 
 
 def _cell(end, cls="UNCHECKED", **kw):
@@ -83,18 +83,23 @@ def test_loader_reads_not_presented_own_and_skips_pre_filing(tmp_path):
     assert cells == {"2016-09-30": "A16"} and printed == [date(2017, 9, 30)]
 
 
-def test_a_note_data_point_is_never_hidden_by_this_rule(tmp_path):
+def test_an_unlisted_data_point_is_never_hidden_by_this_rule(tmp_path):
     hdr = "cik,ticker,data_point,period_end,grain,decision,nodes,value,accession,column,calc_check,flags,resolver_version\n"
     row = "1,QCOM,{},2016-09-30,FY,not_presented,,,A16,own,,roles,v\n"
+    dps = [
+        "inventory",
+        "cash_paid_for_interest",
+        "operating_income",
+        "shares_outstanding",
+        "share_buybacks",
+    ]
     (tmp_path / "resolver-all110-2026-11-14.csv").write_text(
-        hdr + row.format("cash_paid_for_interest") + row.format("operating_income")
-    )
-    (tmp_path / "rules").mkdir()
-    (tmp_path / "rules" / "roles.csv").write_text(
-        "data_point,stmt,parent,alternatives,combined_if,note_ok,custom_label,ruling,fallback\n"
-        "cash_paid_for_interest,NOTE,,,,Y,,,\n"
+        hdr + "".join(row.format(d) for d in dps)
     )
     got = t100.load_absent_in_own(tmp_path)
-    assert ("QCOM", "cash_paid_for_interest") not in got
-    assert ("QCOM", "operating_income") in got
+    assert {dp for _, dp in got} == {
+        "operating_income",
+        "shares_outstanding",
+        "share_buybacks",
+    }
     assert "no face-statement line" in t100.ABSENT_EVIDENCE
