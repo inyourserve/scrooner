@@ -1,7 +1,7 @@
 work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
 combined_split,49,GEV,4015,accounts_payable,2023,2023-12-31,REASON,line_presented_combined,"combined line: the later 10-K 0001996810-25-000011 prints the year in its FY-1 column on the combined line it uses for its own year: the balance sheet prints accounts payable only inside 'Accounts payable and equipment project payables', which holds other payables too: combined (Dhairya 2026-11-15, GEV) | node notes: AccountsPayableAndOtherAccruedLiabilitiesCurrent: @0001996810-25-000011 | reported only combined: AccountsPayableAndOtherAccruedLiabilitiesCurrent",,0001996810-25-000011,R4.htm,
 blank,49,GEV,4015,accounts_receivable,2023,2023-12-31,BLANK,no_value_no_reason,,,,,
-gap_fill,49,GEV,4015,goodwill,2022,2022-12-31,REASON,no_public_filing_for_period,no 10-K was filed for the period (the company was not yet public),,0001996810-25-000011,R4.htm,
+proof,49,GEV,4015,goodwill,2022,2022-12-31,UNCHECKED,no_proof_row,Goodwill = 4164000000.0000 exists in 0001996810-25-000011 but the balance sheet prints no column dated 2022-12-31; the statement face proves nothing here,4164000000,0001996810-25-000011,R4.htm,
 blank,49,GEV,4015,sbc,2022,2022-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
 proof,49,GEV,4015,sbc,2023,2023-12-31,UNCHECKED,reason_own_filing_unverified,the 10-K 0001996810-25-000011 presents the year in its FY-1 column but prints no sbc line for it,,,,
 blank,49,GEV,4015,shares_outstanding,2023,2023-12-31,BLANK,no_value_no_reason,,,,,
