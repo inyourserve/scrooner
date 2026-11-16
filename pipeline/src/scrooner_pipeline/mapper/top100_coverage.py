@@ -1395,14 +1395,25 @@ def attach_only_combined(
                 r["accession"] = hit[2]
 
 
-ABSENT_EVIDENCE = "absent in own filing: no face line and no undimensioned fact in the year's own annual report"
+ABSENT_EVIDENCE = "no face-statement line for this role in the year's own 10-K (resolver not_presented, column own)"
 _VALUED_DECISIONS = ("mapped", "component_sum", "derived_not_printed", "combined")
+
+
+def note_data_points(resolver_dir: Path = RESOLVER_DIR) -> set[str]:
+    """Data points whose role lives in the notes or cover page (rules/roles.csv stmt = NOTE). The resolver's
+    not_presented only says the face has no line, a custom-tagged note line can still print the figure (QCOM interest
+    paid, C/DHR/SYK dividends per share, CRM amortization: verifier 2026-11-16), so these are never hidden. Pure read."""
+    path = resolver_dir / "rules" / "roles.csv"
+    if not path.exists():
+        return set()
+    with path.open(newline="") as fh:
+        return {r["data_point"] for r in csv.DictReader(fh) if r.get("stmt") == "NOTE"}
 
 
 def load_absent_in_own(
     resolver_dir: Path = RESOLVER_DIR,
 ) -> dict[tuple[str, str], tuple[dict[str, str], list[date]]]:
-    """(ticker, data_point) -> ({period_end: own accession} for cells the CURRENT resolver (newest resolver-all110-*.csv)
+    """FACE data points only (note_data_points are skipped). (ticker, data_point) -> ({period_end: own accession} for cells the CURRENT resolver (newest resolver-all110-*.csv)
     decides `not_presented` in the year's own 10-K, the resolver periods where the line IS printed). The resolver has no
     flag literally named absent_in_own_filing: the meaning is decision = not_presented, column = own, and not a
     before_first_10k / line_not_printed pre-filing year (those are other hides). `accession` is the evidence column.
@@ -1412,9 +1423,12 @@ def load_absent_in_own(
     printed: dict[tuple[str, str], list[date]] = defaultdict(list)
     if not files:
         return {}
+    notes = note_data_points(resolver_dir)
     with files[-1].open(newline="") as fh:
         for r in csv.DictReader(fh):
             key = (r["ticker"], r["data_point"])
+            if r["data_point"] in notes:
+                continue  # a note data point is never hidden by this rule; it stays open for the resolver
             if r.get("decision") in _VALUED_DECISIONS:
                 printed[key].append(date.fromisoformat(r["period_end"]))
                 continue
