@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import csv
 from datetime import date
+from decimal import Decimal
 
 from scrooner_pipeline.mapper import structural_direct as sd
 from scrooner_pipeline.mapper import structural_loader as sl
@@ -142,3 +143,64 @@ def test_coverage_loads_only_valid_rows_and_shows_the_cell(tmp_path):
     ):
         tc.attach_stated_zero([other], sz)
         assert other.get("stated_zero", "") != "Y" and not other.get("_stated_zero")
+
+
+# --- proof (branch proof/stated-zero-2026-11-16) ---
+from dataclasses import replace  # noqa: E402
+
+from scrooner_pipeline.proof import prove as pv  # noqa: E402
+from tests.unit.test_cell_proof import shown  # noqa: E402
+
+EVID = (
+    "We did not pay any dividends during fiscal 2022.",
+    "Item 5, Dividends",
+    ACC,
+    "2022-12-31",
+)
+
+
+def _sz(**kw):
+    base = shown("net_income_resolved", "0")
+    return replace(
+        base,
+        **{
+            "period_end": date(2022, 12, 31),
+            "stated_zero": True,
+            "stated_zero_evidence": EVID,
+            **kw,
+        },
+    )
+
+
+def test_proof_accepts_a_stated_zero_with_quote_accession_and_matching_period():
+    p = pv.prove_cell(_sz(), None, None)
+    assert p.verdict == pv.PROVEN and p.checks["stated_zero"]["quote"] == EVID[0]
+    assert p.position_accession == ACC
+
+
+def test_proof_rejects_silence_period_mismatch_and_nonzero():
+    no_quote = pv.prove_cell(
+        _sz(stated_zero_evidence=("", EVID[1], ACC, "2022-12-31")), None, None
+    )
+    assert no_quote.verdict == pv.DISAGREE
+    other = pv.prove_cell(
+        _sz(stated_zero_evidence=(EVID[0], EVID[1], ACC, "2021-12-31")), None, None
+    )
+    assert other.verdict == pv.DISAGREE
+    none = pv.prove_cell(_sz(stated_zero_evidence=None), None, None)
+    assert none.verdict == pv.DISAGREE
+    five = pv.prove_cell(replace(_sz(), value=Decimal(5)), None, None)
+    assert five.verdict == pv.DISAGREE
+
+
+def test_stated_zero_is_its_own_rule_so_only_those_cells_are_reproved():
+    from scrooner_pipeline.proof import rules as rl
+
+    z = _sz()
+    p = pv.prove_cell(z, None, None)
+    assert rl.rules_used(z, p.checks).get("stated_zero") == 1
+    plain = shown("net_income_resolved", "0")
+    assert "stated_zero" not in rl.rules_used(plain, {})
+    # a stored row without the rule record is re-proved only for the stated_zero cell
+    assert rl.reproof_rules({"identities": 1}, z, p.checks) == ["stated_zero"]
+    assert rl.reproof_rules({"identities": 1}, plain, {}) == []

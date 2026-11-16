@@ -55,6 +55,10 @@ def _has_splits(shown: Any) -> bool:
     return bool(getattr(shown, "combined_splits", ()))
 
 
+def _stated_zero(shown: Any) -> bool:
+    return bool(getattr(shown, "stated_zero", False))
+
+
 def _always(_shown: Any) -> bool:
     return True
 
@@ -119,6 +123,19 @@ RULES: dict[str, Rule] = {
                 "proof/shown.py:combined_splits_for",
             ),
             note="v1: split parts of a combined face line must sum to it (founder decision 2026-11-16)",
+        ),
+        # stated zero (ruling 2026-11-16): a cell served from a zero the filing states, value_source stated_zero
+        Rule(
+            "stated_zero",
+            1,
+            legacy_version=0,
+            check_keys=("stated_zero",),
+            applies=_stated_zero,
+            owners=(
+                "proof/prove.py:stated_zero_problem",
+                "proof/prove.py:prove_stated_zero",
+            ),
+            note="v1: PROVEN when the exact quote, accession, locator and a quote period equal to the cell's are present",
         ),
     )
 }
