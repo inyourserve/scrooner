@@ -1,0 +1,11 @@
+work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
+gap_fill,79,TJX,1158,operating_expenses,2015,2015-01-31,REASON,structural_not_presented,the income statement of this filing has no operating_expenses node (no line holds the role in the filer's tree; rulings C1/S12); filing checks: calc LiabilitiesAndStockholdersEquity: ok;calc CashAndCashEquivalentsPeriodIncreaseDecrease: ok,,0001193125-15-114276,R2.htm,
+held,79,TJX,1158,operating_expenses,2016,2016-01-30,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
+held,79,TJX,1158,operating_expenses,2020,2020-02-01,HELD,opex_tie_needs_gross_profit_and_operating_income_of_the_filing,held by the tag-map mapper: opex_tie_needs_gross_profit_and_operating_income_of_the_filing,,,,
+gap_fill,79,TJX,1158,operating_expenses,2025,2025-02-01,REASON,company_tag_map:not_presented,unmapped library status: not_presented,,0000109198-26-000008,R3.htm,
+gap_fill,79,TJX,1158,operating_expenses,2026,2026-01-31,REASON,company_tag_map:not_presented,unmapped library status: not_presented,,0000109198-26-000008,R3.htm,
+held,79,TJX,1158,total_debt,2015,2015-01-31,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
+held,79,TJX,1158,total_debt,2016,2016-01-30,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
+held,79,TJX,1158,total_debt,2017,2017-01-28,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
+held,79,TJX,1158,total_debt,2018,2018-02-03,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
+held,79,TJX,1158,total_debt,2019,2019-02-02,HELD,proof_disagree,held by the tag-map mapper: proof_disagree,,,,
