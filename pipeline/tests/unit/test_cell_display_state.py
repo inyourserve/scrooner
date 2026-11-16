@@ -175,3 +175,10 @@ def test_constraint_accepts_valid_combinations(db, display, hc):
         (display, hc),
     )
 
+
+def test_every_flow_coverage_export_writes_display_state():
+    flow = (Path(__file__).parents[3] / "scripts" / "top100_flow.sh").read_text()
+    calls = [ln for ln in flow.splitlines() if "pipeline/scripts/top100_coverage.py" in ln]
+    assert len(calls) == 2
+    assert all("--write-display-state" in ln for ln in calls)
+    assert not any("default_transaction_read_only" in ln for ln in calls)
