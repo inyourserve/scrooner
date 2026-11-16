@@ -87,7 +87,7 @@ def test_an_unlisted_data_point_is_never_hidden_by_this_rule(tmp_path):
     hdr = "cik,ticker,data_point,period_end,grain,decision,nodes,value,accession,column,calc_check,flags,resolver_version\n"
     row = "1,QCOM,{},2016-09-30,FY,not_presented,,,A16,own,,roles,v\n"
     dps = [
-        "inventory",
+        "sbc",  # not allowlisted (round 4 failed); inventory joined the allowlist in be9134bb
         "cash_paid_for_interest",
         "operating_income",
         "shares_outstanding",
