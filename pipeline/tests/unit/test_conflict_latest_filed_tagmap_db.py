@@ -308,8 +308,9 @@ def test_proof_guard_keeps_a_cells_last_disagree_whichever_run_wrote_it(
         ]:
             conn.execute(
                 """insert into analytics.cell_proof (company_id, data_point_name, period_grain, period_start, period_end,
-                   shown_value, position_value, position_is_expected_line, verdict, reason_code, detector_version, proved_at)
-                   values (%s, %s, 'FY', (%s::date - 364), %s, 5, 5, true, %s, %s, %s, %s)""",
+                   shown_value, position_value, position_is_expected_line, verdict, reason_code, detector_version, proved_at,
+                   checks)
+                   values (%s, %s, 'FY', (%s::date - 364), %s, 5, 5, true, %s, %s, %s, %s, '{"rules": {"claim": 1}}'::jsonb)""",
                 (
                     cid,
                     name,
@@ -342,6 +343,21 @@ def test_proof_guard_keeps_a_cells_last_disagree_whichever_run_wrote_it(
             ("cfo", "2020-12-31", "PROVEN"),
             ("revenue", "2020-12-31", "DISAGREE"),
         ]
+        # ONE-PATH step 1: a row whose recorded rule moved, or that carries no record, is not the coverage verdict; the
+        # mapper's hold still counts an unstamped floor row but not a stale-rule row
+        conn.execute(
+            "update analytics.cell_proof set checks = '{\"rules\": {\"claim\": 0}}' where data_point_name = 'revenue'"
+        )
+        conn.execute(
+            "update analytics.cell_proof set checks = '{}' where data_point_name = 'cfo'"
+        )
+        v = load_current_proofs(conn, [cid], ["revenue", "cfo"])
+        assert v == {}
+        assert sorted(k[0] for k in ctm._load_proof_disagree(conn, cid)) == []
+        conn.execute(
+            "update analytics.cell_proof set checks = '{}' where data_point_name = 'revenue'"
+        )
+        assert sorted(k[0] for k in ctm._load_proof_disagree(conn, cid)) == ["revenue"]
 
 
 @pytest.mark.integration
