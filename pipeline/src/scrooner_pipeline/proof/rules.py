@@ -59,6 +59,10 @@ def _stated_zero(shown: Any) -> bool:
     return bool(getattr(shown, "stated_zero", False))
 
 
+def _text_stated(shown: Any) -> bool:
+    return bool(getattr(shown, "text_stated", False))
+
+
 def _always(_shown: Any) -> bool:
     return True
 
@@ -136,6 +140,19 @@ RULES: dict[str, Rule] = {
                 "proof/prove.py:prove_stated_zero",
             ),
             note="v1: PROVEN when the exact quote, accession, locator and a quote period equal to the cell's are present",
+        ),
+        # text stated (Dhairya 2026-11-16): a NONZERO value stated in filing text, value_source text_stated
+        Rule(
+            "text_stated",
+            1,
+            legacy_version=0,
+            check_keys=("text_stated",),
+            applies=_text_stated,
+            owners=(
+                "proof/prove.py:text_stated_problem",
+                "proof/prove.py:prove_text_stated",
+            ),
+            note="v1: PROVEN when the exact quote, accession, locator, a quote period equal to the cell's and the stated value equal to the cell are present",
         ),
     )
 }

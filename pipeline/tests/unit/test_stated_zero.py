@@ -204,3 +204,61 @@ def test_stated_zero_is_its_own_rule_so_only_those_cells_are_reproved():
     # a stored row without the rule record is re-proved only for the stated_zero cell
     assert rl.reproof_rules({"identities": 1}, z, p.checks) == ["stated_zero"]
     assert rl.reproof_rules({"identities": 1}, plain, {}) == []
+
+
+TS_EVID = (
+    "R&D expenses were $74 million during 2021.",
+    "Item 1, p.13",
+    ACC,
+    "2022-12-31",
+    Decimal("74000000"),
+)
+
+
+def _ts(**kw):
+    base = shown("net_income_resolved", "74000000")
+    return replace(
+        base,
+        **{
+            "period_end": date(2022, 12, 31),
+            "text_stated": True,
+            "text_stated_evidence": TS_EVID,
+            **kw,
+        },
+    )
+
+
+def test_proof_accepts_a_text_stated_value_with_quote_period_and_equal_value():
+    p = pv.prove_cell(_ts(), None, None)
+    assert p.verdict == pv.PROVEN and p.checks["text_stated"]["quote"] == TS_EVID[0]
+    assert p.position_accession == ACC and p.position_value == Decimal("74000000")
+
+
+def test_proof_rejects_text_stated_silence_period_zero_and_value_mismatch():
+    q, loc, acc, qp, v = TS_EVID
+    for ev in (
+        ("", loc, acc, qp, v),
+        (q, loc, acc, "2021-12-31", v),
+        (q, loc, acc, qp, Decimal("75000000")),
+        None,
+    ):
+        assert (
+            pv.prove_cell(_ts(text_stated_evidence=ev), None, None).verdict
+            == pv.DISAGREE
+        )
+    zero = pv.prove_cell(
+        _ts(value=Decimal(0), text_stated_evidence=(q, loc, acc, qp, Decimal(0))),
+        None,
+        None,
+    )
+    assert zero.verdict == pv.DISAGREE
+
+
+def test_text_stated_is_its_own_rule():
+    from scrooner_pipeline.proof import rules as rl
+
+    z = _ts()
+    p = pv.prove_cell(z, None, None)
+    used = rl.rules_used(z, p.checks)
+    assert used.get("text_stated") == 1 and "stated_zero" not in used
+    assert rl.reproof_rules({"identities": 1}, z, p.checks) == ["text_stated"]
