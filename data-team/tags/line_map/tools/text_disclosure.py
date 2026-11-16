@@ -2,6 +2,7 @@
 
     python3 text_disclosure.py fetch CELLS.csv CACHE_DIR          (sec.gov only, <= 2 requests a second, SEC_USER_AGENT)
     python3 text_disclosure.py read  CELLS.csv CACHE_DIR OUT.csv
+    python3 text_disclosure.py cells RESOLVER.csv CELLS.csv TICKERS DATA_POINTS [LATER=2]   (open cells: own 10-K + next LATER 10-Ks)
 
 CELLS.csv: cik,ticker,data_point,period_end,accession (the OPEN cells to try; the caller passes only cells with no XBRL fact
 and no face line, so XBRL always wins). OUT.csv: one row per cell with decision mapped + value_source text_stated|stated_zero
@@ -142,6 +143,7 @@ def amount(a, unit):
 def read_cell(text, cell):
     dp, pe = cell['data_point'], cell['period_end']
     fy = fy_labels(pe)
+    own = str(cell.get('own', '1')) != '0'   # a LATER 10-K (Dhairya 2026-11-16): only statements that name the cell's year count
     secs = sections(text)
     found, ambiguous = [], []
     for pos, s in sentences(text):
@@ -162,12 +164,12 @@ def read_cell(text, cell):
             elif cand:
                 ambiguous.append((sec, s))
         elif dp == 'total_debt' and DEBT0.search(s):
-            date_ok = any(y in s for y in fy) or re.search(re.escape(pe[:4]), s)
+            date_ok = re.search(re.escape(pe[:4]), s) if not own else (any(y in s for y in fy) or re.search(re.escape(pe[:4]), s))
             if AMBIG.search(s) or not date_ok:
                 ambiguous.append((sec, s)) if date_ok else None
                 continue
             found.append((Decimal(0), sec, s, pos))
-        elif dp in ('dividends_paid', 'dividends_per_share') and DIV_SUSP.search(s) and not AMBIG.search(s) and not re.search(r'\bpreferred\b', s, re.I) \
+        elif own and dp in ('dividends_paid', 'dividends_per_share') and DIV_SUSP.search(s) and not AMBIG.search(s) and not re.search(r'\bpreferred\b', s, re.I) \
                 and not re.search(r'\b(until|through|before|prior to)\s+(19|20)\d\d\b', s, re.I):
             # 'Our dividend to common shareholders has been suspended since 2020' in the FY2025 10-K: suspended through the filing's own year
             found.append((Decimal(0), sec, s, pos))
@@ -227,10 +229,31 @@ def read(cells_csv, cache, out_csv):
         text = to_text(open(p).read())
         rows.append(dict(c, **read_cell(text, c)))
     with open(out_csv, 'w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'decision', 'value_source', 'value', 'section', 'locator', 'quote_period', 'quote', 'why'])
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'own', 'decision', 'value_source', 'value', 'section', 'locator', 'quote_period', 'quote', 'why'])
         w.writeheader(); w.writerows({k: r.get(k, '') for k in w.fieldnames} for r in rows)
     return rows
 
 
+def cells(resolver_csv, out_csv, tickers, dps, later=2):
+    """Candidate cells for the reader: every OPEN cell (not_presented / no_role) of the tickers and data points, read in its own 10-K
+    (own=1) and in the next `later` 10-Ks of the company (own=0: only statements naming the year count)."""
+    tk, dl = set(tickers.split(',')), set(dps.split(','))
+    rows = [r for r in csv.DictReader(open(resolver_csv)) if r['ticker'] in tk]
+    own_acc = {}
+    for r in rows:
+        if (r.get('column') or 'own') == 'own' and r['accession']: own_acc.setdefault(r['ticker'], {})[r['period_end']] = (r['cik'], r['accession'])
+    out = []
+    for r in rows:
+        if r['data_point'] not in dl or r['decision'] not in ('not_presented', 'no_role'): continue
+        mine = own_acc.get(r['ticker'], {})
+        if r['period_end'] in mine:
+            out.append(dict(cik=r['cik'], ticker=r['ticker'], data_point=r['data_point'], period_end=r['period_end'], accession=mine[r['period_end']][1], own=1))
+        for pe in sorted(p for p in mine if p > r['period_end'])[:int(later)]:
+            out.append(dict(cik=r['cik'], ticker=r['ticker'], data_point=r['data_point'], period_end=r['period_end'], accession=mine[pe][1], own=0))
+    with open(out_csv, 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'own']); w.writeheader(); w.writerows(out)
+    print(len(out), 'cells')
+
+
 if __name__ == '__main__':
-    {'fetch': lambda: fetch(*sys.argv[2:4]), 'read': lambda: read(*sys.argv[2:5])}[sys.argv[1]]()
+    {'fetch': lambda: fetch(*sys.argv[2:4]), 'read': lambda: read(*sys.argv[2:5]), 'cells': lambda: cells(*sys.argv[2:])}[sys.argv[1]]()

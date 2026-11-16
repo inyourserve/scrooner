@@ -1141,10 +1141,19 @@ def apply_text_disclosures(rows, path=None):
     path = path or os.environ.get('TEXT_DISCLOSURES', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'text_disclosures.csv'))
     if not os.path.exists(path):
         return rows
-    T = {(str(t['cik']).lstrip('0'), t['data_point'], t['period_end'], t['accession']): t for t in csv.DictReader(open(path)) if t['decision'] == 'mapped'}
+    T = collections.defaultdict(list)
+    for t in csv.DictReader(open(path)):
+        if t['decision'] == 'mapped': T[(str(t['cik']).lstrip('0'), t['data_point'], t['period_end'])].append(t)
+    yy = lambda acc: (acc[11:13], acc)   # the filing year inside the accession number
     for r in rows:
-        t = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end']), r.get('accession')))
-        if not t or r.get('status') not in TEXT_OK:
+        cand = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end'])), [])
+        if not cand or r.get('status') not in TEXT_OK:
+            continue
+        # the cell's own 10-K wins; else the LATEST later 10-K that states the year explicitly (Dhairya 2026-11-16, as comparative fill)
+        own = [t for t in cand if t['accession'] == r.get('accession')]
+        later = [t for t in cand if t['accession'] != r.get('accession') and str(t.get('own', '0')) == '0' and yy(t['accession']) > yy(r.get('accession') or '')]
+        t = own[0] if own else (max(later, key=lambda t: yy(t['accession'])) if later else None)
+        if t is None:
             continue
         ev = dict(quote=t['quote'], locator=t['locator'], quote_period=t['quote_period'])
         if t['quote_period'] != str(r['period_end']) or not t['quote'] or not t['locator']:
@@ -1154,8 +1163,12 @@ def apply_text_disclosures(rows, path=None):
         v = D(t['value'])
         if (t['value_source'] == 'stated_zero') != (v == 0):
             continue
-        r.update(status='mapped', value=v, tags='', r_page='', column='own', nodes='', why='', **ev)
-        r['flags'] = 'stated_zero' if v == 0 else 'text_stated'
+        # the reason rides after '| why:' (the loader's nodes part stays empty); a preferred-only financing line the row had excluded
+        # stays named so the hide and value checks see it (BA FY2025 'Dividends paid on Mandatory convertible preferred stock')
+        excl = 'dividends_preferred_only' in (r.get('flags') or '')
+        why = f"{t['value_source']}: the filing states it in prose ({t['locator']})" + (f"; excluded: {r.get('why')}" if excl and r.get('why') else '')
+        r.update(status='mapped', value=v, tags='', r_page='', column='own' if own else 'comparative', nodes='', why=why, accession=t['accession'], **ev)
+        r['flags'] = ('stated_zero' if v == 0 else 'text_stated') + ('' if own else ';stated_in_later_filing') + (';dividends_preferred_only' if excl else '')
     return rows
 
 def apply_bank_template(rows, filings):

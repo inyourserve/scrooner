@@ -656,3 +656,43 @@ def test_suspended_dividend_and_program_buyback_statements_are_year_zeros():
     assert rc(annual, 'share_buybacks', '2022-12-31')['value_source'] == 'stated_zero'
     q4 = 'Item 5. Market\nWe did not purchase any shares of our common stock in the open market pursuant to a repurchase program.\n'
     assert rc(q4, 'share_buybacks', '2023-12-31')['decision'] == 'open'
+
+
+def test_stated_value_from_the_latest_later_10k_that_names_the_year(tmp_path):
+    # Dhairya 2026-11-16: BA DPS FY2022 has no own-filing statement; the FY2023 and FY2024 10-Ks name 2022 -> the latest wins,
+    # its accession is recorded, quote_period stays the cell's period end; an EARLIER filing never fills a later year
+    p = tmp_path / 't.csv'
+    p.write_text('cik,ticker,data_point,period_end,accession,own,decision,value_source,value,section,locator,quote_period,quote,why\n'
+                 '12927,BA,dividends_per_share,2022-12-31,0000012927-24-000010,0,mapped,stated_zero,0,item7,"Item 7, p. 40",2022-12-31,"in 2023, 2022 and 2021",x\n'
+                 '12927,BA,dividends_per_share,2022-12-31,0000012927-25-000015,0,mapped,stated_zero,0,item7,"Item 7, p. 41",2022-12-31,"in 2024, 2023 and 2022",x\n'
+                 '12927,BA,dividends_per_share,2023-12-31,0000012927-23-000007,0,mapped,stated_zero,0,item7,"Item 7, p. 39",2023-12-31,"q",x\n')
+    rows = [dict(cik='12927', data_point='dividends_per_share', period_end='2022-12-31', accession='0000012927-23-000007', status='not_presented', value=None, flags='roles', why=''),
+            dict(cik='12927', data_point='dividends_per_share', period_end='2023-12-31', accession='0000012927-24-000010', status='not_presented', value=None, flags='roles', why='')]
+    resolve_all.apply_text_disclosures(rows, str(p))
+    r = rows[0]
+    assert (r['status'], r['value'], r['accession'], r['column'], r['quote_period']) == ('mapped', D(0), '0000012927-25-000015', 'comparative', '2022-12-31')
+    assert r['flags'] == 'stated_zero;stated_in_later_filing' and r['locator'] == 'Item 7, p. 41'
+    assert rows[1]['status'] == 'not_presented'          # the FY2022 10-K (earlier) never speaks for FY2023
+
+
+def test_stated_zero_keeps_the_excluded_preferred_line_in_its_reason(tmp_path):
+    # BA FY2025: the CF prints only 'Dividends paid on Mandatory convertible preferred stock' 331 (excluded); the 10-K states the
+    # common dividend has been suspended since 2020 -> stated_zero, flag and reason keep the excluded line
+    p = tmp_path / 't.csv'
+    p.write_text('cik,ticker,data_point,period_end,accession,own,decision,value_source,value,section,locator,quote_period,quote,why\n'
+                 '12927,BA,dividends_paid,2025-12-31,0001628280-26-004357,1,mapped,stated_zero,0,item7,"Item 7, p. 38",2025-12-31,"Our dividend to common shareholders has been suspended since 2020.",x\n')
+    rows = [dict(cik='12927', data_point='dividends_paid', period_end='2025-12-31', accession='0001628280-26-004357', status='not_presented', value=None,
+                 flags='dividends_preferred_only', nodes='PaymentsOfDividends=331000000 [R8.htm:45]',
+                 why="the financing dividend line 'Dividends paid on Mandatory convertible preferred stock' is preferred dividends; no common dividend line")]
+    resolve_all.apply_text_disclosures(rows, str(p))
+    r = rows[0]
+    assert (r['status'], r['value'], r['nodes']) == ('mapped', D(0), '') and r['flags'] == 'stated_zero;dividends_preferred_only'
+    assert "excluded: the financing dividend line 'Dividends paid on Mandatory convertible preferred stock'" in r['why']
+
+
+def test_later_filing_reader_needs_the_year_named():
+    import text_disclosure as td
+    susp = 'Item 7. MD&A\nOur dividend to common shareholders has been suspended since 2020.\n'
+    assert td.read_cell(susp, dict(data_point='dividends_per_share', period_end='2022-12-31', own='0'))['decision'] == 'open'
+    named = 'Item 7. MD&A\nAs a result, we did not pay any dividends in 2023, 2022 and 2021.\n'
+    assert td.read_cell(named, dict(data_point='dividends_per_share', period_end='2022-12-31', own='0'))['value'] == '0'
