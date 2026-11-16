@@ -1462,6 +1462,9 @@ VERIFIED_ABSENT_HIDE = frozenset(
         "gross_profit",
         "dividends_paid",
         "total_debt",
+        # round 4, FILING-CHECKED 2026-11-17: inventory 20 checked, 0 wrong (resolver .63+ face-label fix). sbc FAILED
+        # (XOM/CVX note totals) and ppe_net FAILED outside the sample filter (GS Other-assets note 2014-21); both stay out.
+        "inventory",
     }
 )
 
