@@ -1162,6 +1162,7 @@ def _pretax_ties(f, isf):
 
 
 NONOP_CLAIM = ('interest_expense', 'interest_income', 'other_income_expense_net')
+NONOP_EL = re.compile(r'Nonoperating|ForeignCurrencyTransaction|^Interest|InterestExpense|InterestAndDebtExpense|InvestmentIncome|IncomeLossFromEquityMethod')
 
 
 def _opex_from_costs_block(rows, r, f, tot, isf, cor):
@@ -1183,11 +1184,11 @@ def _opex_from_costs_block(rows, r, f, tot, isf, cor):
         if x['accession'] == r['accession'] and x['data_point'] in NONOP_CLAIM and x['status'] in ('mapped', 'component_sum') and (x.get('column') or 'own') == 'own':
             claimed |= node_tags(x)
     if not cor_t & {c for c, _ in kids}: return None   # cost of revenue must be one of the block's lines
-    ops = [(c, w) for c, w in kids if c not in cor_t and c not in claimed]
+    ops = [(c, w) for c, w in kids if c not in cor_t and c not in claimed and not NONOP_EL.search(c)]   # COP: OtherNonoperatingExpense, foreign-currency lines
     if not ops: return None
     v = sum((w * val[c]['val'] for c, w in ops), D(0))
     nodes = '; '.join(f"{'-' if w < 0 else ''}{c}={val[c]['val']} [R{val[c]['rep']}.htm:{val[c]['ln']}]" for c, w in ops)
-    out = [c for c, _ in kids if c in claimed]
+    out = [c for c, _ in kids if c in claimed or NONOP_EL.search(c)]
     return dict(status='component_sum', value=v, tags='+'.join(c for c, _ in ops), nodes=nodes,
                 why=f"the only costs total printed, '{tot['lb']}' {tot['val']}, is exactly its calc lines; operating expenses = its lines less cost of revenue"
                     + (f" and the nonoperating line(s) served elsewhere ({', '.join(out)})" if out else '') + ' (rulings 2026-11-17: opex split from a combined costs total, exact tie)')

@@ -847,3 +847,13 @@
 ## 2026-11-16 (resolver-all110-.79): 2 element changes, 27999 rows, coverage 64.7%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-all110-.80): 8 element changes, 27999 rows, coverage 64.7%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ BenefitCostsNonoperating: data_point, served_cells
+- ~ CostOfServices: served_cells
+- ~ ForeignCurrencyTransactionGainLossBeforeTax: data_point, served_cells
+- ~ GoodwillImpairmentLoss: served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ InterestAndOtherFinancialCharges: data_point, served_cells
+- ~ OtherNonoperatingExpense: data_point, served_cells

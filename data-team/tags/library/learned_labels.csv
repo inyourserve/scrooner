@@ -1721,7 +1721,6 @@ operating_expenses,acquisition charges,10,1,BusinessCombinationAcquisitionRelate
 operating_expenses,total non interest expenses,10,1,NoninterestExpense 10
 operating_expenses,acquired in process research and development expenses,10,2,ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff 6;ResearchAndDevelopmentInProcess 2;ResearchAndDevelopmentInProcessIncludingImpairment 2
 operating_expenses,"other expense, net",10,2,OtherGeneralExpense 6;NonoperatingIncomeExpense 4
-operating_expenses,foreign currency transaction losses,10,2,ForeignCurrencyTransactionGainLossBeforeTax 10
 operating_expenses,total expense,10,1,OperatingExpenses 10
 operating_expenses,gross profit,9,2,GrossProfit 8;GeneralAndAdministrativeExpense 1
 operating_expenses,"marketing, selling and administrative",9,1,SellingGeneralAndAdministrativeExpense 9
@@ -1754,7 +1753,6 @@ operating_expenses,gain on dispositions,6,1,GainLossOnSaleOfBusiness 6
 operating_expenses,interest expense of financial products,6,1,InterestExpenseOfFinancialProducts 5;OtherOperatingIncomeExpenseNet 1
 operating_expenses,total operating costs,6,1,CostsAndExpenses 6
 operating_expenses,"selling, general & administrative expenses",6,1,SellingGeneralAndAdministrativeExpense 6
-operating_expenses,cost of services sold,6,2,CostOfServices 6
 operating_expenses,income from equity investees,6,1,IncomeLossFromEquityMethodInvestments 6
 operating_expenses,depreciation and amortization expenses,6,1,DepreciationAndAmortization 6
 operating_expenses,store operating expenses,6,1,StoreOperatingExpenses 6
@@ -1766,10 +1764,11 @@ operating_expenses,reclamation and remediation,6,1,ReclamationAndMineShutdownPro
 operating_expenses,"marketing, administration and research costs notes",6,1,MarketingAdministrationAndResearchCosts 6
 operating_expenses,"certain litigation charges, net",6,1,LossContingencyAccrualProvision 4;LossContingencyAccrualCarryingValuePeriodIncreaseDecrease 1;LossContingencyLossInPeriod 1
 operating_expenses,certain litigation charges,6,1,LossContingencyAccrualProvision 6
+operating_expenses,goodwill impairments,5,2,GoodwillImpairmentLoss 5
 operating_expenses,benefit costs,5,1,PolicyholderBenefitsAndClaimsIncurredHealthCare 4;PolicyholderBenefitsAndClaimsIncurredNet 1
 operating_expenses,"restructuring and other special charges, net",5,1,RestructuringAndOtherSpecialChargesNet 4;RestructuringandOtherSpecialCharges 1
 operating_expenses,"other cost and expense, operating",5,1,OtherCostAndExpenseOperating 5
-operating_expenses,other expenses,5,3,OtherExpenses 3;OtherNonoperatingExpense 2
+operating_expenses,cost of services sold,5,2,CostOfServices 5
 operating_expenses,"other income, net",5,2,OtherIncome 3;OperatingExpenses 2
 operating_expenses,restructuring and other costs,5,1,RestructuringAndOtherCostsIncomeNet 5
 operating_expenses,cost of products sold,5,2,CostOfGoodsSold 5
@@ -1780,13 +1779,11 @@ operating_expenses,cost of metropcs business combination,5,1,BusinessCombination
 operating_expenses,total operating costs and expenses,5,2,CostsAndExpenses 5
 operating_expenses,"selling, general, administrative and other",5,1,SellingGeneralAndAdministrativeExpense 5
 operating_expenses,cost of services exclusive of depreciation and amortization,5,1,CostOfServicesExcludingDepreciationDepletionAndAmortization 5
-operating_expenses,goodwill impairments,4,2,GoodwillImpairmentLoss 4
 operating_expenses,gross margin,4,3,GrossProfit 4
 operating_expenses,acquired iprd,4,1,AcquiredIPRD 3;MyoKardiaAssetAcquisitionIPRDCharge 1
 operating_expenses,equity in income on unconsolidated subsidiaries,4,1,IncomeLossFromEquityMethodInvestments 4
 operating_expenses,other restaurant expenses,4,1,OtherExpenses 4
 operating_expenses,other costs and expenses,4,1,OtherCostAndExpenseOperating 3;CostAndExpensesOther 1
-operating_expenses,interest and other financial charges,4,1,InterestAndOtherFinancialCharges 4
 operating_expenses,operating profit,4,1,OperatingIncomeLoss 4
 operating_expenses,impairment of intangible assets,4,1,ImpairmentOfIntangibleAssetsExcludingGoodwill 4
 operating_expenses,impairment on equity investment,4,1,EquityMethodInvestmentOtherThanTemporaryImpairment 4
@@ -1808,7 +1805,7 @@ operating_expenses,health care costs,3,1,PolicyholderBenefitsAndClaimsIncurredNe
 operating_expenses,"restructuring, impairment and other charges",3,1,RestructuringSettlementAndImpairmentProvisions 3
 operating_expenses,"loss on dispositions, net",3,1,GainLossOnSaleOfBusiness 3
 operating_expenses,income before income taxes,3,3,NoninterestExpense 1;OperatingExpenses 1;SellingAndMarketingExpense 1
-operating_expenses,"investment contracts, insurance losses and insurance annuity",3,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 3
+operating_expenses,other expenses,3,2,OtherExpenses 3
 operating_expenses,gain associated with the juice transaction,3,1,GainLossOnSaleOfBusiness 3
 operating_expenses,"restructuring and other costs , net",3,1,RestructuringAndOtherCostsIncomeNet 3
 operating_expenses,"impairment of goodwill and other long lived assets, related",3,1,AssetImpairmentCharges 3
@@ -1825,8 +1822,6 @@ operating_expenses,provision for loan losses,3,1,ProvisionForDoubtfulAccounts 2;
 operating_expenses,"other, net",3,1,OtherOperatingIncomeExpenseNet 3
 operating_expenses,loss on disposal group held for sale,3,1,DisposalGroupNotDiscontinuedOperationGainLossOnDisposal 3
 operating_expenses,technology and infrastructure,3,1,TechnologyAndInfrastructureExpense 3
-operating_expenses,other expense,3,2,OtherNonoperatingExpense 2;OtherExpenses 1
-operating_expenses,foreign currency transaction loss,3,1,ForeignCurrencyTransactionGainLossBeforeTax 3
 operating_expenses,litigation settlements,3,1,GainLossRelatedToLitigationSettlement 3
 operating_expenses,cost reduction programs and other charges,3,1,OtherNonrecurringIncomeExpense 3
 operating_expenses,business optimization costs,3,1,RestructuringSettlementAndImpairmentProvisions 2;RestructuringCharges 1
@@ -1841,6 +1836,8 @@ operating_expenses,loss on dispositions,2,1,GainLossOnSaleOfBusiness 2
 operating_expenses,net income,2,2,NoninterestExpense 1;LossContingencyLossInPeriod 1
 operating_expenses,net income before noncontrolling interests,2,1,NoninterestExpense 2
 operating_expenses,"other selling, general and administrative expense",2,1,OtherSellingGeneralAndAdministrativeExpense 2
+operating_expenses,"investment contracts, insurance losses and insurance annuity",2,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 2
+operating_expenses,insurance losses and annuity benefits,2,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 2
 operating_expenses,interest expense,2,1,OperatingIncomeLoss 2
 operating_expenses,cost of products and services sold,2,1,CostOfGoodsAndServicesSold 2
 operating_expenses,"other income , net",2,2,OtherOperatingIncomeExpenseNet 1;ResearchAndDevelopmentExpense 1
@@ -1859,7 +1856,6 @@ operating_expenses,cloud software as a service and platform as a service,2,1,Clo
 operating_expenses,lower of cost or market inventory valuation adjustment,2,1,InventoryWriteDown 2
 operating_expenses,hardware,2,1,HardwareExpenses 2
 operating_expenses,care and maintenance,2,1,CareAndMaintenanceExpense 2
-operating_expenses,foreign currency transaction gains,2,2,ForeignCurrencyTransactionGainLossBeforeTax 2
 operating_expenses,"reorganization benefits, net",2,1,ReorganizationBenefitsCostsNet 2
 operating_expenses,cost of services,2,1,CostOfRevenue 2
 operating_expenses,transaction costs and other charges,2,1,OtherNonrecurringIncomeExpense 2
@@ -1882,8 +1878,6 @@ operating_expenses,total,1,1,NoninterestExpense 1
 operating_expenses,income tax expense,1,1,NoninterestExpense 1
 operating_expenses,earnings,1,1,OperatingExpenses 1
 operating_expenses,provision for losses on financing receivables,1,1,ProvisionForLoanAndLeaseLosses 1
-operating_expenses,non operating benefit costs,1,1,BenefitCostsNonoperating 1
-operating_expenses,insurance losses and annuity benefits,1,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 1
 operating_expenses,business realignment charges,1,1,OperatingExpenses 1
 operating_expenses,other pension and retiree medical benefits income,1,1,OperatingIncomeLoss 1
 operating_expenses,costs and operating expenses,1,1,ResearchAndDevelopmentExpense 1
@@ -1942,6 +1936,7 @@ operating_expenses,"special charges , net",1,1,SpecialChargesGains 1
 operating_expenses,"special charge , net",1,1,SpecialChargesGains 1
 operating_expenses,divestiture related items,1,1,DispositionofBusinessRelatedExpenses 1
 operating_expenses,special charge,1,1,SpecialChargesGains 1
+operating_expenses,other expense,1,1,OtherExpenses 1
 operating_expenses,other operating income,1,1,OtherOperatingIncomeExpenseNet 1
 operating_expenses,consumer excise taxes,1,1,ExciseAndSalesTaxes 1
 operating_expenses,venezuela currency devaluation and other charges net,1,1,OtherNonrecurringIncomeExpense 1

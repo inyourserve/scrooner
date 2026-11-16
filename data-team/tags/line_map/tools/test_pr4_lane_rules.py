@@ -1081,3 +1081,21 @@ def test_absolute_no_repurchase_sentences_and_the_except_clause():
            'of Company common stock during 2021, 2020 or 2019.\n')
     assert td.read_cell(dhr, dict(data_point='share_buybacks', period_end='2020-12-31', own='1'))['decision'] == 'mapped'
     assert td.read_cell(dhr, dict(data_point='share_buybacks', period_end='2019-12-31', own='1'))['decision'] == 'open'
+
+
+def test_costs_block_leaves_out_nonoperating_lines_by_element():
+    # COP FY2019: 'Total Costs and Expenses' 27,146 holds purchased commodities (cost of revenue), interest and debt expense (served on
+    # interest_expense), other nonoperating expense 65 and foreign-currency gains (66): opex = the operating lines only, 14,395
+    lines = [('Revenues', 'Sales and other operating revenues', 32567), ('CostOfPurchasedOilAndGas', 'Purchased commodities', 11842),
+             ('OperatingCostsAndExpenses', 'Production and operating expenses', 5322), ('SellingGeneralAndAdministrativeExpense', 'SG&A', 556),
+             ('ExplorationExpense', 'Exploration expenses', 743), ('DepreciationDepletionAndAmortization', 'DD&A', 6090), ('AssetImpairmentCharges', 'Impairments', 405),
+             ('TaxesExcludingIncomeAndExciseTaxes', 'Taxes other than income taxes', 953), ('AccretionExpenseIncludingAssetRetirementObligations', 'Accretion', 326),
+             ('InterestAndDebtExpense', 'Interest and debt expense', 778), ('ForeignCurrencyTransactionGainLossBeforeTax', 'Foreign currency transaction (gains) losses', -66),
+             ('OtherNonoperatingExpense', 'Other expenses', 65), ('CostsAndExpenses', 'Total Costs and Expenses', 27146)]
+    calc = '~'.join(f"4|CostsAndExpenses|{t}|{-1 if t == 'ForeignCurrencyTransactionGainLossBeforeTax' else 1}" for t, _, _ in lines[1:-1])
+    f, isf = _isf(lines, calc)
+    cor = dict(accession='A', data_point='cost_of_revenue', status='mapped', tags='CostOfPurchasedOilAndGas', nodes='CostOfPurchasedOilAndGas=11842 [R2.htm:2]', column='own')
+    ie = dict(accession='A', data_point='interest_expense', status='mapped', tags='InterestAndDebtExpense', nodes='InterestAndDebtExpense=778 [R2.htm:10]', column='own')
+    r = dict(accession='A', data_point='operating_expenses')
+    got = resolve_all._opex_from_costs_block([cor, ie, r], r, f, isf[-1], isf, cor)
+    assert got['value'] == D(14395) and 'OtherNonoperatingExpense' not in got['nodes'] and 'ForeignCurrency' not in got['nodes']

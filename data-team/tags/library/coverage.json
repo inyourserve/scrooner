@@ -1,8 +1,8 @@
 {
  "built": "2026-11-16",
- "resolver_version": "resolver-all110-.79",
+ "resolver_version": "resolver-all110-.80",
  "rows": 27999,
- "rows_with_usage": 577,
+ "rows_with_usage": 576,
  "rows_full": 115,
  "taxonomy_elements": 22756,
  "served_cells": 55237,
