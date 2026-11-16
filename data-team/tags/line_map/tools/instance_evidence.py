@@ -21,7 +21,7 @@ _last = [0.0]
 def _get(url):
     assert url.startswith('https://www.sec.gov/'), url
     for i in range(4):
-        w = 0.34 - (time.time() - _last[0])
+        w = float(os.environ.get('INSTANCE_MIN_INTERVAL', '0.34')) - (time.time() - _last[0])   # the daily drill sets 0.5 (2 requests a second)
         if w > 0: time.sleep(w)
         _last[0] = time.time()
         try:

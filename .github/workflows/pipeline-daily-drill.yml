@@ -1,0 +1,217 @@
+name: Daily blind drill (20 companies outside the certified set; read-only on the database)
+
+# "Learn daily, like an army drills" (founder, via Dhairya). Each day: pick the next 20 companies outside the certified set in
+# rank order (scripts/ci/daily_drill.py pick: stateless rolling window from the date; ranking =
+# data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv, certified = data-team/strategy/approvals/<TICKER>-certificate-*.md),
+# run the standard extract (same steps as pipeline-standard-extract.yml) and the resolver BLIND (no hand rows, no fix files),
+# gate the answers against analytics.cell_proof, the docmap keys (data-team/companies/reads) and fsn.filing_check, and write
+# data-team/tags/drills/<date>.md + <date>.csv (the Tag Expert's daily queue; class = rule_gap | data_gap | filer_error).
+#
+# Three jobs, three privilege levels:
+#   extract  DATABASE_URL, read-only session (default_transaction_read_only=on, statement_timeout 15 min, ONE connection,
+#            pauses while pg_stat_activity > 80), contents: read.  No SEC access.
+#   resolve  SEC_USER_AGENT only (instance evidence for total_debt, <= 2 requests a second, sec.gov only), no DB secret, contents: read.
+#   commit   contents: write, no secrets. Pushes ONLY data-team/tags/drills/ to the data branch `drills`, never main.
+# Why a branch: main is protected by CI and shared by many sessions; a daily bot commit there would race every session's push and
+# trigger CI each day. The branch costs nothing, keeps main history clean, and the Tag Expert reads `git fetch origin drills`.
+#
+# OFF by default: the schedule only runs when the repository variable DAILY_DRILL is "true" (Settings, Secrets and variables,
+# Variables). A manual dispatch from main always runs. Cron 07:41 UTC: the nightly refresh is scheduled 12:23 (observed starts
+# 17:47-21:49 UTC) and the sanity run 15:17; the hourly coverage export (:17) is light.
+# Queue: its own concurrency group. It waits for pipeline-fsn-write / fsn-load-filings (heavy_job_guard.sh wait-for-write);
+# it is read-only, so it is not in HEAVY_WORKFLOWS and never makes a write refuse.
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Batch date YYYY-MM-DD (empty = today UTC); the same date always picks the same 20 companies"
+        default: ""
+      n:
+        description: "Companies in the batch (1..40)"
+        default: "20"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: daily-drill
+  cancel-in-progress: false
+
+env:
+  MAX_BACKENDS: "80"
+
+jobs:
+  wait-for-fsn-write:
+    name: Main only; wait while pipeline-fsn-write is in progress
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.DAILY_DRILL == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
+  extract:
+    name: Pick, extract (read-only database session), fetch proofs and filer checks
+    needs: wait-for-fsn-write
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      contents: read
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
+      IN_DATE: ${{ inputs.date }}
+      IN_N: ${{ inputs.n }}
+    outputs:
+      day: ${{ steps.pick.outputs.day }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Pick the batch (no database)
+        id: pick
+        run: |
+          set -eu
+          day="${IN_DATE:-$(date -u +%F)}"
+          n="${IN_N:-20}"
+          printf '%s' "$day" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' || { echo "::error::date must be YYYY-MM-DD"; exit 1; }
+          printf '%s' "$n" | grep -Eq '^([1-9]|[1-3][0-9]|40)$' || { echo "::error::n must be 1..40"; exit 1; }
+          echo "day=$day" >> "$GITHUB_OUTPUT"
+          mkdir -p out
+          python3 scripts/ci/daily_drill.py pick --ranking data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv \
+            --approvals data-team/strategy/approvals --date "$day" --out out --n "$n"
+      - name: Connection preflight (pause while pg_stat_activity > 80; this run holds 1)
+        run: |
+          set -eu
+          for i in $(seq 1 60); do
+            used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity" | tr -d ' ')
+            echo "client sessions now: $used (limit $MAX_BACKENDS)"
+            [ "$used" -le "$MAX_BACKENDS" ] && exit 0
+            sleep 60
+          done
+          echo "::error::pg_stat_activity stayed above $MAX_BACKENDS for 60 minutes"; exit 1
+      - name: 1. Write the SQL
+        run: python3 data-team/tags/line_map/tools/standard_run.py sql "$(cat out/ciks.txt)" out --batch 4
+      - name: 2. Run the SQL (one read-only connection)
+        run: pipeline/.venv/bin/python scripts/ci/run_extract_sql.py run out
+      - name: 3. Assemble
+        run: python3 data-team/tags/line_map/tools/standard_run.py assemble out
+      - name: 2b/3b. Legal-entity rows, then assemble again
+        run: |
+          set -eu
+          python3 data-team/tags/line_map/tools/standard_run.py sql-le out
+          if [ -f out/le-00.sql ]; then
+            pipeline/.venv/bin/python scripts/ci/run_extract_sql.py run out --only le
+            python3 data-team/tags/line_map/tools/standard_run.py assemble out
+          fi
+      - name: Keys from the database (cell_proof, failed fsn.filing_check), same read-only settings
+        run: pipeline/.venv/bin/python scripts/ci/daily_drill.py fetch out
+      - name: Sanity
+        run: |
+          python3 -c "import json; f = json.load(open('out/filings.json')); assert f, 'no filings extracted'; print(len(f), 'filings')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drill-extract-${{ github.run_id }}
+          path: |
+            out/*.json
+            out/*.csv
+            out/ciks.txt
+          retention-days: 14
+          if-no-files-found: error
+
+  resolve:
+    name: Resolve blind and write the report (no database secret)
+    needs: extract
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      INSTANCE_MIN_INTERVAL: "0.5"
+      DAY: ${{ needs.extract.outputs.day }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: drill-extract-${{ github.run_id }}
+          path: out
+      - name: Instance evidence for total_debt (sec.gov only, 2 requests a second, cached per accession)
+        run: python3 data-team/tags/line_map/tools/instance_evidence.py fetch out/filings.json out/instances
+      - name: Resolver, blind (no hand rows, no fix files)
+        run: |
+          set -eu
+          cd out
+          python3 ../data-team/tags/line_map/tools/resolve_all.py "drill-$DAY@$GITHUB_SHA" resolver-drill.csv
+      - name: Gate and report
+        run: python3 scripts/ci/daily_drill.py report --out out --date "$DAY" --drills drills-out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drill-report-${{ github.run_id }}
+          path: drills-out/
+          retention-days: 30
+          if-no-files-found: error
+
+  commit:
+    name: Commit data-team/tags/drills/ to the drills branch (never main)
+    needs: [extract, resolve]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      DAY: ${{ needs.extract.outputs.day }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          name: drill-report-${{ github.run_id }}
+          path: dl
+      - name: Push the two files
+        run: |
+          set -eu
+          [ "$GITHUB_REF" = "refs/heads/main" ] || { echo "::error::main only"; exit 1; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp "dl/$DAY.md" "dl/$DAY.csv" "$RUNNER_TEMP/"
+          for i in 1 2 3 4 5 6; do
+            if git ls-remote --exit-code --heads origin drills >/dev/null 2>&1; then
+              git fetch -q origin drills
+              git checkout -q -B drills origin/drills
+            else
+              git checkout -q -B drills origin/main
+            fi
+            mkdir -p data-team/tags/drills
+            cp "$RUNNER_TEMP/$DAY.md" "$RUNNER_TEMP/$DAY.csv" data-team/tags/drills/
+            git add "data-team/tags/drills/$DAY.md" "data-team/tags/drills/$DAY.csv"
+            other=$(git diff --cached --name-only | grep -v '^data-team/tags/drills/' || true)
+            [ -z "$other" ] || { echo "::error::staged files outside data-team/tags/drills/: $other"; exit 1; }
+            if git diff --cached --quiet; then echo "no change"; exit 0; fi
+            git commit -q -m "Daily drill $DAY (run $GITHUB_RUN_ID, code $GITHUB_SHA)"
+            if git push -q origin drills; then echo "pushed drills: data-team/tags/drills/$DAY"; exit 0; fi
+            sleep $((i * 5))
+          done
+          echo "::error::could not push to drills"; exit 1
