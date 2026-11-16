@@ -1,0 +1,7 @@
+work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
+blank,100,BMY,215,gross_profit,2015,2015-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,100,BMY,215,gross_profit,2016,2016-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,100,BMY,215,gross_profit,2017,2017-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,100,BMY,215,gross_profit,2018,2018-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,100,BMY,215,gross_profit,2019,2019-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,100,BMY,215,gross_profit,2020,2020-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
