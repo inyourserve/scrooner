@@ -412,7 +412,7 @@ join fsn.value v on v.filing_id = f.id
 join fsn.tag t on t.id = v.tag_id
 join fsn.dim d on d.id = v.dim_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
-where f.accession = any(%(acc)s) and t.tag = any(%(tags)s) and coalesce(v.coreg, '') = ''
+where f.accession = any(%(acc)s) and t.tag = any(%(tags)s) and coalesce(v.coreg, '') = '' and v.value is not null
 group by 1, 2, 3, 4, 5, 6
 """
 
@@ -420,7 +420,7 @@ COMPANY_FACT_SQL = """
 select f.accession, t.tag, v.ddate::text, v.qtrs, '' as segments, v.value,
        coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports
 from fsn.filing f
-join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = ''
+join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.value is not null
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
@@ -498,11 +498,19 @@ class BundleFactSource:
 
     def facts(self, accessions, tags):
         acc, tg = set(accessions), set(tags)
-        return [_fact(r) for r in self.b.get("facts", []) if r[0] in acc and r[1] in tg]
+        return [
+            _fact(r)
+            for r in self.b.get("facts", [])
+            if r[0] in acc and r[1] in tg and r[5] is not None
+        ]
 
     def company_facts(self, cik, tags):
         tg = set(tags)
-        return [_fact(r) for r in self.b.get("company_facts", []) if r[1] in tg]
+        return [
+            _fact(r)
+            for r in self.b.get("company_facts", [])
+            if r[1] in tg and r[5] is not None
+        ]
 
     def periodic_year_ends(self, cik):
         return {k: sorted(v) for k, v in self.b.get("year_ends", {}).items()}
@@ -661,7 +669,7 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
                 f"{tot[0].tag}={tot[0].value} ({','.join(tot[0].reports)})",
             )
         elif parts:
-            lease = sum((f.value for f in parts), Decimal(0))
+            lease = sum(f.value for f in parts)
             lease_ev = "; ".join(f"{f.tag}[{f.dims}]={f.value}" for f in parts)
     perim = sum(face.values(), Decimal(0)) + lease
     ev = f"face {dict(sorted(face.items()))}; lease {lease_ev}"
@@ -927,7 +935,7 @@ with want(acc, tag, pe) as (values {vals}),
 fact as (
   select f.accession, t.tag, v.ddate, v.qtrs, d.segments, v.value, v.filing_id, v.tag_id
   from want w join fsn.filing f on f.accession = w.acc
-  join fsn.value v on v.filing_id = f.id and v.ddate between w.pe - 7 and w.pe + 7 and coalesce(v.coreg, '') = ''
+  join fsn.value v on v.filing_id = f.id and v.ddate between w.pe - 7 and w.pe + 7 and coalesce(v.coreg, '') = '' and v.value is not null
   join fsn.tag t on t.id = v.tag_id and (t.tag = w.tag or (w.tag = '' and t.tag in ({debt_tags})))
   join fsn.dim d on d.id = v.dim_id
 ),
@@ -935,7 +943,7 @@ fam as (
   select * from (
     select f.accession, t.tag, v.ddate, v.qtrs, '' as segments, v.value, v.filing_id, v.tag_id,
            row_number() over (partition by t.tag order by v.ddate desc) as rn
-    from fsn.filing f join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = ''
+    from fsn.filing f join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.value is not null
     join fsn.dim d on d.id = v.dim_id and d.segments = ''
     join fsn.tag t on t.id = v.tag_id and t.tag in ({fam})
     where ltrim(f.cik, '0') = {_lit(cik.lstrip("0"))} and f.form in ({forms})) x where rn <= {per_tag}

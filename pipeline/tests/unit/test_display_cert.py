@@ -291,7 +291,10 @@ def test_bundle_source_round_trip(tmp_path):
         [["revenue", "2023", "2023-12-31", "100", ACC, "R4", "Revenues", "", dc.SHOWN]],
     )
     bundle = {
-        "facts": [[ACC, "Revenues", "2023-12-31", 4, "", "100", ["R4"]]],
+        "facts": [
+            [ACC, "Revenues", "2023-12-31", 4, "", "100", ["R4"]],
+            [ACC, "Revenues", "2023-12-31", 4, "", None, []],
+        ],
         "company_facts": [[ACC, "Assets", "2023-12-31", 0, "", "1", ["R2"]]],
         "year_ends": {ACC: ["2023-12-31"]},
     }
