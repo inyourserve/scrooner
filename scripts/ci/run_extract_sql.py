@@ -97,7 +97,13 @@ def run_dir(conn, sqldir, only=None):
 
 def connect():
     import psycopg
-    return psycopg.connect(os.environ['DATABASE_URL'], autocommit=False)
+    # The Supabase pooler drops PGOPTIONS startup parameters, so the session is made read-only explicitly here
+    # (and every transaction after it); assert_read_only still checks it before any query.
+    conn = psycopg.connect(os.environ['DATABASE_URL'], autocommit=True)
+    conn.execute('set session characteristics as transaction read only')
+    conn.execute('set default_transaction_read_only = on')
+    conn.autocommit = False
+    return conn
 
 
 def _clean(ciks):
