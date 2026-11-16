@@ -702,3 +702,13 @@ def test_derived_shares_outstanding_and_eps_never_derived():
         dc.check_derived(cell(dp="diluted_eps", value="5.51", tag=""), [], []).result
         == "MISMATCH"
     )
+
+
+def test_gate_censuses_implausible_per_share_values_outside_the_draw():
+    bad = cell(
+        dp="dividends_per_share",
+        value="2770000",
+        tag="CommonStockDividendsPerShareDeclared",
+    )
+    ok = cell(dp="diluted_eps", value="5.51", tag="EarningsPerShareDiluted")
+    assert [f.severity for f in dc.gate([bad, ok])] == ["FAIL"]

@@ -387,6 +387,23 @@ def gate(cells: list[Cell]) -> list[Finding]:
                     "row is hidden in this year but shown in another: a hidden row must be never reported",
                 )
             )
+    # Census, not sample: a per-share value no reader could believe fails wherever it sits.
+    # STX FY2022 dividends per share (2,770,000) passed a later draw only because it was not drawn.
+    for c in cells:
+        if (
+            c.display == SHOWN
+            and c.data_point in PER_SHARE_DPS
+            and c.value is not None
+            and abs(c.value) > PER_SHARE_CEILING
+        ):
+            out.append(
+                Finding(
+                    "gate",
+                    *c.key,
+                    "FAIL",
+                    f"implausible per-share value {c.value} (> {PER_SHARE_CEILING}) from {c.accession}",
+                )
+            )
     return out
 
 

@@ -49,10 +49,12 @@ jobs:
             REQUESTS=""
             for r in $A/requests/*-request-*.md; do
               t=$(basename "$r" | sed 's/-request-.*//')
-              d=$(basename "$r" .md | sed 's/.*-request-//')
-              # pending = no verdict file for this ticker dated on or after the request
-              done_=$(ls $A/${t}-certificate-*.md $A/${t}-final-draw-*.md 2>/dev/null | sed "s/.*-\([0-9-]*\)\.md$/\1/" | awk -v d="$d" '$1>=d' | head -1)
-              [ -z "$done_" ] && REQUESTS="$REQUESTS $r"
+              sha=$(grep -o 'sha256: `[0-9a-f]\{64\}`' "$r" | grep -o '[0-9a-f]\{64\}' | head -1)
+              # pending = no certificate or final-draw file for this ticker cites the request's coverage sha256
+              # (a date test missed a second request on the same day as an earlier verdict)
+              if [ -z "$sha" ] || ! grep -lq "$sha" $A/${t}-certificate-*.md $A/${t}-final-draw-*.md 2>/dev/null; then
+                REQUESTS="$REQUESTS $r"
+              fi
             done
           fi
           echo "requests:$REQUESTS"
