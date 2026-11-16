@@ -881,6 +881,10 @@ def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIn
     return idx
 
 
+# the cells the last build_rows call put OUT of a company's template (read by the display-state writer)
+OUT_CELLS: list[dict[str, Any]] = []
+
+
 def build_rows(
     conn: Any,
     companies: list[Company],
@@ -1199,6 +1203,8 @@ def build_rows(
                     }
                 )
     rows, _out = split_out_of_template(rows, load_not_in_template())
+    OUT_CELLS.clear()
+    OUT_CELLS.extend(_out)
     resolve_derived(
         rows, load_input_prints(conn, rows), load_direct_derived(conn, rows)
     )
@@ -2153,7 +2159,44 @@ def open_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
-def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
+def _display_state(
+    rows: list[dict[str, Any]],
+    out_cells: list[dict[str, Any]],
+    now: datetime,
+    write: bool,
+) -> None:
+    """Dry run by default: count what analytics.cell_display_state would hold. write=True upserts it (scoped
+    delete-then-insert per exported company) on its own connection: the export's read connection stays read-only."""
+    from scrooner_pipeline.mapper import cell_display_state as cds
+
+    run_id = "top100_coverage-" + now.strftime("%Y%m%dT%H%MZ")
+    table_rows = cds.state_rows(rows, out_cells, run_id, cds.resolver_version())
+    counts: dict[str, int] = {}
+    for t in table_rows:
+        counts[t[4]] = counts.get(t[4], 0) + 1
+    print(
+        f"display-state {'WRITE' if write else 'dry run'}: {len(table_rows)} rows, "
+        f"{len({t[0] for t in table_rows})} companies, {counts}"
+    )
+    if not write:
+        return
+    from scrooner_pipeline.db.connection import get_connection
+
+    with get_connection() as wconn:
+        wconn.execute("set statement_timeout = '10min'")
+        written = cds.write_display_state(wconn, table_rows)
+    print(
+        f"display-state written: {sum(written.values())} rows for {len(written)} companies"
+    )
+
+
+def main(
+    out_dir: Path,
+    shards: Path,
+    reads_dir: Path,
+    n: int = 100,
+    write_display_state: bool = False,
+) -> int:
     from scrooner_pipeline.db.connection import get_connection
 
     companies = load_top(shards, n)
@@ -2170,6 +2213,7 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
             load_fix_pages(reads_dir),
         )
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
+    _display_state(rows, list(OUT_CELLS), now, write_display_state)
     summary = summarize(rows, companies, notes, as_of)
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
     scols = [

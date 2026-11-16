@@ -65,6 +65,12 @@ BEHAVIOUR_SMOKES: list[tuple[str, str, str, bool]] = [
              "('analytics','company_value_owner_guard'),('core','company_history_source_no_overlap'),"
              "('analytics','company_tag_map_no_overlap'),('analytics','verifier_check_writer_guard')) "
              "and p.proconfig::text ~ 'search_path=pg_catalog, (analytics|core)'", "8", False),
+    ("0130", "insert into analytics.cell_display_state (company_id, data_point, period_end, grain, display) "
+             "values (1, 'x', '2024-12-31', 'FY', 'HIDDEN_ROW')", "cell_display_state_hide_class_iff_hidden", True),
+    ("0130", "insert into analytics.cell_display_state (company_id, data_point, period_end, grain, display, hide_class) "
+             "values (1, 'x', '2024-12-31', 'FY', 'OPEN', 'pre_filing')", "cell_display_state_hide_class_iff_hidden", True),
+    ("0130", "insert into analytics.cell_display_state (company_id, data_point, period_end, grain, display, hide_class) "
+             "values (1, 'x', '2024-12-31', 'FY', 'HIDDEN_YEAR', 'made_up')", "cell_display_state_hide_class_check", True),
 ]
 
 
