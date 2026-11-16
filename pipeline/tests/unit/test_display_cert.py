@@ -407,3 +407,43 @@ def test_implausible_per_share_value_is_wrong_even_when_it_matches_the_filing():
         dc.check_cell(ok, [fact("CommonStockDividendsPerShareDeclared", "2.77")]).result
         == "MATCH"
     )
+
+
+def test_derived_total_liabilities_uses_total_equity_including_nci():
+    # GILD FY2022: 63,171 - 21,209 (incl. NCI -31) = 41,962; parent-only equity would give 41,931
+    facts = [
+        fact("Assets", "63171", qtrs=0),
+        fact("StockholdersEquity", "21240", qtrs=0),
+        fact(
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "21209",
+            qtrs=0,
+        ),
+    ]
+    c = cell(dp="total_liabilities", value="41962", tag="")
+    assert dc.check_derived(c, [c], facts).result == "MATCH"
+    assert (
+        dc.check_derived(
+            cell(dp="total_liabilities", value="41931", tag=""), [c], facts
+        ).result
+        == "MISMATCH"
+    )
+
+
+def test_derived_gross_profit_is_shown_revenue_less_cost():
+    cells = [
+        cell(dp="revenue", value="28754"),
+        cell(dp="cost_of_revenue", value="6251"),
+    ]
+    gp = cell(dp="gross_profit", value="22503", tag="")
+    assert dc.check_derived(gp, cells, []).result == "MATCH"
+    assert (
+        dc.check_derived(
+            cell(dp="gross_profit", value="22500", tag=""), cells, []
+        ).result
+        == "MISMATCH"
+    )
+    assert (
+        dc.check_derived(cell(dp="ebitda", value="1", tag=""), cells, []).result
+        == "NOT_FOUND"
+    )

@@ -603,6 +603,80 @@ def check_cell(c: Cell, facts: list[Fact]) -> CellCheck:
     return CellCheck(c, "MATCH" if locator_ok else "LOCATOR", total, "; ".join(ev))
 
 
+TOTAL_EQUITY_TAGS = (
+    "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+    "StockholdersEquity",
+)
+DERIVED_TAGS = frozenset(
+    {
+        "Assets",
+        "LiabilitiesAndStockholdersEquity",
+        "MinorityInterest",
+        *TOTAL_EQUITY_TAGS,
+    }
+)
+
+
+def is_derived(c: Cell) -> bool:
+    return not c.tag and not c.parts
+
+
+def check_derived(c: Cell, cells: list[Cell], facts: list[Fact]) -> CellCheck:
+    """A value the filing does not print, computed from printed lines. Only the identities below
+    are checked mechanically; any other derived cell goes to the approver."""
+    shown = c.value if c.value is not None else Decimal(0)
+    if c.data_point == "total_liabilities":
+        at = {
+            f.tag: f.value
+            for f in facts
+            if f.accession == c.accession
+            and f.qtrs == 0
+            and f.dims == ""
+            and c.period_end
+            and _days(f.ddate, c.period_end) <= 7
+            and f.tag in DERIVED_TAGS
+        }
+        assets = at.get("Assets", at.get("LiabilitiesAndStockholdersEquity"))
+        equity = next((at[t] for t in TOTAL_EQUITY_TAGS if t in at), None)
+        if assets is None or equity is None:
+            return CellCheck(
+                c,
+                "NOT_FOUND",
+                None,
+                f"no Assets or total equity fact at {c.period_end} in {c.accession}",
+            )
+        ev = f"Assets {assets} - total equity incl. NCI {equity} ({', '.join(f'{k}={v}' for k, v in sorted(at.items()))})"
+        return CellCheck(
+            c, "MATCH" if assets - equity == shown else "MISMATCH", assets - equity, ev
+        )
+    if c.data_point == "gross_profit":
+        same = {
+            x.data_point: x.value
+            for x in cells
+            if x.fiscal_year == c.fiscal_year and x.display == SHOWN
+        }
+        rev, cor = same.get("revenue"), same.get("cost_of_revenue")
+        if rev is None or cor is None:
+            return CellCheck(
+                c,
+                "NOT_FOUND",
+                None,
+                "revenue or cost_of_revenue not shown for this year",
+            )
+        return CellCheck(
+            c,
+            "MATCH" if rev - abs(cor) == shown else "MISMATCH",
+            rev - abs(cor),
+            f"shown revenue {rev} - shown cost_of_revenue {cor}",
+        )
+    return CellCheck(
+        c,
+        "NOT_FOUND",
+        None,
+        "derived cell with no tag, parts or known identity: approver checks by hand",
+    )
+
+
 @dataclass(frozen=True)
 class DebtCheck:
     cell: Cell
@@ -847,7 +921,10 @@ def certify(
         counts[c.display] += 1
     run = Run(ticker, str(coverage), p.sha, p.seed, dict(counts), gate=gate(p.cells))
     need_tags = (
-        {t.tag for c in p.sample for t in terms(c)} | DEBT_FACE_TAGS | LEASE_TAGS
+        {t.tag for c in p.sample for t in terms(c)}
+        | DEBT_FACE_TAGS
+        | LEASE_TAGS
+        | DERIVED_TAGS
     )
     need_acc = {t.accession for c in p.sample for t in terms(c)} | p.debt_acc
     facts = source.facts(need_acc, need_tags)
@@ -863,7 +940,10 @@ def certify(
                 "fact source returned no facts for the drawn filings: source broken",
             )
         )
-    run.shown = [check_cell(c, facts) for c in p.sample]
+    run.shown = [
+        check_derived(c, p.cells, facts) if is_derived(c) else check_cell(c, facts)
+        for c in p.sample
+    ]
     run.debt = [check_debt(c, facts) for c in p.debt]
     year_ends = source.periodic_year_ends(cik)
     if not year_ends:
