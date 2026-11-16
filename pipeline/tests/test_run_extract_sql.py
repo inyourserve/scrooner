@@ -111,7 +111,7 @@ def test_timeout_resplits_per_cik_and_retries_doubled(tmp_path):
     _batch(tmp_path, "lines-00.sql", ["1", "2", "3"])
     _batch(tmp_path, "lines-01.sql", ["4"])
 
-    # the 3-CIK batch times out; CIK 2 times out alone at 55s but passes at 110s
+    # the 3-CIK batch times out; CIK 2 times out alone at 55s but passes at the 600s retry floor
     def fail(q, t):
         return "in (1,2,3)" in q or ("in (2)" in q and t == 55)
     conn = Conn([("x", "1", "d")], fail=fail)
@@ -120,7 +120,7 @@ def test_timeout_resplits_per_cik_and_retries_doubled(tmp_path):
     assert len((tmp_path / "lines.jsonl").read_text().splitlines()) == 4
     r = json.loads((tmp_path / "retries.json").read_text())
     assert [(x["cik"], x["outcome"], x["retry_timeout_s"]) for x in r] == [
-        ("1", "ok_alone", None), ("2", "ok_doubled", 110), ("3", "ok_alone", None)]
+        ("1", "ok_alone", None), ("2", "ok_doubled", 600), ("3", "ok_alone", None)]
     assert rx.manifest(str(tmp_path), "1", "s", "1,2,3,4")["retries"] == r
 
 
@@ -129,7 +129,7 @@ def test_single_cik_still_timing_out_fails_naming_it_and_writes_nothing(tmp_path
     conn = Conn([("x", "1", "d")], fail=lambda q, t: "in (1,2)" in q or "in (2)" in q)
     with pytest.raises(SystemExit) as e:
         rx.run_dir(conn, str(tmp_path), regen=_regen)
-    assert "CIK 2" in str(e.value) and "110s" in str(e.value)
+    assert "CIK 2" in str(e.value) and "600s" in str(e.value)
     assert not (tmp_path / "lines.jsonl").exists()
 
 

@@ -23,6 +23,7 @@ from decimal import Decimal
 
 LEAD_SET = re.compile(r"\A\s*(?:--[^\n]*\n\s*)*(set\s+statement_timeout\s*=\s*'\d+s'\s*;)", re.I)
 MAX_TIMEOUT_S = 900
+RETRY_FLOOR_S = 600  # the single-CIK retry runs at least this long (still capped at MAX_TIMEOUT_S)
 
 
 def _default(o):
@@ -144,7 +145,8 @@ def run_file(conn, path, out_path, append, regen=default_regen, retries=None):
             got, e2 = (None, err) if single else _attempt(conn, usql)
             rec = dict(file=name, kind=kind, cik=cik, batch_timeout_s=base)
             if got is None:
-                dbl = min(base * 2, MAX_TIMEOUT_S)
+                # one CIK alone gets the long ceiling (a single company with many filings, e.g. AXP face, needs >110s)
+                dbl = min(max(base * 2, RETRY_FLOOR_S), MAX_TIMEOUT_S)
                 got, e3 = _attempt(conn, with_timeout(usql, dbl))
                 rec.update(retry_timeout_s=dbl, outcome='ok_doubled' if got is not None else 'failed')
                 retries.append(rec)
