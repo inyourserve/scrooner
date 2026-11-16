@@ -415,3 +415,15 @@
 - ~ ReceivablesNetCurrent: rule_id
 - ~ StockOptionPlanExpense: rule_id
 - + Tradeaccountsreceivablenet
+
+## 2026-11-16 (resolver-2026-11-16.55): 1 element changes, 8368 rows, coverage 62.6%
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.55): 1 element changes, 8368 rows, coverage 62.6%
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.56): 4 element changes, 8368 rows, coverage 62.5%
+- ~ Deposits: served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ InterestAndDividendIncomeOperating: served_cells
+- ~ InterestIncomeExpenseNet: served_cells

@@ -484,3 +484,18 @@ def test_sbc_is_the_sum_of_award_type_components_without_after_tax_amounts():
     r = _ov([('CF', 'NetIncomeLoss', 'Net income', 35465)], 'sbc', notes=notes)
     assert r['status'] == 'component_sum' and r['value'] == 1073 and 'award_type_sum' in r['flags']
     assert _ov([('CF', 'NetIncomeLoss', 'Net income', 35465)], 'sbc', notes='StockOptionPlanExpense|4|60')['status'] == 'not_presented'
+
+
+def test_bank_data_points_are_read_only_from_a_bank_income_statement():
+    # WMT FY2023 R3:13 InterestIncomeExpenseNet 'Interest, net' -1,874 was served as net_interest_income (found by the library's learned labels)
+    R = next(r for r in resolve_all.ROLES if r['data_point'] == 'net_interest_income')
+    f = filing([('IS', 'Revenues', 'Total revenues', 611289), ('IS', 'InterestIncomeExpenseNet', 'Interest, net', -1874)]); L, arcs = resolve.parse(f)
+    assert resolve_all.role(f, L, arcs, {}, R)['status'] == 'not_presented'
+    f = filing([('IS', 'InterestAndDividendIncomeOperating', 'Total interest income', 100), ('IS', 'InterestIncomeExpenseNet', 'Net interest income', 60)]); L, arcs = resolve.parse(f)
+    assert resolve_all.role(f, L, arcs, {}, R)['status'] == 'mapped'
+
+
+def test_a_label_learned_for_the_data_point_blocks_proven_absence():
+    resolve_all.LEARNED['inventory'] = {'merchandise inventories'}
+    assert not _absent([('BS', 'xyz_Stock', 'Merchandise inventories', 5)], dp='inventory')
+    assert _absent([('BS', 'xyz_Stock', 'Prepaid expenses', 5)], dp='inventory')

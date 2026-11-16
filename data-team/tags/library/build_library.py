@@ -28,7 +28,8 @@ COLUMNS = [
     'element', 'taxonomy', 'standard_label', 'definition', 'balance', 'period_type', 'data_type', 'abstract', 'taxonomy_years',
     'deprecated_year', 'replaces', 'deprecated_by', 'deprecation_chain',
     'data_point', 'roles_rows', 'role_kind', 'rule_id', 'resolver_functions', 'tests', 'polarity', 'family', 'statements',
-    'positions', 'calc_parents', 'metrics', 'concept_catalog', 'links',
+    'positions', 'calc_parents', 'filer_calc_parents', 'labels_seen', 'learned_filings', 'learned_companies', 'learned_statements', 'member_axes', 'custom',
+    'metrics', 'concept_catalog', 'links',
     'companies', 'filings_seen', 'years_seen', 'served_cells', 'example_cells',
     'proof_cells', 'proven_cells', 'proof_companies', 'certified_cells', 'last_verified', 'composite_uses',
     'fsn_lines_top100', 'fsn_companies_top100', 'legacy_decision', 'legacy_concept', 'legacy_caveat', 'company_overrides',
@@ -236,13 +237,19 @@ def main():
             if dp in cat:
                 add(t, 'concept_catalog', dp)
 
+    # 8b. learned from the filings themselves (learn_from_filings.py over the standard extract): every element filers use
+    learned = {r['element']: r for r in rows_of(os.path.join(LIB, 'learned_elements.csv'))}
+    for e, r in learned.items():
+        lib[e]['labels_seen'] = [r['labels']]; lib[e]['filer_calc_parents'] = [r['calc_parents']]; lib[e]['learned_filings'] = [r['filings']]
+        lib[e]['learned_companies'] = [r['companies']]; lib[e]['learned_statements'] = [r['statements']]; lib[e]['member_axes'] = [r['member_axes']]
+        lib[e]['custom'] = [r['custom']]
     # 9. assemble rows: every element with any knowledge, plus the full taxonomy
     out = []
     for e in sorted(set(lib) | set(tax)):
         L = lib.get(e, {})
         T = tax.get(e, {})
         row = {k: '' for k in COLUMNS}
-        row.update(element=e, taxonomy='us-gaap' if T else ('custom-or-other'),
+        row.update(element=e, taxonomy='us-gaap' if T else ('custom' if (L.get('custom') or [''])[0] == '1' else 'us-gaap?' if L.get('custom') else 'unknown'),
                    standard_label=T.get('standard_label', ''), definition=(T.get('documentation') or '')[:400], balance=T.get('balance', ''),
                    period_type=T.get('period_type', ''), data_type=T.get('type', ''), abstract=T.get('abstract', ''),
                    taxonomy_years=f"{T.get('first_year', '')}-{T.get('last_year', '')}" if T else '', deprecated_year=T.get('deprecated_year', ''),

@@ -78,6 +78,27 @@
   "calc_parents": {
    "type": "string"
   },
+  "filer_calc_parents": {
+   "type": "string"
+  },
+  "labels_seen": {
+   "type": "string"
+  },
+  "learned_filings": {
+   "type": "string"
+  },
+  "learned_companies": {
+   "type": "string"
+  },
+  "learned_statements": {
+   "type": "string"
+  },
+  "member_axes": {
+   "type": "string"
+  },
+  "custom": {
+   "type": "string"
+  },
   "metrics": {
    "type": "string"
   },

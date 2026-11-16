@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .55, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .56, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -274,6 +274,8 @@ Format: `ID | rule | code | test | date / source`.
 | X50 | A balance-sheet face line whose own label names inventory, accounts receivable, accounts payable or goodwill maps to that data point whatever its element; flag label_overrides_element. Such a label on any statement also blocks proven absence (AT&T 'Inventories' under PrepaidExpenseCurrent FY2021-25; PH custom 'Trade accounts receivable, net') | ra.apply_face_label_overrides (FACE_LABEL), ra.apply_absent_in_own_filing | pr4::test_face_label_names_the_data_point_whatever_its_element | Dhairya 2026-11-16 (second filing-checked sample); commit .55 |
 | X51 | accounts_receivable from a composition note when the face prints no receivables line: one undimensioned trade-receivables fact (NFLX 'Other current assets' note, TradeReceivablesHeldForSaleAmount); flag from_composition_note | ra.apply_face_label_overrides (TRADE_AR_NOTE); extract_families TradeReceivable | pr4::test_trade_receivables_from_a_composition_note | Dhairya 2026-11-16; commit .55 |
 | X52 | sbc = the sum of two or more award-type components when no total is printed (CVX: restricted stock/units 1,013 custom + StockOptionPlanExpense 60); flag award_type_sum. Per-plan-only filers (SCCO) are not summed unless the plans are shown to be exhaustive | ra.apply_face_label_overrides (SBC_PART); extract_families | pr4::test_sbc_is_the_sum_of_award_type_components_without_after_tax_amounts | Dhairya 2026-11-16; commit .55 |
+| X53 | A face label that served a data point at two or more other companies, and served no other data point, blocks a proven-absence hide for that data point (learned labels, data-team/tags/library/learned_labels.csv from learn_from_filings.py); never used to serve a value | ra.learned_labels, ra.apply_absent_in_own_filing | pr4::test_a_label_learned_for_the_data_point_blocks_proven_absence | founder direction 2026-11-16 (learn from FSN and filings); commit .56 |
+| X54 | Bank template data points (net_interest_income, total_interest_income, noninterest_income, noninterest_expense, deposits) are read only from a bank income statement (bank_face): an industrial's 'Interest, net' is never net interest income (CVS, WMT, RTX, ETN, V, VRTX, LIN, PM: 55 false values withdrawn; found by the learned labels) | ra.role (BANK_ONLY) | pr4::test_bank_data_points_are_read_only_from_a_bank_income_statement | commit .56 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

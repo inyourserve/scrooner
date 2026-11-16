@@ -6,6 +6,13 @@ The single place that says what every element is, which data point it serves, un
 
     python3 data-team/tags/library/build_library.py      # repo root; read-only, no DB, no network, ~1 s
 
+## Learning loop (from the filings, FSN and SEC)
+
+1. `learn_from_filings.py EXTRACT_DIR` reads the standard extract (the same filings the resolver reads) and writes `learned_elements.csv`: every element filers use, with its labels, statements, own calc parents, filings and companies, note use and member axes, and custom or standard. It also writes `learned_labels.csv`: the face labels of every line the resolver served, per data point.
+2. `build_library.py` folds both into `library.csv`, next to the taxonomy (FASB meaning and deprecations), the rules, proof and certification.
+3. The resolver reads `learned_labels.csv` back. A label that served a data point at two or more companies, and no other data point, blocks a false absence hide. The learned tables are also the place to find problems: the first run exposed net interest income served from industrials' interest-expense lines (fixed in .56).
+4. Run 1 then 2 after every extract. On the full 1,000-company extract this is the FSN-wide pass, with no extra DB query.
+
 ## Files
 
 | File | What it is |
@@ -17,6 +24,7 @@ The single place that says what every element is, which data point it serves, un
 | `browser.html` | Static search page. Open it in a browser, search an element, ruling ID, ticker or problem, and click through the links. |
 | `CHANGELOG.md` | Per build, what changed per element (data points, rulings, served, proven, certified, problems, successors). |
 | `coverage.json` | Row counts and coverage (below). |
+| `learn_from_filings.py`, `learned_elements.csv`, `learned_labels.csv` | The learning step above. |
 | `proof_by_tag.csv` / `proof_by_tag.sql` | analytics.cell_proof aggregated by shown tag. The SQL refreshes it (read-only). |
 
 ## Columns (matching the DB schema: element, taxonomy, data_point, rule_id, polarity, family, deprecated_by, replaces, statements and positions, companies, proven_cells, certified_cells, known_problems, links, last_verified)

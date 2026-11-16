@@ -537,6 +537,27 @@ TRADE_AR_NOTE = re.compile(r'^(TradeReceivables\w*|AccountsReceivableTrade\w*)$'
 SBC_PART = re.compile(r'(?i)^(StockOptionPlanExpense|CompensationExpenseFor\w*(Restricted|Stock|Unit|Award|Option|Performance)\w*)$')
 
 
+def learned_labels(path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'library', 'learned_labels.csv'), min_companies=2):
+    """data_point -> normalised face labels the resolver served for it at min_companies or more companies (data-team/tags/library,
+    learn_from_filings.py). Used only to BLOCK an absence hide (a line the label names exists), never to serve a value."""
+    out, dps = collections.defaultdict(set), collections.defaultdict(set)
+    if os.path.exists(path):
+        rows = list(csv.DictReader(open(path)))
+        for r in rows: dps[r['label']].add(r['data_point'])
+        for r in rows:   # a label that served more than one data point ('interest income': banks and industrials) proves nothing
+            if int(r['companies'] or 0) >= min_companies and len(dps[r['label']]) == 1: out[r['data_point']].add(r['label'])
+    return out
+
+
+LEARNED = learned_labels()
+
+
+def norm_label(lb):
+    lb = re.sub(r'\(.*?\)', '', lb or '').lower()
+    lb = re.sub(r'[^a-z ,&]', ' ', lb)
+    return re.sub(r'\s+', ' ', lb).strip(' ,')
+
+
 def apply_face_label_overrides(rows, filings, notefacts):
     """Dhairya 2026-11-16, four fixes on not_presented own cells:
     (1) a balance-sheet face line whose own label names the data point maps to it whatever its element (flag label_overrides_element);
@@ -690,6 +711,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         L = [x.split('|') for x in (f.get('lines') or '').split('~')]
         if any(len(p) > 3 and inE(p[3]) for p in L): continue
         if r['data_point'] in FACE_LABEL and any(len(p) > 7 and p[0] in ('BS', 'IS', 'CF') and FACE_LABEL[r['data_point']].search(p[7].strip()) for p in L): continue   # label names it (AT&T)
+        if LEARNED.get(r['data_point']) and any(len(p) > 7 and p[0] in ('BS', 'IS', 'CF') and norm_label(p[7]) in LEARNED[r['data_point']] for p in L): continue   # a label that served it at other companies (library)
         lab = ABSENT_LABEL.get(r['data_point'])
         if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not (ABSENT_NOT.get(r['data_point']) and ABSENT_NOT[r['data_point']].search(p[7])) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
@@ -1069,8 +1091,15 @@ def bank_face(L):
     return any(l['st'] == 'IS' and (l['tag'] == 'InterestIncomeExpenseAfterProvisionForLoanLoss' or re.match(r'(?i)^net interest( income| revenue)?$', (l['lb'] or '').strip())) for l in L)
 
 
+BANK_ONLY = {'net_interest_income', 'total_interest_income', 'noninterest_income', 'noninterest_expense', 'deposits'}   # bank template data points
+
+
 def role(f, L, arcs, notes, R):
     dp, stmt = R['data_point'], R['stmt']
+    if dp in BANK_ONLY and not bank_face(L):
+        # found by the library's learned labels (2026-11-16): an industrial's 'Interest expense, net' (InterestIncomeExpenseNet) was served as
+        # net interest income at CVS, WMT, RTX, ETN, V, VRTX, LIN, PM. A bank data point is read only from a bank's income statement.
+        return dict(status='not_presented', tags='', value=None, r_page='', why=f"{dp} is a bank data point and this income statement is not a bank's (no net interest income line)")
     alts = [a.split('+') for a in R['alternatives'].split('|') if a]
     comb = [t for t in R['combined_if'].split('|') if t]
     if stmt != 'NOTE':
