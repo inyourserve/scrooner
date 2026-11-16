@@ -802,3 +802,15 @@ def test_weighted_shares_by_class_basic_sum_diluted_open_never_absent():
     rr = [dict(d, cik='1', period_end='2019-12-31'), dict(d, cik='1', period_end='2019-12-31', flags='roles')]
     resolve_all.apply_absent_in_own_filing(rr, filings, {}, {})
     assert 'absent_in_own_filing' not in rr[0]['flags'] and 'absent_in_own_filing' in rr[1]['flags']
+
+
+def test_accounts_receivable_is_out_of_the_bank_template_with_the_line_kept_as_evidence():
+    # Dhairya ruling 2026-11-16 (a): JPM 'Accrued interest and accounts receivable' is not trade AR; OUT, the line kept in why
+    ind = dict(filing([('IS', 'Revenues', 'Net sales', 100)]), cik='1', a='A1')
+    bank = dict(filing([('IS', 'InterestIncomeExpenseNet', 'Net interest income', 60)]), cik='2', a='B1')
+    rows = [dict(cik='2', accession='B1', data_point='accounts_receivable', status='mapped', value=D(70), tags='AccountsReceivableNetCurrent',
+                 nodes='AccountsReceivableNetCurrent=70 [R2.htm:5] | why: face', flags='bs_family', why=''),
+            dict(cik='1', accession='A1', data_point='accounts_receivable', status='mapped', value=D(9), tags='X', nodes='X=9', flags='', why='')]
+    resolve_all.apply_bank_template(rows, [ind, bank])
+    assert rows[0]['status'] == 'not_in_template' and rows[0]['value'] is None and 'AccountsReceivableNetCurrent=70 [R2.htm:5]' in rows[0]['why']
+    assert rows[1]['status'] == 'mapped'                 # an industrial keeps its AR

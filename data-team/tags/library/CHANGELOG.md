@@ -681,3 +681,11 @@
 ## 2026-11-16 (resolver-2026-11-16.67): 2 element changes, 27999 rows, coverage 63.1%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ WeightedAverageNumberOfSharesOutstandingBasic: served_cells
+
+## 2026-11-16 (resolver-2026-11-16.68): 6 element changes, 27999 rows, coverage 63.1%
+- ~ AccountsReceivableNet: served_cells
+- ~ AccruedInterestAndAccountsReceivable: data_point, served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ BrokerageReceivables: data_point, served_cells
+- ~ CustomerAndOtherReceivables: data_point, served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id

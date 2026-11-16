@@ -24,7 +24,6 @@ accounts_receivable,"trade accounts receivable, less allowance for doubtful acco
 accounts_receivable,"trade accounts receivable, net",20,2,AccountsReceivableNetCurrent 14;Tradeaccountsreceivablenet 6
 accounts_receivable,accounts receivable net of allowance for doubtful accounts,18,2,AccountsReceivableNetCurrent 12;ReceivablesNetCurrent 6
 accounts_receivable,"accounts receivable, net of allowance for credit losses of",17,3,AccountsReceivableNetCurrent 17
-accounts_receivable,accrued interest and accounts receivable,12,1,AccruedInterestAndAccountsReceivable 12
 accounts_receivable,"trade accounts receivable, less allowances of and",12,1,AccountsReceivableNetCurrent 12
 accounts_receivable,"trade receivables, less allowances of",12,1,AccountsReceivableNetCurrent 12
 accounts_receivable,receivables trade and other,12,1,AccountsReceivableNetCurrent 12
@@ -65,8 +64,6 @@ accounts_receivable,"insurance and reinsurance balances receivable, net of valua
 accounts_receivable,"accounts receivable, less allowance of , as of june",6,1,AccountsReceivableNetCurrent 6
 accounts_receivable,accounts receivable net of allowances for doubtful account,6,1,AccountsReceivableNetCurrent 6
 accounts_receivable,"accounts receivable, net of allowance of at july",6,1,AccountsReceivableNetCurrent 6
-accounts_receivable,brokerage receivables,6,1,BrokerageReceivables 6
-accounts_receivable,"brokerage receivables, net of allowance",6,1,BrokerageReceivables 6
 accounts_receivable,accounts receivablenet of allowance for credit losses of,6,1,AccountsReceivableNetCurrent 6
 accounts_receivable,"accounts receivable, net allowance for expected credit loss",6,1,AccountsAndOtherReceivablesNetCurrent 6
 accounts_receivable,"accounts receivable, net of allowances of and as",6,1,AccountsReceivableNetCurrent 6
@@ -74,7 +71,6 @@ accounts_receivable,"accounts receivable, net of allowance of and , respec",6,1,
 accounts_receivable,"accounts receivable, less allowances of and , respe",6,1,AccountsReceivableNetCurrent 6
 accounts_receivable,"notes and accounts receivable, less estimated doubtful amoun",6,1,ReceivablesNetCurrent 6
 accounts_receivable,notes and accounts receivable net,6,1,ReceivablesNetCurrent 6
-accounts_receivable,card member receivables,5,1,AccountsReceivableNet 5
 accounts_receivable,"accounts receivable, after allowance for credit loss, curren",5,2,AccountsReceivableNetCurrent 5
 accounts_receivable,"accounts receivable, net of allowances of , and",5,2,AccountsReceivableNetCurrent 5
 accounts_receivable,accounts receivable net of related allowance for credit los,5,1,AccountsReceivableNetCurrent 5
@@ -95,7 +91,6 @@ accounts_receivable,notes and accounts receivabletrade net of allowances of,3,1,
 accounts_receivable,accounts receivable less allowances,3,1,AccountsReceivableNetCurrent 3
 accounts_receivable,"accounts receivable trade, less allowances",3,1,AccountsReceivableNetCurrent 3
 accounts_receivable,"accounts receivable, net of allowances of at december",3,1,AccountsReceivableNetCurrent 3
-accounts_receivable,customer and other receivables includes and at fair,3,1,CustomerAndOtherReceivables 3
 accounts_receivable,"accounts receivable, net of allowances for doubtful accounts",3,1,AccountsReceivableNetCurrent 3
 accounts_receivable,accounts receivablenet of reserves for sales returns and dou,3,1,AccountsReceivableNetCurrent 3
 accounts_receivable,"accounts receivable, net of allowances of and at d",3,1,AccountsReceivableNetCurrent 3
@@ -103,19 +98,16 @@ accounts_receivable,current receivables net,3,1,ReceivablesNetCurrent 3
 accounts_receivable,receivables net,2,1,ReceivablesNetCurrent 2
 accounts_receivable,"trade accounts receivable, net of allowance for doubtful acc",2,1,AccountsReceivableNetCurrent 2
 accounts_receivable,"accounts receivable, net of allowances of and , res",2,1,AccountsReceivableNetCurrent 2
-accounts_receivable,"customer and other receivables includes , and , a",2,1,CustomerAndOtherReceivables 2
 accounts_receivable,accounts receivablenet of reserves for doubtful accounts of,2,1,AccountsReceivableNetCurrent 2
 accounts_receivable,accounts and notes receivable net of allowance of milli,2,1,AccountsAndNotesReceivableNet 2
 accounts_receivable,"accounts receivable, net of allowance of for both years",2,1,AccountsReceivableNetCurrent 2
 accounts_receivable,"accounts receivable, net of allowance of and note",2,1,AccountsReceivableNetCurrent 2
 accounts_receivable,"accounts receivable, net of allowance & due from related par",2,1,AccountsReceivableNetCurrent 2
 accounts_receivable,"accounts and other receivables, net",2,1,AccountsAndOtherReceivablesNetCurrent 2
-accounts_receivable,card member receivables includes gross receivables availabl,1,1,AccountsReceivableNet 1
 accounts_receivable,"accounts receivable, less allowance for doubtful accounts",1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,"trade accounts receivable, net of allowances of and",1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,accounts receivable net of related allowance for credit lo,1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,"accounts receivable, net of allowances of , at december",1,1,AccountsReceivableNetCurrent 1
-accounts_receivable,customer and other receivables includes and at fai,1,1,CustomerAndOtherReceivables 1
 accounts_receivable,"accounts receivables, net",1,1,AccountsAndOtherReceivablesNetCurrent 1
 accounts_receivable,"accounts receivable, net of allowances of and as of",1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,"accounts receivable, net of allowances of million and",1,1,AccountsReceivableNetCurrent 1

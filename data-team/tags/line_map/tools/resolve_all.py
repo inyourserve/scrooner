@@ -1257,14 +1257,16 @@ def apply_bank_template(rows, filings):
                      why=f"{r['data_point']} belongs to the bank template; this company's income statement is not a bank's (ruling 2026-11-16)")
             r['flags'] = 'not_in_template'
         elif r['data_point'] in NONBANK_DPS and n[k] and bank[k] * 2 > n[k] and not str(r.get('accession') or '').startswith('BEFORE:'):
-            # Dhairya ruling 2026-11-16 (BAC 'Customer and other receivables'): banks carry loans, not trade receivables
+            # Dhairya ruling 2026-11-16 (a): banks carry loans, not trade receivables; the bank's own receivables line stays as evidence
+            ev = (r.get('nodes') or '').split(' | why')[0] if r.get('status') in ('mapped', 'component_sum') else ''
             r.update(status='not_in_template', value=None, tags='', nodes='', r_page='', column='own',
-                     why=f"{r['data_point']} is outside the bank template: banks carry loans, not trade receivables (ruling 2026-11-16)")
+                     why=f"{r['data_point']} is outside the bank template: banks carry loans, not trade receivables (ruling 2026-11-16)"
+                         + (f"; the filing's receivables line, kept as evidence: {ev}" if ev else ''))
             r['flags'] = 'not_in_template'
     return rows
 
 
-NONBANK_DPS = set()   # {'accounts_receivable'} per Dhairya 2026-11-16, held: it withdraws ~60 served values (AXP card receivables, C, GS, JPM, SCHW, WFC); confirmation asked
+NONBANK_DPS = {'accounts_receivable'}   # Dhairya 2026-11-16, confirmed (a) after the ~60 served values (AXP card receivables, C, GS, JPM, SCHW, WFC) were shown: comparability
 
 
 def role(f, L, arcs, notes, R):
