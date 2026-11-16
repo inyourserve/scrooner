@@ -1,3 +1,6 @@
 work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
+proof,72,UNP,1117,cash_paid_for_income_taxes,2019,2019-12-31,UNCHECKED,proof_is_for_another_value,"3 fact(s) under IncomeTaxesPaidNet for this period, none authoritative (unresolved cross-filing conflict)",-1382000000,0000100885-20-000065,R7.htm,
+proof,72,UNP,1117,cash_paid_for_income_taxes,2020,2020-12-31,UNCHECKED,proof_is_for_another_value,"3 fact(s) under IncomeTaxesPaidNet for this period, none authoritative (unresolved cross-filing conflict)",-1214000000,0000100885-21-000068,R7.htm,
 blank,72,UNP,1117,cash_paid_for_income_taxes,2022,2022-12-31,BLANK,no_authoritative_fact,"3 fact(s) under IncomeTaxesPaidNet for this period, none authoritative (unresolved cross-filing conflict)",,,,
 blank,72,UNP,1117,cash_paid_for_income_taxes,2023,2023-12-31,BLANK,no_authoritative_fact,"2 fact(s) under IncomeTaxesPaidNet for this period, none authoritative (unresolved cross-filing conflict)",,,,
+proof,72,UNP,1117,other_income_expense_net,2016,2016-12-31,UNCHECKED,proof_is_for_another_value,,210000000,0000100885-17-000056,R2.htm,OtherNonoperatingIncomeExpense=192000000@0000100885-17-000056#;-InvestmentIncomeInterest=11000000@0000100885-17-000056#R75
