@@ -621,6 +621,38 @@ def apply_face_label_overrides(rows, filings, notefacts):
     return rows
 
 
+WEIGHTED_CLASS = {'weighted_basic_shares': 'WeightedAverageNumberOfSharesOutstandingBasic', 'weighted_diluted_shares': 'WeightedAverageNumberOfDilutedSharesOutstanding'}
+
+
+def apply_weighted_class(rows, memberfacts):
+    """Dhairya ruling 2026-11-16 (GOOG): weighted shares reported ONLY by share class (EPS note, no undimensioned fact).
+    Basic: the classes are disjoint, so the class sum is the total (flag class_sum; the 11-13 multi-class ruling (c)). FY2019 A 299,402,000
+    + B 46,527,000 + C 346,667,000 = 692,596,000. Diluted: open, flag reported_per_class, never absent (Class A diluted includes the
+    conversion of Class B, so classes are not additive)."""
+    for r in rows:
+        dp = r['data_point']
+        if dp not in WEIGHTED_CLASS or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
+        vals = collections.defaultdict(set)
+        for x in (memberfacts.get(r['accession']) or '').split('~'):
+            q = x.split('|')
+            if len(q) == 4 and q[0] == WEIGHTED_CLASS[dp] and q[1] == '4':
+                m = re.fullmatch(r'(\w*ClassOfStock)=([^;=]+);', q[3])
+                if m: vals[m.group(2)].add(D(q[2]))
+        if len(vals) < 2 or any(len(v) > 1 for v in vals.values()): continue   # one class, or a class with two different values: no sum
+        mem = {k: next(iter(v)) for k, v in vals.items()}
+        if dp == 'weighted_basic_shares':
+            parts = [(f'{WEIGHTED_CLASS[dp]}[ClassOfStock={k}]', v) for k, v in sorted(mem.items())]
+            r.update(status='component_sum', value=sum(v for _, v in parts), tags='+'.join(p for p, _ in parts), r_page='NOTE',
+                     nodes='; '.join(f'{p}={standard_inputs._plain(v)} [NOTE]' for p, v in parts),
+                     why='weighted basic shares are reported only by share class; the classes are disjoint, so their sum is the total (ruling 2026-11-16)')
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'class_sum') if x)
+        else:
+            r['why'] = ('reported per class (' + ', '.join(f'{k} {standard_inputs._plain(v)}' for k, v in sorted(mem.items()))
+                        + '); Class A diluted includes conversion of Class B, so classes are not additive')
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or '').replace('never_reported', ''), 'reported_per_class') if x).replace(';;', ';').strip(';')
+    return rows
+
+
 SBC_MEMBER_TAGS = ('AllocatedShareBasedCompensationExpense', 'ShareBasedCompensation')
 
 
@@ -754,7 +786,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
     cor_valued = {r['accession']: True for r in rows if r['data_point'] == 'cost_of_revenue' and r['status'] in VALUED and (r.get('column') or 'own') == 'own'}
     for r in rows:
         if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
-        if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed', 'reported_by_award_type')): continue
+        if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed', 'reported_by_award_type', 'reported_per_class')): continue
         E = dp_elements(r['data_point'])
         rx = ABSENT_RX.get(r['data_point'])
         if not E and not rx: continue
@@ -1224,7 +1256,15 @@ def apply_bank_template(rows, filings):
             r.update(status='not_in_template', value=None, tags='', nodes='', r_page='', column='own',
                      why=f"{r['data_point']} belongs to the bank template; this company's income statement is not a bank's (ruling 2026-11-16)")
             r['flags'] = 'not_in_template'
+        elif r['data_point'] in NONBANK_DPS and n[k] and bank[k] * 2 > n[k] and not str(r.get('accession') or '').startswith('BEFORE:'):
+            # Dhairya ruling 2026-11-16 (BAC 'Customer and other receivables'): banks carry loans, not trade receivables
+            r.update(status='not_in_template', value=None, tags='', nodes='', r_page='', column='own',
+                     why=f"{r['data_point']} is outside the bank template: banks carry loans, not trade receivables (ruling 2026-11-16)")
+            r['flags'] = 'not_in_template'
     return rows
+
+
+NONBANK_DPS = set()   # {'accounts_receivable'} per Dhairya 2026-11-16, held: it withdraws ~60 served values (AXP card receivables, C, GS, JPM, SCHW, WFC); confirmation asked
 
 
 def role(f, L, arcs, notes, R):
@@ -1508,6 +1548,7 @@ if __name__ == '__main__':
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
     rows = apply_face_label_overrides(rows, filings, notefacts)
     rows = apply_sbc_award_members(rows, memberfacts)
+    rows = apply_weighted_class(rows, memberfacts)
     rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)

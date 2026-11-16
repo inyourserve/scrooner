@@ -91,12 +91,14 @@ mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
     and (d.segments ~ '^(EquityComponents|RelatedPartyTransactionsByRelatedParty|Scenario)=[^;=]+;$'
          or ((t.tag='AmortizationOfIntangibleAssets' or t.tag ~* '^AmortizationOf\w*Intangible\w*$') and d.segments ~ '^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLivedIntangibleAssetsByMajorClass)=[^;=]+;$')
          or (t.tag='PaymentsForRepurchaseOfCommonStock' and v.qtrs=4 and d.segments ~ '^ClassOfStock=[^;=]+;$')
+         or (t.tag ~ '^(WeightedAverageNumberOfSharesOutstandingBasic|WeightedAverageNumberOfDilutedSharesOutstanding)$' and v.qtrs=4 and d.segments ~ '^\w*ClassOfStock=[^;=]+;$')   -- GOOG weighted shares only by class (EPS note; Dhairya 2026-11-16)
          or (t.tag ~ '^(AllocatedShareBasedCompensationExpense|ShareBasedCompensation)$' and v.qtrs=4 and d.segments ~ '^AwardType=[^;=]+;$')   -- MO/PM/VZ report SBC expense only by award type (2026-11-16); a note fact, never on a statement line
          or (t.tag='NotesReceivableNet' and v.qtrs=0 and d.segments ~ '^\w*FinancingReceivable\w*=[^;=]+;$')   -- AXP 'Financing receivables, net' by class (ruling 2026-11-16)
          or (t.tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' and v.qtrs=4 and d.segments ~ '^ConsolidatedEntities=[^;=]+;$')
          or (t.tag ~ '^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$|InterestExpense|InterestAndDebtExpense$|FinancingInterestExpense$)' and v.qtrs=4 and d.segments ~ '^ProductOrService=[^;=]+;$'
              and exists (select 1 from fsn.line l2 where l2.filing_id=fl.id and l2.tag_id=v.tag_id and l2.stmt='IS')))
-    and (exists (select 1 from fsn.line l where l.filing_id=fl.id and l.tag_id=v.tag_id) or (t.tag ~ '^(AllocatedShareBasedCompensationExpense|ShareBasedCompensation)$' and d.segments ~ '^AwardType=[^;=]+;$'))
+    and (exists (select 1 from fsn.line l where l.filing_id=fl.id and l.tag_id=v.tag_id) or (t.tag ~ '^(AllocatedShareBasedCompensationExpense|ShareBasedCompensation)$' and d.segments ~ '^AwardType=[^;=]+;$')
+         or (t.tag ~ '^(WeightedAverageNumberOfSharesOutstandingBasic|WeightedAverageNumberOfDilutedSharesOutstanding)$' and d.segments ~ '^\w*ClassOfStock=[^;=]+;$'))
   group by 1),
 cmp as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,v.ddate::text),'~') cvals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id

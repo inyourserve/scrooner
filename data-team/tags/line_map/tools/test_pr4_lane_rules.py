@@ -781,3 +781,24 @@ def test_never_declared_or_paid_a_dividend_is_a_dps_and_dividends_zero():
     goog = 'Item 5. Market\nWe have never declared or paid any cash dividend on our common or capital stock.\n'
     assert td.read_cell(goog, dict(data_point='dividends_per_share', period_end='2019-12-31'))['value_source'] == 'stated_zero'
     assert td.read_cell(goog, dict(data_point='dividends_paid', period_end='2019-12-31'))['value_source'] == 'stated_zero'
+
+
+def test_weighted_shares_by_class_basic_sum_diluted_open_never_absent():
+    # Dhairya 2026-11-16, GOOG FY2019: basic A 299,402,000 + B 46,527,000 + C 346,667,000 = 692,596,000 (duplicates of one value are one
+    # fact); diluted is not additive (Class A includes the conversion of Class B): open, reported_per_class, never absent
+    mf = {'G19': 'WeightedAverageNumberOfSharesOutstandingBasic|4|299402000|ClassOfStock=CommonClassA;~WeightedAverageNumberOfSharesOutstandingBasic|4|299402000|ClassOfStock=CommonClassA;'
+                 '~WeightedAverageNumberOfSharesOutstandingBasic|4|46527000|ClassOfStock=CommonClassB;~WeightedAverageNumberOfSharesOutstandingBasic|4|346667000|ClassOfStock=CapitalClassC;'
+                 '~WeightedAverageNumberOfDilutedSharesOutstanding|4|346342000|ClassOfStock=CommonClassA;~WeightedAverageNumberOfDilutedSharesOutstanding|4|46527000|ClassOfStock=CommonClassB;',
+          'X19': 'WeightedAverageNumberOfSharesOutstandingBasic|4|10|ClassOfStock=A;~WeightedAverageNumberOfSharesOutstandingBasic|4|11|ClassOfStock=A;~WeightedAverageNumberOfSharesOutstandingBasic|4|5|ClassOfStock=B;'}
+    rows = [dict(accession='G19', data_point='weighted_basic_shares', status='not_presented', value=None, flags='roles', why='', column='own'),
+            dict(accession='G19', data_point='weighted_diluted_shares', status='not_presented', value=None, flags='roles;never_reported', why='', column='own'),
+            dict(accession='X19', data_point='weighted_basic_shares', status='not_presented', value=None, flags='roles', why='', column='own')]
+    resolve_all.apply_weighted_class(rows, mf)
+    b, d, x = rows
+    assert b['status'] == 'component_sum' and b['value'] == D(692596000) and 'class_sum' in b['flags']
+    assert d['status'] == 'not_presented' and 'reported_per_class' in d['flags'] and 'never_reported' not in d['flags'] and 'not additive' in d['why']
+    assert x['status'] == 'not_presented'                       # one class with two different values: never summed
+    filings = [dict(a='G19', cik='1', p='2019-12-31', lines='')]
+    rr = [dict(d, cik='1', period_end='2019-12-31'), dict(d, cik='1', period_end='2019-12-31', flags='roles')]
+    resolve_all.apply_absent_in_own_filing(rr, filings, {}, {})
+    assert 'absent_in_own_filing' not in rr[0]['flags'] and 'absent_in_own_filing' in rr[1]['flags']
