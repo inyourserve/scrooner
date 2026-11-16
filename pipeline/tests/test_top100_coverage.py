@@ -643,3 +643,78 @@ def test_derived_counts_when_one_filing_prints_both_served_inputs():
     # a filing prints a different value for the input: not a print of the served value
     assert run({(1, "2024-12-31", "CostOfRevenue", "8"): {"A"}})["class"] == "UNCHECKED"
     assert run(None)["class"] == "UNCHECKED"
+
+
+def _derived_pair_claim(dp="comprehensive_income", flag="ci_parent_derived"):
+    from datetime import date
+
+    from scrooner_pipeline.mapper import structural_loader as sl
+
+    tags = {
+        "comprehensive_income": (
+            "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest",
+            "ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest",
+        ),
+        "shares_outstanding": ("CommonStockSharesIssued", "TreasuryStockShares"),
+    }[dp]
+    return sl.Claim(
+        ticker="T",
+        cik="0000000001",
+        data_point=dp,
+        decision="derived_not_printed",
+        parts=((1, None, tags[0]), (-1, None, tags[1])),
+        stmts=("", ""),
+        locs=((4, 22), (4, 23)),
+        accession="0000000001-16-000099",
+        period_end=date(2015, 12, 31),
+        flags=flag,
+        node_values=("6328000000", "-3000000"),
+    )
+
+
+def test_direct_derived_evidence_needs_printed_parts_that_sum_to_the_served_value():
+    from decimal import Decimal as D
+
+    from scrooner_pipeline.mapper.top100_coverage import direct_derived_evidence
+
+    c = _derived_pair_claim()
+    good = [D(6328000000), D(-3000000)]
+    text, acc, page = direct_derived_evidence(c, good, "6331000000")
+    assert acc == "0000000001-16-000099" and page == "R4"
+    assert text == (
+        "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest=6328000000"
+        "@0000000001-16-000099#R4;-ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest=-3000000"
+        "@0000000001-16-000099#R4"
+    )
+    assert direct_derived_evidence(c, good, "6330000000") is None  # not the served sum
+    assert (
+        direct_derived_evidence(c, [D(6328000001), D(-3000000)], "6331000001") is None
+    )  # the filing differs from the node
+    assert (
+        direct_derived_evidence(c, good[:1], "6328000000") is None
+    )  # a part is missing
+
+
+def test_resolve_derived_classifies_a_derived_pair_as_derived_with_parts_and_page():
+    from scrooner_pipeline.mapper.top100_coverage import (
+        DERIVED_FAMILY,
+        resolve_derived,
+    )
+
+    def run(direct):
+        r = {
+            **_row("comprehensive_income", cls="UNCHECKED", acc="", fam=DERIVED_FAMILY),
+            "period_end": "2015-12-31",
+            "parts": "",
+            "r_page": "",
+        }
+        resolve_derived([r], None, direct)
+        return r
+
+    ev = ("A=1@acc#R4;-B=2@acc#R4", "acc", "R4")
+    r = run({(1, "comprehensive_income", "2015-12-31"): ev})
+    assert (r["class"], r["reason_code"]) == ("DERIVED", "derived_not_printed")
+    assert r["parts"] == ev[0] and r["accession"] == "acc" and r["r_page"] == "R4"
+    # no verified parts (cross-filing, missing, wrong sum): never DERIVED
+    assert run({})["class"] == "UNCHECKED"
+    assert run(None)["class"] == "UNCHECKED"

@@ -1199,7 +1199,9 @@ def build_rows(
                     }
                 )
     rows, _out = split_out_of_template(rows, load_not_in_template())
-    resolve_derived(rows, load_input_prints(conn, rows))
+    resolve_derived(
+        rows, load_input_prints(conn, rows), load_direct_derived(conn, rows)
+    )
     attach_only_combined(rows, load_only_combined())
     attach_absent_in_own(rows, load_absent_in_own())
     attach_presence(rows, load_presence(conn, ids))
@@ -1236,6 +1238,94 @@ def _pending_derived(
         if r.get("_family") == DERIVED_FAMILY
         and r["class"] not in ("PROVEN", "DISAGREE")
     ]
+
+
+def direct_derived_evidence(
+    claim: Any, part_values: list[Decimal], shown: str
+) -> tuple[str, str, str] | None:
+    """(parts text, accession, first page) of a derived-pair cell (shares issued - treasury, CI total - NCI), or None.
+    `claim` is the resolver's derived row (structural_direct form: two signed parts, node values, R pages, ONE accession);
+    `part_values` are the two values stored for exactly that accession and column. Valid only when the filing's own
+    printed lines equal the resolver's node values and their signed sum equals the served value. The parts text is the
+    export's parts format, `[-]tag=value@accession#R<page>` joined by ';'. Pure."""
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    if sd.derived_problem(claim) is not None or len(part_values) != 2 or shown == "":
+        return None
+    if any(
+        Decimal(nv) != v for nv, v in zip(claim.node_values, part_values, strict=True)
+    ):
+        return None
+    if part_values[0] - part_values[1] != Decimal(shown):
+        return None
+    text = ";".join(
+        f"{'-' if sg < 0 else ''}{tag}={_num(v)}@{claim.accession}#R{loc[0]}"
+        for (sg, _tx, tag), v, loc in zip(
+            claim.parts, part_values, claim.locs, strict=True
+        )
+    )
+    return text, claim.accession, f"R{claim.locs[0][0]}"
+
+
+def load_direct_derived(
+    conn: Any, rows: list[dict[str, Any]]
+) -> dict[tuple[int, str, str], tuple[str, str, str]]:
+    """(company, data point, period_end) -> direct_derived_evidence of the pending derived-pair cells (data points of
+    structural_loader.DERIVED_DIRECT). The parts come from the resolver's derived row (committed evidence; the serve
+    note is not stored) and are re-read from the stored facts of that one filing (core.fact, else fsn.value): a part
+    missing from that filing, or a sum that is not the served value, leaves the cell UNCHECKED."""
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    pend = [
+        r
+        for r, _i in _pending_derived(rows)
+        if r["data_point"] in sl.DERIVED_DIRECT and r.get("shown_value", "") != ""
+    ]
+    out: dict[tuple[int, str, str], tuple[str, str, str]] = {}
+    path = sd.resolver_path()
+    if not pend or path is None:
+        return out
+    by_cik = sd._claims_by_cik(str(path))
+    ciks = dict(
+        conn.execute(
+            "select id, cik from core.company where id = any(%s)",
+            (sorted({r["company_id"] for r in pend}),),
+        ).fetchall()
+    )
+    for r in pend:
+        cik = str(ciks.get(r["company_id"], "")).zfill(10)
+        pe = date.fromisoformat(r["period_end"])
+        claim = next(
+            (
+                c
+                for c in by_cik.get(cik, ())
+                if c.decision == sd.DERIVED
+                and c.data_point == r["data_point"]
+                and fsn_end_matches(c.period_end, pe)
+            ),
+            None,
+        )
+        if claim is None or sd.derived_problem(claim) is not None:
+            continue
+        tags = {t for _s, _x, t in claim.parts}
+        stored = sd._stored_values(
+            conn, r["company_id"], {claim.accession}, tags, {pe, claim.period_end}
+        )
+        vals: list[Decimal] = []
+        for (_s, _x, tag), nv in zip(claim.parts, claim.node_values, strict=True):
+            got = None
+            for end in (pe, claim.period_end):
+                g = sd._part_value(stored[(claim.accession, tag, end)], Decimal(nv))
+                if not isinstance(g, str):
+                    got = g[0]
+                    break
+            if got is None:
+                break
+            vals.append(got)
+        ev = direct_derived_evidence(claim, vals, r["shown_value"])
+        if ev:
+            out[(r["company_id"], r["data_point"], r["period_end"])] = ev
+    return out
 
 
 def load_input_prints(
@@ -1281,6 +1371,7 @@ def load_input_prints(
 def resolve_derived(
     rows: list[dict[str, Any]],
     prints: dict[tuple[int, str, str, str], set[str]] | None = None,
+    direct: dict[tuple[int, str, str], tuple[str, str, str]] | None = None,
 ) -> None:
     """In place. A served cell of family derived_not_printed is DERIVED only when every input data point of the same
     company and fiscal year is PROVEN and all inputs sit in ONE filing: either the same shown_accession, or (`prints`,
@@ -1288,6 +1379,25 @@ def resolve_derived(
     locators being in that filing. The row then lists the derivation as `dp=value@accession`. Any other case is
     UNCHECKED derived_inputs_unproven."""
     for r, inputs in _pending_derived(rows):
+        dd = (direct or {}).get(
+            (r["company_id"], r["data_point"], r.get("period_end", ""))
+        )
+        if dd is not None:
+            # a derived pair (issued - treasury, total CI - NCI): both signed parts are printed lines of ONE filing
+            # (load_direct_derived); the parts and their R pages are the evidence
+            r["class"], r["reason_code"] = "DERIVED", DERIVED_CODE
+            r["evidence"] = r["parts"] = dd[0]
+            r["_parts_blank"] = 0
+            r["reason"] = (
+                f"{r['data_point']} is not printed; derived from {dd[0]}, "
+                "both parts printed in one filing"
+            )
+            r["accession"], r["r_page"], r["locator_source"] = (
+                dd[1],
+                dd[2],
+                "derived_parts",
+            )
+            continue
         ok = (
             bool(inputs)
             and all(
