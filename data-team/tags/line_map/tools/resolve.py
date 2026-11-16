@@ -195,6 +195,12 @@ def resolve(f):
             nl = next((l for l in is_ if l['val'] is not None and abs(l['val'] - net) <= tol(net, l['val']) and l['ln'] > rev['ln']), None)
             if nl:  # a net-revenue line is printed after the tax: the tax is a revenue deduction (PM); else it sits in the COR span (MO)
                 rev = nl; minus = [c for c in minus if c not in tax]
+        # the filer's calc adds a line the printed gross profit does not subtract: when revenue - the -1 children misses GP and exactly
+        # one -1 child ties it, that child is the cost total and the other line sits inside it (LMT FY2021: 'Total cost of sales' 57,983 with
+        # 'Severance and restructuring charges' 36 as a sibling; 67,044 - 57,983 = 9,061 printed GP; Dhairya wave 3A cos_block_child_not_added)
+        if rev is not None and len(minus) > 1 and abs(rev['val'] - sum(iby[c]['val'] for c in minus) - gp['val']) > tol(gp['val'], rev['val']):
+            tie = [c for c in minus if abs(rev['val'] - iby[c]['val'] - gp['val']) <= tol(gp['val'], rev['val'])]
+            if len(tie) == 1: minus = tie
         if minus:
             cn = [iby[c] for c in minus]
             put('cost_of_revenue', 'mapped' if len(cn) == 1 else 'component_sum', [dict(node(n, ''), st='IS') for n in cn], sum(n['val'] for n in cn),

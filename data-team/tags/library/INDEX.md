@@ -1,6 +1,6 @@
-# Tag library index (generated 2026-11-16, resolver-all110-.73)
+# Tag library index (generated 2026-11-16, resolver-all110-.74)
 
-27999 rows (565 with resolver usage, 22756 taxonomy elements); coverage 62.7% of 55146 resolver-served cells have a full row for every element they use.
+27999 rows (564 with resolver usage, 22756 taxonomy elements); coverage 62.7% of 55146 resolver-served cells have a full row for every element they use.
 
 Search and follow links in [browser.html](browser.html). Columns: [library.schema.json](library.schema.json).
 
@@ -21,7 +21,7 @@ Search and follow links in [browser.html](browser.html). Columns: [library.schem
 - **cf_inventory_change** (6): `IncreaseDecreaseInInventories`, `IncreaseDecreaseInInventoriesAndPropertySubjectToOrAvailableForOperatingLease`, `IncreaseDecreaseInInventoriesPrepaidExpensesAndOtherCurrentAssets`, `IncreaseDecreaseInMaterialsAndSupplies`, `IncreaseDecreaseInOtherOperatingAssets`, `IncreaseDecreaseInRetailRelatedInventories`
 - **cfo** (2): `NetCashProvidedByUsedInOperatingActivities`, `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations`
 - **comprehensive_income** (4): `ComprehensiveIncomeFromContinuingOperations`, `ComprehensiveIncomeNetOfTax`, `ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest`, `ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest`
-- **cost_of_revenue** (15): `AmortizationOfAcquisitionRelatedIntangibles`, `BroadcastProgrammingAndOther`, `CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization`, `CostOfGoodsAndServicesSold`, `CostOfGoodsSold`, `CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization`, `CostOfRevenue`, `CostOfSalesIncludingBuyingAndOccupancyCosts`, `CostOfServices`, `CostOfServicesExcludingDepreciationDepletionAndAmortization`, `ExciseAndSalesTaxes`, `ExciseTax`, `OtherCostOfOperatingRevenue`, `OtherCostOfServices`, `SeveranceAndRestructuringCosts`
+- **cost_of_revenue** (14): `AmortizationOfAcquisitionRelatedIntangibles`, `BroadcastProgrammingAndOther`, `CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization`, `CostOfGoodsAndServicesSold`, `CostOfGoodsSold`, `CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization`, `CostOfRevenue`, `CostOfSalesIncludingBuyingAndOccupancyCosts`, `CostOfServices`, `CostOfServicesExcludingDepreciationDepletionAndAmortization`, `ExciseAndSalesTaxes`, `ExciseTax`, `OtherCostOfOperatingRevenue`, `OtherCostOfServices`
 - **current_assets** (1): `AssetsCurrent`
 - **current_liabilities** (1): `LiabilitiesCurrent`
 - **deposits** (1): `Deposits`
@@ -96,6 +96,6 @@ Search and follow links in [browser.html](browser.html). Columns: [library.schem
 ## By problem type
 
 - ** IncomeTaxesPaidNet** (1): `IncomeTaxesPaidNet`
-- ** the** (4): `CommonStockDividendsPerShareDeclared`, `IncomeLossFromEquityMethodInvestments`, `IncomeTaxesPaidNet`, `Liabilities`
+- ** the** (6): `CommonStockDividendsPerShareDeclared`, `IncomeLossFromEquityMethodInvestments`, `IncomeTaxesPaidNet`, `Liabilities`, `WeightedAverageNumberOfDilutedSharesOutstanding`, `WeightedAverageNumberOfSharesOutstandingBasic`
 - **FSN dropped** (1): `AmortizationOfIntangibleAssets`
-- **filer XBRL** (4): `CommonStockDividendsPerShareDeclared`, `IncomeLossFromEquityMethodInvestments`, `IncomeTaxesPaidNet`, `Liabilities`
+- **filer XBRL** (6): `CommonStockDividendsPerShareDeclared`, `IncomeLossFromEquityMethodInvestments`, `IncomeTaxesPaidNet`, `Liabilities`, `WeightedAverageNumberOfDilutedSharesOutstanding`, `WeightedAverageNumberOfSharesOutstandingBasic`

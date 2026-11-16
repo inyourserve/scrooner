@@ -236,3 +236,15 @@ def test_gross_profit_is_never_the_top_line():
             ('GrossProfit', 'ProductGrossProfit', 1), ('GrossProfit', 'ServicesGrossProfit', 1), ('OperatingIncomeLoss', 'GrossProfit', 1), ('OperatingIncomeLoss', 'OperatingExpenses', -1)])
     rev = resolve.resolve(filing([('IS', t, lb, v) for t, lb, v in is_], calc))[0]['revenue']
     assert D(rev['value']) == 1494930 and 'GrossProfit' not in rev['path']
+
+
+def test_a_cost_line_inside_the_printed_total_is_not_added_twice():
+    # LMT FY2021 (wave 3A, WRONG served 58,019M): calc GP = sales - 'Total cost of sales' - severance, but printed GP 9,061 = 67,044 - 57,983
+    import resolve
+    lines = [('IS', 'Revenues', 'Total net sales', 67044), ('IS', 'CostOfGoodsAndServicesSold', 'Total cost of sales', 57983),
+             ('IS', 'SeveranceAndRestructuringCosts', 'Severance and restructuring charges', 36), ('IS', 'GrossProfit', 'Gross profit', 9061)]
+    calc = '~'.join(f'2|GrossProfit|{c}|{w}' for c, w in [('Revenues', 1), ('CostOfGoodsAndServicesSold', -1), ('SeveranceAndRestructuringCosts', -1)])
+    cor = resolve.resolve(filing(lines, calc))[0]['cost_of_revenue']
+    assert D(cor['value']) == 57983 and cor['status'] == 'mapped'
+    lines[3] = ('IS', 'GrossProfit', 'Gross profit', 9025)   # a calc that ties keeps both lines
+    assert D(resolve.resolve(filing(lines, calc))[0]['cost_of_revenue']['value']) == 58019

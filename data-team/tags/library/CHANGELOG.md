@@ -720,3 +720,13 @@
 ## 2026-11-16 (resolver-all110-.73): 2 element changes, 27999 rows, coverage 62.7%
 - ~ GrossProfit: data_point, served_cells
 - ~ SalesRevenueNet: served_cells
+
+## 2026-11-16 (resolver-all110-.74): 8 element changes, 27999 rows, coverage 62.7%
+- ~ CommonStockSharesIssued: served_cells
+- ~ CommonStockSharesOutstanding: served_cells
+- ~ GrossProfit: rule_id
+- ~ SeveranceAndRestructuringCosts: data_point, served_cells
+- ~ TreasuryStockCommonShares: served_cells
+- ~ TreasuryStockShares: served_cells
+- ~ WeightedAverageNumberOfDilutedSharesOutstanding: known_problems
+- ~ WeightedAverageNumberOfSharesOutstandingBasic: known_problems

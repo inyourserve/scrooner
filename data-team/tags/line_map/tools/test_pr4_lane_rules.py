@@ -924,3 +924,21 @@ def test_other_income_never_fills_from_a_relabelled_line_while_interest_sits_ins
     assert ('A19', 'other_income_expense_net') not in standard_inputs.comparative_fill(rows, comp, set())
     comp = {'A21': 'OtherNonoperatingIncomeExpense|4|3000000|2019-12-31~InvestmentIncomeInterest|4|55000000|2019-12-31'}
     assert ('A19', 'other_income_expense_net') in standard_inputs.comparative_fill(rows, comp, set())
+
+
+def test_class_with_issued_and_treasury_completes_the_class_sum_and_non_economic_classes_drop():
+    # ACN FY2025 (wave 3A, WRONG served 302,358 = the Class X count): Class A issued 657,964,764 - treasury 36,108,842 = 621,855,922;
+    # Class X has no dividend or winding-up rights (rules/non_economic_share_classes.csv); OrdinaryShares 40,000 all in treasury
+    import resolve_bs
+    cpv = '~'.join(['4|10|CommonStockSharesIssued|Ordinary shares, shares issued (in shares)|ClassOfStock=CommonClassA;|657964764',
+                    '4|10|CommonStockSharesIssued|Ordinary shares, shares issued (in shares)|ClassOfStock=CommonClassA;EquityComponents=CommonStock;|657965000',
+                    '4|10|CommonStockSharesIssued|Ordinary shares, shares issued (in shares)|ClassOfStock=CommonClassX;|302358',
+                    '4|10|CommonStockSharesIssued|Ordinary shares, shares issued (in shares)|ClassOfStock=OrdinaryShares;|40000',
+                    '4|11|CommonStockSharesOutstanding|Ordinary shares, shares outstanding (in shares)|ClassOfStock=CommonClassX;|302358',
+                    '4|12|TreasuryStockCommonShares|Treasury shares, ordinary shares (in shares)|ClassOfStock=CommonClassA;|36108842',
+                    '4|12|TreasuryStockCommonShares|Treasury shares, ordinary shares (in shares)|ClassOfStock=OrdinaryShares;|40000'])
+    r = resolve_bs.shares(dict(cik='1467373', cpv=cpv), {}, {})
+    assert r['value'] == D(621855922) and r['rule'] == 'derived_issued_less_treasury' and 'CommonClassX' in r['why']
+    assert 'OrdinaryShares' not in r['nodes'] and 'CommonClassX]' not in r['nodes']   # fully in treasury: no node; non-economic: left out
+    r = resolve_bs.shares(dict(cik='999', cpv=cpv), {}, {})   # an economic Class X counts
+    assert r['value'] == D(621855922 + 302358)

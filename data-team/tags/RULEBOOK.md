@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .73, 2026-11-17). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .74, 2026-11-17). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -302,6 +302,9 @@ Format: `ID | rule | code | test | date / source`.
 | X78 | A pre-filing year-end (before_first_10k) the first 10-K prints only as a FY-2 instant (cash-flow beginning balance, equity-statement opening balance, roll-forward opening) is printed: cash from CashCashEquivalentsRestrictedCash... when it equals the 10-K's own cash (no restricted cash), equity from StockholdersEquity (IncludingPortion... only when it equals the own equity), goodwill from Goodwill; locator NOTE, window FY-2. CRWD cash FY2018 63,179K, UBER goodwill FY2017 39M, DELL, GEV, PLTR, SNDK. CRWD equity FY2018 stays open (NCI 500K in the 10-K's own column; the zero NCI at Jan 2018 is a member fact the extract lacks). | standard_inputs.FY2_INSTANT, _fy2_instant | test_pr4_lane_rules (fy2 instant) | Dhairya Groups B and C, 2026-11-17 |
 | X79 | X59 guard: other_income_expense_net never fills from a later 10-K while the own year's interest income sits inside the own other-income line (interest_income combined) and that 10-K prints no interest-income figure for the year (NOW FY2019-20: the relabelled 58M / -16M hold interest income 55.4M / 39.5M). | standard_inputs._interest_inside | test_pr4_lane_rules (relabelled line) | Dhairya wave 2B 11, 2026-11-17 |
 | X80 | A gross-profit line is never the revenue top line: OI's single +1 child that is a gross profit (element or label) is skipped and revenue climbs from the first printed line to its all-additive total. FTNT FY2014-18 served GrossProfit as revenue (FY2017 1,109,646K; the filing prints Total revenue 1,494,930K); the why names a parent only when the line is its +1 child. | resolve.GROSS_LINE | test_resolve_is (gross profit never the top line) | Dhairya wave 2C (WRONG served value), 2026-11-17 |
+| X81 | shares_outstanding by class: a class that prints shares issued and treasury but no outstanding fact completes the class sum as issued - treasury (derived_issued_less_treasury; founder 2026-11-17 item 5); a class fully held in treasury adds nothing; a class without economic rights (rules/non_economic_share_classes.csv, each row with its filing quote) is left out. ACN FY2014-26 served the Class X count (FY2025 302,358); now Class A 657,964,764 - 36,108,842 = 621,855,922. | resolve_bs.shares, NON_ECONOMIC | test_pr4_lane_rules (class completes the sum) | Dhairya wave 3A class_a_issued_minus_treasury, 2026-11-17 |
+| X82 | cost_of_revenue: when revenue - the -1 children of gross profit misses the printed GP and exactly one -1 child ties it, that child alone is the cost (the other sits inside it). LMT FY2021 57,983M (served 58,019 counted severance 36 twice). | resolve.py (gp minus tie) | test_resolve_is (cost line inside the total) | Dhairya wave 3A cos_block_child_not_added, 2026-11-17 |
+| X83 | MCD FY2023-25 weighted basic/diluted shares are tagged in millions at scale 0 (727.9 for 727,900,000): rules/filer_xbrl_errors.csv rows, each checked net income / shares = printed EPS. | rules/filer_xbrl_errors.csv | pipeline test_filer_xbrl_errors (rows parse) | Dhairya wave 3A, 2026-11-17 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

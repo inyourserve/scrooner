@@ -143,6 +143,15 @@ def note_value(alts, notes, dp=''):
     return None
 
 
+def _non_economic():
+    out = collections.defaultdict(set)
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'non_economic_share_classes.csv')
+    for r in csv.DictReader(open(p)):
+        out[r['cik'].zfill(10)].add(r['member'])
+    return out
+
+
+NON_ECONOMIC = _non_economic()
 DERIVE_SHARES = os.environ.get('DERIVE_SHARES', '1') == '1'   # issued - treasury (X67): ON since the founder's approval (doc 02, 2026-11-17 item 5) and the loader's DERIVED_DIRECT path
 
 
@@ -167,6 +176,35 @@ def shares(f, notes, bsby):
         x = tot[0]
         return dict(status='mapped', value=D(x[5]), nodes=f"{x[2]}={D(x[5])} [R{x[0]}.htm:{x[1]}]",
                     why=f"the balance-sheet parenthetical prints the all-class total '{x[3]}'" + (f" above the class sum {sum(v for v, _ in cls.values())}" if cls else ''), rule='class_total')
+    # a class that prints shares issued (and treasury) but no outstanding fact is not missing from the sum: issued - treasury of that class
+    # (ACN: Class A issued 657,964,764 - treasury 36,108,842; Class X prints outstanding). Classes without economic rights are left out
+    # (rules/non_economic_share_classes.csv, each with its filing quote; Dhairya wave 3A 2026-11-17)
+    noneco = NON_ECONOMIC.get(str(f.get('cik') or '').zfill(10), set())
+    per = collections.defaultdict(dict)
+    for s in (f.get('cpv') or '').split('~'):
+        x = s.split('|')
+        if len(x) != 6 or x[5] in ('', None) or x[2] not in ('CommonStockSharesIssued', 'TreasuryStockShares', 'TreasuryStockCommonShares'): continue
+        m = CLASS_SEG.findall(x[4]); other = re.sub(r'ClassOfStock=[A-Za-z0-9_]+;?', '', x[4]).strip()
+        if len(m) != 1 or other or EQ_STOP.search(m[0]): continue   # the member only: the treasury row's own label names treasury
+        ax = re.search(r'(\w*ClassOfStock)=', x[4]).group(1)
+        per[f'{ax}={m[0]}'].setdefault('iss' if x[2] == 'CommonStockSharesIssued' else 'tre', (x[2], D(x[5]), f"R{x[0]}.htm:{x[1]}"))
+    gaps = [k for k in per if k not in cls and 'iss' in per[k] and k.split('=', 1)[1] not in noneco]
+    if DERIVE_SHARES and gaps and all('tre' in per[k] and per[k]['iss'][1] >= per[k]['tre'][1] for k in gaps):
+        nodes, v = [], D(0)
+        for k, (val, r) in cls.items():
+            if k.split('=', 1)[1] in noneco: continue
+            nodes.append(f"CommonStockSharesOutstanding[{k}]={val} [{r}]"); v += val
+        for k in gaps:
+            (it, iv, ir), (tt, tv, tr) = per[k]['iss'], per[k]['tre']
+            if iv == tv: continue   # fully held in treasury (ACN's 40,000 euro OrdinaryShares): nothing outstanding
+            nodes += [f"{it}[{k}]={iv} [{ir}]", f"-{tt}[{k}]={tv} [{tr}]"]; v += iv - tv
+        if nodes:
+            left = sorted(k for k in list(cls) + gaps if k.split('=', 1)[1] in noneco)
+            return dict(status='derived', value=v, nodes='; '.join(nodes),
+                        why='class sum of the balance-sheet parenthetical, issued - treasury for a class with no outstanding fact (ruling C2)'
+                            + (f"; non-economic class(es) left out: {', '.join(left)} (rules/non_economic_share_classes.csv)" if left else ''),
+                        rule='derived_issued_less_treasury')
+    cls = collections.OrderedDict((k, v) for k, v in cls.items() if k.split('=', 1)[1] not in noneco)
     if cls:
         return dict(status='component_sum' if len(cls) > 1 else 'mapped', value=sum(v for v, _ in cls.values()),
                     nodes='; '.join(f"CommonStockSharesOutstanding[{k}]={v} [{r}]" for k, (v, r) in cls.items()),

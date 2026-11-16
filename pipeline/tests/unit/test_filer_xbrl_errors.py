@@ -42,7 +42,21 @@ def _by_tag_qtrs(rows):
 @pytest.mark.unit
 def test_committed_csv_parses_and_has_every_row():
     got = fxe.load()
-    assert len(got) == 7
+    assert len(got) == 13
+    # MCD FY2023-25 weighted shares tagged in millions at scale 0 (wave 3A 2026-11-17)
+    mcd = got[
+        ("0000063908-24-000072", "WeightedAverageNumberOfSharesOutstandingBasic", 4)
+    ][0]
+    assert mcd.xbrl_value == Decimal("727.9") and mcd.printed_value == Decimal(
+        "727900000"
+    )
+    # STX R9 holds the FY2022 DPS beside the FY2024 one: two rows under one key, told apart by the stored value
+    assert {
+        r.printed_value
+        for r in got[
+            ("0001137789-24-000068", "CommonStockDividendsPerShareDeclared", 4)
+        ]
+    } == {Decimal("2.80"), Decimal("2.77")}
     stx = got[("0001137789-24-000068", "CommonStockDividendsPerShareDeclared", 4)][
         0
     ]  # STX FY2024 DPS stored 10^6 too large (Ritwik draw 2026-11-16)

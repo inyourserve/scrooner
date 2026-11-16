@@ -587,7 +587,6 @@ cost_of_revenue,cost of equipment and services revenues,2,1,CostOfRevenue 2
 cost_of_revenue,cost of product and service sold,2,1,CostOfGoodsAndServicesSold 2
 cost_of_revenue,cost of services and sales,1,1,CostOfGoodsAndServicesSold 1
 cost_of_revenue,cost of services and sales exclusive of depreciation and am,1,1,CostOfRevenue 1
-cost_of_revenue,severance and restructuring charges,1,1,SeveranceAndRestructuringCosts 1
 cost_of_revenue,total operating costs and expenses,1,1,CostOfRevenue 1
 current_assets,total current assets,1067,91,AssetsCurrent 1067
 current_assets,"assets, current",27,3,AssetsCurrent 27
