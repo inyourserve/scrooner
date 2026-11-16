@@ -32,7 +32,7 @@ Last full audit: [`GITHUB-INFRA-AUDIT-2026-11-16.md`](../../data-team/strategy/G
 |---|---|---|---|
 | `pipeline-refresh.yml` | daily 12:23 | the nightly SEC refresh: collect, normalize, map, coverage | dev database |
 | `pipeline-sanity.yml` | daily 15:17 | yfinance cross-check gate (validation only, never a stored value) | sanity tables |
-| `top100-coverage-hourly.yml` | hourly :17, opt-in | rebuilds `data-team/strategy/top100-coverage*.csv` from proof verdicts, read-only session | commits the summary to `main` every hour and the full CSV daily (00:17) or on dispatch; the full CSV is also an artifact each run (90 days) |
+| `top100-coverage-hourly.yml` | hourly :17 (opt-in var) and after every top100-flow run | rebuilds `data-team/strategy/top100-coverage*.csv` from proof verdicts, read-only session | commits the summary to `main` every hour and the full CSV daily (00:17) or on dispatch; the full CSV is also an artifact each run (90 days) |
 | `workflow-health-check.yml` | daily 19:41 | judges every scheduled workflow's latest runs | the alarm issue |
 | `live-sec-verification.yml` | weekly Mon 11:17 | live sec.gov contract tests | nothing |
 | `pipeline-tag-library.yml` | weekly Sun 23:00 | SEC tag library rebuild (old system; review pending) | dev database |

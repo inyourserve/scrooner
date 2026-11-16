@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
+  # GitHub drops scheduled runs under load (2026-11-16: only the 23:59Z slot ran between 00:17 and 04:17Z), so the
+  # export also runs whenever a top-100 batch finishes: coverage is fresh after every batch whatever the cron does.
+  workflow_run:
+    workflows: ["Top-100 per-company flow (scripts/top100_flow.sh)"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -18,7 +23,7 @@ concurrency:
 
 jobs:
   export:
-    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.TOP100_COVERAGE_HOURLY == 'true') }}
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || vars.TOP100_COVERAGE_HOURLY == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -59,7 +64,7 @@ jobs:
         run: |
           set -u
           files="data-team/strategy/top100-coverage-summary.csv"
-          if [ "$EVENT" = "workflow_dispatch" ] || [ "$(date -u +%H)" = "00" ]; then
+          if [ "$EVENT" = "workflow_dispatch" ] || [ "$EVENT" = "workflow_run" ] || [ "$(date -u +%H)" = "00" ]; then
             files="$files data-team/strategy/top100-coverage.csv"
           fi
           if [ -z "$(git status --porcelain -- $files)" ]; then
