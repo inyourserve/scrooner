@@ -6,8 +6,11 @@
   run_extract_sql.py ciks --ciks A,B | --csv PATH
                                               print the comma list of CIKs; a csv needs a cik or company_id column
                                               (company_id is resolved to the CIK of the company's latest annual report)
-  run_extract_sql.py manifest OUTDIR --out FILE --run-id ID --code-sha SHA --ciks LIST
-                                              row counts and SHA-256 of every file in OUTDIR
+  run_extract_sql.py manifest OUTDIR --out FILE --run-id ID --code-sha SHA --ciks LIST [--shards FILE]
+                                              row counts and SHA-256 of every file in OUTDIR (+ per-shard row counts)
+  run_extract_sql.py shard --ciks LIST --n N  print the matrix JSON: N contiguous, balanced shards of the sorted CIK list
+  run_extract_sql.py merge SHARDSDIR OUTDIR   concatenate each kind's .jsonl (and retries.json) over SHARDSDIR/*shard-<i>-*
+                                              in shard order into OUTDIR; writes OUTDIR/shards.json (rows per shard and kind)
 
 Decimal-safe: Decimal and date values are written as strings; a float value is refused (money is never a float).
 The session must report transaction_read_only = on before any query runs (PGOPTIONS from the workflow)."""
@@ -229,18 +232,77 @@ def sha256(p):
     return h.hexdigest()
 
 
-def manifest(outdir, run_id, code_sha, ciks):
+MAX_SHARDS = 12
+KINDS = ('lines', 'bs', 'notes', 'face')
+
+
+def shard_ciks(ciks, n):
+    """Sorted CIKs -> up to n contiguous shards whose sizes differ by at most 1 (contiguous, so the concatenated rows keep a
+    single run's CIK order). Never an empty shard; n is clamped to 1..MAX_SHARDS."""
+    ciks = _clean(list(ciks))
+    n = max(1, min(int(n), MAX_SHARDS, len(ciks) or 1))
+    q, r = divmod(len(ciks), n)
+    out, k = [], 0
+    for i in range(n):
+        size = q + (1 if i < r else 0)
+        out.append(ciks[k:k + size])
+        k += size
+    return [c for c in out if c]
+
+
+def merge_shards(shards_dir, outdir):
+    """Concatenate SHARDS_DIR/<...shard-<i>-...>/<kind>.jsonl in shard order; -> {shard index: {kind: rows}}."""
+    found = {}
+    for d in os.listdir(shards_dir):
+        m = re.search(r'shard-(\d+)(?:-|$)', d)
+        if m and os.path.isdir(os.path.join(shards_dir, d)):
+            found[int(m.group(1))] = os.path.join(shards_dir, d)
+    if not found:
+        raise SystemExit(f'no shard directories in {shards_dir}')
+    idx = sorted(found)
+    if idx != list(range(len(idx))):
+        raise SystemExit(f'shard indexes not contiguous from 0: {idx}')
+    os.makedirs(outdir, exist_ok=True)
+    per, retries = {}, []
+    for kind in KINDS:
+        with open(os.path.join(outdir, kind + '.jsonl'), 'w') as out:
+            for i in idx:
+                p = os.path.join(found[i], kind + '.jsonl')
+                if not os.path.exists(p):
+                    raise SystemExit(f'shard {i} has no {kind}.jsonl')
+                n = 0
+                for ln in open(p):
+                    if ln.strip():
+                        out.write(ln if ln.endswith('\n') else ln + '\n')
+                        n += 1
+                per.setdefault(str(i), {})[kind] = n
+    for i in idx:
+        rp = os.path.join(found[i], 'retries.json')
+        if os.path.exists(rp):
+            retries += [dict(r, shard=i) for r in json.load(open(rp))]
+    if retries:
+        json.dump(retries, open(os.path.join(outdir, 'retries.json'), 'w'), indent=1)
+    json.dump(per, open(os.path.join(outdir, 'shards.json'), 'w'), indent=1)
+    return per
+
+
+def manifest(outdir, run_id, code_sha, ciks, shards=None):
     files = {}
     for p in sorted(glob.glob(os.path.join(outdir, '*.json')) + glob.glob(os.path.join(outdir, '*.jsonl'))):
         name = os.path.basename(p)
         if name == 'manifest.json':
             continue
         rows = sum(1 for _ in open(p)) if name.endswith('.jsonl') else len(json.load(open(p)))
+        if name == 'shards.json':
+            continue
         files[name] = dict(rows=rows, sha256=sha256(p), bytes=os.path.getsize(p))
     rp = os.path.join(outdir, 'retries.json')
     retries = json.load(open(rp)) if os.path.exists(rp) else []
-    return dict(run_id=run_id, code_sha=code_sha, ciks=ciks, n_ciks=len([c for c in ciks.split(',') if c]), files=files,
-                retries=retries)
+    m = dict(run_id=run_id, code_sha=code_sha, ciks=ciks, n_ciks=len([c for c in ciks.split(',') if c]), files=files,
+             retries=retries)
+    if shards:
+        m['shards'] = shards
+    return m
 
 
 def main(argv=None):
@@ -258,6 +320,13 @@ def main(argv=None):
     m.add_argument('--run-id', default='')
     m.add_argument('--code-sha', default='')
     m.add_argument('--ciks', default='')
+    m.add_argument('--shards')
+    h = sub.add_parser('shard')
+    h.add_argument('--ciks', required=True)
+    h.add_argument('--n', default='8')
+    g = sub.add_parser('merge')
+    g.add_argument('shards_dir')
+    g.add_argument('outdir')
     a = ap.parse_args(argv)
     if a.cmd == 'run':
         run_dir(connect(), a.sqldir, a.only)
@@ -266,8 +335,14 @@ def main(argv=None):
             raise SystemExit('give exactly one of --ciks or --csv')
         got = _clean([x for x in re.split(r'[,\s]+', a.ciks.strip()) if x]) if a.ciks else ciks_from_csv(a.csv)
         print(','.join(got))
+    elif a.cmd == 'shard':
+        parts = shard_ciks([x for x in re.split(r'[,\s]+', a.ciks.strip()) if x], a.n)
+        print(json.dumps([dict(i=i, n=len(c), ciks=','.join(c)) for i, c in enumerate(parts)], separators=(',', ':')))
+    elif a.cmd == 'merge':
+        print(json.dumps(merge_shards(a.shards_dir, a.outdir)))
     else:
-        json.dump(manifest(a.outdir, a.run_id, a.code_sha, a.ciks), open(a.out, 'w'), indent=1)
+        sh = json.load(open(a.shards)) if a.shards else None
+        json.dump(manifest(a.outdir, a.run_id, a.code_sha, a.ciks, sh), open(a.out, 'w'), indent=1)
 
 
 if __name__ == '__main__':

@@ -11,9 +11,12 @@ name: Standard extract for the resolver (FSN -> 7 JSON files, read-only)
 # The extract SQL selects by fsn.filing.company_id, successor CIK wins a shared period (48be1944).
 #
 # Read-only: the session is default_transaction_read_only=on, statement_timeout <= 15 min (the SQL files set 55s/115s
-# per query), ONE connection, and a preflight that pauses while pg_stat_activity > 80. No SEC access, no database writes.
+# per query), ONE connection per shard job, and a preflight that pauses while pg_stat_activity > 80. No SEC access, no database writes.
 # Output: (a) artifact standard-extract-<run_id> = the 7 JSON files + the raw .jsonl + manifest.json;
 #         (b) a commit of the 7 JSON files + manifest.json to branch data/extract-<date> (never main).
+# Sharding: plan splits the sorted CIKs into `shards` contiguous shards (default 8, max 12); each shard runs steps 1-2 on its CIKs and
+# uploads its .jsonl; merge concatenates them in shard order, assembles once, runs the legal-entity pass, writes manifest.json (with
+# per-shard row counts) and uploads. Total connections: shards + the plan/merge jobs, never beside each other, well under 70.
 # Queue: manual-db-jobs (never beside top100-flow, cells-load/proof, fsn-load-filings). pipeline-fsn-write has its own
 # group and rewrites fsn.*, so the first job waits for it (heavy_job_guard.sh wait-for-write); this workflow is NOT in
 # HEAVY_WORKFLOWS because it is read-only and a write never needs to refuse because of it.
@@ -29,6 +32,9 @@ on:
       batch:
         description: "CIKs per SQL batch (1..8)"
         default: "4"
+      shards:
+        description: "Parallel shard jobs, one database connection each (1..12)"
+        default: "8"
 
 permissions:
   contents: read
@@ -60,19 +66,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: scripts/ci/heavy_job_guard.sh wait-for-write 330
 
-  extract:
-    name: Extract (read-only database session)
+  plan:
+    name: Plan (company list, split into shards)
     needs: wait-for-fsn-write
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    timeout-minutes: 15
     permissions:
       contents: read
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      ciks: ${{ steps.plan.outputs.ciks }}
+      source: ${{ steps.plan.outputs.source }}
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
       IN_CIKS: ${{ inputs.ciks }}
       IN_CSV: ${{ inputs.csv_path }}
       BATCH: ${{ inputs.batch }}
+      SHARDS: ${{ inputs.shards }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -89,13 +100,63 @@ jobs:
         run: |
           set -eu
           printf '%s' "$BATCH" | grep -Eq '^[1-8]$' || { echo "::error::batch must be 1..8"; exit 1; }
+          printf '%s' "$SHARDS" | grep -Eq '^([1-9]|1[0-2])$' || { echo "::error::shards must be 1..12"; exit 1; }
           if [ -n "$IN_CIKS" ]; then
             printf '%s' "$IN_CIKS" | grep -Eq '^[0-9]{1,10}(, ?[0-9]{1,10})*$' || { echo "::error::ciks must be comma-separated digits"; exit 1; }
           elif [ -n "$IN_CSV" ]; then
             case "$IN_CSV" in /*|*..*) echo "::error::csv_path must be a repo-relative path"; exit 1;; esac
             [ -f "$IN_CSV" ] || { echo "::error::$IN_CSV not found in the repo"; exit 1; }
           fi
-      - name: Connection preflight (pause while pg_stat_activity > 80; this run holds 1)
+      - name: Company list and shard matrix
+        id: plan
+        run: |
+          set -eu
+          py=pipeline/.venv/bin/python
+          if [ -n "$IN_CIKS" ]; then
+            src="ciks input"
+            CIKS=$($py scripts/ci/run_extract_sql.py ciks --ciks "$IN_CIKS")
+          elif [ -n "$IN_CSV" ]; then
+            src="$IN_CSV"
+            CIKS=$($py scripts/ci/run_extract_sql.py ciks --csv "$IN_CSV")
+          else
+            src=$(ls data-team/tags/line_map/resolver-all110-*.csv | sort | tail -1)
+            CIKS=$($py scripts/ci/run_extract_sql.py ciks --csv "$src")
+          fi
+          MATRIX=$($py scripts/ci/run_extract_sql.py shard --ciks "$CIKS" --n "$SHARDS")
+          echo "source: $src; $(echo "$CIKS" | tr ',' '\n' | wc -l) CIKs"
+          echo "matrix: $MATRIX"
+          { echo "ciks=$CIKS"; echo "source=$src"; echo "matrix=$MATRIX"; } >> "$GITHUB_OUTPUT"
+
+  shard:
+    name: Extract shard ${{ matrix.i }} (read-only, one connection)
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: true
+      max-parallel: 12
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    permissions:
+      contents: read
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
+      BATCH: ${{ inputs.batch }}
+      SHARD_CIKS: ${{ matrix.ciks }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Connection preflight (pause while pg_stat_activity > 80; each shard holds 1)
         run: |
           set -eu
           for i in $(seq 1 60); do
@@ -105,31 +166,73 @@ jobs:
             sleep 60
           done
           echo "::error::pg_stat_activity stayed above $MAX_BACKENDS for 60 minutes"; exit 1
-      - name: Company list
+      - name: 1. Write the SQL for this shard
         run: |
           set -eu
           mkdir -p out
-          if [ -n "$IN_CIKS" ]; then
-            src="ciks input"
-            CIKS=$(pipeline/.venv/bin/python scripts/ci/run_extract_sql.py ciks --ciks "$IN_CIKS")
-          elif [ -n "$IN_CSV" ]; then
-            src="$IN_CSV"
-            CIKS=$(pipeline/.venv/bin/python scripts/ci/run_extract_sql.py ciks --csv "$IN_CSV")
-          else
-            src=$(ls data-team/tags/line_map/resolver-all110-*.csv | sort | tail -1)
-            CIKS=$(pipeline/.venv/bin/python scripts/ci/run_extract_sql.py ciks --csv "$src")
-          fi
-          echo "$CIKS" > out/ciks.txt
-          echo "source: $src; $(echo "$CIKS" | tr ',' '\n' | wc -l) CIKs"
-          echo "$src" > out/ciks-source.txt
-      - name: 1. Write the SQL
-        run: python3 data-team/tags/line_map/tools/standard_run.py sql "$(cat out/ciks.txt)" out --batch "$BATCH"
+          echo "$SHARD_CIKS" > out/ciks.txt
+          python3 data-team/tags/line_map/tools/standard_run.py sql "$SHARD_CIKS" out --batch "$BATCH"
       - name: 2. Run the SQL (one read-only connection)
         run: |
           set -eu
           pipeline/.venv/bin/python scripts/ci/run_extract_sql.py run out
-      - name: 3. Assemble
+      - uses: actions/upload-artifact@v4
+        with:
+          name: standard-extract-shard-${{ matrix.i }}-${{ github.run_id }}
+          path: |
+            out/*.jsonl
+            out/retries.json
+            out/ciks.txt
+          retention-days: 7
+          if-no-files-found: error
+
+  merge:
+    name: Merge shards, assemble once, manifest, upload
+    needs: [plan, shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
+      ALL_CIKS: ${{ needs.plan.outputs.ciks }}
+      SRC: ${{ needs.plan.outputs.source }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: standard-extract-shard-*-${{ github.run_id }}
+          path: shards
+      - name: Merge the per-kind .jsonl in shard order
+        run: |
+          set -eu
+          mkdir -p out
+          pipeline/.venv/bin/python scripts/ci/run_extract_sql.py merge shards out
+          echo "$ALL_CIKS" > out/ciks.txt
+          echo "$SRC" > out/ciks-source.txt
+      - name: 3. Assemble (once)
         run: python3 data-team/tags/line_map/tools/standard_run.py assemble out
+      - name: Connection preflight (pause while pg_stat_activity > 80; the legal-entity pass holds 1)
+        run: |
+          set -eu
+          for i in $(seq 1 60); do
+            used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity" | tr -d ' ')
+            echo "client sessions now: $used (limit $MAX_BACKENDS)"
+            [ "$used" -le "$MAX_BACKENDS" ] && exit 0
+            sleep 60
+          done
+          echo "::error::pg_stat_activity stayed above $MAX_BACKENDS for 60 minutes"; exit 1
       - name: 2b/3b. Legal-entity rows for filings without an undimensioned face value, then assemble again
         run: |
           set -eu
@@ -138,11 +241,11 @@ jobs:
             pipeline/.venv/bin/python scripts/ci/run_extract_sql.py run out --only le
             python3 data-team/tags/line_map/tools/standard_run.py assemble out
           fi
-      - name: Manifest
+      - name: Manifest (with per-shard row counts)
         run: |
           set -eu
           pipeline/.venv/bin/python scripts/ci/run_extract_sql.py manifest out --out out/manifest.json \
-            --run-id "$GITHUB_RUN_ID" --code-sha "$GITHUB_SHA" --ciks "$(cat out/ciks.txt)"
+            --run-id "$GITHUB_RUN_ID" --code-sha "$GITHUB_SHA" --ciks "$ALL_CIKS" --shards out/shards.json
           python3 - <<'EOF'
           import json
           m = json.load(open('out/manifest.json'))
@@ -151,6 +254,7 @@ jobs:
           assert not missing, missing
           assert m['files']['filings.json']['rows'] > 0, 'no filings extracted'
           for k, v in m['files'].items(): print(f"{k}: {v['rows']} rows {v['sha256'][:12]}")
+          for i, c in m['shards'].items(): print(f"shard {i}: {c}")
           EOF
       - uses: actions/upload-artifact@v4
         with:
@@ -164,7 +268,7 @@ jobs:
 
   commit:
     name: Commit the 7 files to data/extract-<date> (never main)
-    needs: extract
+    needs: merge
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
