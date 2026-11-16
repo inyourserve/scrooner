@@ -5,6 +5,8 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
+- **Proof rules stated_zero and text_stated** (branch `proof/stated-zero-2026-11-16`, head 39db00aa, CI green run 43819412338). A cell whose value the filing states in words is PROVEN when the resolver row carries the exact quote, locator, accession and a matching period. A stated zero needs the value to be 0; a text-stated value must be nonzero and equal the stated figure. These are two new rules under the rule-scoped proof system, so only those cells are re-proved (no global re-prove). Serving and display are already on main (3b83973a, edf2cfa1); Ritwik samples these cells in every certification. First cells: MCK R&D FY2021-26.
+  - Sentence: "I approve the stated_zero and text_stated proof rules (branch proof/stated-zero-2026-11-16) for merge to main."
 0a. **Apply the pending migration set 0124-0128 to the dev database** (Data Engineer, 2026-11-16). One approval for the whole set; 0127 is dropped (listed in `pipeline/db/migrations/SKIPPED.txt`).
    - Sentence: "I approve migrations 0124-0128 (verifier_check, company_tag_map dims, metric lineage, company x tag x metric library; 0127 skipped) for the dev database."
    - Files are in `pipeline/db/pending/`. CI proof for every line below: Actions run 43812642996 (Pending migrations replay, a fresh Postgres 16 with all committed migrations 0001-0123, then 0124, 0125, 0126, 0128 in order, one smoke SELECT per created object and column, plus guard checks for 0124 and 0125). Nothing has been applied to any shared database.
