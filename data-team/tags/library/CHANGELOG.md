@@ -695,3 +695,8 @@
 - ~ InterestExpense: served_cells
 - ~ InvestmentIncomeInterest: data_point
 - ~ NonoperatingIncomeExpense: data_point
+
+## 2026-11-16 (resolver-2026-11-17.70): 3 element changes, 27999 rows, coverage 62.7%
+- ~ CommonStockSharesIssued: data_point, served_cells
+- ~ TreasuryStockCommonShares: data_point, served_cells
+- ~ TreasuryStockShares: data_point, served_cells

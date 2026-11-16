@@ -143,7 +143,7 @@ def note_value(alts, notes, dp=''):
     return None
 
 
-DERIVE_SHARES = os.environ.get('DERIVE_SHARES') == '1'   # issued - treasury (X67), pending the serving path
+DERIVE_SHARES = os.environ.get('DERIVE_SHARES', '1') == '1'   # issued - treasury (X67): ON since the founder's approval (doc 02, 2026-11-17 item 5) and the loader's DERIVED_DIRECT path
 
 
 def shares(f, notes, bsby):
@@ -174,8 +174,8 @@ def shares(f, notes, bsby):
     # open-shown queue 2026-11-16 (ABT, COP, CVX, WFC, LIN): the parenthetical prints shares ISSUED and TREASURY shares, not outstanding:
     # outstanding = issued - treasury, same parenthetical and column (ruling C2, derived_not_printed). CVX FY2022 2,442,676,580 -
     # 527,460,237 = 1,915,216,343 = CVX's own equity-statement outstanding fact; LIN FY2022 552,012,862 - 59,555,235 = 492,457,627 likewise
-    # OFF until Engineering serves derived_not_printed shares_outstanding (structural_loader DERIVED_VIA_MAP holds only gross_profit and
-    # total_liabilities; a derived row would be skipped and drop the cell's current not_presented claim). Switch on: DERIVE_SHARES=1
+    # founder approval 2026-11-17 (doc 02 item 5): derived instants from printed lines of the same filing are allowed for shares_outstanding;
+    # served by structural_loader.DERIVED_DIRECT. DERIVE_SHARES=0 switches it off
     if not DERIVE_SHARES:
         return None
     und_p = [s.split('|') for s in (f.get('cpv') or '').split('~')]

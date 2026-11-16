@@ -749,13 +749,12 @@ def test_shares_outstanding_issued_less_treasury_and_printed_beats_derived():
     # = 1,915,216,343 (CVX's own equity-statement outstanding fact). A later 10-K's printed count for the year wins (SPGI FY2014 272M)
     import resolve_bs, standard_inputs
     f = dict(cpv='4|20|CommonStockSharesIssued|Common stock, shares issued||2442676580~4|21|TreasuryStockShares|Treasury stock, shares||527460237')
-    assert resolve_bs.shares(f, {}, {}) is None or resolve_bs.DERIVE_SHARES          # off by default until the serving path exists
+    assert resolve_bs.DERIVE_SHARES                                                    # on by default (founder approval 2026-11-17)
     resolve_bs.DERIVE_SHARES = True
     r = resolve_bs.shares(f, {}, {})
     assert r['status'] == 'derived' and r['value'] == D(1915216343) and r['rule'] == 'derived_issued_less_treasury'
     assert r['nodes'] == 'CommonStockSharesIssued=2442676580 [R4.htm:20]; -TreasuryStockShares=527460237 [R4.htm:21]'
     assert resolve_bs.shares(dict(cpv='4|20|CommonStockSharesIssued|x||100'), {}, {}) is None              # no treasury line: no derivation
-    resolve_bs.DERIVE_SHARES = False
     rows = [dict(cik='1', accession='S14', period_end='2014-12-31', data_point='shares_outstanding', status='derived', tags='', nodes='x', value=D(272)),
             dict(cik='1', accession='S15', period_end='2015-12-31', data_point='shares_outstanding', status='mapped', tags='CommonStockSharesOutstanding',
                  nodes='CommonStockSharesOutstanding=265 [BSP]', value=D(265))]
