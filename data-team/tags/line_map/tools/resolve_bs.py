@@ -186,7 +186,7 @@ def shares(f, notes, bsby):
         v = D(iss[5]) - D(tre[5])
         return dict(status='derived', value=v, nodes=f"CommonStockSharesIssued={D(iss[5])} [R{iss[0]}.htm:{iss[1]}]; -{tre[2]}={D(tre[5])} [R{tre[0]}.htm:{tre[1]}]",
                     why=f"the balance-sheet parenthetical prints shares issued ('{iss[3]}') and treasury shares ('{tre[3]}'), not outstanding: issued - treasury (ruling C2)",
-                    rule='issued_less_treasury')
+                    rule='derived_issued_less_treasury')
     return None
 
 

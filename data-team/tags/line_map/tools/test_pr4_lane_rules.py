@@ -752,7 +752,7 @@ def test_shares_outstanding_issued_less_treasury_and_printed_beats_derived():
     assert resolve_bs.shares(f, {}, {}) is None or resolve_bs.DERIVE_SHARES          # off by default until the serving path exists
     resolve_bs.DERIVE_SHARES = True
     r = resolve_bs.shares(f, {}, {})
-    assert r['status'] == 'derived' and r['value'] == D(1915216343) and r['rule'] == 'issued_less_treasury'
+    assert r['status'] == 'derived' and r['value'] == D(1915216343) and r['rule'] == 'derived_issued_less_treasury'
     assert r['nodes'] == 'CommonStockSharesIssued=2442676580 [R4.htm:20]; -TreasuryStockShares=527460237 [R4.htm:21]'
     assert resolve_bs.shares(dict(cpv='4|20|CommonStockSharesIssued|x||100'), {}, {}) is None              # no treasury line: no derivation
     resolve_bs.DERIVE_SHARES = False
