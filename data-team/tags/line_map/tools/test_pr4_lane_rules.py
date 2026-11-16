@@ -877,3 +877,50 @@ def test_two_filer_error_rows_for_one_fact_key_by_stored_value(tmp_path):
     nf = {'A1': 'CommonStockDividendsPerShareDeclared|4|2800000~CommonStockDividendsPerShareDeclared|4|2770000'}
     standard_inputs.apply_filer_errors([], nf, errs)
     assert nf['A1'] == 'CommonStockDividendsPerShareDeclared|4|2.80~CommonStockDividendsPerShareDeclared|4|2.77'
+
+
+def test_combined_ci_takes_the_later_parent_note_fact_and_profit_loss_only_net_income_the_later_parent():
+    # Dhairya Group C 6 / B 2026-11-17: CRWD FY2021 CI -91,319K and net income -92,629K from the FY2022 10-K comparative column
+    import standard_inputs
+    rows = [dict(cik='1', data_point='comprehensive_income', period_end='2021-01-31', accession='A21', status='combined', tags='', nodes='X [R5.htm:6]', value=None),
+            dict(cik='1', data_point='comprehensive_income', period_end='2022-01-31', accession='A22', status='mapped', tags='ComprehensiveIncomeNetOfTax',
+                 nodes='ComprehensiveIncomeNetOfTax=-238361000 [NOTE]', value='-238361000')]
+    comp = {'A22': 'ComprehensiveIncomeNetOfTax|4|-91319000|2021-01-31'}
+    assert str(standard_inputs.comparative_fill(rows, comp, set())[('A21', 'comprehensive_income')]['value']).startswith('-91319000')
+    ni = [dict(cik='1', data_point='net_income', period_end='2021-01-31', accession='A21', status='no_role', tags='', nodes='', value=None),
+          dict(cik='1', data_point='net_income', period_end='2022-01-31', accession='A22', status='mapped', tags='NetIncomeLoss', nodes='NetIncomeLoss=-234802000 [R5.htm:24]', value='-234802000')]
+    comp = {'A22': 'NetIncomeLoss|4|-92629000|2021-01-31'}
+    assert str(standard_inputs.comparative_fill(ni, comp, set(), {'A21': 'ProfitLoss|4|-92629000'})[('A21', 'net_income')]['value']).startswith('-92629000')
+    assert ('A21', 'net_income') not in standard_inputs.comparative_fill(ni, comp, set(), {'A21': 'ProfitLoss|4|-1~NetIncomeLoss|4|-2'})   # own parent fact: no fill
+    assert ('A21', 'net_income') not in standard_inputs.comparative_fill(ni, comp, set())
+    ni[1].update(tags='ProfitLoss', nodes='ProfitLoss=-234802000 [R5.htm:24]')   # the later 10-K's figure must be the parent element
+    assert ('A21', 'net_income') not in standard_inputs.comparative_fill(ni, {'A22': 'ProfitLoss|4|-92629000|2021-01-31'}, set(), {'A21': 'ProfitLoss|4|-92629000'})
+
+
+def test_pre_filing_fy2_instant_is_printed_when_the_element_is_the_data_point():
+    # Dhairya Group B/C 2026-11-17: CRWD FY2018 cash 63,179K is the first 10-K's cash-flow beginning balance (no restricted cash: equals BS cash)
+    import standard_inputs
+    rows = [dict(cik='1', data_point='cash_and_equivalents', period_end='2018-01-31', accession='B', status='not_presented', tags='', nodes='', value=None, flags='before_first_10k'),
+            dict(cik='1', data_point='cash_and_equivalents', period_end='2020-01-31', accession='A20', status='mapped', tags='CashAndCashEquivalentsAtCarryingValue',
+                 nodes='CashAndCashEquivalentsAtCarryingValue=264798000 [R2.htm:3]', value='264798000')]
+    comp = {'A20': 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents|0|63179000|2018-01-31'}
+    nf = {'A20': 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents|0|264798000'}
+    c = standard_inputs.comparative_fill(rows, comp, {'cash_and_equivalents'}, nf)[('B', 'cash_and_equivalents')]
+    assert str(c['value']).startswith('63179000') and c['window'] == 'FY-2' and c['loc'] == 'NOTE'
+    assert ('B', 'cash_and_equivalents') not in standard_inputs.comparative_fill(rows, comp, {'cash_and_equivalents'}, {'A20': 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents|0|270000000'})   # restricted cash
+    rows[0]['flags'] = ''
+    assert ('B', 'cash_and_equivalents') not in standard_inputs.comparative_fill(rows, comp, {'cash_and_equivalents'}, nf)   # only a pre-filing year
+
+
+def test_other_income_never_fills_from_a_relabelled_line_while_interest_sits_inside():
+    # Dhairya wave 2B 11 (X59 guard): NOW FY2019 'Interest income and other income (expense), net' 58,345K; the FY2021 10-K relabels it
+    # 'Other income (expense), net' 58M with no interest line for 2019 -> no fill. A later filing that prints interest income for the year may fill.
+    import standard_inputs
+    rows = [dict(cik='1', data_point='interest_income', period_end='2019-12-31', accession='A19', status='combined', tags='', nodes='', value=None),
+            dict(cik='1', data_point='other_income_expense_net', period_end='2019-12-31', accession='A19', status='not_presented', tags='', nodes='', value=None),
+            dict(cik='1', data_point='other_income_expense_net', period_end='2021-12-31', accession='A21', status='mapped', tags='OtherNonoperatingIncomeExpense',
+                 nodes='OtherNonoperatingIncomeExpense=20 [R5.htm:19]', value='20')]
+    comp = {'A21': 'OtherNonoperatingIncomeExpense|4|58000000|2019-12-31'}
+    assert ('A19', 'other_income_expense_net') not in standard_inputs.comparative_fill(rows, comp, set())
+    comp = {'A21': 'OtherNonoperatingIncomeExpense|4|3000000|2019-12-31~InvestmentIncomeInterest|4|55000000|2019-12-31'}
+    assert ('A19', 'other_income_expense_net') in standard_inputs.comparative_fill(rows, comp, set())

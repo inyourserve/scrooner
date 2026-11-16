@@ -38,7 +38,7 @@ def fill_printed_zero_and_comparative(rows, td):
     for (own_a, dp), c in EXT.get('cf', {}).items():   # loc = where the later filing itself resolved the data point
         nodes_loc = next((x.get('nodes') or '' for x in rows if x['accession'] == c['accession'] and x['data_point'] == dp), '')
         m = re.search(r'\[(R[^\]]*|NOTE|BSP|BS parenthetical[^\]]*)\]', nodes_loc)
-        cf[(own_a, dp)] = dict(c, loc=m.group(1) if m else 'NOTE')
+        cf[(own_a, dp)] = dict(c, loc=c.get('loc') or (m.group(1) if m else 'NOTE'))   # a FY-2 instant is not on the balance-sheet line the later filing resolves
     nxt = {}
     by = collections.defaultdict(list)
     for (a, col), t in td.items():
@@ -47,6 +47,7 @@ def fill_printed_zero_and_comparative(rows, td):
         k = (r['accession'], r['data_point'])
         # a combined own working-capital line yields to the pure element a later 10-K prints for the year (TSLA FY2015-16 'Inventories and operating lease vehicles'; standard_inputs.WC_PURE)
         if r['status'] == 'combined' and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
+        if r['status'] == 'no_role' and r['data_point'] in standard_inputs.NO_ROLE_YIELDS_TO and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
         if r['status'] == 'derived' and r['data_point'] in standard_inputs.DERIVED_YIELDS_TO and k in cf and (r.get('column') or 'own') == 'own':   # printed beats derived (SPGI FY2014, BA CI FY2018-19)
             r['status'] = 'not_presented'
             r['flags'] = ';'.join(x for x in (r.get('flags') or '').split(';') if x and x not in ('ci_parent_derived', 'derived_issued_less_treasury'))
@@ -1480,7 +1481,7 @@ if __name__ == '__main__':
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
     rows += standard_inputs.before_first_10k_rows(rows, filings, compfacts)   # years printed only in the first 10-K's comparative columns
-    EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
+    EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS, notefacts)
     _roles = {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}
     _pz = standard_inputs.printed_zero_inferred(rows, filings, compfacts, memberfacts, _roles)
     _pz.update(standard_inputs.printed_zero(rows, zlines, _roles))   # the extract's zlines win where present

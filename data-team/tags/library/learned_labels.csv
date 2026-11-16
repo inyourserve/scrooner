@@ -1046,13 +1046,13 @@ net_income,net income attributable to chubb,3,1,NetIncomeLoss 3
 net_income,net loss attributable to vertex,3,1,NetIncomeLoss 3
 net_income,net income attributable to seagate technology plc,3,1,NetIncomeLoss 3
 net_income,net income attributable to valero energy corporation,3,1,NetIncomeLoss 3
+net_income,net loss attributable to crowdstrike,3,1,NetIncomeLoss 3
 net_income,net income attributable to crowdstrike,3,1,NetIncomeLoss 3
 net_income,net income attributable to the walt disney company d,3,1,NetIncomeLoss 3
 net_income,net earnings attributable to boeing shareholders,2,1,NetIncomeLoss 2
 net_income,"net income attributable to mcgraw hill financial, inc",2,1,NetIncomeLoss 2
 net_income,net income from continuing operations,2,1,NetIncomeLoss 2
 net_income,net income applicable to common stockholders,2,1,NetIncomeLossAvailableToCommonStockholdersBasic 2
-net_income,net loss attributable to crowdstrike,2,1,NetIncomeLoss 2
 net_income,"net loss attributable to uber technologies, inc",2,1,NetIncomeLoss 2
 net_income,net loss and comprehensive loss,2,1,NetIncomeLoss 2
 net_income,net income attributable to ordinary shares,2,1,NetIncomeLoss 2
@@ -1325,7 +1325,7 @@ operating_income,operating loss,15,4,OperatingIncomeLoss 15
 operating_income,operating income from continuing operations,6,2,OperatingIncomeLoss 6
 operating_income,income from continuing operations,5,1,OperatingIncomeLoss 5
 operating_income,total,1,1,OperatingIncomeLoss 1
-other_income_expense_net,"other income , net",220,33,OtherNonoperatingIncomeExpense 164;NonoperatingIncomeExpense 55;OtherNonoperatingIncomeExpenseNet 1
+other_income_expense_net,"other income , net",218,33,OtherNonoperatingIncomeExpense 162;NonoperatingIncomeExpense 55;OtherNonoperatingIncomeExpenseNet 1
 other_income_expense_net,"other income, net",133,28,OtherNonoperatingIncomeExpense 85;NonoperatingIncomeExpense 37;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 2
 other_income_expense_net,other income,123,17,OtherNonoperatingIncomeExpense 57;NonoperatingIncomeExpense 19;OtherIncome 12;OtherNonoperatingIncome 10
 other_income_expense_net,"other expense, net",107,20,OtherNonoperatingIncomeExpense 88;NonoperatingIncomeExpense 14;OtherIncomeExpenseNet 5

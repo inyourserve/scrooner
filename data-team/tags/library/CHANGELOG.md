@@ -706,3 +706,13 @@
 - ~ CommonStockDividendsPerShareDeclared: known_problems
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
 - ~ PropertyPlantsAndEquipmentNet: data_point, rule_id, served_cells
+
+## 2026-11-16 (resolver-all110-.72): 8 element changes, 27999 rows, coverage 62.7%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents: served_cells
+- ~ ComprehensiveIncomeNetOfTax: rule_id, served_cells
+- ~ Goodwill: rule_id, served_cells
+- ~ NetIncomeLoss: rule_id, served_cells
+- ~ OtherNonoperatingIncomeExpense: served_cells
+- ~ ProfitLoss: rule_id
+- ~ StockholdersEquity: rule_id, served_cells

@@ -166,7 +166,8 @@ def related_splits(memberfacts, tag_re):
 
 
 NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares',   # per-share / share counts sit in notes
-                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest', 'interest_income'}   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
+                'amortization_of_intangibles', 'sbc', 'cash_paid_for_income_taxes', 'cash_paid_for_interest', 'interest_income',
+                'comprehensive_income'}   # the CI statement's parent figure reaches the extract as a note fact (Dhairya Group C 6, 2026-11-17: check later 10-K comparatives before combined-only; CRWD FY2021, LLY FY2020-21)   # note facts by nature: a later 10-K's note comparative fills the year (TSLA amortization FY2017-18; Dhairya ruling 2026-11-16: never hide a year a later filing prints)
 FACE_NODE = re.compile(r'\[(R\d|BS parenthetical|BSP)')
 
 
@@ -185,10 +186,29 @@ WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDec
 
 WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
 COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',), other_income_expense_net=('OtherNonoperatingIncomeExpense',))   # MO FY2014: the FY2015 10-K prints 'Other income, net' 0 for 2014
+NO_ROLE_YIELDS_TO = dict(net_income=('NetIncomeLoss',))   # Dhairya Group B 2026-11-17 (CRWD FY2021): the own filing tags its only net-income line ProfitLoss; the later 10-K's parent figure
 DERIVED_YIELDS_TO = dict(comprehensive_income=('ComprehensiveIncomeNetOfTax',), shares_outstanding=('CommonStockSharesOutstanding',))   # a printed figure (a later 10-K's column) beats the own derivation
 
 
-def comparative_fill(rows, compfacts, instant_dps):
+def _profit_loss_only(raw):
+    """The filing's own-column facts (notefacts 'tag|qtrs|value') hold ProfitLoss and no NetIncomeLoss."""
+    t = {x[0] for x in _facts(raw, 3) if x[1] == '4'}
+    return 'ProfitLoss' in t and 'NetIncomeLoss' not in t
+
+
+INTEREST_INCOME_EL = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOperating|InterestIncomeNonOperating|InterestAndOtherIncome|InterestIncomeOther|InvestmentIncomeInterestAndDividend)$')
+
+
+def _interest_inside(by, r, later_raw):
+    """The own year's interest income sits inside the own other-income line (interest_income combined), and the later 10-K prints no
+    interest-income figure for that year: its relabelled 'Other income (expense), net' for the year still holds interest income (NOW
+    FY2019-20: 58M and -16M in the FY2021 10-K hold interest income 55.4M and 39.5M per the FY2020 MD&A). Never a comparative fill."""
+    ii = next((x for x in by.get((r['cik'], 'interest_income'), []) if x['accession'] == r['accession']), None)
+    if ii is None or ii['status'] != 'combined': return False
+    return not any(INTEREST_INCOME_EL.match(t) and dd == str(r['period_end']) and q == '4' for t, q, v, dd in _facts(later_raw, 4))
+
+
+def comparative_fill(rows, compfacts, instant_dps, notefacts=None):
     """rows: resolver rows (run + family replacement). For every own row 'not_presented', the later 10-Ks of the same company (next = FY-1, then FY-2) are
     looked at in order (instants: FY-1 only; the later filing must resolve the data point on its face, R page or BS parenthetical, except
     per-share and share counts), the first that resolves the data point to ONE element (status mapped, a single tag) and holds ONE undimensioned fact of that element
@@ -202,7 +222,8 @@ def comparative_fill(rows, compfacts, instant_dps):
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
             if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in COMBINED_YIELDS_TO) \
-                    and not (r['status'] == 'derived' and r['data_point'] in DERIVED_YIELDS_TO):
+                    and not (r['status'] == 'derived' and r['data_point'] in DERIVED_YIELDS_TO) \
+                    and not (r['status'] == 'no_role' and r['data_point'] in NO_ROLE_YIELDS_TO and _profit_loss_only((notefacts or {}).get(r['accession']))):
                 continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
@@ -210,9 +231,11 @@ def comparative_fill(rows, compfacts, instant_dps):
                 if b is None: continue
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
-                if r['status'] == 'derived' and tag not in DERIVED_YIELDS_TO[r['data_point']]: continue   # a printed figure beats an own derivation (SPGI FY2014 272M; BA CI FY2018-19)
+                if r['status'] == 'derived' and tag not in DERIVED_YIELDS_TO[r['data_point']]: continue
+                if r['status'] == 'no_role' and tag not in NO_ROLE_YIELDS_TO[r['data_point']]: continue   # a printed figure beats an own derivation (SPGI FY2014 272M; BA CI FY2018-19)
                 if r['status'] == 'combined' and tag not in COMBINED_YIELDS_TO[r['data_point']]: continue   # only the pure element a later 10-K prints (CI: the parent figure; the own filing printed only CI including NCI: AVGO/BLK/DIS/LIN predecessor years)
-                if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
+                if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue
+                if r['data_point'] == 'other_income_expense_net' and _interest_inside(by, r, compfacts.get(b['accession'])): continue   # X59 guard (Dhairya wave 2B 11, NOW FY2019-20)   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
                 if len(vals) == 1:
@@ -221,7 +244,31 @@ def comparative_fill(rows, compfacts, instant_dps):
                     if m and b.get('value') not in (None, '') and D(b['value']) == -D(m.group(1)) != 0: v = -v   # the later cell is the fact signed by its calc weight (MDT OTTI, weight -1 toward pretax)
                     out[(r['accession'], r['data_point'])] = dict(accession=b['accession'], tag=tag, value=str(v), window=w)
                     break
+            if (r['accession'], r['data_point']) not in out and q == 0 and r['data_point'] in FY2_INSTANT and 'before_first_10k' in (r.get('flags') or ''):
+                b = next((x for x in lst if abs((date.fromisoformat(str(x['period_end'])) - date.fromisoformat(str(r['period_end']))).days - 730) <= 45), None)
+                c = _fy2_instant(r, b, compfacts, notefacts or {}) if b is not None and b['status'] == 'mapped' and b.get('value') not in (None, '') else None
+                if c: out[(r['accession'], r['data_point'])] = c
     return out
+
+
+# Dhairya Group B/C rulings 2026-11-17: a pre-filing year-end that the first 10-K prints only as a FY-2 instant of a periodic report
+# (cash-flow beginning balance, equity-statement opening balance, roll-forward opening balance) is a printed instant, not pre-filing.
+# Each alternative carries the proof that it is the data point: the element equals the data point's own-column value in that 10-K.
+FY2_INSTANT = {'cash_and_equivalents': ('CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents',),   # CRWD FY2018 63,179K: no restricted cash
+               'stockholders_equity': ('StockholdersEquity', 'StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest'),   # CRWD FY2018: NCI column 0
+               'goodwill': ('Goodwill',)}   # UBER FY2017 39M: the goodwill roll-forward opening balance
+
+
+def _fy2_instant(r, b, compfacts, notefacts):
+    own = {}
+    for t, qq, v in _facts(notefacts.get(b['accession']), 3):
+        if qq == '0': own.setdefault(t, set()).add(D(v))
+    for tag in FY2_INSTANT[r['data_point']]:
+        vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and qq == '0' and dd == str(r['period_end'])}
+        if len(vals) != 1: continue
+        if tag != _one_element(b) and own.get(tag) != {D(b['value'])}: continue   # the same concept: the element equals the data point in the 10-K's own column
+        return dict(accession=b['accession'], tag=tag, value=str(vals.pop()), window='FY-2', loc='NOTE')   # CF / equity statement / roll-forward: no BS line
+    return None
 
 
 def printed_zero(rows, zlines, roles):
