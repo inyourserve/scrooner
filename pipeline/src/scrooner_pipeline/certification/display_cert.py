@@ -41,6 +41,10 @@ SHOWN = "SHOWN_VALUE"
 HIDDEN_ROW = "HIDDEN_ROW"
 HIDDEN_YEAR = "HIDDEN_YEAR"
 OPEN = "OPEN"
+PER_SHARE_DPS = frozenset({"basic_eps", "diluted_eps", "dividends_per_share"})
+PER_SHARE_CEILING = Decimal(
+    1000
+)  # above any US per-share EPS or dividend on record (BRK-A excluded)
 CONTROL_TAG = "Assets"  # every periodic filer reports it undimensioned
 DRAW_SIZE = 32  # 0 errors in 32 -> 8.94% per-company bound; the 0.10% target is pooled
 PERIODIC_FORMS = (
@@ -576,6 +580,16 @@ def check_cell(c: Cell, facts: list[Fact]) -> CellCheck:
             f"{'-' if t.sign < 0 else ''}{t.tag}{'[' + t.dims + ']' if t.dims else ''}={f.value}@{f.accession}#{t.r_page} (fsn reports {','.join(f.reports) or '-'})"
         )
     shown = c.value if c.value is not None else Decimal(0)
+    if c.data_point in PER_SHARE_DPS and abs(shown) > PER_SHARE_CEILING:
+        # Matching the filing is not enough: STX's FY2024 10-K tags FY2022 dividends per share as
+        # 2,770,000 (a filer scale error). A shown value no reader could believe is wrong.
+        return CellCheck(
+            c,
+            "MISMATCH",
+            total,
+            f"implausible per-share value {shown} (> {PER_SHARE_CEILING}); "
+            + "; ".join(ev),
+        )
     if not part_ok or (total != shown if c.parts else abs(total) != abs(shown)):
         return CellCheck(c, "MISMATCH", total, "; ".join(ev))
     return CellCheck(c, "MATCH" if locator_ok else "LOCATOR", total, "; ".join(ev))
@@ -647,7 +661,7 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
                 f"{tot[0].tag}={tot[0].value} ({','.join(tot[0].reports)})",
             )
         elif parts:
-            lease = sum((f.value for f in parts), Decimal(0))
+            lease = sum(f.value for f in parts)
             lease_ev = "; ".join(f"{f.tag}[{f.dims}]={f.value}" for f in parts)
     perim = sum(face.values(), Decimal(0)) + lease
     ev = f"face {dict(sorted(face.items()))}; lease {lease_ev}"

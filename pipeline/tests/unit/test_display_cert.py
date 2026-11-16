@@ -385,3 +385,22 @@ def test_hidden_row_evidence_must_be_presented_annual_and_in_window():
         ].severity
         == "FAIL"
     )
+
+
+def test_implausible_per_share_value_is_wrong_even_when_it_matches_the_filing():
+    stx = [fact("CommonStockDividendsPerShareDeclared", "2770000")]
+    c = cell(
+        dp="dividends_per_share",
+        value="2770000",
+        tag="CommonStockDividendsPerShareDeclared",
+    )
+    assert dc.check_cell(c, stx).result == "MISMATCH"
+    ok = cell(
+        dp="dividends_per_share",
+        value="2.77",
+        tag="CommonStockDividendsPerShareDeclared",
+    )
+    assert (
+        dc.check_cell(ok, [fact("CommonStockDividendsPerShareDeclared", "2.77")]).result
+        == "MATCH"
+    )
