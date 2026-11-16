@@ -64,3 +64,12 @@ Why: 13 red CI runs in a row on main on 11-14, and main red again 11-15 20:53-21
 They have been disabled since 11-16 through `vars.ALLOW_RETIRED_WORKFLOWS`.
 - No action is needed unless someone set that variable during the week.
 - GitHub-ops opens the deletion PR on 11-23; it only needs a merge.
+
+## Definition call: derived instants from printed lines in the same filing (Dhairya, 2026-11-17)
+
+Founder decision 2026-11-01 (doc 02, "company-wise FSN statement store", item 4) says "EPS and instants are never derived". Two chief-of-staff rulings compute an instant the filing does not print as one line, from lines it does print in the SAME filing:
+- total_liabilities = L&SE total − total equity incl. NCI − mezzanine (ruling C2, 2026-11-13; already served as DERIVED, flagged derived_not_printed);
+- shares_outstanding = shares issued − treasury shares, both printed in the same BS face/parenthetical, only when no outstanding count is printed (2026-11-17; ~312 cells; matches the filer's own outstanding count exactly wherever one exists: PM all years, LIN, CVX). Held OFF (DERIVE_SHARES) until you decide.
+
+Dhairya recommends allowing both (every input printed, same filing, flagged derived, Ritwik samples). EPS stays never derived.
+Sentence to type (Dhairya's session is fine): "I approve derived instants from printed lines in the same filing for total_liabilities and shares_outstanding (issued minus treasury); EPS stays never derived."
