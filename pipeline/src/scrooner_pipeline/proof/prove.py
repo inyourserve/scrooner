@@ -403,6 +403,10 @@ class Shown:
     # invalid, so the cell is not proven.
     stated_zero: bool = False
     stated_zero_evidence: tuple[str, str, str, str] | None = None
+    # the cell is a text_stated value (Dhairya 2026-11-16): a NONZERO value the filing states in its text, served with
+    # no fact id. Evidence (quote, locator, accession, quote_period, stated value) of the valid resolver row.
+    text_stated: bool = False
+    text_stated_evidence: tuple[str, str, str, str, Decimal] | None = None
     # (combined line tag, spanned concept names) of the company's 'combined' rows that span this data point in this
     # era: the data point is split from a note, and the split parts must sum to that printed combined line
     # (founder decision 2026-11-16; proof/identities._check_splits)
@@ -1110,6 +1114,57 @@ def stated_zero_problem(shown: Shown) -> str | None:
     return None
 
 
+def text_stated_problem(shown: Shown) -> str | None:
+    """Why a text_stated cell is not proven, or None. It needs a NONZERO value equal to the one the filing states and
+    the exact quote, the section locator, the accession and a quote_period that is the cell's own period. Pure."""
+    ev = shown.text_stated_evidence
+    if shown.value == 0:
+        return "the value is 0 (a stated zero is a stated_zero cell)"
+    if ev is None:
+        return "no valid text_stated evidence row (quote, locator, accession, period, value)"
+    quote, locator, accession, qperiod, value = ev
+    if not quote.strip():
+        return "no quoted sentence"
+    if not locator.strip():
+        return "no section locator"
+    if not accession.strip():
+        return "no accession"
+    try:
+        qp = date.fromisoformat(qperiod)
+    except ValueError:
+        return "no quote period"
+    if not fsn_end_matches(qp, shown.period_end):
+        return f"the quote speaks for {qp}, the cell is {shown.period_end}"
+    if value != shown.value:
+        return f"the filing states {value}, the cell shows {shown.value}"
+    return None
+
+
+def prove_text_stated(shown: Shown, p: Proof) -> Proof:
+    """Rule `text_stated` (proof/rules.py): PROVEN when the filing's own quoted statement of the value is present for the
+    cell's period and equals it; DISAGREE (text_stated_evidence_incomplete) otherwise."""
+    why = text_stated_problem(shown)
+    if why or shown.text_stated_evidence is None:
+        p.verdict, p.reason_code = DISAGREE, "text_stated_evidence_incomplete"
+        p.reason_text = f"served as a text-stated value but {why}"
+        p.checks["text_stated"] = {"status": "fail", "why": why}
+        return p
+    quote, locator, accession, qperiod, value = shown.text_stated_evidence
+    p.verdict, p.reason_code = PROVEN, None
+    p.position_value = value
+    p.position_accession = accession
+    p.checks["text_stated"] = {
+        "status": "pass",
+        "accession": accession,
+        "locator": locator,
+        "quote": quote,
+        "quote_period": qperiod,
+        "value": str(value),
+    }
+    p.reason_text = f"the filing states {value} for {qperiod}: {quote}"
+    return p
+
+
 def prove_stated_zero(shown: Shown, p: Proof) -> Proof:
     """Rule `stated_zero` (proof/rules.py): PROVEN when the filing's own quoted statement of the zero is present for the
     cell's period; DISAGREE (stated_zero_evidence_incomplete) otherwise."""
@@ -1175,6 +1230,8 @@ def _prove_cell(
     p = Proof(shown=shown, verdict=UNCHECKED, fsn_set=fsn_set)
     if shown.stated_zero:
         return prove_stated_zero(shown, p)
+    if shown.text_stated:
+        return prove_text_stated(shown, p)
     if shown.data_point_name not in EXPECTED and shown.claim is None:
         p.reason_text = (
             "no company_tag_map claim for this cell and no hand expectation: "

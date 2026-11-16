@@ -69,12 +69,17 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
 
 PRINTED_ZERO_FAMILY = "company_tag_map:printed_zero"
 STATED_ZERO_FAMILY = "company_tag_map:stated_zero"
+TEXT_STATED_FAMILY = "company_tag_map:text_stated"
 
 
 def stated_zero_evidence(
-    conn: psycopg.Connection, company_id: int, name: str, end: date
-) -> tuple[str, str, str, str] | None:
-    """(quote, locator, accession, quote_period) of the VALID stated_zero resolver row of this cell (same company,
+    conn: psycopg.Connection,
+    company_id: int,
+    name: str,
+    end: date,
+    kind: str = "stated_zero",
+) -> Any:
+    """(quote, locator, accession, quote_period), plus the stated value for kind text_stated, of the VALID resolver row of this cell (same company,
     data point, period), the latest file wins; None when there is none (the cell is then not proven). Reads the
     resolver CSV through the loader's own validation, never the DB (the quote is not stored in canonical_fact)."""
     from scrooner_pipeline.mapper import docmap_loader as dl
@@ -92,7 +97,7 @@ def stated_zero_evidence(
     best = None
     for c in sd._claims_by_cik(str(path)).get(str(row[0]).zfill(10), ()):
         if (
-            sl.is_stated_zero(c.decision, c.flags)
+            sl.stated_kind(c.decision, c.flags) == kind
             and dl.served_concept(c.data_point, {name}) == name
             and fsn_end_matches(c.period_end, end)
             and sd.stated_zero_claim_problem(c) is None
@@ -103,9 +108,10 @@ def stated_zero_evidence(
                 best.accession,
             ):
                 best = c
-    return (
-        (best.quote, best.locator, best.accession, best.quote_period) if best else None
-    )
+    if best is None:
+        return None
+    ev = (best.quote, best.locator, best.accession, best.quote_period)
+    return (*ev, Decimal(best.value)) if kind == "text_stated" else ev
 
 
 CORRECTION_FAMILIES = (
@@ -695,8 +701,16 @@ def load_shown(
         pz = family == PRINTED_ZERO_FAMILY and Decimal(value) == 0
         sz = family == STATED_ZERO_FAMILY
         sz_ev = stated_zero_evidence(conn, company_id, name, end) if sz else None
+        ts = family == TEXT_STATED_FAMILY
+        ts_ev = (
+            stated_zero_evidence(conn, company_id, name, end, "text_stated")
+            if ts
+            else None
+        )
         if sz and sz_ev:
             accession = sz_ev[2]
+        if ts and ts_ev:
+            accession = ts_ev[2]
         if (
             pz or family in CORRECTION_FAMILIES
         ) and accession is None:  # no fact id: the claim's evidence filing
@@ -840,6 +854,8 @@ def load_shown(
                 printed_zero=pz,
                 stated_zero=sz,
                 stated_zero_evidence=sz_ev,
+                text_stated=ts,
+                text_stated_evidence=ts_ev,
             )
         )
     return out
