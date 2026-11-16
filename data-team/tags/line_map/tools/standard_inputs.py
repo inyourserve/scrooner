@@ -13,7 +13,7 @@ amortization_location_total(...)  AmortizationOfIntangibleAssets reported by inc
                         _amortization-location-total file.
 debt_vals(...)          own + comparative undimensioned facts in the debtvals.json shape total_debt.run reads.
 Side files stay a fallback in resolve_all.py / resolve_is.py until parity is shown (tools/test_standard_inputs.py)."""
-import csv, os, re
+import collections, csv, os, re
 from datetime import date
 from decimal import Decimal as D
 
@@ -183,6 +183,7 @@ WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDec
 
 
 WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
+COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',))
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -198,7 +199,7 @@ def comparative_fill(rows, compfacts, instant_dps):
     for lst in by.values():
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
-            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in WC_PURE):
+            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and (r['data_point'] in WC_PURE or r['data_point'] == 'comprehensive_income')):
                 continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
@@ -206,7 +207,7 @@ def comparative_fill(rows, compfacts, instant_dps):
                 if b is None: continue
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
-                if r['status'] == 'combined' and tag not in WC_PURE[r['data_point']]: continue
+                if r['status'] == 'combined' and tag not in COMBINED_YIELDS_TO[r['data_point']]: continue   # only the pure element a later 10-K prints (CI: the parent figure; the own filing printed only CI including NCI: AVGO/BLK/DIS/LIN predecessor years)
                 if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
@@ -422,11 +423,21 @@ def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
     first = {}
     for f in filings:
         if f['cik'] not in first or f['p'] < first[f['cik']]['p']: first[f['cik']] = f
+    own = collections.defaultdict(list)
+    for f in filings: own[f['cik'].zfill(10)].append(date.fromisoformat(f['p']))
+    # a year INSIDE the company's run with no annual report of its own in the inputs (MRVL FY2021: the predecessor's last 10-K is not in
+    # FSN) is treated like a pre-filing year of the next 10-K that prints it: one row per data point, filled from that 10-K's columns
+    nxt = {}
+    for f in sorted(filings, key=lambda f: f['p']):
+        k = f['cik'].zfill(10)
+        prev = [d for d in own[k] if d < date.fromisoformat(f['p'])]
+        if prev and (date.fromisoformat(f['p']) - max(prev)).days > 400: nxt[(k, f['a'])] = f
+    seen = set()
     tmpl = {}
     for r in rows:
         if (r.get('column') or 'own') == 'own' and r.get('cik'): tmpl.setdefault(r['cik'].zfill(10), (r['ticker'], set()))[1].add(r['data_point'])
     out = []
-    for cik, f in first.items():
+    for cik, f in list(first.items()) + [(k, g) for (k, _a), g in nxt.items()]:
         per = date.fromisoformat(f['p']); key = cik.zfill(10)
         if key not in tmpl: continue
         dates = {}
@@ -440,6 +451,8 @@ def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
         for w, c in sorted(dates.items()):
             dd = max(c, key=lambda x: (c[x], x))
             if dd < start: continue   # before the extract window: a 10-K outside the window covers it
+            if any(abs((date.fromisoformat(dd) - d).days) <= 20 for d in own[key]) or (key, dd) in seen: continue   # an own 10-K covers it
+            seen.add((key, dd))
             for dp in sorted(dps):
                 out.append(dict(ticker=ticker, cik=key, accession=f'BEFORE:{key}:{dd}', period_end=dd, data_point=dp, status='not_presented', tags='', value=None, r_page='',
                                 nodes='', why=f"no 10-K covers this year: it is before the company's first 10-K ({f['a']}), and that 10-K's FY-{w} column does not print the line",

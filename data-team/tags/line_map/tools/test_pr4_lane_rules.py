@@ -366,3 +366,42 @@ def test_card_member_loans_are_the_loan_classes_of_a_member_only_line_when_class
     assert r['status'] == 'component_sum' and r['value'] == 104217 + 5357 and 'member_sum' in r['flags'] and 'CardMemberReceivables' in r['why']
     # classes that do not tie to total assets: stays open
     assert run({'A22': mf['A22'].replace('|5357|', '|5000|')})['status'] == 'not_presented'
+
+
+def test_printed_all_class_share_total_beats_an_incomplete_class_sum():
+    # Google Inc FY2014 R3:18 'Common and Capital Stock, Shares, Outstanding' 680,172,000; class A 286,560,000 + B 53,213,000 only
+    import resolve_bs
+    cpv = ('3|18|CommonandCapitalStockSharesOutstanding|Common and Capital Stock, Shares, Outstanding||680172000~'
+           '3|23|CommonStockSharesOutstanding|Common stock, shares outstanding|ClassOfStock=CommonClassA;|286560000~'
+           '3|23|CommonStockSharesOutstanding|Common stock, shares outstanding|ClassOfStock=CommonClassB;|53213000')
+    r = resolve_bs.shares({'cpv': cpv}, {}, {})
+    assert r['value'] == 680172000 and r['rule'] == 'class_total'
+    # without the total the class sum stands
+    r = resolve_bs.shares({'cpv': cpv.split('~', 1)[1]}, {}, {})
+    assert r['value'] == 339773000 and r['rule'] == 'class_sum'
+
+
+def test_combined_ci_including_nci_takes_the_later_parent_figure():
+    # DIS FY2017 (predecessor 10-K prints only CI including NCI); the FY2019 10-K prints ComprehensiveIncomeNetOfTax for 2017
+    import standard_inputs
+    rows = [dict(cik='1', data_point='comprehensive_income', period_end='2017-09-30', accession='A17', status='combined', tags='X', nodes='X=1 [R4.htm:9]', value=None),
+            dict(cik='1', data_point='comprehensive_income', period_end='2018-09-30', accession='A18', status='combined', tags='X', nodes='X=1 [R4.htm:9]', value=None),
+            dict(cik='1', data_point='comprehensive_income', period_end='2019-09-30', accession='A19', status='mapped', tags='ComprehensiveIncomeNetOfTax', nodes='ComprehensiveIncomeNetOfTax=5 [R4.htm:9]', value='5')]
+    out = standard_inputs.comparative_fill(rows, {'A19': 'ComprehensiveIncomeNetOfTax|4|9431|2017-09-30'}, set())
+    assert str(out[('A17', 'comprehensive_income')]['value']).startswith('9431')
+    rows[2]['tags'] = 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest'
+    rows[2]['nodes'] = 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest=5 [R4.htm:9]'
+    assert ('A17', 'comprehensive_income') not in standard_inputs.comparative_fill(rows, {'A19': 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|4|9431|2017-09-30'}, set())
+
+
+def test_a_gap_year_inside_the_run_gets_rows_from_the_next_10k_columns():
+    # MRVL FY2021: predecessor 10-Ks to FY2020, successor from FY2022; the FY2022 10-K prints FY2021 in its FY-1 column
+    import standard_inputs
+    filings = [dict(cik='9', a='A20', p='2020-02-01'), dict(cik='9', a='A22', p='2022-01-29')]
+    rows = [dict(ticker='MRVL', cik='0000000009', data_point='revenue', column='own')]
+    comp = {'A22': 'Revenues|4|2969|2021-01-30', 'A20': ''}
+    out = standard_inputs.before_first_10k_rows(rows, filings, comp, start='2014-01-01')
+    assert [(r['period_end'], r['data_point']) for r in out] == [('2021-01-30', 'revenue')]
+    # a year an own 10-K covers never gets a second row
+    filings.append(dict(cik='9', a='A21', p='2021-01-30'))
+    assert standard_inputs.before_first_10k_rows(rows, filings, comp, start='2014-01-01') == []
