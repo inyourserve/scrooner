@@ -178,7 +178,7 @@ def resolve_band(L, arcs, notes, acc=None):
     if ie:
         out['interest_expense'] = mk('interest_expense', 'mapped' if len(ie) == 1 else 'component_sum', ie, f"{where}: interest expense line(s), gross", flags='band')
     elif nt or mx:
-        src = (nt + mx)[0]
+        src = next((l for l in nt + mx if re.search(r'(?i)\bexpense\b', l['lb'] or '')), (nt + mx)[0])   # the expense line, not 'interest and other income'
         cands = [t for t in ('InterestExpense', 'InterestExpenseNonoperating', 'InterestExpenseDebt', 'InterestAndDebtExpense') if notes.get((t, 4)) is not None]
         own = {l['tag'] for l in nt + mx}
         note_ie = next((t for t in cands if t not in own), None) or next(iter(cands), None)   # LIN: a gross tag other than the net line's own tag wins; MCD 'net of capitalized interest' keeps its own
@@ -195,7 +195,9 @@ def resolve_band(L, arcs, notes, acc=None):
         out['interest_income'] = dict(data_point='interest_income', status='mapped', tags=t, value=v, r_page='NOTE', nodes=f'{t}={v} [NOTE]',
                                       why=f"{where} prints only '{src['lb']}'; interest income is the undimensioned note fact {t}", flags='note_only')
     elif nt or mx:
-        src = (nt + mx)[0]
+        # AMGN FY2016: 'Interest expense, net' beside 'Interest and other income, net': interest income sits in the line whose label
+        # names income, never in the expense line (map reconcile 2026-11-16)
+        src = next((l for l in mx + nt if re.search(r'(?i)\bincome\b', l['lb'] or '')), (nt + mx)[0])
         out['interest_income'] = mk('interest_income', 'combined', [src], f"{where}: interest income only inside '{src['lb']}'")
     return out
 

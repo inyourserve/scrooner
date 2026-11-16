@@ -212,3 +212,13 @@ def test_labelled_other_income_line_beside_a_mixed_interest_line_is_the_data_poi
     no_label = [l for l in mo if l[1] != 'OtherNonoperatingIncomeExpense']
     no_label[-1] = no_label[-1][:3] + (8301,)
     assert run(no_label)['other_income_expense_net']['status'] == 'combined'     # MO FY2016: no labelled line, still combined
+
+
+def test_interest_income_combined_cites_the_income_line_not_the_expense_line():
+    # AMGN FY2016: 'Interest expense, net' 1,260 and 'Interest and other income, net' 629: interest income sits in the income line
+    amgn = [('IS', 'Revenues', 'Total revenues', 22991), ('IS', 'OperatingIncomeLoss', 'Operating income', 9794),
+            ('IS', 'InterestExpenseDebt', 'Interest expense, net', 1260), ('IS', 'NonoperatingIncomeExpense', 'Interest and other income, net', 629),
+            ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxes', 'Income before income taxes', 9163)]
+    o = R.resolve(filing(amgn), {('InterestExpenseDebt', 4): D(1260)})
+    assert o['interest_income']['status'] == 'combined' and o['interest_income']['tags'] == 'NonoperatingIncomeExpense'
+    assert o['interest_expense']['status'] == 'mapped' and o['interest_expense']['value'] == D(1260)

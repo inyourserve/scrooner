@@ -689,3 +689,9 @@
 - ~ BrokerageReceivables: data_point, served_cells
 - ~ CustomerAndOtherReceivables: data_point, served_cells
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.69): 4 element changes, 27999 rows, coverage 63.1%
+- ~ InterestAndOtherExpense: data_point, served_cells
+- ~ InterestExpense: served_cells
+- ~ InvestmentIncomeInterest: data_point
+- ~ NonoperatingIncomeExpense: data_point
