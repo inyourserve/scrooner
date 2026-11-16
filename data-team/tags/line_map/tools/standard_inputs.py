@@ -185,6 +185,7 @@ WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDec
 
 WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
 COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',), other_income_expense_net=('OtherNonoperatingIncomeExpense',))   # MO FY2014: the FY2015 10-K prints 'Other income, net' 0 for 2014
+DERIVED_YIELDS_TO = dict(comprehensive_income=('ComprehensiveIncomeNetOfTax',), shares_outstanding=('CommonStockSharesOutstanding',))   # a printed figure (a later 10-K's column) beats the own derivation
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -200,7 +201,8 @@ def comparative_fill(rows, compfacts, instant_dps):
     for lst in by.values():
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
-            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in COMBINED_YIELDS_TO):
+            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in COMBINED_YIELDS_TO) \
+                    and not (r['status'] == 'derived' and r['data_point'] in DERIVED_YIELDS_TO):
                 continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
@@ -208,6 +210,7 @@ def comparative_fill(rows, compfacts, instant_dps):
                 if b is None: continue
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
+                if r['status'] == 'derived' and tag not in DERIVED_YIELDS_TO[r['data_point']]: continue   # a printed figure beats an own derivation (SPGI FY2014 272M; BA CI FY2018-19)
                 if r['status'] == 'combined' and tag not in COMBINED_YIELDS_TO[r['data_point']]: continue   # only the pure element a later 10-K prints (CI: the parent figure; the own filing printed only CI including NCI: AVGO/BLK/DIS/LIN predecessor years)
                 if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line

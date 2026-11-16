@@ -742,3 +742,35 @@ def test_a_single_award_type_member_is_never_the_consolidated_value():
     import standard_inputs
     out = standard_inputs.member_facts({}, {'VZ19': 'ShareBasedCompensation|4|872000000|AwardType=RestrictedStockUnitsAndPerformanceStockUnits;'})
     assert out == []
+
+
+def test_shares_outstanding_issued_less_treasury_and_printed_beats_derived():
+    # ABT/CVX/LIN print shares issued and treasury shares, not outstanding: issued - treasury (C2). CVX FY2022 2,442,676,580 - 527,460,237
+    # = 1,915,216,343 (CVX's own equity-statement outstanding fact). A later 10-K's printed count for the year wins (SPGI FY2014 272M)
+    import resolve_bs, standard_inputs
+    f = dict(cpv='4|20|CommonStockSharesIssued|Common stock, shares issued||2442676580~4|21|TreasuryStockShares|Treasury stock, shares||527460237')
+    assert resolve_bs.shares(f, {}, {}) is None or resolve_bs.DERIVE_SHARES          # off by default until the serving path exists
+    resolve_bs.DERIVE_SHARES = True
+    r = resolve_bs.shares(f, {}, {})
+    assert r['status'] == 'derived' and r['value'] == D(1915216343) and r['rule'] == 'issued_less_treasury'
+    assert r['nodes'] == 'CommonStockSharesIssued=2442676580 [R4.htm:20]; -TreasuryStockShares=527460237 [R4.htm:21]'
+    assert resolve_bs.shares(dict(cpv='4|20|CommonStockSharesIssued|x||100'), {}, {}) is None              # no treasury line: no derivation
+    resolve_bs.DERIVE_SHARES = False
+    rows = [dict(cik='1', accession='S14', period_end='2014-12-31', data_point='shares_outstanding', status='derived', tags='', nodes='x', value=D(272)),
+            dict(cik='1', accession='S15', period_end='2015-12-31', data_point='shares_outstanding', status='mapped', tags='CommonStockSharesOutstanding',
+                 nodes='CommonStockSharesOutstanding=265 [BSP]', value=D(265))]
+    out = standard_inputs.comparative_fill(rows, {'S15': 'CommonStockSharesOutstanding|0|272|2014-12-31'}, {'shares_outstanding'})
+    assert out[('S14', 'shares_outstanding')]['value'] == '272'
+
+
+def test_an_own_derivation_yields_to_a_later_printed_figure_and_drops_its_flag():
+    old = dict(resolve_all.EXT)
+    try:
+        resolve_all.EXT.clear()
+        resolve_all.EXT.update(pz={}, cf={('BA18', 'comprehensive_income'): dict(tag='ComprehensiveIncomeNetOfTax', value='11750000000', accession='BA20', window='FY-2')})
+        rs = [dict(accession='BA18', data_point='comprehensive_income', status='derived', value=D(11750000000), flags='roles;ci_parent_derived', ticker='BA', column='own')]
+        resolve_all.fill_printed_zero_and_comparative(rs, {})
+    finally:
+        resolve_all.EXT.clear(); resolve_all.EXT.update(old)
+    r = rs[0]
+    assert (r['status'], r['column'], r['accession']) == ('mapped', 'comparative', 'BA20') and 'ci_parent_derived' not in r['flags'] and 'comparative_fill' in r['flags']

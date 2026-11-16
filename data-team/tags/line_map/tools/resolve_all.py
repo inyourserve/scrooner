@@ -47,6 +47,9 @@ def fill_printed_zero_and_comparative(rows, td):
         k = (r['accession'], r['data_point'])
         # a combined own working-capital line yields to the pure element a later 10-K prints for the year (TSLA FY2015-16 'Inventories and operating lease vehicles'; standard_inputs.WC_PURE)
         if r['status'] == 'combined' and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
+        if r['status'] == 'derived' and r['data_point'] in standard_inputs.DERIVED_YIELDS_TO and k in cf and (r.get('column') or 'own') == 'own':   # printed beats derived (SPGI FY2014, BA CI FY2018-19)
+            r['status'] = 'not_presented'
+            r['flags'] = ';'.join(x for x in (r.get('flags') or '').split(';') if x and x not in ('ci_parent_derived', 'issued_less_treasury'))
         if r['status'] != 'not_presented': continue
         if k in pz and not (pz[k].get('stmt') == 'EQ' and k in cf and D(cf[k]['value']) != 0):   # an equity-statement dash yields to a later 10-K's printed value (MU FY2021 DPS 0.10)
             z = pz[k]

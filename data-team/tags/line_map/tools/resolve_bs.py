@@ -143,6 +143,9 @@ def note_value(alts, notes, dp=''):
     return None
 
 
+DERIVE_SHARES = os.environ.get('DERIVE_SHARES') == '1'   # issued - treasury (X67), pending the serving path
+
+
 def shares(f, notes, bsby):
     und = notes.get('CommonStockSharesOutstanding')
     if und is not None:
@@ -168,6 +171,22 @@ def shares(f, notes, bsby):
         return dict(status='component_sum' if len(cls) > 1 else 'mapped', value=sum(v for v, _ in cls.values()),
                     nodes='; '.join(f"CommonStockSharesOutstanding[{k}]={v} [{r}]" for k, (v, r) in cls.items()),
                     why=f"class sum over ClassOfStock members of the balance-sheet parenthetical ({len(cls)} classes)", rule='class_sum')
+    # open-shown queue 2026-11-16 (ABT, COP, CVX, WFC, LIN): the parenthetical prints shares ISSUED and TREASURY shares, not outstanding:
+    # outstanding = issued - treasury, same parenthetical and column (ruling C2, derived_not_printed). CVX FY2022 2,442,676,580 -
+    # 527,460,237 = 1,915,216,343 = CVX's own equity-statement outstanding fact; LIN FY2022 552,012,862 - 59,555,235 = 492,457,627 likewise
+    # OFF until Engineering serves derived_not_printed shares_outstanding (structural_loader DERIVED_VIA_MAP holds only gross_profit and
+    # total_liabilities; a derived row would be skipped and drop the cell's current not_presented claim). Switch on: DERIVE_SHARES=1
+    if not DERIVE_SHARES:
+        return None
+    und_p = [s.split('|') for s in (f.get('cpv') or '').split('~')]
+    und_p = [x for x in und_p if len(x) == 6 and not x[4] and x[5] not in ('', None)]
+    iss = next((x for x in und_p if x[2] == 'CommonStockSharesIssued'), None)
+    tre = next((x for x in und_p if x[2] in ('TreasuryStockShares', 'TreasuryStockCommonShares')), None)
+    if iss is not None and tre is not None and D(iss[5]) > D(tre[5]) >= 0:
+        v = D(iss[5]) - D(tre[5])
+        return dict(status='derived', value=v, nodes=f"CommonStockSharesIssued={D(iss[5])} [R{iss[0]}.htm:{iss[1]}]; -{tre[2]}={D(tre[5])} [R{tre[0]}.htm:{tre[1]}]",
+                    why=f"the balance-sheet parenthetical prints shares issued ('{iss[3]}') and treasury shares ('{tre[3]}'), not outstanding: issued - treasury (ruling C2)",
+                    rule='issued_less_treasury')
     return None
 
 
