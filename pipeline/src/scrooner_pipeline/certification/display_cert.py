@@ -41,6 +41,7 @@ SHOWN = "SHOWN_VALUE"
 HIDDEN_ROW = "HIDDEN_ROW"
 HIDDEN_YEAR = "HIDDEN_YEAR"
 OPEN = "OPEN"
+CONTROL_TAG = "Assets"  # every periodic filer reports it undimensioned
 DRAW_SIZE = 32  # 0 errors in 32 -> 8.94% per-company bound; the 0.10% target is pooled
 PERIODIC_FORMS = (
     "10-K",
@@ -392,7 +393,7 @@ join fsn.value v on v.filing_id = f.id
 join fsn.tag t on t.id = v.tag_id
 join fsn.dim d on d.id = v.dim_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
-where f.accession = any(%(acc)s) and t.tag = any(%(tags)s) and v.coreg is null
+where f.accession = any(%(acc)s) and t.tag = any(%(tags)s) and coalesce(v.coreg, '') = ''
 group by 1, 2, 3, 4, 5, 6
 """
 
@@ -400,7 +401,7 @@ COMPANY_FACT_SQL = """
 select f.accession, t.tag, v.ddate::text, v.qtrs, '' as segments, v.value,
        coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports
 from fsn.filing f
-join fsn.value v on v.filing_id = f.id and v.coreg is null
+join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = ''
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
@@ -795,6 +796,18 @@ def certify(
     )
     need_acc = {t.accession for c in p.sample for t in terms(c)} | p.debt_acc
     facts = source.facts(need_acc, need_tags)
+    if (p.sample or p.debt) and not facts:
+        # Positive control: the drawn filings always carry facts. None at all means the source
+        # or its filters are broken (2026-11-16: a coreg filter matched nothing), never a pass.
+        run.gate.append(
+            Finding(
+                "gate",
+                "*",
+                "*",
+                "FAIL",
+                "fact source returned no facts for the drawn filings: source broken",
+            )
+        )
     run.shown = [check_cell(c, facts) for c in p.sample]
     run.debt = [check_debt(c, facts) for c in p.debt]
     year_ends = source.periodic_year_ends(cik)
@@ -810,9 +823,21 @@ def certify(
             )
         )
         return run
-    run.hides = check_hidden_rows(
-        p.cells, source.company_facts(cik, p.family_tags) if p.family_tags else []
-    )
+    company = source.company_facts(cik, p.family_tags | {CONTROL_TAG})
+    if not any(f.tag == CONTROL_TAG for f in company):
+        # Positive control for the hide checks: without it an empty result would read as
+        # "never reported" for every hidden row.
+        run.gate.append(
+            Finding(
+                "gate",
+                "*",
+                "*",
+                "FAIL",
+                f"company fact query returned no {CONTROL_TAG} control fact: source broken",
+            )
+        )
+        return run
+    run.hides = check_hidden_rows(p.cells, [f for f in company if f.tag != CONTROL_TAG])
     if counts.get(HIDDEN_YEAR):
         run.hides += check_hidden_years(p.cells, year_ends)
     return run
@@ -848,14 +873,14 @@ def bundle_sql(cik: str, p: Plan, per_tag: int = 3) -> str:
         ",".join(f"({_lit(a)},{_lit(t)},date {_lit(d)})" for a, t, d in want)
         or "(null,null,null)"
     )
-    fam = ",".join(_lit(t) for t in sorted(p.family_tags)) or "null"
+    fam = ",".join(_lit(t) for t in sorted(p.family_tags | {CONTROL_TAG}))
     forms = ",".join(_lit(f) for f in PERIODIC_FORMS)
     return f"""set statement_timeout = '30s';
 with want(acc, tag, pe) as (values {vals}),
 fact as (
   select f.accession, t.tag, v.ddate, v.qtrs, d.segments, v.value, v.filing_id, v.tag_id
   from want w join fsn.filing f on f.accession = w.acc
-  join fsn.value v on v.filing_id = f.id and v.ddate between w.pe - 7 and w.pe + 7 and v.coreg is null
+  join fsn.value v on v.filing_id = f.id and v.ddate between w.pe - 7 and w.pe + 7 and coalesce(v.coreg, '') = ''
   join fsn.tag t on t.id = v.tag_id and (t.tag = w.tag or (w.tag = '' and t.tag in ({debt_tags})))
   join fsn.dim d on d.id = v.dim_id
 ),
@@ -863,7 +888,7 @@ fam as (
   select * from (
     select f.accession, t.tag, v.ddate, v.qtrs, '' as segments, v.value, v.filing_id, v.tag_id,
            row_number() over (partition by t.tag order by v.ddate desc) as rn
-    from fsn.filing f join fsn.value v on v.filing_id = f.id and v.coreg is null
+    from fsn.filing f join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = ''
     join fsn.dim d on d.id = v.dim_id and d.segments = ''
     join fsn.tag t on t.id = v.tag_id and t.tag in ({fam})
     where ltrim(f.cik, '0') = {_lit(cik.lstrip("0"))} and f.form in ({forms})) x where rn <= {per_tag}

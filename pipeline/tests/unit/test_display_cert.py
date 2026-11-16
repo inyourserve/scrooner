@@ -225,7 +225,8 @@ def test_draw_is_deterministic_and_excludes_total_debt():
 
 
 class Src:
-    def __init__(self, facts=(), company=(), years=None):
+    def __init__(self, facts=(), company=(), years=None, control=True):
+        self.control = control
         self.f, self.c, self.y = (
             list(facts),
             list(company),
@@ -236,7 +237,7 @@ class Src:
         return self.f
 
     def company_facts(self, cik, tags):
-        return self.c
+        return [*self.c, fact("Assets", "1", qtrs=0)] if self.control else self.c
 
     def periodic_year_ends(self, cik):
         return self.y
@@ -263,7 +264,7 @@ def test_certify_pass_fail_and_wrong_cik(tmp_path):
     ok = dc.certify("T", "1", cov, Src([fact("Revenues", "100")]))
     assert ok.verdict == "PASS" and ok.errors == 0 and len(ok.shown) == 1
     # fsn.* can miss a fact: NOT_FOUND goes to the approver (REVIEW), it is not counted as a wrong value
-    nf = dc.certify("T", "1", cov, Src([]))
+    nf = dc.certify("T", "1", cov, Src([fact("Revenues", "100", acc="other")]))
     assert nf.verdict == "REVIEW" and nf.errors == 0
     assert dc.certify("T", "1", cov, Src([fact("Revenues", "99")])).verdict == "FAIL"
     assert (
@@ -291,7 +292,7 @@ def test_bundle_source_round_trip(tmp_path):
     )
     bundle = {
         "facts": [[ACC, "Revenues", "2023-12-31", 4, "", "100", ["R4"]]],
-        "company_facts": [],
+        "company_facts": [[ACC, "Assets", "2023-12-31", 0, "", "1", ["R2"]]],
         "year_ends": {ACC: ["2023-12-31"]},
     }
     assert dc.certify("T", "1", cov, dc.BundleFactSource(bundle)).verdict == "PASS"
@@ -323,3 +324,32 @@ def test_read_request(tmp_path):
     )
     r = dc.read_request(p)
     assert (r.ticker, r.company_id, r.coverage) == ("BA", 207, "x/BA.csv")
+
+
+def test_positive_controls_fail_a_broken_source(tmp_path):
+    """2026-11-16: a coreg filter made every query empty; hides then read as 'never reported'."""
+    cov = write_cov(
+        tmp_path,
+        [
+            [
+                "revenue",
+                "2023",
+                "2023-12-31",
+                "100",
+                ACC,
+                "R4",
+                "Revenues",
+                "",
+                dc.SHOWN,
+            ],
+            ["sbc", "2023", "2023-12-31", "", "", "", "", "", dc.HIDDEN_ROW],
+        ],
+    )
+    no_control = dc.certify(
+        "T", "1", cov, Src([fact("Revenues", "100")], control=False)
+    )
+    assert no_control.verdict == "FAIL"
+    empty = dc.certify("T", "1", cov, Src([]))
+    assert empty.verdict == "FAIL" and any(
+        "source broken" in f.detail for f in empty.gate
+    )
