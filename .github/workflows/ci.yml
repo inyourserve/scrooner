@@ -95,6 +95,10 @@ jobs:
           done
       - name: Pipeline tests
         run: uv run --project pipeline pytest pipeline/tests -rs
+      # The structural resolver and tag library (data-team/tags) decide served values; their tests gate main too
+      # (Ritwik measurement 2026-11-17: 184 resolver tests ran only in tag-library-learn, which had never run)
+      - name: Resolver and tag-library tests
+        run: uv run --project pipeline pytest data-team/tags/line_map/tools data-team/tags/library -rs -p no:cacheprovider
       - name: Backend tests
         working-directory: apps/backend
         run: uv run pytest tests
