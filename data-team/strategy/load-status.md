@@ -1,0 +1,1 @@
+- 2026-11-16T19:03Z add-dim-notes re-check on main with resolver .67 (22392fb0; rules rebuilt from the CTE: WeightedAverageNumber* by ClassOfStock, AwardType SBC): dry run 0 rows to add, 34,494 already present. GOOG's class-of-stock weighted shares are already in fsn.value (1,185 facts, on statement lines, kept by the shard), so no apply was needed.
