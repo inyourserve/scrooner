@@ -6,7 +6,7 @@ order, on top of main's committed schema, long before anyone runs them on the li
 
 Checks (exit 1 on any failure):
 - names match NNNN_snake_case.sql, numbers are unique, none collides with a committed migration, each is above the
-  highest committed number; gaps (numbers held on unmerged branches) are reported, not failed;
+  highest committed number; the pending set continues main's sequence with no hole (a gap must be listed in migrations/SKIPPED.txt);
 - each file applies with psql ON_ERROR_STOP in one transaction (--single-transaction);
 - every `create table|view|materialized view` object answers `select * from <obj> limit 0`, and every
   `alter table <t> add column [if not exists] <c>` answers `select <c> from <t> limit 0`.
@@ -43,6 +43,25 @@ def smoke_targets(sql: str) -> list[str]:
     return out
 
 
+def load_skipped(migrations_dir: Path) -> set[int]:
+    path = migrations_dir / "SKIPPED.txt"
+    if not path.exists():
+        return set()
+    return {int(m.group(1)) for line in path.read_text(encoding="utf-8").splitlines() if (m := re.match(r"^(\d{4}) \S", line))}
+
+
+# Behaviour smokes beyond "the object exists": (file number, sql, text that must appear, expect_error). The text is
+# searched in stderr when expect_error, else in stdout. Each proves a guard or constraint is live, not only the tables.
+BEHAVIOUR_SMOKES: list[tuple[str, str, str, bool]] = [
+    ("0124", "insert into analytics.verifier_check (company_id, data_point_name, period_grain, period_start, period_end, "
+             "verdict, draw_id, draw_kind, verifier_session) values (1, 'x', 'FY', '2024-01-01', '2024-12-31', "
+             "'blank_right', 'd', 'blanks', 's')", "written by the Verifier only", True),
+    ("0125", "select conname from pg_constraint where conname = 'company_tag_map_dims_decision_check'",
+     "company_tag_map_dims_decision_check", False),
+    ("0125", "select proname from pg_proc where proname = 'company_tag_map_no_overlap'", "company_tag_map_no_overlap", False),
+]
+
+
 def check_names(pending: list[Path], committed: list[Path]) -> tuple[list[str], list[str]]:
     errors, notes = [], []
     done = {int(m.group(1)) for p in committed if (m := NAME_RE.match(p.name))}
@@ -62,9 +81,17 @@ def check_names(pending: list[Path], committed: list[Path]) -> tuple[list[str], 
             errors.append(f"{p.name}: {n:04d} is not above the highest committed migration {top:04d}")
         seen.add(n)
     nums = sorted(seen | {top})
-    gaps = [n for n in range(top + 1, max(nums) + 1) if n not in seen]
-    if gaps:
-        notes.append("held numbers not on main (expected while their branches are open): " + ", ".join(f"{g:04d}" for g in gaps))
+    skipped = load_skipped(committed[0].parent) if committed else set()
+    for n in sorted(seen & skipped):
+        errors.append(f"{n:04d} is listed in SKIPPED.txt but a pending file uses it")
+    # the pending set must continue main's sequence with no hole: committed top + pending + SKIPPED numbers
+    gaps = [n for n in range(top + 1, max(nums) + 1) if n not in seen and n not in skipped]
+    for g in gaps:
+        errors.append(f"pending set is not contiguous: {g:04d} is neither a pending file nor listed in SKIPPED.txt")
+    if seen:
+        inside = ", ".join(f"{n:04d}" for n in sorted(skipped) if min(seen) < n < max(seen))
+        notes.append(f"pending set {min(seen):04d}-{max(seen):04d}: " + ", ".join(f"{n:04d}" for n in sorted(seen))
+                     + (f" (skipped inside the range: {inside})" if inside else ""))
     return errors, notes
 
 
@@ -94,6 +121,16 @@ def main() -> int:
                 errors.append(f"{p.name}: smoke `{q}` failed: {s.stderr.strip()}")
             else:
                 print(f"  ok  {q}")
+    applied = {m.group(1) for p in pending if (m := NAME_RE.match(p.name))}
+    for num, q, needle, expect_error in BEHAVIOUR_SMOKES:
+        if num not in applied:
+            continue
+        r = psql("-At", "-c", q)
+        out = (r.stderr if expect_error else r.stdout) or ""
+        if bool(r.returncode) != expect_error or needle not in out:
+            errors.append(f"{num}: behaviour smoke `{q[:70]}` expected {needle!r}, got rc={r.returncode} {out.strip()[:200]}")
+        else:
+            print(f"  ok  [{num}] {needle}")
     for e in errors:
         print(f"::error::{e}")
     return 1 if errors else 0

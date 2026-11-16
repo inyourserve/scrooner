@@ -11,3 +11,4 @@
 0109 claimed for the second ADS census table, never written; released
 0110 formerly claimed for company_slot_record, which was renumbered to 0101; released
 0112 reserved as "next free" when 0111 and 0113 were applied or written out of order; never used, released
+0127 claimed for template shown_from (page hides); superseded by a per-cell display-state table, decision "decide later" (founder 2026-11-16); file removed from pending/, kept in history at 9e71f726; released
