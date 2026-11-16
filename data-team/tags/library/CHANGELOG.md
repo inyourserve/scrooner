@@ -800,3 +800,46 @@
 ## 2026-11-16 (resolver-all110-.77): 2 element changes, 27999 rows, coverage 64.7%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ InvestmentIncomeNonoperating: rule_id
+
+## 2026-11-16 (resolver-all110-.78): 41 element changes, 27999 rows, coverage 64.7%
+- ~ AccretionExpenseIncludingAssetRetirementObligations: data_point, served_cells
+- ~ AcquiredIPRD: data_point, served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ AmortizationofAcquiredIntangibleAssets: data_point, served_cells
+- ~ AssetImpairmentCharges: served_cells
+- ~ BenefitCostsNonoperating: data_point, served_cells
+- ~ CareAndMaintenanceExpense: data_point, served_cells
+- ~ CostAndExpensesOther: data_point, served_cells
+- ~ CostOfServices: served_cells
+- ~ CostOfServicesExcludingDepreciationDepletionAndAmortization: data_point, served_cells
+- ~ DepreciationAndAmortization: served_cells
+- ~ DepreciationDepletionAndAmortization: served_cells
+- ~ DerivativeGainLossOnDerivativeNet: data_point, served_cells
+- ~ ExplorationExpense: served_cells
+- ~ ForeignCurrencyTransactionGainLossBeforeTax: data_point, served_cells
+- ~ GainLossRelatedToLitigationSettlement: served_cells
+- ~ GainsLossesOnExtinguishmentOfDebt: data_point, served_cells
+- ~ GeneralAndAdministrativeExpense: served_cells
+- ~ GoodwillImpairmentLoss: served_cells
+- ~ ImpairmentGoodwillLongLivedAssetAndOtherAssets: data_point, served_cells
+- ~ ImpairmentOfLongLivedAssetsHeldForUse: served_cells
+- ~ ImpairmentOfLongLivedAssetsToBeDisposedOf: served_cells
+- ~ InterestAndOtherFinancialCharges: data_point, served_cells
+- ~ InterestIncomeExpenseNet: rule_id
+- ~ InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits: data_point, served_cells
+- ~ MyoKardiaAssetAcquisitionIPRDCharge: data_point, served_cells
+- ~ NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent: data_point, served_cells
+- ~ OperatingCostsAndExpenses: served_cells
+- ~ OtherCostAndExpenseOperating: served_cells
+- ~ OtherGeneralExpense: served_cells
+- ~ OtherNonoperatingExpense: data_point, served_cells
+- ~ ProvisionForDoubtfulAccounts: data_point, served_cells
+- ~ ProvisionForLoanAndLeaseLosses: data_point, served_cells
+- ~ ProvisionForLoanLossesExpensed: data_point, served_cells
+- ~ ReclamationAndMineShutdownProvisionAndEnvironmentalRemediationExpense: data_point, served_cells
+- ~ ResearchAndDevelopmentExpense: served_cells
+- ~ ResultsOfOperationsExplorationExpense: data_point, served_cells
+- ~ SellingGeneralAndAdministrativeExpense: served_cells
+- ~ TaxesExcludingIncomeAndExciseTaxes: served_cells
+- ~ TaxesOther: data_point, served_cells
+- ~ TaxesOtherThanIncomeTaxes: data_point, served_cells

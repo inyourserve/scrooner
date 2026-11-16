@@ -1026,3 +1026,45 @@ def test_latest_print_component_sum_with_one_renamed_line_and_c1_derivation():
     comp = {'A18': 'RevenueFromContractWithCustomerExcludingAssessedTax|4|86086|2016-12-31~CostOfGoodsAndServicesSold|4|77047|2016-12-31'}
     r = resolve_all.apply_latest_print(rows, comp, _lp_face('RevenueFromContractWithCustomerExcludingAssessedTax', 'CostOfGoodsAndServicesSold'))[0]
     assert r['value'] == D(9039)
+
+
+def _isf(lines, calc):
+    f = dict(cik='1', a='A', p='2025-12-31', fd='2026-02-01', calc=calc,
+             lines='~'.join(f'IS|2|{i + 1}|{t}|0|0|terseLabel|{lb}|{v}' for i, (t, lb, v) in enumerate(lines)))
+    from resolve import parse, face
+    return f, [l for l in face(parse(f)[0], 'IS') if l['val'] is not None]
+
+
+def test_opex_from_a_costs_block_less_cost_of_revenue_and_lines_served_as_nonoperating():
+    # BMY FY2018 (wave 3C opex_split_from_combined_costs_total, exact tie): 'Total Expenses' 16,593 = cost 6,467 + MS&A 4,551 + R&D 6,332
+    # + amortization 97 + other (income)/expense (854); the other line serves other income -> opex 10,980
+    lines = [('Revenues', 'Total Revenues', 22561), ('CostOfGoodsAndServicesSold', 'Cost of products sold', 6467),
+             ('SellingGeneralAndAdministrativeExpense', 'Marketing, selling and administrative', 4551), ('ResearchAndDevelopmentExpense', 'Research and development', 6332),
+             ('AmortizationOfIntangibleAssets', 'Amortization of acquired intangible assets', 97), ('OtherNonoperatingIncomeExpense', 'Other (income)/expense, net', -854),
+             ('CostsAndExpenses', 'Total Expenses', 16593)]
+    calc = '~'.join(f'4|CostsAndExpenses|{t}|1' for t, _, _ in lines[1:6])
+    f, isf = _isf(lines, calc)
+    tot = isf[-1]
+    cor = dict(accession='A', data_point='cost_of_revenue', status='mapped', tags='CostOfGoodsAndServicesSold', nodes='CostOfGoodsAndServicesSold=6467 [R2.htm:2]', column='own')
+    oth = dict(accession='A', data_point='other_income_expense_net', status='mapped', tags='OtherNonoperatingIncomeExpense', nodes='OtherNonoperatingIncomeExpense=-854 [R2.htm:6]', column='own')
+    r = dict(accession='A', data_point='operating_expenses')
+    got = resolve_all._opex_from_costs_block([cor, oth, r], r, f, tot, isf, cor)
+    assert got['value'] == D(10980) and 'OtherNonoperatingIncomeExpense' not in got['nodes']
+    f2, isf2 = _isf(lines[:-1] + [('CostsAndExpenses', 'Total Expenses', 16594)], calc)   # not an exact tie: no split
+    assert resolve_all._opex_from_costs_block([cor, oth, r], r, f2, isf2[-1], isf2, cor) is None
+
+
+def test_opex_lines_without_an_operating_income_line_need_the_pretax_tie():
+    # ETN FY2025 (wave 2A opex_without_oi_line): 27,448 - 17,131 - 4,311 - 797 - 241 + (-37) = 4,931 vs printed 4,932 (rounding): ties
+    lines = [('RevenueFromContractWithCustomerExcludingAssessedTax', 'Net sales', 27448), ('CostOfRevenue', 'Cost of products sold', 17131),
+             ('SellingGeneralAndAdministrativeExpense', 'Selling and administrative expense', 4311), ('ResearchAndDevelopmentExpense', 'Research and development expense', 797),
+             ('InterestExpenseNonoperating', 'Interest expense - net', 241), ('OtherNonoperatingIncomeExpense', 'Other expense (income) - net', -37),
+             ('IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Income before income taxes', 4932)]
+    w = {'RevenueFromContractWithCustomerExcludingAssessedTax': 1, 'OtherNonoperatingIncomeExpense': 1}
+    calc = '~'.join(f"3|{lines[-1][0]}|{t}|{w.get(t, -1)}" for t, _, _ in lines[:-1])
+    f, isf = _isf(lines, calc)
+    assert resolve_all._pretax_ties(f, isf)
+    lines[-1] = (lines[-1][0], lines[-1][1], 5932)
+    f, isf = _isf(lines, calc)
+    assert not resolve_all._pretax_ties(f, isf)
+    assert resolve_all.NONOP_NEXT.search('InterestIncomeExpenseNet Interest expense - net') and resolve_all.NONOP_NEXT.search('xyz_FinanceNet Interest income, net')

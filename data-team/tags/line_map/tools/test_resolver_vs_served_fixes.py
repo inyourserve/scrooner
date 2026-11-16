@@ -517,9 +517,14 @@ def test_operating_lines_without_a_total_or_oi_are_summed_up_to_the_first_nonope
     f = filing([('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'Engineering, research and development', 530),
                 ('IS', 'SellingGeneralAndAdministrativeExpense', 'Selling, general and administrative', 406), ('IS', 'GainsLossesOnExtinguishmentOfDebt', 'Loss on extinguishment of debt', 131),
                 ('IS', 'InterestExpense', 'Interest expense', 106), ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Total income before income taxes', 426)])
+    pt = 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest'
+    f['calc'] = '~'.join(f'3|{pt}|{t}|{w}' for t, w in [('Revenues', 1), ('CostOfRevenue', -1), ('ResearchAndDevelopmentExpense', -1), ('SellingGeneralAndAdministrativeExpense', -1),
+                                                       ('GainsLossesOnExtinguishmentOfDebt', -1), ('InterestExpense', -1)])   # wave 2A: no OI line -> the pretax calc must tie
     cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(1215), tags='CostOfRevenue', nodes='', why='', flags='')
     r = resolve_all.apply_cost_and_opex([_opex_row(f), cor], [f])[0]
     assert r['status'] == 'component_sum' and r['value'] == D(936) and 'opex_component_lines' in r['flags']
+    f['calc'] = f['calc'].replace('InterestExpense|-1', 'InterestExpense|1')   # a calc that misses the printed pretax: no sum
+    assert resolve_all.apply_cost_and_opex([_opex_row(f), dict(cor)], [f])[0]['status'] == 'not_presented'
     # a line the rule does not know as operating stops the run before two lines: no sum
     g = filing([('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'R&D', 530),
                 ('IS', 'OtherCostAndExpenseOperating', 'Other', 9), ('IS', 'InterestExpense', 'Interest expense', 106)])

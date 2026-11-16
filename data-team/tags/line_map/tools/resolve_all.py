@@ -1128,6 +1128,9 @@ def apply_cost_and_opex(rows, filings):
                 if OPEX_LINE.match(l['tag']) or resolve_is.OPER_TAG.match(l['tag']): ops.append(l); continue
                 break
             nxt = next((l for l in isf if l['ln'] > (ops[-1]['ln'] if ops else 10**9)), None)
+            # with no operating-income line printed, the filing's own pretax calc must tie through the printed lines (Dhairya wave 2A
+            # opex_without_oi_line: ETN FY2015-21 S&A + R&D, e.g. FY2018 3,548 + 584 = 4,132)
+            if not any(l['tag'] == 'OperatingIncomeLoss' for l in isf) and not _pretax_ties(F[r['accession']], isf): continue
             if len(ops) >= 2 and nxt is not None and NONOP_NEXT.search(nxt['tag'] + ' ' + (nxt['lb'] or '')):
                 r.update(status='component_sum', value=sum((l['val'] for l in ops), D(0)), tags='+'.join(l['tag'] for l in ops),
                          nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ops),
@@ -1139,13 +1142,59 @@ def apply_cost_and_opex(rows, filings):
             inside = [l for l in isf_all if l['ln'] < tot['ln'] and l['ln'] > max((x['ln'] for x in isf if x['ln'] < tot['ln'] and re.match(r'^(Revenues|RevenuesAndOtherIncome|SalesRevenueNet)$', x['tag'])), default=0)]
             wider = [l['lb'] for l in inside if (cl is not None and l is cl) or COSTLIKE.search(l['tag'] + ' ' + (l['lb'] or ''))]
             if not wider: continue
+            got = _opex_from_costs_block(rows, r, F[r['accession']], tot, isf, cor)
+            if got:
+                r.update(**got); r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_costs_block') if y); continue
             r.update(status='combined', value=None, tags=tot['tag'], nodes=f"{tot['tag']}={tot['val']} [R{tot['rep']}.htm:{tot['ln']}]",
                      why=f"the only expense total printed, '{tot['lb']}', also holds " + ', '.join(f"'{w}'" for w in wider[:3]) + " (cost of revenue or nonoperating items); no operating-expense total is printed")
     return rows
 
 
+def _pretax_ties(f, isf):
+    """The filing's own calc for its pretax line adds up exactly from the printed lines (weights from the calc)."""
+    L, arcs = parse(f)
+    pt = next((l for l in isf if l['tag'].startswith('IncomeLossFromContinuingOperationsBefore')), None)
+    if pt is None: return False
+    val = {l['tag']: l['val'] for l in isf}
+    # one calc group at a time: a filing's pretax element also has children in segment and tax notes (TJX, KLAC, MRK)
+    return any(sum(1 for c, _ in g if c in val) >= 2 and abs(sum((w * val.get(c, D(0)) for c, w in g), D(0)) - pt['val']) <= tol(pt['val'], *[val[c] for c, _ in g if c in val])
+               for g in arcs.get(pt['tag'], {}).values())   # within the rounding of the printed lines (ETN FY2025: 4,931 vs 4,932)
+
+
+NONOP_CLAIM = ('interest_expense', 'interest_income', 'other_income_expense_net')
+
+
+def _opex_from_costs_block(rows, r, f, tot, isf, cor):
+    """Dhairya wave 3C opex_split_from_combined_costs_total (exact tie only), wave 2A opex_without_oi_line, I09: the only printed costs
+    total holds cost of revenue and nonoperating lines. When the total is EXACTLY its own calc children (weights from the filing), the
+    operating expenses are the children that are neither cost of revenue nor a line the resolver serves on a nonoperating data point of
+    the same filing (interest expense / income, other income). BMY FY2018 16,593 - 6,467 - (-854) = 10,980; COP FY2019 14,395 (interest
+    and debt expense out); MPC FY2016 60,978 - 56,676 = 4,302."""
+    if cor is None or cor['status'] not in ('mapped', 'component_sum'): return None
+    L, arcs = parse(f)
+    val = {l['tag']: l for l in isf}
+    kids = next((list(g) for g in arcs.get(tot['tag'], {}).values() if len(g) >= 3 and all(c in val for c, _ in g)
+                 and sum((w * val[c]['val'] for c, w in g), D(0)) == tot['val']), None)   # one calc group, every line printed, exact tie only
+    if kids is None: return None
+    node_tags = lambda x: set(re.findall(r'(?:^|; )-?(\w+)(?:\[[^\]]*\])?=', (x.get('nodes') or '').split(' | ')[0]))
+    cor_t = node_tags(cor) | set((cor.get('tags') or '').split('+'))
+    claimed = set()
+    for x in rows:
+        if x['accession'] == r['accession'] and x['data_point'] in NONOP_CLAIM and x['status'] in ('mapped', 'component_sum') and (x.get('column') or 'own') == 'own':
+            claimed |= node_tags(x)
+    if not cor_t & {c for c, _ in kids}: return None   # cost of revenue must be one of the block's lines
+    ops = [(c, w) for c, w in kids if c not in cor_t and c not in claimed]
+    if not ops: return None
+    v = sum((w * val[c]['val'] for c, w in ops), D(0))
+    nodes = '; '.join(f"{'-' if w < 0 else ''}{c}={val[c]['val']} [R{val[c]['rep']}.htm:{val[c]['ln']}]" for c, w in ops)
+    out = [c for c, _ in kids if c in claimed]
+    return dict(status='component_sum', value=v, tags='+'.join(c for c, _ in ops), nodes=nodes,
+                why=f"the only costs total printed, '{tot['lb']}' {tot['val']}, is exactly its calc lines; operating expenses = its lines less cost of revenue"
+                    + (f" and the nonoperating line(s) served elsewhere ({', '.join(out)})" if out else '') + ' (rulings 2026-11-17: opex split from a combined costs total, exact tie)')
+
+
 OPEX_LINE = re.compile(r'^(SellingGeneralAndAdministrativeExpense|ResearchAndDevelopmentExpense\w*|GeneralAndAdministrativeExpense|SellingAndMarketingExpense|MarketingAndAdvertisingExpense|AmortizationOfIntangibleAssets|GoodwillImpairmentLoss)$')
-NONOP_NEXT = re.compile(r'(?i)InterestExpense|ExtinguishmentOfDebt|OtherNonoperating|InterestAndOtherIncome|OtherExpenseIncome|other (expense|income)')
+NONOP_NEXT = re.compile(r'(?i)InterestExpense|InterestIncomeExpense|ExtinguishmentOfDebt|OtherNonoperating|InterestAndOtherIncome|OtherExpenseIncome|other (expense|income)|interest (expense|income)')   # ETN 'Interest expense - net' (InterestIncomeExpenseNet)
 COSTLIKE = re.compile(r'(?i)^(CostOf\w*|CostOfPurchased\w*|\w*Costs\b|RefiningAndMarketingCosts|MineralExtraction\w*|CostOfGoods\w*|InterestExpense\w*|InterestAndDebtExpense|InterestAndOtherFinancialCharges|OtherNonoperating\w*|CostOfServices\w*)\b|cost of (sales|revenues?|products|goods|services)|costs applicable to sales|purchased (crude|commodities)|interest expense|interest and debt|other \(income\)')
 def derive_gross_profit(rows):
     """Ruling C1 (Dhairya 2026-11-14): gross profit not printed, revenue and cost of revenue printed and resolved in the same
