@@ -39,6 +39,10 @@ from scrooner_pipeline.certification.display_cert import (
     PERIODIC_FORMS as CERT_PERIODIC_FORMS,
 )
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.per_share_guard import (
+    FILER_SCALE_REASON,
+    filer_scale_error,
+)
 from scrooner_pipeline.common.company_filings import (
     company_filings,
     core_filings_cte,
@@ -1839,6 +1843,29 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
     cell is an evidenced not-presented reason is a hidden row; everything else is open. A hide needs a HIDE_ELIGIBLE
     class (never a pipeline-state reason), also on the row-collapse path."""
     by_row: dict[tuple[Any, Any], list[dict[str, Any]]] = defaultdict(list)
+    # filer-scale hold (common/per_share_guard.py): an already-served per-share value >= 1000 that is 10^3 or 10^6 times
+    # the company's other shown values of the same data point is never SHOWN; it is HELD (open work, a pipeline state,
+    # never hidden: not in HIDE_ELIGIBLE). The serving layer compares the same filing's other columns; here the export
+    # has only the shown cells, so the company's other shown values stand in for them (DATA-INFERRED).
+    _peers: dict[tuple[Any, Any], list[str]] = defaultdict(list)
+    for r in rows:
+        if r.get("shown_value"):
+            _peers[(r["company_id"], r.get("data_point"))].append(r["shown_value"])
+    for r in rows:
+        if (
+            r["class"] in ("PROVEN", "DERIVED", "DISAGREE", "UNCHECKED")
+            or r.get("_stated_zero")
+        ) and filer_scale_error(
+            r.get("data_point"),
+            r.get("shown_value"),
+            _peers[(r["company_id"], r.get("data_point"))],
+        ):
+            r["class"] = "HELD"
+            r["reason_code"] = FILER_SCALE_REASON
+            r["reason"] = (
+                f"served per-share value {r['shown_value']} is 10^3 or 10^6 times the other columns: filer monetary scale"
+            )
+            r["_stated_zero"] = False
     for r in rows:
         code = r.get("reason_code")
         is_reason = r["class"] == "REASON"

@@ -60,6 +60,7 @@ from scrooner_pipeline.common.authority import (
     latest_complete_filing,
 )
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.mapper.per_share_scale import scale_error_cell_indexes
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
@@ -2084,6 +2085,41 @@ def resolve_for_company(
     add_derived_quarters(cells, stats, concept_info, periods)
 
     add_derived_cells(conn, company_id, cells, stats, concept_info, periods)
+    # filer-scale hold (common/per_share_guard.py): a per-share value >= 1000 that is 10^3 or 10^6 times the same
+    # filing's other columns of its tag is never written; the cell is HELD with a reasoned blank (stays OPEN)
+    _bad = scale_error_cell_indexes(conn, company_id, cells, concept_info)
+    if _bad:
+        for i in sorted(_bad):
+            c = cells[i]
+            pstart, pend, ptype = periods[c["period_id"]]
+            grain = _grain(pstart, pend, ptype)
+            stats["held"].append(
+                {
+                    "canonical_concept_id": c["canonical_concept_id"],
+                    "period_id": c["period_id"],
+                    "reason": "filer_scale_error",
+                }
+            )
+            if grain is not None:
+                stats["blanks"].append(
+                    {
+                        "canonical_concept_id": c["canonical_concept_id"],
+                        "concept_name": concept_info[c["canonical_concept_id"]][0],
+                        "period_id": c["period_id"],
+                        "state": "defect",
+                        "defect_class": "guard_hidden",
+                        "owner": "standardization_lead",
+                        "reason_code": "filer_scale_error",
+                        "reason": f"per-share value {c['value']} is 10^3 or 10^6 times the filing's other columns: "
+                        "held until a filer_xbrl_errors correction row covers it",
+                        "rule_id": RULE_ID,
+                        "period_start": pstart,
+                        "period_end": pend,
+                        "grain": grain,
+                    }
+                )
+        cells = [c for i, c in enumerate(cells) if i not in _bad]
+    stats["filer_scale_held"] = len(_bad)
     targets = set(managed_concept_ids)
     for r in rows:
         targets.update(

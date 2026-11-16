@@ -35,6 +35,12 @@ import psycopg
 
 from scrooner_pipeline.common.authority import face_column_eligible, latest_eligible
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common.per_share_guard import (
+    FILER_SCALE_REASON,
+    at_or_above_floor,
+    filer_scale_error,
+)
+from scrooner_pipeline.mapper.per_share_scale import other_columns
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import (
@@ -869,6 +875,15 @@ def direct_cells(
         if c.value and Decimal(c.value) != served:
             reject(f"stored value {served} differs from the resolver value {c.value}")
             continue
+        if at_or_above_floor(name, served):
+            # filer-scale hold (common/per_share_guard.py): a rare cell, so its other columns are read here (one batched
+            # read of its (accession, tag) pairs); a filer_xbrl_errors correction already replaced the part value above
+            _oth = other_columns(conn, company_id, {(c.accession, p[1]) for p in parts})
+            if filer_scale_error(name, served, [o for vs in _oth.values() for o in vs]):
+                reject(
+                    f"{FILER_SCALE_REASON}: {served} is 10^3 or 10^6 times the filing's other columns of the tag"
+                )
+                continue
         fix_src = any(p[3] == fxe.VALUE_SOURCE for p in parts)
         drop_src = any(p[3] == fsn_dropped.VALUE_SOURCE for p in parts)
         zero_src = any(p[3] == PRINTED_ZERO for p in parts)

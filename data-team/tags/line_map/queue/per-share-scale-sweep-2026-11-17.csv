@@ -1,0 +1,2 @@
+rank,ticker,data_point,fiscal_year,period_end,served_value,family,guard_verdict
+87,STX,dividends_per_share,2022,2022-07-01,2770000,company_tag_map,HELD_filer_scale_error
