@@ -847,3 +847,83 @@
 ## 2026-11-16 (resolver-all110-.79): 2 element changes, 27999 rows, coverage 64.7%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-learn-2026-11-16@4a713ab013a997199efed207a7336cea6c59b29e): 78 element changes, 28037 rows, coverage 64.7%
+- ~ AccountsAndOtherReceivablesNetCurrent: served_cells
+- ~ AccountsPayableCurrent: served_cells
+- ~ AccountsReceivableNetCurrent: served_cells
+- ~ AllocatedShareBasedCompensationExpense: served_cells
+- ~ AmortizationOfIntangibleAssets: served_cells
+- + AmortizationOfPurchasedIntangiblesFromBusinessCombinations
+- ~ Assets: served_cells
+- ~ AssetsCurrent: served_cells
+- ~ BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1: data_point
+- ~ CashAndCashEquivalentsAtCarryingValue: served_cells
+- ~ CommercialPaper: served_cells
+- ~ CommonStockDividendsPerShareDeclared: served_cells
+- ~ CommonStockSharesOutstanding: served_cells
+- + CompensationExpenseForStockAppreciationRightsRestrictedStockPerformanceUnitsAndRestrictedStockUnits
+- ~ ComprehensiveIncomeNetOfTax: served_cells
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ CostOfRevenue: served_cells
+- ~ CostsAndExpenses: served_cells
+- ~ DebtCurrent: served_cells
+- ~ DepreciationAndAmortization: served_cells
+- ~ DepreciationDepletionAndAmortization: served_cells
+- ~ EarningsPerShareBasic: served_cells
+- ~ EarningsPerShareDiluted: served_cells
+- ~ FinanceLeaseLiability: served_cells
+- ~ Goodwill: served_cells
+- ~ GrossProfit: served_cells
+- ~ IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest: served_cells
+- ~ IncomeLossFromEquityMethodInvestments: data_point
+- ~ IncomeTaxExpenseBenefit: served_cells
+- ~ IncomeTaxesPaidNet: served_cells
+- ~ IncreaseDecreaseInAccountsPayable: served_cells
+- ~ IncreaseDecreaseInAccountsPayableTrade: served_cells
+- ~ IncreaseDecreaseInAccountsReceivable: served_cells
+- ~ IncreaseDecreaseInInventories: served_cells
+- ~ IncreaseDecreaseInReceivables: served_cells
+- ~ IntangibleAssetsNetExcludingGoodwill: served_cells
+- ~ InterestAndDebtExpense: data_point
+- ~ InterestExpense: served_cells
+- ~ InterestExpenseNonoperating: served_cells
+- ~ InterestExpenseOther: data_point
+- ~ InterestPaidNet: served_cells
+- ~ Interestpaidnetofinterestreceived: served_cells
+- ~ InventoryNet: served_cells
+- ~ Liabilities: served_cells
+- ~ LiabilitiesCurrent: served_cells
+- ~ LongTermDebt: served_cells
+- ~ LongTermDebtAndCapitalLeaseObligations: data_point
+- ~ LongTermDebtCurrent: served_cells
+- ~ LongTermDebtNoncurrent: served_cells
+- ~ NetCashProvidedByUsedInFinancingActivities: served_cells
+- ~ NetCashProvidedByUsedInInvestingActivities: served_cells
+- ~ NetCashProvidedByUsedInOperatingActivities: served_cells
+- ~ NetIncomeLoss: served_cells
+- ~ NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent: data_point
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ OperatingExpenses: served_cells
+- ~ OperatingIncomeLoss: served_cells
+- ~ OtherCostOfOperatingRevenue: data_point
+- ~ OtherNonoperatingIncomeExpense: served_cells
+- ~ OtherOperatingIncomeExpenseNet: served_cells
+- ~ PaymentsForRepurchaseOfCommonStock: served_cells
+- ~ PaymentsOfDividends: served_cells
+- ~ PaymentsOfOrdinaryDividends: served_cells
+- ~ PaymentsToAcquireProductiveAssets: served_cells
+- ~ PaymentsToAcquirePropertyPlantAndEquipment: served_cells
+- ~ PropertyPlantAndEquipmentNet: served_cells
+- ~ PropertyPlantsAndEquipmentNet: data_point, rule_id, served_cells
+- ~ ResearchAndDevelopmentExpense: served_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: data_point, served_cells
+- ~ Revenues: served_cells
+- ~ SellingGeneralAndAdministrativeExpense: served_cells
+- ~ ShareBasedCompensation: served_cells
+- ~ StockOptionPlanExpense: data_point, served_cells
+- ~ StockholdersEquity: served_cells
+- ~ StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest: served_cells
+- ~ TradeReceivablesHeldForSaleAmount: data_point, served_cells
+- ~ WeightedAverageNumberOfDilutedSharesOutstanding: served_cells
+- ~ WeightedAverageNumberOfSharesOutstandingBasic: served_cells
