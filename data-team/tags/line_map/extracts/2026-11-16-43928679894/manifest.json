@@ -1,0 +1,4283 @@
+{
+ "run_id": "43928679894",
+ "code_sha": "a1eff1e5b2499c7345b042783b0a33b7aecbc3b0",
+ "ciks": "1800,2488,4962,6281,6951,8670,12927,14272,18230,19617,21344,24741,40545,50863,51143,59478,60667,63908,64040,64803,70858,72971,76334,77476,78003,80424,80661,93410,97476,97745,100885,101829,104169,106040,109198,200406,310158,310764,313616,315189,316709,318154,319201,320193,354950,707549,723125,731766,732712,732717,753308,764180,766704,789019,804328,829224,831001,858877,875320,882095,886982,895421,896159,909832,927628,927653,936468,1001838,1018724,1035002,1035267,1045609,1045810,1065280,1075531,1108524,1137789,1141391,1163165,1164727,1262039,1283699,1318605,1321655,1326801,1327567,1341439,1373715,1403161,1413329,1467373,1510295,1534701,1535527,1543151,1551152,1551182,1571996,1594805,1596532,1613103,1652044,1707925,1730168,1744489,1835632,1996810,2012383,2023554,2115436",
+ "n_ciks": 110,
+ "files": {
+  "bs.jsonl": {
+   "rows": 1297,
+   "sha256": "e8b2914b1051c2fec2a9a123fa102c561ba2a2cd53c8f8960c431eaa8cfc0b3a",
+   "bytes": 9624770
+  },
+  "clines.json": {
+   "rows": 1228,
+   "sha256": "bc528e744c55a57dd4f11931e9e769c2e95df8e7375722e742e1cfc25681983a",
+   "bytes": 280183
+  },
+  "compfacts.json": {
+   "rows": 1297,
+   "sha256": "b0b45d0e77f8fe716636057d0a300cbbac33e74dd81fece990906021d13e24cc",
+   "bytes": 20307120
+  },
+  "face.jsonl": {
+   "rows": 1297,
+   "sha256": "dc3c3615bad5df28d2ee7e41a30eeb9da65dd9332196bab0554b35a9f582c90a",
+   "bytes": 13562779
+  },
+  "filings.json": {
+   "rows": 1297,
+   "sha256": "e1e45eb9de26eb7a89745884aa900ff3cd0aeef904636ffbfb5c6751eae8351d",
+   "bytes": 28582409
+  },
+  "lentity.json": {
+   "rows": 0,
+   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+   "bytes": 2
+  },
+  "lines.jsonl": {
+   "rows": 1297,
+   "sha256": "a3fcfc509cd1fc14bbb2b0928d35aedc8bf73112460bd38e320892b8bfc2de4f",
+   "bytes": 27802151
+  },
+  "memberfacts.json": {
+   "rows": 1233,
+   "sha256": "55bdd9aee6e35de1cb7674156cb754fef24e3dc3118030ce696609af92e0bf8f",
+   "bytes": 733365
+  },
+  "notefacts.json": {
+   "rows": 1297,
+   "sha256": "5459bafcf59e6d70404af136df16f6fc69f1148f8e49c0cb005573db5cf1f4b3",
+   "bytes": 11022979
+  },
+  "notes.jsonl": {
+   "rows": 1297,
+   "sha256": "d4c746b01270619da60f621449fc7fcc2c35600ded91c246230c9e65d6946869",
+   "bytes": 18828848
+  },
+  "retries.json": {
+   "rows": 218,
+   "sha256": "8482b483da289a1925ce6e0ad19ed5d5325723c5f11a79bf342761b407d3c84b",
+   "bytes": 59843
+  },
+  "zlines.json": {
+   "rows": 106,
+   "sha256": "272d63888270c2b926b370097c077e68e770dbf4e58ac5e882eeef493c3a8099",
+   "bytes": 17339
+  }
+ },
+ "retries": [
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1800",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "2488",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "4962",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "6281",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "6951",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "8670",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "12927",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "14272",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "18230",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "19617",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "21344",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "24741",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "40545",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "50863",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1800",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "2488",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "4962",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "6281",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "6951",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "8670",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "12927",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "14272",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "18230",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "19617",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "21344",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "24741",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "40545",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "50863",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "51143",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "59478",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "60667",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "63908",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "64040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "64803",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "70858",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "72971",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "76334",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "77476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "78003",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "80424",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "80661",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "93410",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "51143",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "59478",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "60667",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "63908",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "64040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "64803",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "70858",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "72971",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "76334",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "77476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "78003",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "80424",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "80661",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "93410",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "97476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "97745",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "100885",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "101829",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "104169",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "106040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "109198",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "200406",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "310158",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "310764",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "313616",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "315189",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "316709",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "318154",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "97476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "97745",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "100885",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "101829",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "104169",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "106040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "109198",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "200406",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "310158",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "310764",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "313616",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "315189",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "316709",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "318154",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "319201",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "320193",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "354950",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "707549",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "723125",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "731766",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "732712",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "732717",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "753308",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "764180",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "766704",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "789019",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "804328",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "829224",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "319201",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "320193",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "354950",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "707549",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "723125",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "731766",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "732712",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "732717",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "753308",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "764180",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "766704",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "789019",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "804328",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "829224",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "831001",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "858877",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "875320",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "882095",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "886982",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "895421",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "896159",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "909832",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "927628",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "927653",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "936468",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1001838",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1018724",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1035002",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 4
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "831001",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "858877",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "875320",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "882095",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "886982",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "895421",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "896159",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "909832",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "927628",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "927653",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "936468",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 4
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1001838",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1018724",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1035002",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 4
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1035267",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1045609",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1045810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1065280",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1075531",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1108524",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1137789",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1141391",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1163165",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1164727",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1262039",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1283699",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1318605",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1321655",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 5
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1035267",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1045609",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1045810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1065280",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1075531",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1108524",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1137789",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1141391",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 5
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1163165",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 5
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1164727",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1262039",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1283699",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 5
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1318605",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 5
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1321655",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 5
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1326801",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1327567",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1341439",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1373715",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1403161",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1413329",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1467373",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1510295",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1534701",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1535527",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1543151",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1551152",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 6
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1551182",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1326801",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1327567",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1341439",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1373715",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1403161",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1413329",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1467373",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1510295",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1534701",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 6
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1535527",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1543151",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1551152",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 6
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1571996",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1594805",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1596532",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1613103",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1652044",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1707925",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1730168",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1744489",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1835632",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1996810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "2012383",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "2023554",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "2115436",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_sliced",
+   "slices": [
+    [
+     null,
+     "2014-01-01"
+    ],
+    [
+     "2014-01-01",
+     "2016-01-01"
+    ],
+    [
+     "2016-01-01",
+     "2018-01-01"
+    ],
+    [
+     "2018-01-01",
+     "2020-01-01"
+    ],
+    [
+     "2020-01-01",
+     "2022-01-01"
+    ],
+    [
+     "2022-01-01",
+     "2024-01-01"
+    ],
+    [
+     "2024-01-01",
+     null
+    ]
+   ],
+   "slice_timeout_s": 900,
+   "shard": 7
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1571996",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1594805",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 7
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1596532",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 7
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1613103",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 7
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1652044",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1707925",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1730168",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 7
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1744489",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1835632",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1996810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "2012383",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 7
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "2023554",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 7
+  }
+ ],
+ "shards": {
+  "0": {
+   "lines": 169,
+   "bs": 169,
+   "notes": 169,
+   "face": 169
+  },
+  "1": {
+   "lines": 170,
+   "bs": 170,
+   "notes": 170,
+   "face": 170
+  },
+  "2": {
+   "lines": 169,
+   "bs": 169,
+   "notes": 169,
+   "face": 169
+  },
+  "3": {
+   "lines": 174,
+   "bs": 174,
+   "notes": 174,
+   "face": 174
+  },
+  "4": {
+   "lines": 170,
+   "bs": 170,
+   "notes": 170,
+   "face": 170
+  },
+  "5": {
+   "lines": 164,
+   "bs": 164,
+   "notes": 164,
+   "face": 164
+  },
+  "6": {
+   "lines": 149,
+   "bs": 149,
+   "notes": 149,
+   "face": 149
+  },
+  "7": {
+   "lines": 132,
+   "bs": 132,
+   "notes": 132,
+   "face": 132
+  }
+ }
+}
