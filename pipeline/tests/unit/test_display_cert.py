@@ -632,3 +632,53 @@ def test_certify_fails_a_hide_with_a_non_doc02_reason(tmp_path):
         )
     run = dc.certify("T", "1", p, Src([fact("Revenues", "100")]))
     assert run.verdict == "FAIL" and any(f.check == "hide_reason" for f in run.hides)
+
+
+def test_hide_class_column_is_authoritative_and_reason_code_is_evidence():
+    """main 532fc006: the export writes hide_class, exactly one of four doc 02 classes."""
+
+    def hid(dp, display, hc, reason="no_role"):
+        return dc.Cell(
+            dp, "2022", "2022-12-31", display, None, "", "", "", (), reason, hc
+        )
+
+    ok = [
+        hid(
+            "sbc",
+            dc.HIDDEN_ROW,
+            "structural_not_presented",
+            "not_presented_in_any_filing",
+        ),
+        hid("cf_ap_change", dc.HIDDEN_ROW, "line_presented_combined", "flag_combined"),
+        hid("revenue", dc.HIDDEN_YEAR, "pre_filing", "no_public_filing_for_period"),
+        hid("dividends_paid", dc.HIDDEN_YEAR, "verified_absent"),
+    ]
+    assert dc.check_hide_reasons(ok) == []
+    bad = [
+        hid("sbc", dc.HIDDEN_ROW, ""),
+        hid("sbc", dc.HIDDEN_ROW, "era_unmapped"),
+        hid("sbc", dc.HIDDEN_ROW, "pre_filing"),
+        hid("research_and_development", dc.HIDDEN_YEAR, "verified_absent"),
+    ]
+    assert [f.severity for f in dc.check_hide_reasons(bad)] == ["FAIL"] * 4
+
+
+def test_hide_class_combined_year_uses_the_printed_line_test():
+    shown = cell(
+        dp="comprehensive_income", tag="ComprehensiveIncomeNetOfTax", pe="2021-12-31"
+    )
+    hid = dc.Cell(
+        "comprehensive_income",
+        "2017",
+        "2017-12-31",
+        dc.HIDDEN_YEAR,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "flag_x",
+        "line_presented_combined",
+    )
+    ye = {"A": ["2017-12-31|4"]}
+    assert [f.severity for f in dc.check_hidden_years([shown, hid], ye, {})] == ["INFO"]

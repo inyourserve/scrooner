@@ -233,6 +233,15 @@ class Cell:
     tag: str
     parts: tuple[Part, ...] = ()
     reason_code: str | None = None  # None when the export has no reason_code column
+    hide_class: str | None = (
+        None  # None when the export has no hide_class column (before main 532fc006)
+    )
+
+    @property
+    def hide_basis(self) -> str | None:
+        """The hide class the checks judge: the export's hide_class when it writes one, else the
+        legacy reason_code (which then stays the evidence)."""
+        return self.hide_class if self.hide_class is not None else self.reason_code
 
     @property
     def key(self) -> tuple[str, str]:
@@ -313,6 +322,9 @@ def read_coverage(path: Path) -> list[Cell]:
                 parts=parse_parts(parts) if "@" in parts else (),
                 reason_code=(r["reason_code"] or "").strip()
                 if "reason_code" in r
+                else None,
+                hide_class=(r["hide_class"] or "").strip()
+                if "hide_class" in r
                 else None,
             )
         )
@@ -790,10 +802,49 @@ HIDE_REASONS = frozenset({"structural_not_presented", "line_presented_combined"}
 ONLY_COMBINED = "line_presented_combined"
 
 
+HC_STRUCTURAL = "structural_not_presented"
+HC_PRE_FILING = "pre_filing"
+HC_VERIFIED_ABSENT = "verified_absent"
+HIDE_CLASSES = frozenset(
+    {HC_STRUCTURAL, ONLY_COMBINED, HC_PRE_FILING, HC_VERIFIED_ABSENT}
+)
+
+
+def _hide_fail(c: Cell, why: str) -> Finding:
+    return Finding("hide_reason", *c.key, "FAIL", why)
+
+
 def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
+    """Each hide must name a doc 02 hide class. With a hide_class column (main 532fc006) that is
+    the class, exactly one of four, and the class must fit the cell; reason_code is evidence only.
+    Without it, the legacy reason_code is judged. Whether the class is TRUE is proved elsewhere:
+    check_hidden_rows (facts), check_hidden_years (pre-filing, printed lines)."""
     out = []
     for c in cells:
-        if c.display not in (HIDDEN_ROW, HIDDEN_YEAR) or c.reason_code is None:
+        if c.display not in (HIDDEN_ROW, HIDDEN_YEAR):
+            continue
+        if c.hide_class is not None:
+            hc = c.hide_class
+            if hc not in HIDE_CLASSES:
+                out.append(
+                    _hide_fail(
+                        c,
+                        f"hide_class {hc or '(none)'!r} is not one of the four doc 02 classes",
+                    )
+                )
+            elif hc == HC_PRE_FILING and c.display != HIDDEN_YEAR:
+                out.append(
+                    _hide_fail(c, "pre_filing applies to a year, not a whole row")
+                )
+            elif hc == HC_VERIFIED_ABSENT and c.data_point not in HIDE_YEAR_ALLOWLIST:
+                out.append(
+                    _hide_fail(
+                        c,
+                        f"verified_absent, but {c.data_point} is not on the VERIFIED_ABSENT_HIDE allowlist",
+                    )
+                )
+            continue
+        if c.reason_code is None:
             continue
         if c.display == HIDDEN_YEAR and c.reason_code in (
             "",
@@ -803,10 +854,8 @@ def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
             continue  # a pre-filing year needs no line reason; check_hidden_years proves it
         if c.reason_code not in HIDE_REASONS:
             out.append(
-                Finding(
-                    "hide_reason",
-                    *c.key,
-                    "FAIL",
+                _hide_fail(
+                    c,
                     f"hidden with reason {c.reason_code or '(none)'!r}, which is not a doc 02 hide class "
                     "(never presented, only combined, pre-filing year, allowlisted absence)",
                 )
@@ -931,7 +980,7 @@ def check_hidden_years(
         )
         if not presenting:
             continue  # a pre-filing year: no periodic filing presents it
-        if c.data_point not in HIDE_YEAR_ALLOWLIST and c.reason_code != ONLY_COMBINED:
+        if c.data_point not in HIDE_YEAR_ALLOWLIST and c.hide_basis != ONLY_COMBINED:
             out.append(
                 Finding(
                     "hidden_year",
@@ -960,7 +1009,7 @@ def check_hidden_years(
                     "hidden_year",
                     *c.key,
                     "INFO",
-                    f"{'only combined' if c.reason_code == ONLY_COMBINED else 'allowlisted'}: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
+                    f"{'only combined' if c.hide_basis == ONLY_COMBINED else 'allowlisted'}: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
                 )
             )
     return out
@@ -1114,7 +1163,7 @@ def certify(
             c.data_point
             for c in p.cells
             if c.display == HIDDEN_YEAR
-            and (c.data_point in HIDE_YEAR_ALLOWLIST or c.reason_code == ONLY_COMBINED)
+            and (c.data_point in HIDE_YEAR_ALLOWLIST or c.hide_basis == ONLY_COMBINED)
         }
         lines: dict[str, set[str]] = {}
         if allow:
