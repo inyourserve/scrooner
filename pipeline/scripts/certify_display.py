@@ -84,7 +84,8 @@ def main(argv: list[str] | None = None) -> int:
         from scrooner_pipeline.db.connection import get_connection
 
         with get_connection() as conn:
-            cik = a.cik or dc.resolve_cik(conn, company_id)
+            assert a.cik or company_id is not None  # argparse checks above
+            cik = a.cik or dc.resolve_cik(conn, company_id or 0)
             run = dc.certify(t, cik, a.coverage, dc.SqlFactSource(conn), a.seed)
     else:
         raw = json.loads(a.bundle.read_text())
