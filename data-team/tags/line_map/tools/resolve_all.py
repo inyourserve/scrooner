@@ -618,6 +618,40 @@ def apply_face_label_overrides(rows, filings, notefacts):
     return rows
 
 
+SBC_MEMBER_TAGS = ('AllocatedShareBasedCompensationExpense', 'ShareBasedCompensation')
+
+
+def apply_sbc_award_members(rows, memberfacts):
+    """Open-shown queue 2026-11-16 (MO, PM, VZ were 'never reported'): a filing that reports share-based compensation expense ONLY by
+    award type (AllocatedShareBasedCompensationExpense / ShareBasedCompensation on the single AwardType axis, no undimensioned total)
+    does report the data point. Two or more distinct award types -> sbc is their sum (flag award_type_member_sum; MO FY2019 PSU 4 +
+    restricted stock and RSUs 28 = 32, as the note text states). One award type cannot prove a total: the cell stays open but is never an
+    absence (flag reported_by_award_type). Members whose names contain one another (a combined member beside its parts) are not summed."""
+    for r in rows:
+        if r['data_point'] != 'sbc' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
+        by = collections.defaultdict(dict)
+        for x in (memberfacts.get(r['accession']) or '').split('~'):
+            q = x.split('|')
+            if len(q) == 4 and q[0] in SBC_MEMBER_TAGS and q[1] == '4':
+                m = re.fullmatch(r'AwardType=([^;=]+);', q[3])
+                if m: by[q[0]][m.group(1)] = D(q[2])
+        if not by: continue
+        t = next((t for t in SBC_MEMBER_TAGS if len(by.get(t, {})) >= 2), None) or next(t for t in SBC_MEMBER_TAGS if by.get(t))
+        mem = by[t]
+        names = sorted(mem)
+        overlap = any(a != b and a.lower() in b.lower() for a in names for b in names)
+        if len(mem) >= 2 and not overlap and all(v > 0 for v in mem.values()):
+            parts = [(f'{t}[AwardType={m}]', mem[m]) for m in names]
+            r.update(status='component_sum', value=sum(v for _, v in parts), tags='+'.join(p for p, _ in parts), r_page='NOTE',
+                     nodes='; '.join(f'{p}={standard_inputs._plain(v)} [NOTE]' for p, v in parts),
+                     why='share-based compensation expense is reported only by award type: the sum of the award types')
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'award_type_member_sum') if x)
+        else:
+            r['why'] = f"share-based compensation expense is reported only by award type ({', '.join(f'{m} {standard_inputs._plain(v)}' for m, v in mem.items())}); one award type does not prove the total"
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or '').replace('never_reported', ''), 'reported_by_award_type') if x).replace(';;', ';').strip(';')
+    return rows
+
+
 LOAN_AXIS = re.compile(r'^\w*FinancingReceivable\w*=([^;=]+);$')
 
 
@@ -717,7 +751,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
     cor_valued = {r['accession']: True for r in rows if r['data_point'] == 'cost_of_revenue' and r['status'] in VALUED and (r.get('column') or 'own') == 'own'}
     for r in rows:
         if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
-        if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed')): continue
+        if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed', 'reported_by_award_type')): continue
         E = dp_elements(r['data_point'])
         rx = ABSENT_RX.get(r['data_point'])
         if not E and not rx: continue
@@ -1470,6 +1504,7 @@ if __name__ == '__main__':
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
     rows = apply_face_label_overrides(rows, filings, notefacts)
+    rows = apply_sbc_award_members(rows, memberfacts)
     rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)

@@ -713,3 +713,32 @@ def test_table_line_amount_needs_year_header_and_scale_and_future_schedules_neve
     assert rc(future, '2025-12-31')['decision'] == 'open'
     said = 'Item 8. Notes\nAmortization expense of intangible assets was $ 425 million in 2024.\n'
     assert rc(said, '2024-12-31')['value'] == '425000000'
+
+
+def test_sbc_reported_only_by_award_type_is_summed_or_kept_open_never_absent():
+    # MO FY2019: AllocatedShareBasedCompensationExpense PerformanceShares 4 + RestrictedAndDeferredStock 28 = 32 (note text states both);
+    # VZ: one member (RSU and PSU) -> open, flag reported_by_award_type, not hideable; overlapping members are never summed
+    mf = {'MO19': 'AllocatedShareBasedCompensationExpense|4|4000000|AwardType=PerformanceShares;~AllocatedShareBasedCompensationExpense|4|28000000|AwardType=RestrictedAndDeferredStock;',
+          'VZ19': 'ShareBasedCompensation|4|872000000|AwardType=RestrictedStockUnitsAndPerformanceStockUnits;',
+          'X19': 'ShareBasedCompensation|4|10|AwardType=RestrictedStock;~ShareBasedCompensation|4|30|AwardType=RestrictedStockAndPerformanceShares;'}
+    rows = [dict(accession=a, data_point='sbc', status='not_presented', value=None, flags='cf_family;never_reported', why='w', column='own') for a in ('MO19', 'VZ19', 'X19')]
+    resolve_all.apply_sbc_award_members(rows, mf)
+    mo, vz, x = rows
+    assert mo['status'] == 'component_sum' and mo['value'] == D(32000000) and 'award_type_member_sum' in mo['flags']
+    assert mo['nodes'].startswith('AllocatedShareBasedCompensationExpense[AwardType=PerformanceShares]=4000000 [NOTE]')
+    assert vz['status'] == 'not_presented' and 'reported_by_award_type' in vz['flags'] and 'never_reported' not in vz['flags']
+    assert x['status'] == 'not_presented' and 'reported_by_award_type' in x['flags']      # overlapping member names: not summed
+
+
+def test_sbc_reported_by_award_type_is_never_flagged_absent():
+    filings = [dict(a='VZ19', cik='1', p='2019-12-31', lines=''), dict(a='Z19', cik='2', p='2019-12-31', lines='')]
+    rows = [dict(cik='1', accession='VZ19', data_point='sbc', period_end='2019-12-31', status='not_presented', value=None, flags='cf_family;reported_by_award_type', why='w', column='own'),
+            dict(cik='2', accession='Z19', data_point='sbc', period_end='2019-12-31', status='not_presented', value=None, flags='cf_family', why='w', column='own')]
+    resolve_all.apply_absent_in_own_filing(rows, filings, {}, {})
+    assert 'absent_in_own_filing' not in rows[0]['flags'] and 'absent_in_own_filing' in rows[1]['flags']
+
+
+def test_a_single_award_type_member_is_never_the_consolidated_value():
+    import standard_inputs
+    out = standard_inputs.member_facts({}, {'VZ19': 'ShareBasedCompensation|4|872000000|AwardType=RestrictedStockUnitsAndPerformanceStockUnits;'})
+    assert out == []

@@ -1,11 +1,11 @@
 {
  "built": "2026-11-16",
- "resolver_version": "resolver-2026-11-16.63",
+ "resolver_version": "resolver-2026-11-16.64",
  "rows": 27999,
  "rows_with_usage": 563,
  "rows_full": 112,
  "taxonomy_elements": 22756,
- "served_cells": 54799,
- "served_cells_all_elements_full": 34560,
+ "served_cells": 54818,
+ "served_cells_all_elements_full": 34579,
  "coverage_pct": 63.1
 }

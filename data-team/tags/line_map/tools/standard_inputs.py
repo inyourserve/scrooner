@@ -138,6 +138,7 @@ def member_facts(notefacts, memberfacts, class_shares=()):
             seg, v = fs[0]
             if COMPONENT_COLUMN.match(seg): continue
             if seg.startswith('ProductOrService=') and REV_ROW.match(t): continue
+            if seg.startswith('AwardType='): continue   # one award type is never the total (VZ RSU+PSU 872M; a note fact, not a face line)
             if seg.startswith('ClassOfStock='): continue   # one class is never the total (DELL FY2020 class V 0; classes A-D repurchased 8)   # a revenue-table row, never the consolidated revenue
             if t == 'CommonStockSharesOutstanding' and a in class_shares: continue
             iss = und.get(('CommonStockSharesIssued', q))
