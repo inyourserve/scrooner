@@ -121,6 +121,7 @@ CSV_COLUMNS = [
     "parts",
     "display",
     "stated_zero",
+    "text_stated",
 ]
 
 
@@ -1537,48 +1538,56 @@ def attach_absent_in_own(
 
 
 STATED_ZERO_FAMILY = "company_tag_map:stated_zero"
+TEXT_STATED_FAMILY = "company_tag_map:text_stated"
+# (accession, locator, quote, kind, value)
+StatedRec = tuple[str, str, str, str, Decimal]
 
 
 def load_stated_zero(
     resolver_dir: Path = RESOLVER_DIR,
-) -> dict[tuple[str, str], dict[str, tuple[str, str, str]]]:
-    """Ruling 2026-11-16 (Dhairya): (ticker, data_point) -> {period_end: (accession, locator, quote)} for every VALID
-    stated_zero row of the newest resolver-all110-*.csv (same validation as serving: quote, locator, accession, value 0,
-    quote_period == period_end). An invalid row is absent, so its cell stays what it was. Missing file: empty."""
+) -> dict[tuple[str, str], dict[str, StatedRec]]:
+    """Rulings 2026-11-16 (Dhairya): (ticker, data_point) -> {period_end: (accession, locator, quote, kind, value)} for
+    every VALID stated_zero / text_stated row of the newest resolver-all110-*.csv (same validation as serving: quote,
+    locator, accession, value 0 / nonzero, quote_period == period_end). An invalid row is absent, so its cell stays
+    what it was. Missing file: empty."""
     files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
-    out: dict[tuple[str, str], dict[str, tuple[str, str, str]]] = defaultdict(dict)
+    out: dict[tuple[str, str], dict[str, StatedRec]] = defaultdict(dict)
     if not files:
         return {}
     with files[-1].open(newline="") as fh:
         for r in csv.DictReader(fh):
-            if not sl.is_stated_zero(r.get("decision", ""), r.get("flags", "")):
+            kind = sl.stated_kind(r.get("decision", ""), r.get("flags", ""))
+            if not kind:
                 continue
             try:
                 pe = date.fromisoformat(r["period_end"])
             except ValueError:
                 continue
-            if sl.stated_zero_problem(r, pe, r.get("accession", "")):
+            if sl.stated_zero_problem(r, pe, r.get("accession", ""), kind):
                 continue
             out[(r["ticker"], r["data_point"])][r["period_end"]] = (
                 r["accession"],
                 r["locator"].strip(),
                 r["quote"].strip(),
+                kind,
+                Decimal(r["value"]),
             )
     return dict(out)
 
 
 def attach_stated_zero(
     rows: list[dict[str, Any]],
-    sz: dict[tuple[str, str], dict[str, tuple[str, str, str]]],
+    sz: dict[tuple[str, str], dict[str, StatedRec]],
 ) -> None:
-    """A cell SERVED by the stated_zero family (value 0) whose resolver row is valid is a shown value: `_stated_zero`,
-    accession = the filing that states it, r_page = the section/page locator (the page gate accepts a section),
-    evidence = the exact quote, column `stated_zero` = Y so Ritwik can sample every such cell. Matching is the same
-    ticker and data point and the exact period or exactly one fsn_end_matches period. Pure."""
+    """A cell SERVED by the stated_zero or text_stated family whose resolver row is valid, of the same kind and the same
+    value, is a shown value: `_stated_zero`, accession = the filing that states it, r_page = the section/page locator
+    (the page gate accepts a section), evidence = the exact quote, column `stated_zero` or `text_stated` = Y so Ritwik
+    can sample every such cell. Matching is the same ticker and data point and the exact period or exactly one
+    fsn_end_matches period. Pure."""
+    fam = {STATED_ZERO_FAMILY: sl.STATED_ZERO, TEXT_STATED_FAMILY: sl.TEXT_STATED}
     for r in rows:
-        if r.get("_family") != STATED_ZERO_FAMILY:
-            continue
-        if r.get("shown_value") in ("", None) or Decimal(r["shown_value"]) != 0:
+        kind = fam.get(r.get("_family", ""))
+        if kind is None or r.get("shown_value") in ("", None):
             continue
         got = sz.get((r["ticker"], r["data_point"]))
         if not got:
@@ -1590,12 +1599,12 @@ def attach_stated_zero(
                 v for d, v in got.items() if fsn_end_matches(date.fromisoformat(d), end)
             ]
             rec = near[0] if len(near) == 1 else None
-        if rec is None:
+        if rec is None or rec[3] != kind or Decimal(r["shown_value"]) != rec[4]:
             continue
         r["_stated_zero"] = True
-        r["stated_zero"] = "Y"
-        r["accession"], r["r_page"], r["evidence"] = rec
-        r["locator_source"] = "stated_zero"
+        r[kind] = "Y"
+        r["accession"], r["r_page"], r["evidence"] = rec[0], rec[1], rec[2]
+        r["locator_source"] = kind
 
 
 def apply_display(rows: list[dict[str, Any]]) -> None:

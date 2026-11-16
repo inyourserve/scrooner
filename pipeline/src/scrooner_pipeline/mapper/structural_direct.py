@@ -250,6 +250,7 @@ def printed_zero_ok(claim: sl.Claim, why: str, i: int = 0) -> bool:
 
 
 STATED_ZERO = sl.STATED_ZERO
+TEXT_STATED = sl.TEXT_STATED
 
 
 def stated_zero_claim_problem(claim: sl.Claim) -> str | None:
@@ -264,6 +265,7 @@ def stated_zero_claim_problem(claim: sl.Claim) -> str | None:
         },
         claim.period_end,
         claim.accession,
+        sl.stated_kind(claim.decision, claim.flags) or STATED_ZERO,
     )
 
 
@@ -391,7 +393,7 @@ def unclaimed(rows, cells: list[dict], periods, concept_info) -> list[dict]:
     structural-load did not write their claim (reject or conflict in its CSVs), so the serve and the map diverge. Pure."""
     out = []
     for c in cells:
-        if c.get("value_source") == "stated_zero":
+        if c.get("value_source") in (STATED_ZERO, TEXT_STATED):
             continue  # carries its own quote and locator in the serve note; no map claim row by design
         cid = c["canonical_concept_id"]
         end = periods[c["period_id"]][1]
@@ -678,7 +680,8 @@ def direct_cells(
             if sl.instant_sum_refused_for(c, name, concept_info[cid][1]):
                 reject("instant component sum refused (only total_debt)")
                 continue
-        if sl.is_stated_zero(c.decision, c.flags):
+        kind = sl.stated_kind(c.decision, c.flags)
+        if kind:
             why = stated_zero_claim_problem(c)
             if why:
                 reject(why)
@@ -687,13 +690,14 @@ def direct_cells(
                 {
                     "canonical_concept_id": cid,
                     "period_id": pid,
-                    "value": Decimal(0),
-                    "value_source": STATED_ZERO,
+                    "value": Decimal(c.value) if kind == TEXT_STATED else Decimal(0),
+                    "value_source": kind,
                     "source_fact_ids": [],
                     "source_value_ids": [],
                     "serve_note": (
-                        f"structural resolver direct: {c.accession} column {end.isoformat()}; stated_zero: "
-                        f'the filing states the zero, served as 0 with no fact id; locator: {c.locator}; quote: "{c.quote}"'
+                        f"structural resolver direct: {c.accession} column {end.isoformat()}; {kind}: "
+                        f"the filing states the value in its text, served with no fact id; "
+                        f'locator: {c.locator}; quote: "{c.quote}"'
                     ),
                     "_scaled": False,
                     "_filing_id": meta[c.accession][0],

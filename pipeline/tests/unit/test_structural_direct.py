@@ -829,3 +829,35 @@ def test_stated_zero_serves_as_zero_with_quote_in_note_and_rejects_silence_and_p
             write(bad)
             cells, st = w.cells()
             assert cells == []
+
+
+@pytest.mark.integration
+def test_text_stated_serves_the_nonzero_value_with_quote_and_rejects_zero_silence_and_period_mismatch(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """Dhairya 2026-11-16: a nonzero value stated in the filing's text is served with no fact id."""
+    head = HEAD.rstrip("\n") + ",quote,locator,quote_period\n"
+    quote = "R&D expenses were $74 million during 2018."
+
+    def row(v="74000000", q=quote, qp=str(END)):
+        return f'{CIK},TST,sd_inc,{END},FY,mapped,"",{v},{ACC1},own,,text_stated,r.1,"{q}",Item 1 p.13,{qp}\n'
+
+    def write(*rows):
+        p = tmp_path / "resolver-all110-2026-11-16.csv"
+        p.write_text(head + "".join(rows))
+        monkeypatch.setenv(sd.ENV_PATH, str(p))
+        sd._claims_by_cik.cache_clear()
+
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        w.filing(ACC1, date(2019, 2, 1), END)
+        write(row())
+        cells, st = w.cells()
+        (c,) = cells
+        assert c["value"] == Decimal("74000000") and c["value_source"] == "text_stated"
+        assert c["source_fact_ids"] == [] and c["source_value_ids"] == []
+        assert quote in c["serve_note"] and "Item 1 p.13" in c["serve_note"]
+        for bad in (row(v="0"), row(q=""), row(qp="2017-12-31")):
+            write(bad)
+            cells, st = w.cells()
+            assert cells == []

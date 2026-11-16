@@ -107,34 +107,61 @@ NOT_A_DECISION = {"derived", "derived_not_printed", "no_role"}
 # ("did not pay any dividends", "Long-term debt $ -"). A `mapped` row flagged stated_zero with value 0 and the extra
 # columns quote / locator / quote_period (RESOLVER-OUTPUT-FORMAT.md). Never inferred from silence.
 STATED_ZERO = "stated_zero"
+# Text stated (Dhairya 2026-11-16): the same, for a NONZERO value the filing states in text (MCK R&D, Item 1).
+TEXT_STATED = "text_stated"
+STATED_FLAGS = (STATED_ZERO, TEXT_STATED)
+
+
+def stated_kind(decision: str, flags: str) -> str | None:
+    """`stated_zero`, `text_stated` or None for a resolver row's decision and flags."""
+    if decision != "mapped":
+        return None
+    fl = {f.strip() for f in flags.replace(",", ";").split(";")}
+    for k in STATED_FLAGS:
+        if k in fl:
+            return k
+    return None
 
 
 def is_stated_zero(decision: str, flags: str) -> bool:
-    return decision == "mapped" and STATED_ZERO in {
-        f.strip() for f in flags.replace(",", ";").split(";")
-    }
+    return stated_kind(decision, flags) == STATED_ZERO
 
 
-def stated_zero_problem(r: dict[str, str], pe: date | None, accn: str) -> str | None:
+def is_text_stated(decision: str, flags: str) -> bool:
+    return stated_kind(decision, flags) == TEXT_STATED
+
+
+def stated_zero_problem(
+    r: dict[str, str], pe: date | None, accn: str, kind: str = STATED_ZERO
+) -> str | None:
     """Why a stated_zero row is refused, or None. It needs the exact quoted sentence, the section/page locator, the own
     accession, the value 0, and a quote_period equal to the cell's period_end (the sentence speaks for THIS period).
     A zero with no quote is a zero inferred from silence: refused. Pure."""
     if not ACCN_RE.fullmatch(accn or ""):
-        return "stated_zero: no accession"
+        return f"{kind}: no accession"
     if not (r.get("quote") or "").strip():
-        return "stated_zero: no quoted sentence (a zero is never inferred from silence)"
+        return f"{kind}: no quoted sentence (a value is never inferred from silence)"
     if not (r.get("locator") or "").strip():
-        return "stated_zero: no section/page locator"
+        return f"{kind}: no section/page locator"
     try:
-        if (r.get("value") or "").strip() == "" or Decimal(r["value"]) != 0:
-            return "stated_zero: value is not 0"
+        if (r.get("value") or "").strip() == "":
+            return (
+                "stated_zero: value is not 0"
+                if kind == STATED_ZERO
+                else f"{kind}: no value"
+            )
+        zero = Decimal(r["value"]) == 0
     except ArithmeticError:
+        return f"{kind}: value is not a number"
+    if kind == STATED_ZERO and not zero:
         return "stated_zero: value is not 0"
+    if kind == TEXT_STATED and zero:
+        return "text_stated: value is 0 (a stated zero belongs under stated_zero)"
     qp = _date(r.get("quote_period", ""))
     if qp is None:
-        return "stated_zero: no quote_period"
+        return f"{kind}: no quote_period"
     if pe is None or qp != pe:
-        return f"stated_zero: the quote speaks for {qp}, the cell is {pe}"
+        return f"{kind}: the quote speaks for {qp}, the cell is {pe}"
     return None
 
 
@@ -454,9 +481,9 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                 if not ACCN_RE.fullmatch(accn):
                     reject("accession is not an SEC accession number")
                     continue
-                stated = is_stated_zero(decision, r.get("flags", ""))
+                stated = stated_kind(decision, r.get("flags", ""))
                 if stated:
-                    why = stated_zero_problem(r, pe, accn)
+                    why = stated_zero_problem(r, pe, accn, stated)
                     if why:
                         reject(why)
                         continue
@@ -1349,8 +1376,8 @@ def load(
             ((cid, cik),) = hits
         if company_ids is not None and cid not in company_ids:
             continue
-        if is_stated_zero(c.decision, c.flags):
-            # no tag, no map row: served only by structural_direct (value_source stated_zero)
+        if stated_kind(c.decision, c.flags):
+            # no tag, no map row: served only by structural_direct (value_source stated_zero / text_stated)
             stats["stated_zero_direct_only"] = (
                 stats.get("stated_zero_direct_only", 0) + 1
             )
