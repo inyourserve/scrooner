@@ -90,6 +90,7 @@ jobs:
         if: ${{ inputs.apply }}
         env:
           GH_TOKEN: ${{ github.token }}
+          HEAVY_GUARD_SELF: pipeline-fsn-load-filings.yml
         run: scripts/ci/heavy_job_guard.sh refuse-if-heavy
       - name: Connection headroom
         run: |
