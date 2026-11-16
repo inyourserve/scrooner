@@ -1613,17 +1613,12 @@ def attach_stated_zero(
         r["locator_source"] = kind
 
 
-# The approver's own presence test (certification.display_cert): a year end that ANY periodic filing of the company
-# (10-K, 10-Q, 20-F, 40-F, own or comparative column, via the shared company_filings()) prints on a rendered statement
-# line. YEAR_TAGS are the certifier's year-end tags; a row's own tag family is HIDE_FAMILY.
-YEAR_TAGS = (
-    "Assets",
-    "Revenues",
-    "RevenueFromContractWithCustomerExcludingAssessedTax",
-    "NetIncomeLoss",
-    "NetCashProvidedByUsedInOperatingActivities",
-    "ProfitLoss",
-)
+# LINE-level presence (Dhairya 2026-11-16): a cell is never hidden when ANY periodic filing of the company (10-K, 10-Q,
+# 20-F, 40-F, own or comparative column, via the shared company_filings()) prints THIS data point's line or fact at that
+# period end: an undimensioned, valued fact on a tag of the data point's family (HIDE_FAMILY, the approver's own family
+# list) that sits on a rendered line. A period some filing presents while none prints the line does not block a hide
+# (a period-level test would make every year inside the filing window unhideable). Not matched: a line printed under a
+# custom tag or only by label, which the family list cannot see.
 _FAMILY_TAGS = sorted({t for tags in HIDE_FAMILY.values() for t in tags})
 _PRESENCE_SQL = """
 select v.filing_id, t.tag, v.ddate, v.qtrs
@@ -1639,9 +1634,9 @@ where v.filing_id = any(%s) and coalesce(v.coreg, '') = '' and v.value is not nu
 def load_presence(
     conn: Any, company_ids: list[int], chunk: int = 10
 ) -> dict[int, list[tuple[date, str, int]]]:
-    """company id -> (ddate, tag, qtrs) of every undimensioned, valued, rendered fact on YEAR_TAGS or a HIDE_FAMILY tag
+    """company id -> (ddate, tag, qtrs) of every undimensioned, valued, rendered fact on a HIDE_FAMILY tag
     in ANY periodic filing of the company (company_filings(): predecessors inside their windows). Read-only."""
-    tags = sorted({*YEAR_TAGS, *_FAMILY_TAGS})
+    tags = _FAMILY_TAGS
     out: dict[int, list[tuple[date, str, int]]] = defaultdict(list)
     for i in range(0, len(company_ids), chunk):
         ids = company_ids[i : i + chunk]
@@ -1662,20 +1657,18 @@ def attach_presence(
     rows: list[dict[str, Any]],
     presence: dict[int, list[tuple[date, str, int]]],
 ) -> None:
-    """Set `_year_presented_any` (a periodic filing prints a statement fact at the cell's period end: the certifier's
-    test, which no HIDDEN_YEAR may meet) and `_family_hit` (a fact on the data point's own tag family, undimensioned,
-    rendered, annual or instant, dated at that period: a row with any such year is not 'never reported'). Pure."""
-    by_co: dict[int, tuple[list[date], dict[str, list[tuple[date, int]]]]] = {}
+    """Set `_family_hit`: a fact on the data point's own tag family, undimensioned, rendered, annual (instant for a
+    balance-sheet point), dated at the cell's period, in any periodic filing. The cell is then not hidden, and a row with
+    any such year is not 'never reported'. Pure."""
+    by_co: dict[int, dict[str, list[tuple[date, int]]]] = {}
     for cid, facts in presence.items():
-        ends = sorted({d for d, t, _q in facts if t in YEAR_TAGS})
         fam: dict[str, list[tuple[date, int]]] = defaultdict(list)
         for d, t, q in facts:
             fam[t].append((d, q))
-        by_co[cid] = (ends, fam)
+        by_co[cid] = fam
     for r in rows:
-        ends, fam = by_co.get(r["company_id"], ([], {}))
+        fam = by_co.get(r["company_id"], {})
         end = date.fromisoformat(r["period_end"])
-        r["_year_presented_any"] = any(fsn_end_matches(d, end, 7) for d in ends)
         want = 0 if r["data_point"] in INSTANT_DPS else 4
         r["_family_hit"] = any(
             q == want and fsn_end_matches(d, end, 7)
@@ -1718,11 +1711,10 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             r["display"] = HIDDEN_YEAR
         else:
             r["display"] = OPEN
-        if r["display"] == HIDDEN_YEAR and (
-            r.get("_year_presented_any") or r.get("_family_hit")
-        ):
-            # ONE presence test for EVERY hidden-year route (only_combined years, absent_in_own, comparative-only, no-period
-            # reasons): a period any periodic filing prints is never hidden; it stays OPEN until filled (BA 2026-11-16)
+        if r["display"] == HIDDEN_YEAR and r.get("_family_hit"):
+            # ONE line-level presence test for EVERY hidden-year route (only_combined years, absent_in_own, comparative-only,
+            # no-period reasons): a period in which any periodic filing prints THIS data point's line is never hidden; it
+            # stays OPEN until filled (BA 2026-11-16). A period presented without the line may still be hidden.
             r["display"] = OPEN
         by_row[(r["company_id"], r.get("data_point"))].append(r)
     for cells in by_row.values():
