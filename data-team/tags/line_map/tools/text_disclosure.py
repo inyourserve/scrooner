@@ -133,6 +133,10 @@ DIV0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|ha
 DIV_SUSP = re.compile(r"\b(our|the company's|the)\s+(quarterly\s+)?(cash\s+)?dividends?\s+(to common (shareholders|stockholders)\s+|on (our )?common stock\s+)?(has|have|remains?|remained)\s+(been\s+)?suspended\b", re.I)
 DPS0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|has never)\s+(declare|declared|pay|paid)\s+(or\s+(pay|paid|declare|declared)\s+)?(any\s+)?(cash\s+)?dividends?\b", re.I)
 BUY0 = re.compile(r"\b(we|the company)\s+did not\s+(re)?purchase\s+any\s+(shares|common stock)\b[^.]*\brepurchase program\b", re.I)
+# absolute statements (no program qualifier): AMZN FY2019 'There were no repurchases of common stock in 2017, 2018, or 2019';
+# DHR FY2021 'Except in connection with the Envista Split-Off in 2019, neither the Company nor any "affiliated purchaser" repurchased any
+# shares of Company common stock during 2021, 2020 or 2019' (worker findings 2026-11-17)
+BUY0_ABS = re.compile(r"\bthere (were|was) no (share )?repurchases? of (our |its |the company's )?common stock (in|during)\b|\b(neither the company nor [^.]{0,80}?|we did not|the company did not)\s+repurchased?\s+any\s+shares\s+of\s+(the |our )?(company )?common stock\s+(in|during)\b", re.I)
 AMORT = re.compile(r'\bamortization (expense )?(of|related to|for|on|associated with) (\w+[- ])?(acquired |purchased |finite[- ]lived |definite[- ]lived |identifiable )*intangible|\bintangible assets?\s+amortization expense', re.I)
 AMORT_NOT = re.compile(r'\b(estimated|expected|future|will|next|anticipated|remaining|thereafter|impairment|capitaliz|software|tax)\b', re.I)
 TABLE_LB = {'amortization_of_intangibles': re.compile(r'^\s*(intangible assets? amortization expense|amortization (expense )?of (acquired |purchased |identifiable )?intangible assets?)\b', re.I),
@@ -189,7 +193,11 @@ def read_cell(text, cell):
                 ambiguous.append((sec, s)); continue
             if any(re.search(rf'\b{y}\b', s) for y in fy) or re.search(r'\b(have|has) never\b', s, re.I):   # GOOG 'We have never declared or paid any cash dividend'
                 found.append((Decimal(0), sec, s, pos))
-        elif dp == 'share_buybacks' and BUY0.search(s):
+        elif dp == 'share_buybacks' and (BUY0.search(s) or BUY0_ABS.search(s)):
+            # a leading 'Except ... in <year>,' clause takes its years out (DHR 2019, the Envista split-off exchange)
+            m = re.match(r'(?is)^\s*except\b([^,]*),', s)
+            if m and any(re.search(rf'\b{y}\b', m.group(1)) for y in fy):
+                continue
             # the annual statement only: the cell's year named (BA FY2022 Item 7 'During the years ended December 31, 2022, 2021 and 2020,
             # we did not repurchase any shares through our open market share repurchase program'); the Item 5 table footnote speaks
             # for the fourth quarter and names no year, so it never fills the year

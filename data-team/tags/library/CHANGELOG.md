@@ -843,3 +843,7 @@
 - ~ TaxesExcludingIncomeAndExciseTaxes: served_cells
 - ~ TaxesOther: data_point, served_cells
 - ~ TaxesOtherThanIncomeTaxes: data_point, served_cells
+
+## 2026-11-16 (resolver-all110-.79): 2 element changes, 27999 rows, coverage 64.7%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id

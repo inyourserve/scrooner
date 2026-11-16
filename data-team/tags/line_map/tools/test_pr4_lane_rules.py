@@ -1068,3 +1068,16 @@ def test_opex_lines_without_an_operating_income_line_need_the_pretax_tie():
     f, isf = _isf(lines, calc)
     assert not resolve_all._pretax_ties(f, isf)
     assert resolve_all.NONOP_NEXT.search('InterestIncomeExpenseNet Interest expense - net') and resolve_all.NONOP_NEXT.search('xyz_FinanceNet Interest income, net')
+
+
+def test_absolute_no_repurchase_sentences_and_the_except_clause():
+    # AMZN FY2019 10-K p. 47; DHR FY2021 Item 5 (2019 excepted: the Envista split-off exchange) - worker findings 2026-11-17
+    import text_disclosure as td
+    amzn = 'Item 8. Financial Statements\nThere were no repurchases of common stock in 2017 , 2018 , or 2019 .\n'
+    for y in ('2017', '2018', '2019'):
+        r = td.read_cell(amzn, dict(data_point='share_buybacks', period_end=f'{y}-12-31', own='1'))
+        assert r['decision'] == 'mapped' and str(r['value']) == '0'
+    dhr = ('Item 5. Market\nExcept in connection with the Envista Split-Off in 2019, neither the Company nor any "affiliated purchaser" repurchased any shares '
+           'of Company common stock during 2021, 2020 or 2019.\n')
+    assert td.read_cell(dhr, dict(data_point='share_buybacks', period_end='2020-12-31', own='1'))['decision'] == 'mapped'
+    assert td.read_cell(dhr, dict(data_point='share_buybacks', period_end='2019-12-31', own='1'))['decision'] == 'open'
