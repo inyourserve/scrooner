@@ -1,3 +1,6 @@
+# RETIRED 2026-11-16 (founder-approved cleanup, GITHUB-INFRA-AUDIT-2026-11-16.md): old FSN-store / cell-family path,
+# replaced by top100-flow.yml. Every job is skipped unless repository variable ALLOW_RETIRED_WORKFLOWS is 'true'.
+# The file is removed after a week (from 2026-11-23) if nothing needed it. Map: doc/infra/GITHUB.md.
 name: FSN store cohort dry run
 
 # Manual only. The pilot (pipeline-fsn-pilot.yml) at cohort scale: v1.1, 1,000 companies, sharded. Each shard
@@ -31,6 +34,7 @@ env:
 
 jobs:
   plan:
+    if: vars.ALLOW_RETIRED_WORKFLOWS == 'true'
     name: Shards
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -155,7 +159,7 @@ jobs:
   aggregate:
     name: Cohort table, top 100, top gap classes
     needs: shard
-    if: always()
+    if: always() && vars.ALLOW_RETIRED_WORKFLOWS == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

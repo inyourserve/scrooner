@@ -299,3 +299,46 @@ def test_coverage_rebuild_covers_every_cohort_member_whatever_its_status():
     )  # insert + the five company filters
     assert "where c.status = 'active' and md.status" not in joined
     assert len(cm.cohort_company_ids()) == 1000
+
+
+def test_metric_sharing_a_concept_name_gets_one_registry_row_and_one_coverage_row(monkeypatch) -> None:
+    # 2026-11-12..15 nightlies: migration 0122 made net_interest_income a canonical concept while it
+    # is also an active metric; both inserts are keyed by name (data_point_registry_data_point_name_key,
+    # unique (company_id, data_point_name)) and the coverage job died with UniqueViolation.
+    from scrooner_pipeline.mapper import coverage_matrix as cm
+
+    class Cur(_FakeCursor):
+        def __init__(self, conn):
+            super().__init__(conn)
+            self._last = ""
+
+        def execute(self, sql, params=None):
+            super().execute(sql, params)
+            self._last = sql
+
+        def executemany(self, sql, rows):
+            super().executemany(sql, rows)
+            self._conn.rows = list(rows)
+
+        def fetchall(self):
+            if "from analytics.canonical_concept cc" in self._last:
+                return [("revenue", ["us-gaap:Revenues"]), ("net_interest_income", [])]
+            if "join analytics.metric_definition_input" in self._last:
+                return [("net_interest_income", ["us-gaap:InterestIncomeExpenseNet"])]
+            if "from analytics.metric_definition" in self._last:
+                return [("net_interest_income",), ("net_margin",)]
+            return []
+
+    class Conn(_FakeConn):
+        def cursor(self):
+            return Cur(self)
+
+    conn = Conn()
+    cm.build_registry(conn)  # type: ignore[arg-type]
+    names = [r["data_point_name"] for r in conn.rows]
+    assert len(names) == len(set(names)), names
+    assert {"net_interest_income", "net_margin", "revenue"} <= set(names)
+
+    stmts = _run_build_statements(monkeypatch)
+    metric_insert = next(s for s in stmts if "cross join analytics.metric_definition md" in s)
+    assert "md.metric_name not in (select name from analytics.canonical_concept)" in metric_insert

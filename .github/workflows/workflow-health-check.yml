@@ -18,13 +18,14 @@ name: Workflow health check
 on:
   workflow_dispatch:
   schedule:
-    # Weekly -- this is a meta-check on the other crons, not something
-    # that needs daily granularity.
-    - cron: "30 6 * * 1"
+    # Daily since 2026-11-16 (was weekly): the refresh was red 4 nights and the
+    # sanity gate 2 weeks before anyone looked. Runs after both nightlies end.
+    - cron: "41 19 * * *"
 
 permissions:
   contents: read
   actions: read
+  issues: write
 
 jobs:
   check-scheduled-workflow-health:
@@ -58,5 +59,24 @@ jobs:
           if [ "$failed_any" -eq 1 ]; then
             echo ""
             echo "One or more scheduled workflows have a real failure pattern in their recent run history -- investigate before assuming everything is fine just because nothing paged anyone."
+          fi
+          echo "failed_any=$failed_any" >> "$GITHUB_OUTPUT"
+        id: health
+      # A red X on a weekly meta-job was seen by nobody (red 11 runs in a row). Keep ONE open issue as the alarm:
+      # opened or commented on while anything is failing, closed when everything is healthy again.
+      - name: Open, update or close the alarm issue
+        if: always() && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FAILED: ${{ steps.health.outputs.failed_any }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Scheduled workflow failing"
+          num=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')
+          if [ "$FAILED" = "1" ]; then
+            if [ -n "$num" ]; then gh issue comment "$num" --body "Still failing: $RUN_URL"
+            else gh issue create --title "$title" --body "Health check found a scheduled workflow with a failure pattern: $RUN_URL"; fi
             exit 1
+          elif [ -n "$num" ]; then
+            gh issue close "$num" --comment "All scheduled workflows healthy again: $RUN_URL"
           fi

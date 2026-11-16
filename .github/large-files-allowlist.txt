@@ -1,0 +1,2 @@
+# New files over 10 MB that may be committed, one path per line, each with its reason as a comment.
+# Checked by scripts/ci/check_large_files.py (CI: Migrations, documentation, and secrets).

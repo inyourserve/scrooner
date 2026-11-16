@@ -1,3 +1,6 @@
+# RETIRED 2026-11-16 (founder-approved cleanup, GITHUB-INFRA-AUDIT-2026-11-16.md): old FSN-store / cell-family path,
+# replaced by top100-flow.yml. Every job is skipped unless repository variable ALLOW_RETIRED_WORKFLOWS is 'true'.
+# The file is removed after a week (from 2026-11-23) if nothing needed it. Map: doc/infra/GITHUB.md.
 name: Cell files load (scrooner-cells)
 
 # Manual only. Loads lane cell files (data-team/46-canonical-fact-v2/CELL-FORMAT-v1.md) into
@@ -54,6 +57,7 @@ concurrency:
 
 jobs:
   wait-for-fsn-write:
+    if: vars.ALLOW_RETIRED_WORKFLOWS == 'true'
     # 2026-11-09: a manually dispatched heavy job must not start beside an FSN production write either
     # (the write refuses to start beside it; this is the other direction).
     name: Wait while an FSN production write is in progress

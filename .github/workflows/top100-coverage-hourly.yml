@@ -1,7 +1,7 @@
 name: Top-100 coverage export (hourly, opt-in, read-only on the DB)
 
 # Rebuilds data-team/strategy/top100-coverage.csv and top100-coverage-summary.csv from the live proof verdicts and
-# commits them to main. The database session is read-only (default_transaction_read_only=on).
+# commits them to main (summary hourly, full CSV daily; full CSV as an artifact every run). The database session is read-only (default_transaction_read_only=on).
 # OPT-IN: the hourly schedule only does anything when the repository variable TOP100_COVERAGE_HOURLY is "true"
 # (Settings, Secrets and variables, Variables). A manual dispatch from main always runs.
 on:
@@ -45,19 +45,34 @@ jobs:
           PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
           PYTHONPATH: pipeline/src
         run: pipeline/.venv/bin/python pipeline/scripts/top100_coverage.py data-team/strategy
-      - name: Commit the two files if they changed
+      # Repo slimming (founder-approved 2026-11-16): the full CSV is ~9 MB; committed hourly it would add 24 versions a
+      # day to git history. Every run uploads it as an artifact (90 days); git gets the summary every hour and the full
+      # CSV once a day (the 00:17Z run) or on a manual dispatch, so agents reading it from main are at most a day stale.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: top100-coverage-${{ github.run_id }}
+          path: data-team/strategy/top100-coverage.csv
+          retention-days: 90
+      - name: Commit the changed files
+        env:
+          EVENT: ${{ github.event_name }}
         run: |
           set -u
-          if [ -z "$(git status --porcelain -- data-team/strategy/top100-coverage.csv data-team/strategy/top100-coverage-summary.csv)" ]; then
+          files="data-team/strategy/top100-coverage-summary.csv"
+          if [ "$EVENT" = "workflow_dispatch" ] || [ "$(date -u +%H)" = "00" ]; then
+            files="$files data-team/strategy/top100-coverage.csv"
+          fi
+          if [ -z "$(git status --porcelain -- $files)" ]; then
             echo "no change"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp data-team/strategy/top100-coverage.csv data-team/strategy/top100-coverage-summary.csv "$RUNNER_TEMP/"
+          for f in $files; do cp "$f" "$RUNNER_TEMP/"; done
           for i in 1 2 3 4 5 6; do
             git fetch -q origin main && git reset -q --hard origin/main
-            cp "$RUNNER_TEMP/top100-coverage.csv" "$RUNNER_TEMP/top100-coverage-summary.csv" data-team/strategy/
-            git add data-team/strategy/top100-coverage.csv data-team/strategy/top100-coverage-summary.csv
+            for f in $files; do cp "$RUNNER_TEMP/$(basename "$f")" "$f"; done
+            git add $files
+            git diff --cached --quiet && { echo "no change against main"; exit 0; }
             git commit -q -m "Top-100 coverage export $(date -u +%Y%m%dT%H%MZ) (hourly workflow, read-only rebuild)"
             git push -q origin HEAD:main && { echo pushed; exit 0; }
             sleep $((RANDOM % 8 + 2))

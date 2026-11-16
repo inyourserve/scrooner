@@ -36,7 +36,13 @@ def main(workflow_file: str) -> int:
     for r in scheduled:
         print(f"  {r.get('createdAt')}: {r.get('conclusion')}")
 
-    failures = [r for r in scheduled if r.get("conclusion") not in ("success", None)]
+    # cancelled / skipped runs say nothing about health (a superseded dispatch, a concurrency queue)
+    judged = [r for r in scheduled if r.get("conclusion") not in ("cancelled", "skipped")]
+    if not judged:
+        print("  only cancelled or skipped runs -- not flagging")
+        return 0
+    scheduled = judged
+    failures = [r for r in scheduled if r.get("conclusion") != "success"]
     if len(failures) == len(scheduled):
         print("  ALL recent scheduled runs failed")
         return 1

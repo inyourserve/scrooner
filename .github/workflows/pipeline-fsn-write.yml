@@ -1,3 +1,6 @@
+# RETIRED 2026-11-16 (founder-approved cleanup, GITHUB-INFRA-AUDIT-2026-11-16.md): old FSN-store / cell-family path,
+# replaced by top100-flow.yml. Every job is skipped unless repository variable ALLOW_RETIRED_WORKFLOWS is 'true'.
+# The file is removed after a week (from 2026-11-23) if nothing needed it. Map: doc/infra/GITHUB.md.
 name: FSN store production write (cohort)
 
 # Manual only. PRODUCTION WRITE: dispatch only on the founder's typed go-ahead (scrooner-87 session).
@@ -88,6 +91,7 @@ env:
 
 jobs:
   seed:
+    if: vars.ALLOW_RETIRED_WORKFLOWS == 'true'
     name: Preflight and seed concept rules
     runs-on: ubuntu-latest
     timeout-minutes: 20
