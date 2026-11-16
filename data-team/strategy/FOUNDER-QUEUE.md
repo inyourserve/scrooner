@@ -5,6 +5,8 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
+- **Proof rule resolver_beats_combined** (branch `proof/resolver-wins-over-combined`, b501fd23; ONE-PATH: the resolver decision is the single source). When the resolver's structural row holds a cell, an older company_tag_map "combined" status no longer vetoes it; the cell is still checked against the filing's own line. It is a rule-scoped change (only cells a combined row spans are re-proved, no global re-prove). It lifts the veto on 70 open cells; 52 of them already show the resolver's value (AMGN, ANET, AAPL, ABBV, PANW, CAT, COST).
+  - Sentence: "I approve the resolver_beats_combined proof rule (branch proof/resolver-wins-over-combined) for merge to main."
 - **Proof rules stated_zero and text_stated** (branch `proof/stated-zero-2026-11-16`, head 39db00aa, CI green run 43819412338). A cell whose value the filing states in words is PROVEN when the resolver row carries the exact quote, locator, accession and a matching period. A stated zero needs the value to be 0; a text-stated value must be nonzero and equal the stated figure. These are two new rules under the rule-scoped proof system, so only those cells are re-proved (no global re-prove). Serving and display are already on main (3b83973a, edf2cfa1); Ritwik samples these cells in every certification. First cells: MCK R&D FY2021-26.
   - Sentence: "I approve the stated_zero and text_stated proof rules (branch proof/stated-zero-2026-11-16) for merge to main."
 0a. **Apply the pending migration set 0124-0128 to the dev database** (Data Engineer, 2026-11-16). One approval for the whole set; 0127 is dropped (listed in `pipeline/db/migrations/SKIPPED.txt`).
