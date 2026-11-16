@@ -265,6 +265,7 @@ def printed_zero_inferred(rows, filings, compfacts, memberfacts, roles):
             out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{p[1]}:{p[2]}", label=p[7])
     return out
 
+CUSTOM_AMORT = re.compile(r'(?i)^AmortizationOf\w*Intangible\w*$')   # a filer's own amortization-of-intangibles element (Dhairya 2026-11-16, CRM)
 LOCATION_AXES = ('IncomeStatementLocation', 'StatementOfIncomeLocationBalance', 'FiniteLivedIntangibleAssetsByMajorClass')   # CSCO 2014-16, 2022 put the location members on the class axis
 LOCATION_NAME = re.compile(r'(?i)cost|expense|sales|revenue|charges|operating')   # on the class axis every member must name a location (WFC: asset classes)
 
@@ -275,10 +276,13 @@ def amortization_location_total(notefacts, memberfacts):
     serves it when the face line it mapped is smaller (CSCO prints the operating-expense part only)."""
     out = {}
     for a, raw in memberfacts.items():
-        by = {}
+        by, cust = {}, {}
         for t, q, v, seg in _facts(raw, 4):
             m = re.fullmatch(r'(\w+)=(?:[\w-]+:)?(\w+);', seg)
-            if t == 'AmortizationOfIntangibleAssets' and int(q) == 4 and m and m.group(1) in LOCATION_AXES:
+            if (t == 'AmortizationOfIntangibleAssets' or CUSTOM_AMORT.match(t)) and int(q) == 4 and m and m.group(1) in LOCATION_AXES:
+                if t != 'AmortizationOfIntangibleAssets':
+                    if m.group(1) != 'IncomeStatementLocation': continue
+                    cust.setdefault(t, {})[m.group(2)] = D(v); continue
                 if m.group(1) == 'FiniteLivedIntangibleAssetsByMajorClass' and not LOCATION_NAME.search(m.group(2)):
                     by.setdefault(m.group(1), {})['__class__'] = None; continue
                 by.setdefault(m.group(1), {})[m.group(2)] = D(v)
@@ -294,6 +298,10 @@ def amortization_location_total(notefacts, memberfacts):
                 s_ = sum(d.values())
                 if s_ in {D(v) for t, q, v, seg in _facts(raw, 4) if t == 'AmortizationOfIntangibleAssets' and int(q) == 4}:
                     out[a] = dict(value=s_, parts=d, total_member=None, axis=ax, corroborated=True); break   # PM FY2022: the class-axis 159 = 58 + 101
+        if a not in out and und is None and not by and len(cust) == 1:
+            t, d = next(iter(cust.items()))
+            if len(d) >= 2:   # CRM FY2018+: crm:AmortizationOfPurchasedIntangiblesFromBusinessCombinations by IncomeStatementLocation only (440 + 352)
+                out[a] = dict(value=sum(d.values()), parts=d, total_member=None, axis='IncomeStatementLocation', tag=t)
     return out
 
 
@@ -506,3 +514,25 @@ def apply_filer_errors(filings, notefacts, errs):
                     x[2] = str(e['printed']); parts[i] = '|'.join(x); hit.add(a)
             notefacts[a] = '~'.join(parts)
     return hit
+
+
+def quarterly_dps(notefacts, compfacts, filings):
+    """Dhairya 2026-11-16 (C, SYK; the 11-04 Q4 decision): annual dividends per share = the sum of the four quarterly DPS facts (qtrs 1) the
+    SAME filing reports for its fiscal year, when all four are present and the filing has no annual fact. {accession: dict(tag, value, parts)}."""
+    out = {}
+    for f in filings:
+        a = f['a']; per = date.fromisoformat(f['p'])
+        q = {}
+        for raw in (notefacts.get(a), compfacts.get(a)):
+            for x in (raw or '').split('~'):
+                p = x.split('|')
+                if len(p) >= 3 and p[0].startswith('CommonStockDividendsPerShare') and p[1] == '1':
+                    dd = date.fromisoformat(p[3]) if len(p) > 3 else per
+                    if 0 <= (per - dd).days < 360: q.setdefault(p[0], {})[dd] = D(p[2])
+        annual = {x.split('|')[0] for x in (notefacts.get(a) or '').split('~') if x.startswith('CommonStockDividendsPerShare') and x.split('|')[1:2] == ['4']}
+        if annual: continue
+        for t in ('CommonStockDividendsPerShareDeclared', 'CommonStockDividendsPerShareCashPaid'):
+            d = q.get(t, {})
+            if len(d) == 4 and per in d:
+                out[a] = dict(tag=t, value=sum(d.values()), parts={k.isoformat(): v for k, v in sorted(d.items())}); break
+    return out

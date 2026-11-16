@@ -405,3 +405,44 @@ def test_a_gap_year_inside_the_run_gets_rows_from_the_next_10k_columns():
     # a year an own 10-K covers never gets a second row
     filings.append(dict(cik='9', a='A21', p='2021-01-30'))
     assert standard_inputs.before_first_10k_rows(rows, filings, comp, start='2014-01-01') == []
+
+
+# ---- Dhairya 2026-11-16: note data points with a filer's own element; quarterly DPS
+def test_custom_interest_paid_note_element_serves_and_flags_net_of_interest_received():
+    # QCOM FY2016 note: qcom:Interestpaidnetofinterestreceived 282
+    R = next(r for r in resolve_all.ROLES if r['data_point'] == 'cash_paid_for_interest')
+    f = filing([('IS', 'Revenues', 'Revenues', 100)]); L, arcs = resolve.parse(f)
+    r = resolve_all.role(f, L, arcs, {('Interestpaidnetofinterestreceived', 4): D(282)}, R)
+    assert r['status'] == 'mapped' and r['value'] == D(282) and 'net_of_interest_received' in r['flags']
+    # a component (ANET interest on notes payable, PANW contractual interest) is never the whole figure
+    for t in ('InterestPaidNotesPayable', 'InterestPaidContractualInterest', 'InterestPaidLeaseFinancingObligation'):
+        assert resolve_all.role(f, L, arcs, {(t, 4): D(3)}, R)['status'] == 'not_presented'
+
+
+def test_any_element_named_for_a_note_data_point_blocks_proven_absence():
+    assert not _absent([('IS', 'Revenues', 'Revenues', 100)], notes='InterestPaidNotesPayable|4|3639000')
+    assert _absent([('IS', 'Revenues', 'Revenues', 100)], notes='InterestExpense|4|5')
+
+
+def test_custom_amortization_element_by_location_is_the_location_total():
+    # CRM FY2020: crm:AmortizationOfPurchasedIntangiblesFromBusinessCombinations, CostOfSales 440 + SellingAndMarketingExpense 352
+    import standard_inputs
+    mf = {'A20': 'AmortizationOfPurchasedIntangiblesFromBusinessCombinations|4|440|IncomeStatementLocation=CostOfSales;~'
+                 'AmortizationOfPurchasedIntangiblesFromBusinessCombinations|4|352|IncomeStatementLocation=SellingAndMarketingExpense;'}
+    x = standard_inputs.amortization_location_total({}, mf)['A20']
+    assert x['value'] == 792 and x['tag'] == 'AmortizationOfPurchasedIntangiblesFromBusinessCombinations'
+    # a standard AmortizationOfIntangibleAssets location set wins over a custom one
+    mf['A20'] += '~AmortizationOfIntangibleAssets|4|500|IncomeStatementLocation=CostOfSales;~AmortizationOfIntangibleAssets|4|292|IncomeStatementLocation=OperatingExpense;'
+    assert 'tag' not in standard_inputs.amortization_location_total({}, mf).get('A20', {})
+
+
+def test_annual_dps_is_the_sum_of_four_quarterly_facts_of_the_same_filing():
+    # C FY2023: 0.51 x 2 + 0.53 x 2 = 2.08, no annual fact
+    import standard_inputs
+    f = [dict(a='A23', p='2023-12-31')]
+    nf = {'A23': 'CommonStockDividendsPerShareDeclared|1|0.53'}
+    cf = {'A23': 'CommonStockDividendsPerShareDeclared|1|0.51|2023-03-31~CommonStockDividendsPerShareDeclared|1|0.51|2023-06-30~CommonStockDividendsPerShareDeclared|1|0.53|2023-09-30'}
+    x = standard_inputs.quarterly_dps(nf, cf, f)['A23']
+    assert x['value'] == D('2.08') and len(x['parts']) == 4
+    assert 'A23' not in standard_inputs.quarterly_dps({'A23': nf['A23'] + '~CommonStockDividendsPerShareDeclared|4|2.08'}, cf, f)   # an annual fact exists
+    assert 'A23' not in standard_inputs.quarterly_dps(nf, {'A23': cf['A23'].rsplit('~', 1)[0]}, f)   # only three quarters

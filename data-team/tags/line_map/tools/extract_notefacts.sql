@@ -45,16 +45,16 @@ company_filings as (
 ),
 fl as (select id, accession, period from company_filings where form in ('10-K','20-F','40-F') and period>='2014-06-01'),
 tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
-tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'NotesReceivableNet' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' or tag ~ '^(InterestExpense\w*|InterestAndDebtExpense|FinancingInterestExpense)$' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
+tgm as (select id, tag from fsn.tag where (custom and tag ~* '^AmortizationOf\w*Intangible\w*$') or not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'NotesReceivableNet' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' or tag ~ '^(InterestExpense\w*|InterestAndDebtExpense|FinancingInterestExpense)$' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
-  where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
+  where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and (v.qtrs in (0,4) or (v.qtrs=1 and t.tag ~ '^CommonStockDividendsPerShare')) and v.value is not null
   group by 1),
 mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,d.segments),'~') mvals
   from fsn.value v join fl on fl.id=v.filing_id join tgm t on t.id=v.tag_id join fsn.dim d on d.id=v.dim_id
   where v.dim_id<>0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
     and (d.segments ~ '^(EquityComponents|RelatedPartyTransactionsByRelatedParty|Scenario)=[^;=]+;$'
-         or (t.tag='AmortizationOfIntangibleAssets' and d.segments ~ '^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLivedIntangibleAssetsByMajorClass)=[^;=]+;$')
+         or ((t.tag='AmortizationOfIntangibleAssets' or t.tag ~* '^AmortizationOf\w*Intangible\w*$') and d.segments ~ '^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLivedIntangibleAssetsByMajorClass)=[^;=]+;$')
          or (t.tag='PaymentsForRepurchaseOfCommonStock' and v.qtrs=4 and d.segments ~ '^ClassOfStock=[^;=]+;$')
          or (t.tag='NotesReceivableNet' and v.qtrs=0 and d.segments ~ '^\w*FinancingReceivable\w*=[^;=]+;$')   -- AXP 'Financing receivables, net' by class (ruling 2026-11-16)
          or (t.tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' and v.qtrs=4 and d.segments ~ '^ConsolidatedEntities=[^;=]+;$')
@@ -64,7 +64,7 @@ mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
   group by 1),
 cmp as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,v.ddate::text),'~') cvals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
-  where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and v.qtrs in (0,4) and v.value is not null
+  where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and (v.qtrs in (0,4) or (v.qtrs=1 and t.tag ~ '^CommonStockDividendsPerShare' and v.ddate>fl.period-interval '1 year')) and v.value is not null
   group by 1),
 zl as (select fl.accession a, string_agg(concat_ws('|',t.tag,l.stmt,l.report,l.line,translate(coalesce(l.plabel,''),'|~','/-')),'~') zlines
   from fl join fsn.line l on l.filing_id=fl.id and l.stmt in ('BS','IS','CF') join tg t on t.id=l.tag_id

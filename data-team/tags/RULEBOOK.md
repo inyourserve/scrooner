@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .53, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .54, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -267,6 +267,10 @@ Format: `ID | rule | code | test | date / source`.
 | X43 | A combined comprehensive_income cell (own filing prints only CI including NCI) takes the parent figure ComprehensiveIncomeNetOfTax a later 10-K prints for the year (si.COMBINED_YIELDS_TO) | si.comparative_fill | pr4::test_combined_ci_including_nci_takes_the_later_parent_figure | Dhairya ruling 2026-11-16 (never hide a year a later filing prints); commit .53 |
 | X44 | A year inside the company's run with no annual report of its own in the inputs gets one row per data point, filled from the next 10-K's columns (MRVL FY2021: predecessor's last 10-K not in FSN) | si.before_first_10k_rows | pr4::test_a_gap_year_inside_the_run_gets_rows_from_the_next_10k_columns | commit .53 |
 | X45 | Input contract: a company's filings come from the shared company_filings(company_id) CTE (common/company_filings.py: own CIK minus exclude windows, plus predecessor CIKs within their windows, the successor winning a shared period), embedded in every extract SQL; a guard test blocks raw-CIK filters. A pre-combination shell 10-K under the successor CIK (Linde plc FY2017) needs an exclude window so the predecessor's report wins | extract*.sql (company_filings CTE), core.company_history_source | Engineering guard test (bd6614ea) | Dhairya 2026-11-16, founder direction; Engineering bd6614ea |
+| X46 | A note data point (cash_paid_for_interest, amortization_of_intangibles) takes the filer's own undimensioned element named for it when exactly one exists and its name carries no component qualifier (lease, contractual, notes, payable, excluding, convertible, debt, financing, ...): QCOM qcom:Interestpaidnetofinterestreceived, flag custom_note_element;net_of_interest_received | ra.role (NOTE_NAME_RX, NOTE_NAME_NOT) | pr4::test_custom_interest_paid_note_element_serves_and_flags_net_of_interest_received | Dhairya 2026-11-16 (filing check: 6 wrong note hides); commit .54 |
+| X47 | Proven absence of a note data point also needs no element named for it anywhere in the filing, component or not (ANET InterestPaidNotesPayable, PANW InterestPaidContractualInterest, AMZN: open, never hidden) | ra.apply_absent_in_own_filing (NOTE_NAME_RX) | pr4::test_any_element_named_for_a_note_data_point_blocks_proven_absence | Dhairya 2026-11-16 (note data points need positive proof of absence, custom tags included); commit .54 |
+| X48 | Amortization by income-statement location from the filer's own amortization-of-intangibles element when no standard location set or undimensioned fact exists (CRM FY2018+: crm:AmortizationOfPurchasedIntangiblesFromBusinessCombinations 440 + 352); the extract carries those custom location members | si.amortization_location_total (CUSTOM_AMORT), extract_notefacts.sql tgm/mem | pr4::test_custom_amortization_element_by_location_is_the_location_total | Dhairya 2026-11-16 (CRM); commit .54 |
+| X49 | Annual dividends per share = the sum of the four quarterly DPS facts (qtrs 1) the same filing reports for its fiscal year, only when no annual fact exists; flag quarterly_sum. The extract carries the quarterly DPS facts | si.quarterly_dps, ra main; extract_notefacts.sql own/cmp | pr4::test_annual_dps_is_the_sum_of_four_quarterly_facts_of_the_same_filing | Dhairya 2026-11-16 (C, SYK), the 11-04 Q4 decision; commit .54 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 
