@@ -796,3 +796,7 @@
 - ~ SalesRevenueServicesNet: served_cells
 - ~ TranslatedEarningsContractGainLossNet: served_cells
 - ~ UnusualOrInfrequentItemOperating: served_cells
+
+## 2026-11-16 (resolver-all110-.77): 2 element changes, 27999 rows, coverage 64.7%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ InvestmentIncomeNonoperating: rule_id
