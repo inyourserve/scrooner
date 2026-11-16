@@ -146,3 +146,65 @@ def test_the_embedded_sql_text_is_the_same_rule(world):
         (int(S),),
     ).fetchall()
     assert {r[0] for r in rows} == _acc(conn, ids["S"], "core")
+
+
+# ---- shell successor reports (Linde FY2017: 15 valued face lines against Praxair's 83) -----------------------------
+SH_S, SH_P = "0003333333", "0004444444"
+
+
+def _faces(conn, acc, n):
+    """n valued BS face lines on the filing (an instant at its period)."""
+    fid, period = conn.execute("select id, period from fsn.filing where accession = %s", (acc,)).fetchone()
+    for i in range(n):
+        tag = conn.execute(
+            "insert into fsn.tag (tag, version, custom, abstract) values (%s, 'us-gaap/2017', false, false) returning id",
+            (f"T{acc}{i}",),
+        ).fetchone()[0]
+        conn.execute(
+            "insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s, 2, %s, 'BS', %s)", (fid, i, tag)
+        )
+        conn.execute(
+            "insert into fsn.value (filing_id, tag_id, ddate, qtrs, uom, dim_id, value) values (%s, %s, %s, 0, 'USD', 0, 1)",
+            (fid, tag, period),
+        )
+
+
+@pytest.fixture
+def shell_world(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = conn.execute(
+            "insert into core.company (cik, company_name, fiscal_year_end) values (%s, 'SH', '1231') returning id", (SH_S,)
+        ).fetchone()[0]
+        conn.execute(
+            "insert into core.company_history_source (company_id,source_cik,relation,source_name,valid_from,valid_to,reason) "
+            "values (%s,%s,'predecessor','P','2014-01-01','2018-12-31','t')",
+            (cid, SH_P),
+        )
+        # FY2017: the successor's report is a shell (3 lines against 20); FY2016: a real one (18 against 20)
+        for acc, cik, period, n in (
+            ("SH-S17", SH_S, date(2017, 12, 31), 3),
+            ("SH-P17", SH_P, date(2017, 12, 31), 20),
+            ("SH-S16", SH_S, date(2016, 12, 31), 18),
+            ("SH-P16", SH_P, date(2016, 12, 31), 20),
+        ):
+            _fsn(conn, acc, cik, "10-K", period, cid)
+            _faces(conn, acc, n)
+            _core(conn, cid, acc, "10-K", period, cik)
+        conn.commit()
+        yield conn, cid
+
+
+def test_shell_successor_report_flips_the_winner_to_the_predecessor(shell_world):
+    conn, cid = shell_world
+    for source in ("fsn", "core"):
+        got = {f.accession: f for f in company_filings(conn, cid, source=source) if f.period == date(2017, 12, 31)}
+        assert set(got) == {"SH-P17"}, source
+        assert got["SH-P17"].via == "predecessor" and got["SH-P17"].reason == "shell_successor_report"
+
+
+def test_a_real_successor_report_still_wins_the_shared_period(shell_world):
+    conn, cid = shell_world
+    for source in ("fsn", "core"):
+        got = {f.accession: f for f in company_filings(conn, cid, source=source) if f.period == date(2016, 12, 31)}
+        assert set(got) == {"SH-S16"}, source  # 18 of 20 is not under 25%
+        assert got["SH-S16"].reason is None
