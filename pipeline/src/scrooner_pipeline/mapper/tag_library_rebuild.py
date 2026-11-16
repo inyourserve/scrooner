@@ -280,7 +280,10 @@ def parse_deprecations(
         rows = list(csv.DictReader(fh))
     if rows and "tag" in rows[0]:
         for r in rows:
-            out[r["tag"]] = ((r.get("deprecated_by") or None), (r.get("replaces") or None))
+            out[r["tag"]] = (
+                (r.get("deprecated_by") or None),
+                (r.get("replaces") or None),
+            )
         return out
     by: dict[str, str | None] = {}
     replaced: dict[str, list[str]] = {}

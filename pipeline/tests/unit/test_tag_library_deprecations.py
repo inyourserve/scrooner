@@ -1,7 +1,10 @@
 """parse_deprecations reads the FASB taxonomy deprecations file (element / replacement_element) that the
 company x tag x metric rebuild loads; the rebuild failed 9 runs on 2026-11-16 with KeyError 'tag'."""
 
-from scrooner_pipeline.mapper.tag_library_rebuild import DEPRECATIONS_CSV, parse_deprecations
+from scrooner_pipeline.mapper.tag_library_rebuild import (
+    DEPRECATIONS_CSV,
+    parse_deprecations,
+)
 
 
 def test_taxonomy_layout_gives_deprecated_by_and_replaces(tmp_path):
@@ -13,7 +16,10 @@ def test_taxonomy_layout_gives_deprecated_by_and_replaces(tmp_path):
         "ASU201501TransitionAbstract,2019,,,x,\n"
     )
     d = parse_deprecations(p)
-    assert d["SalesRevenueNet"] == ("RevenueFromContractWithCustomerExcludingAssessedTax", None)
+    assert d["SalesRevenueNet"] == (
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        None,
+    )
     assert d["ASU201501TransitionAbstract"] == (None, None)
     assert d["RevenueFromContractWithCustomerExcludingAssessedTax"] == (
         None,
@@ -29,4 +35,8 @@ def test_older_tag_layout_still_read(tmp_path):
 
 def test_committed_taxonomy_file_parses():
     d = parse_deprecations(DEPRECATIONS_CSV)
-    assert len(d) > 1000 and any(v[0] for v in d.values()) and any(v[1] for v in d.values())
+    assert (
+        len(d) > 1000
+        and any(v[0] for v in d.values())
+        and any(v[1] for v in d.values())
+    )
