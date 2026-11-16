@@ -25,6 +25,7 @@ Last full audit: [`GITHUB-INFRA-AUDIT-2026-11-16.md`](../../data-team/strategy/G
 |---|---|---|
 | `ci.yml` | `changes` job, then: Python tests on Postgres 16 with every migration applied (also lint and compile); Next.js lint, test and build; migrations, docs links and secret scans; advisory ruff, mypy and dependency audits | nothing |
 | `mind.yml` | tests and lint for the shared team memory (`mind/`) | nothing |
+| `migrations-pending-replay.yml` | on changes under `pipeline/db/**`: builds Postgres 16 from every committed migration, applies `pipeline/db/pending/*.sql` in numeric order, and smoke-SELECTs each created table or view and each added column (`scripts/ci/replay_pending_migrations.py`) | nothing (CI database only) |
 
 ### Scheduled
 

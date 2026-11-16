@@ -1,0 +1,61 @@
+name: Pending migrations replay
+
+# pipeline/db/pending/ holds migrations written ahead of their contiguous number (doc 53) that have never run anywhere.
+# This builds a clean Postgres 16 from every committed migration, applies each pending file in numeric order, runs the
+# committed-sequence check, and smoke-SELECTs every table, view and added column the pending files create. It never
+# touches a live database. (Requested by Dhairya 2026-11-16.)
+on:
+  push:
+    paths: ["pipeline/db/**", "scripts/ci/replay_pending_migrations.py", ".github/workflows/migrations-pending-replay.yml"]
+  pull_request:
+    paths: ["pipeline/db/**", "scripts/ci/replay_pending_migrations.py", ".github/workflows/migrations-pending-replay.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pending-replay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  replay:
+    name: Replay pending migrations on the committed schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: scrooner_test
+          POSTGRES_PASSWORD: scrooner_test
+          POSTGRES_DB: scrooner_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scrooner_test -d scrooner_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: scrooner_test
+      PGPASSWORD: scrooner_test
+      PGDATABASE: scrooner_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Committed migration sequence
+        run: python scripts/check_migrations.py
+      - name: Build the committed schema (Supabase-owned objects, then every committed migration)
+        run: |
+          set -euo pipefail
+          psql --set ON_ERROR_STOP=1 -q --file scripts/ci/bootstrap_supabase.sql
+          for migration in pipeline/db/migrations/*.sql; do
+            psql --set ON_ERROR_STOP=1 -q --file "$migration"
+          done
+      - name: Apply pending migrations in numeric order and smoke-test their objects
+        run: python scripts/ci/replay_pending_migrations.py pipeline/db/pending pipeline/db/migrations
