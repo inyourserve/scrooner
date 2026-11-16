@@ -33,6 +33,7 @@ from decimal import Decimal
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.dims import find_value_dim, split_part
@@ -397,6 +398,11 @@ class Shown:
     # the cell is a printed zero (ruling 2026-11-14): served as 0 with no fact id, from a line the own filing prints with
     # a dash or 0 (canonical_fact family company_tag_map:printed_zero); the claim's evidence accession is `accession`
     printed_zero: bool = False
+    # the cell is a stated zero (ruling 2026-11-16): served as 0 with no fact id from a zero the filing STATES for the
+    # period. Evidence from the resolver row: (quote, locator, accession, quote_period); None = the row is missing or
+    # invalid, so the cell is not proven.
+    stated_zero: bool = False
+    stated_zero_evidence: tuple[str, str, str, str] | None = None
     # (combined line tag, spanned concept names) of the company's 'combined' rows that span this data point in this
     # era: the data point is split from a note, and the split parts must sum to that printed combined line
     # (founder decision 2026-11-16; proof/identities._check_splits)
@@ -1079,6 +1085,55 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     )
 
 
+def stated_zero_problem(shown: Shown) -> str | None:
+    """Why a stated_zero cell is not proven, or None. It needs the value 0 and the exact quote, the section locator, the
+    accession and a quote_period that is the cell's own period (a zero inferred from silence, or a sentence about
+    another period, proves nothing). Pure."""
+    ev = shown.stated_zero_evidence
+    if shown.value != 0:
+        return "the value is not 0"
+    if ev is None:
+        return "no valid stated_zero evidence row (quote, locator, accession, period)"
+    quote, locator, accession, qperiod = ev
+    if not quote.strip():
+        return "no quoted sentence"
+    if not locator.strip():
+        return "no section locator"
+    if not accession.strip():
+        return "no accession"
+    try:
+        qp = date.fromisoformat(qperiod)
+    except ValueError:
+        return "no quote period"
+    if not fsn_end_matches(qp, shown.period_end):
+        return f"the quote speaks for {qp}, the cell is {shown.period_end}"
+    return None
+
+
+def prove_stated_zero(shown: Shown, p: Proof) -> Proof:
+    """Rule `stated_zero` (proof/rules.py): PROVEN when the filing's own quoted statement of the zero is present for the
+    cell's period; DISAGREE (stated_zero_evidence_incomplete) otherwise."""
+    why = stated_zero_problem(shown)
+    if why or shown.stated_zero_evidence is None:
+        p.verdict, p.reason_code = DISAGREE, "stated_zero_evidence_incomplete"
+        p.reason_text = f"served as a stated zero but {why}"
+        p.checks["stated_zero"] = {"status": "fail", "why": why}
+        return p
+    quote, locator, accession, qperiod = shown.stated_zero_evidence
+    p.verdict, p.reason_code = PROVEN, None
+    p.position_value = Decimal(0)
+    p.position_accession = accession
+    p.checks["stated_zero"] = {
+        "status": "pass",
+        "accession": accession,
+        "locator": locator,
+        "quote": quote,
+        "quote_period": qperiod,
+    }
+    p.reason_text = f"the filing states the zero for {qperiod}: {quote}"
+    return p
+
+
 def printed_zero_proven(shown: Shown) -> bool:
     """A printed_zero cell holds only the value 0, never another number. Pure."""
     return shown.printed_zero and shown.value == 0
@@ -1118,6 +1173,8 @@ def _prove_cell(
     prior_structure: FilingStructure | None = None,
 ) -> Proof:
     p = Proof(shown=shown, verdict=UNCHECKED, fsn_set=fsn_set)
+    if shown.stated_zero:
+        return prove_stated_zero(shown, p)
     if shown.data_point_name not in EXPECTED and shown.claim is None:
         p.reason_text = (
             "no company_tag_map claim for this cell and no hand expectation: "

@@ -30,7 +30,7 @@ from scrooner_pipeline.common.authority import (
 )
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fdf
-from scrooner_pipeline.common.fsn_dates import era_holds
+from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
 from scrooner_pipeline.proof.fsn import fsn_ddate
 from scrooner_pipeline.proof.identities import failing_unlifted, load_filing_checks
@@ -68,6 +68,46 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
 
 
 PRINTED_ZERO_FAMILY = "company_tag_map:printed_zero"
+STATED_ZERO_FAMILY = "company_tag_map:stated_zero"
+
+
+def stated_zero_evidence(
+    conn: psycopg.Connection, company_id: int, name: str, end: date
+) -> tuple[str, str, str, str] | None:
+    """(quote, locator, accession, quote_period) of the VALID stated_zero resolver row of this cell (same company,
+    data point, period), the latest file wins; None when there is none (the cell is then not proven). Reads the
+    resolver CSV through the loader's own validation, never the DB (the quote is not stored in canonical_fact)."""
+    from scrooner_pipeline.mapper import docmap_loader as dl
+    from scrooner_pipeline.mapper import structural_direct as sd
+    from scrooner_pipeline.mapper import structural_loader as sl
+
+    path = sd.resolver_path()
+    if path is None:
+        return None
+    with conn.cursor() as cur:
+        cur.execute("select cik from core.company where id = %s", (company_id,))
+        row = cur.fetchone()
+    if not row or not row[0]:
+        return None
+    best = None
+    for c in sd._claims_by_cik(str(path)).get(str(row[0]).zfill(10), ()):
+        if (
+            sl.is_stated_zero(c.decision, c.flags)
+            and dl.served_concept(c.data_point, {name}) == name
+            and fsn_end_matches(c.period_end, end)
+            and sd.stated_zero_claim_problem(c) is None
+        ):
+            if best is None or (c.file_rank, c.filed, c.accession) >= (
+                best.file_rank,
+                best.filed,
+                best.accession,
+            ):
+                best = c
+    return (
+        (best.quote, best.locator, best.accession, best.quote_period) if best else None
+    )
+
+
 CORRECTION_FAMILIES = (
     "company_tag_map:" + fxe.VALUE_SOURCE,
     "company_tag_map:" + fdf.VALUE_SOURCE,
@@ -653,6 +693,10 @@ def load_shown(
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
         pz = family == PRINTED_ZERO_FAMILY and Decimal(value) == 0
+        sz = family == STATED_ZERO_FAMILY
+        sz_ev = stated_zero_evidence(conn, company_id, name, end) if sz else None
+        if sz and sz_ev:
+            accession = sz_ev[2]
         if (
             pz or family in CORRECTION_FAMILIES
         ) and accession is None:  # no fact id: the claim's evidence filing
@@ -794,6 +838,8 @@ def load_shown(
                 combined_splits=combined_splits_for(combined_rows, name, end),
                 zero_parts=zero_parts,
                 printed_zero=pz,
+                stated_zero=sz,
+                stated_zero_evidence=sz_ev,
             )
         )
     return out
