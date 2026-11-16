@@ -133,7 +133,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 240
     strategy:
-      fail-fast: true
+      # false (2026-11-16): run 43833278049 lost 7 healthy shards when shard 4 (Citigroup face) failed; the merge job
+      # still needs every shard, so a failure stops the merge, but the other shards finish and report their own CIKs.
+      fail-fast: false
       max-parallel: 12
       matrix:
         include: ${{ fromJSON(needs.plan.outputs.matrix) }}
