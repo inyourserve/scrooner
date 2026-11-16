@@ -1095,6 +1095,29 @@ BANK_ONLY = {'net_interest_income', 'total_interest_income', 'noninterest_income
 BANK_TEMPLATE_DPS = BANK_ONLY | {'provision_for_credit_losses', 'loans_net'}
 
 
+
+TEXT_OK = ('not_presented', 'no_role', 'open', 'no_value', 'missing')
+
+
+def apply_text_disclosures(rows, path=None):
+    """Amounts and explicit zeros the filing states only in prose (text_disclosure.py read -> rules/text_disclosures.csv, reviewed).
+    Fills a cell only when it has no XBRL fact and no face line (status in TEXT_OK, never mapped/component_sum/combined/not_in_template)
+    and the row's accession is the cell's own filing. XBRL always wins. Dhairya direction 2026-11-16."""
+    path = path or os.environ.get('TEXT_DISCLOSURES', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'text_disclosures.csv'))
+    if not os.path.exists(path):
+        return rows
+    T = {(str(t['cik']).lstrip('0'), t['data_point'], t['period_end'], t['accession']): t for t in csv.DictReader(open(path)) if t['decision'] == 'mapped'}
+    for r in rows:
+        t = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end']), r.get('accession')))
+        if not t or r.get('status') not in TEXT_OK:
+            continue
+        q = t['quote'].replace('"', "'")
+        r.update(status='mapped', value=D(t['value']), tags='', r_page='', column='own',
+                 nodes=f'text[{t["section"]}@{t["accession"]}]: "{q}"',
+                 why=f'{t["value_source"]}: the filing states it in prose ({t["section"]}); no XBRL fact or face line for this cell')
+        r['flags'] = t['value_source']
+    return rows
+
 def apply_bank_template(rows, filings):
     """Dhairya ruling 2026-11-16: bank data points (BANK_TEMPLATE_DPS) belong to the bank template only. A company is in the bank template
     when most of its annual reports print a bank income statement (bank_face: AXP, BAC, C, COF, GS, JPM, MS, SCHW, WFC). For every other
@@ -1398,6 +1421,7 @@ if __name__ == '__main__':
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     rows = apply_bank_template(rows, filings)
+    rows = apply_text_disclosures(rows)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

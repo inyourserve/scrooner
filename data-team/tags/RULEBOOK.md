@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .57, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .58, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -279,6 +279,7 @@ Format: `ID | rule | code | test | date / source`.
 | X55 | Bank template: provision_for_credit_losses, loans_net, deposits, net_interest_income, noninterest_income, noninterest_expense and total_interest_income belong to banks only (most annual reports print a bank income statement: AXP, BAC, C, COF, GS, JPM, MS, SCHW, WFC). Every other company's cells are not_in_template, never served (captive finance CAT/DE/GE, telecom VZ, tech CSCO, REIT WELL, insurer CB): 99 values withdrawn, 8,400 cells OUT | ra.apply_bank_template | pr4::test_bank_data_points_are_out_of_template_outside_the_bank_template | Dhairya ruling 2026-11-16; commit .57 |
 | X56 | MO/PM: excise printed between revenue and gross profit is part of cost of revenue (the filer's own gross-profit arithmetic holds); no change | resolve.py core (GrossProfit -1 children) | rvs (core) | Dhairya ruling 2026-11-16 (keeps ruling A) |
 | X57 | FASB taxonomy gaps are our own rulings: SalesRevenueNet (deprecated 2018, no successor named) maps to revenue; CapitalLeaseObligations* (deprecated 2026, no link to FinanceLeaseLiability) counts in total_debt as the pre-842 lease liability | roles.csv revenue; total_debt.py | rvs, cap | Dhairya ruling 2026-11-16, citing data-team/tags/taxonomy/deprecations.csv |
+| X58 | Text-stated values: an amount or explicit zero the 10-K states only in prose (Item 1, 6/7/7A, notes) fills a cell that has no XBRL fact and no face line, from the cell's own filing only. Decision mapped, flag text_stated or stated_zero, nodes `text[section@ACC]: "exact sentence"`. The subject must be the company ('we', 'the Company'), never one facility or program; 'other than/except/excluding' and any year that cannot be paired = open; silence = open. Reader text_disclosure.py (sec.gov, 2 requests a second); rows reviewed into rules/text_disclosures.csv. First rows: MCK R&D FY2021-26 (Item 1, $74M-$103M), MRVL total_debt FY2015-17 = 0 (Item 7A 'we did not have any outstanding debt'); V FY2014 stays open (only the commercial paper program is stated zero) | ra.apply_text_disclosures; text_disclosure.read_cell | pr4::test_text_disclosure_fills_only_open_cells_of_the_same_filing, pr4::test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros | Dhairya direction 2026-11-16; commit .58 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

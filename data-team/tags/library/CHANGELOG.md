@@ -627,3 +627,5 @@
 - ~ ProvisionForLoanLeaseAndOtherLosses: served_cells
 - ~ ProvisionForLoanLossesExpensed: served_cells
 - ~ SalesRevenueNet: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.58): 0 element changes, 27999 rows, coverage 63.1%

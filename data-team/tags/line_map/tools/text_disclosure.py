@@ -1,0 +1,183 @@
+"""Text-disclosure reader: amounts and explicit zeros a 10-K states only in prose (Dhairya direction 2026-11-16).
+
+    python3 text_disclosure.py fetch CELLS.csv CACHE_DIR          (sec.gov only, <= 2 requests a second, SEC_USER_AGENT)
+    python3 text_disclosure.py read  CELLS.csv CACHE_DIR OUT.csv
+
+CELLS.csv: cik,ticker,data_point,period_end,accession (the OPEN cells to try; the caller passes only cells with no XBRL fact
+and no face line, so XBRL always wins). OUT.csv: one row per cell with decision mapped + value_source text_stated|stated_zero
++ value, or decision open + why; section (item1|item1a|item6|item7|item7a|item8_notes|other) and the exact quoted sentence.
+
+Rules (never infer from silence; ambiguous wording stays open):
+  research_and_development  an R&D expense sentence with $ amounts; the amount must pair with the cell's fiscal year:
+                            one amount and that year named, or N amounts and N years in the same order. Otherwise open.
+  total_debt (zero)         'did not have any (outstanding) debt/borrowings', 'had no (outstanding) debt/borrowings',
+                            'no debt outstanding' + the cell's balance-sheet date or fiscal year in the same sentence.
+  dividends_paid (zero)     'did not (declare or) pay (any) (cash) dividends' / 'have never (declared or) paid (any) (cash) dividends'
+                            / 'have not (declared or) paid (any) (cash) dividends' in the filing for that fiscal year.
+  Any 'other than', 'except', 'excluding', 'aside from', 'apart from' in a zero sentence -> open (ambiguous).
+"""
+import csv, html, json, os, re, sys, time, urllib.request
+from decimal import Decimal
+
+UA = os.environ.get('SEC_USER_AGENT', '')
+MIN_INTERVAL = float(os.environ.get('TEXT_MIN_INTERVAL', '0.5'))
+_last = [0.0]
+
+
+def get(url):
+    assert url.startswith('https://www.sec.gov/'), url
+    assert UA, 'set SEC_USER_AGENT'
+    wait = _last[0] + MIN_INTERVAL - time.time()
+    if wait > 0:
+        time.sleep(wait)
+    for i in range(4):
+        try:
+            _last[0] = time.time()
+            with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Encoding': 'identity'}), timeout=60) as r:
+                return r.read().decode('utf-8', 'replace')
+        except Exception:
+            if i == 3:
+                raise
+            time.sleep(2 * (i + 1))
+
+
+def primary_doc(cik, acc):
+    idx = get(f'https://www.sec.gov/Archives/edgar/data/{int(cik)}/{acc.replace("-", "")}/{acc}-index.htm')
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', idx, re.S | re.I):
+        cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S | re.I)
+        if len(cells) >= 4 and re.sub(r'<[^>]+>|\s', '', cells[3]).upper() in ('10-K', '10-K405', '10-KT', '20-F', '40-F'):
+            m = re.search(r'href="([^"]+)"', cells[2], re.I)
+            if m:
+                href = m.group(1).replace('/ix?doc=', '')
+                return 'https://www.sec.gov' + href if href.startswith('/') else href
+    return None
+
+
+def to_text(doc):
+    doc = re.sub(r'(?is)<(script|style|ix:header)[^>]*>.*?</\1>', ' ', doc)
+    doc = re.sub(r'(?i)<br\s*/?>|</(p|div|tr|li|h\d|table)>', '\n', doc)
+    doc = html.unescape(re.sub(r'<[^>]+>', ' ', doc)).replace('\xa0', ' ')
+    return '\n'.join(re.sub(r'[ \t]+', ' ', ln).strip() for ln in doc.split('\n') if ln.strip())
+
+
+def sections(text):
+    """[(start, name)] from the 10-K item headings (the LAST heading of each name, so the table of contents loses)."""
+    marks = {}
+    for m in re.finditer(r'(?im)^\s*item\s*(1|1a|6|7|7a|8)\s*[.:\-—–]', text):
+        marks[m.group(1).lower()] = m.start()
+    names = {'1': 'item1', '1a': 'item1a', '6': 'item6', '7': 'item7', '7a': 'item7a', '8': 'item8_notes'}
+    return sorted((p, names[k]) for k, p in marks.items())
+
+
+def section_at(secs, pos):
+    name = 'other'
+    for p, n in secs:
+        if p <= pos:
+            name = n
+    return name
+
+
+def sentences(text):
+    for m in re.finditer(r'[^.\n]*(?:\.(?!\d)[^.\n]*)*?(?:\.(?=\s|$)|\n)', text):
+        s = m.group(0).strip()
+        if 20 < len(s) < 1200:
+            yield m.start(), s
+
+
+AMT = re.compile(r'\$\s?(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(million|billion|thousand)?', re.I)
+YR = re.compile(r'\b(?:fiscal(?: year)?\s*)?((?:19|20)\d{2})\b', re.I)
+SCALE = {'thousand': Decimal(1000), 'million': Decimal(10 ** 6), 'billion': Decimal(10 ** 9), None: Decimal(1)}
+AMBIG = re.compile(r'\b(other than|except|excluding|aside from|apart from|besides)\b', re.I)
+RD = re.compile(r'research and development|\bR&D\b', re.I)
+RD_EXP = re.compile(r'\b(expense|expenses|costs|spending|spent|expenditures)\b', re.I)
+# the subject must be the company itself ('we', 'the Company'), never one facility or program ("the 2020 Credit Facility had no borrowings")
+DEBT0 = re.compile(r"\b(we|the company)\s+(did not have any|had no|have no|has no|does not have any|do not have any)\s+(outstanding\s+)?"
+                   r"(debt|borrowings|indebtedness)\b", re.I)
+DIV0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|has never)\s+(declared?\s+(or|and)\s+)?(paid|pay)\s+"
+                  r"(any\s+)?(cash\s+)?dividends\b", re.I)
+RD_NOT = re.compile(r'\b(credits?|capitali[sz]ed|tax|carryforwards?|percent|%)', re.I)
+
+
+def fy_labels(period_end):
+    y, m = int(period_end[:4]), int(period_end[5:7])
+    return {str(y)} if m >= 6 else {str(y), str(y - 1)}   # Jan-May year ends: 'fiscal 2021' may name either calendar year
+
+
+def amount(a, unit):
+    return Decimal(a.replace(',', '')) * SCALE[unit.lower() if unit else None]
+
+
+def read_cell(text, cell):
+    dp, pe = cell['data_point'], cell['period_end']
+    fy = fy_labels(pe)
+    secs = sections(text)
+    found, ambiguous = [], []
+    for pos, s in sentences(text):
+        sec = section_at(secs, pos)
+        if dp == 'research_and_development' and RD.search(s) and RD_EXP.search(s) and not RD_NOT.search(s):
+            amts = AMT.findall(s)
+            yrs = [y for y in YR.findall(s)]
+            if not amts:
+                continue
+            uy = list(dict.fromkeys(yrs))
+            cand = [k for k, y in enumerate(uy) if y in fy]
+            if len(cand) > 1 and pe[:4] in uy and max(uy) == pe[:4]:
+                cand = [uy.index(pe[:4])]           # 'during 2021, 2020 and 2019' in the FY ending March 2021: 2021 is the filer's label
+            if len(amts) == 1 and len(uy) == 1 and len(cand) == 1:
+                found.append((amount(*amts[0]), sec, s))
+            elif len(amts) == len(uy) > 1 and len(cand) == 1 and re.search(r'\brespectively\b', s, re.I):
+                found.append((amount(*amts[cand[0]]), sec, s))
+            elif cand:
+                ambiguous.append((sec, s))
+        elif dp == 'total_debt' and DEBT0.search(s):
+            date_ok = any(y in s for y in fy) or re.search(re.escape(pe[:4]), s)
+            if AMBIG.search(s) or not date_ok:
+                ambiguous.append((sec, s)) if date_ok else None
+                continue
+            found.append((Decimal(0), sec, s))
+        elif dp == 'dividends_paid' and DIV0.search(s):
+            if AMBIG.search(s) or re.search(r'\bpreferred\b', s, re.I):
+                ambiguous.append((sec, s)); continue
+            found.append((Decimal(0), sec, s))
+    vals = {v for v, _, _ in found}
+    if len(vals) == 1:
+        v, sec, s = found[0]
+        return dict(decision='mapped', value_source='stated_zero' if v == 0 else 'text_stated', value=str(v), section=sec, quote=s,
+                    why=f'stated in the filing text ({sec})')
+    if len(vals) > 1:
+        return dict(decision='open', value_source='', value='', section=';'.join(sorted({x[1] for x in found})), quote=' || '.join(x[2] for x in found[:3]),
+                    why='text states different amounts: ' + ', '.join(str(v) for v in sorted(vals)))
+    if ambiguous:
+        return dict(decision='open', value_source='', value='', section=ambiguous[0][0], quote=ambiguous[0][1], why='ambiguous wording')
+    return dict(decision='open', value_source='', value='', section='', quote='', why='no explicit statement in the text')
+
+
+def fetch(cells_csv, cache):
+    os.makedirs(cache, exist_ok=True)
+    for c in csv.DictReader(open(cells_csv)):
+        p = os.path.join(cache, c['accession'] + '.txt')
+        if os.path.exists(p):
+            continue
+        url = primary_doc(c['cik'], c['accession'])
+        if not url:
+            print('no primary document', c['accession'], file=sys.stderr); continue
+        open(p, 'w').write(f'URL {url}\n' + to_text(get(url)))
+        print('fetched', c['ticker'], c['accession'], url)
+
+
+def read(cells_csv, cache, out_csv):
+    rows = []
+    for c in csv.DictReader(open(cells_csv)):
+        p = os.path.join(cache, c['accession'] + '.txt')
+        if not os.path.exists(p):
+            rows.append(dict(c, decision='open', value_source='', value='', section='', quote='', why='filing text not fetched')); continue
+        text = open(p).read()
+        rows.append(dict(c, **read_cell(text, c)))
+    with open(out_csv, 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'decision', 'value_source', 'value', 'section', 'quote', 'why'])
+        w.writeheader(); w.writerows({k: r.get(k, '') for k in w.fieldnames} for r in rows)
+    return rows
+
+
+if __name__ == '__main__':
+    {'fetch': lambda: fetch(*sys.argv[2:4]), 'read': lambda: read(*sys.argv[2:5])}[sys.argv[1]]()

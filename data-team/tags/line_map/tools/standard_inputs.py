@@ -472,7 +472,9 @@ def fsn_dropped_facts(path, memberfacts, notefacts):
     """rules/fsn_dropped_facts.csv: filing-checked facts the FSN set does not store (PM FY2022 R60 amortization by location). Added to
     the member facts (a segment) or the note facts (no segment) of the accession; returns the number added."""
     n = 0
-    if not path or not os.path.exists(path): return n
+    if not path: return n
+    if not os.path.exists(path):   # a wrong FSN_DROPPED_FACTS path silently dropped PM FY2022 amortization (2026-11-16): fail loudly
+        raise FileNotFoundError(f'fsn_dropped_facts file not found: {path}')
     for r in csv.DictReader(open(path)):
         if r['segment']:
             memberfacts[r['accession']] = '~'.join(x for x in (memberfacts.get(r['accession']), f"{r['tag']}|{r['qtrs']}|{r['value']}|{r['segment']}") if x)

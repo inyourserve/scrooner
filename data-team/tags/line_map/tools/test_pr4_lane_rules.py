@@ -511,3 +511,41 @@ def test_bank_data_points_are_out_of_template_outside_the_bank_template():
     resolve_all.apply_bank_template(rows, [ind, bank])
     assert rows[0]['status'] == 'not_in_template' and rows[0]['value'] is None
     assert rows[1]['status'] == 'mapped' and rows[2]['status'] == 'mapped'
+
+
+def test_text_disclosure_fills_only_open_cells_of_the_same_filing(tmp_path):
+    # MCK FY2021 R&D stated in Item 1 only; MRVL FY2015 'we did not have any outstanding debt'. XBRL always wins.
+    p = tmp_path / 't.csv'
+    p.write_text('cik,ticker,data_point,period_end,accession,decision,value_source,value,section,quote,why\n'
+                 '0000927653,MCK,research_and_development,2021-03-31,A1,mapped,text_stated,74000000,item1,"R&D expenses were $74 million",x\n'
+                 '0000927653,MCK,research_and_development,2022-03-31,A2,mapped,text_stated,70000000,item1,"q",x\n'
+                 '0000927653,MCK,total_debt,2021-03-31,A1,mapped,stated_zero,0,item7a,"q",x\n')
+    rows = [dict(cik='927653', data_point='research_and_development', period_end='2021-03-31', accession='A1', status='not_presented', value=None, flags='roles', why=''),
+            dict(cik='927653', data_point='research_and_development', period_end='2022-03-31', accession='OTHER', status='not_presented', value=None, flags='', why=''),
+            dict(cik='927653', data_point='total_debt', period_end='2021-03-31', accession='A1', status='component_sum', value=D(5), flags='total_debt', why='')]
+    resolve_all.apply_text_disclosures(rows, str(p))
+    assert rows[0]['status'] == 'mapped' and rows[0]['value'] == D(74000000) and rows[0]['flags'] == 'text_stated' and 'A1' in rows[0]['nodes']
+    assert rows[1]['status'] == 'not_presented'                     # another filing's text never fills this cell
+    assert rows[2]['value'] == D(5)                                 # XBRL wins
+
+
+def test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros():
+    import text_disclosure as td
+    mck = 'Item 1. Business\nResearch and Development: Research and development ("R&D") expenses were $74 million, $96 million, and $71 million during 2021, 2020, and 2019, respectively.\n'
+    assert td.read_cell(mck, dict(data_point='research_and_development', period_end='2021-03-31'))['value'] == '74000000'
+    assert td.read_cell(mck, dict(data_point='research_and_development', period_end='2020-03-31'))['decision'] == 'open'   # a prior year's label is not settled from this filing
+    credit = 'Item 7A. Market risk\nThe 2020 Credit Facility had no borrowings during 2021 and no amounts outstanding as of March 31, 2021.\n'
+    assert td.read_cell(credit, dict(data_point='total_debt', period_end='2021-03-31'))['decision'] == 'open'
+    mrvl = 'Item 7A. Market risk\nOur interest rate risk relates to our portfolio as we did not have any outstanding debt as of January 31, 2015.\n'
+    r = td.read_cell(mrvl, dict(data_point='total_debt', period_end='2015-01-31'))
+    assert r['value_source'] == 'stated_zero' and r['value'] == '0' and r['section'] == 'item7a'
+    other = 'Item 7A. Market risk\nWe did not have any outstanding debt other than finance leases as of January 31, 2015.\n'
+    assert td.read_cell(other, dict(data_point='total_debt', period_end='2015-01-31'))['decision'] == 'open'
+    silent = 'Item 7. MD&A\nWe manage liquidity carefully in fiscal 2015.\n'
+    assert td.read_cell(silent, dict(data_point='total_debt', period_end='2015-01-31'))['decision'] == 'open'
+
+
+def test_fsn_dropped_facts_missing_path_fails_loudly(tmp_path):
+    import pytest, standard_inputs
+    with pytest.raises(FileNotFoundError):
+        standard_inputs.fsn_dropped_facts(str(tmp_path / 'nope.csv'), {}, {})
