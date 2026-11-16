@@ -142,3 +142,42 @@ def test_doubled_timeout_is_capped_and_other_errors_are_not_retried(tmp_path):
         raise ValueError("not a timeout")
     with pytest.raises(ValueError):
         rx.run_dir(Conn([], fail=boom), str(tmp_path), regen=_regen)
+
+
+def _cf_batch(d, name, cik):
+    # the shape of the notes/face queries: the company_filings CTE selects filings f of `co`
+    (d / name).write_text(
+        "set statement_timeout='55s';\nwith company_filings as (select f.id from core.company co join fsn.filing f on true"
+        f" where co.cik::bigint in ({cik}) and true) select {cik} where cik::bigint in ({cik});"
+    )
+
+
+def test_period_slices_partition_the_company_filings_cte():
+    sql = "with c as (select 1 from x f where co.cik::bigint in (831001) and f.ok) select 1"
+    sl = rx.period_slices(sql, bounds=("2016-01-01", "2020-01-01"))
+    assert [b for b, _ in sl] == [(None, "2016-01-01"), ("2016-01-01", "2020-01-01"), ("2020-01-01", None)]
+    assert "in (831001) and f.period < date '2016-01-01' and f.ok" in sl[0][1]
+    assert "in (831001) and f.period >= date '2016-01-01' and f.period < date '2020-01-01' and" in sl[1][1]
+    assert sl[2][1].count("f.period") == 1 and "f.period >= date '2020-01-01'" in sl[2][1]
+    # not sliceable: no company_filings anchor (lines/bs queries) or more than one company
+    assert rx.period_slices("select 1 where cik::bigint in (1)") == []
+    assert rx.period_slices("where co.cik::bigint in (1,2)") == []
+
+
+def test_one_company_timing_out_alone_runs_per_period_slice(tmp_path):
+    # run 43833278049: Citigroup (831001) face timed out alone at 600s; the slices finish at the 900s ceiling
+    _cf_batch(tmp_path, "face-00.sql", "831001")
+    conn = Conn([("x", "1", "d")], fail=lambda q, t: "f.period" not in q)
+    counts = rx.run_dir(conn, str(tmp_path), regen=_regen)
+    assert counts == {"face": len(rx.SLICE_BOUNDS) + 1}  # one fake row per slice
+    r = json.loads((tmp_path / "retries.json").read_text())
+    assert r[0]["outcome"] == "ok_sliced" and r[0]["slice_timeout_s"] == 900 and len(r[0]["slices"]) == len(rx.SLICE_BOUNDS) + 1
+
+
+def test_a_slice_that_still_times_out_fails_naming_the_cik_and_writes_nothing(tmp_path):
+    _cf_batch(tmp_path, "face-00.sql", "831001")
+    conn = Conn([("x", "1", "d")], fail=lambda q, t: "f.period" not in q or "date '2018-01-01' and f.period <" in q)
+    with pytest.raises(SystemExit) as e:
+        rx.run_dir(conn, str(tmp_path), regen=_regen)
+    assert "CIK 831001" in str(e.value)
+    assert not (tmp_path / "face.jsonl").exists()

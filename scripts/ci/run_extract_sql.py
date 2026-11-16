@@ -27,6 +27,11 @@ from decimal import Decimal
 LEAD_SET = re.compile(r"\A\s*(?:--[^\n]*\n\s*)*(set\s+statement_timeout\s*=\s*'\d+s'\s*;)", re.I)
 MAX_TIMEOUT_S = 900
 RETRY_FLOOR_S = 600  # the single-CIK retry runs at least this long (still capped at MAX_TIMEOUT_S)
+# Last resort for one company that still times out alone (run 43833278049: Citigroup, CIK 831001, face at 600s): the query is
+# re-run per filing-period slice. Every output row of the four standard queries (lines, bs, notes, face) is one filing of `company_filings`, and whether
+# a filing belongs is decided per filing, so restricting `f.period` inside that CTE partitions the rows exactly.
+PERIOD_ANCHOR = re.compile(r"(where\s+co\.cik::bigint\s+in\s+\(\s*\d+\s*\))", re.I)
+SLICE_BOUNDS = ("2014-01-01", "2016-01-01", "2018-01-01", "2020-01-01", "2022-01-01", "2024-01-01")
 
 
 def _default(o):
@@ -80,6 +85,21 @@ def with_timeout(sql, secs):
     stmt = f"set statement_timeout='{secs}s';"
     m = LEAD_SET.match(sql)
     return sql[:m.start(1)] + stmt + sql[m.end(1):] if m else stmt + '\n' + sql
+
+
+def period_slices(sql, bounds=SLICE_BOUNDS):
+    """The single-company query split into filing-period slices [None, b0), [b0, b1), ..., [bn, None); [] when the query
+    has no `where co.cik::bigint in (<one cik>)` anchor (it cannot be sliced safely)."""
+    if len(PERIOD_ANCHOR.findall(sql)) != 1:
+        return []
+    edges = [None, *bounds, None]
+    out = []
+    for lo, hi in zip(edges, edges[1:]):
+        cond = "".join(
+            [f" and f.period >= date '{lo}'" if lo else "", f" and f.period < date '{hi}'" if hi else ""]
+        )
+        out.append(((lo, hi), PERIOD_ANCHOR.sub(lambda m: m.group(1) + cond, sql, count=1)))
+    return out
 
 
 def batch_ciks(sql):
@@ -152,6 +172,21 @@ def run_file(conn, path, out_path, append, regen=default_regen, retries=None):
                 dbl = min(max(base * 2, RETRY_FLOOR_S), MAX_TIMEOUT_S)
                 got, e3 = _attempt(conn, with_timeout(usql, dbl))
                 rec.update(retry_timeout_s=dbl, outcome='ok_doubled' if got is not None else 'failed')
+                if got is None and (slices := period_slices(usql)):
+                    # still too slow alone: run it per filing-period slice, each at the ceiling
+                    print(f'{name}: CIK {cik} times out alone at {dbl}s; running {len(slices)} period slices', flush=True)
+                    got, done = [], []
+                    for (lo, hi), ssql in slices:
+                        part, e4 = _attempt(conn, with_timeout(ssql, MAX_TIMEOUT_S))
+                        if part is None:
+                            got, e3 = None, e4
+                            rec.update(failed_slice=[lo, hi])
+                            break
+                        got += part
+                        done.append([lo, hi])
+                    rec.update(slices=done, slice_timeout_s=MAX_TIMEOUT_S)
+                    if got is not None:
+                        rec.update(outcome='ok_sliced')
                 retries.append(rec)
                 if got is None:
                     raise SystemExit(f'CIK {cik} ({name}) still times out at {dbl}s: {e3}')
