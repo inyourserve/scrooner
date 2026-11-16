@@ -7121,7 +7121,7 @@ PropertyPlantandEquipmentRetirementsandOther,0,1,2015-2016,,0,,,2,,0
 PropertyPlantandEquipmentandFinanceLeaseRightofUseAssetAccumulatedDepreciationandAmortization,0,3,2019-2020,,0,,PropertyPlantandEquipmentandFinanceLeaseRightofUseAssetafterAccumulatedDepreciationandAmortization(-) 3,3,,0
 PropertyPlantandEquipmentandFinanceLeaseRightofUseAssetafterAccumulatedDepreciationandAmortization,4,4,2019-2020,BS:4,4,"Property and equipment, net (2);Property, Plant, and Equipment and Finance Lease Right-of-Us (1);Net properties, plants and equipment (1)",Assets(+) 4,4,,1
 PropertyPlantandEquipmentandFinanceLeaseRightofUseAssetbeforeAccumulatedDepreciationandAmortization,0,3,2019-2020,,0,,PropertyPlantandEquipmentandFinanceLeaseRightofUseAssetafterAccumulatedDepreciationandAmortization(+) 3;PropertyPlantAndEquipmentNet(+) 1,3,,0
-PropertyPlantsAndEquipmentNet,0,0,,,0,,OtherAssets(+) 8,0,,0
+PropertyPlantsAndEquipmentNet,0,1,2014-2022,,0,,OtherAssets(+) 8,9,,0
 PropertyRoyaltyCurrent,0,0,,,0,,OtherLiabilitiesCurrent(+) 6,0,,0
 PropertyRoyaltyNoncurrent,0,0,,,0,,OtherLiabilitiesNoncurrent(+) 6,0,,0
 PropertySubjectToOrAvailableForOperatingLeaseAccumulatedDepreciation,0,0,,,0,,PropertySubjectToOrAvailableForOperatingLeaseNet(-) 5,0,,0

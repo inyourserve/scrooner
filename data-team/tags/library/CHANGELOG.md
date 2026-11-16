@@ -700,3 +700,9 @@
 - ~ CommonStockSharesIssued: data_point, served_cells
 - ~ TreasuryStockCommonShares: data_point, served_cells
 - ~ TreasuryStockShares: data_point, served_cells
+
+## 2026-11-16 (resolver-all110-.71): 4 element changes, 27999 rows, coverage 62.7%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ CommonStockDividendsPerShareDeclared: known_problems
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ PropertyPlantsAndEquipmentNet: data_point, rule_id, served_cells

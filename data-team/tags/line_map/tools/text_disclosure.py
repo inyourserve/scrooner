@@ -73,11 +73,16 @@ def to_text(doc):
     return '\n'.join(out)
 
 
+XREF = re.compile(r'(?i)\b(for a (more )?(complete|further|detailed)|see |refer to|discussed in|included in|of this (report|form))')
+
+
 def sections(text):
     """[(start, name)] from the 10-K item headings (the LAST heading of each name, so the table of contents loses)."""
     marks = {}
     for m in re.finditer(r'(?im)^\s*item\s*(1|1a|5|6|7|7a|8)\s*[.:\-—–][^\n]*', text):
         h = re.sub(r'\s+', ' ', m.group(0)).strip()
+        if XREF.search(h):                                # 'Item 1A. Risk Factors for a more complete discussion of risks.' wrapped to a line start
+            continue
         if len(h) < 12:                                   # 'Item 7A.' with its title on the next line
             nxt = text[m.end():m.end() + 200].lstrip('\n').split('\n')[0]
             h = f'{h} {nxt.strip()}'
@@ -216,6 +221,8 @@ def read_cell(text, cell):
             if not sc or yrs[0] not in fy or len(yrs) != len(amts): continue
             pos = text.find(ln)
             found.append((amount(amts[0], sc.group(1).rstrip('s')), section_at(secs, pos), f'{hdr.strip()} / {ln.strip()}', pos))
+    if dp == 'sbc' and own and not found:
+        found = sbc_total(text, secs, fy, pe)
     vals = {x[0] for x in found}
     if len(vals) == 1:
         v, sec, s, pos = found[0]
@@ -227,6 +234,57 @@ def read_cell(text, cell):
     if ambiguous:
         return dict(decision='open', value_source='', value='', section=ambiguous[0][0], quote=ambiguous[0][1], why='ambiguous wording')
     return dict(decision='open', value_source='', value='', section='', quote='', why='no explicit statement in the text')
+
+
+SBC_SENT = re.compile(r'(?i)compensation (cost|expense)')
+SBC_AWARD = re.compile(r'(?i)\b(stock|share|restricted|option|award|performance|units?|RSUs?|PSUs?)\b')
+SBC_NOT = re.compile(r'(?i)\b(ESIP|savings|401|capitaliz\w*|unrecognized|unamortized|not yet recognized|tax benefit|cash (paid|payments?|received)|settled in cash|fair value|granted|expected to be recognized|weighted)')
+SBC_AMT = re.compile(r'\$\s?(\()?\s*(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*\)?\s*(million|billion|thousand)?', re.I)
+AFTER_TAX = re.compile(r'\(\s*\$\s?\(?\s*[\d,.]+\s*\)?\s*after[- ]tax\)', re.I)
+
+
+def _doc_scale(text):
+    """'million' when the document declares its amounts in millions and never in thousands (CVX notes: 'Millions of dollars')."""
+    m = len(re.findall(r'(?i)\b(millions of dollars|in millions|\(millions\))', text))
+    k = len(re.findall(r'(?i)(?<!shares )\b(thousands of dollars|in thousands(?! of (?!dollars))|\(thousands\))', text))   # never 'in thousands of barrels per day' or 'Shares in thousands' (CVX)
+    return 'million' if m >= 3 and k == 0 else None
+
+
+def sbc_total(text, secs, fy, pe):
+    """Verifier round 4 (Dhairya 2026-11-16): the share-based compensation note's own statement of the year's expense.
+    One sentence -> it is the total (XOM 'The compensation cost charged against income for the restricted stock and restricted stock units
+    was $ 672 million, ... for 2020, 2019, and 2018'). Two sentences, the second opening 'In addition' -> their sum (CVX 'Compensation
+    expense for stock options ... was $ 94 ($ 74 after tax), ...' + 'In addition, compensation expense for stock appreciation rights,
+    restricted stock, performance shares and restricted stock units was $ 96 ...'). Savings-plan (ESIP), unrecognized, tax-benefit and
+    cash-settlement sentences never count; after-tax parentheticals are removed before pairing amounts with years."""
+    scale = _doc_scale(text)
+    parts, unparsed = [], 0
+    for pos, s in sentences(text):
+        subj = s.split('$', 1)[0]      # what the figure IS: the words before the first amount (CVX 2023 explains a net benefit by 'fair value' after it)
+        if not (SBC_SENT.search(subj) and SBC_AWARD.search(subj)) or SBC_NOT.search(subj) or AFTER_TAX.sub('', s) == s and 'after tax' in s.lower():
+            continue
+        t = AFTER_TAX.sub('', s)
+        yrs = list(dict.fromkeys(YR.findall(t)))
+        if not any(y in fy for y in yrs): continue
+        amts = SBC_AMT.findall(t)     # (sign, digits, unit); CVX 2023 '$( 100 )' is negative
+        if '$' not in t: continue     # no figure stated ('No significant stock-based compensation cost was capitalized ...')
+        cand = [k for k, y in enumerate(yrs) if y in fy]
+        if len(cand) > 1 and pe[:4] in yrs and max(yrs) == pe[:4]:
+            cand = [yrs.index(pe[:4])]
+        unit = next((u for _, _, u in amts if u), None) or scale
+        if not amts or len(cand) != 1 or not unit or not (len(amts) == len(yrs) and (len(amts) == 1 or re.search(r'\brespectively\b', t, re.I))):
+            unparsed += 1; continue          # a sentence for the year that cannot be read: no total from the others
+        neg, a, _u = amts[cand[0]]
+        v = amount(a, unit)
+        parts.append((-v if neg else v, section_at(secs, pos), s, pos))
+    if unparsed:
+        return []
+    if len(parts) == 1:
+        return parts
+    if len(parts) == 2 and re.match(r'(?i)\s*in addition\b', parts[1][2]):
+        v = parts[0][0] + parts[1][0]
+        return [(v, parts[0][1], parts[0][2] + ' || ' + parts[1][2], parts[0][3])]
+    return []
 
 
 def fetch(cells_csv, cache):

@@ -492,11 +492,11 @@ def fsn_dropped_facts(path, memberfacts, notefacts):
 
 def filer_xbrl_errors(path):
     """rules/filer_xbrl_errors.csv: facts whose XBRL value differs from the value the filing prints (Dhairya ruling 2026-11-14:
-    serve the printed value with evidence). {(accession, tag, qtrs): dict(xbrl, printed, evidence)}."""
+    serve the printed value with evidence). {(accession, tag, qtrs, xbrl_value): dict(xbrl, printed, evidence)}; one row per stored value."""
     out = {}
     if not path or not os.path.exists(path): return out
     for r in csv.DictReader(open(path)):
-        out[(r['accession'], r['tag'], int(r['qtrs']))] = dict(xbrl=D(r['xbrl_value']) if r['xbrl_value'] != '' else None, printed=D(r['printed_value']), evidence=r['evidence'])
+        out[(r['accession'], r['tag'], int(r['qtrs']), r['xbrl_value'])] = dict(xbrl=D(r['xbrl_value']) if r['xbrl_value'] != '' else None, printed=D(r['printed_value']), evidence=r['evidence'])
     return out
 
 
@@ -504,7 +504,8 @@ def apply_filer_errors(filings, notefacts, errs):
     """Replace the XBRL value by the printed one in the filing's own face lines and own-column note facts; returns the
     accessions touched. A fact whose stored value is not the listed XBRL value is left alone (the list is evidence, not a patch)."""
     hit = set()
-    for (a, tag, q), e in errs.items():
+    for k, e in errs.items():
+        a, tag, q = k[:3]
         for f in filings:
             if f['a'] != a: continue
             parts = (f['lines'] or '').split('~')

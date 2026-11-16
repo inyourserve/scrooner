@@ -553,6 +553,7 @@ FACE_LABEL = {'inventory': re.compile(r'(?i)^(total )?inventor(y|ies)(,? net)?$'
               'accounts_payable': re.compile(r'(?i)^(trade )?accounts payable(,? trade)?$'),
               'goodwill': re.compile(r'(?i)^goodwill(,? net)?$')}
 TRADE_AR_NOTE = re.compile(r'^(TradeReceivables\w*|AccountsReceivableTrade\w*)$')
+PPE_CUSTOM = re.compile(r'(?i)^PropertyPlants?AndEquipment\w*Net$')
 SBC_PART = re.compile(r'(?i)^(StockOptionPlanExpense|CompensationExpenseFor\w*(Restricted|Stock|Unit|Award|Option|Performance)\w*)$')
 
 
@@ -604,6 +605,17 @@ def apply_face_label_overrides(rows, filings, notefacts):
             r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), flag) if x)
             continue
         nf = note_facts(notefacts.get(r['accession']))
+        if dp == 'ppe_net':
+            # verifier round 4 (GS FY2014-22): no PP&E line on the face; the Other Assets composition note prints 'Property, leasehold
+            # improvements and equipment, net' as the filer's own element gs:PropertyPlantsAndEquipmentNet (9,344 ... 23,147M). One custom
+            # element named for PP&E net with no qualifier (UNH '...ExcludingCapitalizedComputerSoftwareNet' is a component: refused)
+            pp = [(t, v) for (t, q), v in nf.items() if q == 0 and PPE_CUSTOM.match(t) and not NOTE_NAME_NOT.search(t)]
+            if len(pp) == 1:
+                t, v = pp[0]
+                r.update(status='mapped', value=v, tags=t, r_page='NOTE', nodes=f"{t}={v} [NOTE]",
+                         why=f"no PP&E line on the balance-sheet face; the filer's own note element {t} (a composition note of another face line) is PP&E, net")
+                r['flags'] = ';'.join(x for x in ((r.get('flags') or '').replace('absent_in_own_filing', '').replace('never_reported', ''), 'custom_note_element') if x).replace(';;', ';').strip(';')
+                continue
         if dp == 'accounts_receivable':
             ar = [(t, v) for (t, q), v in nf.items() if q == 0 and TRADE_AR_NOTE.match(t)]
             if len(ar) == 1:
@@ -664,19 +676,20 @@ def apply_sbc_award_members(rows, memberfacts):
     absence (flag reported_by_award_type). Members whose names contain one another (a combined member beside its parts) are not summed."""
     for r in rows:
         if r['data_point'] != 'sbc' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
-        by = collections.defaultdict(dict)
+        by = collections.defaultdict(dict)   # (element, axis) -> member -> value; one axis at a time, never mixed
         for x in (memberfacts.get(r['accession']) or '').split('~'):
             q = x.split('|')
             if len(q) == 4 and q[0] in SBC_MEMBER_TAGS and q[1] == '4':
-                m = re.fullmatch(r'AwardType=([^;=]+);', q[3])
-                if m: by[q[0]][m.group(1)] = D(q[2])
+                m = re.fullmatch(r'(AwardType|PlanName)=([^;=]+);', q[3])   # Dhairya 2026-11-16: a plan split counts like an award split (SCCO)
+                if m: by[(q[0], m.group(1))][m.group(2)] = D(q[2])
         if not by: continue
-        t = next((t for t in SBC_MEMBER_TAGS if len(by.get(t, {})) >= 2), None) or next(t for t in SBC_MEMBER_TAGS if by.get(t))
-        mem = by[t]
+        key = next((k for k in sorted(by) if len(by[k]) >= 2), None) or sorted(by)[0]
+        t, axis = key
+        mem = by[key]
         names = sorted(mem)
         overlap = any(a != b and a.lower() in b.lower() for a in names for b in names)
         if len(mem) >= 2 and not overlap and all(v > 0 for v in mem.values()):
-            parts = [(f'{t}[AwardType={m}]', mem[m]) for m in names]
+            parts = [(f'{t}[{axis}={m}]', mem[m]) for m in names]
             r.update(status='component_sum', value=sum(v for _, v in parts), tags='+'.join(p for p, _ in parts), r_page='NOTE',
                      nodes='; '.join(f'{p}={standard_inputs._plain(v)} [NOTE]' for p, v in parts),
                      why='share-based compensation expense is reported only by award type: the sum of the award types')
@@ -1483,8 +1496,10 @@ if __name__ == '__main__':
     rows = apply_tl_corroboration(rows, notefacts, filings)
     rows = apply_polarity(rows)
     for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence
-        for (a, tag, q), e in FERR.items():
-            if r['accession'] == a and re.search(r'(^|; |-)' + tag + '=', r.get('nodes') or ''):
+        for k, e in FERR.items():
+            a, tag, q = k[:3]
+            m = r['accession'] == a and re.search(r'(?:^|; |-)' + tag + r'=(-?[\d.]+)', r.get('nodes') or '')
+            if m and (len([x for x in FERR if x[:3] == k[:3]]) == 1 or D(m.group(1)) == e['printed']):   # several rows per fact: the one served
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filer_xbrl_error') if x)
                 r['why'] = (r.get('why') or '') + f" | filer XBRL error: {tag} stored {e['xbrl']}, printed {e['printed']} served ({e['evidence']})"
   # one sign per concept (rules/polarity.csv)

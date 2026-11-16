@@ -813,3 +813,67 @@ def test_accounts_receivable_is_out_of_the_bank_template_with_the_line_kept_as_e
     resolve_all.apply_bank_template(rows, [ind, bank])
     assert rows[0]['status'] == 'not_in_template' and rows[0]['value'] is None and 'AccountsReceivableNetCurrent=70 [R2.htm:5]' in rows[0]['why']
     assert rows[1]['status'] == 'mapped'                 # an industrial keeps its AR
+
+
+def test_ppe_net_from_the_filers_own_note_element_named_for_it():
+    # verifier round 4: GS FY2014 gs:PropertyPlantsAndEquipmentNet 9,344M (Other Assets note); UNH '...ExcludingCapitalizedComputerSoftwareNet'
+    # is a component, never the figure
+    filings = [dict(a='GS14', cik='1', p='2014-12-31', lines=''), dict(a='U14', cik='2', p='2014-12-31', lines='')]
+    nf = {'GS14': 'PropertyPlantsAndEquipmentNet|0|9344000000', 'U14': 'PropertyPlantandEquipmentExcludingCapitalizedComputerSoftwareNet|0|2991000000'}
+    rows = [dict(cik='1', accession='GS14', data_point='ppe_net', status='not_presented', value=None, flags='bs_family;absent_in_own_filing', why='', column='own'),
+            dict(cik='2', accession='U14', data_point='ppe_net', status='not_presented', value=None, flags='bs_family', why='', column='own')]
+    resolve_all.apply_face_label_overrides(rows, filings, nf)
+    assert rows[0]['status'] == 'mapped' and rows[0]['value'] == D(9344000000) and rows[0]['flags'] == 'bs_family;custom_note_element'
+    assert rows[1]['status'] == 'not_presented'
+
+
+def test_sbc_total_from_the_note_one_sentence_or_an_in_addition_pair():
+    # verifier round 4: XOM restricted stock = the complete SBC total; CVX options + 'In addition' all other awards (two exhaustive parts);
+    # the ESIP (a savings-plan match) never counts; after-tax figures are dropped; a negative '$( 100 )' is a net benefit
+    import text_disclosure as td
+    rc = lambda t, pe: td.read_cell(t, dict(data_point='sbc', period_end=pe))
+    xom = ('Item 8. Notes\nThe compensation cost charged against income for the restricted stock and restricted stock units was $ 672 million, '
+           '$ 741 million, and $ 774 million for 2020, 2019, and 2018, respectively.\n')
+    assert rc(xom, '2020-12-31')['value'] == '672000000'
+    scale = 'Millions of dollars\nMillions of dollars\nMillions of dollars\n'
+    cvx = (scale + 'Item 8. Notes\nCompensation expense for stock options for 2020, 2019 and 2018 was $ 94 ($ 74 after tax), $ 81 ($ 64 after tax) and '
+           '$ 105 ($ 83 after tax), respectively.\nIn addition, compensation expense for stock appreciation rights, restricted stock, performance shares '
+           'and restricted stock units was $ 96 ($ 76 after tax), $ 313 ($ 266 after tax) and $ 60 ($ 47 after tax) for 2020, 2019 and 2018, respectively.\n'
+           'Compensation expense for the ESIP totaled $ 281 , $ 284 and $ 270 in 2020, 2019 and 2018, respectively.\n')
+    assert rc(cvx, '2020-12-31')['value'] == '190000000'
+    neg = (scale + 'Item 8. Notes\nCompensation expense for stock options for 2023, 2022 and 2021 was $ 85 ($ 65 after tax), $ 60 ($ 46 after tax) and $ 60 ($ 47 after tax), respectively.\n'
+           'In addition, compensation expense for stock appreciation rights, restricted stock, performance shares and restricted stock units resulted in a net '
+           'benefit of $( 100 ) ($( 76 ) after tax) for 2023, primarily as a result of reductions in the fair value of outstanding awards.\n')
+    assert rc(neg, '2023-12-31')['value'] == '-15000000'
+    broken = neg.replace('$( 100 ) ($( 76 ) after tax) for 2023', '$ 100 and $ 7 for 2023')
+    assert rc(broken, '2023-12-31')['decision'] == 'open'          # a sentence for the year that cannot be read: never the options part alone
+    nounit = cvx.replace(scale, '')
+    assert rc(nounit, '2020-12-31')['decision'] == 'open'          # no unit and no declared scale: open
+
+
+def test_sbc_plan_split_is_summed_like_an_award_split():
+    # Dhairya 2026-11-16 (SCCO): PlanName members ESPP 2018 0.7 + ESPP 2015 0.6 + Directors 0.4 = 1.7M
+    mf = {'S20': 'AllocatedShareBasedCompensationExpense|4|700000|PlanName=EmployeeStockPurchase2018Plan;~AllocatedShareBasedCompensationExpense|4|600000|PlanName=EmployeeStockPurchase2015Plan;'
+                 '~AllocatedShareBasedCompensationExpense|4|400000|PlanName=DirectorsStockAwardPlan;'}
+    rows = [dict(accession='S20', data_point='sbc', status='not_presented', value=None, flags='cf_family', why='w', column='own')]
+    resolve_all.apply_sbc_award_members(rows, mf)
+    assert rows[0]['status'] == 'component_sum' and rows[0]['value'] == D(1700000) and '[PlanName=DirectorsStockAwardPlan]' in rows[0]['nodes']
+
+
+def test_an_in_text_item_reference_at_a_line_start_is_not_a_heading():
+    # XOM FY2015 10-K p. 82: 'Item 1A. Risk Factors for a more complete discussion of risks.' wraps to a line start inside Item 8
+    import text_disclosure as td
+    t = 'Item 1A. Risk Factors\nrisks\nItem 8. Financial Statements and Supplementary Data\nnotes\nItem 1A. Risk Factors for a more complete discussion of risks.\nThe cost was $ 5 million.\n'
+    assert td.section_at(td.sections(t), t.index('The cost')) == 'item8_notes'
+
+
+def test_two_filer_error_rows_for_one_fact_key_by_stored_value(tmp_path):
+    # STX FY2024 10-K R9 stores the FY2024 DPS (2,800,000) and the FY2022 DPS (2,770,000) under one (accession, tag, qtrs)
+    p = tmp_path / 'e.csv'
+    p.write_text('accession,tag,qtrs,xbrl_value,printed_value,evidence\nA1,CommonStockDividendsPerShareDeclared,4,2800000,2.80,x\n'
+                 'A1,CommonStockDividendsPerShareDeclared,4,2770000,2.77,y\n')
+    import standard_inputs
+    errs = standard_inputs.filer_xbrl_errors(str(p))
+    nf = {'A1': 'CommonStockDividendsPerShareDeclared|4|2800000~CommonStockDividendsPerShareDeclared|4|2770000'}
+    standard_inputs.apply_filer_errors([], nf, errs)
+    assert nf['A1'] == 'CommonStockDividendsPerShareDeclared|4|2.80~CommonStockDividendsPerShareDeclared|4|2.77'
