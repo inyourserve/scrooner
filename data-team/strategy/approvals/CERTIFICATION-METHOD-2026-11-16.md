@@ -25,3 +25,13 @@ Source: doc 02, commit 438677db. A shown cell must hold a real proven value; a r
   - GEV: the first 10-K's FY-1 and FY-2 columns mean those years are not hidden years. Only FY2022 balance-sheet cells are hidden, as pre-filing (registration-only).
   - PM: parent comprehensive income is printed, so the row is shown with values, and FY2022 amortization is split from the note.
   - TXN: amortization of acquired intangibles must be shown with a value, or the row hidden only if never reported.
+
+## How it runs (2026-11-16)
+
+The checks above run as one tool, `pipeline/scripts/certify_display.py` (logic in `pipeline/src/scrooner_pipeline/certification/display_cert.py`, tests in `pipeline/tests/unit/test_display_cert.py`). It downloads nothing from the SEC. Every value is checked against SEC's own Financial Statement and Notes data for the cited filing, already loaded in `fsn.*`, so a company takes minutes, not hours.
+
+- **Run:** dispatch the `Display certification (approver)` workflow (`.github/workflows/display-certify.yml`). It takes request files, or `pending` for every request without a verdict file. It is read-only and writes nothing to the database or the repo. Locally with DATABASE_URL: `python pipeline/scripts/certify_display.py --request <request.md> --live --out-dir <dir>`.
+- **Seed:** `<TICKER>-<first 12 hex of the coverage sha256>`. The draw is fixed by the file, so anyone can re-run it and get the same sample.
+- **Outputs:** a verdict page and an evidence CSV per company, plus one row in `data-team/strategy/approvals/registry.csv`. The pooled bound is computed over every company whose latest row is PASS.
+- **The approver still decides.** Any REVIEW item (a lease location the facts cannot show, a hidden row with no tag family on file, a locator-only difference) is checked by hand, and the approver commits the certificate or final-draw file.
+- **Known gap:** fsn.* can miss a fact. For example, MSFT `CapitalLeaseObligationsCurrent` at 2016-06-30 is absent from its FY2017 10-K row set. A NOT_FOUND therefore goes to the approver, not straight to FAIL in the published verdict.

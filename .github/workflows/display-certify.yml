@@ -1,0 +1,73 @@
+name: Display certification (approver)
+
+# Manual. Runs pipeline/scripts/certify_display.py --live for certification requests
+# (data-team/strategy/approvals/requests/). Method: CERTIFICATION-METHOD-2026-11-16.md.
+# Read-only: indexed SELECTs on fsn.* under a 15 s statement_timeout, one connection, no SEC
+# downloads. It writes nothing to the database or the repo: the verdicts and evidence are attached
+# as an artifact and printed in the job summary; the approver reads them and commits the verdict.
+on:
+  workflow_dispatch:
+    inputs:
+      requests:
+        description: 'Request files, space separated, or "pending" for every request without a certificate or final-draw file'
+        default: "pending"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: display-certify
+  cancel-in-progress: false
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # The shared Settings model refuses to load without these, although this job only reads.
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      REQUESTS: ${{ inputs.requests }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
+      - name: Certify
+        run: |
+          set -u
+          A=data-team/strategy/approvals
+          if [ "$REQUESTS" = "pending" ] || [ -z "$REQUESTS" ]; then
+            REQUESTS=""
+            for r in $A/requests/*-request-*.md; do
+              t=$(basename "$r" | sed 's/-request-.*//')
+              d=$(basename "$r" .md | sed 's/.*-request-//')
+              # pending = no verdict file for this ticker dated on or after the request
+              done_=$(ls $A/${t}-certificate-*.md $A/${t}-final-draw-*.md 2>/dev/null | sed "s/.*-\([0-9-]*\)\.md$/\1/" | awk -v d="$d" '$1>=d' | head -1)
+              [ -z "$done_" ] && REQUESTS="$REQUESTS $r"
+            done
+          fi
+          echo "requests:$REQUESTS"
+          mkdir -p cert-out
+          cp $A/registry.csv cert-out/registry.csv 2>/dev/null || true
+          for r in $REQUESTS; do
+            echo "::group::$r"
+            timeout 300 uv run --project pipeline python pipeline/scripts/certify_display.py \
+              --request "$r" --live --out-dir cert-out --registry cert-out/registry.csv || echo "exit $? for $r"
+            echo "::endgroup::"
+          done
+          for f in cert-out/*-display-cert-*.md; do [ -f "$f" ] && { cat "$f"; echo; } >> "$GITHUB_STEP_SUMMARY"; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: display-certification
+          path: cert-out/
+          if-no-files-found: ignore
