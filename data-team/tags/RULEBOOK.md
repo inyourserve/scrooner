@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .72, 2026-11-17). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .73, 2026-11-17). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -301,6 +301,7 @@ Format: `ID | rule | code | test | date / source`.
 | X77 | net_income no_role whose own filing tags only ProfitLoss (no NetIncomeLoss) takes the NetIncomeLoss a later 10-K prints for the year (CRWD FY2021 -92,629K). | standard_inputs.NO_ROLE_YIELDS_TO, _profit_loss_only | same test | Dhairya Group B, 2026-11-17 |
 | X78 | A pre-filing year-end (before_first_10k) the first 10-K prints only as a FY-2 instant (cash-flow beginning balance, equity-statement opening balance, roll-forward opening) is printed: cash from CashCashEquivalentsRestrictedCash... when it equals the 10-K's own cash (no restricted cash), equity from StockholdersEquity (IncludingPortion... only when it equals the own equity), goodwill from Goodwill; locator NOTE, window FY-2. CRWD cash FY2018 63,179K, UBER goodwill FY2017 39M, DELL, GEV, PLTR, SNDK. CRWD equity FY2018 stays open (NCI 500K in the 10-K's own column; the zero NCI at Jan 2018 is a member fact the extract lacks). | standard_inputs.FY2_INSTANT, _fy2_instant | test_pr4_lane_rules (fy2 instant) | Dhairya Groups B and C, 2026-11-17 |
 | X79 | X59 guard: other_income_expense_net never fills from a later 10-K while the own year's interest income sits inside the own other-income line (interest_income combined) and that 10-K prints no interest-income figure for the year (NOW FY2019-20: the relabelled 58M / -16M hold interest income 55.4M / 39.5M). | standard_inputs._interest_inside | test_pr4_lane_rules (relabelled line) | Dhairya wave 2B 11, 2026-11-17 |
+| X80 | A gross-profit line is never the revenue top line: OI's single +1 child that is a gross profit (element or label) is skipped and revenue climbs from the first printed line to its all-additive total. FTNT FY2014-18 served GrossProfit as revenue (FY2017 1,109,646K; the filing prints Total revenue 1,494,930K); the why names a parent only when the line is its +1 child. | resolve.GROSS_LINE | test_resolve_is (gross profit never the top line) | Dhairya wave 2C (WRONG served value), 2026-11-17 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

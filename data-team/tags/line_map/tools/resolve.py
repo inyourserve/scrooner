@@ -68,6 +68,7 @@ def cor_top(cn, iby, kids_fn, onis):
 
 def node(l, why): return dict(tag=l['tag'], val=l['val'], ln=l['ln'], rep=l['rep'], lb=l['lb'], why=why)
 
+GROSS_LINE = re.compile(r'(?i)GrossProfit|GrossMargin|gross (profit|margin)')
 REV_HINT = re.compile(r'Revenue|Sales')
 COR_HINT = re.compile(r'^CostOf|CostOfRevenue|CostOfGoods|CostOfServices|CostDirect')
 COS_LABEL = re.compile(r'(?i)^(total )?costs? of(?!.*(business combination|merger|acquisition|integration|restructur))|^food (and|&) paper')  # 'Cost of MetroPCS business combination' (TMUS) is not cost of sales
@@ -208,7 +209,9 @@ def resolve(f):
     # revenue: GP's +1 child, else OI's +1 child (one), else the bank shape, else the top line climbed to its revenue total
     if rev is None and oi is not None:
         plus = [c for c, w in kids(oi['tag']) if w > 0]
-        if len(plus) == 1: rev = iby[plus[0]]
+        # a gross profit line is never the top line (FTNT FY2014-18: OI's one +1 child is GrossProfit = product GP + services GP;
+        # revenue then climbs from the first printed line to 'Total revenue' 1,494,930K FY2017, not gross profit 1,109,646K)
+        if len(plus) == 1 and not GROSS_LINE.search(plus[0] + ' ' + iby[plus[0]]['lb']): rev = iby[plus[0]]
     if rev is None:
         for p in onis:
             k = kids(p)
@@ -258,7 +261,7 @@ def resolve(f):
     if rev is None and bank_parts:
         put('revenue', 'component_sum', [dict(node(n, ''), st='IS') for n in bank_parts], sum(n['val'] for n in bank_parts), 'bank IS without a revenue total: net interest income + noninterest income')
     if rev is not None:
-        put('revenue', 'mapped', [dict(node(rev, ''), st='IS')], rev['val'], f"IS line {rev['ln']}: top line" + (f", +1 child of {gp['tag']}" if gp is not None else (f", +1 child of {oi['tag']}" if oi is not None else '')))
+        put('revenue', 'mapped', [dict(node(rev, ''), st='IS')], rev['val'], f"IS line {rev['ln']}: top line" + next((f", +1 child of {p['tag']}" for p in (gp, oi) if p is not None and (rev['tag'], 1) in [(c, 1) for c, w in kids(p['tag']) if w > 0]), ''))
     if oi is not None:
         put('operating_income', 'mapped', [dict(node(oi, ''), st='IS')], oi['val'], f"IS line {oi['ln']}")
         k = kids(oi['tag']); top = {gp['tag']} if gp is not None else ({rev['tag']} if rev is not None else set())

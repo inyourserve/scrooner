@@ -1535,7 +1535,7 @@ revenue,total revenues,256,29,Revenues 173;RevenueFromContractWithCustomerExclud
 revenue,net sales,172,16,RevenueFromContractWithCustomerExcludingAssessedTax 68;SalesRevenueNet 53;Revenues 35;RevenueFromContractWithCustomerIncludingAssessedTax 8
 revenue,revenue,157,17,RevenueFromContractWithCustomerExcludingAssessedTax 88;Revenues 49;SalesRevenueNet 20
 revenue,revenues,134,22,Revenues 62;RevenueFromContractWithCustomerExcludingAssessedTax 56;RevenueFromContractWithCustomerIncludingAssessedTax 8;SalesRevenueGoodsNet 4
-revenue,total revenue,93,12,RevenueFromContractWithCustomerExcludingAssessedTax 46;SalesRevenueNet 18;Revenues 10;RevenueFromContractWithCustomerIncludingAssessedTax 9
+revenue,total revenue,98,12,RevenueFromContractWithCustomerExcludingAssessedTax 46;SalesRevenueNet 23;Revenues 10;RevenueFromContractWithCustomerIncludingAssessedTax 9
 revenue,net revenue,68,8,RevenueFromContractWithCustomerExcludingAssessedTax 28;Revenues 21;SalesRevenueNet 19
 revenue,net revenues,54,6,RevenueFromContractWithCustomerExcludingAssessedTax 17;Revenues 15;SalesRevenueNet 11;RevenuesNetOfInterestExpense 11
 revenue,sales,48,4,RevenueFromContractWithCustomerExcludingAssessedTax 23;Revenues 9;SalesRevenueNet 8;SalesRevenueGoodsNet 4
@@ -1558,7 +1558,6 @@ revenue,sales and other operating revenue,8,1,SalesAndOtherOperatingRevenueInclu
 revenue,total sales and revenues,7,1,Revenues 7
 revenue,total noninterest income,6,1,NoninterestIncome 6
 revenue,sales and revenues,5,1,Revenues 5
-revenue,total gross profit,5,1,GrossProfit 5
 revenue,sales of goods,4,1,SalesRevenueGoodsNet 4
 revenue,sales of services,4,1,SalesRevenueServicesNet 4
 revenue,total,4,1,Revenues 4

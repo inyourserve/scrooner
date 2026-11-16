@@ -716,3 +716,7 @@
 - ~ OtherNonoperatingIncomeExpense: served_cells
 - ~ ProfitLoss: rule_id
 - ~ StockholdersEquity: rule_id, served_cells
+
+## 2026-11-16 (resolver-all110-.73): 2 element changes, 27999 rows, coverage 62.7%
+- ~ GrossProfit: data_point, served_cells
+- ~ SalesRevenueNet: served_cells

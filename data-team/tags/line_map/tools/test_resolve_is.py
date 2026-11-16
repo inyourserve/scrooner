@@ -222,3 +222,17 @@ def test_interest_income_combined_cites_the_income_line_not_the_expense_line():
     o = R.resolve(filing(amgn), {('InterestExpenseDebt', 4): D(1260)})
     assert o['interest_income']['status'] == 'combined' and o['interest_income']['tags'] == 'NonoperatingIncomeExpense'
     assert o['interest_expense']['status'] == 'mapped' and o['interest_expense']['value'] == D(1260)
+
+
+
+def test_gross_profit_is_never_the_top_line():
+    # FTNT FY2017 (Wave 2C, WRONG served value 1.11B): OI's one +1 child is GrossProfit (= product GP + services GP); revenue is 'Total revenue'
+    import resolve
+    is_ = [('SalesRevenueGoodsNet', 'Product', 577171), ('SalesRevenueServicesNet', 'Service', 917759), ('SalesRevenueNet', 'Total revenue', 1494930),
+           ('CostOfGoodsSold', 'Product', 243824), ('CostOfServices', 'Service', 141460), ('CostOfGoodsAndServicesSold', 'Total cost of revenue', 385284),
+           ('ProductGrossProfit', 'Product', 333347), ('ServicesGrossProfit', 'Service', 776299), ('GrossProfit', 'Total gross profit', 1109646),
+           ('OperatingExpenses', 'Total operating expenses', 900000), ('OperatingIncomeLoss', 'Operating income', 209646)]
+    calc = '~'.join(f'2|{p}|{c}|{w}' for p, c, w in [('SalesRevenueNet', 'SalesRevenueGoodsNet', 1), ('SalesRevenueNet', 'SalesRevenueServicesNet', 1),
+            ('GrossProfit', 'ProductGrossProfit', 1), ('GrossProfit', 'ServicesGrossProfit', 1), ('OperatingIncomeLoss', 'GrossProfit', 1), ('OperatingIncomeLoss', 'OperatingExpenses', -1)])
+    rev = resolve.resolve(filing([('IS', t, lb, v) for t, lb, v in is_], calc))[0]['revenue']
+    assert D(rev['value']) == 1494930 and 'GrossProfit' not in rev['path']
