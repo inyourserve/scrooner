@@ -262,6 +262,9 @@ def test_certify_pass_fail_and_wrong_cik(tmp_path):
     )
     ok = dc.certify("T", "1", cov, Src([fact("Revenues", "100")]))
     assert ok.verdict == "PASS" and ok.errors == 0 and len(ok.shown) == 1
+    # fsn.* can miss a fact: NOT_FOUND goes to the approver (REVIEW), it is not counted as a wrong value
+    nf = dc.certify("T", "1", cov, Src([]))
+    assert nf.verdict == "REVIEW" and nf.errors == 0
     assert dc.certify("T", "1", cov, Src([fact("Revenues", "99")])).verdict == "FAIL"
     assert (
         dc.certify(

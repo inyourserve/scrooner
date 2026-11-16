@@ -732,7 +732,7 @@ class Run:
 
     @property
     def errors(self) -> int:
-        return sum(1 for s in self.shown if s.result in ("MISMATCH", "NOT_FOUND"))
+        return sum(1 for s in self.shown if s.result == "MISMATCH")
 
     @property
     def verdict(self) -> str:
@@ -741,7 +741,7 @@ class Run:
         if self.errors or any(d.result == "MISMATCH" for d in self.debt):
             return "FAIL"
         if (
-            any(s.result == "LOCATOR" for s in self.shown)
+            any(s.result in ("LOCATOR", "NOT_FOUND") for s in self.shown)
             or any(d.result == "REVIEW" for d in self.debt)
             or any(f.severity == "REVIEW" for f in self.hides)
         ):
