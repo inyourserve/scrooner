@@ -1,0 +1,127 @@
+name: Tag library learn and rebuild (resolver -> learner -> library, no database)
+
+# Dhairya direction 2026-11-16 ("go ahead with the CI step for the learner and the library rebuild").
+# After every successful standard extract, and on manual dispatch, rebuild the unified tag library from what filers did:
+#   1. download the extract artifact (standard-extract-<run_id>, 7 JSON files) of the triggering or given run
+#   2. instance evidence for total_debt (sec.gov only, 2 requests a second, cached per accession)
+#   3. resolve_all.py on it (version resolver-learn-<date>@<sha>)
+#   4. learn_from_filings.py  -> learned_elements.csv, learned_labels.csv (label candidates, reviewed before use)
+#   5. build_library.py       -> library.csv/json, schema, INDEX.md, browser.html, CHANGELOG.md, coverage.json
+#   6. the library tests, then push data-team/tags/library/ + the resolver csv to branch data/library-<date> (never main)
+# The Tag Expert reviews the branch diff and brings it to main by hand: learned labels never reach the resolver unreviewed.
+# No database secret, no writes anywhere but the data branch.
+on:
+  workflow_run:
+    workflows: ["Standard extract for the resolver (FSN -> 7 JSON files, read-only)"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      extract_run_id:
+        description: "Run id of a successful standard-extract run (its artifact standard-extract-<id> is used)"
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: tag-library-learn
+  cancel-in-progress: false
+
+jobs:
+  learn:
+    name: Resolve, learn, rebuild the library
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      INSTANCE_MIN_INTERVAL: "0.5"
+      EXTRACT_RUN: ${{ inputs.extract_run_id || github.event.workflow_run.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: standard-extract-${{ env.EXTRACT_RUN }}
+          run-id: ${{ env.EXTRACT_RUN }}
+          github-token: ${{ github.token }}
+          path: out
+      - name: Ticker list (ticker,cik10 from the committed resolver output)
+        run: |
+          python3 - <<'PY'
+          import csv, glob
+          src = sorted(glob.glob('data-team/tags/line_map/resolver-all110-*.csv'))[-1]
+          tk = sorted({(r['ticker'], r['cik'].zfill(10)) for r in csv.DictReader(open(src)) if r['ticker']})
+          with open('out/tk.csv', 'w', newline='') as f:
+              csv.writer(f).writerows(tk)
+          print(len(tk), 'tickers from', src)
+          PY
+      - name: Instance evidence for total_debt (sec.gov only, 2 requests a second)
+        run: |
+          test -n "$SEC_USER_AGENT"
+          python3 data-team/tags/line_map/tools/instance_evidence.py fetch out/filings.json out/instances
+      - name: Resolver
+        run: |
+          set -eu
+          cd out
+          python3 ../data-team/tags/line_map/tools/resolve_all.py "resolver-learn-$(date -u +%F)@$GITHUB_SHA" resolver.csv
+          cp resolver.csv ../data-team/tags/line_map/resolver-all110-2026-11-14.csv
+      - name: Learn from the filings
+        run: python3 data-team/tags/library/learn_from_filings.py out
+      - name: Rebuild the library
+        run: python3 data-team/tags/library/build_library.py | tee out/library-summary.json
+      - name: Library tests
+        run: |
+          pip install -q pytest
+          python3 -m pytest -q -p no:cacheprovider data-team/tags/library data-team/tags/line_map/tools
+      - name: Summary
+        run: |
+          {
+            echo "### Tag library rebuilt from extract run $EXTRACT_RUN"
+            echo '```'; cat out/library-summary.json; echo '```'
+            echo '```'; git diff --stat -- data-team/tags/library data-team/tags/line_map | tail -15; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tag-library-${{ github.run_id }}
+          path: |
+            data-team/tags/library/
+            data-team/tags/line_map/resolver-all110-2026-11-14.csv
+          retention-days: 30
+          if-no-files-found: error
+
+  commit:
+    name: Push the rebuilt library to data/library-<date> (never main)
+    needs: learn
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          name: tag-library-${{ github.run_id }}
+          path: data-team/tags
+      - name: Commit to the data branch
+        run: |
+          set -eu
+          d=$(date -u +%F)
+          branch="data/library-$d"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then branch="$branch-$GITHUB_RUN_ID"; fi
+          case "$branch" in main|master) echo "::error::refusing main"; exit 1;; esac
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "$branch"
+          git add data-team/tags/library data-team/tags/line_map/resolver-all110-2026-11-14.csv
+          if git diff --cached --quiet; then echo "library unchanged"; exit 0; fi
+          git commit -q -m "Tag library rebuilt (run $GITHUB_RUN_ID, code $GITHUB_SHA)"
+          git push -q origin "$branch"
+          echo "branch $branch" >> "$GITHUB_STEP_SUMMARY"
