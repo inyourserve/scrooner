@@ -370,7 +370,7 @@ def test_company_metric_status_flags_a_value_the_registry_says_is_out():
 
 @pytest.mark.unit
 def test_pending_migration_defines_the_views_and_columns_the_code_reads():
-    sql = (Path(__file__).resolve().parents[2] / "db/pending/0126_metric_lineage_view.sql").read_text()
+    sql = (Path(__file__).resolve().parents[2] / "db/migrations/0126_metric_lineage_view.sql").read_text()
     for name in ("v_company_metric_status", "v_company_metric_inputs", "formula_fingerprint", "registry_version"):
         assert name in sql
     assert sql.rstrip().endswith(";")

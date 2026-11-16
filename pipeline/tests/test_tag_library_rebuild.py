@@ -297,5 +297,5 @@ def test_not_in_template_is_stored_and_an_unknown_decision_is_rejected(tmp_path)
     rows, rejects = t.parse_resolver(f)
     assert [(r["data_point"], r["decision"], r["value"]) for r in rows] == [("net_interest_income", "not_in_template", None)]
     assert len(rejects) == 1 and "brand_new_value" in rejects[0]
-    mig = (Path(__file__).resolve().parents[1] / "db/pending/0128_company_tag_metric_library.sql").read_text()
+    mig = (Path(__file__).resolve().parents[1] / "db/migrations/0128_company_tag_metric_library.sql").read_text()
     assert "'not_in_template'" in mig.split("analytics.resolver_decision (")[1].split("node_tags")[0]
