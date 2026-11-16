@@ -13,6 +13,38 @@ INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'curr
 import resolve_bs, resolve_cf, resolve_is, standard_inputs, total_debt
 FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
 POLARITY = {r['data_point']: r for r in csv.DictReader(open(os.environ.get('POLARITY_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'polarity.csv'))))}
+def _balances():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'taxonomy', 'elements.csv')
+    return {r['name']: r['balance'] for r in csv.DictReader(open(p))} if os.path.exists(p) else {}
+
+
+BALANCE = _balances()
+CF_WC = ('cf_ar_change', 'cf_inventory_change', 'cf_ap_change')
+
+
+def apply_cf_weight_flip(rows, filings):
+    """Dhairya wave 3B 4 (2026-11-17): a working-capital change is stored by the element's own definition, fixed from the printed cash
+    effect. A filer whose calc adds the element to operating cash with the weight its balance type forbids (a credit IncreaseDecrease
+    element must enter the inflow-positive operating total at -1, a debit one at +1) entered the fact with the opposite sign to make its
+    calc add up: the value is -fact, flag calc_weight_flip. QCOM FY2019 'Inventories 273' (an inflow) at weight +1: -273, as the FY2020-21
+    10-Ks carry the year."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] not in CF_WC or r['status'] != 'mapped' or (r.get('column') or 'own') != 'own' or r.get('value') in (None, ''): continue
+        t = (r.get('tags') or '').strip() or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, None])[1]
+        bal = BALANCE.get(t or '')
+        f = F.get(r['accession'])
+        if not t or bal not in ('debit', 'credit') or f is None: continue
+        ws = {int(x.split('|')[3]) for x in (f.get('calc') or '').split('~') if len(x.split('|')) == 4 and x.split('|')[2] == t
+              and x.split('|')[1].startswith('NetCashProvidedByUsedInOperatingActivities')}
+        if len(ws) != 1: continue
+        if ws.pop() != (1 if bal == 'debit' else -1):
+            r['value'] = -D(r['value'])
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'calc_weight_flip') if x)
+            r['why'] = (r.get('why') or '') + f"; sign: the filing adds {t} ({bal}) to operating cash with the weight its balance type forbids, so its fact carries the opposite sign: value = -fact (wave 3B ruling 4)"
+    return rows
+
+
 def apply_polarity(rows):
     """Ruling 2026-11-14: every concept has one sign. An expense (or payment) read from a single element whose filer polarity
     is reversed (DIS InterestExpense -1,973; V InterestIncomeExpenseNet printed 'Interest expense') is normalised to the
@@ -1495,6 +1527,7 @@ if __name__ == '__main__':
     rows = apply_label_beyond(rows, filings, only={'revenue'})   # MPC: ruling 3 sets revenue before gross profit is derived from it
     rows = derive_gross_profit(rows)
     rows = apply_tl_corroboration(rows, notefacts, filings)
+    rows = apply_cf_weight_flip(rows, filings)
     rows = apply_polarity(rows)
     for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence
         for k, e in FERR.items():

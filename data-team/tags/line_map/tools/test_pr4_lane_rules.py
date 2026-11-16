@@ -942,3 +942,17 @@ def test_class_with_issued_and_treasury_completes_the_class_sum_and_non_economic
     assert 'OrdinaryShares' not in r['nodes'] and 'CommonClassX]' not in r['nodes']   # fully in treasury: no node; non-economic: left out
     r = resolve_bs.shares(dict(cik='999', cpv=cpv), {}, {})   # an economic Class X counts
     assert r['value'] == D(621855922 + 302358)
+
+
+def test_working_capital_sign_follows_the_element_when_the_filer_flips_its_calc_weight():
+    # QCOM FY2019 (wave 3B, WRONG served +273M): 'Inventories 273' (an inflow) added to operating cash at +1; IncreaseDecreaseInInventories
+    # is credit, so a valid calc uses -1: the fact's sign is inverted -> -273 (the FY2020-21 10-Ks carry -273 for 2019)
+    f = dict(a='A', calc='7|NetCashProvidedByUsedInOperatingActivities|IncreaseDecreaseInInventories|1~7|NetCashProvidedByUsedInOperatingActivities|IncreaseDecreaseInAccountsPayable|1')
+    rows = [dict(accession='A', data_point='cf_inventory_change', status='mapped', value='273000000', tags='IncreaseDecreaseInInventories', nodes='', flags='', column='own'),
+            dict(accession='A', data_point='cf_ap_change', status='mapped', value='50', tags='IncreaseDecreaseInAccountsPayable', nodes='', flags='', column='own')]
+    resolve_all.apply_cf_weight_flip(rows, [f])
+    assert rows[0]['value'] == D(-273000000) and 'calc_weight_flip' in rows[0]['flags']
+    assert rows[1]['value'] == '50'   # a debit element at +1 is the valid weight
+    rows[0].update(value='273000000', flags='')
+    resolve_all.apply_cf_weight_flip(rows, [dict(f, calc=f['calc'].replace('IncreaseDecreaseInInventories|1', 'IncreaseDecreaseInInventories|-1'))])
+    assert rows[0]['value'] == '273000000'

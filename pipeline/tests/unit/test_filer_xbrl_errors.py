@@ -42,7 +42,7 @@ def _by_tag_qtrs(rows):
 @pytest.mark.unit
 def test_committed_csv_parses_and_has_every_row():
     got = fxe.load()
-    assert len(got) == 13
+    assert len(got) == 14
     # MCD FY2023-25 weighted shares tagged in millions at scale 0 (wave 3A 2026-11-17)
     mcd = got[
         ("0000063908-24-000072", "WeightedAverageNumberOfSharesOutstandingBasic", 4)

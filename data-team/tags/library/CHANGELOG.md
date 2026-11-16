@@ -730,3 +730,9 @@
 - ~ TreasuryStockShares: served_cells
 - ~ WeightedAverageNumberOfDilutedSharesOutstanding: known_problems
 - ~ WeightedAverageNumberOfSharesOutstandingBasic: known_problems
+
+## 2026-11-16 (resolver-all110-.75): 4 element changes, 27999 rows, coverage 64.8%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ CommonStockDividendsPerShareDeclared: known_problems
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ NetCashProvidedByUsedInOperatingActivities: rule_id

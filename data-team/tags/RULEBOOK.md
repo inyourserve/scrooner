@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .74, 2026-11-17). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .75, 2026-11-17). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -305,6 +305,8 @@ Format: `ID | rule | code | test | date / source`.
 | X81 | shares_outstanding by class: a class that prints shares issued and treasury but no outstanding fact completes the class sum as issued - treasury (derived_issued_less_treasury; founder 2026-11-17 item 5); a class fully held in treasury adds nothing; a class without economic rights (rules/non_economic_share_classes.csv, each row with its filing quote) is left out. ACN FY2014-26 served the Class X count (FY2025 302,358); now Class A 657,964,764 - 36,108,842 = 621,855,922. | resolve_bs.shares, NON_ECONOMIC | test_pr4_lane_rules (class completes the sum) | Dhairya wave 3A class_a_issued_minus_treasury, 2026-11-17 |
 | X82 | cost_of_revenue: when revenue - the -1 children of gross profit misses the printed GP and exactly one -1 child ties it, that child alone is the cost (the other sits inside it). LMT FY2021 57,983M (served 58,019 counted severance 36 twice). | resolve.py (gp minus tie) | test_resolve_is (cost line inside the total) | Dhairya wave 3A cos_block_child_not_added, 2026-11-17 |
 | X83 | MCD FY2023-25 weighted basic/diluted shares are tagged in millions at scale 0 (727.9 for 727,900,000): rules/filer_xbrl_errors.csv rows, each checked net income / shares = printed EPS. | rules/filer_xbrl_errors.csv | pipeline test_filer_xbrl_errors (rows parse) | Dhairya wave 3A, 2026-11-17 |
+| X84 | A CF working-capital change (cf_ar/inventory/ap_change) whose filing adds its element to NetCashProvidedByUsedInOperatingActivities with the weight its taxonomy balance forbids (credit element must enter at -1, debit at +1) carries the opposite sign: value = -fact, flag calc_weight_flip (node keeps the raw fact). QCOM FY2019 inventories -273M and receivables -1,373M (the FY2020-21 10-Ks carry both for 2019). | resolve_all.apply_cf_weight_flip, BALANCE (taxonomy/elements.csv) | test_pr4_lane_rules (calc weight flip) | Dhairya wave 3B 4, 2026-11-17 |
+| X85 | INTC FY2019 DPS: the equity statement XBRL shifts each year's DPS one context left (1.2 under 2019); the 10-K prints 1.26 (filer_xbrl_errors row, quote). | rules/filer_xbrl_errors.csv | pipeline test_filer_xbrl_errors | Dhairya wave 3C, 2026-11-17 |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 
