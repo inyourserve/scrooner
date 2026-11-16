@@ -1,0 +1,77 @@
+name: Display certify auto trigger (new request -> display-certify)
+
+# Kill switch: does nothing unless the repo variable AUTO_LOOP is exactly "true" (default off).
+# Two ways a request file (data-team/strategy/approvals/requests/<T>-request-<date>.md) appears:
+#  1. a person pushes it: `push` path trigger below.
+#  2. top100-flow's publish job commits it with GITHUB_TOKEN. Pushes made with GITHUB_TOKEN do NOT start push workflows
+#     (GitHub rule), so the second trigger is `workflow_run` on top100-flow completion.
+# Either way this runs scripts/ci/top100_changed.py requests (files ADDED between the last successful run's head and
+# now), then dispatches display-certify.yml (unchanged judge workflow, unchanged certify_display.py) with exactly those
+# files. Own queue group, never cancelled; waits for an active display-certify run first so a pending one is not replaced.
+# Holds no secret except GITHUB_TOKEN; writes nothing.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data-team/strategy/approvals/requests/*.md"
+  workflow_run:
+    workflows: ["Top-100 per-company flow (scripts/top100_flow.sh)"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: display-certify-auto
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    if: vars.AUTO_LOOP == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      EVENT: ${{ github.event_name }}
+      PUSH_SHA: ${{ github.sha }}
+      BEFORE_SHA: ${{ github.event.before }}
+      FLOW_CREATED: ${{ github.event.workflow_run.created_at }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: New request files
+        id: r
+        run: |
+          set -eu
+          if [ "$EVENT" = push ]; then HEAD="$PUSH_SHA"; else HEAD=$(git rev-parse origin/main); fi
+          BASE=$(gh run list --repo "$REPO" --workflow display-certify-auto.yml --status success --limit 1 --json headSha --jq '.[0].headSha // ""' || true)
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            if [ "$EVENT" = push ]; then BASE="$BEFORE_SHA"; else BASE=$(git rev-list -1 --before="$FLOW_CREATED" origin/main); fi
+          fi
+          echo "diff $BASE..$HEAD"
+          REQ=$(python3 -I scripts/ci/top100_changed.py requests "$BASE" "$HEAD")
+          echo "requests=$REQ"
+          echo "req=$REQ" >> "$GITHUB_OUTPUT"
+      - name: Wait until no display-certify run is active, then dispatch
+        if: steps.r.outputs.req != ''
+        env:
+          REQ: ${{ steps.r.outputs.req }}
+        run: |
+          set -eu
+          for i in $(seq 1 25); do
+            N=0
+            for s in queued in_progress waiting pending; do
+              K=$(gh run list --repo "$REPO" --workflow display-certify.yml --status "$s" --json databaseId --jq 'length')
+              N=$((N + K))
+            done
+            [ "$N" -eq 0 ] && break
+            sleep 60
+          done
+          [ "$N" -eq 0 ] || { echo "::error::display-certify still active; the next trigger covers this range"; exit 1; }
+          gh workflow run display-certify.yml --repo "$REPO" --ref main -f requests="$REQ"
+          echo "dispatched display-certify for $REQ"

@@ -1,0 +1,72 @@
+name: Top-100 auto trigger (resolver change -> top100-flow for the changed companies)
+
+# Kill switch: does nothing unless the repo variable AUTO_LOOP is exactly "true" (default off).
+# A push to main that changes a resolver CSV (data-team/tags/line_map/resolver-all110-*.csv) or a per-ticker rules file
+# (data-team/tags/line_map/<TICKER>.csv) runs scripts/ci/top100_changed.py, which diffs rows (resolver_version ignored)
+# and maps changed tickers to core.company ids through data-team/strategy/top100-coverage-summary.csv. The ids are
+# dispatched to top100-flow.yml with workflow_dispatch (GITHUB_TOKEN, actions: write). top100-flow keeps its own
+# "dispatch on main only" guard untouched. This workflow holds no secret other than GITHUB_TOKEN and writes nothing.
+# Debounce, no lost work: runs of this workflow queue in their own group (never cancelled). The diff base is the head
+# commit of the last SUCCESSFUL run of this workflow, so a run replaced while pending (GitHub keeps one pending run per
+# group) is covered by the next one. Before dispatching, it waits until no top100-flow run is active, because a second
+# dispatch would replace a pending flow run in the manual-db-jobs queue and drop its company list.
+# Shared rules (line_map/rules/*) carry no company key and are not fanned out. Cap: 256 companies (the flow's limit);
+# above it the job fails instead of truncating.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data-team/tags/line_map/resolver-all110-*.csv"
+      - "data-team/tags/line_map/*.csv"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: top100-auto-trigger
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    if: github.ref == 'refs/heads/main' && vars.AUTO_LOOP == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      HEAD_SHA: ${{ github.sha }}
+      BEFORE_SHA: ${{ github.event.before }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Companies whose resolver rows changed
+        id: c
+        run: |
+          set -eu
+          BASE=$(gh run list --repo "$REPO" --workflow top100-auto-trigger.yml --status success --limit 1 --json headSha --jq '.[0].headSha // ""' || true)
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE="$BEFORE_SHA"; fi
+          echo "diff $BASE..$HEAD_SHA"
+          IDS=$(python3 -I scripts/ci/top100_changed.py companies "$BASE" "$HEAD_SHA")
+          echo "company_ids=$IDS"
+          echo "ids=$IDS" >> "$GITHUB_OUTPUT"
+      - name: Wait until no top100-flow run is active, then dispatch
+        if: steps.c.outputs.ids != ''
+        env:
+          IDS: ${{ steps.c.outputs.ids }}
+        run: |
+          set -eu
+          for i in $(seq 1 165); do
+            N=0
+            for s in queued in_progress waiting pending; do
+              K=$(gh run list --repo "$REPO" --workflow top100-flow.yml --status "$s" --json databaseId --jq 'length')
+              N=$((N + K))
+            done
+            [ "$N" -eq 0 ] && break
+            echo "top100-flow active ($N); waiting"; sleep 120
+          done
+          [ "$N" -eq 0 ] || { echo "::error::top100-flow still active; not dispatching (the next trigger covers this range)"; exit 1; }
+          gh workflow run top100-flow.yml --repo "$REPO" --ref main -f company_ids="$IDS"
+          echo "dispatched top100-flow for $IDS"
