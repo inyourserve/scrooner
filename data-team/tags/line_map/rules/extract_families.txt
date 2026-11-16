@@ -68,3 +68,7 @@ DueFromAffiliate\w*
 DueToOfficersOrStockholders\w*
 PreferredStockDividends\w*
 DividendsPreferredStock\w*
+TradeReceivable\w*
+StockOptionPlanExpense
+CompensationExpenseFor\w*
+PremiumsReceivable\w*

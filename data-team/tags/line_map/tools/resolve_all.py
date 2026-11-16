@@ -527,6 +527,60 @@ def mark_presented_and_never_reported(rows, filings=None, compfacts=None):
     return rows
 
 
+# Dhairya 2026-11-16 (second filing-checked sample: 8 of 20 face hides wrong). A face line whose own LABEL names a data point maps to it
+# whatever its element (AT&T 'Inventories' under PrepaidExpenseCurrent from FY2021), flag label_overrides_element.
+FACE_LABEL = {'inventory': re.compile(r'(?i)^(total )?inventor(y|ies)(,? net)?$'),
+              'accounts_receivable': re.compile(r'(?i)^(trade )?(accounts )?receivables?(,? (net|trade))?$|^accounts receivable,? net\b|^accounts receivable,? less allowance'),
+              'accounts_payable': re.compile(r'(?i)^(trade )?accounts payable(,? trade)?$'),
+              'goodwill': re.compile(r'(?i)^goodwill(,? net)?$')}
+TRADE_AR_NOTE = re.compile(r'^(TradeReceivables\w*|AccountsReceivableTrade\w*)$')
+SBC_PART = re.compile(r'(?i)^(StockOptionPlanExpense|CompensationExpenseFor\w*(Restricted|Stock|Unit|Award|Option|Performance)\w*)$')
+
+
+def apply_face_label_overrides(rows, filings, notefacts):
+    """Dhairya 2026-11-16, four fixes on not_presented own cells:
+    (1) a balance-sheet face line whose own label names the data point maps to it whatever its element (flag label_overrides_element);
+    (2) accounts_receivable for an insurer: the face 'Premiums receivable' (PremiumsReceivableAtCarryingValue), net of allowance (ruling;
+        flag insurer_premiums_receivable);
+    (3) accounts_receivable from a composition note: one undimensioned trade-receivables fact (NFLX 'Other current assets' note,
+        TradeReceivablesHeldForSaleAmount 988.9M; flag from_composition_note);
+    (4) sbc = the sum of two or more award-type components when no total is printed (CVX: restricted stock/units 1,013 + options 60;
+        after-tax and tax-benefit amounts never count; flag award_type_sum)."""
+    F_ = {f['a']: f for f in filings}
+    for r in rows:
+        if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
+        dp, f = r['data_point'], F_[r['accession']]
+        L = [x.split('|') for x in (f.get('lines') or '').split('~')]
+        hit = None
+        if dp in FACE_LABEL:
+            hit = next((p for p in L if len(p) > 8 and p[0] == 'BS' and p[8] and FACE_LABEL[dp].search(p[7].strip())), None)
+            flag, why = 'label_overrides_element', "the balance-sheet face line's own label '{lb}' names the data point (element {t})"
+        if not hit and dp == 'accounts_receivable':
+            hit = next((p for p in L if len(p) > 8 and p[0] == 'BS' and p[8] and p[3] == 'PremiumsReceivableAtCarryingValue'), None)
+            flag, why = 'insurer_premiums_receivable', "insurer: 'Premiums receivable' ({t}) is the customer receivable, net of allowance (ruling 2026-11-16)"
+        if hit:
+            r.update(status='mapped', value=D(hit[8]), tags=hit[3], r_page=f"R{hit[1]}.htm", nodes=f"{hit[3]}={D(hit[8])} [R{hit[1]}.htm:{hit[2]}]",
+                     why=why.format(lb=hit[7].strip(), t=hit[3]))
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), flag) if x)
+            continue
+        nf = note_facts(notefacts.get(r['accession']))
+        if dp == 'accounts_receivable':
+            ar = [(t, v) for (t, q), v in nf.items() if q == 0 and TRADE_AR_NOTE.match(t)]
+            if len(ar) == 1:
+                t, v = ar[0]
+                r.update(status='mapped', value=v, tags=t, r_page='NOTE', nodes=f"{t}={v} [NOTE]",
+                         why=f"no receivables line on the face; the composition note of another face line reports trade receivables {t}")
+                r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'from_composition_note') if x)
+        if dp == 'sbc':
+            parts = sorted((t, v) for (t, q), v in nf.items() if q == 4 and SBC_PART.match(t))   # the name pattern excludes after-tax and tax-benefit amounts (they do not start with the expense name)
+            if len(parts) >= 2:
+                r.update(status='component_sum', value=sum(v for _, v in parts), tags='+'.join(t for t, _ in parts), r_page='NOTE',
+                         nodes='; '.join(f"{t}={v} [NOTE]" for t, v in parts),
+                         why='no share-based compensation total is printed; the sum of the award-type components the filing reports')
+                r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'award_type_sum') if x)
+    return rows
+
+
 LOAN_AXIS = re.compile(r'^\w*FinancingReceivable\w*=([^;=]+);$')
 
 
@@ -635,10 +689,12 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         f = F_[r['accession']]
         L = [x.split('|') for x in (f.get('lines') or '').split('~')]
         if any(len(p) > 3 and inE(p[3]) for p in L): continue
+        if r['data_point'] in FACE_LABEL and any(len(p) > 7 and p[0] in ('BS', 'IS', 'CF') and FACE_LABEL[r['data_point']].search(p[7].strip()) for p in L): continue   # label names it (AT&T)
         lab = ABSENT_LABEL.get(r['data_point'])
         if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not (ABSENT_NOT.get(r['data_point']) and ABSENT_NOT[r['data_point']].search(p[7])) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
         if any(inE(t) for t, _q in nf): continue
+        if (r['data_point'] == 'accounts_receivable' and any(TRADE_AR_NOTE.match(t) or t.startswith('PremiumsReceivable') for t, _q in nf)) or (r['data_point'] == 'sbc' and any(SBC_PART.match(t) for t, _q in nf)): continue
         if r['data_point'] in NOTE_NAME_RX and any(NOTE_NAME_RX[r['data_point']].match(t) for t, _q in nf): continue   # any element named for it, component or not, blocks a hide   # a custom element named for it (QCOM)
         pe = str(r['period_end'])
         if any(g['a'] != f['a'] and g['p'] > f['p'] and any(len(x) == 4 and inE(x[0]) and x[3] == pe for x in (y.split('|') for y in (compfacts.get(g['a']) or '').split('~')))
@@ -1287,6 +1343,7 @@ if __name__ == '__main__':
     for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
     NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
+    rows = apply_face_label_overrides(rows, filings, notefacts)
     rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)

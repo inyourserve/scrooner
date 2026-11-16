@@ -401,3 +401,17 @@
 - + NotesReceivableNet
 - + OccupancyAndOtherOperatingExpenses
 - ... 185 more
+
+## 2026-11-16 (resolver-2026-11-16.55): 12 element changes, 982 rows, coverage 62.6%
+- ~ AccountsAndNotesReceivableNet: rule_id
+- ~ AccountsAndOtherReceivablesNetCurrent: rule_id
+- ~ AccountsNotesAndLoansReceivableNetCurrent: rule_id
+- ~ AccountsReceivableGrossCurrent: rule_id
+- ~ AccountsReceivableNet: rule_id
+- ~ AccountsReceivableNetCurrent: rule_id
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- + PremiumsReceivableAtCarryingValue
+- ~ PrepaidExpenseCurrent: data_point, rule_id, served_cells
+- ~ ReceivablesNetCurrent: rule_id
+- ~ StockOptionPlanExpense: rule_id
+- + Tradeaccountsreceivablenet

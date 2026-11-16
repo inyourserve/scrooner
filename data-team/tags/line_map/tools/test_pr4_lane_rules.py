@@ -446,3 +446,41 @@ def test_annual_dps_is_the_sum_of_four_quarterly_facts_of_the_same_filing():
     assert x['value'] == D('2.08') and len(x['parts']) == 4
     assert 'A23' not in standard_inputs.quarterly_dps({'A23': nf['A23'] + '~CommonStockDividendsPerShareDeclared|4|2.08'}, cf, f)   # an annual fact exists
     assert 'A23' not in standard_inputs.quarterly_dps(nf, {'A23': cf['A23'].rsplit('~', 1)[0]}, f)   # only three quarters
+
+
+# ---- Dhairya 2026-11-16 (second filing-checked sample, 8 of 20 face hides wrong)
+def _ov(lines, dp, notes=''):
+    f = dict(filing(lines), a='A22')
+    r = dict(data_point=dp, status='not_presented', accession='A22', column='own', flags='bs_family', why='', value=None)
+    resolve_all.apply_face_label_overrides([r], [f], {'A22': notes})
+    return r
+
+
+def test_face_label_names_the_data_point_whatever_its_element():
+    # AT&T FY2022 R6:12 'Inventories' tagged PrepaidExpenseCurrent 3,123
+    r = _ov([('BS', 'PrepaidExpenseCurrent', 'Inventories', 3123), ('BS', 'OtherAssetsCurrent', 'Prepaid and other current assets', 14818)], 'inventory')
+    assert r['status'] == 'mapped' and r['value'] == 3123 and 'label_overrides_element' in r['flags']
+    assert _ov([('BS', 'OtherAssetsCurrent', 'Prepaid and other current assets', 14818)], 'inventory')['status'] == 'not_presented'
+    # and such a line blocks a proven-absence hide
+    assert not _absent([('BS', 'PrepaidExpenseCurrent', 'Inventories', 3123)], dp='inventory')
+
+
+def test_insurer_premiums_receivable_is_accounts_receivable():
+    # PGR FY2022 R2:15 PremiumsReceivableAtCarryingValue 10,416.9 (ruling 2026-11-16)
+    r = _ov([('BS', 'PremiumsReceivableAtCarryingValue', 'Premiums receivable, net of allowance for credit losses', 10416900000)], 'accounts_receivable')
+    assert r['status'] == 'mapped' and 'insurer_premiums_receivable' in r['flags']
+
+
+def test_trade_receivables_from_a_composition_note():
+    # NFLX FY2022 'Other current assets' note: TradeReceivablesHeldForSaleAmount 988.9M
+    r = _ov([('BS', 'OtherAssetsCurrent', 'Other current assets', 3208021000)], 'accounts_receivable', notes='TradeReceivablesHeldForSaleAmount|0|988898000~OtherReceivablesNetCurrent|0|1826388000')
+    assert r['status'] == 'mapped' and r['value'] == 988898000 and 'from_composition_note' in r['flags']
+
+
+def test_sbc_is_the_sum_of_award_type_components_without_after_tax_amounts():
+    # CVX FY2022: restricted stock/units 1,013 (custom) + StockOptionPlanExpense 60; after-tax 770 / 46 never count
+    notes = ('CompensationExpenseForStockAppreciationRightsRestrictedStockPerformanceUnitsAndRestrictedStockUnits|4|1013~StockOptionPlanExpense|4|60~'
+             'AfterTaxCompensationExpenseForStockOptions|4|46~AfterTaxCompensationExpenseForStockAppreciationRightsRestrictedStockPerformanceUnitsAndRestrictedStockUnits|4|770')
+    r = _ov([('CF', 'NetIncomeLoss', 'Net income', 35465)], 'sbc', notes=notes)
+    assert r['status'] == 'component_sum' and r['value'] == 1073 and 'award_type_sum' in r['flags']
+    assert _ov([('CF', 'NetIncomeLoss', 'Net income', 35465)], 'sbc', notes='StockOptionPlanExpense|4|60')['status'] == 'not_presented'
