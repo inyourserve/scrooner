@@ -1185,6 +1185,7 @@ def build_rows(
                         "_first_10k": min(in_window)[1] if in_window else "",
                     }
                 )
+    rows, _out = split_out_of_template(rows, load_not_in_template())
     resolve_derived(rows, load_input_prints(conn, rows))
     attach_only_combined(rows, load_only_combined())
     attach_absent_in_own(rows, load_absent_in_own())
@@ -1335,6 +1336,34 @@ def resolve_derived(
 
 RESOLVER_DIR = Path("data-team/tags/line_map")
 OC_EVIDENCE_RE = re.compile(r"reported only combined: ([^|,]*)")
+
+
+def load_not_in_template(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> set[tuple[str, str]]:
+    """(ticker, data_point) pairs the CURRENT resolver (newest resolver-all110-*.csv) decides `not_in_template` in every
+    one of its rows (resolver .57: the bank data points for the non-bank companies). The pair is outside the company's
+    grid. A pair with any other decision in some row is not returned. Missing file: empty."""
+    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    seen: dict[tuple[str, str], bool] = {}
+    if not files:
+        return set()
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            key = (r["ticker"], r["data_point"])
+            seen[key] = seen.get(key, True) and r.get("decision") == "not_in_template"
+    return {k for k, all_out in seen.items() if all_out}
+
+
+def split_out_of_template(
+    rows: list[dict[str, Any]], out: set[tuple[str, str]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """(kept, out_of_template). A cell whose (ticker, data_point) the resolver decides not_in_template is OUT: not a
+    shown cell, not OPEN, in no count (Dhairya 2026-11-16). The existing in-template contradiction guard (a
+    company_tag_map / blank-state not_in_template on a template point) is a different case and is untouched. Pure."""
+    kept = [r for r in rows if (r["ticker"], r["data_point"]) not in out]
+    dropped = [r for r in rows if (r["ticker"], r["data_point"]) in out]
+    return kept, dropped
 
 
 def load_only_combined(

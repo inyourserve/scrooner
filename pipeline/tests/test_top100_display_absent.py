@@ -103,3 +103,29 @@ def test_an_unlisted_data_point_is_never_hidden_by_this_rule(tmp_path):
         "share_buybacks",
     }
     assert "no face-statement line" in t100.ABSENT_EVIDENCE
+
+
+def test_not_in_template_pairs_are_out_of_the_grid(tmp_path):
+    hdr = "cik,ticker,data_point,period_end,grain,decision,nodes,value,accession,column,calc_check,flags,resolver_version\n"
+    row = "1,{},{},2016-09-30,FY,{},,,A1,own,,roles,v\n"
+    (tmp_path / "resolver-all110-2026-11-14.csv").write_text(
+        hdr
+        + row.format("AAPL", "deposits", "not_in_template")
+        + row.format("JPM", "deposits", "mapped")
+        + row.format("AAPL", "revenue", "mapped")
+        + row.format("MIX", "x", "not_in_template")
+        + row.format("MIX", "x", "mapped")
+    )
+    out = t100.load_not_in_template(tmp_path)
+    assert out == {("AAPL", "deposits")}
+    rows = [
+        _cell("2016-09-30", "PROVEN", ticker="AAPL", data_point="deposits"),
+        _cell("2016-09-30", "PROVEN", ticker="JPM", data_point="deposits"),
+        _cell("2016-09-30", "UNCHECKED", ticker="AAPL", data_point="revenue"),
+    ]
+    kept, dropped = t100.split_out_of_template(rows, out)
+    assert [r["ticker"] + r["data_point"] for r in kept] == [
+        "JPMdeposits",
+        "AAPLrevenue",
+    ]
+    assert len(dropped) == 1
