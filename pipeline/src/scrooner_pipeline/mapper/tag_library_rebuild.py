@@ -57,6 +57,7 @@ CELL_DECISIONS = {
     "derived_not_printed",
     "combined",
     "not_presented",
+    "not_in_template",  # out of the company's template (resolver .57); never served, not a gap
     "no_role",
 }
 NAMESPACE_BY_STMT = {

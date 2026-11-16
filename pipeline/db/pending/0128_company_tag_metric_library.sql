@@ -64,7 +64,7 @@ create table if not exists analytics.resolver_decision (
     period_end        date   not null,
     grain             text   not null check (grain in ('FY', 'I')),
     decision          text   not null check (decision in ('mapped', 'component_sum', 'derived_not_printed',
-                                                         'combined', 'not_presented', 'no_role')),
+                                                         'combined', 'not_presented', 'not_in_template', 'no_role')),
     node_tags         text[] not null default '{}',
     nodes             text,
     value             numeric,

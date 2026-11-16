@@ -110,12 +110,17 @@ def test_generator_reads_the_mem_cte_not_a_copied_list():
     src = [r for r in rules if r["source"] == "extract_notefacts.mem"]
     assert any(r["seg_re"].startswith("^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLived") and r["tag_re"] == "^AmortizationOfIntangibleAssets$" for r in src)
     assert any(r["seg_re"] == "^ProductOrService=[^;=]+;$" and r["qtrs"] == 4 for r in src)
+    # resolver .54: a filer's own amortization-of-intangibles element by income-statement location (CRM), matched case-insensitively
+    assert any(r["tag_re"] == r"(?i)^AmortizationOf\w*Intangible\w*$" and r["seg_re"].startswith("^(IncomeStatementLocation|") for r in src)
+    assert al.current().matches("AmortizationOfPurchasedIntangiblesFromBusinessCombinations", "IncomeStatementLocation=CostOfSales;", 4)
+    assert not al.current().matches("AmortizationOfPurchasedIntangiblesFromBusinessCombinations", "ProductOrService=Foo;", 4)
     assert any("EquityComponents" in r["seg_re"] and "AccountsPayable|AccountsReceivable" in r["tag_re"] for r in src)  # the tgm domain
     assert any(r["source"] == "extract_legalentity" for r in rules)
     # a changed CTE changes the rules: a new disjunct is picked up with no list to edit
-    sql = al._standard_inputs(ROOT).build_sql([1]).replace(
-        "or (t.tag='AmortizationOfIntangibleAssets'", "or (t.tag='NewTag' and d.segments ~ '^NewAxis=[^;=]+;$') or (t.tag='AmortizationOfIntangibleAssets'"
-    )
+    base = al._standard_inputs(ROOT).build_sql([1])
+    anchor = "or ((t.tag='AmortizationOfIntangibleAssets'"
+    assert anchor in base  # if the CTE is reshaped again, move this anchor, do not weaken the test
+    sql = base.replace(anchor, "or (t.tag='NewTag' and d.segments ~ '^NewAxis=[^;=]+;$') " + anchor)
     assert any(r["tag_re"] == "^NewTag$" for r in al.cte_rules(ROOT, sql))
 
 

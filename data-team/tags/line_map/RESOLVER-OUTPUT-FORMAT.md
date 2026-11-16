@@ -32,6 +32,7 @@ The file is `data-team/tags/line_map/resolver-all110-<YYYY-MM-DD>.csv`: UTF-8 CS
 | `derived_not_printed` | yes | not printed; computed only from nodes of the same filing and column (rulings C2, R5) |
 | `combined` | no | the filing prints the item only inside a line that also holds other items |
 | `not_presented` | no | the filing has no node of this role (on the face, or as an undimensioned note fact where note facts are allowed) |
+| `not_in_template` | no | the data point is outside the company's template (e.g. a bank data point at a non-bank). Not served and not a gap (resolver .57) |
 | `no_role` | no | the resolver found no node and has no reason yet. This is a rule gap, never a served reason |
 
 ## Sources and rules

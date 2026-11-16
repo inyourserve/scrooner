@@ -284,3 +284,18 @@ def test_repo_files_parse_and_cover_every_resolver_decision():
     rows, rejects = t.parse_resolver(t.newest_resolver_file())
     assert rows and not rejects
     assert t.parse_rules() and t.parse_polarity()
+
+
+def test_not_in_template_is_stored_and_an_unknown_decision_is_rejected(tmp_path):
+    head = "cik,ticker,data_point,period_end,grain,decision,nodes,value,accession,column,calc_check,flags,resolver_version\n"
+    f = tmp_path / "resolver-all110-2026-01-01.csv"
+    f.write_text(
+        head
+        + "0000000001,AAA,net_interest_income,2020-12-31,FY,not_in_template,,,,,,,v\n"
+        + "0000000001,AAA,total_assets,2020-12-31,I,brand_new_value,,5,,,,,v\n"
+    )
+    rows, rejects = t.parse_resolver(f)
+    assert [(r["data_point"], r["decision"], r["value"]) for r in rows] == [("net_interest_income", "not_in_template", None)]
+    assert len(rejects) == 1 and "brand_new_value" in rejects[0]
+    mig = (Path(__file__).resolve().parents[1] / "db/pending/0128_company_tag_metric_library.sql").read_text()
+    assert "'not_in_template'" in mig.split("analytics.resolver_decision (")[1].split("node_tags")[0]

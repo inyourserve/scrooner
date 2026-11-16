@@ -39,9 +39,9 @@ _NODE_RE = re.compile(
     r"(?:^|[ ;|])([A-Za-z][A-Za-z0-9_:]*)\[([A-Za-z][A-Za-z0-9_]*)=[^\]]*\]"
 )
 _MEMBER_RULE_RE = re.compile(r"member|multi_class|class_sum", re.I)
-_DISJUNCT_RE = re.compile(
-    r"(?:t\.tag\s*(=|~)\s*'([^']*)'\s*and\s*)?(?:v\.qtrs\s*=\s*(\d+)\s*and\s*)?d\.segments\s*~\s*'([^']*)'"
-)
+_SEG_RE = re.compile(r"d\.segments\s*~\s*'([^']*)'")
+_TAG_COND_RE = re.compile(r"t\.tag\s*(=|~\*|~)\s*'([^']*)'")
+_QTRS_COND_RE = re.compile(r"v\.qtrs\s*=\s*(\d+)")
 
 
 def _standard_inputs(root: Path) -> Any:
@@ -71,19 +71,33 @@ def cte_rules(root: Path, sql: str | None = None) -> list[dict[str, Any]]:
     ]
     domain_re = "|".join(f"(?:{d})" for d in domain)
     out: list[dict[str, Any]] = []
-    for m in _DISJUNCT_RE.finditer(_cte(sql, "mem", "cmp")):
-        op, tag, qtrs, seg = m.groups()
-        tag_re = (
-            domain_re if op is None else (f"^{re.escape(tag)}$" if op == "=" else tag)
+    # Each `d.segments ~ '...'` is one disjunct. Its conditions are the text since the previous disjunct's
+    # segments test: any number of `t.tag =|~|~* '...'` (an `(a or b)` group gives one rule per tag test)
+    # and an optional `v.qtrs = N`. No tag test means the whole tgm domain.
+    body = re.sub(r"--[^\n]*", "", _cte(sql, "mem", "cmp"))
+    pos = 0
+    for m in _SEG_RE.finditer(body):
+        window = body[pos : m.start()]
+        pos = m.end()
+        qm = _QTRS_COND_RE.findall(window)
+        tags = _TAG_COND_RE.findall(window)
+        tag_res = (
+            [domain_re]
+            if not tags
+            else [
+                f"^{re.escape(t)}$" if op == "=" else (f"(?i){t}" if op == "~*" else t)
+                for op, t in tags
+            ]
         )
-        out.append(
-            {
-                "source": "extract_notefacts.mem",
-                "tag_re": tag_re,
-                "seg_re": seg,
-                "qtrs": int(qtrs) if qtrs else None,
-            }
-        )
+        for tag_re in tag_res:
+            out.append(
+                {
+                    "source": "extract_notefacts.mem",
+                    "tag_re": tag_re,
+                    "seg_re": m.group(1),
+                    "qtrs": int(qm[-1]) if qm else None,
+                }
+            )
     if not out:
         raise ValueError(
             "no member disjunct parsed from the mem CTE: the extract changed shape"
