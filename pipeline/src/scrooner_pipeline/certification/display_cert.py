@@ -232,6 +232,7 @@ class Cell:
     r_page: str
     tag: str
     parts: tuple[Part, ...] = ()
+    reason_code: str | None = None  # None when the export has no reason_code column
 
     @property
     def key(self) -> tuple[str, str]:
@@ -310,6 +311,9 @@ def read_coverage(path: Path) -> list[Cell]:
                 r_page=_rpage(r.get("r_page", "")),
                 tag=(r.get("tag", "") or "").strip(),
                 parts=parse_parts(parts) if "@" in parts else (),
+                reason_code=(r["reason_code"] or "").strip()
+                if "reason_code" in r
+                else None,
             )
         )
     return cells
@@ -778,6 +782,38 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
     return DebtCheck(c, res, perim, ev)
 
 
+# Hide classes doc 02 allows (founder decision 2026-11-16 and "Display rules under the
+# 2026-11-16 founder decision", main 2bc5a106): a line never presented, a line reported only
+# combined, a pre-filing year, an allowlisted absence. A hide whose reason is anything else (an
+# unmapped era, an unverified reason) is a pipeline gap shown as a hide, and fails.
+HIDE_REASONS = frozenset({"structural_not_presented", "line_presented_combined"})
+ONLY_COMBINED = "line_presented_combined"
+
+
+def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
+    out = []
+    for c in cells:
+        if c.display not in (HIDDEN_ROW, HIDDEN_YEAR) or c.reason_code is None:
+            continue
+        if c.display == HIDDEN_YEAR and c.reason_code in (
+            "",
+            "pre_filing",
+            "before_first_10k",
+        ):
+            continue  # a pre-filing year needs no line reason; check_hidden_years proves it
+        if c.reason_code not in HIDE_REASONS:
+            out.append(
+                Finding(
+                    "hide_reason",
+                    *c.key,
+                    "FAIL",
+                    f"hidden with reason {c.reason_code or '(none)'!r}, which is not a doc 02 hide class "
+                    "(never presented, only combined, pre-filing year, allowlisted absence)",
+                )
+            )
+    return out
+
+
 def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Finding]:
     """A hidden row fails when the company presents a fact of the row's family for one of the
     display years: undimensioned, on a rendered page (a fact no page shows is not reported to a
@@ -835,10 +871,11 @@ def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Find
     return out
 
 
-# Dhairya ruling 2026-11-16 (relayed to the approver session): for these data points a
-# HIDDEN_YEAR is also valid inside the filing window when no periodic filing that presents the
-# period prints the data point's line (a dash counts as printed). Every other data point may hide
-# only pre-filing years (founder decision 2026-11-16, doc 02).
+# Doc 02, "Display rules under the 2026-11-16 founder decision" (main 2bc5a106), rule 1
+# (VERIFIED_ABSENT_HIDE): for these data points a HIDDEN_YEAR is also valid inside the filing
+# window when no periodic filing that presents the period prints the row's line (a dash counts as
+# printed). Rule 2: a year hidden as reported only combined passes the same printed-line test on
+# the row's own (pure) line. Every other hidden year must be a pre-filing year (rule 4).
 HIDE_YEAR_ALLOWLIST = frozenset(
     {
         "operating_income",
@@ -894,14 +931,14 @@ def check_hidden_years(
         )
         if not presenting:
             continue  # a pre-filing year: no periodic filing presents it
-        if c.data_point not in HIDE_YEAR_ALLOWLIST:
+        if c.data_point not in HIDE_YEAR_ALLOWLIST and c.reason_code != ONLY_COMBINED:
             out.append(
                 Finding(
                     "hidden_year",
                     *c.key,
                     "FAIL",
                     f"periodic filing {presenting[0]} presents {c.period_end} (own or comparative column): not a pre-filing year, "
-                    f"and {c.data_point} is not on the hide allowlist",
+                    f"and {c.data_point} is neither on the hide allowlist nor hidden as reported only combined",
                 )
             )
             continue
@@ -923,7 +960,7 @@ def check_hidden_years(
                     "hidden_year",
                     *c.key,
                     "INFO",
-                    f"allowlisted: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
+                    f"{'only combined' if c.reason_code == ONLY_COMBINED else 'allowlisted'}: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
                 )
             )
     return out
@@ -1016,6 +1053,7 @@ def certify(
     for c in p.cells:
         counts[c.display] += 1
     run = Run(ticker, str(coverage), p.sha, p.seed, dict(counts), gate=gate(p.cells))
+    run.hides += check_hide_reasons(p.cells)
     need_tags = (
         {t.tag for c in p.sample for t in terms(c)}
         | DEBT_FACE_TAGS
@@ -1068,12 +1106,15 @@ def certify(
             )
         )
         return run
-    run.hides = check_hidden_rows(p.cells, [f for f in company if f.tag != CONTROL_TAG])
+    run.hides += check_hidden_rows(
+        p.cells, [f for f in company if f.tag != CONTROL_TAG]
+    )
     if counts.get(HIDDEN_YEAR):
         allow = {
             c.data_point
             for c in p.cells
-            if c.display == HIDDEN_YEAR and c.data_point in HIDE_YEAR_ALLOWLIST
+            if c.display == HIDDEN_YEAR
+            and (c.data_point in HIDE_YEAR_ALLOWLIST or c.reason_code == ONLY_COMBINED)
         }
         lines: dict[str, set[str]] = {}
         if allow:

@@ -517,3 +517,118 @@ def test_presented_lines_positive_control(tmp_path):
     assert broken.verdict == "FAIL" and any(
         "presented-lines" in f.detail for f in broken.gate
     )
+
+
+def test_hide_reason_must_be_a_doc02_hide_class():
+    ok = dc.Cell(
+        "sbc",
+        "2023",
+        "2023-12-31",
+        dc.HIDDEN_ROW,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "structural_not_presented",
+    )
+    combined = dc.Cell(
+        "sbc",
+        "2022",
+        "2022-12-31",
+        dc.HIDDEN_ROW,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "line_presented_combined",
+    )
+    era = dc.Cell(
+        "sga_expense",
+        "2016",
+        "2016-12-31",
+        dc.HIDDEN_ROW,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "era_unmapped",
+    )
+    old_export = dc.Cell(
+        "sga_expense", "2016", "2016-12-31", dc.HIDDEN_ROW, None, "", "", ""
+    )
+    pre = dc.Cell(
+        "revenue", "2014", "2014-12-31", dc.HIDDEN_YEAR, None, "", "", "", (), ""
+    )
+    out = dc.check_hide_reasons([ok, combined, era, old_export, pre])
+    assert [(f.data_point, f.severity) for f in out] == [("sga_expense", "FAIL")]
+
+
+def test_only_combined_hidden_year_passes_the_printed_line_test():
+    """Doc 02 rule 2: years hidden as reported only combined are valid if the pure line is not printed."""
+    shown = cell(
+        dp="comprehensive_income", tag="ComprehensiveIncomeNetOfTax", pe="2021-12-31"
+    )
+    hid = dc.Cell(
+        "comprehensive_income",
+        "2017",
+        "2017-12-31",
+        dc.HIDDEN_YEAR,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "line_presented_combined",
+    )
+    ye = {"A": ["2017-12-31|4"]}
+    assert [f.severity for f in dc.check_hidden_years([shown, hid], ye, {})] == ["INFO"]
+    printed = dc.check_hidden_years(
+        [shown, hid], ye, {"A": {"ComprehensiveIncomeNetOfTax"}}
+    )
+    assert [f.severity for f in printed] == ["FAIL"]
+    no_reason = dc.Cell(
+        "comprehensive_income", "2017", "2017-12-31", dc.HIDDEN_YEAR, None, "", "", ""
+    )
+    assert [f.severity for f in dc.check_hidden_years([shown, no_reason], ye, {})] == [
+        "FAIL"
+    ]
+
+
+def test_certify_fails_a_hide_with_a_non_doc02_reason(tmp_path):
+    p = tmp_path / "cov.csv"
+    with open(p, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow([*HDR, "reason_code"])
+        w.writerow(
+            [
+                "revenue",
+                "2023",
+                "2023-12-31",
+                "100",
+                ACC,
+                "R4",
+                "Revenues",
+                "",
+                dc.SHOWN,
+                "",
+            ]
+        )
+        w.writerow(
+            [
+                "sbc",
+                "2023",
+                "2023-12-31",
+                "",
+                "",
+                "",
+                "",
+                "",
+                dc.HIDDEN_ROW,
+                "era_unmapped",
+            ]
+        )
+    run = dc.certify("T", "1", p, Src([fact("Revenues", "100")]))
+    assert run.verdict == "FAIL" and any(f.check == "hide_reason" for f in run.hides)
