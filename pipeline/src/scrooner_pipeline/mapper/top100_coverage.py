@@ -1481,8 +1481,6 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
         if r["class"] in ("PROVEN", "DERIVED"):
             r["display"] = SHOWN_VALUE
-        elif r["class"] == "REASON" and r.get("reason_code") == "zz":
-            r["display"] = HIDDEN_YEAR
         elif r.get("_only_combined") == "years":
             r["display"] = HIDDEN_YEAR
         elif r.get("_only_combined") == "row":
