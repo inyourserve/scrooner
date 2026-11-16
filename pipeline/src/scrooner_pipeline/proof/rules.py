@@ -117,6 +117,19 @@ RULES: dict[str, Rule] = {
             "there (TMO total_debt Dec-2020)",
         ),
         Rule(
+            "resolver_beats_combined",
+            1,
+            legacy_version=0,
+            applies=_has_splits,
+            owners=(
+                "proof/shown.py:resolver_decision_beats_combined",
+                "proof/shown.py:load_shown",
+            ),
+            note="v1 (ONE-PATH, founder 2026-11-16): a structural (resolver) concept/component row of the cell beats an "
+            "older company_tag_map combined row; the combined veto no longer fires. Selects the cells a combined row "
+            "spans (the cells whose verdict can change)",
+        ),
+        Rule(
             "split_parts",
             1,
             legacy_version=0,

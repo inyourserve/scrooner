@@ -214,3 +214,40 @@ def test_claim_driven_cell_is_proven_or_disagrees(
         assert p.checks["claim"]["source"] == "company_tag_map"
     else:
         assert p.verdict == pv.DISAGREE, (p.verdict, p.reason_text)
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("resolver_row", [True, False])
+def test_structural_row_beats_a_combined_row_on_the_same_cell(
+    isolated_database_url, resolver_row
+):
+    """ONE-PATH: a structural (resolver) row of the cell beats an older 'combined' row on its tag (AMGN interest
+    expense). Without a structural row the combined row still vetoes the cell."""
+    case = CASES["note_only"]
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _world(conn, "0000000099", case, case["shown"])
+        conn.execute(
+            "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, components, "
+            "era_from, decided_by, rule_id) values (%s,'us-gaap','InterestPaidNet','IS','combined',%s,"
+            "'2015-01-01','t','company_tag_map.library@1')",
+            (cid, [case["name"], "interest_income"]),
+        )
+        if resolver_row:
+            conn.execute(
+                "update analytics.company_tag_map set rule_id = 'company_tag_map.structural@1' "
+                "where company_id = %s and decision = 'concept'",
+                (cid,),
+            )
+        conn.commit()
+        cell = next(
+            c
+            for c in load_shown(conn, cid, floor=date(2015, 1, 1))
+            if c.data_point_name == case["name"]
+        )
+    p = pv.prove_cell(cell, _structure(case), "2025q1")
+    if resolver_row:
+        assert cell.combined == ()
+        assert p.verdict == pv.PROVEN, (p.reason_code, p.reason_text)
+    else:
+        assert cell.combined == ("InterestPaidNet",)
+        assert p.reason_code == "combined_line_shown_as_concept"
