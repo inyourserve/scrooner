@@ -12,6 +12,8 @@ from typing import Any
 
 import typer
 
+from scrooner_pipeline.common.company_filings import core_filings_cte, fsn_filings_cte
+
 app = typer.Typer(help="Company-wise FSN statement store (design 2026-11-01).")
 SHARDS_CSV = Path("doc/data-moat/team/top1000/shards.csv")
 
@@ -369,7 +371,10 @@ def pilot_cmd(
                     rep["accessions"] = [
                         r[0]
                         for r in conn.execute(
-                            "select accession from fsn.filing where company_id = %s order by accepted",
+                            "with "
+                            + fsn_filings_cte("co.id = %s")
+                            + " select f.accession from company_filings cf"
+                            " join fsn.filing f on f.id = cf.id order by f.accepted",
                             (cid,),
                         ).fetchall()
                     ]
@@ -501,11 +506,13 @@ def pilot_prod_cmd(
         for r in reports:
             have = set(r["accessions"])
             rows = conn.execute(
-                """
-                select accession_number, form, period_of_report from core.filing
-                where company_id = %s and form in ('10-K', '10-Q', '10-K/A', '10-Q/A')
-                  and period_of_report >= '2014-01-01'
-                order by period_of_report
+                "with "
+                + core_filings_cte("co.id = %s")
+                + """
+                select accession, form, period from company_core_filings
+                where form in ('10-K', '10-Q', '10-K/A', '10-Q/A')
+                  and period >= '2014-01-01'
+                order by period
                 """,
                 (r["company_id"],),
             ).fetchall()
@@ -969,7 +976,9 @@ def nightly_cmd(
     try:
         res = increment.build(
             cands,
-            lambda c: edgar_fetch.fetch_filing(client, c.cik, c.accession, fsn_set),
+            lambda c: edgar_fetch.fetch_filing(
+                client, c.filer_cik or c.cik, c.accession, fsn_set
+            ),
             max_seconds=max_minutes * 60,
         )
     finally:

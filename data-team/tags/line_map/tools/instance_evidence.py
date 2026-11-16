@@ -69,9 +69,9 @@ def fetch(filings, cache):
     for f in filings:
         p = os.path.join(cache, f['a'] + '.json')
         if os.path.exists(p): continue
-        rec = dict(acc=f['a'], cik=f['cik'], per=f['p'])
+        rec = dict(acc=f['a'], cik=f.get('fcik') or f['cik'], per=f['p'])
         try:
-            base = f"https://www.sec.gov/Archives/edgar/data/{int(f['cik'])}/{f['a'].replace('-', '')}/"
+            base = f"https://www.sec.gov/Archives/edgar/data/{int(f.get('fcik') or f['cik'])}/{f['a'].replace('-', '')}/"
             names = [i['name'] for i in json.loads(_get(base + 'index.json'))['directory']['item']]
             inst = [x for x in names if x.endswith('_htm.xml')] or [x for x in names if re.fullmatch(r'[a-z0-9\-]+-\d{8}\.xml', x)]
             if not inst: raise ValueError('no instance')

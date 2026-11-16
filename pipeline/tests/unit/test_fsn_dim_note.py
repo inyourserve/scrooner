@@ -243,8 +243,15 @@ def test_a_period_in_both_bucket_folders_is_read_from_both(conn, isolated_databa
     pred_adsh = "0000034088-23-000020"
     fid2 = _one(
         conn,
-        "insert into fsn.filing (accession, company_id, cik, form, period, fsn_set) values (%s, %s, '0000034088', '10-K', '2022-12-31', '2023q1') returning id",
+        "insert into fsn.filing (accession, company_id, cik, form, period, fsn_set) values (%s, %s, '0000034088', '10-K', '2021-12-31', '2023q1') returning id",
         (pred_adsh, cid),
+    )
+    # (a different period than the own filing: the successor wins a shared period)
+    # the predecessor window is what makes the 0000034088 filing this company's (common/company_filings.py)
+    conn.execute(
+        "insert into core.company_history_source (company_id, source_cik, relation, source_name, valid_from, valid_to, reason)"
+        " values (%s, '0000034088', 'predecessor', 'XOM', '2014-01-01', '2026-03-31', 'test')",
+        (cid,),
     )
     conn.commit()
     base = _period(tmp_path / "base")  # holds ADSH only

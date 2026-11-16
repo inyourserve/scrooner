@@ -35,6 +35,10 @@ from pathlib import Path
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.company_filings import (
+    core_filings_cte,
+    fsn_filings_cte,
+)
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
@@ -342,9 +346,10 @@ def year_presence(
 def _annual_filings(conn: Any, ids: list[int]) -> dict[int, list[tuple[date, str]]]:
     out: dict[int, list[tuple[date, str]]] = defaultdict(list)
     for cid, period, acc in conn.execute(
-        """select company_id, period, accession from fsn.filing
-           where company_id = any(%s) and period is not null
-             and form = any(%s)""",
+        "with "
+        + fsn_filings_cte("co.id = any(%s)")
+        + """ select company_id, period, accession from company_filings
+           where period is not null and form = any(%s)""",
         (ids, list(ANNUAL_FORMS)),
     ).fetchall():
         out[cid].append((period, acc))
@@ -356,8 +361,10 @@ def _earliest_filings(conn: Any, ids: list[int]) -> dict[int, date]:
     return {
         cid: d
         for cid, d in conn.execute(
-            "select company_id, min(filing_date) from core.filing "
-            "where company_id = any(%s) and form = any(%s) group by company_id",
+            "with "
+            + core_filings_cte("co.id = any(%s)")
+            + " select company_id, min(filed) from company_core_filings"
+            " where form = any(%s) group by company_id",
             (ids, list(PERIODIC_FORMS)),
         ).fetchall()
         if d is not None

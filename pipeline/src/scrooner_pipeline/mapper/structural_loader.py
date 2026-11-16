@@ -53,6 +53,7 @@ import psycopg
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
+from scrooner_pipeline.common.company_filings import core_filings_cte
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import reason_guard as rg
@@ -1322,8 +1323,10 @@ def load(
     if nf:
         with conn.cursor() as cur:
             cur.execute(
-                "select company_id, min(filing_date) from core.filing "
-                "where company_id = any(%s) and form = any(%s) group by company_id",
+                "with "
+                + core_filings_cte("co.id = any(%s)")
+                + " select company_id, min(filed) from company_core_filings"
+                " where form = any(%s) group by company_id",
                 (sorted({cid for _, cid in nf}), list(PERIODIC_FORMS)),
             )
             earliest = {i: d for i, d in cur.fetchall() if d is not None}

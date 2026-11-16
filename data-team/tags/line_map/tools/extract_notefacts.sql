@@ -19,8 +19,31 @@
 -- Families: the element regex of rules/roles.csv plus the balance-sheet / cash-flow family modules; mvals also takes the AP/AR names.
 set statement_timeout='55s';
 with rx as (select '^(/* element families from rules/roles.csv */)$'::text r),
-fl as (select id, accession, period from fsn.filing where company_id in (select g.company_id from fsn.filing g where g.cik::bigint in (/* CIKs */)) and form in ('10-K','20-F','40-F')
-  and (cik::bigint in (/* CIKs */) or not exists (select 1 from fsn.filing s where s.company_id=fsn.filing.company_id and s.period=fsn.filing.period and s.form in ('10-K','20-F','40-F') and s.cik::bigint in (/* CIKs */))) and period>='2014-06-01'),
+-- which filings belong to the company: the shared rule (common/company_filings.py, fsn_filings_cte), embedded verbatim; `cik` below is the COMPANY's cik
+company_filings as (
+ select f.id, co.id as company_id, co.cik, f.cik as filer_cik, f.accession, f.form, f.period, f.fy, f.fp, f.filed,
+        case when f.cik = co.cik then 'own' else 'predecessor' end as via
+ from core.company co
+ join fsn.filing f on f.cik = any(array[co.cik] || array(
+      select h.source_cik from core.company_history_source h where h.company_id = co.id and h.relation = 'predecessor'))
+ where co.cik::bigint in (/* CIKs */)
+   and (
+     (f.cik = co.cik and not exists (select 1 from core.company_history_source x
+                 where x.company_id = co.id and x.relation = 'exclude'
+                   and f.period between x.valid_from and x.valid_to))
+     or (f.cik <> co.cik
+         and exists (select 1 from core.company_history_source h
+                     where h.company_id = co.id and h.relation = 'predecessor' and h.source_cik = f.cik
+                       and f.period between h.valid_from and h.valid_to)
+         and not exists (select 1 from fsn.filing s
+                         where s.cik = co.cik and s.period = f.period
+                           and replace(s.form, '/A', '') = replace(f.form, '/A', '')
+                           and not exists (select 1 from core.company_history_source x
+                 where x.company_id = co.id and x.relation = 'exclude'
+                   and s.period between x.valid_from and x.valid_to)))
+   )
+),
+fl as (select id, accession, period from company_filings where form in ('10-K','20-F','40-F') and period>='2014-06-01'),
 tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
 tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'NotesReceivableNet' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' or tag ~ '^(InterestExpense\w*|InterestAndDebtExpense|FinancingInterestExpense)$' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals

@@ -50,6 +50,7 @@ def assemble(outdir):
     filings = []
     for r in J('lines'):
         f = dict(cik=r['cik'].zfill(10), a=r['a'], p=r['p'], fd=r.get('fd'), lines=r.get('lines') or '', calc=r.get('calc') or '')
+        if r.get('fcik'): f['fcik'] = r['fcik'].zfill(10)   # the filer's cik (a predecessor's for a predecessor-window filing): the SEC path
         if cpv.get(r['a']): f['cpv'] = cpv[r['a']]
         filings.append(f)
     main = [(r['a'], r.get('vals'), r.get('mvals'), r.get('cvals'), r.get('zlines')) for r in J('notes')]
