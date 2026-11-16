@@ -86,3 +86,54 @@ if __name__ == '__main__':
     for k, v in list(globals().items()):
         if k.startswith('test_'): v(); n += 1
     print(n, 'tests passed')
+
+
+# ---- RULEBOOK D07 / D10 / D12 (Ritwik measurement 2026-11-17: total_debt rules without a test)
+_FACE = [('BS', 'Assets', 'Total assets', 900), ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 100),
+         ('BS', 'OtherLiabilitiesNoncurrent', 'Other long-term liabilities', 70), ('BS', 'StockholdersEquity', 'Total stockholders equity', 300)]
+
+
+def _vals(f, *facts):
+    return [dict(a=f['a'], vals='~'.join(f'{t}|0|{d}|{v}' for t, d, v in facts))]
+
+
+def _own(rows):
+    return next(r for r in rows if r['column'] == 'own')
+
+
+def test_d07_both_columns_and_the_most_precise_of_several_facts():
+    f = _f(_FACE)
+    vals = _vals(f, ('LongTermDebtNoncurrent', '2016-12-31', 9000), ('LongTermDebtNoncurrent', '2016-12-31', 9012), ('LongTermDebtNoncurrent', '2017-12-31', 100))
+    rows = total_debt.run([f], vals, {})
+    comp = next(r for r in rows if r['column'] == 'comparative')
+    assert comp['period_end'] == '2016-12-31' and D(comp['value']) == D(9012)   # a rounded copy (9,000) never wins
+    assert D(_own(rows)['value']) == D(100)
+
+
+def test_d10_note_finance_lease_follows_its_location():
+    f = _f(_FACE)
+    vals = _vals(f, ('FinanceLeaseLiability', '2017-12-31', 50))
+    assert D(_own(total_debt.run([f], vals, {f['a']: 'out'}))['value']) == D(150)    # ExtensibleList 'out': added
+    assert D(_own(total_debt.run([f], vals, {f['a']: 'in'}))['value']) == D(100)     # 'in': inside a debt line
+    g = _f(_FACE, 'g|OtherLiabilitiesNoncurrent|FinanceLeaseLiability|1')            # no list, a non-debt calc parent: added
+    r = _own(total_debt.run([g], _vals(g, ('FinanceLeaseLiability', '2017-12-31', 50)), {}))
+    assert D(r['value']) == D(150) and 'calc parent OtherLiabilitiesNoncurrent' in r['parts']   # the calc arc is the evidence, not absence
+    h = _f(_FACE, 'g|LongTermDebtNoncurrent|FinanceLeaseLiability|1')                # under a debt node: not added
+    assert D(_own(total_debt.run([h], _vals(h, ('FinanceLeaseLiability', '2017-12-31', 50)), {}))['value']) == D(100)
+
+
+def test_d12_pre842_capital_lease_by_location_member_calc_arc_or_reader_check():
+    f = _f(_FACE)
+    vals = _vals(f, ('CapitalLeaseObligations', '2017-12-31', 40))
+    try:
+        total_debt.LEASES[f['a']] = {'2017-12-31': [('CapitalLeaseObligations', 'us-gaap:OtherLiabilitiesNoncurrentMember', D(40))]}
+        assert D(_own(total_debt.run([f], vals, {}))['value']) == D(140)               # located outside debt: added
+        total_debt.LEASES[f['a']] = {'2017-12-31': [('CapitalLeaseObligations', 'us-gaap:LongTermDebtNoncurrentMember', D(40))]}
+        r = _own(total_debt.run([f], vals, {}))
+        assert D(r['value']) == D(100) and 'located in a debt line' in r['flags']      # a debt member: inside, skipped
+    finally:
+        total_debt.LEASES.pop(f['a'], None)
+    r = _own(total_debt.run([f], vals, {}))                                            # no member, no calc arc: a reader decides
+    assert D(r['value']) == D(100) and 'READER CHECK' in r['flags']
+    g = _f(_FACE, 'g|OtherLiabilitiesNoncurrent|CapitalLeaseObligations|1')           # a non-debt calc parent: added
+    assert D(_own(total_debt.run([g], _vals(g, ('CapitalLeaseObligations', '2017-12-31', 40)), {}))['value']) == D(140)
