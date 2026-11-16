@@ -1435,7 +1435,19 @@ _VALUED_DECISIONS = ("mapped", "component_sum", "derived_not_printed", "combined
 # samples, 40 cells: operating_income 6/6, shares_outstanding 3/3, share_buybacks 6/6, 0 wrong. A data point is added
 # here only after a >=20-cell filing check with 0 wrong; every other data point stays OPEN for the resolver to fill.
 VERIFIED_ABSENT_HIDE = frozenset(
-    {"operating_income", "shares_outstanding", "share_buybacks"}
+    {
+        "operating_income",
+        "shares_outstanding",
+        "share_buybacks",
+        # round 3, FILING-CHECKED 2026-11-16, 0 wrong each: current_assets + current_liabilities 20, gross_profit 20,
+        # dividends_paid 20, total_debt 37 (all), share_buybacks re-sample 20. research_and_development FAILED
+        # (MCK FY2021 R&D $74M stated in Item 1 after the face line was dropped) and stays out.
+        "current_assets",
+        "current_liabilities",
+        "gross_profit",
+        "dividends_paid",
+        "total_debt",
+    }
 )
 
 
