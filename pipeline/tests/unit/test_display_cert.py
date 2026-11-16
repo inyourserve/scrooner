@@ -682,3 +682,23 @@ def test_hide_class_combined_year_uses_the_printed_line_test():
     )
     ye = {"A": ["2017-12-31|4"]}
     assert [f.severity for f in dc.check_hidden_years([shown, hid], ye, {})] == ["INFO"]
+
+
+def test_derived_shares_outstanding_and_eps_never_derived():
+    """Founder approvals 2026-11-17 (doc 02, 93c8d6ba)."""
+    facts = [
+        fact("CommonStockSharesIssued", "3119843000", qtrs=0),
+        fact("TreasuryStockCommonShares", "712000000", qtrs=0),
+    ]
+    so = cell(dp="shares_outstanding", value="2407843000", tag="")
+    assert dc.check_derived(so, [so], facts).result == "MATCH"
+    assert (
+        dc.check_derived(
+            cell(dp="shares_outstanding", value="3119843000", tag=""), [so], facts
+        ).result
+        == "MISMATCH"
+    )
+    assert (
+        dc.check_derived(cell(dp="diluted_eps", value="5.51", tag=""), [], []).result
+        == "MISMATCH"
+    )

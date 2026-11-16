@@ -646,7 +646,9 @@ TOTAL_EQUITY_TAGS = (
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
     "StockholdersEquity",
 )
-DERIVED_TAGS = frozenset(
+SHARES_ISSUED_TAGS = ("CommonStockSharesIssued",)
+TREASURY_SHARES_TAGS = ("TreasuryStockCommonShares", "TreasuryStockShares")
+DERIVED_TAGS = frozenset({*SHARES_ISSUED_TAGS, *TREASURY_SHARES_TAGS}) | frozenset(
     {
         "Assets",
         "LiabilitiesAndStockholdersEquity",
@@ -687,6 +689,42 @@ def check_derived(c: Cell, cells: list[Cell], facts: list[Fact]) -> CellCheck:
         ev = f"Assets {assets} - total equity incl. NCI {equity} ({', '.join(f'{k}={v}' for k, v in sorted(at.items()))})"
         return CellCheck(
             c, "MATCH" if assets - equity == shown else "MISMATCH", assets - equity, ev
+        )
+    if c.data_point in ("basic_eps", "diluted_eps"):
+        # Founder approvals 2026-11-17 (doc 02, 93c8d6ba): EPS is never derived.
+        return CellCheck(
+            c,
+            "MISMATCH",
+            None,
+            "EPS is never derived (founder 2026-11-17): it must be the filing's printed EPS",
+        )
+    if c.data_point == "shares_outstanding":
+        # Founder approvals 2026-11-17 (doc 02, 93c8d6ba): shares issued minus treasury shares,
+        # both printed in the same filing at the same date.
+        at = {
+            f.tag: f.value
+            for f in facts
+            if f.accession == c.accession
+            and f.qtrs == 0
+            and f.dims == ""
+            and c.period_end
+            and _days(f.ddate, c.period_end) <= 7
+            and f.tag in DERIVED_TAGS
+        }
+        issued = next((at[t] for t in SHARES_ISSUED_TAGS if t in at), None)
+        treasury = next((at[t] for t in TREASURY_SHARES_TAGS if t in at), None)
+        if issued is None or treasury is None:
+            return CellCheck(
+                c,
+                "NOT_FOUND",
+                None,
+                f"no shares issued or treasury shares fact at {c.period_end} in {c.accession}",
+            )
+        return CellCheck(
+            c,
+            "MATCH" if issued - treasury == shown else "MISMATCH",
+            issued - treasury,
+            f"shares issued {issued} - treasury shares {treasury} in {c.accession}",
         )
     if c.data_point == "gross_profit":
         same = {
