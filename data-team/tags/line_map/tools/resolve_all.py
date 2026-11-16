@@ -45,6 +45,101 @@ def apply_cf_weight_flip(rows, filings):
     return rows
 
 
+def _deprecated():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'taxonomy', 'deprecations.csv')
+    return {r['element'] for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
+
+
+DEPRECATED = _deprecated()   # FASB deprecations (taxonomy/deprecations.csv): an element a later filing no longer uses because the taxonomy retired it
+LP_NODE = re.compile(r'(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[([^\]@]*)(?:@[^\]]*)?\]')
+LP_SKIP = re.compile(r'eps|per_share|shares|total_debt')   # splits restate per-share and share counts: a separate decision; total_debt has its own tool
+
+
+def _unit(v):
+    """The rounding unit a figure is printed at (10^k dividing it, k <= 6)."""
+    v = abs(D(v))
+    if v != v.to_integral(): return D(0)
+    u = D(1)
+    while u < D(10) ** 9 and v % (u * 10) == 0 and v != 0: u *= 10   # a narrative '$1.6 billion' fact is printed at 10^8 (LRCX goodwill)
+    return u
+
+
+def apply_latest_print(rows, compfacts, filings=()):
+    """One vintage per year (Dhairya rulings 2026-11-17: IS 'one vintage per year, latest print' (Group B); CF 'flow_latest_print' (wave 2B/3A);
+    BS 'bs_latest_print' (wave 2A); 'authoritative_copy_follows_line_role' (Group A 3); rounding (Group B): a served own cell takes the
+    figure of the LATEST later 10-K that presents its period (flows: FY+2, else FY+1; instants: FY+1), recomputed the way THAT filing
+    resolves the data point (its elements and weights) from its comparative column, when every part has one undimensioned value at the
+    date. A later coarser copy that agrees within half its unit never replaces a precise value. Restated years (SPGI FY2017, VLO FY2016,
+    TMO FY2016-17, FTNT FY2018, MSFT FY2016 opex, MPC FY2018 GP 9,039). Per-share figures, share counts and total_debt are not touched."""
+    served = ('mapped', 'component_sum', 'derived')
+    face_tags = {f['a']: {x.split('|')[3] for x in (f.get('lines') or '').split('~') if len(x.split('|')) >= 9 and x.split('|')[0] in ('IS', 'BS', 'CF', 'EQ', 'SE')} for f in filings}
+    by, cand = collections.defaultdict(list), collections.defaultdict(list)
+    for r in rows:
+        cand[(r['cik'], r['data_point'])].append(r)   # own cells and cells already filled from a comparative column
+        if (r.get('column') or 'own') == 'own': by[(r['cik'], r['data_point'])].append(r)
+    dates = {}
+    def presents(a, d, q):
+        if a not in dates:
+            dates[a] = {(dd, int(qq)) for t, qq, v, dd in standard_inputs._facts(compfacts.get(a), 4)}
+        return (d, q) in dates[a]
+    def parse(r):
+        ns = LP_NODE.findall((r.get('nodes') or '').split(' | ')[0])
+        if not ns or any(dim for _, _, dim, _, _ in ns): return None
+        return [(-1 if neg else 1, t, D(v), loc) for neg, t, dim, v, loc in ns]
+    for (cik, dp), lst in by.items():
+        if LP_SKIP.search(dp): continue
+        q = 0 if dp in INSTANT_DPS else 4
+        for r in [x for x in cand[(cik, dp)] if (x.get('column') or 'own') == 'own' or 'comparative_fill' in (x.get('flags') or '')]:
+            if r['status'] not in served or r.get('value') in (None, '') or not parse(r): continue
+            pe = date.fromisoformat(str(r['period_end']))
+            later = []
+            for k in ((1,) if q == 0 else (2, 1)):
+                b = next((x for x in lst if abs((date.fromisoformat(str(x['period_end'])) - pe).days - 365 * k) <= 45), None)
+                if b is not None and presents(b['accession'], str(r['period_end']), q): later.append((k, b)); break   # the latest filing that presents the year
+            if not later: continue
+            k, b = later[0]
+            if b['accession'] == r['accession'] or 'calc_weight_flip' in (b.get('flags') or ''): continue   # a filing with inverted signs is no source (QCOM FY2019)
+            facts = collections.defaultdict(set)
+            for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4):
+                if dd == str(r['period_end']) and int(qq) == q: facts[t].add(D(v))
+            mine = parse(r)
+            how = 'its own elements'
+            # 1. the same parts set (Group B): the own cell's elements and weights, read from the latest filing's column for the year
+            # a face part must be a face line of the later filing too: the same element as a note fact is another line (NFLX FY2015 R&D)
+            bparts = parse(b) if b['status'] in served and b.get('value') not in (None, '') else None
+            # ...and the later filing resolves its own year with no element the own cell lacks (PFE FY2021: the own RevenueFromContract
+            # 81,288 total became a part under a new Revenues total in the FY2023 10-K; same element, another line)
+            if sum(w * v for w, _, v, _ in mine) == D(r['value']) and all(len(facts.get(t, ())) == 1 for _, t, _, _ in mine) \
+                    and all(t in face_tags.get(b['accession'], ()) for _, t, _, l in mine if l.startswith('R')) \
+                    and bparts is not None and {t for _, t, _, _ in bparts} <= {t for _, t, _, _ in mine}:
+                parts, sgn = mine, 1
+            else:
+                # 2. an element the later filing no longer uses (SalesRevenueNet -> Revenues, FTNT FY2018): the cell follows the later
+                # filing's line role (Group A 3) when both are face lines, or a C1 derivation takes the later filing's parts (MPC FY2018)
+                parts = bparts
+                if not parts or sum(w * v for w, _, v, _ in parts) != D(b['value']): continue   # not exactly its nodes' weighted sum
+                gone = [t for _, t, _, _ in mine if t not in facts]   # own elements the later filing no longer reports for the year
+                ot, lt = {t for _, t, _, _ in mine}, {t for _, t, _, _ in parts}
+                face = all(l.startswith('R') for _, _, _, l in mine) and all(l.startswith('R') for _, _, _, l in parts)
+                renamed = (b['status'] == r['status'] == 'mapped' and face and gone and all(t in DEPRECATED for t in gone))   # FTNT SalesRevenueNet (deprecated 2018)
+                c1 = b['status'] == r['status'] == 'derived' and dp in ('gross_profit', 'total_liabilities')   # MPC FY2018
+                one_renamed = (b['status'] == r['status'] == 'component_sum' and len(ot) == len(lt) and len(ot - lt) == 1 and set(gone) == ot - lt)   # MSFT FY2016 impairment line
+                if not (renamed or c1 or one_renamed): continue
+                if any(len(facts.get(t, ())) != 1 for _, t, _, _ in parts): continue
+                sgn, how = 1, f"the way it resolves {dp}"
+            new = sgn * sum(w * next(iter(facts[t])) for w, t, _, _ in parts)
+            old = D(r['value'])
+            if new == old or new != new.to_integral() or old != old.to_integral(): continue   # money only: a ratio fact under the element (LOW 0.0593) is not the figure
+            u_new, u_old = _unit(new), _unit(old)
+            if u_new > u_old and abs(new - old) <= u_new / 2 * len(parts): continue   # a rounded later copy (each rounded part) never replaces a precise figure
+            loc = lambda l: f"{l}@{b['accession']}" if l else f"NOTE@{b['accession']}"
+            r.update(status=r['status'] if parts is mine else b['status'], value=new, tags=r.get('tags', '') if parts is mine else b.get('tags', ''), accession=b['accession'], column='comparative',
+                     nodes='; '.join(f"{'-' if w < 0 else ''}{t}={next(iter(facts[t]))} [{loc(l)}]" for w, t, _, l in parts),
+                     why=f"latest print: the FY+{k} 10-K {b['accession']} re-presents the year as {new} (own filing {old}), recomputed from {how}; one vintage per year (rulings 2026-11-17)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print') if x)
+    return rows
+
+
 def apply_polarity(rows):
     """Ruling 2026-11-14: every concept has one sign. An expense (or payment) read from a single element whose filer polarity
     is reversed (DIS InterestExpense -1,973; V InterestIncomeExpenseNet printed 'Interest expense') is normalised to the
@@ -1607,6 +1702,7 @@ if __name__ == '__main__':
     rows = apply_bank_template(rows, filings)
     rows = apply_text_disclosures(rows)
     rows = apply_scale_flags(rows)
+    rows = apply_latest_print(rows, compfacts, filings)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

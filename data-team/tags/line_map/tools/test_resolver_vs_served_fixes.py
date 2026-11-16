@@ -147,15 +147,18 @@ def test_note_finance_lease_equal_to_a_face_debt_line_is_inside_it():
     assert D(own['value']) == D(12489) and 'equals a face debt line' in own['flags']
 
 
-def test_cf_da_that_includes_other_income_da_yields_to_the_is_line():
-    # UBER 2024: CF 737 (DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense) vs IS 711
+def test_cf_da_printed_as_depreciation_and_amortization_is_the_line_whatever_its_wider_element():
+    # UBER 2024: CF 737 (DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense, printed 'Depreciation and amortization') vs IS 711.
+    # Dhairya Group C 1 (2026-11-17) takes the CF 737, superseding ruling 2026-11-14 e; a CF label that itself says it is wider still yields to the IS line
     rows = [('IS', 'Revenues', 'Revenue', 43978), ('IS', 'DepreciationDepletionAndAmortization', 'Depreciation and amortization', 711), ('IS', 'OperatingIncomeLoss', 'Income from operations', 2799),
             ('CF', 'ProfitLoss', 'Net income', 10046), ('CF', 'uber_DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense', 'Depreciation and amortization', 737),
             ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 7137)]
     f = filing(rows)
     f['lines'] = f['lines'].replace('|uber_DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense|0|', '|uber_DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense|1|')
     d = resolve_is.resolve(f, {})['depreciation_and_amortization']
-    assert d['value'] == D(711)
+    assert d['value'] == D(737)
+    f['lines'] = f['lines'].replace('|Depreciation and amortization|737', '|Depreciation and amortization, including other income|737')
+    assert resolve_is.resolve(f, {})['depreciation_and_amortization']['value'] == D(711)
 
 
 def test_filer_xbrl_error_serves_the_printed_value():

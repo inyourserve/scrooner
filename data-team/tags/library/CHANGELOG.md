@@ -736,3 +736,63 @@
 - ~ CommonStockDividendsPerShareDeclared: known_problems
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
 - ~ NetCashProvidedByUsedInOperatingActivities: rule_id
+
+## 2026-11-16 (resolver-all110-.76): 58 element changes, 27999 rows, coverage 64.7%
+- ~ AccruedIncomeTaxesNoncurrent: served_cells
+- ~ AdjustmentForAmortization: served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id, served_cells
+- ~ AssetImpairmentCharges: served_cells
+- ~ BroadcastProgrammingAndOther: data_point
+- ~ BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1: served_cells
+- ~ ContractWithCustomerLiabilityNoncurrent: served_cells
+- ~ CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization: served_cells
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ CostOfGoodsSold: served_cells
+- ~ CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization: served_cells
+- ~ CostOfRevenue: served_cells
+- ~ CostOfServices: served_cells
+- ~ CostOfServicesExcludingDepreciationDepletionAndAmortization: data_point, served_cells
+- ~ CostmethodInvestmentsOtherThanTemporaryImpairment: served_cells
+- ~ DeferredIncomeTaxLiabilitiesNet: served_cells
+- ~ DeferredRevenueNoncurrent: served_cells
+- ~ Depreciation: rule_id
+- ~ DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense: data_point, served_cells
+- ~ DepreciationDepletionAndAmortization: served_cells
+- ~ DerivativeGainLossOnDerivativeNet: served_cells
+- ~ DirectOperatingCostRoyaltyExpense: served_cells
+- ~ EquityMethodInvestmentOtherThanTemporaryImpairment: data_point, served_cells
+- ~ GainLossOnSaleOfBusiness: served_cells
+- ~ GainsLossesOnExtinguishmentOfDebt: served_cells
+- ~ GoodwillAndIndefiniteLivedIntangiblesImpairmentCharges: served_cells
+- ~ ImpairmentAndRestructuringExpenses: served_cells
+- ~ ImpairmentIntegrationAndRestructuringExpenses: served_cells
+- ~ ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill: served_cells
+- ~ IncomeLossFromEquityMethodInvestments: served_cells
+- ~ IncomeLossfromEquityMethodInvestmentsIncludingOtherThanTemporaryImpairmentandTransactionCosts: served_cells
+- ~ IncomeLossfromInvestments: served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ InterestIncomeOther: served_cells
+- ~ InvestmentIncomeInterest: served_cells
+- ~ LiabilityForUncertainTaxPositionsNoncurrent: served_cells
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ NonoperatingIncomeExpenseIncludingEliminationOfNetIncomeLossAttributableToNoncontrollingInterests: served_cells
+- ~ OtherCostAndExpenseOperating: served_cells
+- ~ OtherCostOfServices: data_point
+- ~ OtherNonoperatingIncomeExpense: served_cells
+- ~ OtherOperatingIncome: served_cells
+- ~ OtherThanTemporaryImpairmentLossesInvestmentsAvailableforsaleSecurities: data_point, served_cells
+- ~ RefiningAndMarketingRevenue: served_cells
+- ~ ResearchAndDevelopmentExpense: served_cells
+- ~ ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost: served_cells
+- ~ RestructuringAndOtherCostsIncomeNet: served_cells
+- ~ RestructuringSettlementAndImpairmentProvisions: served_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: served_cells
+- ~ RevenueFromContractWithCustomerIncludingAssessedTax: served_cells
+- ~ RevenueFromRelatedParties: data_point, served_cells
+- ~ RevenueMineralSales: served_cells
+- ~ Revenues: served_cells
+- ~ SalesRevenueGoodsNet: served_cells
+- ~ SalesRevenueNet: rule_id, served_cells
+- ~ SalesRevenueServicesNet: served_cells
+- ~ TranslatedEarningsContractGainLossNet: served_cells
+- ~ UnusualOrInfrequentItemOperating: served_cells

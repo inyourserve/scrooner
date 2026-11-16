@@ -292,6 +292,7 @@ def proven_amort(cfo, notes):
     return None
 
 
+PLAIN_DA_LB = re.compile(r'(?i)^\s*depreciation(,| and) amortization\s*$')
 WIDER_DA = re.compile(r'Including\w*(OtherIncome|Nonoperating|OtherExpense)')
 
 
@@ -307,8 +308,11 @@ def resolve_da(L, notes):
         # accretion AND the filing reports no accretion of its own (no ARO accretion fact, no accretion line); otherwise combined (DUK)
         acc_rep = accretion_reported(L, notes)
         tot = [l for l in tot if not (l['tag'] == 'DepreciationAmortizationAndAccretionNet' or ACC.search(l['tag'])) or (DA_TOT_LB.search(l['lb'] or '') and not ACC_LB.search(l['lb'] or '') and not acc_rep)]
-        if src == 'CF' and tot and all(WIDER_DA.search(l['tag']) for l in tot) and any((DA_TOT.match(l['tag']) or DA_TOT_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '') for l in isf):
-            continue   # UBER: the CF line includes D&A recorded in other income; the purest line is the IS D&A (ruling 2026-11-14 e)
+        # a wider custom CF element yields to the IS D&A only when its printed label says it is wider; a CF add-back printed
+        # 'Depreciation and amortization' is the D&A line whatever its element (Dhairya Group C 1, 2026-11-17: UBER FY2024-25 737M / 747M
+        # from the CF; supersedes ruling 2026-11-14 e, which took the IS line 711M / 719M)
+        if src == 'CF' and tot and all(WIDER_DA.search(l['tag']) and not PLAIN_DA_LB.match(l['lb'] or '') for l in tot) and any((DA_TOT.match(l['tag']) or DA_TOT_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '') for l in isf):
+            continue
         if len(tot) >= 1:
             tot.sort(key=lambda l: (not DA_TOT_LB.search(l['lb'] or ''), l['tag'] not in ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'), l['ln']))
             t0 = tot[0]

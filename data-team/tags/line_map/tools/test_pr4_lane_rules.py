@@ -956,3 +956,73 @@ def test_working_capital_sign_follows_the_element_when_the_filer_flips_its_calc_
     rows[0].update(value='273000000', flags='')
     resolve_all.apply_cf_weight_flip(rows, [dict(f, calc=f['calc'].replace('IncreaseDecreaseInInventories|1', 'IncreaseDecreaseInInventories|-1'))])
     assert rows[0]['value'] == '273000000'
+
+
+def _lp_rows(dp, own_tag, own_val, later_tag, later_own_val, own_loc='R4.htm:14', later_loc='R4.htm:14', status='mapped', flags=''):
+    return [dict(cik='1', ticker='X', data_point=dp, period_end='2016-12-31', accession='A16', status=status, value=own_val, tags=own_tag,
+                 nodes=f'{own_tag}={own_val} [{own_loc}]', column='own', flags=''),
+            dict(cik='1', ticker='X', data_point=dp, period_end='2017-12-31', accession='A17', status=status, value='1', tags=own_tag,
+                 nodes=f'{own_tag}=1 [{own_loc}]', column='own', flags=''),
+            dict(cik='1', ticker='X', data_point=dp, period_end='2018-12-31', accession='A18', status=status, value=later_own_val, tags=later_tag,
+                 nodes=f'{later_tag}={later_own_val} [{later_loc}]', column='own', flags=flags)]
+
+
+def _lp_face(*tags):
+    return [dict(a='A18', lines='~'.join(f'IS|4|{i}|{t}|0|0|terseLabel|x|1' for i, t in enumerate(tags)))]
+
+
+def test_one_vintage_per_year_takes_the_latest_print_of_the_same_line():
+    # Dhairya rulings 2026-11-17 (one vintage per year): VLO FY2016 operating income 3,572 first print; the FY2018 10-K prints 3,534 (ASU 2017-07 recast)
+    rows = _lp_rows('operating_income', 'OperatingIncomeLoss', '3572000000', 'OperatingIncomeLoss', '4572000000')
+    comp = {'A18': 'OperatingIncomeLoss|4|3534000000|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('OperatingIncomeLoss'))[0]
+    assert r['value'] == D(3534000000) and r['accession'] == 'A18' and r['column'] == 'comparative' and 'latest_print' in r['flags'] and '@A18]' in r['nodes']
+    # a rounded later copy that agrees within half its unit never replaces the precise figure (LRCX goodwill '$1.6 billion')
+    rows = _lp_rows('operating_income', 'OperatingIncomeLoss', '1626528000', 'OperatingIncomeLoss', '4572000000')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'OperatingIncomeLoss|4|1600000000|2016-12-31'}, _lp_face('OperatingIncomeLoss'))[0]['value'] == '1626528000'
+    # a ratio fact under the element is not the figure (LOW 0.0593)
+    rows = _lp_rows('net_income', 'NetIncomeLoss', '4281000000', 'NetIncomeLoss', '7000000000')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'NetIncomeLoss|4|0.0593|2016-12-31'}, _lp_face('NetIncomeLoss'))[0]['value'] == '4281000000'
+
+
+def test_latest_print_guards_line_role_note_figures_and_flipped_sources():
+    # NFLX FY2015: the later filing carries the element only as a rounded note fact: no replacement of the face line
+    rows = _lp_rows('research_and_development', 'ResearchAndDevelopmentExpense', '650788000', 'ResearchAndDevelopmentExpense', '981300000', later_loc='NOTE')
+    comp = {'A18': 'ResearchAndDevelopmentExpense|4|570000000|2016-12-31'}
+    assert resolve_all.apply_latest_print(rows, comp, _lp_face('OtherTag'))[0]['value'] == '650788000'
+    # PFE FY2021: the later filing resolves revenue to a new total; the own element is now a part line: kept
+    rows = _lp_rows('revenue', 'RevenueFromContractWithCustomerExcludingAssessedTax', '81288000000', 'Revenues', '58496000000')
+    comp = {'A18': 'RevenueFromContractWithCustomerExcludingAssessedTax|4|73636000000|2016-12-31~Revenues|4|81288000000|2016-12-31'}
+    assert resolve_all.apply_latest_print(rows, comp, _lp_face('RevenueFromContractWithCustomerExcludingAssessedTax', 'Revenues'))[0]['value'] == '81288000000'
+    # FTNT FY2018: a taxonomy-deprecated element (SalesRevenueNet) follows the later filing's line
+    rows = _lp_rows('revenue', 'SalesRevenueNet', '1801200000', 'RevenueFromContractWithCustomerExcludingAssessedTax', '2594400000', own_loc='R4.htm:8', later_loc='R4.htm:8')
+    comp = {'A18': 'RevenueFromContractWithCustomerExcludingAssessedTax|4|1804600000|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('RevenueFromContractWithCustomerExcludingAssessedTax'))[0]
+    assert r['value'] == D(1804600000) and r['tags'] == 'RevenueFromContractWithCustomerExcludingAssessedTax'
+    # AVGO: a different concept in the later filing (ProfitLoss for NetIncomeLoss) is not a rename
+    rows = _lp_rows('net_income', 'NetIncomeLoss', '1692000000', 'ProfitLoss', '2724000000')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'ProfitLoss|4|1784000000|2016-12-31'}, _lp_face('ProfitLoss'))[0]['value'] == '1692000000'
+    # QCOM FY2017: a later filing whose own cell has inverted signs is no source
+    rows = _lp_rows('cf_inventory_change', 'IncreaseDecreaseInInventories', '200000000', 'IncreaseDecreaseInInventories', '-273000000', flags='calc_weight_flip')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'IncreaseDecreaseInInventories|4|-200000000|2016-12-31'}, _lp_face('IncreaseDecreaseInInventories'))[0]['value'] == '200000000'
+    # per-share figures are not touched (splits restate them)
+    rows = _lp_rows('basic_eps', 'EarningsPerShareBasic', '5', 'EarningsPerShareBasic', '6')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'EarningsPerShareBasic|4|2|2016-12-31'}, _lp_face('EarningsPerShareBasic'))[0]['value'] == '5'
+
+
+def test_latest_print_component_sum_with_one_renamed_line_and_c1_derivation():
+    # MSFT FY2016 opex: the FY2018 10-K prints the impairment line under ImpairmentAndRestructuringExpenses: 32,358 -> 32,296
+    own = 'GeneralAndAdministrativeExpense=4563 [R2.htm:14]; SellingAndMarketingExpense=14697 [R2.htm:13]; ImpairmentIntegrationAndRestructuringExpenses=1110 [R2.htm:15]'
+    later = 'GeneralAndAdministrativeExpense=4754 [R2.htm:12]; SellingAndMarketingExpense=17469 [R2.htm:11]; ImpairmentAndRestructuringExpenses=0 [R2.htm:13]'
+    rows = _lp_rows('operating_expenses', 'x', '20370', 'x', '22223', status='component_sum')
+    rows[0]['nodes'], rows[2]['nodes'] = own, later
+    comp = {'A18': 'GeneralAndAdministrativeExpense|4|4563|2016-12-31~SellingAndMarketingExpense|4|14635|2016-12-31~ImpairmentAndRestructuringExpenses|4|1110|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('GeneralAndAdministrativeExpense', 'SellingAndMarketingExpense', 'ImpairmentAndRestructuringExpenses'))[0]
+    assert r['value'] == D(20308)
+    # MPC FY2018 GP: a C1 derivation takes the latest filing's revenue and cost of revenue together (86,086 - 77,047 = 9,039)
+    rows = _lp_rows('gross_profit', 'x', '11048', 'x', '4046', status='derived')
+    rows[0]['nodes'] = 'RevenueFromContractWithCustomerExcludingAssessedTax=95750 [R2.htm:2]; RevenueFromRelatedParties=754 [R2.htm:4]; -CostOfGoodsAndServicesSold=85456 [R2.htm:10]'
+    rows[2]['nodes'] = 'RevenueFromContractWithCustomerExcludingAssessedTax=69779 [R2.htm:2]; -CostOfGoodsAndServicesSold=65733 [R2.htm:9]'
+    comp = {'A18': 'RevenueFromContractWithCustomerExcludingAssessedTax|4|86086|2016-12-31~CostOfGoodsAndServicesSold|4|77047|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('RevenueFromContractWithCustomerExcludingAssessedTax', 'CostOfGoodsAndServicesSold'))[0]
+    assert r['value'] == D(9039)
