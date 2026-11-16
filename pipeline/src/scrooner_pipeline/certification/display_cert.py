@@ -661,7 +661,7 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
                 f"{tot[0].tag}={tot[0].value} ({','.join(tot[0].reports)})",
             )
         elif parts:
-            lease = sum(f.value for f in parts)
+            lease = sum((f.value for f in parts), Decimal(0))
             lease_ev = "; ".join(f"{f.tag}[{f.dims}]={f.value}" for f in parts)
     perim = sum(face.values(), Decimal(0)) + lease
     ev = f"face {dict(sorted(face.items()))}; lease {lease_ev}"
