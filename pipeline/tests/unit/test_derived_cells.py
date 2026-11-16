@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 
-from scrooner_pipeline.mapper.derived_cells import LABEL, derive
+from scrooner_pipeline.mapper.derived_cells import LABEL, derive as _derive
 
 M = 1_000_000
 FYS, FYE = date(2023, 1, 1), date(2023, 12, 31)
@@ -20,8 +20,23 @@ CI = {
 PERIODS = {10: (FYS, FYE, "duration"), 11: (FYE, FYE, "instant")}
 
 
-def cell(cid, pid, v):
-    return {"canonical_concept_id": cid, "period_id": pid, "value": Decimal(v * M)}
+def derive(cells, st, ci, periods, proven, ops):
+    """Operands are printed in filing ACC (the one-filing rule needs the accession of every input)."""
+    return _derive(
+        cells, st, ci, periods, proven, {}, {k: {ACC: v} for k, v in ops.items()}
+    )
+
+
+ACC = "0000000000-20-000001"
+
+
+def cell(cid, pid, v, acc=ACC):
+    return {
+        "canonical_concept_id": cid,
+        "period_id": pid,
+        "value": Decimal(v * M),
+        "_accession": acc,
+    }
 
 
 def blank(cid, pid, grain, state="not_presented"):
@@ -167,3 +182,40 @@ def test_c2_never_derived_when_an_operand_is_missing_or_unproven():
         == []
     )
     assert len(derive(cells, st(), CI, PERIODS, proven_bs(), ops)) == 1
+
+
+def test_inputs_from_different_filings_are_never_combined_mpc_fy2018():
+    """MPC FY2018: revenue 96,504 (FY2019 10-K) - cost of revenue 77,047 (FY2020 10-K) = 19,457 was served; the one
+    filing's own figure is 11,048. Inputs of two filings: not derived. Same filing: derived."""
+    rev, cor = 96_504, 77_047
+    proven = {
+        ("revenue", "FY", FYS, FYE): {Decimal(rev * M)},
+        ("cost_of_revenue", "FY", FYS, FYE): {Decimal(cor * M)},
+    }
+    mixed = [cell(1, 10, rev, "FY2019-10K"), cell(2, 10, cor, "FY2020-10K")]
+    assert derive(mixed, stats(blank(3, 10, "FY")), CI, PERIODS, proven, {}) == []
+    one = [cell(1, 10, rev, "FY2019-10K"), cell(2, 10, cor, "FY2019-10K")]
+    out = derive(one, stats(blank(3, 10, "FY")), CI, PERIODS, proven, {})
+    assert [o["value"] for o in out] == [Decimal((rev - cor) * M)]
+
+
+def test_c2_assets_equity_and_operands_from_one_filing():
+    cells = [cell(4, 11, 201, "A1"), cell(5, 11, 81, "A2")]
+    st = stats(blank(6, 11, "I"))
+    ops = {(LSE, 11): {"A1": Decimal(201 * M), "A2": Decimal(201 * M)}}
+    assert _derive(cells, st, CI, PERIODS, proven_bs(), {}, ops) == []
+    cells = [cell(4, 11, 201, "A1"), cell(5, 11, 81, "A1")]
+    # the L&SE is printed only in another filing
+    assert (
+        _derive(
+            cells,
+            st,
+            CI,
+            PERIODS,
+            proven_bs(),
+            {},
+            {(LSE, 11): {"A2": Decimal(201 * M)}},
+        )
+        == []
+    )
+    assert len(_derive(cells, st, CI, PERIODS, proven_bs(), {}, ops)) == 1

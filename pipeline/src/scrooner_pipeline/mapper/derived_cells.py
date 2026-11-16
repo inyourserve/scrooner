@@ -12,6 +12,10 @@ and the identities skip it, proof/identities.not_printed):
                           PROVEN total_assets, the PROVEN stockholders_equity (plus the printed NCI when the served
                           equity excludes it) is present, and no operand is missing.
 
+ONE-FILING RULE (approved 2026-11-17): every input of a derived cell comes from the SAME filing (cell `_accession`;
+operands from core.fact of that accession). Inputs whose winners sit in different filings (MPC FY2018: revenue from
+the FY2019 10-K, cost of revenue from the FY2020 10-K) never combine: the cell is not derived.
+
 Never derived: a period without every operand served/printed and proven, a cell the mapper already serves or holds,
 a concept the template leaves out (not_in_template). Instants are never summed by the mapper (D3); C2 is the single
 ruled exception: one subtraction of printed lines, labelled.
@@ -91,23 +95,28 @@ def load_proven(
     return out
 
 
-def load_operands(
+def load_operand_filings(
     conn: psycopg.Connection, company_id: int
-) -> dict[tuple[str, int], Decimal]:
-    """(tag, period_id) -> the printed (authoritative, non-derived) value of the C2 operand tags; a key with two
-    distinct values is dropped (never guess)."""
-    seen: dict[tuple[str, int], set[Decimal]] = defaultdict(set)
-    for tag, period_id, value in conn.execute(
+) -> dict[tuple[str, int], dict[str, Decimal]]:
+    """(tag, period_id) -> {accession: printed value} of the C2 operand tags, so the operands can be read from the one
+    filing that prints the proven assets and equity. A key with two distinct values in one accession is dropped."""
+    seen: dict[tuple[str, int, str], set[Decimal]] = defaultdict(set)
+    for tag, period_id, acc, value in conn.execute(
         """
-        select c.tag, f.period_id, f.value
+        select c.tag, f.period_id, fl.accession_number, f.value
         from core.fact f join core.concept c on c.id = f.concept_id
+        join core.filing fl on fl.id = f.filing_id
         where f.company_id = %s and f.is_authoritative and not f.is_derived
           and c.taxonomy = 'us-gaap' and c.tag = any(%s)
         """,
         (company_id, list(OPERAND_TAGS)),
     ).fetchall():
-        seen[(tag, period_id)].add(Decimal(value))
-    return {k: next(iter(v)) for k, v in seen.items() if len(v) == 1}
+        seen[(tag, period_id, acc)].add(Decimal(value))
+    out: dict[tuple[str, int], dict[str, Decimal]] = defaultdict(dict)
+    for (tag, period_id, acc), v in seen.items():
+        if len(v) == 1:
+            out[(tag, period_id)][acc] = next(iter(v))
+    return dict(out)
 
 
 def derive(
@@ -117,6 +126,7 @@ def derive(
     periods: dict[int, tuple[date, date, str]],
     proven: dict[ProvenKey, set[Decimal]],
     operands: dict[tuple[str, int], Decimal],
+    operand_filings: dict[tuple[str, int], dict[str, Decimal]] | None = None,
 ) -> list[dict]:
     """The derived cells (pure); `cells` and `stats` are not touched (add_derived_cells applies them)."""
     by_base: dict[tuple[str, int], dict] = {}
@@ -147,13 +157,17 @@ def derive(
             if (
                 rev is not None
                 and cor is not None
+                and rev.get("_accession") is not None
+                and rev.get("_accession") == cor.get("_accession")
                 and is_proven("revenue", rev)
                 and is_proven("cost_of_revenue", cor)
             ):
                 value = rev["value"] - cor["value"]
                 note = f"{LABEL}: revenue {rev['value']} - cost_of_revenue {cor['value']} (both PROVEN); the filing prints no gross profit line"
         elif base == "total_liabilities" and b["grain"] == "I":
-            value, note = _total_liabilities(pid, by_base, operands, is_proven)
+            value, note = _total_liabilities(
+                pid, by_base, operand_filings or {}, is_proven
+            )
         if value is None:
             continue
         out.append(
@@ -172,9 +186,24 @@ def derive(
     return out
 
 
-def _total_liabilities(pid, by_base, operands, is_proven) -> tuple[Decimal | None, str]:
+def _total_liabilities(
+    pid, by_base, operand_filings, is_proven
+) -> tuple[Decimal | None, str]:
     ta = by_base.get(("total_assets", pid))
     se = by_base.get(("stockholders_equity", pid))
+    if ta is None or se is None:
+        return None, ""
+    acc = ta.get("_accession")
+    if acc is None or acc != se.get("_accession"):
+        return (
+            None,
+            "",
+        )  # one-filing rule: assets, equity and every operand from the same filing
+    operands = {
+        (t, p): by_acc[acc]
+        for (t, p), by_acc in operand_filings.items()
+        if p == pid and acc in by_acc
+    }
     lse = next((operands[(t, pid)] for t in LSE_TAGS if (t, pid) in operands), None)
     if ta is None or se is None or lse is None:
         return None, ""
@@ -229,7 +258,8 @@ def add_derived_cells(
         concept_info,
         periods,
         load_proven(conn, company_id),
-        load_operands(conn, company_id),
+        {},
+        load_operand_filings(conn, company_id),
     )
     if not new:
         return 0
