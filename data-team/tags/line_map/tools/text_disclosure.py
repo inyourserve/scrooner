@@ -128,6 +128,10 @@ DIV0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|ha
 DIV_SUSP = re.compile(r"\b(our|the company's|the)\s+(quarterly\s+)?(cash\s+)?dividends?\s+(to common (shareholders|stockholders)\s+|on (our )?common stock\s+)?(has|have|remains?|remained)\s+(been\s+)?suspended\b", re.I)
 DPS0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not)\s+(declare|declared|pay|paid)\s+(or\s+(pay|paid|declare|declared)\s+)?(any\s+)?(cash\s+)?dividends\b", re.I)
 BUY0 = re.compile(r"\b(we|the company)\s+did not\s+(re)?purchase\s+any\s+(shares|common stock)\b[^.]*\brepurchase program\b", re.I)
+AMORT = re.compile(r'\bamortization (expense )?(of|related to|for|on|associated with) (\w+[- ])?(acquired |purchased |finite[- ]lived |definite[- ]lived |identifiable )*intangible|\bintangible assets?\s+amortization expense', re.I)
+AMORT_NOT = re.compile(r'\b(estimated|expected|future|will|next|anticipated|remaining|thereafter|impairment|capitaliz|software|tax)\b', re.I)
+TABLE_LB = {'amortization_of_intangibles': re.compile(r'^\s*(intangible assets? amortization expense|amortization (expense )?of (acquired |purchased |identifiable )?intangible assets?)\b', re.I),
+            'research_and_development': re.compile(r'^\s*research and development( expenses?| costs?)?\b', re.I)}
 RD_NOT = re.compile(r'\b(credits?|capitali[sz]ed|tax|carryforwards?|percent|%)', re.I)
 
 
@@ -148,7 +152,8 @@ def read_cell(text, cell):
     found, ambiguous = [], []
     for pos, s in sentences(text):
         sec = section_at(secs, pos)
-        if dp == 'research_and_development' and RD.search(s) and RD_EXP.search(s) and not RD_NOT.search(s):
+        if (dp == 'research_and_development' and RD.search(s) and RD_EXP.search(s) and not RD_NOT.search(s)) or \
+           (dp == 'amortization_of_intangibles' and AMORT.search(s) and not AMORT_NOT.search(s)):
             amts = AMT.findall(s)
             yrs = [y for y in YR.findall(s)]
             if not amts:
@@ -194,6 +199,23 @@ def read_cell(text, cell):
             if not year_ok:
                 continue
             found.append((Decimal(0), sec, s, pos))
+    # table lines (ETN FY2024 MD&A: '(In millions except for per share data) 2024 2023 2022' / 'Intangible asset amortization expense
+    # $ 425 $ 450 $ 499'): own filing only; the header line right above names the years with the cell's year FIRST and carries the
+    # scale ('in millions/thousands/billions'); the line's label is the data point's own label; first amount = the cell's year
+    if own and not found and dp in TABLE_LB:
+        lines = text.split('\n')
+        for i, ln in enumerate(lines):
+            m = TABLE_LB[dp].match(ln)
+            if not m: continue
+            amts = re.findall(r'\$\s?\(?(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\)?', ln[m.end():])
+            if len(amts) < 2: continue
+            hdr = next((lines[j] for j in range(i - 1, max(i - 4, -1), -1) if len(re.findall(r'\b(?:19|20)\d{2}\b', lines[j])) >= 2), None)
+            if not hdr: continue
+            yrs = re.findall(r'\b((?:19|20)\d{2})\b', hdr)
+            sc = re.search(r'(?i)\bin (millions|thousands|billions)\b', hdr) or re.search(r'(?i)\bin (millions|thousands|billions)\b', ' '.join(lines[max(i - 4, 0):i]))
+            if not sc or yrs[0] not in fy or len(yrs) != len(amts): continue
+            pos = text.find(ln)
+            found.append((amount(amts[0], sc.group(1).rstrip('s')), section_at(secs, pos), f'{hdr.strip()} / {ln.strip()}', pos))
     vals = {x[0] for x in found}
     if len(vals) == 1:
         v, sec, s, pos = found[0]
@@ -213,7 +235,13 @@ def fetch(cells_csv, cache):
         p = os.path.join(cache, c['accession'] + '.htm')       # raw document: a parser fix never needs a refetch
         if os.path.exists(p):
             continue
-        url = primary_doc(c['cik'], c['accession'])
+        url = None
+        for k in dict.fromkeys((c['cik'], c['accession'][:10])):   # a predecessor's report sits under its own CIK (MRVL 1058057)
+            try:
+                url = primary_doc(k, c['accession'])
+            except Exception:
+                url = None
+            if url: break
         if not url:
             print('no primary document', c['accession'], file=sys.stderr); continue
         open(p, 'w').write(f'<!-- URL {url} -->\n' + get(url))

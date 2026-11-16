@@ -696,3 +696,20 @@ def test_later_filing_reader_needs_the_year_named():
     assert td.read_cell(susp, dict(data_point='dividends_per_share', period_end='2022-12-31', own='0'))['decision'] == 'open'
     named = 'Item 7. MD&A\nAs a result, we did not pay any dividends in 2023, 2022 and 2021.\n'
     assert td.read_cell(named, dict(data_point='dividends_per_share', period_end='2022-12-31', own='0'))['value'] == '0'
+
+
+def test_table_line_amount_needs_year_header_and_scale_and_future_schedules_never_count():
+    # ETN FY2024 MD&A: '(In millions ...) 2024 2023 2022' / 'Intangible asset amortization expense $ 425 $ 450 $ 499' -> 425,000,000
+    # (equals ETN's CorporateNonSegment fact); a table whose first year is not the cell's, or with no scale, stays open
+    import text_disclosure as td
+    rc = lambda t, pe, own='1': td.read_cell(t, dict(data_point='amortization_of_intangibles', period_end=pe, own=own))
+    etn = 'Item 7. MD&A\nIntangible asset amortization expense is as follows:\n(In millions except for per share data) 2024 2023 2022\nIntangible asset amortization expense $ 425 $ 450 $ 499\n'
+    r = rc(etn, '2024-12-31')
+    assert r['value'] == '425000000' and r['value_source'] == 'text_stated' and r['quote'].endswith('$ 425 $ 450 $ 499')
+    assert rc(etn, '2023-12-31')['decision'] == 'open'                  # 2023 is not the first column
+    assert rc(etn, '2024-12-31', own='0')['decision'] == 'open'         # table lines: own filing only
+    assert rc(etn.replace('(In millions except for per share data) ', ''), '2024-12-31')['decision'] == 'open'   # no scale
+    future = 'Item 8. Notes\nEstimated amortization expense of intangible assets is $ 400 million in 2025.\n'
+    assert rc(future, '2025-12-31')['decision'] == 'open'
+    said = 'Item 8. Notes\nAmortization expense of intangible assets was $ 425 million in 2024.\n'
+    assert rc(said, '2024-12-31')['value'] == '425000000'
