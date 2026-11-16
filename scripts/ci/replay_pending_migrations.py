@@ -59,6 +59,12 @@ BEHAVIOUR_SMOKES: list[tuple[str, str, str, bool]] = [
     ("0125", "select conname from pg_constraint where conname = 'company_tag_map_dims_decision_check'",
      "company_tag_map_dims_decision_check", False),
     ("0125", "select proname from pg_proc where proname = 'company_tag_map_no_overlap'", "company_tag_map_no_overlap", False),
+    ("0129", "select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace where (n.nspname, p.proname) in "
+             "(('analytics','check_first_match_priority_unique'),('analytics','cell_evidence_append_only'),"
+             "('core','company_identity_audit_guard'),('analytics','slot_protected_cell_guard'),"
+             "('analytics','company_value_owner_guard'),('core','company_history_source_no_overlap'),"
+             "('analytics','company_tag_map_no_overlap'),('analytics','verifier_check_writer_guard')) "
+             "and p.proconfig::text ~ 'search_path=pg_catalog, (analytics|core)'", "8", False),
 ]
 
 
