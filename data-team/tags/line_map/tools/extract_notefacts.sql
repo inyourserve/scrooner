@@ -9,7 +9,8 @@
 --   cvals 'tag|qtrs|value|ddate~...'      undimensioned facts of the filing's earlier columns (FY-1, FY-2), face or note, incl. parenthetical
 --                                         per-share lines (LLY DPS 2016 sits in the FY2018 equity parenthetical). compfacts.json.
 --   zlines 'tag|stmt|report|line|label~...' statement lines of the family elements with no own-period fact in any dimension but
---                                         values in other columns: printed dash / zero evidence (ruling 2026-11-14).
+--                                         values in other columns: printed dash / zero evidence (ruling 2026-11-14); EQ lines only for
+--                                         CommonStockDividendsPerShare* (BA FY2020-21 equity-statement DPS dash, 2026-11-16).
 --   mvals also carries AmortizationOfIntangibleAssets by income-statement location (CSCO prints only the opex part on the face) and
 --   CostOf* by ProductOrService member on an IS line (GE, RTX, TMO, TMUS print product and service cost lines with members only), and
 --   capex elements by ConsolidatedEntities (VLO: lines carrying entity members only; served when they tie to the investing total),
@@ -101,7 +102,7 @@ cmp as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
   where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and (v.qtrs in (0,4) or (v.qtrs=1 and t.tag ~ '^CommonStockDividendsPerShare' and v.ddate>fl.period-interval '1 year')) and v.value is not null
   group by 1),
 zl as (select fl.accession a, string_agg(concat_ws('|',t.tag,l.stmt,l.report,l.line,translate(coalesce(l.plabel,''),'|~','/-')),'~') zlines
-  from fl join fsn.line l on l.filing_id=fl.id and l.stmt in ('BS','IS','CF') join tg t on t.id=l.tag_id
+  from fl join fsn.line l on l.filing_id=fl.id and (l.stmt in ('BS','IS','CF') or (l.stmt='EQ' and l.tag_id in (select id from tg where tag ~ '^CommonStockDividendsPerShare'))) join tg t on t.id=l.tag_id
   where not exists (select 1 from fsn.value v where v.filing_id=fl.id and v.tag_id=l.tag_id and v.ddate=fl.period)
     and exists (select 1 from fsn.value v where v.filing_id=fl.id and v.tag_id=l.tag_id and v.ddate<>fl.period)
   group by 1)

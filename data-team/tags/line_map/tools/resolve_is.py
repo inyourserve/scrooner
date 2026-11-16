@@ -142,7 +142,13 @@ def resolve_band(L, arcs, notes, acc=None):
         brk = abs(s - pt['val']) > tol(s, pt['val'], *[l['val'] for l in keep])
     else: brk = False
     idf = ',identity_break' if brk else ''   # T 2019: equity income tagged -6 where the printed total needs +6 (filer sign)
-    if mx:
+    lab = [l for l in ot if OTHER_IE_LB.match((l['lb'] or '').strip())]
+    if mx and len(lab) == 1:
+        # Ritwik draw 2026-11-16 (MO FY2015 'Other income, net' beside 'Interest and other debt expense, net'): a band line the filer
+        # labels other income/expense is the data point wherever it is printed (BMY ruling 2026-11-14), even beside a mixed interest line
+        out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped', lab, f"{where}: the filer's own line '{lab[0]['lb']}' (beside the mixed '{mx[0]['lb']}')",
+                                             flags='band;labelled_other_line' + idf, value=sv(lab))
+    elif mx:
         out['other_income_expense_net'] = mk('other_income_expense_net', 'combined', mx + ot, f"{where}: '{mx[0]['lb']}' holds interest together with other items; no separate other-income line")
     elif len(ot) == 1 and not (ie or ii or nt) and ot[0]['tag'] == 'NonoperatingIncomeExpense':
         out['other_income_expense_net'] = mk('other_income_expense_net', 'combined', ot, f"{where}: a single nonoperating total ('{ot[0]['lb']}') is printed; it holds interest and other items together")

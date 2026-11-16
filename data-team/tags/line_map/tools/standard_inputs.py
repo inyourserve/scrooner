@@ -183,7 +183,7 @@ WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDec
 
 
 WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
-COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',))
+COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',), other_income_expense_net=('OtherNonoperatingIncomeExpense',))   # MO FY2014: the FY2015 10-K prints 'Other income, net' 0 for 2014
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -199,7 +199,7 @@ def comparative_fill(rows, compfacts, instant_dps):
     for lst in by.values():
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
-            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and (r['data_point'] in WC_PURE or r['data_point'] == 'comprehensive_income')):
+            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in COMBINED_YIELDS_TO):
                 continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
@@ -231,11 +231,13 @@ def printed_zero(rows, zlines, roles):
         z = {}
         for s in (zlines.get(r['accession']) or '').split('~'):
             x = s.split('|')
-            if len(x) == 5 and x[1] == stmt: z.setdefault(x[0], x)
+            # a NOTE-stmt per-share dividend role is printed on the equity statement (BA FY2020-21 'Cash dividends declared, per share'
+            # 2019 8.22, 2020 -, Ritwik draw 2026-11-16): an EQ dash line counts for it
+            if len(x) == 5 and (x[1] == stmt or (stmt == 'NOTE' and x[1] == 'EQ' and x[0].startswith('CommonStockDividendsPerShare'))): z.setdefault(x[0], x)
         t = next((t for t in alts if t in z), None)
         if t:
             x = z[t]
-            out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{x[2]}:{x[3]}", label=x[4])
+            out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=x[1], r_line=f"R{x[2]}:{x[3]}", label=x[4])
     return out
 
 
@@ -537,4 +539,56 @@ def quarterly_dps(notefacts, compfacts, filings):
             d = q.get(t, {})
             if len(d) == 4 and per in d:
                 out[a] = dict(tag=t, value=sum(d.values()), parts={k.isoformat(): v for k, v in sorted(d.items())}); break
+    return out
+
+
+PER_SHARE = re.compile(r'^(EarningsPerShare\w*|IncomeLossFromContinuingOperationsPerShare\w*|IncomeLossFromDiscontinuedOperationsNetOfTaxPerShare\w*|CommonStockDividendsPerShare\w*)$')
+
+
+def per_share_scale_errors(filings, notefacts, compfacts):
+    """Ritwik draw 2026-11-16 (STX FY2024 10-K stores DPS 2,800,000 / 2,770,000 for the printed $2.80 / $2.77): a per-share fact that is
+    10^3 or 10^6 times the same filer's value of that element in its other years is a filer scale error. Divides it in place in the own
+    face lines, the own note facts and the comparative facts; returns {(accession, tag, ddate): (xbrl, fixed)}. The reference is the median
+    of the filer's values of the element; a value within 2% of 10^3x or 10^6x of it is scaled, anything else is left alone."""
+    import statistics
+    cik_of = {f['a']: f['cik'].lstrip('0') for f in filings}
+    per = {f['a']: f['p'] for f in filings}
+    vals = collections.defaultdict(list)
+    for a, raw in list(notefacts.items()) + list(compfacts.items()):
+        for x in (raw or '').split('~'):
+            y = x.split('|')
+            if len(y) >= 3 and PER_SHARE.match(y[0]) and a in cik_of:
+                try: v = abs(D(y[2]))
+                except Exception: continue
+                if v: vals[(cik_of[a], y[0])].append(v)
+    ref = {k: statistics.median(v) for k, v in vals.items() if len(v) >= 3}
+    def fix(a, tag, v):
+        r = ref.get((cik_of.get(a), tag))
+        if not r or not v: return None
+        for k in (D(10) ** 6, D(10) ** 3):
+            if abs(abs(v) / r / k - 1) <= D('0.02') and abs(v) / k < 1000: return v / k
+        return None
+    out = {}
+    for name, store in (('note', notefacts), ('cmp', compfacts)):
+        for a, raw in list(store.items()):
+            parts = (raw or '').split('~'); ch = False
+            for i, x in enumerate(parts):
+                y = x.split('|')
+                if len(y) >= 3 and PER_SHARE.match(y[0]):
+                    try: v = D(y[2])
+                    except Exception: continue
+                    nv = fix(a, y[0], v)
+                    if nv is not None:
+                        y[2] = str(nv.normalize()); parts[i] = '|'.join(y); ch = True
+                        out[(a, y[0], y[3] if name == 'cmp' and len(y) > 3 else per.get(a))] = (v, nv)
+            if ch: store[a] = '~'.join(parts)
+    for f in filings:
+        parts = (f.get('lines') or '').split('~'); ch = False
+        for i, x in enumerate(parts):
+            y = x.split('|')
+            if len(y) >= 9 and PER_SHARE.match(y[3]) and y[8] not in ('', None):
+                nv = fix(f['a'], y[3], D(y[8]))
+                if nv is not None:
+                    out[(f['a'], y[3], f['p'])] = (D(y[8]), nv); y[8] = str(nv.normalize()); parts[i] = '|'.join(y); ch = True
+        if ch: f['lines'] = '~'.join(parts)
     return out

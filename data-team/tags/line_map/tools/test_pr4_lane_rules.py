@@ -519,7 +519,7 @@ def test_bank_data_points_are_out_of_template_outside_the_bank_template():
 
 def test_text_disclosure_fills_only_open_cells_of_the_same_filing(tmp_path):
     # MRVL FY2015 'we did not have any outstanding debt' (stated_zero contract, RESOLVER-OUTPUT-FORMAT.md); MCK FY2021 R&D stated in
-    # Item 1 only stays open (text_stated_pending) until the serving contract covers stated amounts. XBRL always wins.
+    # Item 1 only ('Text stated' contract, edf2cfa1). XBRL always wins.
     p = tmp_path / 't.csv'
     p.write_text('cik,ticker,data_point,period_end,accession,decision,value_source,value,section,locator,quote_period,quote,why\n'
                  '0001835632,MRVL,total_debt,2015-01-31,A1,mapped,stated_zero,0,item7a,"Item 7A, p. 52",2015-01-31,"we did not have any outstanding debt",x\n'
@@ -536,7 +536,7 @@ def test_text_disclosure_fills_only_open_cells_of_the_same_filing(tmp_path):
     assert z['quote'] and z['locator'] == 'Item 7A, p. 52' and z['quote_period'] == '2015-01-31'
     assert rows[1]['status'] == 'not_presented'                     # another filing's text never fills this cell
     assert rows[2]['value'] == D(5)                                 # XBRL wins
-    assert rows[3]['status'] == 'no_role' and rows[3]['value'] is None and rows[3]['flags'] == 'text_stated_pending' and rows[3]['quote']
+    assert (rows[3]['status'], rows[3]['value'], rows[3]['flags'], rows[3]['nodes']) == ('mapped', D(74000000), 'text_stated', '') and rows[3]['quote_period'] == '2021-03-31'
 
 
 def test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros():
@@ -557,6 +557,9 @@ def test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros
     assert r['locator'] == 'Item 7A. Quantitative and Qualitative Disclosures About Market Risk, p. 52'
     other = 'Item 7A. Market risk\nWe did not have any outstanding debt other than finance leases as of January 31, 2015.\n'
     assert td.read_cell(other, dict(data_point='total_debt', period_end='2015-01-31'))['decision'] == 'open'
+    ba = 'Item 5. Market\nAs a result, we did not pay any dividends in 2023, 2022 and 2021.\n'
+    assert td.read_cell(ba, dict(data_point='dividends_paid', period_end='2023-12-31'))['value_source'] == 'stated_zero'
+    assert td.read_cell(ba, dict(data_point='dividends_paid', period_end='2024-12-31'))['decision'] == 'open'   # 2024 is not named
     silent = 'Item 7. MD&A\nWe manage liquidity carefully in fiscal 2015.\n'
     assert td.read_cell(silent, dict(data_point='total_debt', period_end='2015-01-31'))['decision'] == 'open'
 
@@ -565,3 +568,73 @@ def test_fsn_dropped_facts_missing_path_fails_loudly(tmp_path):
     import pytest, standard_inputs
     with pytest.raises(FileNotFoundError):
         standard_inputs.fsn_dropped_facts(str(tmp_path / 'nope.csv'), {}, {})
+
+
+def test_ci_parent_derived_from_total_and_nci_lines_of_the_ci_statement():
+    # Ritwik draw 2026-11-16, BA FY2015: CI prints 'Comprehensive income, net of tax' 6,328 and NCI -3, no parent line -> 6,331
+    a = 'BA15'
+    cl = {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|4|22|Comprehensive income, net of tax~'
+             'ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|21|Comprehensive (loss)/income related to noncontrolling interests'}
+    nf = {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|4|6328000000~ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|-3000000'}
+    rows = [dict(accession=a, data_point='comprehensive_income', status='combined', value=None, tags='', nodes='', why='', flags='ci_incl_nci', column='own')]
+    resolve_all.apply_ci_parent(rows, cl, nf)
+    r = rows[0]
+    assert r['status'] == 'derived' and r['value'] == D(6331000000) and 'ci_parent_derived' in r['flags'] and 'ci_incl_nci' not in r['flags']
+    assert r['nodes'].startswith('ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest=6328000000 [R4.htm:22]; -ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest=-3000000')
+    only_total = [dict(rows[0], status='combined', value=None, flags='ci_incl_nci')]
+    resolve_all.apply_ci_parent(only_total, {a: cl[a].split('~')[0]}, nf)
+    assert only_total[0]['status'] == 'combined'                                  # no NCI line printed: stays the point reason
+
+
+def test_equity_statement_dps_dash_is_a_printed_zero_unless_a_later_10k_prints_a_value():
+    # BA FY2020 'Cash dividends declared, per share' 2019 8.22, 2020 -; MU FY2021 own dash but the FY2022 10-K prints 0.10 for FY2021
+    import standard_inputs
+    rows = [dict(accession='BA20', data_point='dividends_per_share', status='not_presented')]
+    z = {'BA20': 'CommonStockDividendsPerShareDeclared|EQ|6|35|Cash dividends declared, per share'}
+    roles = {'dividends_per_share': ('NOTE', ['CommonStockDividendsPerShareDeclared'])}
+    pz = standard_inputs.printed_zero(rows, z, roles)
+    assert pz[('BA20', 'dividends_per_share')]['stmt'] == 'EQ'
+    assert standard_inputs.printed_zero(rows, {'BA20': 'CommonStockDividendsPerShareDeclared|EQ|6|35|x'}, {'dividends_per_share': ('IS', ['CommonStockDividendsPerShareDeclared'])}) == {}
+    old = dict(resolve_all.EXT)
+    try:
+        resolve_all.EXT.clear()
+        resolve_all.EXT.update(pz={('BA20', 'dividends_per_share'): pz[('BA20', 'dividends_per_share')], ('MU21', 'dividends_per_share'): dict(pz[('BA20', 'dividends_per_share')])},
+                               cf={('MU21', 'dividends_per_share'): dict(tag='CommonStockDividendsPerShareDeclared', value='0.10', accession='MU22')})
+        rs = [dict(accession='BA20', data_point='dividends_per_share', status='not_presented', flags='', ticker='BA'),
+              dict(accession='MU21', data_point='dividends_per_share', status='not_presented', flags='', ticker='MU')]
+        resolve_all.fill_printed_zero_and_comparative(rs, {})
+    finally:
+        resolve_all.EXT.clear(); resolve_all.EXT.update(old)
+    assert rs[0]['value'] == D(0) and 'printed_zero' in rs[0]['flags']
+    assert rs[1]['value'] == D('0.10') and rs[1]['column'] == 'comparative'
+
+
+def test_per_share_scale_error_is_divided_and_flagged():
+    # STX FY2024 10-K stores DPS 2,800,000 (own) and 2,770,000 (FY2022 column) for the printed $2.80 / $2.77
+    import standard_inputs
+    filings = [dict(a=f'S{y}', cik='1137789', p=f'{y}-06-30', lines='') for y in (2021, 2022, 2023, 2024)]
+    notes = {'S2021': 'CommonStockDividendsPerShareDeclared|4|2.66', 'S2022': 'CommonStockDividendsPerShareDeclared|4|2.77',
+             'S2023': 'CommonStockDividendsPerShareDeclared|4|2.80', 'S2024': 'CommonStockDividendsPerShareDeclared|4|2800000'}
+    comp = {'S2024': 'CommonStockDividendsPerShareDeclared|4|2770000|2022-06-30~EarningsPerShareBasic|4|1.5|2023-06-30'}
+    fixed = standard_inputs.per_share_scale_errors(filings, notes, comp)
+    assert notes['S2024'] == 'CommonStockDividendsPerShareDeclared|4|2.8' and comp['S2024'].startswith('CommonStockDividendsPerShareDeclared|4|2.77|2022-06-30')
+    assert fixed[('S2024', 'CommonStockDividendsPerShareDeclared', '2022-06-30')] == (D(2770000), D('2.77'))
+    assert notes['S2021'].endswith('|2.66') and 'EarningsPerShareBasic|4|1.5' in comp['S2024']     # in-range values untouched
+    rows = [dict(accession='S2024', period_end='2022-06-30', data_point='dividends_per_share', status='mapped', value=D('2.77'),
+                 nodes='CommonStockDividendsPerShareDeclared=2.77 [NOTE]', flags='roles', why='w')]
+    resolve_all.apply_scale_flags(rows, fixed)
+    assert rows[0]['flags'] == 'roles;filer_scale_error' and '2770000' in rows[0]['why']
+
+
+def test_combined_other_income_yields_to_the_later_10k_labelled_line():
+    # MO FY2014: own band has only the mixed interest line (combined); the FY2015 10-K prints 'Other income, net' 0 for 2014
+    import standard_inputs
+    rows = [dict(cik='1', accession='M14', period_end='2014-12-31', data_point='other_income_expense_net', status='combined', tags='InterestIncomeExpenseNet', nodes='', value=None),
+            dict(cik='1', accession='M15', period_end='2015-12-31', data_point='other_income_expense_net', status='mapped', tags='OtherNonoperatingIncomeExpense',
+                 nodes='OtherNonoperatingIncomeExpense=5000000 [R4.htm:12]', value=D(5000000))]
+    comp = {'M15': 'OtherNonoperatingIncomeExpense|4|0|2014-12-31'}
+    out = standard_inputs.comparative_fill(rows, comp, set())
+    assert out[('M14', 'other_income_expense_net')]['value'] == '0' and out[('M14', 'other_income_expense_net')]['accession'] == 'M15'
+    rows[1]['tags'] = 'NonoperatingIncomeExpense'; rows[1]['nodes'] = 'NonoperatingIncomeExpense=5 [R4.htm:12]'
+    comp = {'M15': 'NonoperatingIncomeExpense|4|0|2014-12-31'}
+    assert ('M14', 'other_income_expense_net') not in standard_inputs.comparative_fill(rows, comp, set())   # only the pure labelled element

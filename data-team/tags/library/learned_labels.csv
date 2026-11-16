@@ -1333,12 +1333,12 @@ operating_income,operating loss,15,4,OperatingIncomeLoss 15
 operating_income,operating income from continuing operations,6,2,OperatingIncomeLoss 6
 operating_income,income from continuing operations,5,1,OperatingIncomeLoss 5
 operating_income,total,1,1,OperatingIncomeLoss 1
-other_income_expense_net,"other income , net",214,33,OtherNonoperatingIncomeExpense 158;NonoperatingIncomeExpense 55;OtherNonoperatingIncomeExpenseNet 1
-other_income_expense_net,"other income, net",131,27,OtherNonoperatingIncomeExpense 83;NonoperatingIncomeExpense 37;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 2
+other_income_expense_net,"other income , net",220,33,OtherNonoperatingIncomeExpense 164;NonoperatingIncomeExpense 55;OtherNonoperatingIncomeExpenseNet 1
+other_income_expense_net,"other income, net",133,28,OtherNonoperatingIncomeExpense 85;NonoperatingIncomeExpense 37;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 2
 other_income_expense_net,other income,123,17,OtherNonoperatingIncomeExpense 57;NonoperatingIncomeExpense 19;OtherIncome 12;OtherNonoperatingIncome 10
 other_income_expense_net,"other expense, net",107,20,OtherNonoperatingIncomeExpense 88;NonoperatingIncomeExpense 14;OtherIncomeExpenseNet 5
+other_income_expense_net,other income net,36,5,OtherNonoperatingIncomeExpense 35;OtherNonoperatingIncome 1
 other_income_expense_net,"other, net",33,3,OtherNonoperatingIncomeExpense 33
-other_income_expense_net,other income net,32,4,OtherNonoperatingIncomeExpense 31;OtherNonoperatingIncome 1
 other_income_expense_net,other expense,26,5,OtherOperatingIncomeExpenseNet 10;OtherNonoperatingIncomeExpense 9;OtherNonoperatingExpense 7
 other_income_expense_net,loss on extinguishment of debt,26,6,GainsLossesOnExtinguishmentOfDebt 26
 other_income_expense_net,net foreign exchange loss,24,2,ForeignCurrencyTransactionGainLossBeforeTax 24
@@ -1377,6 +1377,7 @@ other_income_expense_net,"interest and other income , net",7,1,NonoperatingIncom
 other_income_expense_net,"interest and other income, net",7,3,NonoperatingIncomeExpense 6;OtherNonoperatingIncomeExpense 1
 other_income_expense_net,other expensenet,7,1,OtherNonoperatingIncomeExpense 7
 other_income_expense_net,"non operating income, net",7,1,NonoperatingIncomeExpenseIncludingEliminationOfNetIncomeLossAttributableToNoncontrollingInterests 6;NonoperatingIncomeExpense 1
+other_income_expense_net,other,7,2,OtherNonoperatingIncomeExpense 7
 other_income_expense_net,investment income and other,7,1,OtherNonoperatingIncomeExpense 7
 other_income_expense_net,"translated earnings contract gain, net",6,1,DerivativeGainLossOnDerivativeNet 2;TranslatedEarningsContractGainLossNet 2;TranslatedEarningsContractGainNet 2
 other_income_expense_net,loss on debt extinguishment,6,1,GainsLossesOnExtinguishmentOfDebt 6
@@ -1387,7 +1388,6 @@ other_income_expense_net,debt extinguishment costs,5,2,GainsLossesOnExtinguishme
 other_income_expense_net,gain on extinguishment of debt,5,3,GainsLossesOnExtinguishmentOfDebt 5
 other_income_expense_net,non service pension income,5,1,NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent 5
 other_income_expense_net,non service fas pension income,5,1,NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent 5
-other_income_expense_net,other,5,2,OtherNonoperatingIncomeExpense 5
 other_income_expense_net,net unrealized gain on equity and other investments,5,1,EquityMethodAndOtherInvestmentsUnrealizedGainLoss 5
 other_income_expense_net,total other income,5,1,NonoperatingIncomeExpense 5
 other_income_expense_net,"other , net",4,1,OtherNonoperatingIncomeExpense 4

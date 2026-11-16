@@ -636,3 +636,18 @@
 ## 2026-11-16 (resolver-2026-11-16.59): 2 element changes, 27999 rows, coverage 63.1%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.60): 9 element changes, 27999 rows, coverage 63.1%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ BenefitCostIncomeNonoperating: data_point, served_cells
+- ~ CommonStockDividendsPerShareDeclared: served_cells, known_problems
+- ~ ComprehensiveIncomeNetOfTax: served_cells
+- ~ ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest: data_point, served_cells
+- ~ ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest: served_cells
+- ~ InterestAndOtherExpense: data_point, served_cells
+- ~ InterestAndOtherFinancialCharges: data_point
+- ~ OtherNonoperatingIncomeExpense: rule_id, served_cells
+
+## 2026-11-16 (resolver-2026-11-16.60): 2 element changes, 27999 rows, coverage 63.1%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id

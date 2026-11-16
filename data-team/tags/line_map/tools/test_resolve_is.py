@@ -198,3 +198,17 @@ def test_identity_break_is_flagged_not_dropped():
     f = filing(lines, calc(('OperatingIncomeLoss', 1), ('InterestExpense', -1), ('IncomeLossFromEquityMethodInvestments', 1), ('OtherNonoperatingIncomeExpense', 1)))
     o = R.resolve(f, {})['other_income_expense_net']
     assert o['value'] == D(-1077) and 'identity_break' in o['flags']
+
+
+def test_labelled_other_income_line_beside_a_mixed_interest_line_is_the_data_point():
+    # Ritwik draw 2026-11-16, MO FY2015: 'Interest and other debt expense, net' is mixed, 'Other income, net' 5 is printed beside it
+    mo = [('IS', 'Revenues', 'Net revenues', 25434), ('IS', 'OperatingIncomeLoss', 'Operating income', 8361),
+          ('IS', 'InterestIncomeExpenseNet', 'Interest and other debt expense, net', -817),
+          ('IS', 'IncomeLossFromEquityMethodInvestments', 'Earnings from equity investment in SABMiller', 757),
+          ('IS', 'OtherNonoperatingIncomeExpense', 'Other income, net', 5),
+          ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxes', 'Earnings before income taxes', 8306)]
+    o = run(mo)['other_income_expense_net']
+    assert o['status'] == 'mapped' and o['value'] == D(5) and o['tags'] == 'OtherNonoperatingIncomeExpense' and 'labelled_other_line' in o['flags']
+    no_label = [l for l in mo if l[1] != 'OtherNonoperatingIncomeExpense']
+    no_label[-1] = no_label[-1][:3] + (8301,)
+    assert run(no_label)['other_income_expense_net']['status'] == 'combined'     # MO FY2016: no labelled line, still combined

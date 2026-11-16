@@ -42,7 +42,9 @@ def _by_tag_qtrs(rows):
 @pytest.mark.unit
 def test_committed_csv_parses_and_has_every_row():
     got = fxe.load()
-    assert len(got) == 6
+    assert len(got) == 7
+    stx = got[("0001137789-24-000068", "CommonStockDividendsPerShareDeclared", 4)]   # STX FY2024 DPS stored 10^6 too large (Ritwik draw 2026-11-16)
+    assert stx.xbrl_value == Decimal("2800000") and stx.printed_value == Decimal("2.80")
     c = got[("0001562762-20-000064", EM, 4)]
     assert c.xbrl_value == Decimal("-6000000") and c.printed_value == Decimal("6000000")
     s = got[(ACC, "Liabilities", 0)]

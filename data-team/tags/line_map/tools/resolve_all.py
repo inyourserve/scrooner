@@ -48,7 +48,7 @@ def fill_printed_zero_and_comparative(rows, td):
         # a combined own working-capital line yields to the pure element a later 10-K prints for the year (TSLA FY2015-16 'Inventories and operating lease vehicles'; standard_inputs.WC_PURE)
         if r['status'] == 'combined' and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
         if r['status'] != 'not_presented': continue
-        if k in pz:
+        if k in pz and not (pz[k].get('stmt') == 'EQ' and k in cf and D(cf[k]['value']) != 0):   # an equity-statement dash yields to a later 10-K's printed value (MU FY2021 DPS 0.10)
             z = pz[k]
             r.update(status='mapped', value=D(0), tags=z['tag'], nodes=f"{z['tag']}=0 [{z['r_line']}]",
                      why=f"the own face prints '{z['label']}' with a dash or zero for this period (ruling 2026-11-14: printed dash = 0)")
@@ -195,6 +195,9 @@ NCI_IN_TAG = re.compile(r'Noncontrolling|MinorityInterest|IncludingPortion')
 PARENT_SEG = re.compile(r'^(EquityComponents=Parent|ConsolidatedEntities=ParentCompany);$')
 
 
+CI_INCL = 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest'
+
+
 def apply_ci_parent(rows, clines, notefacts, memberfacts=None):
     """Ruling 2026-11-14 (PM): 'parent figure not printed' is false when the CI statement prints the parent line: the element
     ComprehensiveIncomeNetOfTax, or a line whose label reads 'attributable to <company>' / '<ticker>' (PM: 'Comprehensive earnings
@@ -211,7 +214,20 @@ def apply_ci_parent(rows, clines, notefacts, memberfacts=None):
                     pv = {(sg, D(x)) for t_, q, x, sg in standard_inputs._facts((memberfacts or {}).get(r['accession']), 4) if t_ == t and int(q) == 4 and PARENT_SEG.match(sg)}
                     if pv and len({x for _, x in pv}) == 1: seg, v = sorted(pv)[0][0].rstrip(';'), next(iter(pv))[1]
                 if v is not None: cand.append((t != 'ComprehensiveIncomeNetOfTax', int(rep), int(ln), t, lb, v, seg))
-        if not cand: continue
+        if not cand:
+            # Ritwik draw 2026-11-16 (BA FY2015-17): the CI statement prints the total including NCI and the NCI line, not the parent:
+            # parent = total including NCI - NCI, same statement and column (ruling C2, derived_not_printed). BA FY2018 checks:
+            # 11,729 - (-21) = 11,750, the parent line the FY2020 10-K prints for 2018
+            cl = {t: (rep, ln, lb) for t, rep, ln, lb in standard_inputs._facts(clines.get(r['accession']), 4)}
+            inc, nci = CI_INCL, 'ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest'
+            if inc in cl and nci in cl and und.get((inc, 4)) is not None and und.get((nci, 4)) is not None:
+                vi, vn = D(standard_inputs._plain(und[(inc, 4)])), D(standard_inputs._plain(und[(nci, 4)]))
+                (ri, li, lbi), (rn, ln_, lbn) = cl[inc], cl[nci]
+                r.update(status='derived', value=vi - vn, tags=f'{inc}-{nci}',
+                         nodes=f"{inc}={standard_inputs._plain(vi)} [R{ri}.htm:{li}]; -{nci}={standard_inputs._plain(vn)} [R{rn}.htm:{ln_}]",
+                         why=f"the CI statement prints '{lbi}' and '{lbn}' but not the parent line: parent = total including NCI - NCI (ruling C2, derived_not_printed)")
+                r['flags'] = ';'.join(x for x in (r.get('flags', '').replace('ci_incl_nci', ''), 'ci_parent_derived') if x).replace(';;', ';').strip(';')
+            continue
         _, rep, ln, t, lb, v, seg = sorted(cand)[0]
         r.update(status='mapped', value=D(standard_inputs._plain(v)), tags=t, nodes=f"{t}{'[' + seg + ']' if seg else ''}={standard_inputs._plain(v)} [R{rep}.htm:{ln}]",
                  why=f"CI statement prints the parent line '{lb}' (R{rep}.htm:{ln}) (ruling 2026-11-14: a line attributable to the company is the parent figure)")
@@ -1096,6 +1112,25 @@ BANK_TEMPLATE_DPS = BANK_ONLY | {'provision_for_credit_losses', 'loans_net'}
 
 
 
+
+SCALE_FIXED = {}
+
+
+def apply_scale_flags(rows, fixed=None):
+    """A cell served from a per-share fact the filer stored 10^3 or 10^6 too large (standard_inputs.per_share_scale_errors) is flagged
+    filer_scale_error and its reason names the stored and the printed-scale value (STX FY2022-24 DPS, Ritwik draw 2026-11-16)."""
+    fixed = SCALE_FIXED if fixed is None else fixed
+    by = collections.defaultdict(list)
+    for (a, t, d), (v, nv) in fixed.items(): by[(a, str(d))].append((t, v, nv))
+    for r in rows:
+        if r.get('status') not in ('mapped', 'component_sum', 'derived'): continue
+        for t, v, nv in by.get((r.get('accession'), str(r['period_end'])), []):
+            if t in (r.get('nodes') or '') or t in (r.get('tags') or ''):
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filer_scale_error') if x)
+                r['why'] = ((r.get('why') or '') + f"; filer scale error: {t} stored {standard_inputs._plain(v)}, served {standard_inputs._plain(nv)} (the filing prints per-share amounts)").lstrip('; ')
+                break
+    return rows
+
 TEXT_OK = ('not_presented', 'no_role', 'open', 'no_value', 'missing')
 
 
@@ -1112,16 +1147,15 @@ def apply_text_disclosures(rows, path=None):
         if not t or r.get('status') not in TEXT_OK:
             continue
         ev = dict(quote=t['quote'], locator=t['locator'], quote_period=t['quote_period'])
-        if t['value_source'] == 'stated_zero' and D(t['value']) == 0 and t['quote_period'] == str(r['period_end']):
-            # contract RESOLVER-OUTPUT-FORMAT.md 'Stated zero': mapped, value 0, nodes empty, quote + locator + quote_period
-            r.update(status='mapped', value=D(0), tags='', r_page='', column='own', nodes='', why='', **ev)
-            r['flags'] = 'stated_zero'
-        else:
-            # a nonzero amount stated only in prose: the serving contract covers stated zeros only, so the cell stays OPEN
-            # (no_role) with its evidence until Engineering extends it (asked 2026-11-16)
-            r.update(status='no_role', value=None, tags='', r_page='', column='own', nodes='', **ev,
-                     why=f'text_stated {t["value"]} ({t["locator"]}); open until the serving contract covers stated amounts')
-            r['flags'] = 'text_stated_pending'
+        if t['quote_period'] != str(r['period_end']) or not t['quote'] or not t['locator']:
+            continue
+        # contracts RESOLVER-OUTPUT-FORMAT.md 'Stated zero' and 'Text stated': mapped, nodes empty, quote + locator + quote_period;
+        # a zero is stated_zero, a nonzero amount (filer units) is text_stated
+        v = D(t['value'])
+        if (t['value_source'] == 'stated_zero') != (v == 0):
+            continue
+        r.update(status='mapped', value=v, tags='', r_page='', column='own', nodes='', why='', **ev)
+        r['flags'] = 'stated_zero' if v == 0 else 'text_stated'
     return rows
 
 def apply_bank_template(rows, filings):
@@ -1323,6 +1357,7 @@ if __name__ == '__main__':
         else: PRED[f['a']] = x
     FERR = standard_inputs.filer_xbrl_errors(os.environ.get('FILER_XBRL_ERRORS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'filer_xbrl_errors.csv')))
     standard_inputs.apply_filer_errors(filings, notefacts, FERR)
+    SCALE_FIXED.update(standard_inputs.per_share_scale_errors(filings, notefacts, compfacts))   # filer scale errors on per-share facts (STX FY2024 DPS)
     rows = run(filings, notefacts, tick, td)
     for r in rows:
         if r['accession'] in PRED and r['status'] in ('no_role', 'not_presented'):
@@ -1428,6 +1463,7 @@ if __name__ == '__main__':
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     rows = apply_bank_template(rows, filings)
     rows = apply_text_disclosures(rows)
+    rows = apply_scale_flags(rows)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

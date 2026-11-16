@@ -159,8 +159,13 @@ def read_cell(text, cell):
                 continue
             found.append((Decimal(0), sec, s, pos))
         elif dp == 'dividends_paid' and DIV0.search(s):
+            # the sentence must speak for the cell's year: it names the fiscal year, or says 'never' (BA FY2023 10-K: 'we did not pay
+            # any dividends in 2023, 2022 and 2021')
+            year_ok = any(re.search(rf'\b{y}\b', s) for y in fy) or re.search(r'\b(have|has) never\b', s, re.I)
             if AMBIG.search(s) or re.search(r'\bpreferred\b', s, re.I):
                 ambiguous.append((sec, s)); continue
+            if not year_ok:
+                continue
             found.append((Decimal(0), sec, s, pos))
     vals = {x[0] for x in found}
     if len(vals) == 1:
