@@ -52,13 +52,15 @@ def _deprecated():
 
 DEPRECATED = _deprecated()   # FASB deprecations (taxonomy/deprecations.csv): an element a later filing no longer uses because the taxonomy retired it
 LP_NODE = re.compile(r'(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[([^\]@]*)(?:@[^\]]*)?\]')
-LP_SKIP = re.compile(r'eps|per_share|shares|total_debt')   # splits restate per-share and share counts: a separate decision; total_debt has its own tool
+LP_SKIP = re.compile(r'^$')   # nothing skipped: Dhairya 2026-11-17 definition: per-share figures, share counts and total_debt follow one vintage too (split-adjusted history)
+LP_PER_SHARE = re.compile(r'eps|per_share')
+LP_SHARES = re.compile(r'eps|per_share|shares')
 
 
 def _unit(v):
     """The rounding unit a figure is printed at (10^k dividing it, k <= 6)."""
     v = abs(D(v))
-    if v != v.to_integral(): return D(0)
+    if v != v.to_integral(): return D(10) ** v.normalize().as_tuple().exponent   # a per-share figure: its last printed decimal
     u = D(1)
     while u < D(10) ** 9 and v % (u * 10) == 0 and v != 0: u *= 10   # a narrative '$1.6 billion' fact is printed at 10^8 (LRCX goodwill)
     return u
@@ -72,7 +74,13 @@ def apply_latest_print(rows, compfacts, filings=()):
     date. A later coarser copy that agrees within half its unit never replaces a precise value. Restated years (SPGI FY2017, VLO FY2016,
     TMO FY2016-17, FTNT FY2018, MSFT FY2016 opex, MPC FY2018 GP 9,039). Per-share figures, share counts and total_debt are not touched."""
     served = ('mapped', 'component_sum', 'derived')
-    face_tags = {f['a']: {x.split('|')[3] for x in (f.get('lines') or '').split('~') if len(x.split('|')) >= 9 and x.split('|')[0] in ('IS', 'BS', 'CF', 'EQ', 'SE')} for f in filings}
+    face_loc = {}
+    for f in filings:   # element -> its first face line in THAT filing (the locator cited for a later print)
+        d = face_loc.setdefault(f['a'], {})
+        for x in (f.get('lines') or '').split('~'):
+            q = x.split('|')
+            if len(q) >= 9 and q[0] in ('IS', 'BS', 'CF', 'EQ', 'SE') and q[3] not in d: d[q[3]] = f"R{q[1]}.htm:{q[2]}"
+    face_tags = face_loc
     by, cand = collections.defaultdict(list), collections.defaultdict(list)
     for r in rows:
         cand[(r['cik'], r['data_point'])].append(r)   # own cells and cells already filled from a comparative column
@@ -129,14 +137,24 @@ def apply_latest_print(rows, compfacts, filings=()):
                 sgn, how = 1, f"the way it resolves {dp}"
             new = sgn * sum(w * next(iter(facts[t])) for w, t, _, _ in parts)
             old = D(r['value'])
-            if new == old or new != new.to_integral() or old != old.to_integral(): continue   # money only: a ratio fact under the element (LOW 0.0593) is not the figure
+            if new == old: continue
+            if not LP_PER_SHARE.search(dp) and (new != new.to_integral() or old != old.to_integral()): continue   # money only: a ratio fact under the element (LOW 0.0593) is not the figure
+            split = None
+            if LP_SHARES.search(dp) and old != 0 and new != 0:
+                q_ = abs(new / old); q_ = q_ if q_ >= 1 else 1 / q_
+                if any(abs(q_ / D(1000) ** k - 1) < D('0.01') for k in (1, 2, 3)): continue   # a scale error, not a split (MCD 727.9 shares; STX DPS 2,770,000)
+                n_ = q_.to_integral_value()
+                if (q_ >= D('1.4') and abs(q_ - n_) <= n_ * D('0.02')) or abs(q_ - D('1.5')) <= D('0.03'):
+                    split = n_ if abs(q_ - n_) <= n_ * D('0.02') else D('1.5')
             u_new, u_old = _unit(new), _unit(old)
             if u_new > u_old and abs(new - old) <= u_new / 2 * len(parts): continue   # a rounded later copy (each rounded part) never replaces a precise figure
-            loc = lambda l: f"{l}@{b['accession']}" if l else f"NOTE@{b['accession']}"
+            fl = face_loc.get(b['accession'], {})
+            loc = lambda t, l: f"{fl[t]}@{b['accession']}" if t in fl and l.startswith('R') else f"NOTE@{b['accession']}"   # the later filing's own line
             r.update(status=r['status'] if parts is mine else b['status'], value=new, tags=r.get('tags', '') if parts is mine else b.get('tags', ''), accession=b['accession'], column='comparative',
-                     nodes='; '.join(f"{'-' if w < 0 else ''}{t}={next(iter(facts[t]))} [{loc(l)}]" for w, t, _, l in parts),
+                     nodes='; '.join(f"{'-' if w < 0 else ''}{t}={next(iter(facts[t]))} [{loc(t, l)}]" for w, t, _, l in parts),
                      why=f"latest print: the FY+{k} 10-K {b['accession']} re-presents the year as {new} (own filing {old}), recomputed from {how}; one vintage per year (rulings 2026-11-17)")
-            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print') if x)
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print', 'split_adjusted' if split else '') if x)
+            if split: r['why'] += f"; split_adjusted: the later print differs from the own print {old} by a {split}-for-1 split ratio"
     return rows
 
 

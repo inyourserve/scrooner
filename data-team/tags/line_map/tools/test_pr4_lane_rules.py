@@ -977,6 +977,7 @@ def test_one_vintage_per_year_takes_the_latest_print_of_the_same_line():
     comp = {'A18': 'OperatingIncomeLoss|4|3534000000|2016-12-31'}
     r = resolve_all.apply_latest_print(rows, comp, _lp_face('OperatingIncomeLoss'))[0]
     assert r['value'] == D(3534000000) and r['accession'] == 'A18' and r['column'] == 'comparative' and 'latest_print' in r['flags'] and '@A18]' in r['nodes']
+    assert '[R4.htm:0@A18]' in r['nodes']   # the later filing's own line for the element, not the own filing's line
     # a rounded later copy that agrees within half its unit never replaces the precise figure (LRCX goodwill '$1.6 billion')
     rows = _lp_rows('operating_income', 'OperatingIncomeLoss', '1626528000', 'OperatingIncomeLoss', '4572000000')
     assert resolve_all.apply_latest_print(rows, {'A18': 'OperatingIncomeLoss|4|1600000000|2016-12-31'}, _lp_face('OperatingIncomeLoss'))[0]['value'] == '1626528000'
@@ -1005,9 +1006,18 @@ def test_latest_print_guards_line_role_note_figures_and_flipped_sources():
     # QCOM FY2017: a later filing whose own cell has inverted signs is no source
     rows = _lp_rows('cf_inventory_change', 'IncreaseDecreaseInInventories', '200000000', 'IncreaseDecreaseInInventories', '-273000000', flags='calc_weight_flip')
     assert resolve_all.apply_latest_print(rows, {'A18': 'IncreaseDecreaseInInventories|4|-200000000|2016-12-31'}, _lp_face('IncreaseDecreaseInInventories'))[0]['value'] == '200000000'
-    # per-share figures are not touched (splits restate them)
-    rows = _lp_rows('basic_eps', 'EarningsPerShareBasic', '5', 'EarningsPerShareBasic', '6')
-    assert resolve_all.apply_latest_print(rows, {'A18': 'EarningsPerShareBasic|4|2|2016-12-31'}, _lp_face('EarningsPerShareBasic'))[0]['value'] == '5'
+    # Dhairya 2026-11-17 definition: per-share figures and share counts follow the latest print too (split-adjusted history), flagged
+    rows = _lp_rows('basic_eps', 'EarningsPerShareBasic', '4.80', 'EarningsPerShareBasic', '6.00')
+    r = resolve_all.apply_latest_print(rows, {'A18': 'EarningsPerShareBasic|4|1.20|2016-12-31'}, _lp_face('EarningsPerShareBasic'))[0]
+    assert r['value'] == D('1.20') and 'split_adjusted' in r['flags'] and '4.80' in r['why']
+    rows = _lp_rows('basic_eps', 'EarningsPerShareBasic', '7.70', 'EarningsPerShareBasic', '9.00')   # a restatement, not a split
+    r = resolve_all.apply_latest_print(rows, {'A18': 'EarningsPerShareBasic|4|7.92|2016-12-31'}, _lp_face('EarningsPerShareBasic'))[0]
+    assert r['value'] == D('7.92') and 'split_adjusted' not in r['flags']
+    rows = _lp_rows('dividends_per_share', 'CommonStockDividendsPerShareDeclared', '2.77', 'CommonStockDividendsPerShareDeclared', '2.80')   # a coarser copy
+    assert resolve_all.apply_latest_print(rows, {'A18': 'CommonStockDividendsPerShareDeclared|4|2.8|2016-12-31'}, _lp_face('CommonStockDividendsPerShareDeclared'))[0]['value'] == '2.77'
+    # a power-of-1000 ratio is a filer scale error, never a split (MCD weighted shares 727.9 in later filings)
+    rows = _lp_rows('weighted_basic_shares', 'WeightedAverageNumberOfSharesOutstandingBasic', '727900000', 'WeightedAverageNumberOfSharesOutstandingBasic', '713400')
+    assert resolve_all.apply_latest_print(rows, {'A18': 'WeightedAverageNumberOfSharesOutstandingBasic|4|727900|2016-12-31'}, _lp_face('WeightedAverageNumberOfSharesOutstandingBasic'))[0]['value'] == '727900000'
 
 
 def test_latest_print_component_sum_with_one_renamed_line_and_c1_derivation():

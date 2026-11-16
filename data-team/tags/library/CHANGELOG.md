@@ -857,3 +857,12 @@
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
 - ~ InterestAndOtherFinancialCharges: data_point, served_cells
 - ~ OtherNonoperatingExpense: data_point, served_cells
+
+## 2026-11-16 (resolver-all110-.81): 7 element changes, 27999 rows, coverage 64.7%
+- ~ EarningsPerShareBasic: served_cells
+- ~ EarningsPerShareBasicAndDiluted: served_cells
+- ~ EarningsPerShareDiluted: served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ LongTermDebtNoncurrent: served_cells
+- ~ LongTermDebtNoncurrentExcludingDebtIssuanceCosts: data_point, served_cells
+- ~ OtherIncomeAndExpense: data_point, served_cells
