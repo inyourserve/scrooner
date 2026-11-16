@@ -774,3 +774,10 @@ def test_an_own_derivation_yields_to_a_later_printed_figure_and_drops_its_flag()
         resolve_all.EXT.clear(); resolve_all.EXT.update(old)
     r = rs[0]
     assert (r['status'], r['column'], r['accession']) == ('mapped', 'comparative', 'BA20') and 'ci_parent_derived' not in r['flags'] and 'comparative_fill' in r['flags']
+
+
+def test_never_declared_or_paid_a_dividend_is_a_dps_and_dividends_zero():
+    import text_disclosure as td
+    goog = 'Item 5. Market\nWe have never declared or paid any cash dividend on our common or capital stock.\n'
+    assert td.read_cell(goog, dict(data_point='dividends_per_share', period_end='2019-12-31'))['value_source'] == 'stated_zero'
+    assert td.read_cell(goog, dict(data_point='dividends_paid', period_end='2019-12-31'))['value_source'] == 'stated_zero'

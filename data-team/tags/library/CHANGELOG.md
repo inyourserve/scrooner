@@ -673,3 +673,7 @@
 - ~ ComprehensiveIncomeNetOfTax: rule_id, served_cells
 - ~ ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest: served_cells
 - ~ ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest: served_cells
+
+## 2026-11-16 (resolver-2026-11-16.66): 2 element changes, 27999 rows, coverage 63.1%
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id

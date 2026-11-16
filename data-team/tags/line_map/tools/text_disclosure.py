@@ -122,11 +122,11 @@ RD_EXP = re.compile(r'\b(expense|expenses|costs|spending|spent|expenditures)\b',
 DEBT0 = re.compile(r"\b(we|the company)\s+(did not have any|had no|have no|has no|does not have any|do not have any)\s+(outstanding\s+)?"
                    r"(debt|borrowings|indebtedness)\b", re.I)
 DIV0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|has never)\s+(declared?\s+(or|and)\s+)?(paid|pay)\s+"
-                  r"(any\s+)?(cash\s+)?dividends\b", re.I)
+                  r"(any\s+)?(cash\s+)?dividends?\b", re.I)   # GOOG 'any cash dividend' (singular)
 # Dhairya rulings 2026-11-16 (BA): a suspended common dividend stated for the filing's own year is a zero for dividends paid and DPS;
 # the open-market repurchase program statement is the company's buyback zero (our share_buybacks excludes tax-withholding transfers)
 DIV_SUSP = re.compile(r"\b(our|the company's|the)\s+(quarterly\s+)?(cash\s+)?dividends?\s+(to common (shareholders|stockholders)\s+|on (our )?common stock\s+)?(has|have|remains?|remained)\s+(been\s+)?suspended\b", re.I)
-DPS0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not)\s+(declare|declared|pay|paid)\s+(or\s+(pay|paid|declare|declared)\s+)?(any\s+)?(cash\s+)?dividends\b", re.I)
+DPS0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|has never)\s+(declare|declared|pay|paid)\s+(or\s+(pay|paid|declare|declared)\s+)?(any\s+)?(cash\s+)?dividends?\b", re.I)
 BUY0 = re.compile(r"\b(we|the company)\s+did not\s+(re)?purchase\s+any\s+(shares|common stock)\b[^.]*\brepurchase program\b", re.I)
 AMORT = re.compile(r'\bamortization (expense )?(of|related to|for|on|associated with) (\w+[- ])?(acquired |purchased |finite[- ]lived |definite[- ]lived |identifiable )*intangible|\bintangible assets?\s+amortization expense', re.I)
 AMORT_NOT = re.compile(r'\b(estimated|expected|future|will|next|anticipated|remaining|thereafter|impairment|capitaliz|software|tax)\b', re.I)
@@ -182,7 +182,7 @@ def read_cell(text, cell):
             # BA FY2023 'As a result [of the 2020 suspension], we did not pay any dividends in 2023, 2022 and 2021': the year must be named
             if AMBIG.search(s) or re.search(r'\bpreferred\b', s, re.I):
                 ambiguous.append((sec, s)); continue
-            if any(re.search(rf'\b{y}\b', s) for y in fy):
+            if any(re.search(rf'\b{y}\b', s) for y in fy) or re.search(r'\b(have|has) never\b', s, re.I):   # GOOG 'We have never declared or paid any cash dividend'
                 found.append((Decimal(0), sec, s, pos))
         elif dp == 'share_buybacks' and BUY0.search(s):
             # the annual statement only: the cell's year named (BA FY2022 Item 7 'During the years ended December 31, 2022, 2021 and 2020,
