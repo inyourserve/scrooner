@@ -1479,13 +1479,25 @@ def load_absent_in_own(
     printed: dict[tuple[str, str], list[date]] = defaultdict(list)
     if not files:
         return {}
+    # a comparative_fill row's accession is a LATER filing's: that filing's own period is the period_end of the `own`
+    # rows carrying the same accession (any data point)
+    own_period: dict[tuple[str, str], date] = {}
+    comparative: list[tuple[tuple[str, str], str, date]] = []
     with files[-1].open(newline="") as fh:
         for r in csv.DictReader(fh):
             key = (r["ticker"], r["data_point"])
+            if r.get("column") == "own" and r.get("accession"):
+                own_period[(r["ticker"], r["accession"])] = date.fromisoformat(
+                    r["period_end"]
+                )
             if r["data_point"] not in VERIFIED_ABSENT_HIDE:
                 continue  # unverified data point: never hidden by this rule, stays open for the resolver
             if r.get("decision") in _VALUED_DECISIONS:
-                printed[key].append(date.fromisoformat(r["period_end"]))
+                pe = date.fromisoformat(r["period_end"])
+                if r.get("column") == "comparative" and r.get("accession"):
+                    comparative.append((key, r["accession"], pe))
+                else:
+                    printed[key].append(pe)
                 continue
             flags = (r.get("flags") or "").split(";")
             if (
@@ -1497,6 +1509,12 @@ def load_absent_in_own(
             ):
                 continue
             absent[key][r["period_end"]] = r["accession"]
+    for key, acc, pe in comparative:
+        # the line is printed by the filing that fills the comparative, not by a filing OF that period: the later-filing
+        # guard asks whether THAT filing's columns carry the absent year (DHR/UBER FY2022 buybacks are filled from the
+        # FY2024 10-K, which does not carry FY2020-21; the FY2022 10-K itself prints no line). Filing unknown: the
+        # period itself (the strict old behaviour).
+        printed[key].append(own_period.get((key[0], acc), pe))
     return {k: (v, printed.get(k, [])) for k, v in absent.items()}
 
 
