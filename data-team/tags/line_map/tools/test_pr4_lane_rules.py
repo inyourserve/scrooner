@@ -507,26 +507,36 @@ def test_bank_data_points_are_out_of_template_outside_the_bank_template():
     bank = dict(filing([('IS', 'InterestIncomeExpenseNet', 'Net interest income', 60)]), cik='2', a='B1')
     rows = [dict(cik='1', data_point='provision_for_credit_losses', status='mapped', value=D(5), tags='X', nodes='X=5', flags='roles', why=''),
             dict(cik='2', data_point='provision_for_credit_losses', status='mapped', value=D(9), tags='X', nodes='X=9', flags='roles', why=''),
-            dict(cik='1', data_point='revenue', status='mapped', value=D(100), tags='Revenues', nodes='', flags='', why='')]
+            dict(cik='1', data_point='revenue', status='mapped', value=D(100), tags='Revenues', nodes='', flags='', why=''),
+            dict(cik='1', data_point='loans_net', status='not_presented', value=None, accession='BEFORE:1:2018-01-31', flags='before_first_10k', why='')]
+    for r in rows[:3]:
+        r.setdefault('accession', 'A')
     resolve_all.apply_bank_template(rows, [ind, bank])
+    assert rows[3]['status'] == 'not_presented' and rows[3]['flags'] == 'before_first_10k'   # no filing: the loader needs an accession
     assert rows[0]['status'] == 'not_in_template' and rows[0]['value'] is None
     assert rows[1]['status'] == 'mapped' and rows[2]['status'] == 'mapped'
 
 
 def test_text_disclosure_fills_only_open_cells_of_the_same_filing(tmp_path):
-    # MCK FY2021 R&D stated in Item 1 only; MRVL FY2015 'we did not have any outstanding debt'. XBRL always wins.
+    # MRVL FY2015 'we did not have any outstanding debt' (stated_zero contract, RESOLVER-OUTPUT-FORMAT.md); MCK FY2021 R&D stated in
+    # Item 1 only stays open (text_stated_pending) until the serving contract covers stated amounts. XBRL always wins.
     p = tmp_path / 't.csv'
-    p.write_text('cik,ticker,data_point,period_end,accession,decision,value_source,value,section,quote,why\n'
-                 '0000927653,MCK,research_and_development,2021-03-31,A1,mapped,text_stated,74000000,item1,"R&D expenses were $74 million",x\n'
-                 '0000927653,MCK,research_and_development,2022-03-31,A2,mapped,text_stated,70000000,item1,"q",x\n'
-                 '0000927653,MCK,total_debt,2021-03-31,A1,mapped,stated_zero,0,item7a,"q",x\n')
-    rows = [dict(cik='927653', data_point='research_and_development', period_end='2021-03-31', accession='A1', status='not_presented', value=None, flags='roles', why=''),
-            dict(cik='927653', data_point='research_and_development', period_end='2022-03-31', accession='OTHER', status='not_presented', value=None, flags='', why=''),
-            dict(cik='927653', data_point='total_debt', period_end='2021-03-31', accession='A1', status='component_sum', value=D(5), flags='total_debt', why='')]
+    p.write_text('cik,ticker,data_point,period_end,accession,decision,value_source,value,section,locator,quote_period,quote,why\n'
+                 '0001835632,MRVL,total_debt,2015-01-31,A1,mapped,stated_zero,0,item7a,"Item 7A, p. 52",2015-01-31,"we did not have any outstanding debt",x\n'
+                 '0001835632,MRVL,total_debt,2016-01-31,A2,mapped,stated_zero,0,item7a,"Item 7A, p. 55",2016-01-31,"q",x\n'
+                 '0001835632,MRVL,total_debt,2017-01-31,A3,mapped,stated_zero,0,item7a,"Item 7A, p. 42",2017-01-31,"q",x\n'
+                 '0000927653,MCK,research_and_development,2021-03-31,M1,mapped,text_stated,74000000,item1,"Item 1, p. 13",2021-03-31,"R&D $74 million",x\n')
+    rows = [dict(cik='1835632', data_point='total_debt', period_end='2015-01-31', accession='A1', status='not_presented', value=None, flags='total_debt', why='w', nodes='n'),
+            dict(cik='1835632', data_point='total_debt', period_end='2016-01-31', accession='OTHER', status='not_presented', value=None, flags='', why=''),
+            dict(cik='1835632', data_point='total_debt', period_end='2017-01-31', accession='A3', status='component_sum', value=D(5), flags='total_debt', why=''),
+            dict(cik='927653', data_point='research_and_development', period_end='2021-03-31', accession='M1', status='not_presented', value=None, flags='', why='')]
     resolve_all.apply_text_disclosures(rows, str(p))
-    assert rows[0]['status'] == 'mapped' and rows[0]['value'] == D(74000000) and rows[0]['flags'] == 'text_stated' and 'A1' in rows[0]['nodes']
+    z = rows[0]
+    assert (z['status'], z['value'], z['flags'], z['nodes']) == ('mapped', D(0), 'stated_zero', '')
+    assert z['quote'] and z['locator'] == 'Item 7A, p. 52' and z['quote_period'] == '2015-01-31'
     assert rows[1]['status'] == 'not_presented'                     # another filing's text never fills this cell
     assert rows[2]['value'] == D(5)                                 # XBRL wins
+    assert rows[3]['status'] == 'no_role' and rows[3]['value'] is None and rows[3]['flags'] == 'text_stated_pending' and rows[3]['quote']
 
 
 def test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros():
@@ -538,7 +548,13 @@ def test_text_disclosure_reader_pairs_the_fiscal_year_and_refuses_facility_zeros
     assert td.read_cell(credit, dict(data_point='total_debt', period_end='2021-03-31'))['decision'] == 'open'
     mrvl = 'Item 7A. Market risk\nOur interest rate risk relates to our portfolio as we did not have any outstanding debt as of January 31, 2015.\n'
     r = td.read_cell(mrvl, dict(data_point='total_debt', period_end='2015-01-31'))
-    assert r['value_source'] == 'stated_zero' and r['value'] == '0' and r['section'] == 'item7a'
+    assert r['value_source'] == 'stated_zero' and r['value'] == '0' and r['section'] == 'item7a' and r['quote_period'] == '2015-01-31'
+    assert r['locator'].startswith('Item 7A. Market risk')
+    wrapped = td.to_text('<p>Item 7A. Market risk</p><div>Our risk relates to our portfolio</div><div>as we did not have any outstanding debt as of January 31, 2015.</div>')
+    assert 'Our risk relates to our portfolio as we did not have any outstanding debt' in wrapped
+    split = 'Item 7A.\nQuantitative and Qualitative Disclosures About Market Risk\nWe did not have any outstanding debt as of January 31, 2015.\n52\n'
+    r = td.read_cell(split, dict(data_point='total_debt', period_end='2015-01-31'))
+    assert r['locator'] == 'Item 7A. Quantitative and Qualitative Disclosures About Market Risk, p. 52'
     other = 'Item 7A. Market risk\nWe did not have any outstanding debt other than finance leases as of January 31, 2015.\n'
     assert td.read_cell(other, dict(data_point='total_debt', period_end='2015-01-31'))['decision'] == 'open'
     silent = 'Item 7. MD&A\nWe manage liquidity carefully in fiscal 2015.\n'

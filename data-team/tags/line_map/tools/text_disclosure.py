@@ -57,24 +57,47 @@ def to_text(doc):
     doc = re.sub(r'(?is)<(script|style|ix:header)[^>]*>.*?</\1>', ' ', doc)
     doc = re.sub(r'(?i)<br\s*/?>|</(p|div|tr|li|h\d|table)>', '\n', doc)
     doc = html.unescape(re.sub(r'<[^>]+>', ' ', doc)).replace('\xa0', ' ')
-    return '\n'.join(re.sub(r'[ \t]+', ' ', ln).strip() for ln in doc.split('\n') if ln.strip())
+    out = []
+    for ln in (re.sub(r'[ \t]+', ' ', x).strip() for x in doc.split('\n')):
+        if not ln:
+            continue
+        if out and re.match(r'[a-z(]', ln) and not re.search(r'[.:;]$', out[-1]):
+            out[-1] += ' ' + ln          # a sentence wrapped across a block break ("...portfolio as we" / "did not have any ...")
+        else:
+            out.append(ln)
+    return '\n'.join(out)
 
 
 def sections(text):
     """[(start, name)] from the 10-K item headings (the LAST heading of each name, so the table of contents loses)."""
     marks = {}
-    for m in re.finditer(r'(?im)^\s*item\s*(1|1a|6|7|7a|8)\s*[.:\-—–]', text):
-        marks[m.group(1).lower()] = m.start()
-    names = {'1': 'item1', '1a': 'item1a', '6': 'item6', '7': 'item7', '7a': 'item7a', '8': 'item8_notes'}
-    return sorted((p, names[k]) for k, p in marks.items())
+    for m in re.finditer(r'(?im)^\s*item\s*(1|1a|5|6|7|7a|8)\s*[.:\-—–][^\n]*', text):
+        h = re.sub(r'\s+', ' ', m.group(0)).strip()
+        if len(h) < 12:                                   # 'Item 7A.' with its title on the next line
+            nxt = text[m.end():m.end() + 200].lstrip('\n').split('\n')[0]
+            h = f'{h} {nxt.strip()}'
+        marks[m.group(1).lower()] = (m.start(), h[:90])
+    names = {'1': 'item1', '1a': 'item1a', '5': 'item5', '6': 'item6', '7': 'item7', '7a': 'item7a', '8': 'item8_notes'}
+    return sorted((p, names[k], h) for k, (p, h) in marks.items())
 
 
 def section_at(secs, pos):
     name = 'other'
-    for p, n in secs:
+    for p, n, _ in secs:
         if p <= pos:
             name = n
     return name
+
+
+def locator(text, secs, pos):
+    """'Item 7A. Quantitative and Qualitative Disclosures About Market Risk, p. 52': the item heading above the sentence and the
+    page footer below it (the first standalone page-number line within 8,000 characters; omitted when none is printed)."""
+    head = 'filing text'
+    for p, _, h in secs:
+        if p <= pos:
+            head = h
+    m = re.search(r'(?m)^(?:page\s*)?(\d{1,3})$', text[pos:pos + 8000], re.I)
+    return f'{head}, p. {m.group(1)}' if m else head
 
 
 def sentences(text):
@@ -124,9 +147,9 @@ def read_cell(text, cell):
             if len(cand) > 1 and pe[:4] in uy and max(uy) == pe[:4]:
                 cand = [uy.index(pe[:4])]           # 'during 2021, 2020 and 2019' in the FY ending March 2021: 2021 is the filer's label
             if len(amts) == 1 and len(uy) == 1 and len(cand) == 1:
-                found.append((amount(*amts[0]), sec, s))
+                found.append((amount(*amts[0]), sec, s, pos))
             elif len(amts) == len(uy) > 1 and len(cand) == 1 and re.search(r'\brespectively\b', s, re.I):
-                found.append((amount(*amts[cand[0]]), sec, s))
+                found.append((amount(*amts[cand[0]]), sec, s, pos))
             elif cand:
                 ambiguous.append((sec, s))
         elif dp == 'total_debt' and DEBT0.search(s):
@@ -134,16 +157,16 @@ def read_cell(text, cell):
             if AMBIG.search(s) or not date_ok:
                 ambiguous.append((sec, s)) if date_ok else None
                 continue
-            found.append((Decimal(0), sec, s))
+            found.append((Decimal(0), sec, s, pos))
         elif dp == 'dividends_paid' and DIV0.search(s):
             if AMBIG.search(s) or re.search(r'\bpreferred\b', s, re.I):
                 ambiguous.append((sec, s)); continue
-            found.append((Decimal(0), sec, s))
-    vals = {v for v, _, _ in found}
+            found.append((Decimal(0), sec, s, pos))
+    vals = {x[0] for x in found}
     if len(vals) == 1:
-        v, sec, s = found[0]
+        v, sec, s, pos = found[0]
         return dict(decision='mapped', value_source='stated_zero' if v == 0 else 'text_stated', value=str(v), section=sec, quote=s,
-                    why=f'stated in the filing text ({sec})')
+                    locator=locator(text, secs, pos), quote_period=pe, why=f'stated in the filing text ({sec})')
     if len(vals) > 1:
         return dict(decision='open', value_source='', value='', section=';'.join(sorted({x[1] for x in found})), quote=' || '.join(x[2] for x in found[:3]),
                     why='text states different amounts: ' + ', '.join(str(v) for v in sorted(vals)))
@@ -155,26 +178,26 @@ def read_cell(text, cell):
 def fetch(cells_csv, cache):
     os.makedirs(cache, exist_ok=True)
     for c in csv.DictReader(open(cells_csv)):
-        p = os.path.join(cache, c['accession'] + '.txt')
+        p = os.path.join(cache, c['accession'] + '.htm')       # raw document: a parser fix never needs a refetch
         if os.path.exists(p):
             continue
         url = primary_doc(c['cik'], c['accession'])
         if not url:
             print('no primary document', c['accession'], file=sys.stderr); continue
-        open(p, 'w').write(f'URL {url}\n' + to_text(get(url)))
+        open(p, 'w').write(f'<!-- URL {url} -->\n' + get(url))
         print('fetched', c['ticker'], c['accession'], url)
 
 
 def read(cells_csv, cache, out_csv):
     rows = []
     for c in csv.DictReader(open(cells_csv)):
-        p = os.path.join(cache, c['accession'] + '.txt')
+        p = os.path.join(cache, c['accession'] + '.htm')
         if not os.path.exists(p):
             rows.append(dict(c, decision='open', value_source='', value='', section='', quote='', why='filing text not fetched')); continue
-        text = open(p).read()
+        text = to_text(open(p).read())
         rows.append(dict(c, **read_cell(text, c)))
     with open(out_csv, 'w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'decision', 'value_source', 'value', 'section', 'quote', 'why'])
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end', 'accession', 'decision', 'value_source', 'value', 'section', 'locator', 'quote_period', 'quote', 'why'])
         w.writeheader(); w.writerows({k: r.get(k, '') for k in w.fieldnames} for r in rows)
     return rows
 

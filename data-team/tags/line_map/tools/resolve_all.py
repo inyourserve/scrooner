@@ -1111,11 +1111,17 @@ def apply_text_disclosures(rows, path=None):
         t = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end']), r.get('accession')))
         if not t or r.get('status') not in TEXT_OK:
             continue
-        q = t['quote'].replace('"', "'")
-        r.update(status='mapped', value=D(t['value']), tags='', r_page='', column='own',
-                 nodes=f'text[{t["section"]}@{t["accession"]}]: "{q}"',
-                 why=f'{t["value_source"]}: the filing states it in prose ({t["section"]}); no XBRL fact or face line for this cell')
-        r['flags'] = t['value_source']
+        ev = dict(quote=t['quote'], locator=t['locator'], quote_period=t['quote_period'])
+        if t['value_source'] == 'stated_zero' and D(t['value']) == 0 and t['quote_period'] == str(r['period_end']):
+            # contract RESOLVER-OUTPUT-FORMAT.md 'Stated zero': mapped, value 0, nodes empty, quote + locator + quote_period
+            r.update(status='mapped', value=D(0), tags='', r_page='', column='own', nodes='', why='', **ev)
+            r['flags'] = 'stated_zero'
+        else:
+            # a nonzero amount stated only in prose: the serving contract covers stated zeros only, so the cell stays OPEN
+            # (no_role) with its evidence until Engineering extends it (asked 2026-11-16)
+            r.update(status='no_role', value=None, tags='', r_page='', column='own', nodes='', **ev,
+                     why=f'text_stated {t["value"]} ({t["locator"]}); open until the serving contract covers stated amounts')
+            r['flags'] = 'text_stated_pending'
     return rows
 
 def apply_bank_template(rows, filings):
@@ -1130,7 +1136,7 @@ def apply_bank_template(rows, filings):
         if bank_face(L): bank[f['cik'].zfill(10)] += 1
     for r in rows:
         k = str(r.get('cik') or '').zfill(10)
-        if r['data_point'] in BANK_TEMPLATE_DPS and n[k] and bank[k] * 2 <= n[k]:
+        if r['data_point'] in BANK_TEMPLATE_DPS and n[k] and bank[k] * 2 <= n[k] and not str(r.get('accession') or '').startswith('BEFORE:'):   # a year before the first 10-K keeps before_first_10k (the loader needs a real accession)
             r.update(status='not_in_template', value=None, tags='', nodes='', r_page='', column='own',
                      why=f"{r['data_point']} belongs to the bank template; this company's income statement is not a bank's (ruling 2026-11-16)")
             r['flags'] = 'not_in_template'
@@ -1436,6 +1442,7 @@ if __name__ == '__main__':
                          decision=DEC.get(r['status'], r['status']), nodes=(r.get('nodes') or '') + (' | why: ' + r['why'] if r.get('why') else ''),
                          value='' if v is None or r['status'] in ('combined', 'not_presented', 'no_role') else str(D(v).normalize() if D(v) != D(v).to_integral() else D(v).to_integral()),
                          accession=r['accession'], column=r.get('column') or 'own', calc_check=r.get('calc_check', ''), flags=';'.join(x for x in (r['source'], r.get('flags', '')) if x),
+                         quote=r.get('quote') or '', locator=r.get('locator') or '', quote_period=r.get('quote_period') or '',
                          resolver_version=sys.argv[1] if len(sys.argv) > 1 else 'dev'))
     import os
     name = sys.argv[2] if len(sys.argv) > 2 else 'resolver-all110.csv'
