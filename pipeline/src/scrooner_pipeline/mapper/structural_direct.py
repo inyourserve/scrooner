@@ -15,7 +15,8 @@ resolver already found it in a named filing. This module serves the resolver's c
 Why the CSV is read at serve time and not stored in company_tag_map: the table has no value column and no DDL is
 allowed; its eras are the selection that failed. The committed CSV is the evidence (the same pattern as
 common/instance_facts). Hand fix rows (company_tag_map.docmap_fix@1) still win their cells. Decisions served:
-mapped, component_sum (derived_not_printed stays with the derived path). A filing whose own calc check FAILs is
+mapped, component_sum, and the two ruled derived_not_printed pairs (shares issued - treasury, CI total - NCI; same
+filing and column, DERIVED_DIRECT); gross profit and total liabilities stay with the derived path (derived_cells). A filing whose own calc check FAILs is
 quarantined (structural_loader.quarantined). Pure parts are unit-testable; the DB reads are two indexed queries.
 """
 
@@ -23,6 +24,7 @@ from __future__ import annotations
 
 import os
 from collections import defaultdict
+from dataclasses import replace
 from datetime import date
 from decimal import Decimal
 from functools import lru_cache
@@ -51,6 +53,7 @@ ENV_PATH = "SCROONER_STRUCTURAL_RESOLVER"
 ENV_OFF = "SCROONER_STRUCTURAL_DIRECT"  # "off" disables the path
 LINE_MAP_DIR = Path(__file__).resolve().parents[4] / "data-team" / "tags" / "line_map"
 SERVED = ("mapped", "component_sum")
+DERIVED = "derived_not_printed"
 CASH = "cash_and_equivalents"  # ruling 2026-11-14 (Dhairya): the BS face 'cash and cash equivalents' total line only
 
 
@@ -67,9 +70,64 @@ def _claims_by_cik(path: str) -> dict[str, tuple[sl.Claim, ...]]:
     claims, _rejects, _counts = sl.read_claims(Path(path))
     out: dict[str, list[sl.Claim]] = defaultdict(list)
     for c in claims:
-        if c.decision in SERVED and c.cik:
+        if derived_claim(
+            c
+        ):  # the loader's not_presented statement, with the parts the derivation needs
+            c = replace(c, decision=DERIVED, parts=c.derived_parts, locs=c.derived_locs)
+        if c.decision in (*SERVED, DERIVED) and c.cik:
             out[c.cik].append(c)
     return {k: tuple(v) for k, v in out.items()}
+
+
+def derived_claim(c: sl.Claim) -> bool:
+    """A derived_not_printed resolver row of a data point served directly (sl.DERIVED_DIRECT) that carries its flag."""
+    spec = sl.DERIVED_DIRECT.get(c.data_point)
+    return (
+        c.decision == "not_presented"
+        and bool(c.derived_parts)
+        and spec is not None
+        and spec[0] in c.flags
+    )
+
+
+def derived_problem(c: sl.Claim) -> str | None:
+    """Why a derived row is not servable, or None. Exactly two parts of one filing and column: the plus tag of the
+    data point's pair first, the minus tag second, each with its resolver node value and printed page. Pure."""
+    spec = sl.DERIVED_DIRECT.get(c.data_point)
+    if spec is None or spec[0] not in c.flags:
+        return f"{c.data_point}: no derivation ruled for this data point"
+    _flag, plus, minus = spec
+    if len(c.parts) != 2:
+        return f"derived row with {len(c.parts)} parts (exactly 2 are ruled)"
+    (s0, _t0, g0), (s1, _t1, g1) = c.parts
+    if s0 != 1 or s1 != -1 or g0 not in plus or g1 not in minus:
+        return f"derived parts {g0}, {g1} are not the ruled pair {sorted(plus)} minus {sorted(minus)}"
+    if len(c.node_values) != 2 or not all(c.node_values):
+        return "derived row without a node value for each part"
+    if len(c.locs) != 2 or not all(rp for rp, _ln in c.locs):
+        return "derived row without a printed R page for each part"
+    return None
+
+
+def derived_value(c: sl.Claim, vals: list[Decimal]) -> tuple[Decimal | None, str]:
+    """(value, evidence) of a derived claim from its two stored part values (plus part first), or (None, why). The
+    evidence is the signed parts, tag=value@accession#R-page joined by ';' (the coverage export's parts format);
+    the accession is the claim's own filing, the only one the parts were read from. Pure."""
+    why = derived_problem(c)
+    if why:
+        return None, why
+    if len(vals) != 2:
+        return None, "derived row needs two stored part values"
+    if c.data_point == "shares_outstanding" and not vals[0] > vals[1] >= 0:
+        return (
+            None,
+            "issued shares must exceed treasury shares, which must not be negative",
+        )
+    ev = ";".join(
+        f"{'-' if g < 0 else ''}{p[2]}={v}@{c.accession}#R{c.locs[i][0]}"
+        for i, (g, p, v) in enumerate(zip((1, -1), c.parts, vals))
+    )
+    return vals[0] - vals[1], ev
 
 
 def enabled() -> bool:
@@ -669,6 +727,11 @@ def direct_cells(
             reject("no filing that prints the column as a face column")
             continue
         c = picked
+        if c.decision == DERIVED:
+            why = derived_problem(c)
+            if why:
+                reject(why)
+                continue
         if name == CASH and any(
             (c.accession, tag) in cash_parts for _s, _t, tag in c.parts
         ):
@@ -782,7 +845,13 @@ def direct_cells(
         if bad:
             reject(bad)
             continue
-        if c.decision == "mapped":
+        if c.decision == DERIVED:
+            served, dev = derived_value(c, [p[2] for p in parts])
+            flipped = False
+            if served is None:
+                reject(dev)
+                continue
+        elif c.decision == "mapped":
             served, flipped = apply_polarity(name, parts[0][2])
         else:
             signs = tuple(p[0] for p in parts)
@@ -822,6 +891,27 @@ def direct_cells(
             rp, ln = c.locs[zi] if zi < len(c.locs) else (None, None)
             note += f"; printed_zero: the line is printed with a dash or 0 (R{rp}:{ln}), served as 0 with no fact id"
         fid = meta[c.accession][0]
+        if c.decision == DERIVED:
+            cells.append(
+                {
+                    "canonical_concept_id": cid,
+                    "period_id": pid,
+                    "value": served,
+                    "value_source": DERIVED,
+                    "source_fact_ids": [],
+                    "source_value_ids": [],
+                    "serve_note": f"{DERIVED}: {dev} (printed in the same filing and column; the filing prints no {c.data_point} line)"
+                    + (f"; filing checks: {c.checks}" if c.checks else ""),
+                    "_scaled": False,
+                    "_derived_not_printed": True,
+                    "_filing_id": fid,
+                    "_accession": c.accession,
+                    "_filed": meta[c.accession][1],
+                    "_dcml_keys": [],
+                    "_structural_direct": True,
+                }
+            )
+            continue
         cells.append(
             {
                 "canonical_concept_id": cid,

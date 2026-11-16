@@ -168,6 +168,26 @@ def stated_zero_problem(
 # derived_not_printed rows of these data points are served by mapper/derived_cells (C1 gross profit, C2 total
 # liabilities), which needs the map's not_presented row; other derived rows stay counted, not loaded
 DERIVED_VIA_MAP = ("gross_profit", "total_liabilities")
+# derived_not_printed rows served DIRECTLY by mapper/structural_direct (Dhairya's revised ruling 2026-11-16, RULEBOOK
+# X60/X67): data point -> (resolver flag, the plus part's tags, the minus part's tags). Two parts, same filing and
+# column, nothing else is accepted (structural_direct.derived_problem). The loader keeps the map's not_presented
+# statement for these rows (the value is never loaded here), exactly like DERIVED_VIA_MAP
+DERIVED_DIRECT: dict[str, tuple[str, frozenset[str], frozenset[str]]] = {
+    "shares_outstanding": (
+        "derived_issued_less_treasury",
+        frozenset({"CommonStockSharesIssued"}),
+        frozenset({"TreasuryStockShares", "TreasuryStockCommonShares"}),
+    ),
+    "comprehensive_income": (
+        "ci_parent_derived",
+        frozenset(
+            {
+                "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest"
+            }
+        ),
+        frozenset({"ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest"}),
+    ),
+}
 SKIP_ACTIONS = {"review_missing_column_value", "no_structural_node"}
 ACCN_RE = dl.ACCN_RE
 STMT_WORDS = {"BS", "IS", "CF", "CI", "EQ", "CP", "UN", "NOTE"}
@@ -202,6 +222,10 @@ class Claim:
         ""  # the resolver's value for the cell (checked against the parts' SEC facts)
     )
     node_values: tuple[str, ...] = ()  # per part, when the nodes print them
+    # a derived_not_printed row served directly (DERIVED_DIRECT): the claim stays a tagless not_presented statement for
+    # load(); its signed parts and their (R page, line) ride here for mapper/structural_direct
+    derived_parts: tuple[tuple[int, str | None, str], ...] = ()
+    derived_locs: tuple[tuple[int | None, int | None], ...] = ()
     grain: str = (
         ""  # FY (duration) or I (instant) of the resolver row; '' for other file shapes
     )
@@ -448,10 +472,18 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                 if r.get("action", "") in SKIP_ACTIONS:
                     counts["skipped_action"] += 1
                     continue
-                if decision == "derived_not_printed" and dp in DERIVED_VIA_MAP:
+                derived_direct = False
+                if decision == "derived_not_printed" and (
+                    dp in DERIVED_VIA_MAP
+                    or (
+                        dp in DERIVED_DIRECT
+                        and DERIVED_DIRECT[dp][0] in r.get("flags", "")
+                    )
+                ):
                     # the derived path (mapper/derived_cells.py, rulings C1/C2) derives the value only where the
                     # company map says the line is NOT PRESENTED: load that statement; the value is never loaded here
                     decision = "not_presented"
+                    derived_direct = dp in DERIVED_DIRECT
                     counts["derived_loaded_as_not_presented"] += 1
                 if decision in NOT_A_DECISION:
                     counts[f"skipped_{decision}"] += 1
@@ -513,8 +545,21 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                     r.get("stmts") or r.get("stmt", ""),
                     r.get("path", ""),
                 )
+                dparts: tuple[tuple[int, str | None, str], ...] = ()
+                dlocs: tuple[tuple[int | None, int | None], ...] = ()
+                if derived_direct:
+                    try:
+                        dparts = parse_claim_parts(r.get("tags", ""))
+                    except ValueError:
+                        dparts = ()
+                    if dparts:
+                        dlocs = parse_locs(
+                            r.get("r_pages", ""), len(dparts), "", r.get("path", "")
+                        )[1]
                 claims.append(
                     Claim(
+                        derived_parts=dparts,
+                        derived_locs=dlocs,
                         ticker=ticker,
                         cik=(r.get("cik") or "").zfill(10) if r.get("cik") else None,
                         data_point=dp,

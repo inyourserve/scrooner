@@ -61,3 +61,14 @@ When the filing STATES a number in running text that no XBRL fact or statement l
 - `quote`, `locator`, `quote_period` exactly as for stated_zero. All required; `quote_period` must equal `period_end`.
 - `value` must be NONZERO. A zero belongs under `stated_zero`; a `stated_zero` row must be 0.
 A row failing any rule is rejected (nothing is served). Served with `value_source` `text_stated` (family `company_tag_map:text_stated`), no fact id, the quote and locator in the serve note. Coverage: SHOWN_VALUE, r_page = locator, evidence = quote, column `text_stated` = Y (a stated zero has `stated_zero` = Y), so Ritwik can sample both.
+
+
+## Derived pairs served directly (Dhairya, revised ruling 2026-11-16; RULEBOOK X60, X67; serving: `structural_direct.derived_value`)
+Two `derived_not_printed` rows are SERVED (every other derived row is counted, not served; gross profit and total liabilities go through `derived_cells`). Contract for the Tag Expert:
+- `decision` = `derived_not_printed`, `value` = the derived number, `accession` = the own-period 10-K, `column` as for any row, `grain` `I` for shares and `FY` for comprehensive income.
+- The flag is REQUIRED and selects the pair: `derived_issued_less_treasury` for `shares_outstanding` (shares issued minus treasury shares; emitted only when `DERIVE_SHARES=1`), `ci_parent_derived` for `comprehensive_income` (total comprehensive income including NCI minus the NCI portion).
+- `nodes` carries EXACTLY two parts of the SAME filing and column, plus part first, minus part second with a leading `-`, each with its value and its printed page: `CommonStockSharesIssued=<v> [R3.htm:5]; -TreasuryStockShares=<v> [R3.htm:6] | why: ...` (tags: `CommonStockSharesIssued` minus `TreasuryStockShares` or `TreasuryStockCommonShares`; `ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest` minus `ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest`).
+- The loader keeps the map's `not_presented` statement for the row (the value is never loaded). Direct serving reads each part from the stored facts of that accession and column only (never another filing or period), requires each to equal its node value and the difference to equal `value` (shares: issued > treasury >= 0), and REJECTS anything else (nothing is served).
+- Served with `value_source` `derived_not_printed` (family `company_tag_map:derived_not_printed`), no fact id; the serve note carries the signed parts in the coverage export's parts format, `tag=value@accession#R<page>` joined by `;`, minus part prefixed `-`.
+- A printed figure beats an own derivation (X67): where the filing or a later 10-K prints the figure, emit `mapped` instead.
+- Open conflict (RULEBOOK X67): doc 02, founder decision 2026-11-01 item 4 ("EPS and instants are never derived"). The serving path ships dormant (no share rows exist while `DERIVE_SHARES` is off); switching the resolver on needs that line amended by the founder.
