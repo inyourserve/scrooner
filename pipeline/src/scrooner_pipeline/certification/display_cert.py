@@ -403,6 +403,8 @@ class FactSource(Protocol):
 
     def periodic_year_ends(self, cik: str) -> dict[str, list[str]]: ...
 
+    def presented_lines(self, cik: str, tags: Iterable[str]) -> dict[str, set[str]]: ...
+
 
 FACT_SQL = """
 select f.accession, t.tag, v.ddate::text, v.qtrs, coalesce(d.segments, '') as segments, v.value,
@@ -429,13 +431,23 @@ group by 1, 2, 3, 4, 5, 6
 """
 
 YEAR_END_SQL = """
-select f.accession, array_agg(distinct v.ddate::text)
+select f.accession, array_agg(distinct v.ddate::text || '|' || v.qtrs)
 from fsn.filing f join fsn.value v on v.filing_id = f.id and v.qtrs in (0, 4)
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
 where ltrim(f.cik, '0') = ltrim(%(cik)s, '0') and f.form = any(%(forms)s)
   and t.tag in ('Assets', 'Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax', 'NetIncomeLoss',
                 'NetCashProvidedByUsedInOperatingActivities', 'ProfitLoss')
+group by 1
+"""
+
+# Statement lines a periodic filing presents, whether or not a column holds a value: a printed
+# dash has a line and no fact, and it still counts as printed.
+PRESENTED_LINES_SQL = """
+select f.accession, array_agg(distinct t.tag)
+from fsn.filing f join fsn.line l on l.filing_id = f.id
+join fsn.tag t on t.id = l.tag_id
+where ltrim(f.cik, '0') = ltrim(%(cik)s, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
 group by 1
 """
 
@@ -489,6 +501,13 @@ class SqlFactSource:
             )
         }
 
+    def presented_lines(self, cik, tags):
+        rows = self._q(
+            PRESENTED_LINES_SQL,
+            {"cik": cik, "forms": list(PERIODIC_FORMS), "tags": sorted(set(tags))},
+        )
+        return {acc: set(t) for acc, t in rows}
+
 
 class BundleFactSource:
     """Offline source: an evidence bundle (JSON) holding the rows of the three queries above."""
@@ -514,6 +533,10 @@ class BundleFactSource:
 
     def periodic_year_ends(self, cik):
         return {k: sorted(v) for k, v in self.b.get("year_ends", {}).items()}
+
+    def presented_lines(self, cik, tags):
+        tg = set(tags)
+        return {k: set(v) & tg for k, v in self.b.get("lines", {}).items()}
 
 
 # ---------------------------------------------------------------- checks
@@ -812,22 +835,95 @@ def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Find
     return out
 
 
+# Dhairya ruling 2026-11-16 (relayed to the approver session): for these data points a
+# HIDDEN_YEAR is also valid inside the filing window when no periodic filing that presents the
+# period prints the data point's line (a dash counts as printed). Every other data point may hide
+# only pre-filing years (founder decision 2026-11-16, doc 02).
+HIDE_YEAR_ALLOWLIST = frozenset(
+    {
+        "operating_income",
+        "shares_outstanding",
+        "share_buybacks",
+        "dividends_paid",
+        "gross_profit",
+        "total_debt",
+        "current_assets",
+        "current_liabilities",
+    }
+)
+YEAR_HIDE_FAMILY: dict[str, frozenset[str]] = {
+    "total_debt": DEBT_FACE_TAGS,
+    "current_assets": frozenset({"AssetsCurrent"}),
+    "current_liabilities": frozenset({"LiabilitiesCurrent"}),
+}
+
+
+def _year_end(entry: str) -> tuple[str, int | None]:
+    """'2019-12-31|4' -> ('2019-12-31', 4); a bare date (older bundles) matches either kind."""
+    d, _, q = entry.partition("|")
+    return d, (int(q) if q else None)
+
+
+def row_tags(cells: list[Cell], dp: str) -> frozenset[str]:
+    """The tags that print this row: its tag family plus every tag its shown cells cite."""
+    tags = set(HIDE_FAMILY.get(dp, ())) | set(YEAR_HIDE_FAMILY.get(dp, ()))
+    for c in cells:
+        if c.data_point == dp and c.display == SHOWN:
+            tags |= {t.tag for t in terms(c) if t.tag}
+    return frozenset(tags)
+
+
 def check_hidden_years(
-    cells: list[Cell], year_ends: dict[str, list[str]]
+    cells: list[Cell],
+    year_ends: dict[str, list[str]],
+    lines: dict[str, set[str]] | None = None,
 ) -> list[Finding]:
     out = []
-    presented = sorted({d for ds in year_ends.values() for d in ds})
+    lines = lines or {}
     for c in cells:
         if c.display != HIDDEN_YEAR or not c.period_end:
             continue
-        near = [d for d in presented if _days(d, c.period_end) <= 7]
-        if near:
+        want = 0 if c.data_point in INSTANT_DPS else 4
+        presenting = sorted(
+            acc
+            for acc, ends in year_ends.items()
+            if any(
+                _days(d, c.period_end) <= 7 and q in (None, want)
+                for d, q in map(_year_end, ends)
+            )
+        )
+        if not presenting:
+            continue  # a pre-filing year: no periodic filing presents it
+        if c.data_point not in HIDE_YEAR_ALLOWLIST:
             out.append(
                 Finding(
                     "hidden_year",
                     *c.key,
                     "FAIL",
-                    f"a periodic filing presents {near[0]} (comparative or own column): not a pre-filing year",
+                    f"periodic filing {presenting[0]} presents {c.period_end} (own or comparative column): not a pre-filing year, "
+                    f"and {c.data_point} is not on the hide allowlist",
+                )
+            )
+            continue
+        tags = row_tags(cells, c.data_point)
+        printed = [acc for acc in presenting if lines.get(acc, set()) & tags]
+        if printed:
+            out.append(
+                Finding(
+                    "hidden_year",
+                    *c.key,
+                    "FAIL",
+                    f"{printed[0]} presents {c.period_end} and prints the line ({', '.join(sorted(lines[printed[0]] & tags))}); "
+                    "a printed value or dash must be shown",
+                )
+            )
+        else:
+            out.append(
+                Finding(
+                    "hidden_year",
+                    *c.key,
+                    "INFO",
+                    f"allowlisted: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
                 )
             )
     return out
@@ -974,7 +1070,30 @@ def certify(
         return run
     run.hides = check_hidden_rows(p.cells, [f for f in company if f.tag != CONTROL_TAG])
     if counts.get(HIDDEN_YEAR):
-        run.hides += check_hidden_years(p.cells, year_ends)
+        allow = {
+            c.data_point
+            for c in p.cells
+            if c.display == HIDDEN_YEAR and c.data_point in HIDE_YEAR_ALLOWLIST
+        }
+        lines: dict[str, set[str]] = {}
+        if allow:
+            tags = frozenset().union(*(row_tags(p.cells, dp) for dp in allow)) | {
+                CONTROL_TAG
+            }
+            lines = source.presented_lines(cik, tags)
+            if not any(CONTROL_TAG in t for t in lines.values()):
+                # Positive control: every periodic filing presents an Assets line.
+                run.gate.append(
+                    Finding(
+                        "gate",
+                        "*",
+                        "*",
+                        "FAIL",
+                        f"presented-lines query returned no {CONTROL_TAG} line: source broken",
+                    )
+                )
+                return run
+        run.hides += check_hidden_years(p.cells, year_ends, lines)
     return run
 
 
@@ -1093,6 +1212,15 @@ def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> 
         ]
         + [""]
     )
+    allowed = [
+        f for f in run.hides if f.severity == "INFO" and f.check == "hidden_year"
+    ]
+    if allowed:
+        lines += (
+            ["## Hidden years evidenced (allowlist)", ""]
+            + [f"- {f.data_point} FY{f.fiscal_year}: {f.detail}" for f in allowed]
+            + [""]
+        )
     lines += [
         "## Limits",
         "",

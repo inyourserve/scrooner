@@ -201,15 +201,40 @@ def test_hidden_row_unknown_family_needs_review():
 
 
 def test_hidden_year_fails_when_any_periodic_filing_presents_it():
+    # revenue is not on the hide allowlist: only a pre-filing year may be hidden
     cells = [cell(display=dc.HIDDEN_YEAR, pe="2019-12-31")]
     assert (
         dc.check_hidden_years(cells, {ACC: ["2019-12-31", "2020-12-31"]})[0].severity
         == "FAIL"
     )
-    assert dc.check_hidden_years(cells, {ACC: ["2020-12-31"]}) == []
+    assert dc.check_hidden_years(cells, {ACC: ["2020-12-31|4"]}) == []
 
 
-# ---------------------------------------------------------------- bound and run
+def test_allowlisted_hidden_year_needs_no_printed_line_in_any_presenting_filing():
+    """Dhairya ruling 2026-11-16: an allowlisted row may hide a presented year only when no
+    periodic filing presenting that period prints the row's line (a dash counts as printed)."""
+    shown = cell(
+        dp="dividends_paid", tag="PaymentsOfDividendsCommonStock", pe="2018-12-31"
+    )
+    hidden = cell(
+        dp="dividends_paid", display=dc.HIDDEN_YEAR, pe="2023-12-31", value=None, tag=""
+    )
+    cells = [shown, hidden]
+    ye = {"A": ["2023-12-31|4", "2023-12-31|0"], "B": ["2018-12-31|4"]}
+    ok = dc.check_hidden_years(cells, ye, {"B": {"PaymentsOfDividendsCommonStock"}})
+    assert [f.severity for f in ok] == ["INFO"]
+    # the 2023 10-K prints the line (value or dash): the hide is wrong
+    bad = dc.check_hidden_years(cells, ye, {"A": {"PaymentsOfDividendsCommonStock"}})
+    assert [f.severity for f in bad] == ["FAIL"]
+    # a duration row is presented only by an annual column, not by a balance-sheet date
+    assert (
+        dc.check_hidden_years(
+            cells, {"A": ["2023-12-31|0"]}, {"A": {"PaymentsOfDividendsCommonStock"}}
+        )
+        == []
+    )
+
+
 def test_clopper_pearson_known_values():
     assert dc.clopper_pearson_upper(0, 32) == pytest.approx(0.0894, abs=1e-4)
     assert dc.clopper_pearson_upper(0, 2995) == pytest.approx(0.0010, abs=1e-5)
@@ -241,6 +266,9 @@ class Src:
 
     def periodic_year_ends(self, cik):
         return self.y
+
+    def presented_lines(self, cik, tags):
+        return {ACC: {"Assets"}}
 
 
 def test_certify_pass_fail_and_wrong_cik(tmp_path):
@@ -446,4 +474,46 @@ def test_derived_gross_profit_is_shown_revenue_less_cost():
     assert (
         dc.check_derived(cell(dp="ebitda", value="1", tag=""), cells, []).result
         == "NOT_FOUND"
+    )
+
+
+def test_presented_lines_positive_control(tmp_path):
+    cov = write_cov(
+        tmp_path,
+        [
+            [
+                "revenue",
+                "2023",
+                "2023-12-31",
+                "100",
+                ACC,
+                "R4",
+                "Revenues",
+                "",
+                dc.SHOWN,
+            ],
+            [
+                "dividends_paid",
+                "2022",
+                "2022-12-31",
+                "",
+                "",
+                "",
+                "",
+                "",
+                dc.HIDDEN_YEAR,
+            ],
+        ],
+    )
+
+    class NoLines(Src):
+        def presented_lines(self, cik, tags):
+            return {}
+
+    years = {ACC: ["2023-12-31|4", "2022-12-31|4"]}
+    ok = dc.certify("T", "1", cov, Src([fact("Revenues", "100")], years=years))
+    assert ok.verdict == "PASS"
+    broken = dc.certify("T", "1", cov, NoLines([fact("Revenues", "100")], years=years))
+    assert broken.verdict == "FAIL" and any(
+        "presented-lines" in f.detail for f in broken.gate
     )
