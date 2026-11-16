@@ -270,14 +270,34 @@ def parse_polarity(path: Path = POLARITY_CSV) -> dict[str, str]:
 def parse_deprecations(
     path: Path = DEPRECATIONS_CSV,
 ) -> dict[str, tuple[str | None, str | None]]:
+    """tag -> (deprecated_by, replaces). Reads the FASB taxonomy file (data-team/tags/taxonomy/deprecations.csv, columns
+    element, replacement_element, ...: 97c22b59); `replaces` is the reverse of replacement_element. A file in the older
+    tag/deprecated_by/replaces layout is still read. The rebuild failed 9 runs on 2026-11-16 with KeyError 'tag'."""
     out: dict[str, tuple[str | None, str | None]] = {}
-    if path.exists():
-        with path.open(newline="", encoding="utf-8") as fh:
-            for r in csv.DictReader(fh):
-                out[r["tag"]] = (
-                    (r.get("deprecated_by") or None),
-                    (r.get("replaces") or None),
-                )
+    if not path.exists():
+        return out
+    with path.open(newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    if rows and "tag" in rows[0]:
+        for r in rows:
+            out[r["tag"]] = (
+                (r.get("deprecated_by") or None),
+                (r.get("replaces") or None),
+            )
+        return out
+    by: dict[str, str | None] = {}
+    replaced: dict[str, list[str]] = {}
+    for r in rows:
+        el = (r.get("element") or "").strip()
+        if not el:
+            continue
+        rep = (r.get("replacement_element") or "").strip() or None
+        by[el] = rep
+        if rep:
+            replaced.setdefault(rep, []).append(el)
+    for tag in set(by) | set(replaced):
+        olds = sorted(replaced.get(tag, []))
+        out[tag] = (by.get(tag), ";".join(olds) or None)
     return out
 
 
