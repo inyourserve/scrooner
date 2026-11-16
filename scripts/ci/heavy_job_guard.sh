@@ -27,11 +27,13 @@ HEAVY_WORKFLOWS=(
   pipeline-cells-proof.yml
   cells-load-stage.yml
   pipeline-fsn-load-filings.yml
+  onboard-company-identity.yml
+  onboard-company-filings.yml
 )
 # FSN-write marker: wait-for-write waits on every workflow listed here. pipeline-fsn-load-filings.yml
 # (the filing loader, fsn.* only) is one, so the top-100 flow and the nightly jobs wait for it. A workflow
 # does not wait for itself: it sets HEAVY_GUARD_SELF to its own file name.
-WRITE_WORKFLOWS=(pipeline-fsn-write.yml pipeline-fsn-load-filings.yml)
+WRITE_WORKFLOWS=(pipeline-fsn-write.yml pipeline-fsn-load-filings.yml onboard-company-filings.yml)
 ACTIVE_STATUSES=(in_progress queued waiting pending requested)
 POLL_SECONDS="${HEAVY_GUARD_POLL_SECONDS:-60}"
 
@@ -49,6 +51,8 @@ active_runs() {
 refuse_if_heavy() {
   local workflow found=0 runs
   for workflow in "${HEAVY_WORKFLOWS[@]}"; do
+    # a workflow does not refuse itself: its own run is the one in progress (HEAVY_GUARD_SELF, as in wait-for-write)
+    [ "$workflow" = "${HEAVY_GUARD_SELF:-}" ] && continue
     if ! runs=$(active_runs "$workflow"); then
       echo "::error::could not list $workflow runs; refusing (a heavy job may be running)"
       exit 1

@@ -23,6 +23,7 @@ from typing import Any
 
 import structlog
 
+from scrooner_pipeline.common.company_filings import fsn_filings_cte
 from scrooner_pipeline.fsn_store.company_dir import NO_DIM, STATEMENT_STMTS
 from scrooner_pipeline.fsn_store.dim_note_allowlist import Rules, keep_dimensional
 from scrooner_pipeline.fsn_store.dim_note_allowlist import load as dim_note_rules
@@ -218,8 +219,10 @@ def run(
     )  # rebuilt from the current extract/resolver/library: never a snapshot
     with connect() as conn, conn.cursor() as cur:
         cur.execute(
-            "select accession, id, company_id, fsn_set from fsn.filing "
-            "where company_id = any(%s) and fsn_set not like 'edgar:%%'",
+            "with "
+            + fsn_filings_cte("co.id = any(%s)")
+            + " select f.accession, f.id, f.company_id, f.fsn_set from company_filings cf"
+            " join fsn.filing f on f.id = cf.id where f.fsn_set not like 'edgar:%%'",
             (company_ids,),
         )
         by_set: dict[str, dict[str, tuple[int, int | None]]] = defaultdict(dict)

@@ -180,6 +180,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "build-tag-candidates",
             "tag-candidate-report",
             "build-tag-library",
+            "rebuild-company-tag-library",
             "gap-tags",
             "gap-report",
             "record-verdict",

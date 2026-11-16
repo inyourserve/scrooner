@@ -2,7 +2,7 @@
 
 Take any US-listed company from nothing in the database to a certified page. This page lists the steps in order, the exact command for each, and the check that says the step passed. It also shows where the steps are not yet automatic. Checked against `origin/main` 5d9530b6 (2026-11-16). If this page and the code disagree, trust the code. Then fix this page.
 
-**Target (founder):** onboarding 500 companies is one dispatch plus a Tag Expert queue. **Today:** steps 4 to 7 are one dispatch (`top100-flow.yml`). Steps 1 to 3 are local commands that one agent runs by hand. Step 8 is switched off. See "Gaps".
+**Target (founder):** onboarding 500 companies is one dispatch plus a Tag Expert queue. **Today:** steps 4 to 7 are one dispatch (`top100-flow.yml`). Steps 1 and 2 are dispatches (`onboard-company-identity.yml`, `onboard-company-filings.yml`, added 2026-11-16, see below). Step 3 is a local chain (another agent is building `pipeline-standard-extract.yml`). Step 8 is switched off. See "Gaps".
 
 **Read first:** the display rule (doc 02, `Display coverage means a value in every shown cell`, 2026-11-16), [CERTIFICATION-METHOD-2026-11-16](../../data-team/strategy/approvals/CERTIFICATION-METHOD-2026-11-16.md), and [ONE-PATH-DESIGN-2026-11-16](../../data-team/strategy/ONE-PATH-DESIGN-2026-11-16.md). The one-path note covers why the layers in steps 4 to 6 each decide the same things again. That is not repeated here.
 
@@ -13,6 +13,9 @@ Take any US-listed company from nothing in the database to a certified page. Thi
 Each step lists four properties. **List:** is it one command or dispatch keyed by a company list? **Idem:** is it idempotent? **Resume:** can it resume after a failure? **Width:** can it run at batch width?
 
 ### 1. Company, CIK and predecessor windows
+- **Dispatch (2026-11-16):** `onboard-company-identity.yml`, inputs `tickers`, `ciks`, `history_csv`, `apply`. Dry run by default: it resolves the list, proposes predecessor windows (`proposed_history_sources.csv`, `review_queue.csv` in the artifact, never applied), prints the no-filing CIKs and dry-runs a reviewed `history_csv`. `apply=true` (main only) runs the bootstrap submissions and identity with `--ciks` always set, and applies `history_csv` (idempotent, one transaction, an unreviewed row with an empty `klass` is refused). Code: `pipeline/src/scrooner_pipeline/onboarding/`.
+- **Detection limit (live, DATA-INFERRED):** it reads 8-K12B and 8-K12G3 filings and takes the other filers on that accession as predecessor candidates. The 8-K12B headers of ExxonMobil Holdings and BlackRock Inc list only the successor, so for those two it proposes nothing and queues them (`successor_notice_without_predecessor_cik`). A person or agent still names those predecessors.
+- **`NOFILE`:** `top100_flow.sh` now computes it with `python -m scrooner_pipeline.onboarding.no_filing` (first 10-K period or predecessor window end on or after 2024-01-01). It returns exactly the old five CIKs for the 110 companies with a docmap. The cutoff is an assumption, not filing-checked.
 - **Commands:**
   - `scrooner-bootstrap submissions --ciks C1,C2`, then `scrooner-normalize identity --ciks C1,C2`. This creates `core.company`, `core.listing` and `core.filing`.
   - Predecessor history: add rows to `core.company_history_source` (migration 0121: `predecessor` or `exclude`, a window and a reason).
@@ -23,6 +26,7 @@ Each step lists four properties. **List:** is it one command or dispatch keyed b
 - **Non-cohort companies:** the cohort bucket extracts were cut to the top-1,000 cohort CIKs. A company outside the cohort gets its FSN rows only through the predecessors extract above, used with its own CIK. `scrooner-fsn shard` reads `predecessors/` for every target CIK.
 
 ### 2. Filings into core and FSN, plus instance evidence
+- **Dispatch (2026-11-16):** `onboard-company-filings.yml`, inputs `tickers`, `ciks`, `width` (1 to 8 shards), `since`, `max_minutes`, `apply`. Needs step 1 done. Apply (main only): bootstrap companyfacts and submissions (CIKs plus their predecessor source CIKs), then per shard normalize identity, periods, units, facts (`--ciks` always set), tagmap-authority, tagmap-dedupe, `fsn nightly` plus `fsn load --increment` (the commands of `pipeline-fsn-load-filings.yml`, which works for any CIK because it reads core.filing minus fsn.filing, not the cohort bucket), and add-dim-notes. Dry run (default) skips the bootstrap and the four normalize stages and dry-runs the rest. At most 2 shards run at once (2 req/s each, 4 req/s total). The R-page lookup and instance evidence are not in it.
 - **Core (value source):**
   - `scrooner-bootstrap companyfacts --ciks …`. The bulk zip is cached for the day.
   - `scrooner-normalize identity|periods|units|facts --ciks …`
@@ -160,12 +164,11 @@ Each step lists four properties. **List:** is it one command or dispatch keyed b
 
 ## Gaps between today and "500 = one dispatch plus a queue"
 
-1. **Steps 1 to 3 have no workflow.**
-   - Bootstrap and normalize (identity, periods, units, facts) need local runs. `pipeline-recompute.yml` selects only companies that already have `core.fact` rows.
-   - `tagmap-authority` and `tagmap-dedupe` are in no workflow.
-   - `fsn-write load_map` refuses non-cohort CIKs.
-   - The resolver extract has a manual SQL-to-jsonl hop.
-2. **Predecessor detection is manual.** `core.company_history_source` rows go in through a one-off apply script. `NOFILE` is hard-coded in the flow.
+1. **Steps 1 and 2 now have workflows (2026-11-16, untested live: no dispatch has been run); step 3 has none yet.**
+   - CLOSED by the two dispatches: bootstrap and normalize with `--ciks`, `tagmap-authority` and `tagmap-dedupe`, the FSN load for non-cohort CIKs (via `fsn nightly` and `load --increment`, not `load_map`), add-dim-notes.
+   - STILL OPEN: the dispatches have not been run live (dry run first, then a founder-approved apply). `fsn-write load_map` still refuses non-cohort CIKs. Instance evidence and the note R-page lookup are not in step 2. The resolver extract (step 3) has a manual SQL-to-jsonl hop.
+   - The shared-limiter cap is a workflow setting (2 runners at 2 req/s). It is not enforced across other SEC jobs on other runners.
+2. **Predecessor detection is partly built.** CLOSED: `NOFILE` is data-driven; reviewed history rows apply through `onboard-company-identity.yml` (dry run by default). STILL OPEN: the detector finds a predecessor only when the 8-K12B header lists it as a co-filer (not for ExxonMobil Holdings or BlackRock Inc); predecessor `core.period` rows (`history_periods.py`) are still a manual step; the `NOFILE` cutoff is an assumption.
 3. **The template is a hand-read docmap.** With no docmap, there are no cells (`TEMPLATE_UNAVAILABLE`).
 4. **The resolver is one file** (`resolver-all110-*`, latest only). Batches cannot add to it independently.
 5. **Display covers ranks 1 to 100 only.** It also rebuilds all 100 companies in every job, and `only_open` uses the old measure.

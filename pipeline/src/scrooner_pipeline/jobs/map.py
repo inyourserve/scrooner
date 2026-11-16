@@ -1589,6 +1589,29 @@ def build_tag_library_cmd(
     typer.echo(f"tag-library: {stats}")
 
 
+@app.command("rebuild-company-tag-library")
+def rebuild_company_tag_library_cmd(
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Write (only from main, GITHUB_REF=refs/heads/main). Default: dry run, reads only.",
+    ),
+) -> None:
+    """Company x tag x metric library on the new system (migration 0128): regenerates
+    analytics.tag_library_entry and analytics.resolver_decision from company_tag_map, the newest
+    resolver-all110 CSV, cell_proof, the certificates and the Tag Expert's files. Refuses to run
+    until migration 0128 is applied. See mapper/tag_library_rebuild.py."""
+    from scrooner_pipeline.mapper.tag_library_rebuild import MigrationMissing, rebuild
+
+    try:
+        with get_connection() as conn:
+            result = rebuild(conn, apply=apply)
+    except (MigrationMissing, PermissionError) as exc:
+        typer.echo(f"refused: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(f"{'APPLIED' if apply else 'DRY RUN (nothing written)'}: {result}")
+
+
 @app.command("gap-tags")
 def gap_tags_cmd(
     concept: str = typer.Argument(

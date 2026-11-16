@@ -5,6 +5,12 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
+0a. **Apply migration 0128: the company x tag x metric library on the new system** (Data Engineer, 2026-11-16).
+   - What: creates `analytics.tag_library_entry`, `analytics.resolver_decision` and the read-only view `analytics.company_tag_metric` (company x tag -> data point -> metric in one query). The old `sec_tag_library` and `company_sec_tag` are left untouched (the weekly old job wipes any column added there).
+   - File: `pipeline/db/pending/0128_company_tag_metric_library.sql` (pending, not in `migrations/`, because 0124-0127 are not all on main). New tables only; rollback is `drop view` and `drop table` of the three objects.
+   - Then the rebuild: `pipeline-tag-library-rebuild.yml` (dry run first, then apply=true from main). Dry run against the live database on 2026-11-16: `tag_library_entry` 2,757 rows (about 1 MB), `resolver_decision` 68,849 rows (all matched to a company; about 25 MB, 11 MB of it evidence text). Entry table: 354 concept, 450 component, 17 combined, 1,936 excluded rows; 833,619 PROVEN cells attributed (1,974 certified: only MSFT has a certificate on main).
+   - Sentence: "I approve migration 0128 (company x tag x metric library) and the first apply of its rebuild."
+
 0. **Load the 42 missing filings into fsn.* for the top-110** (pipeline-fsn-load-filings.yml, apply=true).
    - The list is data-team/strategy/fsn-missing-filings-2026-11-16.csv: 11 recent Q3 10-Qs, MRVL FY2021 10-K, and 10-K/A and 10-Q/A amendments.
    - The dry run (Actions run 43762675045) writes nothing; its plan is in that run's artifact.

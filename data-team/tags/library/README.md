@@ -1,4 +1,67 @@
-# Standard tag library (cross-company), Tag Expert
+# Scrooner tag library
+
+The single place that says what every element is, which data point it serves, under which rule, how often it is proven, and what has gone wrong with it. One row per element: the us-gaap taxonomy, plus every custom element the resolver has served.
+
+**Generated, never edited by hand.** Rebuild it on every resolver version and every daily drill:
+
+    python3 data-team/tags/library/build_library.py      # repo root; read-only, no DB, no network, ~1 s
+
+## Files
+
+| File | What it is |
+|---|---|
+| `library.csv` | One row per element. This is the input the resolver, proof, the daily drill and the DB rebuild (analytics.sec_tag_library) read. |
+| `library.json` | The same rows, limited to elements with any knowledge (usage, a rule or a proof). |
+| `library.schema.json` | Column schema. Lists inside a cell are `;`-separated. |
+| `INDEX.md` | Elements by data point, statement, family and problem type. |
+| `browser.html` | Static search page. Open it in a browser, search an element, ruling ID, ticker or problem, and click through the links. |
+| `CHANGELOG.md` | Per build, what changed per element (data points, rulings, served, proven, certified, problems, successors). |
+| `coverage.json` | Row counts and coverage (below). |
+| `proof_by_tag.csv` / `proof_by_tag.sql` | analytics.cell_proof aggregated by shown tag. The SQL refreshes it (read-only). |
+
+## Columns (matching the DB schema: element, taxonomy, data_point, rule_id, polarity, family, deprecated_by, replaces, statements and positions, companies, proven_cells, certified_cells, known_problems, links, last_verified)
+
+- **Meaning** (FASB taxonomy, `data-team/tags/taxonomy/`): `taxonomy, standard_label, definition, balance, period_type, data_type, abstract, taxonomy_years`.
+- **Deprecation**: `deprecated_year, replaces, deprecated_by, deprecation_chain`.
+- **Mapping**: `data_point` (resolver data points), `roles_rows` (rules/roles.csv rows), `role_kind` (primary, combined or part, with the alternative's rank), `rule_id` (RULEBOOK IDs), `resolver_functions`, `tests`, `polarity`, `family` (code lists such as resolve_cf.CAPEX).
+- **Where it sits**: `statements`, `positions` (face, note, BS parenthetical, equity statement, with counts from the resolver's served nodes), `calc_parents` (taxonomy calc).
+- **Use downstream**: `metrics` (the metric registry formulas whose inputs include its data point), `concept_catalog`.
+- **Usage**: `companies, filings_seen, years_seen, served_cells, example_cells` (ticker, year, data point, accession, R page).
+- **Evidence**: `proof_cells, proven_cells, proof_companies, last_verified` (analytics.cell_proof), `certified_cells` (certification coverage files), `composite_uses` (proven as a part of a multi-element cell).
+- **Folded-in legacy library**: `fsn_lines_top100, fsn_companies_top100, legacy_decision, legacy_concept, legacy_caveat` (standard-tag-library.csv, needs-detail-answers-r1r2.csv) and `company_overrides` (company-overrides.csv).
+- **Problems**: `known_problems` (filer XBRL errors, FSN dropped facts, each with its evidence), `problem_commits` (ruling ID and resolver version that fixed it).
+- **Links**: `links` (one list of every cross-reference) and the detailed `cards`, `mind_ids`, `ledger_lines`.
+- **Quality bar**: `quality` (companies, proven, certified, open problems, last verified) and `full_row` (yes when the row has a data point, a ruling, served cells, proof or certification, and the taxonomy meaning once the taxonomy tables are present).
+
+## How a tag gets mapped, end to end
+
+1. **Filings.** The extract selects the company's annual reports through `company_filings` (own CIK minus exclude windows, plus predecessor CIKs; RULEBOOK section 2).
+2. **Position.** The resolver reads each data point by position on the face and the filer's calc tree (RULEBOOK X01). The element only ranks the nodes that already hold the role. Custom lines count when their own label names the role.
+3. **Alternatives.** For each data point, the element alternatives, combined lines and note fallbacks are the `roles_rows` / `family` of this library (rules/roles.csv, resolve_cf lists, total_debt patterns).
+4. **Guards** then decide value or reason: combined, net, per class, absence proof, fills from later 10-Ks, printed dashes. Each is one `rule_id`, with its test.
+5. **Proof and certification** check the served cell against the R page. Their counts come back here as `proven_cells` / `certified_cells`.
+
+## Diagnosing a new company's open cell with the library
+
+1. Find the element on the open cell's face line (FSN line) or note fact, and search it in `browser.html`.
+2. **No row, or no `data_point`:** the element is unknown to the resolver.
+   - Check `definition` and `deprecation_chain`. A successor of a known element gets the same role.
+   - Otherwise it is a new mapping: add the alternative to roles.csv with a test, and a RULEBOOK row.
+3. **Row exists:**
+   - Read `rule_id` and `known_problems` for the case: combined label, net line, per-class EPS, component element.
+   - Check `example_cells` for a company that resolved the same way, and follow its R page.
+4. **Proven count is low and `open_problems` > 0:** treat the element as risky. Read the linked card and mind entries before serving it.
+5. After the fix, rebuild. `CHANGELOG.md` shows what moved for the element.
+
+## Coverage
+
+`coverage.json` has `coverage_pct`: the share of resolver-served cells whose every element has a full row.
+
+## Legacy inputs folded into library.csv
+
+These files stay as generator inputs, because pipeline code reads them (pipeline/scripts/tag_map_seed_r1r2.py, its tests, the exam tools). Do not add rows to them; new knowledge goes into rules/roles.csv, RULEBOOK.md or the code, and shows up here on rebuild. Their original notes follow.
+
+### Legacy: standard tag library (cross-company), 2026-11-11
 
 `standard-tag-library.csv`: one row per (statement, us-gaap tag), ranked by how often the tag sits on the face of the top-100 companies' statements (all filings in `fsn.*`, read 2026-11-11). It is the cross-company default that `analytics.company_tag_map` starts from (founder method 2026-11-11: FSN to learn which tag is what, SEC company API for values). Company residue (custom tags, a company whose use contradicts a row, combined lines, era changes) is the two Ritwik sessions' layer on top.
 
@@ -12,10 +75,10 @@ Coverage of the first cut (2026-11-11): 445 (stmt, tag) rows; 443,032 of the 907
 
 Rules that apply to every row: map by face position and the filer's calc tree, not by tag name; a parenthetical (inpth) line is never a balance line; non-dimensional means `dim_id = 0` and `coreg = ''`; take the `iprx = 0` copy (rounded note copies exist); FSN `ddate` is month-end rounded (`datp` = days).
 
-## company-overrides.csv (2026-11-12)
+### Legacy: company-overrides.csv (2026-11-12)
 Company-scoped mappings that the library default does not allow (doc 02: a label may demote a line but never promote it). Only FILING-CHECKED rows are usable; PENDING-FILING-CHECK rows wait for an R-page read. Columns: company, cik, tag, stmt, concept, scope, status, evidence, note.
 
-## needs-detail-answers-r1r2.csv (2026-11-12)
+### Legacy: needs-detail-answers-r1r2.csv (2026-11-12)
 Answers to Engineering's data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv (168 rows, all closed). Added columns: final_decision, members (concept:sign, only from the filing's own calc children or same-filing facts; instants never by subtraction), sign (component contribution to its parent concept, on stored values), label_condition, rule, status. Concept keys use concepts_catalog.csv (_resolved keys where they exist).
 
 - company-overrides.csv column `value_source` (2026-11-12, doc 02 "Founder decision of 2026-11-12: value source for custom-tag lines" (doc/foundational/02_Scrooner_Decision_Register.md, main fcf1425d)): `fsn_xbrl` = value from the filing's own XBRL via SEC FSN data, checked against the printed R page (custom tags); `sec_api` = SEC API (standard tags).

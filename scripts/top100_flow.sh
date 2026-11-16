@@ -14,7 +14,6 @@ CI_MODE=${TOP100_CI:-}
 IDS=${1:?ids}; TAG=${2:?tag}
 REPO=$(cd "$(dirname "$0")/.." && pwd); S=$REPO/.runs/top100_flow; mkdir -p $S
 W=$S/wt-$TAG; O=$S/run_$TAG; rm -rf $O; mkdir -p $O
-NOFILE=2115436,1996810,1594805,2023554,2012383
 cd $REPO
 [ -z "$CI_MODE" ] && {
 # disk floor (Dhairya 2026-11-14): a full disk hangs a process silently, so a run waits while free space on the
@@ -42,12 +41,16 @@ with psycopg.connect(os.environ.get('SCROONER_DATABASE_URL') or os.environ['DATA
 while [ "$(q 'select count(*) from pg_stat_activity')" -gt 80 ]; do sleep 60; done
 CIKS=$(q "select string_agg(cik, ',') from core.company where id in ($IDS)")
 TK=$(q "select string_agg(primary_ticker, '|') from core.company where id in ($IDS)")
+# companies with no 10-K of their own before the template window: data-driven (was a hard-coded CIK list, 2026-11-16);
+# the rule and its cutoff are in pipeline/src/scrooner_pipeline/onboarding/no_filing.py. A failed check stops the run.
+NOFILE=$($PY -m scrooner_pipeline.onboarding.no_filing --company-ids "$IDS" --explain 2> $O/no_filing_why.txt) || { tail -3 $O/no_filing_why.txt; exit 13; }
+echo "no-filing ciks: ${NOFILE:-none}"
 R=$O/reads; mkdir -p $R/fixes
 for f in data-team/companies/reads/*-docmap-*; do t=${${f:t}%%-docmap-*}; echo $t | grep -Eqx "$TK" && cp $f $R/; done
 for f in data-team/companies/reads/fixes/*-fixes-*.csv(N); do t=${${f:t}%%-fixes-*}; echo $t | grep -Eqx "$TK" && cp $f $R/fixes/; done
 echo "docmaps $(ls $R/*.csv 2>/dev/null | wc -l) fix files $(ls $R/fixes | wc -l)"
 PG="-c statement_timeout=900000"
-PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map docmap-load $R --conflicts-out $O/conflicts.csv --rejects-out $O/rejects.csv --extend-eras --era-log $O/era_log.csv --predictor-eras data-team/tags/exam/eras --no-filing-ciks $NOFILE --apply > $O/1.txt 2>&1 || { tail -3 $O/1.txt; exit 11; }
+PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map docmap-load $R --conflicts-out $O/conflicts.csv --rejects-out $O/rejects.csv --extend-eras --era-log $O/era_log.csv --predictor-eras data-team/tags/exam/eras --no-filing-ciks "$NOFILE" --apply > $O/1.txt 2>&1 || { tail -3 $O/1.txt; exit 11; }
 head -1 $O/1.txt | cut -c1-220
 RES=$(ls data-team/tags/line_map/resolver-all110-*.csv 2>/dev/null | sort | tail -1)
 if [ -n "$RES" ]; then

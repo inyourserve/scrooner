@@ -12,6 +12,10 @@ rx = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(rx)
 
 
+class QueryCanceled(Exception):
+    pass
+
+
 class Cur:
     def __init__(self, conn):
         self.c = conn
@@ -24,6 +28,10 @@ class Cur:
 
     def execute(self, sql, params=None):
         self.c.log.append(sql)
+        if sql.startswith("set statement_timeout"):
+            self.c.timeout = int(sql.split("'")[1].rstrip("s"))
+        elif not sql.startswith("show") and self.c.fail and self.c.fail(sql, self.c.timeout):
+            raise QueryCanceled("canceling statement due to statement timeout")
         self.rows = self.c.ro if sql.startswith("show") else ([] if sql.startswith("set") else self.c.rows)
         self.description = [("a",), ("v",), ("d",)]
 
@@ -38,8 +46,8 @@ class Cur:
 
 
 class Conn:
-    def __init__(self, rows, ro="on"):
-        self.rows, self.ro, self.log = rows, [(ro,)], []
+    def __init__(self, rows, ro="on", fail=None):
+        self.rows, self.ro, self.log, self.fail, self.timeout = rows, [(ro,)], [], fail, None
 
     def cursor(self):
         return Cur(self)
@@ -89,3 +97,48 @@ def test_ciks_and_manifest(tmp_path):
     m = rx.manifest(str(tmp_path), "9", "abc", "64803,1652044")
     assert m["files"]["filings.json"]["rows"] == 2 and m["files"]["lines.jsonl"]["rows"] == 3
     assert m["n_ciks"] == 2 and len(m["files"]["lines.jsonl"]["sha256"]) == 64
+
+
+def _batch(d, name, ciks, secs=55):
+    (d / name).write_text(f"set statement_timeout='{secs}s';\nselect {','.join(ciks)} where cik::bigint in ({','.join(ciks)});")
+
+
+def _regen(kind, cik):
+    return f"set statement_timeout='55s';\nselect {cik} where cik::bigint in ({cik});"
+
+
+def test_timeout_resplits_per_cik_and_retries_doubled(tmp_path):
+    _batch(tmp_path, "lines-00.sql", ["1", "2", "3"])
+    _batch(tmp_path, "lines-01.sql", ["4"])
+
+    # the 3-CIK batch times out; CIK 2 times out alone at 55s but passes at 110s
+    def fail(q, t):
+        return "in (1,2,3)" in q or ("in (2)" in q and t == 55)
+    conn = Conn([("x", "1", "d")], fail=fail)
+    counts = rx.run_dir(conn, str(tmp_path), regen=_regen)
+    assert counts == {"lines": 4}  # 3 per-CIK units + the next batch, appended to one file
+    assert len((tmp_path / "lines.jsonl").read_text().splitlines()) == 4
+    r = json.loads((tmp_path / "retries.json").read_text())
+    assert [(x["cik"], x["outcome"], x["retry_timeout_s"]) for x in r] == [
+        ("1", "ok_alone", None), ("2", "ok_doubled", 110), ("3", "ok_alone", None)]
+    assert rx.manifest(str(tmp_path), "1", "s", "1,2,3,4")["retries"] == r
+
+
+def test_single_cik_still_timing_out_fails_naming_it_and_writes_nothing(tmp_path):
+    _batch(tmp_path, "lines-00.sql", ["1", "2"])
+    conn = Conn([("x", "1", "d")], fail=lambda q, t: "in (1,2)" in q or "in (2)" in q)
+    with pytest.raises(SystemExit) as e:
+        rx.run_dir(conn, str(tmp_path), regen=_regen)
+    assert "CIK 2" in str(e.value) and "110s" in str(e.value)
+    assert not (tmp_path / "lines.jsonl").exists()
+
+
+def test_doubled_timeout_is_capped_and_other_errors_are_not_retried(tmp_path):
+    assert rx.with_timeout("set statement_timeout='600s';\nselect 1;", 1200).startswith("set statement_timeout='900s';")
+    assert rx.with_timeout("select 1;", 110).startswith("set statement_timeout='110s';")
+    _batch(tmp_path, "lines-00.sql", ["1", "2"])
+
+    def boom(q, t):
+        raise ValueError("not a timeout")
+    with pytest.raises(ValueError):
+        rx.run_dir(Conn([], fail=boom), str(tmp_path), regen=_regen)

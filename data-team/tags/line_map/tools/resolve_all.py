@@ -601,6 +601,11 @@ def dp_elements(dp):
     return out
 
 
+NOTE_NAME_RX = {'cash_paid_for_interest': re.compile(r'(?i)^interestpaid\w*$|^\w*paidforinterest$'),
+                'amortization_of_intangibles': re.compile(r'(?i)^amortizationof\w*intangible\w*$')}   # a filer's own element named for a note data point (QCOM, CRM)
+# a qualifier in the name makes it a component, never the whole figure (ANET lease-financing interest, PANW contractual interest, STX 'excluding
+# amount included in cost of revenue')
+NOTE_NAME_NOT = re.compile(r'(?i)lease|contractual|notes|loan|payable|capitaliz|excluding|exclusive|portion|component|convertible|debt|financing|discontinued|foreign|domestic|segment')
 ABSENT_RX = {'total_debt': total_debt.DEBT, 'gross_profit': re.compile(r'^GrossProfit$'), 'current_assets': re.compile(r'^AssetsCurrent$'), 'current_liabilities': re.compile(r'^LiabilitiesCurrent$')}   # data points read by pattern (total_debt.py) or by the core statement tree
 ABSENT_STMT = {'total_debt': 'BS'}
 # a line the family itself excludes never blocks absence (BA 'Treasury shares issued for 401(k) contribution', AMD 'Issuance of treasury stock
@@ -634,6 +639,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
         if lab and any(len(p) > 7 and p[0] == ABSENT_STMT.get(r['data_point'], 'CF') and lab.search(p[7]) and not (ABSENT_NOT.get(r['data_point']) and ABSENT_NOT[r['data_point']].search(p[7])) and not p[3].endswith('Shares') and not (r['data_point'] == 'total_debt' and total_debt.NOTDEBT.search(p[7])) for p in L): continue   # a share-count line is not the money line (DHR 'Shares held as Treasury shares')
         nf = note_facts(notefacts.get(r['accession']))
         if any(inE(t) for t, _q in nf): continue
+        if r['data_point'] in NOTE_NAME_RX and any(NOTE_NAME_RX[r['data_point']].match(t) for t, _q in nf): continue   # any element named for it, component or not, blocks a hide   # a custom element named for it (QCOM)
         pe = str(r['period_end'])
         if any(g['a'] != f['a'] and g['p'] > f['p'] and any(len(x) == 4 and inE(x[0]) and x[3] == pe for x in (y.split('|') for y in (compfacts.get(g['a']) or '').split('~')))
                for g in later[f['cik']]): continue
@@ -1052,6 +1058,15 @@ def role(f, L, arcs, notes, R):
                 if dp in BANK_NOTE:   # after a later 10-K's printed line for the year (GS 2016: face 182, note -138; C 2023: face 1,762, note 7,786)
                     return dict(status='not_presented', tags='', value=None, r_page='', why=f"no {dp} line on the {stmt} of this filing", alt=hit)
                 return hit
+    if (R['note_ok'] == 'Y' or stmt == 'NOTE') and dp in NOTE_NAME_RX:
+        # Dhairya 2026-11-16: a filer's own note element whose name names the data point (QCOM qcom:Interestpaidnetofinterestreceived)
+        q = 0 if (stmt == 'BS' or dp in INSTANT_DPS) else 4
+        hits = sorted((t, v) for (t, qq), v in notes.items() if qq == q and NOTE_NAME_RX[dp].match(t) and not NOTE_NAME_NOT.search(t) and t not in {x for a in alts for x in a})
+        if len(hits) == 1:
+            t, v = hits[0]
+            return dict(status='mapped', tags=t, value=v, r_page='NOTE', nodes=f"{t}={v} [NOTE]",
+                        why=f"the filing's own note element {t} names the data point (undimensioned, own column)",
+                        flags='custom_note_element' + (';net_of_interest_received' if dp == 'cash_paid_for_interest' and re.search(r'(?i)received', t) else ''))
     return dict(status='not_presented', tags='', value=None, r_page='',
                 why=f"no {dp} line on the {stmt if stmt != 'NOTE' else 'statements'} of this filing" + (' nor an undimensioned note fact' if R['note_ok'] == 'Y' or stmt == 'NOTE' else ''))
 def run(filings, notefacts, tick, td_rows):
@@ -1089,7 +1104,8 @@ def run(filings, notefacts, tick, td_rows):
                 continue
             r = role(f, L, arcs, notes, R)
             r.setdefault('nodes', f"{r['tags']} [{r['r_page']}]" if r['tags'] else '')
-            out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=R['data_point'], source='roles', calc_check=chk, flags='', **r))
+            fl0 = r.pop('flags', '')
+            out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=R['data_point'], source='roles', calc_check=chk, flags=fl0, **r))
         for dp, r in fam.items():   # family data points with no roles.csv row (e.g. intangible_assets)
             if dp in ('current_assets', 'current_liabilities'): continue
             r = dict(r); src = r.pop('source'); fl_ = r.pop('flags')
@@ -1152,6 +1168,7 @@ if __name__ == '__main__':
     MF = {}
     resolve_cf.MEMBER_FACTS = memberfacts
     EXT['lt'] = standard_inputs.amortization_location_total(notefacts, memberfacts)
+    EXT['qdps'] = standard_inputs.quarterly_dps(notefacts, compfacts, filings)
     EXT['cor'] = standard_inputs.product_service_cor(notefacts, memberfacts)
     EXT['cor_mx'] = {a: x for a, x in standard_inputs.cost_member_sums(notefacts, memberfacts).items() if a not in EXT['cor']}
     EXT['gp'] = standard_inputs.gross_profit_facts(notefacts)
@@ -1217,10 +1234,18 @@ if __name__ == '__main__':
         x = EXT.get('lt', {}).get(r['accession'])
         if x and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'not_presented' and r.get('column', 'own') == 'own':
             parts = [(k, v) for k, v in x['parts'].items()] if not x['total_member'] else [(x['total_member'], x['value'])]
-            r.update(status='component_sum' if len(parts) > 1 else 'mapped', value=D(x['value']), tags='+'.join(['AmortizationOfIntangibleAssets'] * len(parts)),
-                     nodes='; '.join(f"AmortizationOfIntangibleAssets[{x['axis']}={k}]={v} [NOTE]" for k, v in parts),
+            lt_tag = x.get('tag') or 'AmortizationOfIntangibleAssets'
+            r.update(status='component_sum' if len(parts) > 1 else 'mapped', value=D(x['value']), tags='+'.join([lt_tag] * len(parts)),
+                     nodes='; '.join(f"{lt_tag}[{x['axis']}={k}]={v} [NOTE]" for k, v in parts),
                      why=f"the filing reports intangible amortization by income-statement location only: the members' sum" + (' (another own-period fact of the element equals it)' if x.get('corroborated') else ''))
-            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'location_total') if y)
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'location_total', 'custom_element' if x.get('tag') else '') if y)
+    for r in rows:   # Dhairya 2026-11-16 (C, SYK): annual DPS = the four quarterly facts of the same filing when no annual fact exists
+        x = EXT.get('qdps', {}).get(r['accession'])
+        if x and r['data_point'] == 'dividends_per_share' and r['status'] == 'not_presented' and r.get('column', 'own') == 'own':
+            r.update(status='component_sum', value=x['value'], tags='+'.join([x['tag']] * 4),
+                     nodes='; '.join(f"{x['tag']}[quarter ending {k}]={v} [NOTE]" for k, v in x['parts'].items()),
+                     why=f"no annual per-share fact; the sum of the four quarterly {x['tag']} facts this filing reports for its fiscal year")
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'quarterly_sum') if y)
     for a_, x in EXT.get('lt', {}).items():   # served when the mapped face line is smaller than the location total
         fv = next((D(r['value']) for r in rows if r['accession'] == a_ and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None), None)
         if fv is not None and x['value'] > fv:

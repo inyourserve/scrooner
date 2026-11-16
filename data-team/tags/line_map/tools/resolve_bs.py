@@ -155,6 +155,15 @@ def shares(f, notes, bsby):
         if len(m) != 1 or other or EQ_STOP.search(m[0] + ' ' + x[3]): continue
         ax = re.search(r'(\w*ClassOfStock)=', x[4]).group(1)
         cls.setdefault(f'{ax}={m[0]}', (D(x[5]), f"R{x[0]}.htm:{x[1]}"))   # the FSN segment verbatim: StatementClassOfStock=CommonClassA
+    # a printed all-class total in the parenthetical (Google Inc FY2014: 'Common and Capital Stock, Shares, Outstanding' 680,172,000, Class C
+    # filed as capital stock outside CommonStockSharesOutstanding) wins over an incomplete class sum
+    tot = [s.split('|') for s in (f.get('cpv') or '').split('~')]
+    tot = [x for x in tot if len(x) == 6 and not x[4] and x[2] != 'CommonStockSharesOutstanding' and x[2].endswith('SharesOutstanding')
+           and re.search(r'(?i)common', x[2] + ' ' + x[3]) and re.search(r'(?i)outstanding', x[3])]
+    if tot and (not cls or D(tot[0][5]) > sum(v for v, _ in cls.values())):
+        x = tot[0]
+        return dict(status='mapped', value=D(x[5]), nodes=f"{x[2]}={D(x[5])} [R{x[0]}.htm:{x[1]}]",
+                    why=f"the balance-sheet parenthetical prints the all-class total '{x[3]}'" + (f" above the class sum {sum(v for v, _ in cls.values())}" if cls else ''), rule='class_total')
     if cls:
         return dict(status='component_sum' if len(cls) > 1 else 'mapped', value=sum(v for v, _ in cls.values()),
                     nodes='; '.join(f"CommonStockSharesOutstanding[{k}]={v} [{r}]" for k, (v, r) in cls.items()),

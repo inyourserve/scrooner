@@ -49,6 +49,7 @@ from typing import Any
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.company_filings import core_filings_cte
 from scrooner_pipeline.common.authority import (
     FaceIndex,
     face_column_eligible,
@@ -260,6 +261,9 @@ def _load_fact_vintages(
     with conn.cursor() as cur:
         cur.execute(
             """
+            with """
+            + core_filings_cte("co.id = %s")
+            + """
             select taxonomy, tag, period_id, value, id, end_date, is_derived, filing_id, accession_number, filing_date,
                    is_authoritative, form, period_of_report, period_type, start_date
             from (
@@ -286,17 +290,16 @@ def _load_fact_vintages(
                       select 1 from core.filing_registrant r
                       where r.accession_number = fl.accession_number and r.company_id = f.company_id
                         and r.role in ('co_registrant', 'quarantined'))
-                  -- the company's OWN filings inside an 'exclude' window belong to another entity
-                  and not exists (
-                      select 1 from core.company_history_source h
-                      where h.company_id = f.company_id and h.relation = 'exclude'
-                        and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to)
+                  -- which filings belong to the company: the shared rule (common/company_filings.py); the company's
+                  -- OWN filings inside an 'exclude' window belong to another entity and are not in the set
+                  and fl.id in (select id from company_core_filings)
                   and c.tag = any(%s)
             ) t
             where rk = 1 or not %s
             order by taxonomy, tag, period_id, filing_date desc nulls last, filing_id desc, id desc
             """,
             (
+                company_id,
                 company_id,
                 latest_only,
                 sorted({t for _, t in tags if t is not None}),

@@ -29,6 +29,7 @@ from typing import Any, Callable
 
 import structlog
 
+from scrooner_pipeline.common.company_filings import core_filings_cte
 from scrooner_pipeline.fsn_store.company_dir import PERIODIC_FORMS, TABLES
 from scrooner_pipeline.fsn_store.xbrl_fsn import (
     COLUMNS,
@@ -52,6 +53,9 @@ class Candidate:
     form: str
     filing_date: str
     period: str
+    # the cik that filed it (a predecessor's for a filing inside a predecessor window); the SEC document lives
+    # under it. None: the company's own cik.
+    filer_cik: str | None = None
 
 
 @dataclass
@@ -97,22 +101,24 @@ def since_last_set(conn: Any) -> date | None:
 def candidates(conn: Any, ciks: list[str], since: date) -> list[Candidate]:
     """New periodic filings of the given companies not yet in the store (read-only)."""
     conn.execute(f"set statement_timeout = '{STATEMENT_TIMEOUT}'")
+    # which filings belong to the company: the shared rule (common/company_filings.py), predecessor CIKs inside
+    # their windows included, the company's exclude windows out
     rows = conn.execute(
-        """
-        select f.company_id, c.cik, f.accession_number, f.form, f.filing_date::text, f.period_of_report::text
-        from core.company c
-        join core.filing f on f.company_id = c.id
-        where c.cik = any(%s)
-          and f.form = any(%s)
-          and f.filing_date >= %s
-          and f.period_of_report >= %s
-          and not exists (select 1 from fsn.filing s where s.accession = f.accession_number)
-        order by f.filing_date, c.cik, f.accession_number
+        "with "
+        + core_filings_cte("co.cik = any(%s)")
+        + """
+        select f.company_id, f.cik, f.accession, f.form, f.filed::text, f.period::text, f.filer_cik
+        from company_core_filings f
+        where f.form = any(%s)
+          and f.filed >= %s
+          and f.period >= %s
+          and not exists (select 1 from fsn.filing s where s.accession = f.accession)
+        order by f.filed, f.cik, f.accession
         """,
         ([c.zfill(10) for c in ciks], sorted(PERIODIC_FORMS), since, PERIOD_FLOOR),
     ).fetchall()
     conn.rollback()
-    return [Candidate(int(a), b, c, d, e, f) for a, b, c, d, e, f in rows]
+    return [Candidate(int(a), b, c, d, e, f, g) for a, b, c, d, e, f, g in rows]
 
 
 def build(

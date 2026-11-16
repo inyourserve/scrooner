@@ -13,7 +13,7 @@ amortization_location_total(...)  AmortizationOfIntangibleAssets reported by inc
                         _amortization-location-total file.
 debt_vals(...)          own + comparative undimensioned facts in the debtvals.json shape total_debt.run reads.
 Side files stay a fallback in resolve_all.py / resolve_is.py until parity is shown (tools/test_standard_inputs.py)."""
-import csv, os, re
+import collections, csv, os, re
 from datetime import date
 from decimal import Decimal as D
 
@@ -183,6 +183,7 @@ WC_PURE = {'cf_ar_change': ('IncreaseDecreaseInAccountsReceivable', 'IncreaseDec
 
 
 WIDER_THAN_INTEREST = {'InvestmentIncomeInterestAndDividend'}
+COMBINED_YIELDS_TO = dict(WC_PURE, comprehensive_income=('ComprehensiveIncomeNetOfTax',))
 
 
 def comparative_fill(rows, compfacts, instant_dps):
@@ -198,7 +199,7 @@ def comparative_fill(rows, compfacts, instant_dps):
     for lst in by.values():
         lst.sort(key=lambda r: r['period_end'])
         for r in lst:
-            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and r['data_point'] in WC_PURE):
+            if r['status'] != 'not_presented' and not (r['status'] == 'combined' and (r['data_point'] in WC_PURE or r['data_point'] == 'comprehensive_income')):
                 continue   # a combined working-capital line yields to the later 10-K's pure element for the year (TSLA FY2015-16 inventories)
             q = 0 if r['data_point'] in instant_dps else 4
             for k, w in ((1, 'FY-1'), (2, 'FY-2'))[:1 if q == 0 else 2]:   # a balance sheet prints two columns: instants fill from FY-1 only
@@ -206,7 +207,7 @@ def comparative_fill(rows, compfacts, instant_dps):
                 if b is None: continue
                 tag = _one_element(b)
                 if b['status'] != 'mapped' or not tag: continue
-                if r['status'] == 'combined' and tag not in WC_PURE[r['data_point']]: continue
+                if r['status'] == 'combined' and tag not in COMBINED_YIELDS_TO[r['data_point']]: continue   # only the pure element a later 10-K prints (CI: the parent figure; the own filing printed only CI including NCI: AVGO/BLK/DIS/LIN predecessor years)
                 if r['data_point'] == 'interest_income' and tag in WIDER_THAN_INTEREST: continue   # interest AND dividends: wider than the data point (label_beyond; DELL, BLK)
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
@@ -264,6 +265,7 @@ def printed_zero_inferred(rows, filings, compfacts, memberfacts, roles):
             out[(r['accession'], r['data_point'])] = dict(tag=t, stmt=stmt, r_line=f"R{p[1]}:{p[2]}", label=p[7])
     return out
 
+CUSTOM_AMORT = re.compile(r'(?i)^AmortizationOf\w*Intangible\w*$')   # a filer's own amortization-of-intangibles element (Dhairya 2026-11-16, CRM)
 LOCATION_AXES = ('IncomeStatementLocation', 'StatementOfIncomeLocationBalance', 'FiniteLivedIntangibleAssetsByMajorClass')   # CSCO 2014-16, 2022 put the location members on the class axis
 LOCATION_NAME = re.compile(r'(?i)cost|expense|sales|revenue|charges|operating')   # on the class axis every member must name a location (WFC: asset classes)
 
@@ -274,10 +276,13 @@ def amortization_location_total(notefacts, memberfacts):
     serves it when the face line it mapped is smaller (CSCO prints the operating-expense part only)."""
     out = {}
     for a, raw in memberfacts.items():
-        by = {}
+        by, cust = {}, {}
         for t, q, v, seg in _facts(raw, 4):
             m = re.fullmatch(r'(\w+)=(?:[\w-]+:)?(\w+);', seg)
-            if t == 'AmortizationOfIntangibleAssets' and int(q) == 4 and m and m.group(1) in LOCATION_AXES:
+            if (t == 'AmortizationOfIntangibleAssets' or CUSTOM_AMORT.match(t)) and int(q) == 4 and m and m.group(1) in LOCATION_AXES:
+                if t != 'AmortizationOfIntangibleAssets':
+                    if m.group(1) != 'IncomeStatementLocation': continue
+                    cust.setdefault(t, {})[m.group(2)] = D(v); continue
                 if m.group(1) == 'FiniteLivedIntangibleAssetsByMajorClass' and not LOCATION_NAME.search(m.group(2)):
                     by.setdefault(m.group(1), {})['__class__'] = None; continue
                 by.setdefault(m.group(1), {})[m.group(2)] = D(v)
@@ -293,6 +298,10 @@ def amortization_location_total(notefacts, memberfacts):
                 s_ = sum(d.values())
                 if s_ in {D(v) for t, q, v, seg in _facts(raw, 4) if t == 'AmortizationOfIntangibleAssets' and int(q) == 4}:
                     out[a] = dict(value=s_, parts=d, total_member=None, axis=ax, corroborated=True); break   # PM FY2022: the class-axis 159 = 58 + 101
+        if a not in out and und is None and not by and len(cust) == 1:
+            t, d = next(iter(cust.items()))
+            if len(d) >= 2:   # CRM FY2018+: crm:AmortizationOfPurchasedIntangiblesFromBusinessCombinations by IncomeStatementLocation only (440 + 352)
+                out[a] = dict(value=sum(d.values()), parts=d, total_member=None, axis='IncomeStatementLocation', tag=t)
     return out
 
 
@@ -422,11 +431,21 @@ def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
     first = {}
     for f in filings:
         if f['cik'] not in first or f['p'] < first[f['cik']]['p']: first[f['cik']] = f
+    own = collections.defaultdict(list)
+    for f in filings: own[f['cik'].zfill(10)].append(date.fromisoformat(f['p']))
+    # a year INSIDE the company's run with no annual report of its own in the inputs (MRVL FY2021: the predecessor's last 10-K is not in
+    # FSN) is treated like a pre-filing year of the next 10-K that prints it: one row per data point, filled from that 10-K's columns
+    nxt = {}
+    for f in sorted(filings, key=lambda f: f['p']):
+        k = f['cik'].zfill(10)
+        prev = [d for d in own[k] if d < date.fromisoformat(f['p'])]
+        if prev and (date.fromisoformat(f['p']) - max(prev)).days > 400: nxt[(k, f['a'])] = f
+    seen = set()
     tmpl = {}
     for r in rows:
         if (r.get('column') or 'own') == 'own' and r.get('cik'): tmpl.setdefault(r['cik'].zfill(10), (r['ticker'], set()))[1].add(r['data_point'])
     out = []
-    for cik, f in first.items():
+    for cik, f in list(first.items()) + [(k, g) for (k, _a), g in nxt.items()]:
         per = date.fromisoformat(f['p']); key = cik.zfill(10)
         if key not in tmpl: continue
         dates = {}
@@ -440,6 +459,8 @@ def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
         for w, c in sorted(dates.items()):
             dd = max(c, key=lambda x: (c[x], x))
             if dd < start: continue   # before the extract window: a 10-K outside the window covers it
+            if any(abs((date.fromisoformat(dd) - d).days) <= 20 for d in own[key]) or (key, dd) in seen: continue   # an own 10-K covers it
+            seen.add((key, dd))
             for dp in sorted(dps):
                 out.append(dict(ticker=ticker, cik=key, accession=f'BEFORE:{key}:{dd}', period_end=dd, data_point=dp, status='not_presented', tags='', value=None, r_page='',
                                 nodes='', why=f"no 10-K covers this year: it is before the company's first 10-K ({f['a']}), and that 10-K's FY-{w} column does not print the line",
@@ -493,3 +514,25 @@ def apply_filer_errors(filings, notefacts, errs):
                     x[2] = str(e['printed']); parts[i] = '|'.join(x); hit.add(a)
             notefacts[a] = '~'.join(parts)
     return hit
+
+
+def quarterly_dps(notefacts, compfacts, filings):
+    """Dhairya 2026-11-16 (C, SYK; the 11-04 Q4 decision): annual dividends per share = the sum of the four quarterly DPS facts (qtrs 1) the
+    SAME filing reports for its fiscal year, when all four are present and the filing has no annual fact. {accession: dict(tag, value, parts)}."""
+    out = {}
+    for f in filings:
+        a = f['a']; per = date.fromisoformat(f['p'])
+        q = {}
+        for raw in (notefacts.get(a), compfacts.get(a)):
+            for x in (raw or '').split('~'):
+                p = x.split('|')
+                if len(p) >= 3 and p[0].startswith('CommonStockDividendsPerShare') and p[1] == '1':
+                    dd = date.fromisoformat(p[3]) if len(p) > 3 else per
+                    if 0 <= (per - dd).days < 360: q.setdefault(p[0], {})[dd] = D(p[2])
+        annual = {x.split('|')[0] for x in (notefacts.get(a) or '').split('~') if x.startswith('CommonStockDividendsPerShare') and x.split('|')[1:2] == ['4']}
+        if annual: continue
+        for t in ('CommonStockDividendsPerShareDeclared', 'CommonStockDividendsPerShareCashPaid'):
+            d = q.get(t, {})
+            if len(d) == 4 and per in d:
+                out[a] = dict(tag=t, value=sum(d.values()), parts={k.isoformat(): v for k, v in sorted(d.items())}); break
+    return out
