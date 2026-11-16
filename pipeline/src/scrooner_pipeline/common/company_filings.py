@@ -116,13 +116,19 @@ _CORE_TEMPLATE = f"""company_core_filings as (
       and not {_EXCLUDED.format(p="fl.period_of_report")}
       and not exists (select 1 from core.filing p
                       join raw.sec_submissions ps on ps.id = p.raw_submission_id
-                      where ps.cik <> co.cik
+                      where p.company_id = any(array[co.id] || array(
+                              select pc.id from core.company pc join core.company_history_source h2
+                                on h2.source_cik = pc.cik and h2.company_id = co.id and h2.relation = 'predecessor'))
+                        and ps.cik <> co.cik
                         and exists (select 1 from core.company_history_source h
                               where h.company_id = co.id and h.relation = 'predecessor' and h.source_cik = ps.cik
                                 and p.period_of_report between h.valid_from and h.valid_to)
                         and p.period_of_report = fl.period_of_report
                         and replace(p.form, '/A', '') = replace(fl.form, '/A', '')
-                        and {_SHELL.format(s=_FACE.format(acc="fl.accession_number"), p=_FACE.format(acc="p.accession_number"))}))
+                        and (case when ps.cik <> co.cik and p.period_of_report = fl.period_of_report
+                                       and replace(p.form, '/A', '') = replace(fl.form, '/A', '')
+                                  then {_SHELL.format(s=_FACE.format(acc="fl.accession_number"), p=_FACE.format(acc="p.accession_number"))}
+                                  else false end)))
      or (s.cik is not null and s.cik <> co.cik
          and exists (select 1 from core.company_history_source h
                      where h.company_id = co.id and h.relation = 'predecessor' and h.source_cik = s.cik
@@ -133,7 +139,10 @@ _CORE_TEMPLATE = f"""company_core_filings as (
                            and o.period_of_report = fl.period_of_report
                            and replace(o.form, '/A', '') = replace(fl.form, '/A', '')
                            and not {_EXCLUDED.format(p="o.period_of_report")}
-                           and not {_SHELL.format(s=_FACE.format(acc="o.accession_number"), p=_FACE.format(acc="fl.accession_number"))}))
+                           and not (case when o.period_of_report = fl.period_of_report
+                                              and replace(o.form, '/A', '') = replace(fl.form, '/A', '')
+                                         then {_SHELL.format(s=_FACE.format(acc="o.accession_number"), p=_FACE.format(acc="fl.accession_number"))}
+                                         else false end)))
    )
 )"""
 

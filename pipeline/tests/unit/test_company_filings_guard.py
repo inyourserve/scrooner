@@ -140,3 +140,16 @@ def test_guard_detects_a_raw_cik_filter():
         "x.py", "select id from core.filing where company_id = any(%s)"
     ) == []
     assert raw_cik_filter_offences("x.py", "select cik from core.company where cik = any(%s)") == []
+
+
+def test_core_cte_shell_probe_is_company_scoped_and_cheap_guarded():
+    """Regression 2026-11-16: the shell probe scanned ALL of core.filing (cost 782M) and counted face lines for every own
+    filing, so a 5-company coverage call ran >100 s. The probe's candidate set must be the company's own filing ids and
+    the face-line count must sit behind the cheap period/form/cik guard."""
+    from scrooner_pipeline.common.company_filings import core_filings_cte
+
+    text = core_filings_cte("co.id = any(%s)")
+    probe = text[text.index("from core.filing p") :]
+    assert "where p.company_id = any(array[co.id]" in probe.split("and ps.cik <> co.cik")[0]
+    assert text.count("case when ps.cik <> co.cik and p.period_of_report = fl.period_of_report") == 1
+    assert text.count("case when o.period_of_report = fl.period_of_report") == 1
