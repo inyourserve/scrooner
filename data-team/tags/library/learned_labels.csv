@@ -967,7 +967,6 @@ inventory,"inventories and contracts in progress, net",5,1,InventoryNet 5
 inventory,"materials, supplies and fuel inventory",5,1,InventoryNet 5
 inventory,"inventories, net of advances and progress billings",4,1,InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings 4
 inventory,"inventory, net, total",3,1,InventoryNet 3
-loans_net,financing receivables net,14,2,LoansAndLeasesReceivableNetReportedAmount 8;NotesReceivableNet 6
 loans_net,"loans and leases, net of allowance",12,1,LoansAndLeasesReceivableNetReportedAmount 6;FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss 4;NotesReceivableNet 2
 loans_net,net loans held for investment,12,1,LoansAndLeasesReceivableNetReportedAmount 6;NotesReceivableNet 6
 loans_net,"total loans, net",12,1,LoansAndLeasesReceivableNetReportedAmount 6;NotesReceivableNet 3;FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss 3
@@ -976,14 +975,11 @@ loans_net,"loans, net of allowance for loan losses",10,1,FinancingReceivableExcl
 loans_net,net loans,8,1,LoansAndLeasesReceivableNetReportedAmount 8
 loans_net,"financing receivables, net",6,1,NotesReceivableNet 6
 loans_net,"loans net of allowance of , and , , and includes",6,1,NotesReceivableNet 4;LoansAndLeasesReceivableNetReportedAmount 2
-loans_net,"real estate loans receivable, net of credit allowance",6,1,NotesReceivableNet 6
 loans_net,card member loans,5,1,LoansAndLeasesReceivableNetReportedAmount 5
 loans_net,loans receivable,5,1,LoansAndLeasesReceivableNetReportedAmount 5
-loans_net,"private debt held for investment, at amortized cost, net of",4,1,LoansAndLeasesReceivableNetReportedAmount 2;FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss 2
 loans_net,held for investment,4,1,NotesReceivableNet 4
 loans_net,held for investment net of allowance for credit losses of,4,1,FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss 4
 loans_net,held for investment net of allowances of and at d,2,1,NotesReceivableNet 2
-loans_net,"real estate loans receivable, net of allowance",2,1,NotesReceivableNet 2
 loans_net,card member loans includes gross loans available to settle,1,1,LoansAndLeasesReceivableNetReportedAmount 1
 loans_net,loans to banking clients net,1,1,LoansAndLeasesReceivableNetReportedAmount 1
 loans_net,loans,1,1,LoansAndLeasesReceivableNetReportedAmount 1
@@ -1526,13 +1522,11 @@ ppe_net,"property, plant and equipment, at cost, net",1,1,PropertyPlantAndEquipm
 ppe_net,"property, net",1,1,PropertyPlantAndEquipmentNet 1
 ppe_net,"property, plant, and equipment, at cost, less accumulated de",1,1,PropertyPlantAndEquipmentNet 1
 provision_for_credit_losses,provision for credit losses,48,5,ProvisionForLoanLeaseAndOtherLosses 41;ProvisionForLoanLossesExpensed 6;ProvisionForLoanAndLeaseLosses 1
-provision_for_credit_losses,provision for loan losses,13,3,ProvisionForLoanAndLeaseLosses 7;ProvisionForLoanLossesExpensed 4;ProvisionForDoubtfulAccounts 2
 provision_for_credit_losses,total provisions for losses,6,1,ProvisionForLoanLeaseAndOtherLosses 6
 provision_for_credit_losses,provisions for credit losses,6,1,ProvisionForLoanLossesExpensed 6
+provision_for_credit_losses,provision for loan losses,5,2,ProvisionForLoanLossesExpensed 4;ProvisionForLoanAndLeaseLosses 1
 provision_for_credit_losses,total provisions for credit losses and for benefits and clai,5,1,ProvisionForLoanLeaseAndOtherLosses 5
-provision_for_credit_losses,"provision for loan losses, net",4,1,ProvisionForLoanLossesExpensed 4
 provision_for_credit_losses,provision for credit losses on loans,3,1,ProvisionForLoanLossesExpensed 3
-provision_for_credit_losses,provision for losses on financing receivables,1,1,ProvisionForLoanAndLeaseLosses 1
 provision_for_credit_losses,benefit for credit losses,1,1,ProvisionForLoanLeaseAndOtherLosses 1
 research_and_development,research and development,473,43,ResearchAndDevelopmentExpense 428;ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost 45
 research_and_development,research and development expenses,88,8,ResearchAndDevelopmentExpense 66;ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost 22

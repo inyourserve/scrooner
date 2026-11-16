@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .56, 2026-11-16). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .57, 2026-11-16). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -276,6 +276,9 @@ Format: `ID | rule | code | test | date / source`.
 | X52 | sbc = the sum of two or more award-type components when no total is printed (CVX: restricted stock/units 1,013 custom + StockOptionPlanExpense 60); flag award_type_sum. Per-plan-only filers (SCCO) are not summed unless the plans are shown to be exhaustive | ra.apply_face_label_overrides (SBC_PART); extract_families | pr4::test_sbc_is_the_sum_of_award_type_components_without_after_tax_amounts | Dhairya 2026-11-16; commit .55 |
 | X53 | A face label that served a data point at two or more other companies, and served no other data point, blocks a proven-absence hide for that data point (learned labels, data-team/tags/library/learned_labels.csv from learn_from_filings.py); never used to serve a value | ra.learned_labels, ra.apply_absent_in_own_filing | pr4::test_a_label_learned_for_the_data_point_blocks_proven_absence | founder direction 2026-11-16 (learn from FSN and filings); commit .56 |
 | X54 | Bank template data points (net_interest_income, total_interest_income, noninterest_income, noninterest_expense, deposits) are read only from a bank income statement (bank_face): an industrial's 'Interest, net' is never net interest income (CVS, WMT, RTX, ETN, V, VRTX, LIN, PM: 55 false values withdrawn; found by the learned labels) | ra.role (BANK_ONLY) | pr4::test_bank_data_points_are_read_only_from_a_bank_income_statement | commit .56 |
+| X55 | Bank template: provision_for_credit_losses, loans_net, deposits, net_interest_income, noninterest_income, noninterest_expense and total_interest_income belong to banks only (most annual reports print a bank income statement: AXP, BAC, C, COF, GS, JPM, MS, SCHW, WFC). Every other company's cells are not_in_template, never served (captive finance CAT/DE/GE, telecom VZ, tech CSCO, REIT WELL, insurer CB): 99 values withdrawn, 8,400 cells OUT | ra.apply_bank_template | pr4::test_bank_data_points_are_out_of_template_outside_the_bank_template | Dhairya ruling 2026-11-16; commit .57 |
+| X56 | MO/PM: excise printed between revenue and gross profit is part of cost of revenue (the filer's own gross-profit arithmetic holds); no change | resolve.py core (GrossProfit -1 children) | rvs (core) | Dhairya ruling 2026-11-16 (keeps ruling A) |
+| X57 | FASB taxonomy gaps are our own rulings: SalesRevenueNet (deprecated 2018, no successor named) maps to revenue; CapitalLeaseObligations* (deprecated 2026, no link to FinanceLeaseLiability) counts in total_debt as the pre-842 lease liability | roles.csv revenue; total_debt.py | rvs, cap | Dhairya ruling 2026-11-16, citing data-team/tags/taxonomy/deprecations.csv |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

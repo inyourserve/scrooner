@@ -499,3 +499,15 @@ def test_a_label_learned_for_the_data_point_blocks_proven_absence():
     resolve_all.LEARNED['inventory'] = {'merchandise inventories'}
     assert not _absent([('BS', 'xyz_Stock', 'Merchandise inventories', 5)], dp='inventory')
     assert _absent([('BS', 'xyz_Stock', 'Prepaid expenses', 5)], dp='inventory')
+
+
+def test_bank_data_points_are_out_of_template_outside_the_bank_template():
+    # Dhairya ruling 2026-11-16: DE's financing-receivable provision is OUT; a bank (net interest income face) keeps its cell
+    ind = dict(filing([('IS', 'Revenues', 'Net sales', 100)]), cik='1', a='A1')
+    bank = dict(filing([('IS', 'InterestIncomeExpenseNet', 'Net interest income', 60)]), cik='2', a='B1')
+    rows = [dict(cik='1', data_point='provision_for_credit_losses', status='mapped', value=D(5), tags='X', nodes='X=5', flags='roles', why=''),
+            dict(cik='2', data_point='provision_for_credit_losses', status='mapped', value=D(9), tags='X', nodes='X=9', flags='roles', why=''),
+            dict(cik='1', data_point='revenue', status='mapped', value=D(100), tags='Revenues', nodes='', flags='', why='')]
+    resolve_all.apply_bank_template(rows, [ind, bank])
+    assert rows[0]['status'] == 'not_in_template' and rows[0]['value'] is None
+    assert rows[1]['status'] == 'mapped' and rows[2]['status'] == 'mapped'

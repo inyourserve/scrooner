@@ -1092,6 +1092,26 @@ def bank_face(L):
 
 
 BANK_ONLY = {'net_interest_income', 'total_interest_income', 'noninterest_income', 'noninterest_expense', 'deposits'}   # bank template data points
+BANK_TEMPLATE_DPS = BANK_ONLY | {'provision_for_credit_losses', 'loans_net'}
+
+
+def apply_bank_template(rows, filings):
+    """Dhairya ruling 2026-11-16: bank data points (BANK_TEMPLATE_DPS) belong to the bank template only. A company is in the bank template
+    when most of its annual reports print a bank income statement (bank_face: AXP, BAC, C, COF, GS, JPM, MS, SCHW, WFC). For every other
+    company (captive-finance industrials CAT/DE/GE, telecoms, tech, REITs, insurers) these cells are not_in_template, never served: a captive
+    finance arm's figures are its own business lines, not the bank definition."""
+    n, bank = collections.Counter(), collections.Counter()
+    for f in filings:
+        L, _ = parse(f)
+        n[f['cik'].zfill(10)] += 1
+        if bank_face(L): bank[f['cik'].zfill(10)] += 1
+    for r in rows:
+        k = str(r.get('cik') or '').zfill(10)
+        if r['data_point'] in BANK_TEMPLATE_DPS and n[k] and bank[k] * 2 <= n[k]:
+            r.update(status='not_in_template', value=None, tags='', nodes='', r_page='', column='own',
+                     why=f"{r['data_point']} belongs to the bank template; this company's income statement is not a bank's (ruling 2026-11-16)")
+            r['flags'] = 'not_in_template'
+    return rows
 
 
 def role(f, L, arcs, notes, R):
@@ -1377,6 +1397,7 @@ if __name__ == '__main__':
     rows = apply_eps_per_class(rows, filings)
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
+    rows = apply_bank_template(rows, filings)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
