@@ -34,8 +34,13 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.certification.display_cert import (
+    HIDE_FAMILY,
+    PERIODIC_FORMS as CERT_PERIODIC_FORMS,
+)
 from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.common.company_filings import (
+    company_filings,
     core_filings_cte,
     fsn_filings_cte,
 )
@@ -1196,6 +1201,7 @@ def build_rows(
     resolve_derived(rows, load_input_prints(conn, rows))
     attach_only_combined(rows, load_only_combined())
     attach_absent_in_own(rows, load_absent_in_own())
+    attach_presence(rows, load_presence(conn, ids))
     attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
     note = {
@@ -1607,6 +1613,77 @@ def attach_stated_zero(
         r["locator_source"] = kind
 
 
+# The approver's own presence test (certification.display_cert): a year end that ANY periodic filing of the company
+# (10-K, 10-Q, 20-F, 40-F, own or comparative column, via the shared company_filings()) prints on a rendered statement
+# line. YEAR_TAGS are the certifier's year-end tags; a row's own tag family is HIDE_FAMILY.
+YEAR_TAGS = (
+    "Assets",
+    "Revenues",
+    "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "NetIncomeLoss",
+    "NetCashProvidedByUsedInOperatingActivities",
+    "ProfitLoss",
+)
+_FAMILY_TAGS = sorted({t for tags in HIDE_FAMILY.values() for t in tags})
+_PRESENCE_SQL = """
+select v.filing_id, t.tag, v.ddate, v.qtrs
+from fsn.value v
+join fsn.tag t on t.id = v.tag_id
+join fsn.dim d on d.id = v.dim_id and d.segments = ''
+where v.filing_id = any(%s) and coalesce(v.coreg, '') = '' and v.value is not null
+  and v.qtrs in (0, 4) and t.tag = any(%s)
+  and exists (select 1 from fsn.line l where l.filing_id = v.filing_id and l.tag_id = v.tag_id)
+"""
+
+
+def load_presence(
+    conn: Any, company_ids: list[int], chunk: int = 10
+) -> dict[int, list[tuple[date, str, int]]]:
+    """company id -> (ddate, tag, qtrs) of every undimensioned, valued, rendered fact on YEAR_TAGS or a HIDE_FAMILY tag
+    in ANY periodic filing of the company (company_filings(): predecessors inside their windows). Read-only."""
+    tags = sorted({*YEAR_TAGS, *_FAMILY_TAGS})
+    out: dict[int, list[tuple[date, str, int]]] = defaultdict(list)
+    for i in range(0, len(company_ids), chunk):
+        ids = company_ids[i : i + chunk]
+        owner = {
+            f.id: f.company_id
+            for f in company_filings(conn, ids, source="fsn", forms=CERT_PERIODIC_FORMS)
+        }
+        if not owner:
+            continue
+        for fid, tag, dd, q in conn.execute(
+            _PRESENCE_SQL, (list(owner), tags)
+        ).fetchall():
+            out[owner[fid]].append((dd, tag, int(q)))
+    return out
+
+
+def attach_presence(
+    rows: list[dict[str, Any]],
+    presence: dict[int, list[tuple[date, str, int]]],
+) -> None:
+    """Set `_year_presented_any` (a periodic filing prints a statement fact at the cell's period end: the certifier's
+    test, which no HIDDEN_YEAR may meet) and `_family_hit` (a fact on the data point's own tag family, undimensioned,
+    rendered, annual or instant, dated at that period: a row with any such year is not 'never reported'). Pure."""
+    by_co: dict[int, tuple[list[date], dict[str, list[tuple[date, int]]]]] = {}
+    for cid, facts in presence.items():
+        ends = sorted({d for d, t, _q in facts if t in YEAR_TAGS})
+        fam: dict[str, list[tuple[date, int]]] = defaultdict(list)
+        for d, t, q in facts:
+            fam[t].append((d, q))
+        by_co[cid] = (ends, fam)
+    for r in rows:
+        ends, fam = by_co.get(r["company_id"], ([], {}))
+        end = date.fromisoformat(r["period_end"])
+        r["_year_presented_any"] = any(fsn_end_matches(d, end, 7) for d in ends)
+        want = 0 if r["data_point"] in INSTANT_DPS else 4
+        r["_family_hit"] = any(
+            q == want and fsn_end_matches(d, end, 7)
+            for t in HIDE_FAMILY.get(r["data_point"], ())
+            for d, q in fam.get(t, ())
+        )
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
     a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
@@ -1641,6 +1718,12 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             r["display"] = HIDDEN_YEAR
         else:
             r["display"] = OPEN
+        if r["display"] == HIDDEN_YEAR and (
+            r.get("_year_presented_any") or r.get("_family_hit")
+        ):
+            # ONE presence test for EVERY hidden-year route (only_combined years, absent_in_own, comparative-only, no-period
+            # reasons): a period any periodic filing prints is never hidden; it stays OPEN until filled (BA 2026-11-16)
+            r["display"] = OPEN
         by_row[(r["company_id"], r.get("data_point"))].append(r)
     for cells in by_row.values():
         rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
@@ -1661,6 +1744,12 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             # every year is before the first filing: nothing of this row can be shown
             for c in cells:
                 c["display"] = HIDDEN_ROW
+        if any(c.get("_family_hit") for c in cells):
+            # a row hidden as never reported must have no year whose own filing prints the line (MO other income FY2015):
+            # a row with any printed year is not a hidden row; its cells are judged per year (open until filled)
+            for c in cells:
+                if c["display"] == HIDDEN_ROW:
+                    c["display"] = OPEN
 
 
 def work_type(r: dict[str, Any]) -> str:
