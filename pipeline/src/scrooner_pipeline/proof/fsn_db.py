@@ -35,7 +35,8 @@ def apply_filer_corrections(s: FilingStructure) -> None:
     replaces the stored undimensioned value that equals its xbrl_value (that tag and qtrs) with the printed one; a
     supplying row adds the printed value the filer left untagged, at the filing's own period end, when the tag is a
     line of one of its statements and carries no value there. The proof then reads the printed line. Pure on `s`."""
-    for (tag, qtrs), c in sorted(fxe.for_accession(s.adsh).items()):
+    for c in fxe.for_accession(s.adsh):
+        tag, qtrs = c.tag, c.qtrs
         if c.supplies:
             line = next((p for p in s.pre if p.tag == tag), None)
             if line is None or s.period is None:

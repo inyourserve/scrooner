@@ -36,18 +36,18 @@ def _row(**kw):
 
 
 def _by_tag_qtrs(rows):
-    return {(k[1], k[2]): v for k, v in fxe.parse(rows).items()}
+    return [c for cs in fxe.parse(rows).values() for c in cs]
 
 
 @pytest.mark.unit
 def test_committed_csv_parses_and_has_every_row():
     got = fxe.load()
     assert len(got) == 7
-    stx = got[("0001137789-24-000068", "CommonStockDividendsPerShareDeclared", 4)]   # STX FY2024 DPS stored 10^6 too large (Ritwik draw 2026-11-16)
+    stx = got[("0001137789-24-000068", "CommonStockDividendsPerShareDeclared", 4)][0]   # STX FY2024 DPS stored 10^6 too large (Ritwik draw 2026-11-16)
     assert stx.xbrl_value == Decimal("2800000") and stx.printed_value == Decimal("2.80")
-    c = got[("0001562762-20-000064", EM, 4)]
+    c = got[("0001562762-20-000064", EM, 4)][0]
     assert c.xbrl_value == Decimal("-6000000") and c.printed_value == Decimal("6000000")
-    s = got[(ACC, "Liabilities", 0)]
+    s = got[(ACC, "Liabilities", 0)][0]
     assert s.supplies and s.printed_value == Decimal("95390000000")
 
 
@@ -78,10 +78,10 @@ def test_parse_rejects_duplicate_key():
 
 @pytest.mark.unit
 def test_stored_problems():
-    fix = fxe.parse([_row(xbrl_value="-6", printed_value="6")])[(ACC, "Liabilities", 0)]
+    fix = fxe.parse([_row(xbrl_value="-6", printed_value="6")])[(ACC, "Liabilities", 0)][0]
     assert fxe.stored_problems(fix, [Decimal("-6")]) is None
     assert fxe.stored_problems(fix, [Decimal("5")]) is not None
-    sup = fxe.parse([_row()])[(ACC, "Liabilities", 0)]
+    sup = fxe.parse([_row()])[(ACC, "Liabilities", 0)][0]
     assert fxe.stored_problems(sup, [Decimal("93492000000")]) is None
     assert fxe.stored_problems(sup, [Decimal("95390000000")]) is not None
 
@@ -184,12 +184,12 @@ def test_sign_correction_replaces_only_the_matching_value():
 @pytest.mark.unit
 def test_fix_fit_for_serving():
     none = "no stored fact for the part in that filing and column"
-    sup = fxe.parse([_row()])[(ACC, "Liabilities", 0)]
+    sup = fxe.parse([_row()])[(ACC, "Liabilities", 0)][0]
     assert sd._fix_fit(sup, none) is None
     assert sd._fix_fit(sup, (Decimal("95390000000"), "fsn_xbrl", {1})) is None
     assert sd._fix_fit(sup, (Decimal("1"), "fsn_xbrl", {1})) is not None
     assert sd._fix_fit(sup, "two fsn values for the part in that filing") is not None
-    cor = fxe.parse([_row(xbrl_value="-6", printed_value="6")])[(ACC, "Liabilities", 0)]
+    cor = fxe.parse([_row(xbrl_value="-6", printed_value="6")])[(ACC, "Liabilities", 0)][0]
     assert sd._fix_fit(cor, (Decimal("-6"), "sec_api", {1})) is None
     assert sd._fix_fit(cor, (Decimal("9"), "sec_api", {1})) is not None
     assert sd._fix_fit(cor, none) is not None
@@ -213,3 +213,34 @@ def test_loader_sign_solve_uses_the_printed_value():
     assert sl.fixed_option(c, "Other", {Decimal(1)}) == {Decimal(1)}
     c2 = sl.Claim(**{**c.__dict__, "accession": "0000000000-20-000001"})
     assert sl.fixed_option(c2, EM, {Decimal(-6000000)}) == {Decimal(-6000000)}
+
+
+STX_ACC = "0001137789-24-000068"
+STX_TAG = "CommonStockDividendsPerShareDeclared"
+
+
+def _stx(xv, pv):
+    return _row(
+        accession=STX_ACC, tag=STX_TAG, qtrs="4", xbrl_value=xv, printed_value=pv
+    )
+
+
+@pytest.mark.unit
+def test_several_rows_share_a_key_when_xbrl_value_differs(tmp_path):
+    got = fxe.parse([_stx("2770000", "2.77"), _stx("2800000", "2.80")])
+    assert len(got[(STX_ACC, STX_TAG, 4)]) == 2
+    with pytest.raises(ValueError):  # same stored value twice is still a duplicate
+        fxe.parse([_stx("2770000", "2.77"), _stx("2770000", "2.78")])
+    with pytest.raises(ValueError):  # a supply cannot share a key
+        fxe.parse([_stx("2770000", "2.77"), _stx("", "2.80")])
+    path = tmp_path / "f.csv"
+    path.write_text(
+        ",".join(fxe.COLUMNS)
+        + f"\n{STX_ACC},{STX_TAG},4,2770000,2.77,FY2022 DPS\n{STX_ACC},{STX_TAG},4,2800000,2.80,FY2024 DPS\n"
+    )
+    assert fxe.corrected_value(STX_ACC, STX_TAG, 4, Decimal("2770000"), path) == Decimal("2.77")
+    assert fxe.corrected_value(STX_ACC, STX_TAG, 4, Decimal("2800000"), path) == Decimal("2.80")
+    assert fxe.corrected_value(STX_ACC, STX_TAG, 4, Decimal("2.5"), path) == Decimal("2.5")
+    rows = fxe.parse([_stx("2770000", "2.77"), _stx("2800000", "2.80")])[(STX_ACC, STX_TAG, 4)]
+    assert fxe.pick(rows, Decimal("2800000")).printed_value == Decimal("2.80")
+    assert fxe.pick(rows, Decimal("9")) is None

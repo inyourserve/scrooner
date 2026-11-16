@@ -804,7 +804,10 @@ def direct_cells(
                     member_cites[tag] = f"R{rp}" + (f":{ln}" if ln else "")
             else:
                 got = _part_value(stored[(c.accession, tag, te)], want)
-                fix = fixes.get((c.accession, tag, 0 if grain == "I" else 4))
+                fix = fxe.pick(
+                    fixes.get((c.accession, tag, 0 if grain == "I" else 4), ()),
+                    None if isinstance(got, str) else got[0],
+                )
                 if fix is not None:
                     why = _fix_fit(fix, got)
                     if why:

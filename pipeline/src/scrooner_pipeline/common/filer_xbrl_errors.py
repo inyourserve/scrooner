@@ -78,10 +78,13 @@ def _dec(s: str, what: str, line: int) -> Decimal:
     return d
 
 
-def parse(rows: Iterable[dict[str, str]]) -> dict[Key, Correction]:
-    """Validate and index CSV rows. Raises ValueError on a bad accession, qtrs, number, empty printed value, empty
-    evidence, a correction that changes nothing, or a duplicate key. Pure."""
-    out: dict[Key, Correction] = {}
+def parse(rows: Iterable[dict[str, str]]) -> dict[Key, tuple[Correction, ...]]:
+    """Validate and index CSV rows by (accession, tag, qtrs). SEVERAL rows may share that key when their xbrl_value
+    differs (STX FY2024 10-K stores the FY2022 and FY2024 DPS both wrong, at different values); the stored value picks
+    the row. Raises ValueError on a bad accession, qtrs, number, empty printed value, empty evidence, a correction that
+    changes nothing, a duplicate (accession, tag, qtrs, xbrl_value), or a supplying row beside another row of its key
+    (a supply has no stored fact to tell the rows apart). Pure."""
+    out: dict[Key, list[Correction]] = {}
     for n, r in enumerate(rows, start=2):
         acc, tag = (r.get("accession") or "").strip(), (r.get("tag") or "").strip()
         if not ACCESSION_RE.match(acc):
@@ -108,14 +111,21 @@ def parse(rows: Iterable[dict[str, str]]) -> dict[Key, Correction]:
                 f"filer_xbrl_errors line {n}: xbrl_value equals printed_value"
             )
         c = Correction(acc, tag, qtrs, xv, pv, ev)
-        if c.key in out:
-            raise ValueError(f"filer_xbrl_errors line {n}: duplicate key {c.key}")
-        out[c.key] = c
-    return out
+        same = out.setdefault(c.key, [])
+        if any(o.xbrl_value == c.xbrl_value for o in same):
+            raise ValueError(
+                f"filer_xbrl_errors line {n}: duplicate key {c.key} xbrl_value {c.xbrl_value}"
+            )
+        if same and (c.supplies or any(o.supplies for o in same)):
+            raise ValueError(
+                f"filer_xbrl_errors line {n}: a supplying row cannot share the key {c.key} with another row"
+            )
+        same.append(c)
+    return {k: tuple(v) for k, v in out.items()}
 
 
 @lru_cache(maxsize=4)
-def _load(path: str) -> dict[Key, Correction]:
+def _load(path: str) -> dict[Key, tuple[Correction, ...]]:
     p = Path(path)
     if not p.exists():
         return {}
@@ -128,16 +138,43 @@ def _load(path: str) -> dict[Key, Correction]:
         return parse(reader)
 
 
-def load(path: Path | None = None) -> dict[Key, Correction]:
-    """(accession, tag, qtrs) -> Correction from the committed CSV (cached per path)."""
+def load(path: Path | None = None) -> dict[Key, tuple[Correction, ...]]:
+    """(accession, tag, qtrs) -> its Corrections from the committed CSV (cached per path)."""
     return _load(str(path or CSV_PATH))
 
 
-def for_accession(
-    accession: str, path: Path | None = None
-) -> dict[tuple[str, int], Correction]:
-    """(tag, qtrs) -> Correction of one filing."""
-    return {(c.tag, c.qtrs): c for c in load(path).values() if c.accession == accession}
+def all_corrections(path: Path | None = None) -> list[Correction]:
+    """Every correction row, in file order of key."""
+    return [c for cs in load(path).values() for c in cs]
+
+
+def for_accession(accession: str, path: Path | None = None) -> list[Correction]:
+    """The Corrections of one filing, sorted by (tag, qtrs, xbrl_value)."""
+    return sorted(
+        (c for c in all_corrections(path) if c.accession == accession),
+        key=lambda c: (c.tag, c.qtrs, c.xbrl_value if c.xbrl_value is not None else Decimal(0)),
+    )
+
+
+def pick(
+    corrections: Iterable[Correction], stored: Decimal | None
+) -> Correction | None:
+    """The row of one (accession, tag, qtrs) that covers the stored value: the correcting row whose xbrl_value equals
+    it; else the supplying row; else, when `stored` is None (unknown) and there is exactly one row, that row; else the
+    correcting row whose printed_value is already stored. None when no row fits. Pure."""
+    rows = list(corrections)
+    for c in rows:
+        if c.supplies:
+            return c
+    if stored is not None:
+        for c in rows:
+            if c.xbrl_value == stored:
+                return c
+        for c in rows:
+            if c.printed_value == stored:
+                return c
+        return rows[0] if len(rows) == 1 else None
+    return rows[0] if len(rows) == 1 else None
 
 
 def corrected_value(
@@ -145,9 +182,9 @@ def corrected_value(
 ) -> Decimal:
     """The printed value when a correcting row covers this stored fact (same accession, tag, qtrs and the stored wrong
     value), else the value unchanged. A supplying row has no stored fact to replace. Pure."""
-    c = load(path).get((accession, tag, qtrs))
-    if c is not None and not c.supplies and c.xbrl_value == value:
-        return c.printed_value
+    for c in load(path).get((accession, tag, qtrs), ()):
+        if not c.supplies and c.xbrl_value == value:
+            return c.printed_value
     return value
 
 

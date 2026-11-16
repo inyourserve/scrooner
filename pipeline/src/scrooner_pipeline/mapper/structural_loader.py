@@ -1365,9 +1365,9 @@ def fixed_option(c: Claim, tag: str, stored: set[Decimal]) -> set[Decimal]:
     """The values a part may take in the sign solve: its stored facts, or ONLY the printed value when the filing's
     filer XBRL correction (common/filer_xbrl_errors) covers (accession, tag, qtrs). Pure."""
     qtrs = 0 if c.grain == "I" else 4
-    fix = fxe.load().get((c.accession, tag, qtrs))
-    if fix is not None:
-        return {fix.printed_value}
+    fixes = fxe.load().get((c.accession, tag, qtrs))
+    if fixes:
+        return {f.printed_value for f in fixes}
     drop = fsn_dropped.load().get((c.accession, tag, qtrs, ""))
     return {drop.value} if drop is not None and not stored else stored
 

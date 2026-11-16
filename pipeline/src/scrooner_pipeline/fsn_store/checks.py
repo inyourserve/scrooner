@@ -689,7 +689,7 @@ def apply_dropped(
 
 
 def apply_corrections(
-    data: dict[str, Any], corrections: dict[tuple[str, int], fxe.Correction]
+    data: dict[str, Any], corrections: list[fxe.Correction]
 ) -> dict[tuple[str, date, int], list[fxe.Correction]]:
     """Apply a filing's filer XBRL corrections to load_filing() output IN PLACE, before any check runs.
     A correcting row replaces the Print whose value equals its xbrl_value (that tag and qtrs, every column holding the
@@ -698,7 +698,8 @@ def apply_corrections(
     Returns {(ddate-keyed column) -> corrections used}: (stmt, ddate, qtrs) for column checks and ('', ddate, qtrs)
     for the cross-line ties. Printed values keep the decimals of the Print they replace (a supplied one has none)."""
     used: dict[tuple[str, date, int], list[fxe.Correction]] = defaultdict(list)
-    for (tag, qtrs), c in sorted(corrections.items()):
+    for c in corrections:
+        tag, qtrs = c.tag, c.qtrs
         if c.supplies:
             key = _supply(data, tag, qtrs, c.printed_value)
             if key is not None:
@@ -729,7 +730,7 @@ def check_filing(
     with conn.cursor() as cur:
         cur.execute("select accession from fsn.filing where id = %s", (filing_id,))
         got = cur.fetchone()
-    fixes = fxe.for_accession(got[0]) if got else {}
+    fixes = fxe.for_accession(got[0]) if got else []
     used = apply_corrections(data, fixes) if fixes else {}
     dropped = fdf.for_accession(got[0]) if got else []
     used_dropped = apply_dropped(data, dropped) if dropped else {}
