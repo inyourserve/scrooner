@@ -45,7 +45,7 @@ VERDICT_SOURCES = (
 )
 
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
-PINNED_HASH = "fa0b860473703fc5c14a90b43abaa398754001817e6d860bed981f055e7d17c3"
+PINNED_HASH = "50fc6c1bee6dc24a15ae70631b59739cb4e3f8d08074f6bbde7f887ab67e0150"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
     "identity_tie": (

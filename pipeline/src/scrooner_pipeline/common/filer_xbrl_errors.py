@@ -152,7 +152,11 @@ def for_accession(accession: str, path: Path | None = None) -> list[Correction]:
     """The Corrections of one filing, sorted by (tag, qtrs, xbrl_value)."""
     return sorted(
         (c for c in all_corrections(path) if c.accession == accession),
-        key=lambda c: (c.tag, c.qtrs, c.xbrl_value if c.xbrl_value is not None else Decimal(0)),
+        key=lambda c: (
+            c.tag,
+            c.qtrs,
+            c.xbrl_value if c.xbrl_value is not None else Decimal(0),
+        ),
     )
 
 
@@ -206,7 +210,7 @@ def stored_problems(c: Correction, stored: Iterable[Decimal]) -> str | None:
 def validate_against_store(conn, path: Path | None = None) -> list[str]:
     """Read-only: every correction against fsn.value (undimensioned, no coreg). Returns the problems (empty = fits)."""
     problems: list[str] = []
-    for c in load(path).values():
+    for c in all_corrections(path):
         with conn.cursor() as cur:
             cur.execute(
                 """select v.value from fsn.value v join fsn.tag t on t.id = v.tag_id
