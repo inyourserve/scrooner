@@ -92,17 +92,17 @@ def test_a_period_presented_without_the_line_may_still_be_hidden():
 
 def test_a_line_printed_in_a_tenq_instant_comparative_presents_the_year():
     rows = [
-        _cell(BA, "BA", "goodwill", 2019, _absent_own=True),
-        _proven(BA, "BA", "goodwill", 2026),
+        _cell(BA, "BA", "shares_outstanding", 2019, _absent_own=True),
+        _proven(BA, "BA", "shares_outstanding", 2026),
     ]
-    _run(rows, {BA: _facts("Goodwill", (2019,), 0)})
+    _run(rows, {BA: _facts("CommonStockSharesOutstanding", (2019,), 0)})
     assert rows[0]["display"] == "OPEN"
     # the same tag at an annual duration is not the instant line of a balance-sheet point
     rows = [
-        _cell(BA, "BA", "goodwill", 2019, _absent_own=True),
-        _proven(BA, "BA", "goodwill", 2026),
+        _cell(BA, "BA", "shares_outstanding", 2019, _absent_own=True),
+        _proven(BA, "BA", "shares_outstanding", 2026),
     ]
-    _run(rows, {BA: _facts("Goodwill", (2019,), 4)})
+    _run(rows, {BA: _facts("CommonStockSharesOutstanding", (2019,), 4)})
     assert rows[0]["display"] == "HIDDEN_YEAR"
 
 

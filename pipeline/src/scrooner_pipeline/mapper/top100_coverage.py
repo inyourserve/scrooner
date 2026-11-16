@@ -125,6 +125,7 @@ CSV_COLUMNS = [
     "docmap_status",
     "parts",
     "display",
+    "hide_class",
     "stated_zero",
     "text_stated",
 ]
@@ -1677,45 +1678,64 @@ def attach_presence(
         )
 
 
+# HIDE CLASSES (doc 02, "Display rules under the 2026-11-16 founder decision"; certify_display.check_hide_reasons).
+# A cell may be HIDDEN_ROW or HIDDEN_YEAR only on one of these bases; every other reason is a PIPELINE STATE (era_unmapped,
+# *_unverified, no_role, proof_unchecked, no_proof_row, predictor_candidate, open_period, held_*, anything new) and stays
+# OPEN. The value is the cell's `hide_class` column.
+HC_STRUCTURAL = "structural_not_presented"
+HC_COMBINED = "line_presented_combined"
+HC_PRE_FILING = "pre_filing"
+HC_VERIFIED_ABSENT = "verified_absent"
+HIDE_ELIGIBLE: dict[str, str] = {
+    **{code: HC_STRUCTURAL for code in NOT_PRESENTED_CODES},
+    **{code: HC_PRE_FILING for code in NO_PERIOD_CODES},
+    "line_presented_combined": HC_COMBINED,
+    "only_combined": HC_COMBINED,
+}
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
-    """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
-    a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
-    periodic filing (row['_before_first_filing']) or carries an evidenced no-period reason is a hidden year (a later
-    10-K comparative column makes it presented, so it is never hidden); a row whose every non-hidden-year cell is an
-    evidenced not-presented reason is a hidden row; everything else is open."""
+    """Set row['display'] and row['hide_class'] for every cell. Pure, in place. Precedence per cell: a proven or derived
+    value is shown; a year that NO periodic report presents (row['_presented'] false) and that either ends before the
+    company's first periodic filing (row['_before_first_filing']) or carries an evidenced no-period reason is a hidden
+    year (a later 10-K comparative column makes it presented, so it is never hidden); a row whose every non-hidden-year
+    cell is an evidenced not-presented reason is a hidden row; everything else is open. A hide needs a HIDE_ELIGIBLE
+    class (never a pipeline-state reason), also on the row-collapse path."""
     by_row: dict[tuple[Any, Any], list[dict[str, Any]]] = defaultdict(list)
     for r in rows:
-        no_period = (
+        code = r.get("reason_code")
+        is_reason = r["class"] == "REASON"
+        reason_hc = HIDE_ELIGIBLE.get(code) if is_reason and code else None
+        before = bool(
             r.get("_before_first_filing") and not REGISTRATION_STATEMENT_PRESENTS_YEAR
-        ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
+        )
+        no_period = before or reason_hc == HC_PRE_FILING
+        hc: str | None = None
         if r["class"] in ("PROVEN", "DERIVED") or r.get("_stated_zero"):
             r["display"] = SHOWN_VALUE
         elif r.get("_only_combined") == "years":
-            r["display"] = HIDDEN_YEAR
+            r["display"], hc = HIDDEN_YEAR, HC_COMBINED
         elif r.get("_only_combined") == "row":
-            r["display"] = HIDDEN_ROW
-        elif r.get("_absent_own"):
-            r["display"] = HIDDEN_YEAR
+            r["display"], hc = HIDDEN_ROW, HC_COMBINED
+        elif r.get("_absent_own") and r.get("data_point") in VERIFIED_ABSENT_HIDE:
+            r["display"], hc = HIDDEN_YEAR, HC_VERIFIED_ABSENT
         elif no_period and not r.get("_presented"):
-            r["display"] = HIDDEN_YEAR
-        elif (
+            r["display"], hc = HIDDEN_YEAR, HC_PRE_FILING
+        elif r.get("_comparative_only") and reason_hc in (
+            HC_PRE_FILING,
+            HC_STRUCTURAL,
+        ):
             # Dhairya 2026-11-16: the FIRST annual report presents the year only as a comparative column and no line
             # is printed there (an evidenced reason, no value): hidden for that row, evidenced by that accession
-            r.get("_comparative_only")
-            and r["class"] == "REASON"
-            and (
-                r.get("reason_code") in NO_PERIOD_CODES
-                or r.get("reason_code") in NOT_PRESENTED_CODES
-            )
-        ):
-            r["display"] = HIDDEN_YEAR
+            r["display"], hc = HIDDEN_YEAR, reason_hc
         else:
             r["display"] = OPEN
         if r["display"] == HIDDEN_YEAR and r.get("_family_hit"):
             # ONE line-level presence test for EVERY hidden-year route (only_combined years, absent_in_own, comparative-only,
             # no-period reasons): a period in which any periodic filing prints THIS data point's line is never hidden; it
             # stays OPEN until filled (BA 2026-11-16). A period presented without the line may still be hidden.
-            r["display"] = OPEN
+            r["display"], hc = OPEN, None
+        r["hide_class"] = hc or ""
         by_row[(r["company_id"], r.get("data_point"))].append(r)
     for cells in by_row.values():
         rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
@@ -1725,6 +1745,8 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             for c in rest
         ):
             for c in rest:
+                if c["display"] != HIDDEN_ROW:
+                    c["hide_class"] = HC_STRUCTURAL
                 c["display"] = HIDDEN_ROW
         elif any(c["display"] == SHOWN_VALUE for c in cells):
             # the resolver says the pure figure is never reported but a value is shown in this row: a contradiction
@@ -1732,6 +1754,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             for c in cells:
                 if c["display"] == HIDDEN_ROW and c.get("_only_combined") == "row":
                     c["display"] = OPEN
+                    c["hide_class"] = ""
         elif not rest and cells:
             # every year is before the first filing: nothing of this row can be shown
             for c in cells:
@@ -1742,6 +1765,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             for c in cells:
                 if c["display"] == HIDDEN_ROW:
                     c["display"] = OPEN
+                    c["hide_class"] = ""
 
 
 def work_type(r: dict[str, Any]) -> str:
@@ -1764,6 +1788,7 @@ HIDDEN_ROW_COLUMNS = [
     "data_point",
     "years",
     "reason_codes",
+    "hide_class",
     "method",
     "latest_10k",
     "first_10k",
@@ -1779,6 +1804,7 @@ HIDDEN_YEAR_COLUMNS = [
     "fiscal_year",
     "period_end",
     "reason_code",
+    "hide_class",
     "earliest_filing_date",
     "earliest_10k_presenting",
     "basis",
@@ -1830,6 +1856,9 @@ def hidden_evidence(
                 **{k: c0[k] for k in ("rank", "ticker", "company_id", "data_point")},
                 "years": ",".join(str(c["fiscal_year"]) for c in cells),
                 "reason_codes": ",".join(sorted({c["reason_code"] for c in cells})),
+                "hide_class": ",".join(
+                    sorted({c.get("hide_class") or "" for c in cells} - {""})
+                ),
                 "method": ",".join(
                     sorted({c.get("locator_source") or "none" for c in cells})
                 ),
