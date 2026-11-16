@@ -5,11 +5,14 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
-0a. **Apply migration 0128: the company x tag x metric library on the new system** (Data Engineer, 2026-11-16).
-   - What: creates `analytics.tag_library_entry`, `analytics.resolver_decision` and the read-only view `analytics.company_tag_metric` (company x tag -> data point -> metric in one query). The old `sec_tag_library` and `company_sec_tag` are left untouched (the weekly old job wipes any column added there).
-   - File: `pipeline/db/pending/0128_company_tag_metric_library.sql` (pending, not in `migrations/`, because 0124-0127 are not all on main). New tables only; rollback is `drop view` and `drop table` of the three objects.
-   - Then the rebuild: `pipeline-tag-library-rebuild.yml` (dry run first, then apply=true from main). Dry run against the live database on 2026-11-16: `tag_library_entry` 2,757 rows (about 1 MB), `resolver_decision` 68,849 rows (all matched to a company; about 25 MB, 11 MB of it evidence text). Entry table: 354 concept, 450 component, 17 combined, 1,936 excluded rows; 833,619 PROVEN cells attributed (1,974 certified: only MSFT has a certificate on main).
-   - Sentence: "I approve migration 0128 (company x tag x metric library) and the first apply of its rebuild."
+0a. **Apply the pending migration set 0124-0128 to the dev database** (Data Engineer, 2026-11-16). One approval for the whole set; 0127 is dropped (listed in `pipeline/db/migrations/SKIPPED.txt`).
+   - Sentence: "I approve migrations 0124-0128 (verifier_check, company_tag_map dims, metric lineage, company x tag x metric library; 0127 skipped) for the dev database."
+   - Files are in `pipeline/db/pending/`. CI proof for every line below: Actions run 43812642996 (Pending migrations replay, a fresh Postgres 16 with all committed migrations 0001-0123, then 0124, 0125, 0126, 0128 in order, one smoke SELECT per created object and column, plus guard checks for 0124 and 0125). Nothing has been applied to any shared database.
+   - 0124 `analytics.verifier_check`: the Verifier's filing checks as data, writable only by a session that sets `scrooner.writer = 'verifier'`. Run 43812642996, smokes: table, guard raises. New table; rollback is `drop table`.
+   - 0125 `analytics.company_tag_map.dims`: the FSN segment string so member-only lines (e.g. cost of sales by ProductOrService) and a single class-of-stock member can be mapped; replaces the overlap trigger function. Run 43812642996, smokes: column, constraint, function. The value-path code that uses it is on branch work/engineering/tagmap-dims, not on main; the column defaults to '' so nothing on main changes.
+   - 0126 metric lineage: nullable `metric_value.formula_fingerprint` and `registry_version`, plus read-only views `v_company_metric_inputs` and `v_company_metric_status`. Run 43812642996, 5 smokes.
+   - 0128 tag library: `analytics.tag_library_entry`, `analytics.resolver_decision` and the read-only view `company_tag_metric`. New objects only; rollback is `drop view` and two `drop table`. Run 43812642996, 3 smokes. Its rebuild (`pipeline-tag-library-rebuild.yml`, dry run first, then apply=true) is a separate step after the tables exist; the 2026-11-16 dry run gave `tag_library_entry` 2,757 rows and `resolver_decision` 68,849 rows.
+   - The numbers move from `pending/` into `migrations/` (contiguity check passes with 0127 skipped) in the commit that applies them.
 
 0. **Load the 42 missing filings into fsn.* for the top-110** (pipeline-fsn-load-filings.yml, apply=true).
    - The list is data-team/strategy/fsn-missing-filings-2026-11-16.csv: 11 recent Q3 10-Qs, MRVL FY2021 10-K, and 10-K/A and 10-Q/A amendments.
@@ -17,7 +20,7 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
    - Insert-only for those accessions. It runs on Actions at 2 SEC req/s.
    - Sentence: "I approve loading the 42 missing filings in fsn-missing-filings-2026-11-16.csv into fsn.* for the top-110."
 1. **Product page hides (storage).** Founder said "Decide later" on 2026-11-16.
-   - What: one per-cell display-state table keyed (company, data point, period), holding the hide basis and evidence accession. It supersedes the written-but-unapplied migration 0127 (`shown_from`).
+   - What: one per-cell display-state table keyed (company, data point, period), holding the hide basis and evidence accession. It supersedes the dropped migration 0127 (`shown_from`, now listed in SKIPPED.txt).
    - Until applied: the coverage export is the source of truth and the stock page shows every line.
    - Size: from the latest display export (see `data-team/strategy/top100-display-summary-*.csv`).
    - Sentence: "I approve the per-cell display-state migration for hidden rows and years, keyed by company, data point and period, with hide basis and evidence accession."
