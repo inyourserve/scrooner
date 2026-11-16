@@ -144,6 +144,23 @@ def combined_for(
     )
 
 
+def resolver_decision_beats_combined(
+    rows: list[MapRow], name: str, period_end: date
+) -> bool:
+    """ONE-PATH (founder 2026-11-16): the resolver's decision for the cell is the single source of truth. A structural
+    (resolver-written) concept or component row of `name` whose era holds the period end beats an older 'combined'
+    row of the company's map (a library or docmap remnant) on the same cell: the combined status no longer vetoes
+    the value. The proof still checks the value against the filing's own line (AMGN interest expense from a note,
+    InterestExpenseDebt). Pure."""
+    return any(
+        is_structural(r)
+        and r[1] in ("concept", "component")
+        and (r[4] == name or r[5] == name)
+        and era_holds(r[7], r[8], period_end)
+        for r in rows
+    )
+
+
 def combined_splits_for(
     rows: list[tuple[str, tuple[str, ...], date, date | None]],
     name: str,
@@ -790,7 +807,11 @@ def load_shown(
                 authoritative_disagrees=tuple(auth_differs) or None,
                 copies=len(copies),
                 claim=claim,
-                combined=combined_for(combined_rows, name, end),
+                combined=(
+                    ()
+                    if resolver_decision_beats_combined(map_rows, name, end)
+                    else combined_for(combined_rows, name, end)
+                ),
                 combined_splits=combined_splits_for(combined_rows, name, end),
                 zero_parts=zero_parts,
                 printed_zero=pz,

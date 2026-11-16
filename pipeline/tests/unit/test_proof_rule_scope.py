@@ -74,7 +74,8 @@ def test_a_rule_change_selects_only_cells_that_used_the_rule():
     # legacy rows (no record): v22 moved component_sum_authority (1 -> 2) and added split_parts (0 -> 1)
     assert R.reproof_rules(None, plain, chk) == []
     assert R.reproof_rules(None, comp, chk) == ["component_sum_authority"]
-    assert R.reproof_rules(None, split, chk) == ["split_parts"]
+    # a combined-spanned cell is also re-proved by resolver_beats_combined (0 -> 1, ONE-PATH 2026-11-16)
+    assert R.reproof_rules(None, split, chk) == ["resolver_beats_combined", "split_parts"]
     cur = R.rules_used(comp, chk)
     assert R.reproof_rules(cur, comp, chk) == []
     assert R.reproof_rules({**cur, "component_sum_authority": 1}, comp, chk) == [
