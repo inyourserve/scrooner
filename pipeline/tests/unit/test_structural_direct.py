@@ -731,25 +731,44 @@ def test_member_parts_serve_from_the_one_stored_dimensioned_fact_with_provenance
         t = "CostOfGoodsAndServicesSold"
         a = w.fsn_dim_fact(ACC1, t, "ProductOrService=Product;", "60")
         b = w.fsn_dim_fact(ACC1, t, "ProductOrService=Service;", "40")
-        w.fsn_dim_fact(ACC1, t, "ProductOrService=Other;", "999")  # another member: never read
-        w.fsn_dim_fact(ACC1, t, "ProductOrService=Product;Segment=X;", "5")  # extra axis: never read
-        _csv(tmp_path, _row(ACC1, "100", tags=MEMBER_NODES, decision="component_sum"), monkeypatch=monkeypatch)
+        w.fsn_dim_fact(
+            ACC1, t, "ProductOrService=Other;", "999"
+        )  # another member: never read
+        w.fsn_dim_fact(
+            ACC1, t, "ProductOrService=Product;Segment=X;", "5"
+        )  # extra axis: never read
+        _csv(
+            tmp_path,
+            _row(ACC1, "100", tags=MEMBER_NODES, decision="component_sum"),
+            monkeypatch=monkeypatch,
+        )
         cells, st = w.cells()
         (c,) = cells
         assert c["value"] == Decimal(100) and c["value_source"] == "fsn_xbrl"
         assert c["source_value_ids"] == sorted([a, b]) and c["source_fact_ids"] == []
         assert c["_accession"] == ACC1 and ACC1 in c["serve_note"]
-        assert "CostOfGoodsAndServicesSold[ProductOrService=Product]=60" in c["serve_note"]
+        assert (
+            "CostOfGoodsAndServicesSold[ProductOrService=Product]=60" in c["serve_note"]
+        )
 
 
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "case,why",
     [
-        ("missing", "no stored dimensioned fact"),  # the member is not stored in that filing and column
+        (
+            "missing",
+            "no stored dimensioned fact",
+        ),  # the member is not stored in that filing and column
         ("ambiguous", "ambiguous"),  # the member sits under two axes
-        ("node", "differs from the resolver node"),  # stored value is not the one the resolver printed
-        ("total_only", "no stored dimensioned fact"),  # only the undimensioned total exists: no fallback
+        (
+            "node",
+            "differs from the resolver node",
+        ),  # stored value is not the one the resolver printed
+        (
+            "total_only",
+            "no stored dimensioned fact",
+        ),  # only the undimensioned total exists: no fallback
     ],
 )
 def test_member_part_rejected_when_missing_ambiguous_or_different(
@@ -760,13 +779,53 @@ def test_member_part_rejected_when_missing_ambiguous_or_different(
         w.filing(ACC1, date(2019, 2, 1), END)
         t = "CostOfGoodsAndServicesSold"
         if case != "total_only":
-            w.fsn_dim_fact(ACC1, t, "ProductOrService=Product;", "61" if case == "node" else "60")
+            w.fsn_dim_fact(
+                ACC1, t, "ProductOrService=Product;", "61" if case == "node" else "60"
+            )
             if case != "missing":
                 w.fsn_dim_fact(ACC1, t, "ProductOrService=Service;", "40")
             if case == "ambiguous":
                 w.fsn_dim_fact(ACC1, t, "Segment=Service;", "40")
         else:
             w.core_fact(ACC1, t, "100")
-        _csv(tmp_path, _row(ACC1, "100", tags=MEMBER_NODES, decision="component_sum"), monkeypatch=monkeypatch)
+        _csv(
+            tmp_path,
+            _row(ACC1, "100", tags=MEMBER_NODES, decision="component_sum"),
+            monkeypatch=monkeypatch,
+        )
         cells, st = w.cells()
         assert cells == [] and why in st["rejected"][0]["why"]
+
+
+@pytest.mark.integration
+def test_stated_zero_serves_as_zero_with_quote_in_note_and_rejects_silence_and_period_mismatch(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """Ruling 2026-11-16: a zero the filing states is served as 0, no fact id, quote and locator in the serve note."""
+    head = HEAD.rstrip("\n") + ",quote,locator,quote_period\n"
+    quote = "We did not pay any dividends during 2018."
+
+    def row(q=quote, qp=str(END)):
+        return f'{CIK},TST,sd_inc,{END},FY,mapped,"",0,{ACC1},own,,stated_zero,r.1,"{q}",Item 5,{qp}\n'
+
+    def write(*rows):
+        p = tmp_path / "resolver-all110-2026-11-16.csv"
+        p.write_text(head + "".join(rows))
+        monkeypatch.setenv(sd.ENV_PATH, str(p))
+        sd._claims_by_cik.cache_clear()
+
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        w.filing(ACC1, date(2019, 2, 1), END)
+        write(row())
+        cells, st = w.cells()
+        (c,) = cells
+        assert c["value"] == Decimal(0) and c["value_source"] == "stated_zero"
+        assert c["source_fact_ids"] == [] and c["source_value_ids"] == []
+        assert quote in c["serve_note"] and "Item 5" in c["serve_note"]
+        assert c["_accession"] == ACC1
+        # silence (no quote) and a quote for another period are rejected, nothing served
+        for bad in (row(q=""), row(qp="2017-12-31")):
+            write(bad)
+            cells, st = w.cells()
+            assert cells == []

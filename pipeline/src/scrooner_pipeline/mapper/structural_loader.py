@@ -103,6 +103,41 @@ PERIODIC_FORMS = (
 )
 LOADABLE = {"mapped", "component_sum", "combined", "not_presented", "not_in_template"}
 NOT_A_DECISION = {"derived", "derived_not_printed", "no_role"}
+# Stated zero (ruling 2026-11-16, Dhairya): the filing STATES a zero for the cell's period in words or a dash line
+# ("did not pay any dividends", "Long-term debt $ -"). A `mapped` row flagged stated_zero with value 0 and the extra
+# columns quote / locator / quote_period (RESOLVER-OUTPUT-FORMAT.md). Never inferred from silence.
+STATED_ZERO = "stated_zero"
+
+
+def is_stated_zero(decision: str, flags: str) -> bool:
+    return decision == "mapped" and STATED_ZERO in {
+        f.strip() for f in flags.replace(",", ";").split(";")
+    }
+
+
+def stated_zero_problem(r: dict[str, str], pe: date | None, accn: str) -> str | None:
+    """Why a stated_zero row is refused, or None. It needs the exact quoted sentence, the section/page locator, the own
+    accession, the value 0, and a quote_period equal to the cell's period_end (the sentence speaks for THIS period).
+    A zero with no quote is a zero inferred from silence: refused. Pure."""
+    if not ACCN_RE.fullmatch(accn or ""):
+        return "stated_zero: no accession"
+    if not (r.get("quote") or "").strip():
+        return "stated_zero: no quoted sentence (a zero is never inferred from silence)"
+    if not (r.get("locator") or "").strip():
+        return "stated_zero: no section/page locator"
+    try:
+        if (r.get("value") or "").strip() == "" or Decimal(r["value"]) != 0:
+            return "stated_zero: value is not 0"
+    except ArithmeticError:
+        return "stated_zero: value is not 0"
+    qp = _date(r.get("quote_period", ""))
+    if qp is None:
+        return "stated_zero: no quote_period"
+    if pe is None or qp != pe:
+        return f"stated_zero: the quote speaks for {qp}, the cell is {pe}"
+    return None
+
+
 # derived_not_printed rows of these data points are served by mapper/derived_cells (C1 gross profit, C2 total
 # liabilities), which needs the map's not_presented row; other derived rows stay counted, not loaded
 DERIVED_VIA_MAP = ("gross_profit", "total_liabilities")
@@ -145,6 +180,11 @@ class Claim:
     )
     flags: str = (
         ""  # the resolver row's rule flags (`ap_related_sum`, `before_first_10k`, ...)
+    )
+    quote: str = ""  # stated_zero: the exact sentence the filing states
+    locator: str = ""  # stated_zero: section or page of the accession holding the quote
+    quote_period: str = (
+        ""  # stated_zero: the period the quote speaks for (must equal period_end)
     )
     no_filing: bool = False  # a year before the company's first 10-K; accession is that first 10-K (FIRST_10K_RE)
 
@@ -414,7 +454,17 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                 if not ACCN_RE.fullmatch(accn):
                     reject("accession is not an SEC accession number")
                     continue
-                tagless = decision in ("combined", "not_presented", "not_in_template")
+                stated = is_stated_zero(decision, r.get("flags", ""))
+                if stated:
+                    why = stated_zero_problem(r, pe, accn)
+                    if why:
+                        reject(why)
+                        continue
+                tagless = stated or decision in (
+                    "combined",
+                    "not_presented",
+                    "not_in_template",
+                )
                 try:
                     parts = () if tagless else parse_claim_parts(r.get("tags", ""))
                 except ValueError as exc:
@@ -460,6 +510,9 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                         grain=r.get("grain", ""),
                         flags=r.get("flags", ""),
                         no_filing=no_filing,
+                        quote=r.get("quote", "") if stated else "",
+                        locator=r.get("locator", "") if stated else "",
+                        quote_period=r.get("quote_period", "") if stated else "",
                         node_values=tuple(
                             x.strip() for x in r.get("node_values", "").split("+")
                         )
@@ -1295,6 +1348,12 @@ def load(
                 continue
             ((cid, cik),) = hits
         if company_ids is not None and cid not in company_ids:
+            continue
+        if is_stated_zero(c.decision, c.flags):
+            # no tag, no map row: served only by structural_direct (value_source stated_zero)
+            stats["stated_zero_direct_only"] = (
+                stats.get("stated_zero_direct_only", 0) + 1
+            )
             continue
         resolved.append((c, a, b, cid, cik))
     need_tax: dict[int, set[str]] = {cid: set() for cid in {r[3] for r in resolved}}

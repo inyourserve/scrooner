@@ -41,6 +41,7 @@ from scrooner_pipeline.common.company_filings import (
 )
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
+from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
@@ -118,6 +119,7 @@ CSV_COLUMNS = [
     "docmap_status",
     "parts",
     "display",
+    "stated_zero",
 ]
 
 
@@ -1189,6 +1191,7 @@ def build_rows(
     resolve_derived(rows, load_input_prints(conn, rows))
     attach_only_combined(rows, load_only_combined())
     attach_absent_in_own(rows, load_absent_in_own())
+    attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
     note = {
         c.company_id: (
@@ -1529,6 +1532,68 @@ def attach_absent_in_own(
             r["accession"] = acc
 
 
+STATED_ZERO_FAMILY = "company_tag_map:stated_zero"
+
+
+def load_stated_zero(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str], dict[str, tuple[str, str, str]]]:
+    """Ruling 2026-11-16 (Dhairya): (ticker, data_point) -> {period_end: (accession, locator, quote)} for every VALID
+    stated_zero row of the newest resolver-all110-*.csv (same validation as serving: quote, locator, accession, value 0,
+    quote_period == period_end). An invalid row is absent, so its cell stays what it was. Missing file: empty."""
+    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    out: dict[tuple[str, str], dict[str, tuple[str, str, str]]] = defaultdict(dict)
+    if not files:
+        return {}
+    with files[-1].open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            if not sl.is_stated_zero(r.get("decision", ""), r.get("flags", "")):
+                continue
+            try:
+                pe = date.fromisoformat(r["period_end"])
+            except ValueError:
+                continue
+            if sl.stated_zero_problem(r, pe, r.get("accession", "")):
+                continue
+            out[(r["ticker"], r["data_point"])][r["period_end"]] = (
+                r["accession"],
+                r["locator"].strip(),
+                r["quote"].strip(),
+            )
+    return dict(out)
+
+
+def attach_stated_zero(
+    rows: list[dict[str, Any]],
+    sz: dict[tuple[str, str], dict[str, tuple[str, str, str]]],
+) -> None:
+    """A cell SERVED by the stated_zero family (value 0) whose resolver row is valid is a shown value: `_stated_zero`,
+    accession = the filing that states it, r_page = the section/page locator (the page gate accepts a section),
+    evidence = the exact quote, column `stated_zero` = Y so Ritwik can sample every such cell. Matching is the same
+    ticker and data point and the exact period or exactly one fsn_end_matches period. Pure."""
+    for r in rows:
+        if r.get("_family") != STATED_ZERO_FAMILY:
+            continue
+        if r.get("shown_value") in ("", None) or Decimal(r["shown_value"]) != 0:
+            continue
+        got = sz.get((r["ticker"], r["data_point"]))
+        if not got:
+            continue
+        rec = got.get(r["period_end"])
+        if rec is None:
+            end = date.fromisoformat(r["period_end"])
+            near = [
+                v for d, v in got.items() if fsn_end_matches(date.fromisoformat(d), end)
+            ]
+            rec = near[0] if len(near) == 1 else None
+        if rec is None:
+            continue
+        r["_stated_zero"] = True
+        r["stated_zero"] = "Y"
+        r["accession"], r["r_page"], r["evidence"] = rec
+        r["locator_source"] = "stated_zero"
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] for every cell. Pure, in place. Precedence per cell: a proven or derived value is shown;
     a year that NO periodic report presents (row['_presented'] false) and that either ends before the company's first
@@ -1540,7 +1605,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         no_period = (
             r.get("_before_first_filing") and not REGISTRATION_STATEMENT_PRESENTS_YEAR
         ) or (r["class"] == "REASON" and r.get("reason_code") in NO_PERIOD_CODES)
-        if r["class"] in ("PROVEN", "DERIVED"):
+        if r["class"] in ("PROVEN", "DERIVED") or r.get("_stated_zero"):
             r["display"] = SHOWN_VALUE
         elif r.get("_only_combined") == "years":
             r["display"] = HIDDEN_YEAR
