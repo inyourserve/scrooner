@@ -13,7 +13,11 @@ Rules (never infer from silence; ambiguous wording stays open):
   total_debt (zero)         'did not have any (outstanding) debt/borrowings', 'had no (outstanding) debt/borrowings',
                             'no debt outstanding' + the cell's balance-sheet date or fiscal year in the same sentence.
   dividends_paid (zero)     'did not (declare or) pay (any) (cash) dividends' / 'have never (declared or) paid (any) (cash) dividends'
-                            / 'have not (declared or) paid (any) (cash) dividends' in the filing for that fiscal year.
+                            / 'have not (declared or) paid (any) (cash) dividends' naming the fiscal year; or 'our dividend (to common
+                            shareholders) has been / remains suspended' in the own filing (ruling 2026-11-16).
+  dividends_per_share (0)   the same suspension statement, or 'did not declare/pay any dividends' naming the fiscal year.
+  share_buybacks (zero)     'we did not (re)purchase any shares ... repurchase program' naming the fiscal year (ruling 2026-11-16: our
+                            share_buybacks excludes tax-withholding transfers; the Item 5 Q4 table footnote names no year: open).
   Any 'other than', 'except', 'excluding', 'aside from', 'apart from' in a zero sentence -> open (ambiguous).
 """
 import csv, html, json, os, re, sys, time, urllib.request
@@ -118,6 +122,11 @@ DEBT0 = re.compile(r"\b(we|the company)\s+(did not have any|had no|have no|has n
                    r"(debt|borrowings|indebtedness)\b", re.I)
 DIV0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not|have never|has never)\s+(declared?\s+(or|and)\s+)?(paid|pay)\s+"
                   r"(any\s+)?(cash\s+)?dividends\b", re.I)
+# Dhairya rulings 2026-11-16 (BA): a suspended common dividend stated for the filing's own year is a zero for dividends paid and DPS;
+# the open-market repurchase program statement is the company's buyback zero (our share_buybacks excludes tax-withholding transfers)
+DIV_SUSP = re.compile(r"\b(our|the company's|the)\s+(quarterly\s+)?(cash\s+)?dividends?\s+(to common (shareholders|stockholders)\s+|on (our )?common stock\s+)?(has|have|remains?|remained)\s+(been\s+)?suspended\b", re.I)
+DPS0 = re.compile(r"\b(we|the company)\s+(did not|have not|has not)\s+(declare|declared|pay|paid)\s+(or\s+(pay|paid|declare|declared)\s+)?(any\s+)?(cash\s+)?dividends\b", re.I)
+BUY0 = re.compile(r"\b(we|the company)\s+did not\s+(re)?purchase\s+any\s+(shares|common stock)\b[^.]*\brepurchase program\b", re.I)
 RD_NOT = re.compile(r'\b(credits?|capitali[sz]ed|tax|carryforwards?|percent|%)', re.I)
 
 
@@ -158,6 +167,22 @@ def read_cell(text, cell):
                 ambiguous.append((sec, s)) if date_ok else None
                 continue
             found.append((Decimal(0), sec, s, pos))
+        elif dp in ('dividends_paid', 'dividends_per_share') and DIV_SUSP.search(s) and not AMBIG.search(s) and not re.search(r'\bpreferred\b', s, re.I) \
+                and not re.search(r'\b(until|through|before|prior to)\s+(19|20)\d\d\b', s, re.I):
+            # 'Our dividend to common shareholders has been suspended since 2020' in the FY2025 10-K: suspended through the filing's own year
+            found.append((Decimal(0), sec, s, pos))
+        elif dp == 'dividends_per_share' and DPS0.search(s):
+            # BA FY2023 'As a result [of the 2020 suspension], we did not pay any dividends in 2023, 2022 and 2021': the year must be named
+            if AMBIG.search(s) or re.search(r'\bpreferred\b', s, re.I):
+                ambiguous.append((sec, s)); continue
+            if any(re.search(rf'\b{y}\b', s) for y in fy):
+                found.append((Decimal(0), sec, s, pos))
+        elif dp == 'share_buybacks' and BUY0.search(s):
+            # the annual statement only: the cell's year named (BA FY2022 Item 7 'During the years ended December 31, 2022, 2021 and 2020,
+            # we did not repurchase any shares through our open market share repurchase program'); the Item 5 table footnote speaks
+            # for the fourth quarter and names no year, so it never fills the year
+            if any(re.search(rf'\b{y}\b', s) for y in fy):
+                found.append((Decimal(0), sec, s, pos))
         elif dp == 'dividends_paid' and DIV0.search(s):
             # the sentence must speak for the cell's year: it names the fiscal year, or says 'never' (BA FY2023 10-K: 'we did not pay
             # any dividends in 2023, 2022 and 2021')

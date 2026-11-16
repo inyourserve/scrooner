@@ -638,3 +638,21 @@ def test_combined_other_income_yields_to_the_later_10k_labelled_line():
     rows[1]['tags'] = 'NonoperatingIncomeExpense'; rows[1]['nodes'] = 'NonoperatingIncomeExpense=5 [R4.htm:12]'
     comp = {'M15': 'NonoperatingIncomeExpense|4|0|2014-12-31'}
     assert ('M14', 'other_income_expense_net') not in standard_inputs.comparative_fill(rows, comp, set())   # only the pure labelled element
+
+
+def test_suspended_dividend_and_program_buyback_statements_are_year_zeros():
+    # Dhairya rulings 2026-11-16 (BA): suspension stated in the own 10-K -> dividends paid and DPS 0; the annual open-market program
+    # statement naming the year -> buybacks 0; the Item 5 fourth-quarter table footnote (no year) never fills the year
+    import text_disclosure as td
+    rc = lambda t, dp, pe: td.read_cell(t, dict(data_point=dp, period_end=pe))
+    susp = 'Item 7. MD&A\nOur dividend to common shareholders has been suspended since 2020.\n'
+    assert rc(susp, 'dividends_paid', '2025-12-31')['value_source'] == 'stated_zero'
+    assert rc(susp, 'dividends_per_share', '2025-12-31')['value_source'] == 'stated_zero'
+    assert rc('Item 7. MD&A\nOur dividend remained suspended through 2021 and was reinstated in 2022.\n', 'dividends_paid', '2025-12-31')['decision'] == 'open'
+    pay = 'Item 7. MD&A\nAs a result, we did not pay any dividends in 2023, 2022 and 2021.\n'
+    assert rc(pay, 'dividends_per_share', '2023-12-31')['value'] == '0'
+    assert rc(pay, 'dividends_per_share', '2024-12-31')['decision'] == 'open'
+    annual = 'Item 7. MD&A\nDuring the years ended December 31, 2022, 2021 and 2020, we did not repurchase any shares through our open market share repurchase program.\n'
+    assert rc(annual, 'share_buybacks', '2022-12-31')['value_source'] == 'stated_zero'
+    q4 = 'Item 5. Market\nWe did not purchase any shares of our common stock in the open market pursuant to a repurchase program.\n'
+    assert rc(q4, 'share_buybacks', '2023-12-31')['decision'] == 'open'

@@ -651,3 +651,6 @@
 ## 2026-11-16 (resolver-2026-11-16.60): 2 element changes, 27999 rows, coverage 63.1%
 - ~ AmortizationOfIntangibleAssets: rule_id
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-16 (resolver-2026-11-16.61): 1 element changes, 27999 rows, coverage 63.1%
+- ~ AmortizationOfIntangibleAssets: rule_id

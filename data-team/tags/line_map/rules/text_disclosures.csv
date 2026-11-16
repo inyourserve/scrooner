@@ -11,14 +11,14 @@ cik,ticker,data_point,period_end,accession,decision,value_source,value,section,l
 0001835632,MRVL,total_debt,2017-01-31,0001628280-17-002968,mapped,stated_zero,0,item7a,"Item 7A. Quantitative and Qualitative Disclosures About Market Risk, p. 42",2017-01-31,"Our interest rate risk relates primarily to our fixed income short-term investment portfolio as we did not have any outstanding debt as of January 28, 2017.",stated in the filing text (item7a)
 0000012927,BA,dividends_per_share,2020-12-31,0000012927-21-000011,open,,,,,,,no explicit statement in the text
 0000012927,BA,dividends_per_share,2021-12-31,0000012927-22-000010,open,,,,,,,no explicit statement in the text
-0000012927,BA,share_buybacks,2022-12-31,0000012927-23-000007,open,,,,,,,no explicit statement in the text
+0000012927,BA,share_buybacks,2022-12-31,0000012927-23-000007,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 42",2022-12-31,"During the years ended December 31, 2022, 2021 and 2020, we did not repurchase any shares through our open market share repurchase program.",stated in the filing text (item7)
 0000012927,BA,dividends_per_share,2022-12-31,0000012927-23-000007,open,,,,,,,no explicit statement in the text
 0000012927,BA,dividends_paid,2023-12-31,0000012927-24-000010,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 40",2023-12-31,"As a result, we did not pay any dividends in 2023, 2022 and 2021.",stated in the filing text (item7)
 0000012927,BA,share_buybacks,2023-12-31,0000012927-24-000010,open,,,,,,,no explicit statement in the text
-0000012927,BA,dividends_per_share,2023-12-31,0000012927-24-000010,open,,,,,,,no explicit statement in the text
+0000012927,BA,dividends_per_share,2023-12-31,0000012927-24-000010,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 40",2023-12-31,"As a result, we did not pay any dividends in 2023, 2022 and 2021.",stated in the filing text (item7)
 0000012927,BA,dividends_paid,2024-12-31,0000012927-25-000015,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 43",2024-12-31,"As a result, we did not pay any dividends to common shareholders in 2024, 2023 and 2022.",stated in the filing text (item7)
 0000012927,BA,share_buybacks,2024-12-31,0000012927-25-000015,open,,,,,,,no explicit statement in the text
-0000012927,BA,dividends_per_share,2024-12-31,0000012927-25-000015,open,,,,,,,no explicit statement in the text
-0000012927,BA,dividends_paid,2025-12-31,0001628280-26-004357,open,,,,,,,no explicit statement in the text
+0000012927,BA,dividends_per_share,2024-12-31,0000012927-25-000015,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 43",2024-12-31,"As a result, we did not pay any dividends to common shareholders in 2024, 2023 and 2022.",stated in the filing text (item7)
+0000012927,BA,dividends_paid,2025-12-31,0001628280-26-004357,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 43",2025-12-31,Our dividend to common shareholders has been suspended since 2020.,stated in the filing text (item7)
 0000012927,BA,share_buybacks,2025-12-31,0001628280-26-004357,open,,,,,,,no explicit statement in the text
-0000012927,BA,dividends_per_share,2025-12-31,0001628280-26-004357,open,,,,,,,no explicit statement in the text
+0000012927,BA,dividends_per_share,2025-12-31,0001628280-26-004357,mapped,stated_zero,0,item7,"Item 7. Management’s Discussion and Analysis of Financial Condition and Results of Operati, p. 43",2025-12-31,Our dividend to common shareholders has been suspended since 2020.,stated in the filing text (item7)
