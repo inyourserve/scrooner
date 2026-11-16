@@ -5,7 +5,7 @@ Newest first. When an item is approved, move it to doc 02 (decision register) an
 
 ## Open
 
-- **Migration 0129 (fixed search_path on 8 trigger functions), written, replay-proven in CI, NOT applied.** Clears 8 Supabase advisor warnings `function_search_path_mutable`; metadata-only. File `pipeline/db/pending/0129_trigger_function_search_path.sql` (number 0129 taken because it was free in doc 53; the request said 0130). Approval sentence: "I approve migration 0130 (fixed search_path on 8 trigger functions) for the dev database." (number in the sentence to read 0129 if the founder follows the file name.)
+- **Migration 0129 (fixed search_path on 8 trigger functions), written, replay-proven in CI, NOT applied.** Clears 8 Supabase advisor warnings `function_search_path_mutable`; metadata-only. File `pipeline/db/pending/0129_trigger_function_search_path.sql` (number 0129 taken because it was free in doc 53; the request said 0130). Approval sentence: "I approve migration 0129 (fixed search_path on 8 trigger functions) for the dev database."
 
 - **Shares outstanding = shares issued − treasury shares (same filing).** Founder decision 2026-11-01 (doc 02, item 4) says "EPS and instants are never derived"; Dhairya's revised ruling of 2026-11-16 would show shares outstanding as issued minus treasury when both are printed in the same filing's own column (balance-sheet face or parenthetical), with both signed parts as evidence. The serving path is built and dormant (c32da4c0); the Tag Expert flips DERIVE_SHARES=1 only after this amendment. About 312 cells.
   - Sentence: "I amend the 2026-11-01 instant rule: shares outstanding may be shown as shares issued minus treasury shares when both are printed in the same filing's own column."
