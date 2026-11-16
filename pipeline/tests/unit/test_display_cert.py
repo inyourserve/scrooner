@@ -353,3 +353,35 @@ def test_positive_controls_fail_a_broken_source(tmp_path):
     assert empty.verdict == "FAIL" and any(
         "source broken" in f.detail for f in empty.gate
     )
+
+
+def test_debt_counts_face_lines_only_and_debtcurrent_supersedes_components():
+    # JNJ FY2015: DebtCurrent 7,000 is a note figure; the face prints ShortTermBorrowings 7,004
+    jnj = [
+        fact("ShortTermBorrowings", "7004", qtrs=0),
+        fact("DebtCurrent", "7000", qtrs=0, reports=("R40",)),
+        fact("LongTermDebtNoncurrent", "12857", qtrs=0),
+    ]
+    assert dc.check_debt(debt_cell("19861"), jnj).result == "MATCH"
+    # GILD: face DebtCurrent is the total of the current portion printed beside it
+    gild = [
+        fact("DebtCurrent", "982", qtrs=0),
+        fact("LongTermDebtCurrent", "982", qtrs=0),
+        fact("LongTermDebtNoncurrent", "21073", qtrs=0),
+    ]
+    assert dc.check_debt(debt_cell("22055"), gild).result == "MATCH"
+
+
+def test_hidden_row_evidence_must_be_presented_annual_and_in_window():
+    cells = [cell(dp="sga_expense", display=dc.HIDDEN_ROW)]
+    unpresented = fact("GeneralAndAdministrativeExpense", "5", reports=())
+    quarterly = fact("GeneralAndAdministrativeExpense", "5", qtrs=1)
+    out_of_window = fact("GeneralAndAdministrativeExpense", "5", ddate="2014-09-30")
+    for f in (unpresented, quarterly, out_of_window):
+        assert dc.check_hidden_rows(cells, [f])[0].severity == "INFO", f
+    assert (
+        dc.check_hidden_rows(cells, [fact("GeneralAndAdministrativeExpense", "5")])[
+            0
+        ].severity
+        == "FAIL"
+    )

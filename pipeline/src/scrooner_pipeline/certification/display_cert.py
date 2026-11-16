@@ -118,6 +118,21 @@ LEASE_TAGS = frozenset(
         "CapitalLeaseObligationsNoncurrent",
     }
 )
+# DebtCurrent is the total of these; when it is on the face they are its components, not additions.
+CURRENT_DEBT_COMPONENTS = frozenset(
+    {
+        "ShortTermBorrowings",
+        "CommercialPaper",
+        "ShortTermDebt",
+        "OtherShortTermBorrowings",
+        "LongTermDebtCurrent",
+        "ConvertibleDebtCurrent",
+        "ConvertibleNotesPayableCurrent",
+        "SeniorNotesCurrent",
+        "LoansPayableCurrent",
+        "NotesPayableCurrent",
+    }
+)
 # A face debt tag whose definition already includes lease obligations.
 LEASE_INCLUSIVE_FACE = frozenset(
     t for t in DEBT_FACE_TAGS if "CapitalLease" in t and t not in LEASE_TAGS
@@ -587,8 +602,18 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
         and c.period_end
         and _days(f.ddate, c.period_end) <= 7
     ]
-    face = {f.tag: f.value for f in at if f.tag in DEBT_FACE_TAGS and f.dims == ""}
+    # Face = presented on the balance-sheet page the cell cites. A debt tag that only appears in a
+    # note (JNJ DebtCurrent 7,000 beside face ShortTermBorrowings 7,004) is not a face line.
+    bs = {p.r_page for p in c.parts if p.r_page} or ({c.r_page} if c.r_page else set())
+    face = {
+        f.tag: f.value
+        for f in at
+        if f.tag in DEBT_FACE_TAGS and f.dims == "" and (not bs or bs & set(f.reports))
+    }
     # Prefer totals over their components when the filing prints both.
+    if "DebtCurrent" in face:
+        for t in CURRENT_DEBT_COMPONENTS:
+            face.pop(t, None)
     if "LongTermDebt" in face and (
         {"LongTermDebtCurrent", "LongTermDebtNoncurrent"} & set(face)
     ):
@@ -635,7 +660,11 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
 
 
 def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Finding]:
+    """A hidden row fails when the company presents a fact of the row's family for one of the
+    display years: undimensioned, on a rendered page (a fact no page shows is not reported to a
+    reader), annual for a duration row, dated at a fiscal year end in the coverage."""
     out = []
+    year_ends = sorted({c.period_end for c in cells if c.period_end})
     hidden = sorted({c.data_point for c in cells if c.display == HIDDEN_ROW})
     for dp in hidden:
         fam = set(HIDE_FAMILY.get(dp, ()))
@@ -653,7 +682,11 @@ def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Find
         hits = [
             f
             for f in company_facts
-            if f.tag in fam and f.dims == "" and (f.qtrs == 0) == (dp in INSTANT_DPS)
+            if f.tag in fam
+            and f.dims == ""
+            and f.reports
+            and f.qtrs == (0 if dp in INSTANT_DPS else 4)
+            and any(_days(f.ddate, y) <= 7 for y in year_ends)
         ]
         if hits:
             ex = sorted(hits, key=lambda f: f.ddate)[-3:]
@@ -677,7 +710,7 @@ def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Find
                     dp,
                     "*",
                     "INFO",
-                    f"no undimensioned {sorted(fam)} fact in any periodic filing",
+                    f"no presented, undimensioned, annual {sorted(fam)} fact at a display-year end in any periodic filing",
                 )
             )
     return out
