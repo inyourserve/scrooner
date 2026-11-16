@@ -33,7 +33,7 @@ COLUMNS = [
     'companies', 'filings_seen', 'years_seen', 'served_cells', 'example_cells',
     'proof_cells', 'proven_cells', 'proof_companies', 'certified_cells', 'last_verified', 'composite_uses',
     'fsn_lines_top100', 'fsn_companies_top100', 'legacy_decision', 'legacy_concept', 'legacy_caveat', 'company_overrides',
-    'known_problems', 'problem_commits', 'cards', 'mind_ids', 'ledger_lines',
+    'known_problems', 'problem_commits', 'dqc_rules', 'cards', 'mind_ids', 'ledger_lines',
     'quality', 'full_row',
 ]
 
@@ -69,6 +69,10 @@ def main():
                 pred[s].append(f"{d['element']}@{d.get('deprecated_in_year', '')}")
         if d.get('chain'):
             add(d['element'], 'deprecation_chain', d['chain'])
+    for d in rows_of(os.path.join(TAX, 'dqc_rule_elements.csv')):   # XBRL US data-quality rules that name the element
+        el = (d.get('element') or '').split(':')[-1]
+        if d.get('element_prefix') == 'us-gaap' or (d.get('element') or '').startswith('us-gaap:'):
+            add(el, 'dqc_rules', d['rule_id'] + (f" ({d['role_in_rule']})" if d.get('role_in_rule') else ''))
     calc_par = collections.defaultdict(set)
     for c in rows_of(os.path.join(TAX, 'calc.csv')):
         calc_par[c.get('child')].add(c.get('parent'))

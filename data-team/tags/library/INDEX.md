@@ -1,6 +1,6 @@
 # Tag library index (generated 2026-11-16, resolver-2026-11-16.56)
 
-8368 rows (565 with resolver usage, 0 taxonomy elements); coverage 62.5% of 54855 resolver-served cells have a full row for every element they use.
+27999 rows (565 with resolver usage, 22756 taxonomy elements); coverage 62.5% of 54855 resolver-served cells have a full row for every element they use.
 
 Search and follow links in [browser.html](browser.html). Columns: [library.schema.json](library.schema.json).
 

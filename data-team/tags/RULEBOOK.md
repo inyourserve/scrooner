@@ -570,7 +570,9 @@ The rulings in section 5 are the decisions; most of what the resolver knows sits
 | Resolver run: companies / annual filings / face lines read / output cells | 109 / 1,252 / 145,765 / 68,903 | run inputs (standard extract) and resolver-all110-2026-11-14.csv |
 | FSN store: annual filings / companies / distinct tags (custom) / values / face lines / calc arcs | 11,388 / 1,005 / 1,724,875 (1,625,217) / ~39.2M / ~8.6M / ~6.7M | DB fsn.* (estimates for the large tables) |
 
-Gaps this inventory shows:
+**After the taxonomy ingest and the learning step (2026-11-16):** FASB US-GAAP 2014-2026: 22,756 elements, 6,131 deprecations (3,015 with a successor), 9,726 calc relationships; XBRL US DQC: 202 rules, 9,189 rule-element rows (data-team/tags/taxonomy/). Learned from 1,294 filings: 8,225 elements (6,109 standard, 2,116 custom), 2,092 served labels across 51 data points (data-team/tags/library/learned_*.csv). Library: 27,999 rows.
+
+Gaps this inventory shows (before):
 - **Element meaning.** It sits in hand lists (150 + 171 elements), not in the official taxonomy. The FASB ingest (2014-2026 elements, balance and period type, calc and definition arcs, deprecation chains) goes to data-team/tags/taxonomy/ and replaces the hand lists as the source of element families.
 - **DQC.** 40 of the XBRL US DQC rules are implemented; the full set is being ingested with its element lists.
 - **Libraries.** Two libraries describe elements: data-team/tags/library/ and line_map/rules. They are being unified into one, the library the resolver reads.

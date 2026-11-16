@@ -165,6 +165,9 @@
   "problem_commits": {
    "type": "string"
   },
+  "dqc_rules": {
+   "type": "string"
+  },
   "cards": {
    "type": "string"
   },
