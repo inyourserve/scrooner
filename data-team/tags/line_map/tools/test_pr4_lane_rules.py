@@ -1109,3 +1109,20 @@ def test_costs_block_leaves_out_nonoperating_lines_by_element():
     r = dict(accession='A', data_point='operating_expenses')
     got = resolve_all._opex_from_costs_block([cor, ie, r], r, f, isf[-1], isf, cor)
     assert got['value'] == D(14395) and 'OtherNonoperatingExpense' not in got['nodes'] and 'ForeignCurrency' not in got['nodes']
+
+
+def test_bank_cash_is_the_cash_flow_total_that_ties_to_the_two_cash_lines():
+    # C FY2019 (rulings 2026-11-17): cash and due from banks 23,967 + deposits with banks 169,952 = the cash-flow total 193,919; FY2015 the own
+    # cash flow used 'cash and due from banks' only, the FY2018 10-K's opening balance restates it: 133,097, flag definition_change
+    rows = [dict(cik='1', ticker='C', accession='A19', data_point='cash_and_equivalents', period_end='2019-12-31', status='combined', value=None, column='own',
+                 flags='label_beyond;only_combined', nodes='CashAndDueFromBanks=23967 [R4.htm:11]', why='w'),
+            dict(cik='1', ticker='C', accession='A15', data_point='cash_and_equivalents', period_end='2015-12-31', status='combined', value=None, column='own', flags='', nodes='', why='w')]
+    nf = {'A19': 'CashAndDueFromBanks|0|23967~InterestBearingDepositsInBanks|0|169952~CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents|0|193919',
+          'A15': 'CashAndDueFromBanks|0|20900~InterestBearingDepositsInBanks|0|112197'}
+    comp = {'A18': 'CashAndCashEquivalentsAtCarryingValue|0|133097|2015-12-31', 'A19': 'CashAndCashEquivalentsAtCarryingValue|0|20900|2015-12-31'}   # a newer copy that does not tie is skipped
+    filings = [dict(cik='1', a='A15', p='2015-12-31'), dict(cik='1', a='A18', p='2018-12-31'), dict(cik='1', a='A19', p='2019-12-31')]
+    resolve_all.apply_bank_cash(rows, nf, comp, filings)
+    assert rows[0]['value'] == D(193919) and rows[0]['flags'] == 'bank_cash_cf_row'
+    assert rows[1]['value'] == D(133097) and rows[1]['accession'] == 'A18' and 'definition_change' in rows[1]['flags']
+    rows[0].update(status='combined', value=None); nf['A19'] = nf['A19'].replace('193919', '193900')   # no tie: stays combined
+    assert resolve_all.apply_bank_cash(rows[:1], nf, {}, filings)[0]['status'] == 'combined'

@@ -981,3 +981,33 @@ def test_derived_total_liabilities_is_corroborated_by_the_liabilities_fact():
     r = resolve_all.apply_tl_corroboration([row(96000)], {f['a']: 'Liabilities|0|95243'}, [f])[0]
     assert 'tl_corroboration_disagree' in r['flags']
     assert resolve_all.apply_tl_corroboration([row(95243)], {}, [f])[0]['status'] == 'derived'
+
+
+def test_interest_and_dividends_income_is_interest_for_the_other_income_band():
+    # Dhairya 2026-11-17 call 2: MSFT FY2015 'Other income (expense), net' 346 = interest and dividends income 766 - interest expense 781 + gains ...:
+    # other income = 346 + 781 - 766 = 361. InvestmentIncomeInterestAndDividend counts by its element; InvestmentIncomeNet only where the filing
+    # prints it as interest and dividends income (rules/interest_dividend_lines.csv)
+    for el in ('InvestmentIncomeInterestAndDividend', 'InvestmentIncomeNet'):
+        calc = f'1|NonoperatingIncomeExpense|{el}|1~1|NonoperatingIncomeExpense|InterestExpense|-1~1|NonoperatingIncomeExpense|GainLossOnInvestments|1'
+        f = filing([('IS', 'Revenues', 'Revenue', 93580), ('IS', 'NonoperatingIncomeExpense', 'Other income (expense), net', 346)], calc)
+        row = dict(accession=f['a'], column='own', flags='', why='', data_point='other_income_expense_net', status='mapped', value=D(346),
+                   tags='NonoperatingIncomeExpense', nodes='NonoperatingIncomeExpense=346 [R2.htm:2]')
+        notes = {f['a']: f'{el}|4|766~InterestExpense|4|781'}
+        saved = set(resolve_all.INT_DIV_LINES)
+        try:
+            resolve_all.INT_DIV_LINES.add((f['a'], 'InvestmentIncomeNet'))
+            assert resolve_all.apply_other_income_split([dict(row)], [f], notes)[0]['value'] == D(361)
+            resolve_all.INT_DIV_LINES.discard((f['a'], 'InvestmentIncomeNet'))
+            got = resolve_all.apply_other_income_split([dict(row)], [f], notes)[0]['value']
+            assert got == (D(361) if el == 'InvestmentIncomeInterestAndDividend' else D(1127))   # investment income not printed as interest stays in other income
+        finally:
+            resolve_all.INT_DIV_LINES.clear(); resolve_all.INT_DIV_LINES.update(saved)
+
+
+def test_absence_is_blocked_where_a_verifier_found_the_figure_printed():
+    # DE FY2025 (Dhairya call 2026-11-17): 'Interest income - excluding FS 420' is printed (a part); the consolidated total is not: open, never hidden
+    assert ('0001104659-25-122321', 'interest_income') in resolve_all.ABSENCE_BLOCKED
+    f = dict(filing([('IS', 'Revenues', 'Revenues', 100)]), cik='9', a='0001104659-25-122321', p='2025-10-31')
+    row = dict(data_point='interest_income', status='not_presented', accession=f['a'], period_end='2025-10-31', column='own', flags='roles', why='')
+    resolve_all.apply_absent_in_own_filing([row], [f], {}, {})
+    assert 'absent_in_own_filing' not in row['flags']

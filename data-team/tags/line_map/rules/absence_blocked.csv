@@ -1,0 +1,2 @@
+accession,data_point,evidence
+0001104659-25-122321,interest_income,"DE FY2025 10-K segment reconciliation: 'Interest income – excluding FS 420' ($M, custom de:InterestIncomeNonoperating): interest income is printed, only without the financial services segment; the consolidated total is not printed, so the cell stays OPEN, never hidden (verifier 61b9014a; Dhairya call 2026-11-17)"

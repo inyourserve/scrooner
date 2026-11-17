@@ -866,3 +866,11 @@
 - ~ LongTermDebtNoncurrent: served_cells
 - ~ LongTermDebtNoncurrentExcludingDebtIssuanceCosts: data_point, served_cells
 - ~ OtherIncomeAndExpense: data_point, served_cells
+
+## 2026-11-17 (resolver-all110-.82): 6 element changes, 27999 rows, coverage 64.7%
+- ~ CashAndCashEquivalentsAtCarryingValue: served_cells
+- ~ CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents: served_cells
+- ~ Dividends: rule_id
+- ~ InterestIncomeOperatingAndNonoperating: data_point, rule_id, served_cells
+- ~ InvestmentIncomeInterestAndDividend: rule_id, served_cells
+- ~ InvestmentIncomeNet: data_point, rule_id, served_cells

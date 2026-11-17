@@ -66,6 +66,41 @@ def _unit(v):
     return u
 
 
+CF_CASH = ('CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'CashAndCashEquivalentsAtCarryingValue')
+BANK_CASH_PARTS = ('CashAndDueFromBanks', 'InterestBearingDepositsInBanks')
+
+
+def apply_bank_cash(rows, notefacts, compfacts, filings):
+    """Dhairya rulings 2026-11-17 (3A bank_cash_from_cf_row; call 3: latest print, flag definition_change): a combined cash cell (the face
+    cash line is labelled wider, C 'Cash and due from banks (including segregated cash ...)') is the cash-flow statement's cash total when
+    that total equals 'cash and due from banks' + 'deposits with banks' of the balance sheet exactly. The own filing's total when it ties
+    (C FY2018-25, e.g. FY2019 23,967 + 169,952 = 193,919); else the latest later 10-K printing such a total for the date (its cash-flow
+    opening balance), flag definition_change: the own filing's cash flow used a narrower cash (C FY2014-17: 'cash and due from banks')."""
+    later = collections.defaultdict(list)
+    for f in filings: later[f['cik'].zfill(10)].append(f)
+    for r in rows:
+        if r['data_point'] != 'cash_and_equivalents' or r['status'] != 'combined' or (r.get('column') or 'own') != 'own': continue
+        nf = {t: D(v) for t, q, v in standard_inputs._facts(notefacts.get(r['accession']), 3) if q == '0'}
+        if not all(t in nf for t in BANK_CASH_PARTS): continue
+        s_ = sum(nf[t] for t in BANK_CASH_PARTS)
+        got = next(((t, nf[t], r['accession'], None) for t in CF_CASH if nf.get(t) == s_), None)
+        if got is None:
+            pe = str(r['period_end'])
+            for g in sorted(later[str(r['cik']).zfill(10)], key=lambda g: g['p'], reverse=True):
+                if g['p'] <= pe: break
+                hit = next(((t, D(v)) for t, q, v, dd in standard_inputs._facts(compfacts.get(g['a']), 4) if t in CF_CASH and q == '0' and dd == pe and D(v) == s_), None)
+                if hit: got = (hit[0], hit[1], g['a'], 'definition_change'); break
+        if got is None: continue
+        t, v, a, flag = got
+        loc = 'NOTE' if a == r['accession'] else f'NOTE@{a}'
+        r.update(status='mapped', value=v, tags=t, accession=a, column='own' if a == r['accession'] else 'comparative',
+                 nodes=f"{t}={v} [{loc}]",
+                 why=f"the cash-flow cash total {t} {v} equals the balance sheet's cash and due from banks {nf['CashAndDueFromBanks']} + deposits with banks {nf['InterestBearingDepositsInBanks']} (rulings 2026-11-17: bank cash from the cash-flow row" + (f"; the own filing's cash flow used a narrower cash, the latest print {a} restates it: definition_change)" if flag else ')'))
+        keep = [x for x in (r.get('flags') or '').split(';') if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')]
+        r['flags'] = ';'.join(keep + ['bank_cash_cf_row'] + ([flag] if flag else []))
+    return rows
+
+
 def apply_latest_print(rows, compfacts, filings=()):
     """One vintage per year (Dhairya rulings 2026-11-17: IS 'one vintage per year, latest print' (Group B); CF 'flow_latest_print' (wave 2B/3A);
     BS 'bs_latest_print' (wave 2A); 'authoritative_copy_follows_line_role' (Group A 3); rounding (Group B): a served own cell takes the
@@ -593,6 +628,12 @@ def apply_bundled_ap(rows, filings):
 # pure interest elements: dividends and investment gains (InvestmentIncomeInterestAndDividend, InvestmentIncomeDividend,
 # InvestmentIncomeNet: QCOM, NEM, CAT) are not interest and stay in other income
 PURE_II = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOther|InterestIncomeOperating|InterestIncomeNonoperating|InterestIncome|InterestIncomeExpenseNet|InterestIncomeExpenseNonoperatingNet|InterestIncomeDueToEmploymentTaxRefund)$')
+def _int_div_lines():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'interest_dividend_lines.csv')
+    return {(r['accession'], r['element']) for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
+
+
+INT_DIV_LINES = _int_div_lines()
 NET_II = re.compile(r'^InterestIncomeExpense\w*Net$')
 
 
@@ -615,7 +656,10 @@ def apply_other_income_split(rows, filings, notefacts):
         L, arcs = parse(F[r['accession']])
         notes = note_facts(notefacts.get(r['accession']))
         kids = [(c, w) for g in arcs.get(tag, {}).values() for c, w in g]
-        ints = [(c, w, notes.get((c, 4))) for c, w in kids if (resolve_is.IE_TAG.match(c) or PURE_II.match(c)) and notes.get((c, 4)) is not None]
+        # Dhairya 2026-11-17 call 2: a line printed as interest and dividends income is interest income for the band (MSFT 'Interest and dividends
+        # income', AAPL): the element InvestmentIncomeInterestAndDividend always; another element when the filing prints it so (rules/interest_dividend_lines.csv)
+        ints = [(c, w, notes.get((c, 4))) for c, w in kids if (resolve_is.IE_TAG.match(c) or PURE_II.match(c) or c == 'InvestmentIncomeInterestAndDividend'
+                or (r['accession'], c) in INT_DIV_LINES) and notes.get((c, 4)) is not None]
         if not ints or all(v == 0 for _, _, v in ints): continue
         val = sg * (lv - sum((w * v for _, w, v in ints), D(0)))
         r.update(status='component_sum', value=val, tags='+'.join([tag] + [c for c, _, _ in ints]),
@@ -933,6 +977,14 @@ ABSENT_NOT = {'share_buybacks': re.compile(resolve_cf.BUY_NOT.pattern + r'|issue
 ABSENT_LABEL = {'total_debt': total_debt.LABEL_DEBT, 'share_buybacks': resolve_cf.BUY_LABEL, 'dividends_paid': resolve_cf.DIV_LABEL, 'sbc': resolve_cf.SBC_LABEL, 'capex': resolve_cf.CAPEX_LABEL}
 
 
+def _absence_blocked():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'absence_blocked.csv')
+    return {(r['accession'], r['data_point']) for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
+
+
+ABSENCE_BLOCKED = _absence_blocked()
+
+
 def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
     """Dhairya ruling 2026-11-16 (the 706 gap years): a not_presented cell of the own 10-K is flagged absent_in_own_filing only when the
     resolver proves absence from that filing: no face line on ANY statement under the data point's elements (valued or not), no custom
@@ -946,6 +998,7 @@ def apply_absent_in_own_filing(rows, filings, notefacts, compfacts):
     for r in rows:
         if r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own' or r['accession'] not in F_: continue
         if any(x in (r.get('flags') or '') for x in ('before_first_10k', 'line_not_printed', 'reported_by_award_type', 'reported_per_class')): continue
+        if (r['accession'], r['data_point']) in ABSENCE_BLOCKED: continue   # a verifier found the figure printed (a part, or untagged): open, never hidden
         E = dp_elements(r['data_point'])
         rx = ABSENT_RX.get(r['data_point'])
         if not E and not rx: continue
@@ -1770,6 +1823,7 @@ if __name__ == '__main__':
     rows = apply_bank_template(rows, filings)
     rows = apply_text_disclosures(rows)
     rows = apply_scale_flags(rows)
+    rows = apply_bank_cash(rows, notefacts, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
