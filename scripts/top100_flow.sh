@@ -67,7 +67,9 @@ plan b; proof b
 # The export reads inside `set transaction read only` (mapper/top100_coverage.py main), so the process is no longer forced
 # read-only by PGOPTIONS: --write-display-state upserts analytics.cell_display_state (0130) on its own connection, one
 # transaction per exported company. The held re-export below writes it again so the table matches the final state.
-mkdir -p $O/coverage; PYTHONPATH=pipeline/src $PY pipeline/scripts/top100_coverage.py $O/coverage --write-display-state > $O/coverage.txt 2>&1
+# --company-ids: this job exports ONLY its own company (scale plan 2026-11-17 section 6 item 1; the full export was ~5 of
+# the 8 chain minutes and O(N^2) over a run). The publish job merges the rows into the committed files on main.
+mkdir -p $O/coverage; PYTHONPATH=pipeline/src $PY pipeline/scripts/top100_coverage.py $O/coverage --write-display-state --company-ids $IDS > $O/coverage.txt 2>&1
 # Certified-company regression guard: a certified company (approvals/<TICKER>-certificate-*.md on main) must keep every
 # certified cell (PROVEN/REASON/DERIVED, same shown_value). On a regression its rows are restored from the first
 # rewrite's before-image (bi_a), the proof is re-run so verdicts match, and the flow line says HELD_CERTIFIED.
@@ -86,7 +88,7 @@ for c in ${(s:,:)IDS}; do
     PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map restore-before-image --company-id $c --dir $O/bi_a --apply > $O/restore_$c.txt 2>&1 || { tail -3 $O/restore_$c.txt; HELD[$c]=RESTORE_FAILED; continue; }
     cut -c1-220 $O/restore_$c.txt
     PGOPTIONS=$PG $PY -c "import sys; from scrooner_pipeline.jobs.proof import app; sys.argv=['p','run','--ciks','$ck','--report','$O/proof_held_$ck.jsonl','--write']; app()" > $O/proof_held_$ck.log 2>&1 || { tail -2 $O/proof_held_$ck.log; HELD[$c]=REPROOF_FAILED; continue; }
-    mkdir -p $O/coverage_held; PYTHONPATH=pipeline/src $PY pipeline/scripts/top100_coverage.py $O/coverage_held --write-display-state > $O/coverage_held.txt 2>&1
+    mkdir -p $O/coverage_held; PYTHONPATH=pipeline/src $PY pipeline/scripts/top100_coverage.py $O/coverage_held --write-display-state --company-ids $IDS > $O/coverage_held.txt 2>&1
     HELD[$c]=HELD_CERTIFIED
   elif [ $g -ne 0 ]; then HELD[$c]=GUARD_ERROR; fi
 done

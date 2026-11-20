@@ -236,6 +236,29 @@ jobs:
             sleep $((RANDOM % 8 + 2))
           done
           echo "::error::push failed after retries"; exit 1
+      - name: Commit this company's coverage rows (summary row always; the flow exports only its own company)
+        # The chain's export holds ONE company (--company-ids). scripts/ci/top100_coverage_merge.py replaces that
+        # company's rows in the committed files and writes them atomically; every other company's rows stay. Up to 16
+        # publish jobs edit the same file, so a rebase could conflict: instead reset to origin/main and re-merge on each
+        # retry (idempotent). Summary row on every run; the 9 MB full CSV only daily (founder-approved slimming,
+        # 2026-11-16), so --summary-only here and the hourly export's 00:17Z run carries the full file.
+        run: |
+          set -u
+          CV=$(find part -type d -path "*run_c$CID/coverage_held" | head -1 || true)
+          [ -n "$CV" ] || CV=$(find part -type d -path "*run_c$CID/coverage" | head -1 || true)
+          if [ -z "$CV" ] || [ ! -f "$CV/top100-coverage-summary.csv" ]; then echo "no coverage export in the artifact: nothing to merge"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 8 + 2)); continue; }
+            python3 -I scripts/ci/top100_coverage_merge.py --from "$CV" --into data-team/strategy --company-ids "$CID" --summary-only || { echo "::error::merge failed"; exit 1; }
+            git add data-team/strategy/top100-coverage-summary.csv
+            git diff --cached --quiet && { echo "coverage summary row for $CID unchanged"; exit 0; }
+            git commit -q -m "Coverage row for company $CID (top100-flow run $GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && { echo pushed; exit 0; }
+            sleep $((RANDOM % 8 + 2))
+          done
+          echo "::error::push failed after retries"; exit 1
       - name: Commit certification files on PASS
         run: |
           set -u

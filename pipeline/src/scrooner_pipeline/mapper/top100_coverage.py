@@ -2217,16 +2217,35 @@ def _display_state(
     )
 
 
+def select_companies(
+    companies: list[Company], company_ids: list[int] | None
+) -> list[Company]:
+    """The companies to export: all of them, or only `company_ids` (every id must be in the list; rank order kept).
+
+    The flow exports ONE company per job (scale plan 2026-11-17, section 6 item 1): exporting all 100 in every job was
+    about 5 of its 8 minutes and would scale O(N^2). Rows and summary lines for the other companies are untouched on
+    main; scripts/ci/top100_coverage_merge.py replaces only this company's rows there."""
+    if company_ids is None:
+        return companies
+    wanted = set(company_ids)
+    known = {c.company_id for c in companies}
+    missing = sorted(wanted - known)
+    if missing:
+        raise SystemExit(f"company ids not in the top {len(companies)}: {missing}")
+    return [c for c in companies if c.company_id in wanted]
+
+
 def main(
     out_dir: Path,
     shards: Path,
     reads_dir: Path,
     n: int = 100,
     write_display_state: bool = False,
+    company_ids: list[int] | None = None,
 ) -> int:
     from scrooner_pipeline.db.connection import get_connection
 
-    companies = load_top(shards, n)
+    companies = select_companies(load_top(shards, n), company_ids)
     now = datetime.now(timezone.utc)
     with get_connection() as conn:
         conn.execute("set transaction read only")
