@@ -66,6 +66,32 @@ def _unit(v):
     return u
 
 
+def apply_opex_costs_total_less_cor(rows, filings=()):
+    """Dhairya wave 4A (oi_identity_includes_operating_other_lines): an opex sum over the band that cites the costs total but not the
+    cost of revenue inside it (RTX FY2021-25: 'Total costs and expenses' holds the product / service cost member lines; 'Other income'
+    and goodwill impairment sit between it and OI and are not opex): opex = the costs total - cost of revenue."""
+    by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    lab = {}
+    for f in filings:   # the printed label of the costs-total line: MRVL tags 'Total operating expenses' (no cost of revenue) CostsAndExpenses
+        for x in (f.get('lines') or '').split('~'):
+            q = x.split('|')
+            if len(q) >= 9 and q[0] == 'IS' and q[3] == 'CostsAndExpenses': lab[(f['a'], f"R{q[1]}.htm:{q[2]}")] = q[7]
+    for r in rows:
+        if r['data_point'] != 'operating_expenses' or r['status'] not in ('component_sum', 'mapped') or (r.get('column') or 'own') != 'own' or 'opex_from_printed_totals' in (r.get('flags') or ''): continue
+        m = re.search(r'(?:^|; )(CostsAndExpenses)=(-?[\d.]+) \[(R\d+\.htm:\d+)\]', r.get('nodes') or '')
+        cor = by.get((r['accession'], 'cost_of_revenue'))
+        if not m or not cor or cor['status'] not in ('mapped', 'component_sum') or cor.get('value') in (None, ''): continue
+        ct = set(re.findall(r'(?:^|; )-?(\w+(?:\[[^\]]*\])?)=', (cor.get('nodes') or '').split(' | ')[0]))
+        if not ct or any(t in (r.get('nodes') or '') for t in ct): continue   # the cost of revenue is already out of the sum
+        lb = lab.get((r['accession'], m.group(3)), '')
+        if not re.search(r'(?i)costs? and (other )?expenses|total costs', lb) or re.search(r'(?i)operating expenses', lb): continue
+        v = D(m.group(2)) - D(cor['value'])
+        r.update(status='component_sum', value=v, tags='printed totals', nodes=f"CostsAndExpenses={m.group(2)} [{m.group(3)}]; -cost_of_revenue={cor['value']}",
+                 why="operating expenses = total costs and expenses - cost of revenue; the lines printed between the costs total and operating income (other income, impairment) are not operating expenses (wave 4A ruling)")
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+    return rows
+
+
 CF_CASH = ('CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'CashAndCashEquivalentsAtCarryingValue')
 BANK_CASH_PARTS = ('CashAndDueFromBanks', 'InterestBearingDepositsInBanks')
 
@@ -127,8 +153,9 @@ def apply_latest_print(rows, compfacts, filings=()):
         return (d, q) in dates[a]
     def parse(r):
         ns = LP_NODE.findall((r.get('nodes') or '').split(' | ')[0])
-        if not ns or any(dim for _, _, dim, _, _ in ns): return None
-        return [(-1 if neg else 1, t, D(v), loc) for neg, t, dim, v, loc in ns]
+        # one dimension is replayable: a ProductOrService member line (RTX, TMO cost of products / services), keyed as the extract keys it
+        if not ns or any(dim and not re.fullmatch(r'\[ProductOrService=[^\]=;]+\]', dim) for _, _, dim, _, _ in ns): return None
+        return [(-1 if neg else 1, t + dim, D(v), loc) for neg, t, dim, v, loc in ns]
     for (cik, dp), lst in by.items():
         if LP_SKIP.search(dp): continue
         q = 0 if dp in INSTANT_DPS else 4
@@ -153,7 +180,7 @@ def apply_latest_print(rows, compfacts, filings=()):
             # ...and the later filing resolves its own year with no element the own cell lacks (PFE FY2021: the own RevenueFromContract
             # 81,288 total became a part under a new Revenues total in the FY2023 10-K; same element, another line)
             if sum(w * v for w, _, v, _ in mine) == D(r['value']) and all(len(facts.get(t, ())) == 1 for _, t, _, _ in mine) \
-                    and all(t in face_tags.get(b['accession'], ()) for _, t, _, l in mine if l.startswith('R')) \
+                    and all(t.split('[')[0] in face_tags.get(b['accession'], ()) for _, t, _, l in mine if l.startswith('R')) \
                     and bparts is not None and {t for _, t, _, _ in bparts} <= {t for _, t, _, _ in mine}:
                 parts, sgn = mine, 1
             else:
@@ -166,7 +193,7 @@ def apply_latest_print(rows, compfacts, filings=()):
                 face = all(l.startswith('R') for _, _, _, l in mine) and all(l.startswith('R') for _, _, _, l in parts)
                 renamed = (b['status'] == r['status'] == 'mapped' and face and gone and all(t in DEPRECATED for t in gone))   # FTNT SalesRevenueNet (deprecated 2018)
                 c1 = b['status'] == r['status'] == 'derived' and dp in ('gross_profit', 'total_liabilities')   # MPC FY2018
-                one_renamed = (b['status'] == r['status'] == 'component_sum' and len(ot) == len(lt) and len(ot - lt) == 1 and set(gone) == ot - lt)   # MSFT FY2016 impairment line
+                one_renamed = (b['status'] == r['status'] == 'component_sum' and len(ot) == len(lt) and ot - lt and set(gone) == ot - lt)   # renamed lines, same count: MSFT FY2016 impairment line; RTX FY2016-17 cost lines -> member lines
                 if not (renamed or c1 or one_renamed): continue
                 if any(len(facts.get(t, ())) != 1 for _, t, _, _ in parts): continue
                 sgn, how = 1, f"the way it resolves {dp}"
@@ -184,12 +211,21 @@ def apply_latest_print(rows, compfacts, filings=()):
             u_new, u_old = _unit(new), _unit(old)
             if u_new > u_old and abs(new - old) <= u_new / 2 * len(parts): continue   # a rounded later copy (each rounded part) never replaces a precise figure
             fl = face_loc.get(b['accession'], {})
-            loc = lambda t, l: f"{fl[t]}@{b['accession']}" if t in fl and l.startswith('R') else f"NOTE@{b['accession']}"   # the later filing's own line
+            loc = lambda t, l: f"{fl[t.split('[')[0]]}@{b['accession']}" if t.split('[')[0] in fl and l.startswith('R') else f"NOTE@{b['accession']}"   # the later filing's own line
             r.update(status=r['status'] if parts is mine else b['status'], value=new, tags=r.get('tags', '') if parts is mine else b.get('tags', ''), accession=b['accession'], column='comparative',
                      nodes='; '.join(f"{'-' if w < 0 else ''}{t}={next(iter(facts[t]))} [{loc(t, l)}]" for w, t, _, l in parts),
                      why=f"latest print: the FY+{k} 10-K {b['accession']} re-presents the year as {new} (own filing {old}), recomputed from {how}; one vintage per year (rulings 2026-11-17)")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print', 'split_adjusted' if split else '') if x)
             if split: r['why'] += f"; split_adjusted: the later print differs from the own print {old} by a {split}-for-1 split ratio"
+    # Dhairya wave 4A (RTX FY2016-19, recast for the Otis / Carrier spin): a year whose latest-print revenue differs from its own print by
+    # more than 10% was recast to another basis (discontinued operations, a spin): its latest-print cells carry definition_change
+    rev = {(r['cik'], str(r['period_end'])): r for r in rows if r['data_point'] == 'revenue' and 'latest_print' in (r.get('flags') or '')}
+    for k, r in rev.items():
+        m = re.search(r'own filing (-?[\d.]+)\)', r.get('why') or '')
+        if not m or D(m.group(1)) == 0 or abs(D(r['value']) - D(m.group(1))) <= abs(D(m.group(1))) * D('0.10'): continue
+        for x in rows:
+            if (x['cik'], str(x['period_end'])) == k and 'latest_print' in (x.get('flags') or '') and 'definition_change' not in x['flags']:
+                x['flags'] += ';definition_change'
     return rows
 
 
@@ -1823,6 +1859,7 @@ if __name__ == '__main__':
     rows = apply_bank_template(rows, filings)
     rows = apply_text_disclosures(rows)
     rows = apply_scale_flags(rows)
+    rows = apply_opex_costs_total_less_cor(rows, filings)
     rows = apply_bank_cash(rows, notefacts, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
     for r in rows:

@@ -137,3 +137,11 @@ def test_d12_pre842_capital_lease_by_location_member_calc_arc_or_reader_check():
     assert D(r['value']) == D(100) and 'READER CHECK' in r['flags']
     g = _f(_FACE, 'g|OtherLiabilitiesNoncurrent|CapitalLeaseObligations|1')           # a non-debt calc parent: added
     assert D(_own(total_debt.run([g], _vals(g, ('CapitalLeaseObligations', '2017-12-31', 40)), {}))['value']) == D(140)
+
+
+def test_tower_obligation_failed_sale_leaseback_is_debt():
+    # TMUS FY2015 (wave 4A, perimeter definition 2026-11-17): 182 + 20,461 + 5,600 + 'Tower obligations' 2,658 = 28,901
+    f = _f([('BS', 'Assets', 'Total assets', 900), ('BS', 'DebtCurrent', 'Short-term debt', 182), ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 20461),
+            ('BS', 'DueToAffiliateNoncurrent', 'Long-term debt to affiliates', 5600), ('BS', 'SaleLeasebackTransactionAmountDueUnderFinancingArrangement', 'Tower obligations', 2658),
+            ('BS', 'StockholdersEquity', 'Total stockholders equity', 300)])
+    assert D(_own(total_debt.run([f], [], {}))['value']) == D(28901)

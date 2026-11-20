@@ -874,3 +874,26 @@
 - ~ InterestIncomeOperatingAndNonoperating: data_point, rule_id, served_cells
 - ~ InvestmentIncomeInterestAndDividend: rule_id, served_cells
 - ~ InvestmentIncomeNet: data_point, rule_id, served_cells
+
+## 2026-11-20 (resolver-all110-.83): 21 element changes, 27999 rows, coverage 64.7%
+- ~ AccountsReceivableNet: rule_id, served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ CostOfGoodsSold: served_cells
+- ~ CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization: served_cells
+- ~ CostOfServices: served_cells
+- ~ FinancialServicesRevenue: served_cells
+- ~ GoodwillImpairmentLoss: served_cells
+- ~ LinesOfCreditCurrent: served_cells
+- ~ LongTermDebtAndCapitalLeaseObligations: served_cells
+- ~ LongTermDebtAndCapitalLeaseObligationsCurrent: served_cells
+- ~ LongTermDebtNoncurrent: served_cells
+- ~ OtherAssets: data_point, rule_id, served_cells
+- ~ OtherIncome: served_cells
+- ~ ReceivablesAndOtherAssets: served_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: served_cells
+- ~ Revenues: served_cells
+- ~ SaleLeasebackTransactionAmountDueUnderFinancingArrangement: data_point, rule_id, served_cells
+- ~ SalesRevenueGoodsNet: served_cells
+- ~ SalesRevenueNet: served_cells
+- ~ SalesRevenueServicesNet: served_cells

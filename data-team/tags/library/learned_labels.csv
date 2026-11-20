@@ -82,7 +82,6 @@ accounts_receivable,"receivables from clients, net",5,1,AccountsReceivableNetCur
 accounts_receivable,"accounts receivable, less allowances and credit losses of",5,1,AccountsReceivableNetCurrent 5
 accounts_receivable,"accounts receivable, less allowances of and , respect",4,1,AccountsReceivableNetCurrent 4
 accounts_receivable,"accounts receivable trade, less allowances",4,1,AccountsReceivableNetCurrent 4
-accounts_receivable,receivables and other assets,4,1,ReceivablesAndOtherAssets 4
 accounts_receivable,accounts and notes receivable net of allowance of millio,4,1,AccountsAndNotesReceivableNet 4
 accounts_receivable,trade and other receivables,4,1,ReceivablesNetCurrent 2;AccountsAndOtherReceivablesNetCurrent 2
 accounts_receivable,"accounts receivable, net of provision for sales returns and",4,1,AccountsReceivableNetCurrent 4
@@ -528,10 +527,10 @@ comprehensive_income,total comprehensive income attributable to intuitive surgic
 comprehensive_income,"comprehensive income , net of tax",2,1,ComprehensiveIncomeNetOfTax 2
 comprehensive_income,"comprehensive income , net of tax, attributable to par",1,1,ComprehensiveIncomeNetOfTax 1
 comprehensive_income,"comprehensive loss, net of tax",1,1,ComprehensiveIncomeNetOfTax 1
-cost_of_revenue,cost of sales,273,25,CostOfGoodsAndServicesSold 195;CostOfRevenue 51;CostOfGoodsSold 25;CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization 2
+cost_of_revenue,cost of sales,275,25,CostOfGoodsAndServicesSold 197;CostOfRevenue 51;CostOfGoodsSold 25;CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization 2
 cost_of_revenue,cost of revenue,95,10,CostOfGoodsAndServicesSold 53;CostOfRevenue 37;CostOfGoodsSold 5
-cost_of_revenue,cost of products sold,91,10,CostOfGoodsAndServicesSold 63;CostOfGoodsSold 16;CostOfRevenue 12
-cost_of_revenue,cost of revenues,77,8,CostOfGoodsAndServicesSold 39;CostOfRevenue 38
+cost_of_revenue,cost of products sold,89,10,CostOfGoodsAndServicesSold 63;CostOfGoodsSold 14;CostOfRevenue 12
+cost_of_revenue,cost of revenues,79,8,CostOfGoodsAndServicesSold 41;CostOfRevenue 38
 cost_of_revenue,cost of goods sold,77,8,CostOfGoodsAndServicesSold 48;CostOfGoodsSold 19;CostOfRevenue 10
 cost_of_revenue,total cost of revenue,57,7,CostOfGoodsAndServicesSold 41;CostOfRevenue 16
 cost_of_revenue,total cost of revenues,41,4,CostOfRevenue 24;CostOfGoodsAndServicesSold 10;CostOfServices 7
@@ -540,7 +539,8 @@ cost_of_revenue,cost of goods and services sold,29,6,CostOfGoodsAndServicesSold 
 cost_of_revenue,purchased crude oil and products,20,2,CostOfGoodsAndServicesSold 20
 cost_of_revenue,"cost of products sold, excluding amortization of intangible",17,2,CostOfGoodsAndServicesSold 15;CostOfGoodsSold 2
 cost_of_revenue,excise taxes on products,16,2,ExciseAndSalesTaxes 10;OtherCostOfOperatingRevenue 4;ExciseTax 2
-cost_of_revenue,cost of services,16,2,CostOfRevenue 7;CostOfGoodsAndServicesSold 6;CostOfServices 3
+cost_of_revenue,cost of services,14,2,CostOfRevenue 7;CostOfGoodsAndServicesSold 6;CostOfServices 1
+cost_of_revenue,cost of services and equipment,14,1,CostOfGoodsAndServicesSold 14
 cost_of_revenue,costs of revenues,13,1,CostOfRevenue 13
 cost_of_revenue,merchandise costs,13,1,CostOfGoodsAndServicesSold 9;CostOfGoodsSold 4
 cost_of_revenue,total costs and expenses,12,1,CostOfRevenue 12
@@ -551,20 +551,18 @@ cost_of_revenue,"cost of sales, exclusive of depreciation and amortization",12,1
 cost_of_revenue,total cost of net revenue,12,1,CostOfRevenue 12
 cost_of_revenue,total costs of revenues,10,1,CostOfGoodsAndServicesSold 7;CostOfServices 3
 cost_of_revenue,cost,10,1,CostOfRevenue 10
-cost_of_revenue,cost of services and equipment,10,1,CostOfGoodsAndServicesSold 10
 cost_of_revenue,"cost of services, exclusive of depreciation and amortization",10,1,CostOfGoodsAndServicesSold 6;CostOfServices 4
 cost_of_revenue,cost of services and equipment sales,10,1,CostOfGoodsAndServicesSold 10
 cost_of_revenue,costs applicable to sales,10,1,CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization 7;CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization 3
 cost_of_revenue,purchased commodities,10,1,CostOfGoodsAndServicesSold 10
 cost_of_revenue,property operating expenses,9,1,CostOfGoodsAndServicesSold 9
 cost_of_revenue,"cost of revenue, exclusive of depreciation and amortization",9,1,CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization 9
-cost_of_revenue,cost of product revenues,6,2,CostOfGoodsSold 6
 cost_of_revenue,cost of services and wireless equipment,6,1,CostOfGoodsAndServicesSold 6
+cost_of_revenue,cost of product revenues,5,2,CostOfGoodsSold 5
 cost_of_revenue,total cost of products sold,5,1,CostOfGoodsSold 4;CostOfGoodsAndServicesSold 1
 cost_of_revenue,cost of products exclusive of depreciation and amortization,5,1,CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization 5
 cost_of_revenue,cost of goods and services,4,1,CostOfGoodsAndServicesSold 4
-cost_of_revenue,cost of services sold,4,1,CostOfServices 4
-cost_of_revenue,cost of service revenues,4,1,CostOfServices 4
+cost_of_revenue,cost of products and services sold,4,1,CostOfGoodsAndServicesSold 4
 cost_of_revenue,cost of sales including occupancy costs,4,1,CostOfGoodsAndServicesSold 4
 cost_of_revenue,total cost of goods sold,4,1,CostOfGoodsAndServicesSold 4
 cost_of_revenue,equipment,4,1,CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization 4
@@ -572,15 +570,16 @@ cost_of_revenue,"broadcast, programming and operations",4,1,BroadcastProgramming
 cost_of_revenue,total provisions for credit losses and for benefits and clai,4,1,CostOfRevenue 4
 cost_of_revenue,cost of equipment sales,4,1,CostOfGoodsSold 4
 cost_of_revenue,cost of equipment and services,4,1,CostOfGoodsAndServicesSold 4
-cost_of_revenue,wireless cost of equipment,3,1,CostOfGoodsSold 3
+cost_of_revenue,cost of service revenues,3,1,CostOfServices 3
 cost_of_revenue,other cost of services exclusive of depreciation and amorti,3,1,OtherCostOfServices 3
 cost_of_revenue,amortization of acquisition related intangibles,2,1,AmortizationOfAcquisitionRelatedIntangibles 2
 cost_of_revenue,total cost,2,1,CostOfRevenue 2
 cost_of_revenue,materials and production,2,1,CostOfGoodsSold 2
-cost_of_revenue,cost of products and services sold,2,1,CostOfGoodsAndServicesSold 2
+cost_of_revenue,cost of services sold,2,1,CostOfServices 2
 cost_of_revenue,cost of equipment and services revenues,2,1,CostOfRevenue 2
 cost_of_revenue,cost of product and service sold,2,1,CostOfGoodsAndServicesSold 2
 cost_of_revenue,cost of services and sales,1,1,CostOfGoodsAndServicesSold 1
+cost_of_revenue,wireless cost of equipment,1,1,CostOfGoodsSold 1
 cost_of_revenue,cost of services and sales exclusive of depreciation and am,1,1,CostOfRevenue 1
 cost_of_revenue,total operating costs and expenses,1,1,CostOfRevenue 1
 current_assets,total current assets,1067,91,AssetsCurrent 1067
@@ -1127,7 +1126,6 @@ operating_expenses,other income net,12,1,OtherOperatingIncomeExpenseNet 12
 operating_expenses,"selling, general, and administrative expense",12,1,SellingGeneralAndAdministrativeExpense 12
 operating_expenses,"restructuring charges, net",12,1,RestructuringChargesNetofRestructuringReversals 7;RestructuringChargesNetOfRestructuringReversalsIncludingCostOfProductSoldImpact 5
 operating_expenses,total expense,12,1,OperatingExpenses 12
-operating_expenses,goodwill impairment,11,5,GoodwillImpairmentLoss 11
 operating_expenses,amortization of acquired intangible assets,11,2,AmortizationofAcquiredIntangibleAssets 7;AmortizationOfIntangibleAssets 4
 operating_expenses,"marketing, general and administrative",11,1,SellingGeneralAndAdministrativeExpense 11
 operating_expenses,cost of revenues,11,2,CostOfGoodsAndServicesSold 7;CostOfRevenue 4
@@ -1139,6 +1137,7 @@ operating_expenses,acquisition charges,10,1,BusinessCombinationAcquisitionRelate
 operating_expenses,acquired in process research and development expenses,10,2,ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff 6;ResearchAndDevelopmentInProcess 2;ResearchAndDevelopmentInProcessIncludingImpairment 2
 operating_expenses,total operating expenses net,10,1,OperatingExpenses 10
 operating_expenses,"other expense, net",10,2,OtherGeneralExpense 6;NonoperatingIncomeExpense 4
+operating_expenses,goodwill impairment,9,4,GoodwillImpairmentLoss 9
 operating_expenses,goodwill impairment charge,9,2,GoodwillImpairmentLoss 9
 operating_expenses,acquired in process research and development,9,2,ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff 9
 operating_expenses,restructure and asset impairments,9,1,RestructuringSettlementAndImpairmentProvisions 9
@@ -1185,9 +1184,7 @@ operating_expenses,goodwill impairments,5,2,GoodwillImpairmentLoss 5
 operating_expenses,benefit costs,5,1,PolicyholderBenefitsAndClaimsIncurredHealthCare 4;PolicyholderBenefitsAndClaimsIncurredNet 1
 operating_expenses,"restructuring and other special charges, net",5,1,RestructuringAndOtherSpecialChargesNet 4;RestructuringandOtherSpecialCharges 1
 operating_expenses,"other cost and expense, operating",5,1,OtherCostAndExpenseOperating 5
-operating_expenses,cost of services sold,5,2,CostOfServices 5
 operating_expenses,restructuring and other costs,5,1,RestructuringAndOtherCostsIncomeNet 5
-operating_expenses,cost of products sold,5,2,CostOfGoodsSold 5
 operating_expenses,asset abandonments and impairments,5,1,AssetsDisposedOfByMethodOtherThanSaleInPeriodOfDispositionGainLossOnDisposition1 5
 operating_expenses,impairment charges,5,2,ImpairmentGoodwillLongLivedAssetAndOtherAssets 4;AssetImpairmentCharges 1
 operating_expenses,gains on disposal of spectrum licenses,5,1,GainLossOnDispositionOfIntangibleAssets 5
@@ -1205,6 +1202,7 @@ operating_expenses,impairment of intangible assets,4,1,ImpairmentOfIntangibleAss
 operating_expenses,impairment on equity investment,4,1,EquityMethodInvestmentOtherThanTemporaryImpairment 4
 operating_expenses,"restructuring and other costs, net",4,1,RestructuringSettlementAndImpairmentProvisions 2;RestructuringAndOtherCostsIncomeNet 2
 operating_expenses,cost of goods and services sold,4,1,CostOfGoodsAndServicesSold 4
+operating_expenses,cost of products and services sold,4,1,CostOfGoodsAndServicesSold 4
 operating_expenses,goodwill & indefinite lived intangible asset impairment char,4,1,AssetImpairmentCharges 4
 operating_expenses,impairment of goodwill,4,2,GoodwillImpairmentLoss 4
 operating_expenses,"provision for loan losses, net",4,1,ProvisionForLoanLossesExpensed 4
@@ -1220,10 +1218,11 @@ operating_expenses,health care costs,3,1,PolicyholderBenefitsAndClaimsIncurredNe
 operating_expenses,"restructuring, impairment and other charges",3,1,RestructuringSettlementAndImpairmentProvisions 3
 operating_expenses,"loss on dispositions, net",3,1,GainLossOnSaleOfBusiness 3
 operating_expenses,other expenses,3,2,OtherExpenses 3
+operating_expenses,cost of services sold,3,2,CostOfServices 3
 operating_expenses,gain associated with the juice transaction,3,1,GainLossOnSaleOfBusiness 3
-operating_expenses,"other income, net",3,1,OtherIncome 3
 operating_expenses,"restructuring and other costs , net",3,1,RestructuringAndOtherCostsIncomeNet 3
 operating_expenses,"impairment of goodwill and other long lived assets, related",3,1,AssetImpairmentCharges 3
+operating_expenses,cost of products sold,3,2,CostOfGoodsSold 3
 operating_expenses,impairment of goodwill and purchased intangible assets,3,1,AssetImpairmentCharges 3
 operating_expenses,venezuela deconsolidation charge,3,1,VenezuelaDeconsolidationCharge 3
 operating_expenses,indefinite lived intangible asset impairment charge,3,1,ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill 3
@@ -1247,7 +1246,7 @@ operating_expenses,total,2,1,NoninterestExpense 2
 operating_expenses,"other selling, general and administrative expense",2,1,OtherSellingGeneralAndAdministrativeExpense 2
 operating_expenses,"investment contracts, insurance losses and insurance annuity",2,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 2
 operating_expenses,insurance losses and annuity benefits,2,1,InvestmentContractsInsuranceLossesAndInsuranceAnnuityBenefits 2
-operating_expenses,cost of products and services sold,2,1,CostOfGoodsAndServicesSold 2
+operating_expenses,cost of sales,2,1,CostOfGoodsAndServicesSold 2
 operating_expenses,"engineering, research and development",2,1,ResearchAndDevelopmentExpense 2
 operating_expenses,litigation charge,2,1,GainLossRelatedToLitigationSettlement 2
 operating_expenses,changes to mondelez and pmi tax related receivables payables,2,1,OtherOperatingExpenseIncomeTaxSharingAgreement 2
@@ -1278,6 +1277,7 @@ operating_expenses,current year amortization,1,1,AmortizationOfIntangibleAssets 
 operating_expenses,gain on disposition,1,1,GainLossOnSaleOfBusiness 1
 operating_expenses,loss on dispositions,1,1,GainLossOnSaleOfBusiness 1
 operating_expenses,provision for losses on financing receivables,1,1,ProvisionForLoanAndLeaseLosses 1
+operating_expenses,"other income, net",1,1,OtherIncome 1
 operating_expenses,earnings from unconsolidated joint venture,1,1,IncomeLossFromEquityMethodInvestments 1
 operating_expenses,"other income , net",1,1,OtherOperatingIncomeExpenseNet 1
 operating_expenses,goodwill and indefinite lived intangibles impairment charges,1,1,GoodwillAndIndefiniteLivedIntangiblesImpairmentCharges 1
@@ -1341,7 +1341,7 @@ operating_income,operating income from continuing operations,6,2,OperatingIncome
 operating_income,total,1,1,OperatingIncomeLoss 1
 other_income_expense_net,"other income , net",213,32,OtherNonoperatingIncomeExpense 158;NonoperatingIncomeExpense 54;OtherNonoperatingIncomeExpenseNet 1
 other_income_expense_net,"other income, net",136,27,OtherNonoperatingIncomeExpense 86;NonoperatingIncomeExpense 37;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 4
-other_income_expense_net,other income,121,17,OtherNonoperatingIncomeExpense 57;NonoperatingIncomeExpense 19;OtherIncome 12;OtherNonoperatingIncome 8
+other_income_expense_net,other income,123,17,OtherNonoperatingIncomeExpense 57;NonoperatingIncomeExpense 19;OtherIncome 12;Revenues 10
 other_income_expense_net,"other expense, net",115,20,OtherNonoperatingIncomeExpense 94;NonoperatingIncomeExpense 16;OtherIncomeExpenseNet 5
 other_income_expense_net,other income net,34,5,OtherNonoperatingIncomeExpense 33;OtherNonoperatingIncome 1
 other_income_expense_net,"other, net",33,3,OtherNonoperatingIncomeExpense 33
@@ -1794,14 +1794,14 @@ stockholders_equity,total broadcom inc stockholders equity,1,1,StockholdersEquit
 total_assets,total assets,1284,110,Assets 1284
 total_assets,assets,15,2,Assets 15
 total_assets,segment assets,2,1,Assets 2
-total_debt,long term debt,757,73,LongTermDebtNoncurrent 415;LongTermDebtAndCapitalLeaseObligations 238;LongTermDebt 62;LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities 19
+total_debt,long term debt,756,73,LongTermDebtNoncurrent 415;LongTermDebtAndCapitalLeaseObligations 237;LongTermDebt 62;LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities 19
 total_debt,short term debt,226,28,ShortTermBorrowings 100;DebtCurrent 95;CommercialPaper 14;LongTermDebtCurrent 11
 total_debt,current portion of long term debt,201,25,LongTermDebtCurrent 139;LongTermDebtAndCapitalLeaseObligationsCurrent 61;ShortTermBorrowings 1
 total_debt,short term borrowings,130,16,ShortTermBorrowings 110;DebtCurrent 13;ShortTermBorrowingsIncludingLongTermDebtCurrent 7
 total_debt,debt,54,4,LongTermDebtNoncurrent 20;LongTermDebt 12;LongTermDebtCurrent 11;DebtLongtermAndShorttermCombinedAmount 10
 total_debt,"long term debt, excluding current maturities",42,6,LongTermDebtNoncurrent 30;LongTermDebtAndCapitalLeaseObligations 12
 total_debt,current maturities of long term debt,42,6,LongTermDebtCurrent 26;LongTermDebtAndCapitalLeaseObligationsCurrent 14;DebtCurrent 2
-total_debt,"long term debt, net",34,4,LongTermDebtNoncurrent 29;ConvertibleLongTermNotesPayable 5
+total_debt,"long term debt, net",35,4,LongTermDebtNoncurrent 30;ConvertibleLongTermNotesPayable 5
 total_debt,borrowings,32,3,LongTermDebtNoncurrent 11;LongTermDebt 11;DebtLongtermAndShorttermCombinedAmount 9;DebtAndCapitalLeaseObligations 1
 total_debt,commercial paper,27,3,CommercialPaper 27
 total_debt,"convertible senior notes, net",27,3,ConvertibleLongTermNotesPayable 9;ConvertibleDebtNoncurrent 9;ConvertibleDebtCurrent 8;ConvertibleNotesPayableCurrent 1
@@ -1885,6 +1885,7 @@ total_debt,"short term borrowings included , and , at fair",5,1,ShortTermBorrowi
 total_debt,"senior notes, convertible notes, and capital leases, less cu",5,1,LongTermDebtAndCapitalLeaseObligations 5
 total_debt,"capital lease obligations, excluding current portion",5,1,CapitalLeaseObligationsNoncurrent 5
 total_debt,borrowings under unsecured lines of credit arrangements,5,1,LineOfCredit 5
+total_debt,tower obligations,5,1,SaleLeasebackTransactionAmountDueUnderFinancingArrangement 5
 total_debt,"notes payable, current",5,1,NotesPayableCurrent 3;DebtCurrent 2
 total_debt,current portion of debt and capital lease obligations,5,1,DebtCurrent 5
 total_debt,"debt and capital lease obligations, less current portion",5,1,LongTermDebtAndCapitalLeaseObligations 5
@@ -1958,6 +1959,7 @@ total_debt,notes payable,1,1,NotesPayableCurrent 1
 total_debt,"long term debt including , and , as of decembe",1,1,LongTermDebt 1
 total_debt,"short term borrowings including , and , as of de",1,1,ShortTermBorrowings 1
 total_debt,"short term borrowings including , and , as of d",1,1,ShortTermBorrowings 1
+total_debt,long term financial obligation,1,1,SaleLeasebackTransactionAmountDueUnderFinancingArrangement 1
 total_debt,"term loan, current",1,1,LoansPayableToBankCurrent 1
 total_debt,non current debt,1,1,LongTermDebtNoncurrent 1
 total_debt,convertible long term debt,1,1,ConvertibleDebtNoncurrent 1

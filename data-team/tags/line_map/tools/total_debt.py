@@ -16,7 +16,8 @@ DEBT = re.compile(r'^(ShortTermBorrowings|OtherShortTermBorrowings|CommercialPap
                   r'ShortTermBankLoansAndNotesPayable|NotesPayable\w*|LongTermNotesPayable\w*|LinesOfCreditCurrent|LineOfCredit|LongTermLineOfCredit\w*|LoansPayable\w*|'
                   r'SeniorNotes\w*|ConvertibleNotesPayable\w*|ConvertibleDebt\w*|ConvertibleLongTermNotesPayable|SecuredDebt\w*|UnsecuredDebt\w*|OtherLongTermDebt\w*|'
                   r'SubordinatedDebt\w*|DebtLongtermAndShorttermCombinedAmount|UnsecuredLongTermDebt|SecuredLongTermDebt|LongTermNotesAndLoans|LongTermLoansPayable|ShortTermNonBankLoansAndNotesPayable|OtherBorrowings|BankBorrowings|FederalHomeLoanBankAdvances\w*|AdvancesFromFederalHomeLoanBanks|LongTermFederalHomeLoanBankAdvances\w*|'
-                  r'FinanceLeaseLiability\w*|CapitalLeaseObligations\w*|DebtInstrumentCarryingAmount|LongTermDebtFairValue)$')
+                  r'FinanceLeaseLiability\w*|CapitalLeaseObligations\w*|DebtInstrumentCarryingAmount|LongTermDebtFairValue|'
+                  r'SaleLeasebackTransactionAmountDueUnderFinancingArrangement)$')   # ASC 840 failed sale-leaseback financing (TMUS 'Tower obligations'; perimeter definition 2026-11-17)
 CURRENT_DEBT = {'ShortTermBorrowings', 'OtherShortTermBorrowings', 'CommercialPaper', 'DebtCurrent', 'LongTermDebtCurrent', 'LongTermDebtAndCapitalLeaseObligationsCurrent',
                 'ShortTermBankLoansAndNotesPayable', 'LinesOfCreditCurrent', 'NotesPayableCurrent', 'LongTermNotesPayableCurrent', 'ConvertibleDebtCurrent',
                 'DebtCurrentAndFinanceLeaseLiability', 'LongTermDebtCurrentAndFinanceLeaseLiability', 'SecuredDebtCurrent', 'UnsecuredDebtCurrent', 'ConvertibleNotesPayableCurrent', 'OtherLongTermDebtCurrent', 'LoansPayableCurrent'}

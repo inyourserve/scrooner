@@ -28,6 +28,7 @@ ROLES = {r['data_point']: r for r in csv.DictReader(open(ROLES_CSV))}
 FAMILY = ('cash_and_equivalents', 'accounts_receivable', 'inventory', 'accounts_payable', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding')
 COMPONENT = re.compile(r'^(Inventory(FinishedGoods|RawMaterials|WorkInProcess|Gross)|InventoryFinishedGoodsNetOfReserves)')
 EQ_STOP = re.compile(r'(?i)preferred|treasury|restricted|unvested|nonvoting')
+WIDER_LB = re.compile(r'(?i)\band (other|prepaid|accrued)\b|\bother assets\b')
 CLASS_SEG = re.compile(r'ClassOfStock=([A-Za-z0-9_]+)')
 
 
@@ -122,7 +123,15 @@ def pick(R, lines, notes, dp):
         cl = [l for l in lines if l['custom'] and re.search(R['custom_label'], l['lb'], re.I) and not SALE_RECV.search(l['lb'])]
         if len(cl) == 1:
             l = cl[0]
+            if WIDER_LB.search(l['lb']):   # WELL 'Receivables and other assets' (wave 4A WRONG served value): the line holds other items too
+                return dict(status='combined', value=l['val'], nodes=f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]", why=f"BS face prints the role only inside '{l['lb']}', which names other items too: combined", rule='face')
             return dict(status='mapped', value=l['val'], nodes=f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]", why=f"BS face custom line whose own label names the role: '{l['lb']}'", rule='face')
+    if dp == 'accounts_receivable':   # WELL FY2019-21 'Receivables and other assets' (OtherAssets): the receivables sit inside a wider face line;
+        # a note fact (WELL's AccountsReceivableNet is 'Non real estate loans receivable') never stands in for them (wave 4A)
+        wl = [l for l in lines if re.search(r'(?i)\breceivables?\b', l['lb'] or '') and WIDER_LB.search(l['lb'] or '') and l['val'] is not None and not SALE_RECV.search(l['lb'])]
+        if len(wl) == 1:
+            l = wl[0]
+            return dict(status='combined', value=l['val'], nodes=f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]", why=f"BS face prints receivables only inside '{l['lb']}', which names other items too: combined", rule='face')
     if R['note_ok'] == 'Y':
         n = note_value(alts, notes, dp)
         if n: return n          # an undimensioned BS-date fact beats a combined caption (bank goodwill; DIS payable inside payable+accrued)

@@ -6,7 +6,8 @@
 --   mvals 'tag|qtrs|value|segments~...'   own-period facts with exactly ONE dimension member, on a statement line (face, incl.
 --                                         parenthetical); axes EquityComponents (equity-statement column), RelatedPartyTransactionsByRelatedParty
 --                                         (NonrelatedParty / RelatedParty: COP AP) and Scenario (ORCL comprehensive income). memberfacts.json.
---   cvals 'tag|qtrs|value|ddate~...'      undimensioned facts of the filing's earlier columns (FY-1, FY-2), face or note, incl. parenthetical
+--   cvals 'tag|qtrs|value|ddate~...'      undimensioned facts of the filing's earlier columns (FY-1, FY-2), face or note, incl. parenthetical;
+--                                         plus ProductOrService member facts of IS lines keyed 'Tag[ProductOrService=Member]' (2026-11-20)
 --                                         per-share lines (LLY DPS 2016 sits in the FY2018 equity parenthetical). compfacts.json.
 --   zlines 'tag|stmt|report|line|label~...' statement lines of the family elements with no own-period fact in any dimension but
 --                                         values in other columns: printed dash / zero evidence (ruling 2026-11-14); EQ lines only for
@@ -100,10 +101,19 @@ mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
     and (exists (select 1 from fsn.line l where l.filing_id=fl.id and l.tag_id=v.tag_id) or (t.tag ~ '^(AllocatedShareBasedCompensationExpense|ShareBasedCompensation)$' and d.segments ~ '^(AwardType|PlanName)=[^;=]+;$')
          or (t.tag ~ '^(WeightedAverageNumberOfSharesOutstandingBasic|WeightedAverageNumberOfDilutedSharesOutstanding)$' and d.segments ~ '^\w*ClassOfStock=[^;=]+;$'))
   group by 1),
-cmp as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,v.ddate::text),'~') cvals
+cmp as (select a, string_agg(c, '~') cvals from (
+ select fl.accession a, concat_ws('|',t.tag,v.qtrs,v.value::text,v.ddate::text) c
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
   where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and (v.qtrs in (0,4) or (v.qtrs=1 and t.tag ~ '^CommonStockDividendsPerShare' and v.ddate>fl.period-interval '1 year')) and v.value is not null
-  group by 1),
+ union all
+ -- comparative columns of income-statement lines printed only with ProductOrService members (RTX, TMO, GE, TMUS cost of products /
+ -- services): keyed 'Tag[ProductOrService=Member]' as the resolver's nodes are, so one vintage per year can replay a member sum (2026-11-20)
+ select fl.accession a, concat_ws('|', t.tag || '[' || rtrim(d.segments, ';') || ']', v.qtrs, v.value::text, v.ddate::text) c
+  from fsn.value v join fl on fl.id=v.filing_id join tgm t on t.id=v.tag_id join fsn.dim d on d.id=v.dim_id
+  where v.dim_id<>0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and v.qtrs=4 and v.value is not null
+    and d.segments ~ '^ProductOrService=[^;=]+;$' and t.tag ~ '^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$)'
+    and exists (select 1 from fsn.line l2 where l2.filing_id=fl.id and l2.tag_id=v.tag_id and l2.stmt='IS')
+ ) x group by 1),
 zl as (select fl.accession a, string_agg(concat_ws('|',t.tag,l.stmt,l.report,l.line,translate(coalesce(l.plabel,''),'|~','/-')),'~') zlines
   from fl join fsn.line l on l.filing_id=fl.id and (l.stmt in ('BS','IS','CF') or (l.stmt='EQ' and l.tag_id in (select id from tg where tag ~ '^CommonStockDividendsPerShare'))) join tg t on t.id=l.tag_id
   where not exists (select 1 from fsn.value v where v.filing_id=fl.id and v.tag_id=l.tag_id and v.ddate=fl.period)

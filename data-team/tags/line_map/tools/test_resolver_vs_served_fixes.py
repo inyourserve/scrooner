@@ -1011,3 +1011,16 @@ def test_absence_is_blocked_where_a_verifier_found_the_figure_printed():
     row = dict(data_point='interest_income', status='not_presented', accession=f['a'], period_end='2025-10-31', column='own', flags='roles', why='')
     resolve_all.apply_absent_in_own_filing([row], [f], {}, {})
     assert 'absent_in_own_filing' not in row['flags']
+
+
+def test_receivables_inside_a_wider_face_line_are_combined_not_a_note_fact():
+    # WELL FY2021 (wave 4A WRONG served): 'Receivables and other assets' (OtherAssets) holds the receivables; the AccountsReceivableNet note fact is
+    # 'Non real estate loans receivable': combined, not 223,627K
+    import resolve_bs
+    f = filing([('BS', 'NotesReceivableNet', 'Real estate loans receivable', 1068681), ('BS', 'OtherAssets', 'Receivables and other assets', 803453),
+                ('BS', 'Assets', 'Total assets', 57000000)])
+    out = resolve_bs.resolve_family(f, {('AccountsReceivableNet', 0): D(223627)})
+    assert out['accounts_receivable']['status'] == 'combined'
+    g = filing([('BS', 'well_ReceivablesAndOtherAssets', 'Receivables and other assets', 1140838), ('BS', 'Assets', 'Total assets', 57000000)])
+    g['lines'] = g['lines'].replace('|well_ReceivablesAndOtherAssets|0|', '|well_ReceivablesAndOtherAssets|1|')   # a custom line (FY2022-25)
+    assert resolve_bs.resolve_family(g, {})['accounts_receivable']['status'] == 'combined'

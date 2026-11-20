@@ -1126,3 +1126,49 @@ def test_bank_cash_is_the_cash_flow_total_that_ties_to_the_two_cash_lines():
     assert rows[1]['value'] == D(133097) and rows[1]['accession'] == 'A18' and 'definition_change' in rows[1]['flags']
     rows[0].update(status='combined', value=None); nf['A19'] = nf['A19'].replace('193919', '193900')   # no tie: stays combined
     assert resolve_all.apply_bank_cash(rows[:1], nf, {}, filings)[0]['status'] == 'combined'
+
+
+def test_latest_print_replays_product_service_member_lines_and_renamed_parts():
+    # RTX FY2018 (wave 4A WRONG served): the own UTC print 49,985 (product + service member lines); the FY2020 10-K recasts the year for the
+    # Otis / Carrier spin: 21,083 + 6,382 = 27,465 (the extract keys comparative member facts 'Tag[ProductOrService=Member]')
+    rows = _lp_rows('cost_of_revenue', 'x', '49985', 'x', '28000', status='component_sum')
+    nd = lambda p, s, loc: f'CostOfGoodsAndServicesSold[ProductOrService=Product]={p} [{loc}]; CostOfGoodsAndServicesSold[ProductOrService=Service]={s} [{loc}]'
+    rows[0]['nodes'], rows[2]['nodes'] = nd(36754, 13231, 'R2.htm:12'), nd(21000, 7000, 'R2.htm:10')
+    comp = {'A18': 'CostOfGoodsAndServicesSold[ProductOrService=Product]|4|21083|2016-12-31~CostOfGoodsAndServicesSold[ProductOrService=Service]|4|6382|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('CostOfGoodsAndServicesSold'))[0]
+    assert r['value'] == D(27465)
+    # RTX FY2016: every own line renamed (CostOfGoodsSold + CostOfServices -> the member lines), same count: the later resolution
+    rows = _lp_rows('cost_of_revenue', 'x', '41460', 'x', '28000', status='component_sum')
+    rows[0]['nodes'], rows[2]['nodes'] = 'CostOfGoodsSold=30325 [R2.htm:7]; CostOfServices=11135 [R2.htm:8]', nd(21000, 7000, 'R2.htm:10')
+    comp = {'A18': 'CostOfGoodsAndServicesSold[ProductOrService=Product]|4|30304|2016-12-31~CostOfGoodsAndServicesSold[ProductOrService=Service]|4|11167|2016-12-31'}
+    assert resolve_all.apply_latest_print(rows, comp, _lp_face('CostOfGoodsAndServicesSold'))[0]['value'] == D(41471)
+
+
+def test_opex_is_the_costs_total_less_cost_of_revenue_when_the_band_sum_holds_it():
+    # RTX FY2021: -sum of the band = 'Total costs and expenses' 59,853 + impairment 0 - other income 423 = 59,430 (holds cost of revenue 51,897):
+    # opex = 59,853 - 51,897 = 7,956; MRVL labels its operating-expense total CostsAndExpenses: untouched
+    f = dict(a='A', lines='IS|2|13|CostsAndExpenses|0|0|totalLabel|Total costs and expenses|59853')
+    opex = dict(accession='A', data_point='operating_expenses', status='component_sum', value=D(59430), column='own', flags='',
+                nodes='CostsAndExpenses=59853000000.0000 [R2.htm:13]; GoodwillImpairmentLoss=0 [R2.htm:14]; -OtherIncome=423 [R2.htm:15]')
+    cor = dict(accession='A', data_point='cost_of_revenue', status='component_sum', value=D(51897), column='own',
+               nodes='CostOfGoodsAndServicesSold[ProductOrService=Product]=41095 [R2.htm:10]; CostOfGoodsAndServicesSold[ProductOrService=Service]=10802 [R2.htm:10]')
+    resolve_all.apply_opex_costs_total_less_cor([opex, cor], [f])
+    assert opex['value'] == D(59853000000) - D(51897) and 'opex_from_printed_totals' in opex['flags']
+    o3 = dict(opex, value=D(7956), flags='', nodes='CostsAndExpenses=59853 [R2.htm:13]; -CostOfGoodsAndServicesSold[ProductOrService=Product]=41095 [R2.htm:10]; -CostOfGoodsAndServicesSold[ProductOrService=Service]=10802 [R2.htm:10]')
+    resolve_all.apply_opex_costs_total_less_cor([o3, cor], [f])
+    assert o3['value'] == D(7956) and not o3['flags']   # the cost of revenue is already out of the sum: untouched
+    g = dict(f, lines='IS|2|13|CostsAndExpenses|0|0|totalLabel|Total operating expenses|59853')
+    o2 = dict(opex, value=D(59430), flags='')
+    resolve_all.apply_opex_costs_total_less_cor([o2, cor], [g])
+    assert o2['value'] == D(59430)
+
+
+def test_a_recast_year_is_flagged_definition_change():
+    # RTX FY2018: latest-print revenue 34,701 vs own 66,501 (> 10%): the year's latest-print cells carry definition_change
+    rows = _lp_rows('revenue', 'Revenues', '66501', 'Revenues', '45000')
+    comp = {'A18': 'Revenues|4|34701|2016-12-31'}
+    r = resolve_all.apply_latest_print(rows, comp, _lp_face('Revenues'))[0]
+    assert 'definition_change' in r['flags']
+    rows = _lp_rows('revenue', 'Revenues', '66501', 'Revenues', '45000')
+    r = resolve_all.apply_latest_print(rows, {'A18': 'Revenues|4|66000|2016-12-31'}, _lp_face('Revenues'))[0]
+    assert 'latest_print' in r['flags'] and 'definition_change' not in r['flags']
