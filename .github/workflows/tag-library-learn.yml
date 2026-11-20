@@ -55,8 +55,10 @@ jobs:
         run: |
           python3 - <<'PY'
           import csv, glob
-          src = sorted(glob.glob('data-team/tags/line_map/resolver-all110-*.csv'))[-1]
-          tk = sorted({(r['ticker'], r['cik'].zfill(10)) for r in csv.DictReader(open(src)) if r['ticker']})
+          import sys; sys.path.insert(0, 'pipeline/src')
+          from scrooner_pipeline.mapper.resolver_files import iter_rows, resolver_source
+          src = resolver_source()
+          tk = sorted({(r['ticker'], r['cik'].zfill(10)) for r in iter_rows() if r['ticker']})
           with open('out/tk.csv', 'w', newline='') as f:
               csv.writer(f).writerows(tk)
           print(len(tk), 'tickers from', src)
@@ -70,7 +72,7 @@ jobs:
           set -eu
           cd out
           python3 ../data-team/tags/line_map/tools/resolve_all.py "resolver-learn-$(date -u +%F)@$GITHUB_SHA" resolver.csv
-          cp resolver.csv ../data-team/tags/line_map/resolver-all110-2026-11-14.csv
+          python3 ../data-team/tags/line_map/tools/split_resolver.py resolver.csv ../data-team/tags/line_map/resolver
       - name: Learn from the filings
         run: python3 data-team/tags/library/learn_from_filings.py out
       - name: Rebuild the library
@@ -91,7 +93,7 @@ jobs:
           name: tag-library-${{ github.run_id }}
           path: |
             data-team/tags/library/
-            data-team/tags/line_map/resolver-all110-2026-11-14.csv
+            data-team/tags/line_map/resolver/
           retention-days: 30
           if-no-files-found: error
 
@@ -120,7 +122,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -q -b "$branch"
-          git add data-team/tags/library data-team/tags/line_map/resolver-all110-2026-11-14.csv
+          git add data-team/tags/library data-team/tags/line_map/resolver
           if git diff --cached --quiet; then echo "library unchanged"; exit 0; fi
           git commit -q -m "Tag library rebuilt (run $GITHUB_RUN_ID, code $GITHUB_SHA)"
           git push -q origin "$branch"

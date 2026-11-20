@@ -12,6 +12,7 @@ A ticker not in the summary is reported on stderr and skipped (never guessed). S
 no company key and are NOT fanned out. More than --max (default 256, the flow's limit) companies is an error (exit 3),
 never a silent truncation. Empty BASE or an all-zero SHA means no diff is possible: exit 2.
 Reads git only; no database, no network."""
+
 import argparse
 import csv
 import io
@@ -20,8 +21,13 @@ import subprocess
 import sys
 
 RESOLVER = re.compile(r"^data-team/tags/line_map/resolver-all110-[^/]+\.csv$")
+SPLIT = re.compile(
+    r"^data-team/tags/line_map/resolver/([A-Z0-9.\-]+)\.csv$"
+)  # one file per company
 TICKER_FILE = re.compile(r"^data-team/tags/line_map/([A-Z][A-Z0-9.-]*)\.csv$")
-REQUEST = re.compile(r"^data-team/strategy/approvals/requests/[A-Za-z0-9.-]+-request-[0-9-]+\.md$")
+REQUEST = re.compile(
+    r"^data-team/strategy/approvals/requests/[A-Za-z0-9.-]+-request-[0-9-]+\.md$"
+)
 KEY = ("cik", "ticker", "data_point", "period_end", "grain")
 
 
@@ -59,7 +65,7 @@ def rows(text):
 def changed_tickers(base, head):
     tickers = set()
     for p in changed_paths(base, head):
-        if RESOLVER.match(p):
+        if RESOLVER.match(p) or SPLIT.match(p):
             old, new = rows(show(base, p)), rows(show(head, p))
             for k in set(old) | set(new):
                 if old.get(k) != new.get(k):
@@ -95,7 +101,9 @@ def main():
     ap.add_argument("mode", choices=["companies", "requests"])
     ap.add_argument("base")
     ap.add_argument("head")
-    ap.add_argument("--summary", default="data-team/strategy/top100-coverage-summary.csv")
+    ap.add_argument(
+        "--summary", default="data-team/strategy/top100-coverage-summary.csv"
+    )
     ap.add_argument("--max", type=int, default=256)
     a = ap.parse_args()
     if not valid(a.base) or not valid(a.head):
@@ -104,7 +112,9 @@ def main():
     if a.mode == "companies":
         print(",".join(companies(a.base, a.head, a.summary, a.max)))
     else:
-        print(" ".join(p for p in changed_paths(a.base, a.head, "A") if REQUEST.match(p)))
+        print(
+            " ".join(p for p in changed_paths(a.base, a.head, "A") if REQUEST.match(p))
+        )
     return 0
 
 

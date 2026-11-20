@@ -25,13 +25,15 @@ csv.field_size_limit(10 ** 8)
 
 
 def newest_resolver():
-    return sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver-all110-*.csv')))[-1]
+    split = sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver', '*.csv')))
+    return split or sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver-all110-*.csv')))[-1:]
 
 
 def resolver_cells(path):
     """{cik10: [(data_point, period_end, decision, [node elements], version)]}, own-column cells only."""
     out = collections.defaultdict(list)
-    for r in csv.DictReader(open(path)):
+    paths = [path] if isinstance(path, str) else list(path)  # one file, or the per-company files
+    for r in (row for p in paths for row in csv.DictReader(open(p))):
         if (r.get('column') or 'own') != 'own':
             continue
         nodes = NODE.findall((r.get('nodes') or '').split(' | why')[0])

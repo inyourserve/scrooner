@@ -11,6 +11,7 @@ import csv
 from pathlib import Path
 from typing import Any, Iterable
 
+from scrooner_pipeline.mapper import resolver_files as rf
 from scrooner_pipeline.mapper import top100_coverage as t100
 
 OUT = "OUT"
@@ -47,14 +48,9 @@ INSERT_SQL = (
 
 
 def resolver_version(resolver_dir: Path = t100.RESOLVER_DIR) -> str | None:
-    """resolver_version of the newest resolver-all110-*.csv (first data row), or None when there is no file."""
-    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
-    if not files:
-        return None
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
-            return (r.get("resolver_version") or "").strip() or None
-    return None
+    """resolver_version of the resolver output's first data row (per-company directory, else the newest single file),
+    or None when there is no file."""
+    return rf.resolver_version(resolver_dir)
 
 
 def grain_of(data_point: str) -> str:

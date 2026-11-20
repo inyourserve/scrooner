@@ -50,6 +50,7 @@ from scrooner_pipeline.common.company_filings import (
 )
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
+from scrooner_pipeline.mapper import resolver_files as rf
 from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
@@ -1469,22 +1470,24 @@ def resolve_derived(
             r["class"], r["reason_code"] = "UNCHECKED", DERIVED_UNPROVEN
 
 
-RESOLVER_DIR = Path("data-team/tags/line_map")
+RESOLVER_DIR = Path(
+    "data-team/tags/line_map"
+)  # readers go through resolver_files (per-company dir or the single file)
 OC_EVIDENCE_RE = re.compile(r"reported only combined: ([^|,]*)")
 
 
 def load_not_in_template(
     resolver_dir: Path = RESOLVER_DIR,
 ) -> set[tuple[str, str]]:
-    """(ticker, data_point) pairs the CURRENT resolver (newest resolver-all110-*.csv) decides `not_in_template` in every
+    """(ticker, data_point) pairs the CURRENT resolver (resolver_files: the per-company directory, else the newest resolver-all110-*.csv) decides `not_in_template` in every
     one of its rows (resolver .57: the bank data points for the non-bank companies). The pair is outside the company's
     grid. A pair with any other decision in some row is not returned. Missing file: empty."""
-    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    files = rf.resolver_files(resolver_dir)
     seen: dict[tuple[str, str], bool] = {}
     if not files:
         return set()
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
             key = (r["ticker"], r["data_point"])
             seen[key] = seen.get(key, True) and r.get("decision") == "not_in_template"
     return {k for k, all_out in seen.items() if all_out}
@@ -1508,12 +1511,12 @@ def load_only_combined(
     file on main (the newest resolver-all110-*.csv; the flags are read, never recomputed, and no resolver version is
     pinned). only_combined_row: the company never reports the pure figure in any year; only_combined_years: it does in
     other years (Dhairya 2026-11-16). Missing file or no flags: empty."""
-    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    files = rf.resolver_files(resolver_dir)
     out: dict[tuple[str, str, str], tuple[str, str, str]] = {}
     if not files:
         return out
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
             flags = (r.get("flags") or "").split(";")
             if "only_combined" not in flags or r.get("grain") != "FY":
                 continue
@@ -1592,12 +1595,12 @@ VERIFIED_ABSENT_HIDE = frozenset(
 def load_absent_in_own(
     resolver_dir: Path = RESOLVER_DIR,
 ) -> dict[tuple[str, str], tuple[dict[str, str], list[date]]]:
-    """Only VERIFIED_ABSENT_HIDE data points. (ticker, data_point) -> ({period_end: own accession} for cells the CURRENT resolver (newest resolver-all110-*.csv)
+    """Only VERIFIED_ABSENT_HIDE data points. (ticker, data_point) -> ({period_end: own accession} for cells the CURRENT resolver (resolver_files: the per-company directory, else the newest resolver-all110-*.csv)
     decides `not_presented` in the year's own 10-K, the resolver periods where the line IS printed). The resolver has no
     flag literally named absent_in_own_filing: the meaning is decision = not_presented, column = own, and not a
     before_first_10k / line_not_printed pre-filing year (those are other hides). `accession` is the evidence column.
     The printed periods feed the later-filing guard. Missing file: empty."""
-    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    files = rf.resolver_files(resolver_dir)
     absent: dict[tuple[str, str], dict[str, str]] = defaultdict(dict)
     printed: dict[tuple[str, str], list[date]] = defaultdict(list)
     if not files:
@@ -1606,8 +1609,8 @@ def load_absent_in_own(
     # rows carrying the same accession (any data point)
     own_period: dict[tuple[str, str], date] = {}
     comparative: list[tuple[tuple[str, str], str, date]] = []
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
             key = (r["ticker"], r["data_point"])
             if r.get("column") == "own" and r.get("accession"):
                 own_period[(r["ticker"], r["accession"])] = date.fromisoformat(
@@ -1698,12 +1701,12 @@ def load_stated_zero(
     every VALID stated_zero / text_stated row of the newest resolver-all110-*.csv (same validation as serving: quote,
     locator, accession, value 0 / nonzero, quote_period == period_end). An invalid row is absent, so its cell stays
     what it was. Missing file: empty."""
-    files = sorted(resolver_dir.glob("resolver-all110-*.csv"))
+    files = rf.resolver_files(resolver_dir)
     out: dict[tuple[str, str], dict[str, StatedRec]] = defaultdict(dict)
     if not files:
         return {}
-    with files[-1].open(newline="") as fh:
-        for r in csv.DictReader(fh):
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
             kind = sl.stated_kind(r.get("decision", ""), r.get("flags", ""))
             if not kind:
                 continue

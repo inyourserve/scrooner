@@ -1,6 +1,6 @@
 # Structural resolver output format (for `scrooner-map structural-load`, rule company_tag_map.structural@1)
 
-The file is `data-team/tags/line_map/resolver-all110-<YYYY-MM-DD>.csv`: UTF-8 CSV with a header and one row per company × data point × period. The period is one 10-K's own column. Family modules (`resolver-<family>-<date>.csv`) use the same columns, and the merge keeps one row per key.
+The output is ONE FILE PER COMPANY, `data-team/tags/line_map/resolver/<TICKER>.csv` (since 2026-11-21: run `tools/split_resolver.py <single csv>` after `resolve_all.py`; the single file `resolver-all110-<YYYY-MM-DD>.csv` is no longer committed, and every reader goes through `scrooner_pipeline.mapper.resolver_files`). Each is a UTF-8 CSV with a header and one row per company × data point × period, rows sorted by key. The period is one 10-K's own column. Family modules (`resolver-<family>-<date>.csv`) use the same columns, and the merge keeps one row per key.
 
 **Key:** (cik, data_point, period_end, grain).
 

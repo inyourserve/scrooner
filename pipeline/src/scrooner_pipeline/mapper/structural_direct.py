@@ -52,6 +52,7 @@ from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.mapper import comparative_guard as cg
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper import reason_guard as rg
+from scrooner_pipeline.mapper import resolver_files as rf
 from scrooner_pipeline.mapper import structural_loader as sl
 
 FIX_RULE_ID = "company_tag_map.docmap_fix@1"
@@ -67,8 +68,9 @@ def resolver_path() -> Path | None:
     env = os.environ.get(ENV_PATH)
     if env:
         return Path(env)
-    files = sorted(LINE_MAP_DIR.glob("resolver-all110-*.csv"))
-    return files[-1] if files else None
+    return rf.resolver_source(
+        LINE_MAP_DIR
+    )  # the per-company directory (read_claims takes a dir), else the single file
 
 
 @lru_cache(maxsize=4)

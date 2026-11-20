@@ -52,7 +52,7 @@ echo "docmaps $(ls $R/*.csv 2>/dev/null | wc -l) fix files $(ls $R/fixes | wc -l
 PG="-c statement_timeout=900000"
 PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map docmap-load $R --conflicts-out $O/conflicts.csv --rejects-out $O/rejects.csv --extend-eras --era-log $O/era_log.csv --predictor-eras data-team/tags/exam/eras --no-filing-ciks "$NOFILE" --apply > $O/1.txt 2>&1 || { tail -3 $O/1.txt; exit 11; }
 head -1 $O/1.txt | cut -c1-220
-RES=$(ls data-team/tags/line_map/resolver-all110-*.csv 2>/dev/null | sort | tail -1)
+RES=$(PYTHONPATH=pipeline/src $PY -c "from scrooner_pipeline.mapper import resolver_files as rf; print(rf.resolver_source() or '')")  # per-company dir, else the single file
 if [ -n "$RES" ]; then
   PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map structural-load $RES --company-ids $IDS --conflicts-out $O/s_conflicts.csv --exceptions-out $O/s_exceptions.csv --rejects-out $O/s_rejects.csv --apply > $O/1s.txt 2>&1 || { tail -3 $O/1s.txt; exit 12; }
   grep -iE "structural-load|written|exceptions" $O/1s.txt | head -2 | cut -c1-220

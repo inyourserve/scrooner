@@ -17,6 +17,7 @@ on:
     branches: [main]
     paths:
       - "data-team/tags/line_map/resolver-all110-*.csv"
+      - "data-team/tags/line_map/resolver/*.csv"
       - "data-team/tags/line_map/*.csv"
 
 permissions:

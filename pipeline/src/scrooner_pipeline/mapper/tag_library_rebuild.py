@@ -34,6 +34,8 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.mapper import resolver_files as rf
+
 REPO_ROOT = Path(__file__).resolve().parents[4]
 LINE_MAP_DIR = REPO_ROOT / "data-team" / "tags" / "line_map"
 RULES_DIR = REPO_ROOT / "data-team" / "tags" / "rules"
@@ -140,14 +142,13 @@ def content_hash(parts: list[Any]) -> str:
 
 
 def newest_resolver_file(directory: Path = LINE_MAP_DIR) -> Path:
-    found = sorted(
-        (m.group(1), p)
-        for p in directory.iterdir()
-        if (m := RESOLVER_FILE_RE.match(p.name))
-    )
-    if not found:
-        raise FileNotFoundError(f"no resolver-all110-<date>.csv in {directory}")
-    return found[-1][1]
+    """The resolver output: the per-company directory line_map/resolver/, else the newest resolver-all110-<date>.csv."""
+    src = rf.resolver_source(directory)
+    if src is None:
+        raise FileNotFoundError(
+            f"no resolver/<TICKER>.csv directory and no resolver-all110-<date>.csv in {directory}"
+        )
+    return src
 
 
 _NODE_TAG_RE = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_.:\-]*)")
@@ -168,6 +169,19 @@ def parse_resolver(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
     """Resolver CSV -> cell rows (value as Decimal) and rejects. Key: (cik, data_point, period_end, grain)."""
     rows: dict[tuple[str, str, date, str], dict[str, Any]] = {}
     rejects: list[str] = []
+    files = (
+        rf.split_files(path.parent)
+        if path.is_dir() and path.name == rf.SPLIT_DIRNAME
+        else [path]
+    )
+    if path.is_dir() and not files:
+        files = sorted(path.glob("*.csv"))
+    for path in files:
+        _parse_resolver_file(path, rows, rejects)
+    return list(rows.values()), rejects
+
+
+def _parse_resolver_file(path: Path, rows: dict, rejects: list[str]) -> None:
     with path.open(newline="", encoding="utf-8") as fh:
         for n, r in enumerate(csv.DictReader(fh), start=2):
             try:
@@ -201,7 +215,6 @@ def parse_resolver(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
                 "resolver_version": r.get("resolver_version") or None,
                 "source_file": path.name,
             }
-    return list(rows.values()), rejects
 
 
 def parse_rules(directory: Path = RULES_DIR) -> dict[tuple[str, str], dict[str, Any]]:

@@ -73,10 +73,12 @@ def main(extract_dir, resolver_csv=None):
 
     # labels of the lines the resolver served, per data point
     if not resolver_csv:
-        resolver_csv = sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver-all110-*.csv')))[-1]
+        split = sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver', '*.csv')))
+        resolver_csv = split or sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver-all110-*.csv')))[-1]
     rx = re.compile(r'(?:^|; )-?(\w+)(?:\[[^\]]*\])?=-?[\d.]+ \[R(\d+)\.htm:(\d+)(?:@([\d-]+))?\]')
     L = collections.defaultdict(lambda: dict(n=0, c=set(), e=collections.Counter()))
-    for r in csv.DictReader(open(resolver_csv)):
+    _paths = [resolver_csv] if isinstance(resolver_csv, str) else list(resolver_csv)
+    for r in (row for _p in _paths for row in csv.DictReader(open(_p))):
         if r['decision'] not in ('mapped', 'component_sum'):
             continue
         for t, rep, ln, acc in rx.findall((r.get('nodes') or '').split(' | why')[0]):

@@ -111,13 +111,15 @@ def main():
                 add(t, 'polarity', f"{dp}:{pol[dp].get('sign') or pol[dp].get('polarity') or list(pol[dp].values())[1]}")
 
     # 3. resolver output: usage and served cells
-    outs = sorted(glob.glob(os.path.join(LM, 'resolver-all110-*.csv')))
+    outs = sorted(glob.glob(os.path.join(LM, 'resolver', '*.csv')))  # per-company files; else the newest single file
+    if not outs:
+        outs = sorted(glob.glob(os.path.join(LM, 'resolver-all110-*.csv')))[-1:]
     served_total = served_with_el = 0
     served_els = []
     node_rx = re.compile(r'(?:^|; )-?(\w+)(?:\[[^\]]*\])?=-?[\d.]+ \[(R\d+\.htm:\d+|NOTE|SE|BSP)[^\]]*\]')
     use = collections.defaultdict(lambda: dict(c=set(), f=set(), y=set(), n=0, ex=[], pos=collections.Counter()))
     version = ''
-    for r in (rows_of(outs[-1]) if outs else []):
+    for r in (row for p in outs for row in rows_of(p)):
         version = r.get('resolver_version') or version
         nodes = (r.get('nodes') or '').split(' | why')[0]
         els = node_rx.findall(nodes)
