@@ -897,3 +897,15 @@
 - ~ SalesRevenueGoodsNet: served_cells
 - ~ SalesRevenueNet: served_cells
 - ~ SalesRevenueServicesNet: served_cells
+
+## 2026-11-20 (resolver-all110-.84): 10 element changes, 27999 rows, coverage 64.6%
+- ~ CapitalLeaseObligationsCurrent: served_cells
+- ~ CapitalLeaseObligationsNoncurrent: served_cells
+- ~ CashAndDueFromBanks: served_cells
+- ~ CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents: served_cells
+- ~ FinanceLeaseLiabilityCurrent: served_cells
+- ~ FinanceLeaseLiabilityNoncurrent: served_cells
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+- ~ InterestExpenseDebt: data_point
+- ~ InvestmentIncomeInterest: served_cells
+- ~ NonoperatingIncomeExpense: served_cells

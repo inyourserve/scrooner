@@ -23,6 +23,11 @@ CURRENT_DEBT = {'ShortTermBorrowings', 'OtherShortTermBorrowings', 'CommercialPa
                 'DebtCurrentAndFinanceLeaseLiability', 'LongTermDebtCurrentAndFinanceLeaseLiability', 'SecuredDebtCurrent', 'UnsecuredDebtCurrent', 'ConvertibleNotesPayableCurrent', 'OtherLongTermDebtCurrent', 'LoansPayableCurrent'}
 DEBT_MEMBER = re.compile(r'(?i)(Debt|Borrowing|NotesPayable|CommercialPaper|LineOfCredit|Bonds)')
 LEASES = {}
+def _lease_text():
+    import os
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'lease_location_text.csv')
+    return {(r['accession'], r['family']): r for r in csv.DictReader(open(p)) if r['location'] == 'outside_debt'} if os.path.exists(p) else {}
+LEASE_TEXT = _lease_text()   # location stated in the filing's own words (COST 'included in other current liabilities and other liabilities')
 NOTDEBT = re.compile(r'(?i)interest payable|accrued interest|operating lease|FairValue|DebtInstrumentCarryingAmount')
 AFFIL = re.compile(r'^(DueToAffiliate\w*|DueToRelatedParties\w*|NotesPayableRelatedParties\w*|DueToOfficersOrStockholders\w*)$')
 REPO = re.compile(r'^(FederalFundsPurchased\w*|SecuritiesSoldUnderAgreementsToRepurchase\w*|SecuritiesLoaned\w*)$')   # secured funding like deposits: never debt (Dhairya ruling 2026-11-14 d)
@@ -181,6 +186,13 @@ def run(filings, vals, flloc):
                     elif pars and pars & set(onbs):
                         why_ = f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"
                         if both:   # cite the present-value parts under their own elements (AMZN 2016: CapitalLeaseObligations is the gross 9,406)
+                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')]
+                        else:
+                            nodes.append(('CapitalLeaseObligations', cl, 'NOTE', why_))
+                    elif (f['a'], 'CapitalLeaseObligations') in LEASE_TEXT:
+                        # location evidence 5: the filing's own sentence places the liabilities outside debt lines (rules/lease_location_text.csv)
+                        why_ = f"pre-842 capital lease outside debt lines, as the filing states: '{LEASE_TEXT[(f['a'], 'CapitalLeaseObligations')]['quote'][-80:]}'"
+                        if both:
                             nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')]
                         else:
                             nodes.append(('CapitalLeaseObligations', cl, 'NOTE', why_))

@@ -1024,3 +1024,87 @@ def test_receivables_inside_a_wider_face_line_are_combined_not_a_note_fact():
     g = filing([('BS', 'well_ReceivablesAndOtherAssets', 'Receivables and other assets', 1140838), ('BS', 'Assets', 'Total assets', 57000000)])
     g['lines'] = g['lines'].replace('|well_ReceivablesAndOtherAssets|0|', '|well_ReceivablesAndOtherAssets|1|')   # a custom line (FY2022-25)
     assert resolve_bs.resolve_family(g, {})['accounts_receivable']['status'] == 'combined'
+
+
+# --- wave 4B (Dhairya 2026-11-20) ---
+AMGN_RULE = {'0000318154': dict(ie_line_label='Interest expense, net', ie_line_nets='hedging', other_line_tag='NonoperatingIncomeExpense',
+                                other_line_label='Other income (expense), net', locator='note', why='net of hedging')}
+
+
+def _amgn(pe, ii, oi_v=D(506000000)):
+    ie = dict(cik='318154', period_end=pe, data_point='interest_expense', status='mapped', value=D(3155000000), nodes='InterestExpenseDebt=3155000000 [NOTE]',
+              why="prints only 'Interest expense, net' (net)", flags='note_only')
+    oi = dict(cik='318154', period_end=pe, data_point='other_income_expense_net', status='mapped', value=oi_v,
+              nodes=f'NonoperatingIncomeExpense={oi_v} [R3.htm:18]', why='band', flags='band')
+    return [ie, dict(ii, cik='318154', period_end=pe, data_point='interest_income'), oi]
+
+
+def test_net_ie_not_of_income_splits_other_line():
+    rows = resolve_all.apply_net_ie_not_of_income(_amgn('2024-12-31', dict(status='mapped', value=D(510000000), tags='InvestmentIncomeInterest',
+                                                                              nodes='InvestmentIncomeInterest=510000000 [NOTE]', flags='note_only', why='')), AMGN_RULE)
+    ie, ii, oi = rows
+    assert oi['value'] == D(-4000000) and oi['status'] == 'component_sum' and 'interest_split' in oi['flags']
+    assert all(resolve_all.NODE_GRAMMAR.match(p) for p in oi['nodes'].split('; ')), oi['nodes']
+    assert 'net_of_hedging' in ie['flags']
+    assert resolve_all.apply_net_ie_not_of_income(rows, AMGN_RULE)[2]['value'] == D(-4000000)   # idempotent
+
+
+def test_net_ie_not_of_income_text_part_is_held():
+    ie, ii, oi = resolve_all.apply_net_ie_not_of_income(_amgn('2023-12-31', dict(status='mapped', value=D(1225000000), nodes='', flags='text_stated;finer_precision', why=''),
+                                                               D(2833000000)), AMGN_RULE)
+    assert oi['status'] == 'combined' and oi['value'] == '' and 'text_part_pending' in oi['flags'] and '1608000000' in oi['why']
+
+
+def test_net_ie_not_of_income_combined_points_at_other_line():
+    ie, ii, oi = resolve_all.apply_net_ie_not_of_income(_amgn('2021-12-31', dict(status='combined', value='', nodes='InterestExpenseDebt=1 [R3.htm:17]', flags='', why=''),
+                                                               D(259000000)), AMGN_RULE)
+    assert ii['nodes'].startswith('NonoperatingIncomeExpense=') and oi['status'] == 'combined' and 'interest_inside' in oi['flags']
+
+
+def test_net_ie_not_of_income_other_cik_untouched():
+    rows = _amgn('2024-12-31', dict(status='mapped', value=D(510000000), nodes='InvestmentIncomeInterest=510000000 [NOTE]', flags='', why=''))
+    for r in rows: r['cik'] = '1'
+    assert resolve_all.apply_net_ie_not_of_income(rows, AMGN_RULE)[2]['value'] == D(506000000)
+
+
+def _wfc(pe, acc, nodes, flags='face'):
+    return dict(cik='72971', period_end=pe, data_point='cash_and_equivalents', status='mapped', value=D(1), accession=acc, nodes=nodes, flags=flags, why='')
+
+
+def test_bank_cash_cf_instant_latest_print_and_own():
+    T = 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents'
+    rows = [_wfc('2018-12-31', 'a18', 'CashAndDueFromBanks=23551000000 [R6.htm:2]'),
+            _wfc('2019-12-31', 'a19', f'{T}=141250000000 [R6.htm:10]', 'face;cash_face_subtotal'),
+            _wfc('2025-12-31', 'a25', 'CashAndDueFromBanks=39182000000 [R5.htm:3]')]
+    filings = [dict(cik='72971', a='a18', p='2018-12-31'), dict(cik='72971', a='a19', p='2019-12-31'), dict(cik='72971', a='a21', p='2021-12-31'), dict(cik='72971', a='a25', p='2025-12-31')]
+    comp = {'a19': f'{T}|0|173287000000|2018-12-31', 'a21': f'{T}|0|999|2017-12-31~{T}|0|173287000000|2018-12-31'}
+    notes = {'a25': f'{T}|0|172593000000'}
+    out = resolve_all.apply_bank_cash(rows, notes, comp, filings)
+    assert out[0]['value'] == D(173287000000) and out[0]['accession'] == 'a21' and 'cf_instant_latest_print' in out[0]['flags']
+    assert out[2]['value'] == D(172593000000) and 'cf_instant_own' in out[2]['flags']
+    assert out[1]['value'] == D(1)
+    # no face subtotal anywhere for the company: the component stays
+    rows2 = [_wfc('2018-12-31', 'a18', 'CashAndDueFromBanks=23551000000 [R6.htm:2]')]
+    assert resolve_all.apply_bank_cash(rows2, notes, comp, filings)[0]['value'] == D(1)
+
+
+def test_lease_latest_print_adds_finance_leases():
+    td = lambda pe, acc, nodes, v: dict(cik='909832', period_end=pe, data_point='total_debt', status='component_sum', value=D(v), accession=acc, nodes=nodes, flags='total_debt', why='')
+    rows = [td('2024-08-31', '0000909832-24-000049', 'LongTermDebtCurrent=103000000 [R5.htm:20]; LongTermDebtNoncurrent=5794000000 [R5.htm:24]', 5897000000),
+            td('2025-08-31', '0000909832-25-000101', 'LongTermDebtNoncurrent=5713000000 [R5.htm:23]; FinanceLeaseLiability=1479000000 [NOTE]', 7267000000)]
+    filings = [dict(cik='909832', a='0000909832-24-000049', p='2024-08-31'), dict(cik='909832', a='0000909832-25-000101', p='2025-08-31'),
+               dict(cik='909832', a='0000909832-26-000093', p='2026-08-31')]
+    comp = {'0000909832-25-000101': 'FinanceLeaseLiabilityCurrent|0|147000000|2024-08-31~FinanceLeaseLiabilityNoncurrent|0|1351000000|2024-08-31',
+            '0000909832-26-000093': 'FinanceLeaseLiabilityCurrent|0|78000000|2025-08-31~FinanceLeaseLiabilityNoncurrent|0|1401000000|2025-08-31'}   # 2025 already has its lease
+    out = resolve_all.apply_lease_latest_print(rows, comp, filings)
+    assert out[0]['value'] == D(7395000000) and 'lease_latest_print' in out[0]['flags'] and out[1]['value'] == D(7267000000)
+    assert all(resolve_all.NODE_GRAMMAR.match(p) for p in out[0]['nodes'].split('; ')), out[0]['nodes']
+    # one part only: nothing added
+    rows[0].update(value=D(5897000000), nodes='LongTermDebtCurrent=103000000 [R5.htm:20]', flags='total_debt')
+    assert resolve_all.apply_lease_latest_print(rows[:1] + rows[1:], {'0000909832-25-000101': 'FinanceLeaseLiabilityCurrent|0|147000000|2024-08-31'}, filings)[0]['value'] == D(5897000000)
+
+
+def test_lease_location_text_rule_rows():
+    import total_debt
+    k = ('0000909832-16-000032', 'CapitalLeaseObligations')
+    assert k in total_debt.LEASE_TEXT and 'other liabilities' in total_debt.LEASE_TEXT[k]['quote']

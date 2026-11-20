@@ -318,9 +318,9 @@ capex,property improvements,1,1,PaymentsForCapitalImprovements 1
 capex,"purchases of property, plant, and equipment",1,1,PaymentsToAcquireProductiveAssets 1
 cash_and_equivalents,cash and cash equivalents,1111,98,CashAndCashEquivalentsAtCarryingValue 1076;CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents 22;Cash 8;CashandCashEquivalentsExcludingTimeDepositsatCarryingValue 3
 cash_and_equivalents,cash and equivalents,52,6,CashAndCashEquivalentsAtCarryingValue 42;CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents 6;CashAndEquivalentsExcludingAssetsHeldForSale 4
-cash_and_equivalents,cash and due from banks,26,4,CashAndDueFromBanks 26
 cash_and_equivalents,cash,24,3,CashAndCashEquivalentsAtCarryingValue 21;Cash 3
 cash_and_equivalents,total cash and cash equivalents,22,2,CashCashEquivalentsAndFederalFundsSold 18;CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents 4
+cash_and_equivalents,cash and due from banks,19,4,CashAndDueFromBanks 19
 cash_and_equivalents,"cash, cash equivalents, restricted cash and restricted cash",10,2,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents 10
 cash_and_equivalents,"cash, cash equivalents and restricted cash",8,1,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents 8
 cash_and_equivalents,"cash and cash equivalents, at carrying value",7,2,CashAndCashEquivalentsAtCarryingValue 7
@@ -1339,8 +1339,8 @@ operating_income,operating loss,12,3,OperatingIncomeLoss 12
 operating_income,income from continuing operations,7,1,OperatingIncomeLoss 7
 operating_income,operating income from continuing operations,6,2,OperatingIncomeLoss 6
 operating_income,total,1,1,OperatingIncomeLoss 1
-other_income_expense_net,"other income , net",213,32,OtherNonoperatingIncomeExpense 158;NonoperatingIncomeExpense 54;OtherNonoperatingIncomeExpenseNet 1
-other_income_expense_net,"other income, net",136,27,OtherNonoperatingIncomeExpense 86;NonoperatingIncomeExpense 37;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 4
+other_income_expense_net,"other income , net",212,32,OtherNonoperatingIncomeExpense 158;NonoperatingIncomeExpense 53;OtherNonoperatingIncomeExpenseNet 1
+other_income_expense_net,"other income, net",135,27,OtherNonoperatingIncomeExpense 86;NonoperatingIncomeExpense 36;OtherNonoperatingIncomeExpenseNet 7;OtherNonoperatingIncome 4
 other_income_expense_net,other income,123,17,OtherNonoperatingIncomeExpense 57;NonoperatingIncomeExpense 19;OtherIncome 12;Revenues 10
 other_income_expense_net,"other expense, net",115,20,OtherNonoperatingIncomeExpense 94;NonoperatingIncomeExpense 16;OtherIncomeExpenseNet 5
 other_income_expense_net,other income net,34,5,OtherNonoperatingIncomeExpense 33;OtherNonoperatingIncome 1

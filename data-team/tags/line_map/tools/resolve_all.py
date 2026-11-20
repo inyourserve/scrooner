@@ -124,6 +124,33 @@ def apply_bank_cash(rows, notefacts, compfacts, filings):
                  why=f"the cash-flow cash total {t} {v} equals the balance sheet's cash and due from banks {nf['CashAndDueFromBanks']} + deposits with banks {nf['InterestBearingDepositsInBanks']} (rulings 2026-11-17: bank cash from the cash-flow row" + (f"; the own filing's cash flow used a narrower cash, the latest print {a} restates it: definition_change)" if flag else ')'))
         keep = [x for x in (r.get('flags') or '').split(';') if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')]
         r['flags'] = ';'.join(keep + ['bank_cash_cf_row'] + ([flag] if flag else []))
+    # B06 (WFC) and rule cf_instant_as_printed_source (Dhairya wave 4B, 2026-11-20): where a later face prints the cash total as the calc parent
+    # of 'Cash and due from banks' (flag cash_face_subtotal), an earlier year whose own face prints only that component is the restricted-
+    # inclusive total of the latest 10-K that prints the date: its cash-flow beginning/end balance (the CF instant is the printed source)
+    sub = {str(r['cik']).zfill(10) for r in rows if r['data_point'] == 'cash_and_equivalents' and 'cash_face_subtotal' in (r.get('flags') or '')
+           and str(r.get('nodes', '')).split('=')[0] in CF_CASH}
+    for r in rows:
+        ck = str(r['cik']).zfill(10)
+        if r['data_point'] != 'cash_and_equivalents' or ck not in sub or r['status'] != 'mapped' or not str(r.get('nodes', '')).startswith('CashAndDueFromBanks='): continue
+        pe = str(r['period_end']); found = False
+        for g in sorted(later[ck], key=lambda g: g['p'], reverse=True):
+            if g['p'] <= pe: break
+            hit = next(((t, D(v)) for t, q, v, dd in standard_inputs._facts(compfacts.get(g['a']), 4) if t == CF_CASH[0] and q == '0' and dd == pe), None)
+            if hit:
+                t, v = hit
+                r.update(value=v, tags=t, accession=g['a'], column='comparative', nodes=f"{t}={v} [NOTE@{g['a']}]",
+                         why=f"the face prints only 'Cash and due from banks' ({r['value']}), a component; the cell is the cash total including restricted cash "
+                             f"(B06), printed for {pe} by the latest 10-K {g['a']} as its cash-flow balance {t} {v} (rule cf_instant_as_printed_source, Dhairya 2026-11-20)")
+                r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x] + ['cf_instant_latest_print'])
+                found = True; break
+        if not found:
+            # no later 10-K prints the date (WFC FY2025): the own filing's cash-flow end-of-year total is the latest print
+            own = next((D(v) for t, q, v in standard_inputs._facts(notefacts.get(r['accession']), 3) if t == CF_CASH[0] and q == '0'), None)
+            if own is not None and r['status'] == 'mapped' and str(r.get('nodes', '')).startswith('CashAndDueFromBanks='):
+                r.update(value=own, tags=CF_CASH[0], nodes=f"{CF_CASH[0]}={own} [NOTE]",
+                         why=f"the face prints only 'Cash and due from banks' ({r['value']}), a component; the cell is the cash total including restricted cash "
+                             f"(B06), the own filing's cash-flow balance {CF_CASH[0]} {own} (rule cf_instant_as_printed_source, Dhairya 2026-11-20)")
+                r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x] + ['cf_instant_own'])
     return rows
 
 
@@ -1501,6 +1528,83 @@ def apply_scale_flags(rows, fixed=None):
 TEXT_OK = ('not_presented', 'no_role', 'open', 'no_value', 'missing')
 
 
+def _net_ie_not_income():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'net_interest_line_not_of_income.csv')
+    return {r['cik'].zfill(10): r for r in csv.DictReader(open(p))} if os.path.exists(p) else {}
+
+
+NET_IE_NOT_INCOME = _net_ie_not_income()
+
+
+def apply_net_ie_not_of_income(rows, rules=None):
+    """A face 'Interest expense, net' whose filer states what it nets (AMGN: hedging, not interest income; rules/net_interest_line_not_of_income.csv).
+    The label and the note decide, never the word 'net' (Dhairya wave 4B, 2026-11-20): interest income is not inside the expense line but
+    inside the filer's other-income line, so a combined interest_income cell points at that line and, once interest income is served,
+    other_income_expense_net is that line less interest income (flag interest_split)."""
+    rules = NET_IE_NOT_INCOME if rules is None else rules
+    if not rules: return rows
+    by = {}
+    for r in rows:
+        if str(r.get('cik', '')).zfill(10) in rules: by[(str(r['cik']).zfill(10), str(r['period_end']), r['data_point'])] = r
+    for (cik, pe, dp), r in list(by.items()):
+        if dp != 'interest_expense': continue
+        rule = rules[cik]; ie = r; ii = by.get((cik, pe, 'interest_income')); oi = by.get((cik, pe, 'other_income_expense_net'))
+        if f"'{rule['ie_line_label']}'" not in (ie.get('why') or ''): continue
+        ie['why'] = f"{ie['why']} | the filer's '{rule['ie_line_label']}' nets {rule['ie_line_nets']}, not interest income ({rule['locator']})"
+        ie['flags'] = ';'.join(x for x in (ie.get('flags', ''), 'net_of_hedging') if x)
+        oit = rule['other_line_tag']
+        if not ii or not oi or not str(oi.get('nodes', '')).startswith(f'{oit}='): continue
+        if ii.get('status') == 'combined' and oi.get('status') == 'mapped':
+            ii.update(nodes=oi['nodes'].split(' | ')[0], tags=oit,
+                      why=f"interest income is reported only inside '{rule['other_line_label']}' ({rule['why']})")
+            oi.update(status='combined', value='', why=f"{oi['why']} | '{rule['other_line_label']}' holds interest income, which this filing does not report on its own ({rule['why']})")
+            oi['flags'] = ';'.join(x for x in (oi.get('flags', ''), 'interest_inside') if x)
+        elif ii.get('status') == 'mapped' and ii.get('value') not in (None, '') and oi.get('status') == 'mapped' and 'interest_split' not in (oi.get('flags') or ''):
+            if 'note_split' in (ii.get('flags') or ''):
+                ii['why'] = re.sub(r'the face prints only the combined line \w+', f"interest income sits inside '{rule['other_line_label']}' ({oit}), not '{rule['ie_line_label']}'", ii['why'])
+            v = D(oi['value']) - D(ii['value'])
+            iin = _split_parts(ii.get('nodes') or '')
+            if 'text_stated' in (ii.get('flags') or '') or len(iin) != 1:
+                # the interest figure is stated only in text (AMGN 2023: 1,225 printed, the XBRL fact is the rounded 1,200): the loader checks
+                # parts against SEC facts, so the line less a text part cannot be served yet; the line holds interest: combined, never served whole
+                oi.update(status='combined', value='', why=f"{oi['why']} | '{rule['other_line_label']}' holds interest income {D(ii['value'])} (stated in text); "
+                          f"other income without interest is {v}, served once a text-stated part is accepted ({rule['why']})")
+                oi['flags'] = ';'.join(x for x in (oi.get('flags', ''), 'interest_inside', 'text_part_pending') if x)
+                continue
+            oi['why'] = f"{oi['why']} | less interest income {D(ii['value'])} inside '{rule['other_line_label']}' ({rule['why']})"
+            oi.update(value=v, nodes=f"{_split_parts(oi['nodes'])[0]}; -{iin[0].lstrip('-')}", status='component_sum', tags=f"{oit}+{ii.get('tags') or ''}")
+            oi['flags'] = ';'.join(x for x in (oi.get('flags', ''), 'interest_split') if x)
+    return rows
+
+
+FL_PARTS = ('FinanceLeaseLiabilityCurrent', 'FinanceLeaseLiabilityNoncurrent')
+
+
+def apply_lease_latest_print(rows, compfacts, filings):
+    """COST FY2024 (Dhairya wave 4B, 2026-11-20): a total_debt cell with no lease part, of a company whose total_debt carries finance leases
+    (FinanceLeaseLiability node) in other years, takes the finance-lease parts the latest later 10-K prints for the date (its comparative
+    FinanceLeaseLiabilityCurrent + Noncurrent): the own filing has no undimensioned finance-lease fact at the date. Flag lease_latest_print."""
+    later = collections.defaultdict(list)
+    for f in filings: later[f['cik'].zfill(10)].append(f)
+    has_fl = {str(r['cik']).zfill(10) for r in rows if r['data_point'] == 'total_debt' and 'FinanceLeaseLiability' in str(r.get('nodes', ''))}
+    for r in rows:
+        ck = str(r['cik']).zfill(10)
+        if r['data_point'] != 'total_debt' or ck not in has_fl or r['status'] not in ('mapped', 'component_sum') or r.get('value') in (None, ''): continue
+        if re.search(r'Lease', str(r.get('nodes', ''))) or (r.get('column') or 'own') != 'own': continue
+        pe = str(r['period_end'])
+        for g in sorted(later[ck], key=lambda g: g['p'], reverse=True):
+            if g['p'] <= pe: break
+            got = {t: D(v) for t, q, v, dd in standard_inputs._facts(compfacts.get(g['a']), 4) if t in FL_PARTS and q == '0' and dd == pe}
+            if len(got) == 2:
+                add = sum(got.values(), D(0))
+                r['nodes'] = '; '.join([str(r['nodes']).split(' | ')[0]] + [f"{t}={got[t]} [NOTE@{g['a']}]" for t in FL_PARTS])
+                r.update(value=D(r['value']) + add, status='component_sum',
+                         why=f"{r.get('why') or ''}; finance leases {add} added as the latest 10-K {g['a']} prints them for {pe} (the own filing has no undimensioned finance-lease fact at the date; Dhairya 2026-11-20)")
+                r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x] + ['lease_latest_print'])
+                break
+    return rows
+
+
 def apply_text_disclosures(rows, path=None):
     """Amounts and explicit zeros the filing states only in prose (text_disclosure.py read -> rules/text_disclosures.csv, reviewed).
     Fills a cell only when it has no XBRL fact and no face line (status in TEXT_OK, never mapped/component_sum/combined/not_in_template)
@@ -1514,6 +1618,20 @@ def apply_text_disclosures(rows, path=None):
     yy = lambda acc: (acc[11:13], acc)   # the filing year inside the accession number
     for r in rows:
         cand = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end'])), [])
+        # finest precision (Dhairya Group B rounding ruling; 4B segment_reconciliation_interest_income): a served value that is a coarser
+        # rounding of a quoted figure for the same cell yields to it (AMGN FY2023 interest income: the '$ 1.2 billion' sentence fact vs
+        # the segment reconciliation's 1,225)
+        if cand and r.get('status') == 'mapped' and r.get('value') not in (None, ''):
+            sv = D(r['value'])
+            fine = [t for t in cand if t['quote'] and t['locator'] and t['quote_period'] == str(r['period_end']) and D(t['value']) != sv
+                    and _unit(sv) > _unit(D(t['value'])) and abs(sv - D(t['value'])) <= _unit(sv) / 2]
+            if fine:
+                t = max(fine, key=lambda t: yy(t['accession']))
+                r.update(value=D(t['value']), tags='', r_page='', nodes='', column='own' if t['accession'] == r.get('accession') else 'comparative', accession=t['accession'],
+                         why=f"text_stated: the filing prints the precise figure ({t['locator']}); the served {sv} is its rounding (finest precision)",
+                         quote=t['quote'], locator=t['locator'], quote_period=t['quote_period'])
+                r['flags'] = 'text_stated;finer_precision'
+                continue
         if not cand or r.get('status') not in TEXT_OK:
             continue
         # the cell's own 10-K wins; else the LATEST later 10-K that states the year explicitly (Dhairya 2026-11-16, as comparative fill)
@@ -1858,9 +1976,11 @@ if __name__ == '__main__':
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     rows = apply_bank_template(rows, filings)
     rows = apply_text_disclosures(rows)
+    rows = apply_net_ie_not_of_income(rows)
     rows = apply_scale_flags(rows)
     rows = apply_opex_costs_total_less_cor(rows, filings)
     rows = apply_bank_cash(rows, notefacts, compfacts, filings)
+    rows = apply_lease_latest_print(rows, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
