@@ -1,0 +1,2 @@
+work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
+held,87,STX,3886,dividends_per_share,2022,2022-07-01,HELD,filer_scale_error,served per-share value 2770000 is 10^3 or 10^6 times the other columns: filer monetary scale,2770000,0001137789-24-000068,R9.htm,
