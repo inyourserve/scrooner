@@ -112,7 +112,7 @@ accounts_receivable,"accounts receivable, net of allowances of million and",1,1,
 accounts_receivable,accounts receivablenet of sales returns reserve and allowanc,1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,"accounts receivable, less allowance for credit losses of",1,1,AccountsReceivableNetCurrent 1
 accounts_receivable,"receivables, less allowance for expected credit loss of",1,1,AccountsReceivableNetCurrent 1
-amortization_of_intangibles,amortization of intangible assets,141,16,AmortizationOfIntangibleAssets 117;AdjustmentForAmortization 12;AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction 12
+amortization_of_intangibles,amortization of intangible assets,143,16,AmortizationOfIntangibleAssets 117;AdjustmentForAmortization 12;AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction 12;CostOfGoodsSoldAmortization 2
 amortization_of_intangibles,amortization of intangibles,68,7,AmortizationOfIntangibleAssets 64;AmortizationofIntangibleAssetsIncludingDiscontinuedOperation 2;AmortizationAndImpairmentOfIntangibles 2
 amortization_of_intangibles,amortization of acquired intangible assets,25,4,AmortizationOfIntangibleAssets 13;AmortizationofAcquiredIntangibleAssets 7;AmortizationAndImpairmentOfIntangibleAssets 5
 amortization_of_intangibles,amortization,24,5,AdjustmentForAmortization 19;AmortizationOfIntangibleAssets 5
@@ -216,8 +216,8 @@ basic_eps,net loss per share attributable to common stockholders bas,1,1,Earning
 basic_eps,net income per share attributable to common stockhold,1,1,EarningsPerShareBasicAndDiluted 1
 basic_eps,continuing operations,1,1,IncomeLossFromContinuingOperationsPerBasicShare 1
 basic_eps,"net income attributable to mpc per share, basic",1,1,EarningsPerShareBasic 1
-capex,capital expenditures,308,28,PaymentsToAcquirePropertyPlantAndEquipment 187;PaymentsToAcquireProductiveAssets 89;PaymentsToAcquireOtherPropertyPlantAndEquipment 13;PaymentsToAcquireOtherProductiveAssets 7
-capex,purchases of property and equipment,208,22,PaymentsToAcquirePropertyPlantAndEquipment 176;PaymentsToAcquireProductiveAssets 20;PaymentsToAcquireOtherPropertyPlantAndEquipment 12
+capex,capital expenditures,308,28,PaymentsToAcquirePropertyPlantAndEquipment 188;PaymentsToAcquireProductiveAssets 88;PaymentsToAcquireOtherPropertyPlantAndEquipment 13;PaymentsToAcquireOtherProductiveAssets 7
+capex,purchases of property and equipment,209,22,PaymentsToAcquirePropertyPlantAndEquipment 176;PaymentsToAcquireProductiveAssets 21;PaymentsToAcquireOtherPropertyPlantAndEquipment 12
 capex,"purchases of property, plant and equipment",89,11,PaymentsToAcquirePropertyPlantAndEquipment 89
 capex,"additions to property, plant and equipment",66,6,PaymentsToAcquirePropertyPlantAndEquipment 66
 capex,additions to property and equipment,38,3,PaymentsToAcquirePropertyPlantAndEquipment 38
@@ -281,7 +281,6 @@ capex,"other assetspremises, equipment and software, net",4,1,PaymentsForProceed
 capex,expenditures for property and equipment,4,1,PaymentsToAcquirePropertyPlantAndEquipment 4
 capex,purchases of premises and equipment,4,1,PaymentsToAcquirePropertyPlantAndEquipment 4
 capex,deferred turnaround and catalyst costs,4,1,PaymentsForCapitalImprovements 4
-capex,"purchases of property and equipment, including internal use",4,1,PaymentsToAcquirePropertyPlantAndEquipment 3;PaymentsForProceedsFromProductiveAssets 1
 capex,"purchase of property, plant, and equipment",4,1,PaymentsToAcquireProductiveAssets 4
 capex,"additions to property, plant, and equipment and internal use",4,1,PaymentsToAcquireProductiveAssets 4
 capex,capitalized internal use software,4,1,PaymentsToDevelopSoftware 4
@@ -292,6 +291,7 @@ capex,acquisition and capital expenditures of gulf power,3,1,PaymentsToAcquireBu
 capex,changes in premises and equipment,3,1,PaymentsToAcquirePropertyPlantAndEquipment 3
 capex,nondevelopment capital expenditures,3,1,PaymentsForCapitalImprovements 3
 capex,purchase of fremont land and building,3,1,PaymentsToAcquireOtherPropertyPlantAndEquipment 3
+capex,"purchases of property and equipment, including internal use",3,1,PaymentsForProceedsFromProductiveAssets 2;PaymentsToAcquirePropertyPlantAndEquipment 1
 capex,"purchase of property, plant and equipment, intellectual prop",3,1,PaymentsToAcquireProductiveAssets 3
 capex,"asset acquisitions, net",3,1,PaymentsToAcquireOtherPropertyPlantAndEquipment 3
 capex,purchases of equipment previously leased,3,1,PaymentsToAcquireEquipmentOnLease 3
@@ -1370,16 +1370,16 @@ other_income_expense_net,pension and other employee benefit costs,10,1,NetPeriod
 other_income_expense_net,equity in the income of investees,10,1,IncomeLossFromEquityMethodInvestments 10
 other_income_expense_net,loss on early extinguishment of debt,9,1,GainsLossesOnExtinguishmentOfDebt 9
 other_income_expense_net,"investment and other income, net",9,1,InvestmentIncomeNonoperating 8;NonoperatingIncomeExpense 1
+other_income_expense_net,"interest and other income, net",9,3,NonoperatingIncomeExpense 8;OtherNonoperatingIncomeExpense 1
 other_income_expense_net,equity in earnings of affiliated companies,8,1,IncomeLossFromEquityMethodInvestments 8
 other_income_expense_net,"gains on equity investments, net",8,2,EquitySecuritiesFvNiGainLoss 5;EquitySecuritiesFVNIAndWithoutReadilyDeterminableFairValueGainLoss 2;GainLossOnInvestments 1
 other_income_expense_net,other and losses,8,1,NonoperatingIncomeExpense 8
 other_income_expense_net,change in unrealized gains on equity securities hel,8,1,OtherThanTemporaryImpairmentLossesOnSecuritiesHeldInNuclearDecommissioningFunds 8
 other_income_expense_net,other net periodic benefit income,8,1,AmountRecognizedInNetPeriodicBenefitCostAndOtherComprehensiveIncomeLossBeforeTax 8
+other_income_expense_net,"interest and other income , net",8,1,NonoperatingIncomeExpense 8
 other_income_expense_net,"gains on strategic investments, net",8,1,GainLossOnInvestments 7;EquitySecuritiesFvNiGainLoss 1
 other_income_expense_net,net interest and other financial costs,8,1,InterestAndDebtExpense 8
 other_income_expense_net,equity in earnings of unconsolidated businesses,7,1,IncomeLossFromEquityMethodInvestments 7
-other_income_expense_net,"interest and other income , net",7,1,NonoperatingIncomeExpense 7
-other_income_expense_net,"interest and other income, net",7,3,NonoperatingIncomeExpense 6;OtherNonoperatingIncomeExpense 1
 other_income_expense_net,other expensenet,7,1,OtherNonoperatingIncomeExpense 7
 other_income_expense_net,"non operating income, net",7,1,NonoperatingIncomeExpenseIncludingEliminationOfNetIncomeLossAttributableToNoncontrollingInterests 7
 other_income_expense_net,other,7,2,OtherNonoperatingIncomeExpense 7

@@ -200,7 +200,7 @@ def apply_latest_print(rows, compfacts, filings=()):
             for t, qq, v, dd in standard_inputs._facts(compfacts.get(b['accession']), 4):
                 if dd == str(r['period_end']) and int(qq) == q: facts[t].add(D(v))
             mine = parse(r)
-            how = 'its own elements'
+            how = 'its own elements'; total_of_parts = line_renamed = False
             # 1. the same parts set (Group B): the own cell's elements and weights, read from the latest filing's column for the year
             # a face part must be a face line of the later filing too: the same element as a note fact is another line (NFLX FY2015 R&D)
             bparts = parse(b) if b['status'] in served and b.get('value') not in (None, '') else None
@@ -221,12 +221,19 @@ def apply_latest_print(rows, compfacts, filings=()):
                 renamed = (b['status'] == r['status'] == 'mapped' and face and gone and all(t in DEPRECATED for t in gone))   # FTNT SalesRevenueNet (deprecated 2018)
                 c1 = b['status'] == r['status'] == 'derived' and dp in ('gross_profit', 'total_liabilities')   # MPC FY2018
                 one_renamed = (b['status'] == r['status'] == 'component_sum' and len(ot) == len(lt) and ot - lt and set(gone) == ot - lt)   # renamed lines, same count: MSFT FY2016 impairment line; RTX FY2016-17 cost lines -> member lines
-                if not (renamed or c1 or one_renamed): continue
+                # AVGO FY2016-17: the own face splits intangible amortization by section (cost of sales + opex); the later 10-K prints the
+                # year as one cash-flow total under one of those elements: its total is the year's latest print
+                total_of_parts = (dp == 'amortization_of_intangibles' and b['status'] == 'mapped' and r['status'] == 'component_sum' and len(lt) == 1 and lt <= ot)
+                # one face line renamed (AMZN FY2015 capex: own net PaymentsToAcquirePropertyPlantAndEquipment 4,589 no longer reported for the year;
+                # the latest print's line is gross PaymentsToAcquireProductiveAssets 5,387): the cell follows the latest print's line
+                line_renamed = (dp == 'capex' and b['status'] == r['status'] == 'mapped' and face and len(ot) == len(lt) == 1 and set(gone) == ot)
+                if not (renamed or c1 or one_renamed or total_of_parts or line_renamed): continue
                 if any(len(facts.get(t, ())) != 1 for _, t, _, _ in parts): continue
                 sgn, how = 1, f"the way it resolves {dp}"
             new = sgn * sum(w * next(iter(facts[t])) for w, t, _, _ in parts)
             old = D(r['value'])
             if new == old: continue
+            if line_renamed and (old == 0 or not D('0.5') <= new / old <= 2): continue   # another line's role, not a rename (PLD FY2017 development spend 1,606 vs capex 111)
             if not LP_PER_SHARE.search(dp) and (new != new.to_integral() or old != old.to_integral()): continue   # money only: a ratio fact under the element (LOW 0.0593) is not the figure
             split = None
             if LP_SHARES.search(dp) and old != 0 and new != 0:
@@ -236,7 +243,7 @@ def apply_latest_print(rows, compfacts, filings=()):
                 if (q_ >= D('1.4') and abs(q_ - n_) <= n_ * D('0.02')) or abs(q_ - D('1.5')) <= D('0.03'):
                     split = n_ if abs(q_ - n_) <= n_ * D('0.02') else D('1.5')
             u_new, u_old = _unit(new), _unit(old)
-            if u_new > u_old and abs(new - old) <= u_new / 2 * len(parts): continue   # a rounded later copy (each rounded part) never replaces a precise figure
+            if u_new > u_old and abs(new - old) <= u_new / 2 * len(parts) and not total_of_parts: continue   # a total of other lines is not a rounded copy (AVGO FY2016 2,640 vs 763 + 1,873)   # a rounded later copy (each rounded part) never replaces a precise figure
             fl = face_loc.get(b['accession'], {})
             loc = lambda t, l: f"{fl[t.split('[')[0]]}@{b['accession']}" if t.split('[')[0] in fl and l.startswith('R') else f"NOTE@{b['accession']}"   # the later filing's own line
             r.update(status=r['status'] if parts is mine else b['status'], value=new, tags=r.get('tags', '') if parts is mine else b.get('tags', ''), accession=b['accession'], column='comparative',
@@ -690,14 +697,14 @@ def apply_bundled_ap(rows, filings):
 
 # pure interest elements: dividends and investment gains (InvestmentIncomeInterestAndDividend, InvestmentIncomeDividend,
 # InvestmentIncomeNet: QCOM, NEM, CAT) are not interest and stay in other income
-PURE_II = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOther|InterestIncomeOperating|InterestIncomeNonoperating|InterestIncome|InterestIncomeExpenseNet|InterestIncomeExpenseNonoperatingNet|InterestIncomeDueToEmploymentTaxRefund)$')
+PURE_II = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOther|InterestIncomeOperating|InterestIncomeNonoperating|InterestIncome|InterestIncomeExpenseNet|InterestIncomeExpenseNonoperatingNet|InterestIncomeDueToEmploymentTaxRefund|InterestRevenueExpenseNet)$')
 def _int_div_lines():
     p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'interest_dividend_lines.csv')
     return {(r['accession'], r['element']) for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
 
 
 INT_DIV_LINES = _int_div_lines()
-NET_II = re.compile(r'^InterestIncomeExpense\w*Net$')
+NET_II = re.compile(r'^(InterestIncomeExpense\w*Net|InterestRevenueExpenseNet)$')   # META 'Interest income, net': an interest part, never interest income
 
 
 def apply_other_income_split(rows, filings, notefacts):
@@ -1605,6 +1612,34 @@ def apply_lease_latest_print(rows, compfacts, filings):
     return rows
 
 
+CONT_TAG = {'cash_paid_for_interest': re.compile(r'InterestPaid'), 'cash_paid_for_income_taxes': re.compile(r'IncomeTaxesPaid')}
+
+
+def apply_line_continuity(rows, notefacts, compfacts):
+    """era_by_line_continuity (Dhairya wave 4B, 2026-11-20; AMZN cash paid for interest FY2017-22): a not_presented cell whose filing
+    re-tags the line the company served before: the filing's element (custom included, amzn:InterestPaidOnLongTermDebt) reports, for
+    the prior year, exactly the value served then (InterestPaid 290 for 2016) and no other such element does; its own-year undimensioned
+    fact is the cell. Years in order, so the continuity carries forward (2018 matches the 2017 cell it served)."""
+    by = collections.defaultdict(list)
+    for r in rows:
+        if r['data_point'] in CONT_TAG and (r.get('column') or 'own') == 'own': by[(str(r['cik']).zfill(10), r['data_point'])].append(r)
+    for (ck, dp), lst in by.items():
+        lst.sort(key=lambda r: str(r['period_end']))
+        for i, r in enumerate(lst):
+            if r['status'] != 'not_presented' or i == 0: continue
+            prev = lst[i - 1]
+            if prev['status'] not in ('mapped', 'component_sum') or prev.get('value') in (None, ''): continue
+            pv, ppe = D(prev['value']), str(prev['period_end'])
+            same = {t for t, q, v, dd in standard_inputs._facts(compfacts.get(r['accession']), 4) if q == '4' and dd == ppe and CONT_TAG[dp].search(t) and D(v) == pv}
+            own = {t: D(v) for t, q, v in standard_inputs._facts(notefacts.get(r['accession']), 3) if q == '4' and t in same}
+            if len(same) != 1 or len(own) != 1: continue
+            (t, v), = own.items()
+            r.update(status='mapped', value=v, tags=t, nodes=f"{t}={v} [NOTE]",
+                     why=f"the filing re-tags the line: {t} reports {pv} for {ppe}, exactly the value served then ({prev.get('tags') or ''}); its own-year fact is the cell (era_by_line_continuity, Dhairya 2026-11-20)")
+            r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x] + ['line_continuity'])
+    return rows
+
+
 def apply_text_disclosures(rows, path=None):
     """Amounts and explicit zeros the filing states only in prose (text_disclosure.py read -> rules/text_disclosures.csv, reviewed).
     Fills a cell only when it has no XBRL fact and no face line (status in TEXT_OK, never mapped/component_sum/combined/not_in_template)
@@ -1975,6 +2010,7 @@ if __name__ == '__main__':
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     rows = apply_bank_template(rows, filings)
+    rows = apply_line_continuity(rows, notefacts, compfacts)
     rows = apply_text_disclosures(rows)
     rows = apply_net_ie_not_of_income(rows)
     rows = apply_scale_flags(rows)

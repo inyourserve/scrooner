@@ -354,7 +354,7 @@ def resolve_amort(L, notes):
         dl = dup_labels(lines) if src == 'CF' else set()  # the IS legitimately repeats a caption in the cost and opex sections
         ls = [l for l in lines if (l['lb'] or '').strip().lower() not in dl and INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] or '') and not CAPSW.search(l['tag']) and not re.search(r'(?i)above|below|lease|debt|financing|incentive|right[- ]of[- ]use', l['lb'] or '') and not re.search(r'(?i)incentive|rightofuse|excluding\w*cost', l['tag'])]
         if ls:
-            tagrank = [l for l in ls if l['tag'] in NOTE_AMORT or AMORT_TAG.match(l['tag'])] or ls
+            tagrank = [l for l in ls if l['tag'] in NOTE_AMORT or AMORT_TAG.match(l['tag']) or l['tag'] == 'CostOfGoodsSoldAmortization'] or ls   # AVGO FY2015: the cost-of-sales intangible line too
             return mk('amortization_of_intangibles', 'mapped' if len(tagrank) == 1 else 'component_sum', tagrank, f"{src} face line(s) naming intangible amortization", flags='face')
     for t in NOTE_AMORT:
         v = notes.get((t, 4))

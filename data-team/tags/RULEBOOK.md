@@ -1,6 +1,6 @@
 # Line-map resolver rulebook
 
-The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .84, 2026-11-20). The code and its tests are the authority; this file points to them.
+The single index of every mapping ruling in `data-team/tags/line_map/` (resolver .85, 2026-11-20). The code and its tests are the authority; this file points to them.
 
 ## 1. Purpose
 
@@ -326,6 +326,10 @@ Format: `ID | rule | code | test | date / source`.
 | X102 | cash_and_equivalents (B06, rule cf_instant_as_printed_source): where a later face prints the restricted-inclusive cash total as the calc parent of 'Cash and due from banks', a year whose face prints only that component takes the total that the latest 10-K printing the date shows as its cash-flow balance (flag cf_instant_latest_print); the newest year takes its own cash-flow end balance (cf_instant_own). WFC 2015-18 and 2023-25. | resolve_all.apply_bank_cash | test_resolver_vs_served_fixes::test_bank_cash_cf_instant_latest_print_and_own |
 | X103 | total_debt: pre-842 capital leases are added when the filing's own sentence places them outside debt lines (location evidence 5, rules/lease_location_text.csv; COST FY2014-19 'included in other current liabilities and other liabilities'). | total_debt (LEASE_TEXT) | test_resolver_vs_served_fixes::test_lease_location_text_rule_rows |
 | X104 | total_debt: a year with no lease part, of a company whose total_debt carries finance leases in other years, takes both finance-lease parts that the latest later 10-K prints for the date (flag lease_latest_print). COST 2024 7,395M; also BKNG 2021 and PH 2022. | resolve_all.apply_lease_latest_print | test_resolver_vs_served_fixes::test_lease_latest_print_adds_finance_leases |
+| X105 | amortization_of_intangibles: a face that prints intangible amortization in cost of sales (CostOfGoodsSoldAmortization) and in opex sums both lines. In the latest print, a component_sum whose later 10-K prints the year as one total under one of its elements takes that total, which is not a rounded copy. AVGO FY2014-15 own sums; FY2016-17 CF totals 2,640 / 4,286. | resolve_is.resolve_amort; resolve_all.apply_latest_print (total_of_parts) | test_resolver_vs_served_fixes::test_amortization_takes_the_cost_of_sales_intangible_line_too, ::test_latest_print_total_of_section_parts_and_capex_rename |
+| X106 | capex, vintage_coherence: when the own single face line's element is no longer reported for the year and the later 10-K's single face line is within 0.5-2x of it, the later line is the year's print (AMZN FY2015-16 gross purchases 5,387 / 7,804; RTX 2019 recast). Outside that band it is another line's role (PLD), kept. | resolve_all.apply_latest_print (line_renamed) | test_resolver_vs_served_fixes::test_latest_print_total_of_section_parts_and_capex_rename |
+| X107 | cash_paid_for_interest / cash_paid_for_income_taxes, era_by_line_continuity: a not_presented year whose filing reports, for the prior year, exactly the value served then under one element only (custom included) takes that element's own-year fact. AMZN FY2017-25 amzn:InterestPaidOnLongTermDebt. | resolve_all.apply_line_continuity | test_resolver_vs_served_fixes::test_line_continuity_follows_a_retagged_line |
+| X108 | other_income_expense_net: InterestRevenueExpenseNet ('Interest income, net') in the band line's calc breakdown is an interest part, split out like the other interest elements, and is never interest income. META FY2020-22 −163 / 70 / −401M. | resolve_all.PURE_II / NET_II; rules/roles.csv | test_resolver_vs_served_fixes::test_net_interest_revenue_element_is_an_interest_part_never_interest_income |
 
 ### 5.1 Core statements (rc.resolve; source `core`)
 

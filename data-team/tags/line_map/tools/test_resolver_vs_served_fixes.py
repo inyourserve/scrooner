@@ -1108,3 +1108,56 @@ def test_lease_location_text_rule_rows():
     import total_debt
     k = ('0000909832-16-000032', 'CapitalLeaseObligations')
     assert k in total_debt.LEASE_TEXT and 'other liabilities' in total_debt.LEASE_TEXT[k]['quote']
+
+
+# --- resolver .85: oracle BAD values, largest companies first (Dhairya 2026-11-20) ---
+def test_amortization_takes_the_cost_of_sales_intangible_line_too():
+    # AVGO FY2015: 'Amortization of intangible assets' in cost of products sold (CostOfGoodsSoldAmortization 484) and in opex (249)
+    f = filing([('IS', 'Revenues', 'Net revenue', 6824), ('IS', 'CostOfGoodsSoldAmortization', 'Amortization of intangible assets', 484),
+                ('IS', 'AmortizationOfIntangibleAssets', 'Amortization of intangible assets', 249), ('IS', 'OperatingIncomeLoss', 'Operating income', 1600)])
+    a = resolve_is.resolve(f, {})['amortization_of_intangibles']
+    assert a['value'] == D(733), a
+
+
+def test_latest_print_total_of_section_parts_and_capex_rename():
+    from test_pr4_lane_rules import _lp_face
+    mk = lambda dp, pe, acc, st, nodes, v: dict(cik='1', ticker='X', data_point=dp, period_end=pe, accession=acc, status=st, value=v, tags='', nodes=nodes, column='own', flags='')
+    # AVGO FY2016: own face 763 + 1,873 = 2,636; the FY2018 10-K prints the year as one CF total 2,640
+    am = lambda dp: [mk(dp, '2016-12-31', 'A16', 'component_sum', 'CostOfGoodsSoldAmortization=763 [R4.htm:17]; AmortizationOfIntangibleAssets=1873 [R4.htm:23]', '2636'),
+                     mk(dp, '2017-12-31', 'A17', 'mapped', 'AmortizationOfIntangibleAssets=1 [R6.htm:4]', '1'),
+                     mk(dp, '2018-12-31', 'A18', 'mapped', 'AmortizationOfIntangibleAssets=3566 [R6.htm:4]', '3566')]
+    comp = {'A18': 'AmortizationOfIntangibleAssets|4|2640|2016-12-31'}
+    assert resolve_all.apply_latest_print(am('amortization_of_intangibles'), comp, _lp_face('AmortizationOfIntangibleAssets'))[0]['value'] == D(2640)
+    # another data point with the same shape keeps its own parts
+    assert resolve_all.apply_latest_print(am('research_and_development'), comp, _lp_face('AmortizationOfIntangibleAssets'))[0]['value'] == '2636'
+    # AMZN FY2015 capex: own net line no longer reported; the later print's gross line (within 0.5-2x) is the year's print
+    cap = lambda later: [mk('capex', '2016-12-31', 'A16', 'mapped', 'PaymentsToAcquirePropertyPlantAndEquipment=4589 [R2.htm:27]', '4589'),
+                         mk('capex', '2017-12-31', 'A17', 'mapped', 'PaymentsToAcquireProductiveAssets=1 [R2.htm:18]', '1'),
+                         mk('capex', '2018-12-31', 'A18', 'mapped', 'PaymentsToAcquireProductiveAssets=11955 [R2.htm:18]', '11955')]
+    assert resolve_all.apply_latest_print(cap(0), {'A18': 'PaymentsToAcquireProductiveAssets|4|5387|2016-12-31'}, _lp_face('PaymentsToAcquireProductiveAssets'))[0]['value'] == D(5387)
+    assert resolve_all.apply_latest_print(cap(0), {'A18': 'PaymentsToAcquireProductiveAssets|4|16061|2016-12-31'}, _lp_face('PaymentsToAcquireProductiveAssets'))[0]['value'] == '4589'   # PLD: another line's role
+    c = cap(0)
+    for r in c: r['data_point'] = 'revenue'
+    assert resolve_all.apply_latest_print(c, {'A18': 'PaymentsToAcquireProductiveAssets|4|5387|2016-12-31'}, _lp_face('PaymentsToAcquireProductiveAssets'))[0]['value'] == '4589'
+
+
+def test_line_continuity_follows_a_retagged_line():
+    mk = lambda pe, acc, st, v='', tags='': dict(cik='1018724', period_end=pe, data_point='cash_paid_for_interest', accession=acc, status=st, value=v, tags=tags, nodes='', column='own', flags='')
+    rows = [mk('2016-12-31', 'A16', 'mapped', D(290), 'InterestPaid'), mk('2017-12-31', 'A17', 'not_presented'), mk('2018-12-31', 'A18', 'not_presented')]
+    comp = {'A17': 'InterestPaidOnLongTermDebt|4|290|2016-12-31~InterestPaidOnCapitalAndFinanceLeaseObligations|4|206|2016-12-31',
+            'A18': 'InterestPaidOnLongTermDebt|4|328|2017-12-31'}
+    notes = {'A17': 'InterestPaidOnLongTermDebt|4|328~InterestPaidOnCapitalAndFinanceLeaseObligations|4|319', 'A18': 'InterestPaidOnLongTermDebt|4|854'}
+    out = resolve_all.apply_line_continuity(rows, notes, comp)
+    assert out[1]['value'] == D(328) and out[2]['value'] == D(854) and 'line_continuity' in out[2]['flags']
+    # no prior-year value match: stays not_presented
+    rows = [mk('2016-12-31', 'A16', 'mapped', D(291), 'InterestPaid'), mk('2017-12-31', 'A17', 'not_presented')]
+    assert resolve_all.apply_line_continuity(rows, notes, comp)[1]['status'] == 'not_presented'
+    # two elements carry the prior value: ambiguous, stays
+    rows = [mk('2016-12-31', 'A16', 'mapped', D(290), 'InterestPaid'), mk('2017-12-31', 'A17', 'not_presented')]
+    comp2 = {'A17': 'InterestPaidOnLongTermDebt|4|290|2016-12-31~InterestPaidOther|4|290|2016-12-31'}
+    notes2 = {'A17': 'InterestPaidOnLongTermDebt|4|328~InterestPaidOther|4|5'}
+    assert resolve_all.apply_line_continuity(rows, notes2, comp2)[1]['status'] == 'not_presented'
+
+
+def test_net_interest_revenue_element_is_an_interest_part_never_interest_income():
+    assert resolve_all.PURE_II.match('InterestRevenueExpenseNet') and resolve_all.NET_II.match('InterestRevenueExpenseNet')

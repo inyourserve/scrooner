@@ -909,3 +909,11 @@
 - ~ InterestExpenseDebt: data_point
 - ~ InvestmentIncomeInterest: served_cells
 - ~ NonoperatingIncomeExpense: served_cells
+
+## 2026-11-20 (resolver-all110-.85): 6 element changes, 27999 rows, coverage 64.6%
+- ~ CostOfGoodsSoldAmortization: data_point, rule_id, served_cells
+- ~ InterestPaidOnLongTermDebt: data_point, rule_id, served_cells
+- ~ InterestRevenueExpenseNet: data_point, rule_id, served_cells
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ PaymentsForProceedsFromProductiveAssets: served_cells
+- ~ PaymentsToAcquirePropertyPlantAndEquipment: served_cells
