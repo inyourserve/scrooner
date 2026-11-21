@@ -119,3 +119,20 @@ def test_fsn_freshness_reports_lag_and_alerts_only_behind_flag(conn):
 
     alerts = evaluate_alerts(_snap(conn, fsn_alert_enabled=True))
     assert "fsn_behind_core:1:max_lag_days=9" in alerts
+
+
+def test_null_cik_transient_error_is_never_hidden(conn):
+    """A NULL cik can never be shown isolated (o.cik = NULL matches nothing, which used to hide it). The column is NOT NULL
+    today, so the condition is evaluated on a literal row; the same row with a cik is transient (control)."""
+    from scrooner_pipeline.operations import MAPPER_TRANSIENT_CONDITION
+
+    def transient(cik):
+        return conn.execute(
+            "with e as (select -1::bigint as id, %s::text as cik, 'filing_line_evidence'::text as stage, "
+            "'TransientSecError'::text as error_type, 'x'::text as message, now() as occurred_at) "
+            f"select count(*) from e where {MAPPER_TRANSIENT_CONDITION}",
+            (cik,),
+        ).fetchone()[0]
+
+    assert transient("0000000009") == 1
+    assert transient(None) == 0

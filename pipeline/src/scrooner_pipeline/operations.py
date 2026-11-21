@@ -111,7 +111,9 @@ FRESHNESS_TARGETS = (
 TRANSIENT_REPEAT_DAYS = 7
 # Row-level condition on analytics.mapper_error aliased e. Transient = the probe's own
 # TransientSecError class, or the older raw httpx 429/5xx HTTPStatusError message.
+# A NULL cik can never be shown isolated (o.cik = NULL matches nothing, which used to hide it), so it is never transient.
 MAPPER_TRANSIENT_CONDITION = f"""e.stage = 'filing_line_evidence'
+    and e.cik is not null
     and (e.error_type = 'TransientSecError'
          or (e.error_type = 'HTTPStatusError' and e.message ~ (chr(39) || '(429|5[0-9][0-9]) ')))
     and not exists (
