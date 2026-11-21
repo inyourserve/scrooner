@@ -56,6 +56,26 @@ def _unit(v):
     return u
 
 
+NUM_RE = re.compile(r'(?<![\d.,])\(?(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)\)?')
+
+
+def printed_unit(v, quote):
+    """X121 (.89): the rounding unit the read's figure is PRINTED at, from its quote: the finest unit 10^(k-d) at which the quote
+    prints the figure as a number of k-scale units with d decimals (k = 0, 3, 6, 9: '400' in a $M table is 10^6; '0.8' billion
+    is 10^8). A figure the quote does not print keeps the trailing-zero unit (_unit). CB sbc FY2025: the equity statement
+    prints '400' ($M), a finer print than none; it is not a 10^8 rounding of the note's 399, so the read replaces it."""
+    v = abs(D(v)); best = None
+    if v == 0: return D(1)
+    for m in NUM_RE.finditer(quote or ''):
+        n = D(m.group(1).replace(',', ''))
+        dec = -n.as_tuple().exponent if '.' in m.group(1) else 0
+        for k in (0, 3, 6, 9):
+            if n * D(10) ** k == v:
+                u = D(10) ** (k - dec)
+                best = u if best is None or u < best else best
+    return best if best is not None else _unit(v)
+
+
 def _yy(acc):
     return (acc[11:13], acc) if acc else ('', '')
 
@@ -85,10 +105,14 @@ def apply(rows, path=None, log=None):
     T = load(path)
     if not T: return rows
     for r in rows:
-        if (r.get('column') or 'own') not in ('own', 'comparative') or str(r.get('accession', '')).startswith('BEFORE:'): continue
+        if (r.get('column') or 'own') not in ('own', 'comparative'): continue
         cand = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end'])))
         if not cand: continue
         t = cand[0]
+        # X120 (.89): a year before the company's first 10-K (accession BEFORE:...) takes only a VALUE read citing a real filing
+        # that prints it (PLTR shares FY2018 and CRWD equity/shares FY2018 in the first 10-K's equity statement): a comparative
+        # of that filing; every other read leaves the row as it is
+        if str(r.get('accession', '')).startswith('BEFORE:') and not (t['outcome'] == 'VALUE' and ACC_RE.fullmatch(t.get('accession') or '')): continue
         own_acc = r.get('own_accession') or r.get('accession') or ''
         rv = D(r['value']) if r.get('value') not in (None, '') and r['status'] not in BLANK else None
         if t['outcome'] == 'VALUE':
@@ -98,7 +122,7 @@ def apply(rows, path=None, log=None):
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read', badge) if x)
                 if log is not None: log.append(('agree', r['ticker'], r['data_point'], r['period_end']))
                 continue
-            if rv is not None and _unit(ev) > _unit(rv) and abs(rv - ev) <= _unit(ev) / 2:
+            if rv is not None and printed_unit(ev, t.get('quote')) > _unit(rv) and abs(rv - ev) <= printed_unit(ev, t.get('quote')) / 2:
                 # ruling c (Dhairya 2026-11-21): a coarser rounding of the same figure never replaces the finer value (XOM sbc FY2024 835M, not 0.8B;
                 # MRVL total_debt FY2022 4,547,977k over the FY2023 10-K's 4,548.0M). The read agrees; the finer node stays.
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read', badge) if x)
@@ -137,6 +161,25 @@ def apply(rows, path=None, log=None):
     return rows
 
 
+PE_KEY_RE = re.compile(r'period_end\s+(\d{4}-\d{2}-\d{2})')
+
+
+def fiscal_periods(res, e):
+    """X119 (.89): the resolver period(s) a read's fiscal_year names, keyed to the COMPANY's own fiscal year end, never a
+    calendar Dec 31 (MU fiscal 2023 = the year ended 2023-08-31; the served layer's open row carried 2023-12-31).
+    (1) A read that states 'period_end YYYY-MM-DD' (rule_proposal or quote) is keyed to that period when the resolver has it;
+    (2) else the periods ending in that year, and among several only those in the company's fiscal-year-end month (the month
+    most of its periods end in), so a stray calendar-year period never splits the key."""
+    ends = sorted({r['period_end'] for r in res})
+    for m in PE_KEY_RE.finditer((e.get('rule_proposal') or '') + ' ' + (e.get('quote') or '')):
+        if m.group(1) in ends and m.group(1)[:4] == str(e['fiscal_year']): return [m.group(1)]
+    pes = [x for x in ends if x[:4] == str(e['fiscal_year'])]
+    if len(pes) > 1:
+        fy_month = collections.Counter(x[5:7] for x in ends).most_common(1)[0][0]
+        pes = [x for x in pes if x[5:7] == fy_month] or pes
+    return pes
+
+
 def import_files(resolver_dir, files, skips_path=None):
     """(kept rows, skipped rows) from the evidence files; periods from the resolver output (one annual period per year)."""
     skips = {}
@@ -157,7 +200,7 @@ def import_files(resolver_dir, files, skips_path=None):
             tk = e['ticker']; src = os.path.basename(fp)
             res = list(csv.DictReader(open(os.path.join(resolver_dir, tk + '.csv'))))
             cik = res[0]['cik'] if res else ''
-            pes = sorted({r['period_end'] for r in res if r['period_end'][:4] == str(e['fiscal_year'])})
+            pes = fiscal_periods(res, e)
             row = dict(cik=cik, ticker=tk, data_point=e['data_point'], period_end=pes[0] if len(pes) == 1 else '', fiscal_year=e['fiscal_year'],
                        outcome=e['outcome'], value=e['value'], element=e['element'], accession=e['accession'], r_page=e['r_page'],
                        hide_class='', quote=e['quote'], rule_proposal=e['rule_proposal'], source_file=src)

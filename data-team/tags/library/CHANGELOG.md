@@ -920,3 +920,71 @@
 
 ## 2026-11-22 (resolver-all110-.87): 1 element changes, 28001 rows, coverage 64.1%
 - ~ IntangibleAssetsNetIncludingGoodwill: rule_id
+
+## 2026-11-22 (resolver-all110-.89): 66 element changes, 28005 rows, coverage 65.1%
+- ~ AccountsPayableCurrent: certified_cells
+- ~ AccountsReceivableNetCurrent: certified_cells
+- ~ AdditionalPaidInCapital: rule_id
+- ~ AdjustmentForAmortization: served_cells
+- ~ AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue: rule_id
+- ~ AllocatedShareBasedCompensationExpense: served_cells
+- ~ AmortizationOfIntangibleAssets: served_cells, certified_cells
+- ~ Assets: certified_cells
+- ~ AssetsCurrent: certified_cells
+- ~ CashAndCashEquivalentsAtCarryingValue: certified_cells
+- ~ CommonStockDividendsPerShareDeclared: certified_cells
+- ~ CommonStockSharesOutstanding: certified_cells
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ CostOfGoodsSold: served_cells
+- ~ CostOfServicesExcludingDepreciationDepletionAndAmortization: served_cells
+- ~ CostsAndExpenses: rule_id, served_cells
+- ~ DepreciationAmortizationAndAccretionNet: certified_cells
+- ~ DepreciationDepletionAndAmortization: served_cells
+- ~ EarningsPerShareBasic: certified_cells
+- ~ EarningsPerShareDiluted: certified_cells
+- ~ EquitySecuritiesFVNIAndWithoutReadilyDeterminableFairValueGainLoss: certified_cells
+- ~ FranchiseCosts: served_cells
+- ~ Franchisedrestaurantsoccupancyexpenses: data_point, served_cells
+- ~ Goodwill: certified_cells
+- ~ IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest: certified_cells
+- ~ IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments: certified_cells
+- ~ IncomeTaxExpenseBenefit: certified_cells
+- ~ IncomeTaxesPaid: certified_cells
+- ~ IncomeTaxesPaidNet: certified_cells
+- ~ IncreaseDecreaseInAccountsPayable: certified_cells
+- ~ IncreaseDecreaseInAccountsReceivable: certified_cells
+- ~ InterestExpense: data_point, rule_id, served_cells, certified_cells
+- ~ InterestExpenseNonoperating: served_cells, certified_cells
+- ~ InterestPaid: certified_cells
+- ~ InterestPaidNet: certified_cells
+- ~ InvestmentIncomeNet: data_point, served_cells
+- ~ Liabilities: certified_cells
+- ~ LiabilitiesCurrent: certified_cells
+- ~ LongTermDebtCurrent,LongTermDebtNoncurrent: certified_cells
+- ~ LongTermDebtNoncurrent: certified_cells
+- ~ NetCashProvidedByUsedInFinancingActivities: certified_cells
+- ~ NetCashProvidedByUsedInInvestingActivities: certified_cells
+- ~ NetCashProvidedByUsedInOperatingActivities: certified_cells
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ OccupancyAndOtherOperatingExpenses: served_cells
+- ~ OperatingExpenses: certified_cells
+- ~ OperatingIncomeLoss: certified_cells
+- ~ OtherExpenses: served_cells
+- ~ OtherNonoperatingIncomeExpense: data_point, served_cells, certified_cells
+- ~ OtherOperatingIncomeExpenseNet: served_cells
+- ~ OtherSellingGeneralAndAdministrativeExpense: served_cells
+- ~ PaymentToAcquireProductiveAssetsAndInvestments: data_point, served_cells
+- ~ PaymentsForRepurchaseOfCommonStock: certified_cells
+- ~ PaymentsOfDividends: certified_cells
+- ~ PayrollAndEmployeeBenefits: served_cells
+- ~ ProfitLoss: certified_cells
+- ~ PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization: certified_cells
+- ~ PropertyPlantAndEquipmentNet: certified_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: data_point, served_cells
+- ~ Revenues: data_point, rule_id, served_cells, certified_cells
+- ~ SalesRevenueNet: certified_cells
+- ~ SellingGeneralAndAdministrativeExpense: served_cells
+- ~ ShareBasedCompensation: certified_cells
+- ~ StockholdersEquity: certified_cells
+- ~ WeightedAverageNumberOfDilutedSharesOutstanding: certified_cells
+- ~ WeightedAverageNumberOfSharesOutstandingBasic: certified_cells

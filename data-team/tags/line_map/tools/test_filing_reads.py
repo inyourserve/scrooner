@@ -84,7 +84,7 @@ def test_hide_row_on_a_valued_cell_becomes_not_presented_with_class_and_quote(tm
 
 def test_rows_of_other_periods_cells_and_before_rows_are_untouched(tmp_path):
     p = cells(tmp_path, read())
-    others = [row(pe='2020-01-31'), row(dp='revenue'), row(accession='BEFORE:0001058057-19-000010'), row(column='fill')]
+    others = [row(pe='2020-01-31'), row(dp='revenue'), row(column='fill')]
     out = filing_reads.apply(others, p)
     assert all(o['status'] == 'not_presented' and 'filing_read' not in o['flags'] for o in out)
 

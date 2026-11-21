@@ -92,7 +92,20 @@ def apply_opex_costs_total_less_cor(rows, filings=()):
     return rows
 
 
-OPEX_BADGE_TC = 'derived:total_costs_and_expenses-cost_of_revenue'   # registry badge (metrics/registry/data_points.csv, fa369851)
+def registry_badge(dp, formula):
+    """The badge of the fallback step of `dp` whose derived formula starts with `formula`, read from the registry
+    (pipeline metrics/registry/data_points.csv via registry.load_data_points, founder 2026-11-22; resolver .89: never a
+    copy in this file). Exactly one step must match, in the general template."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'pipeline', 'src'))
+    from scrooner_pipeline.metrics import registry
+    hits = [b for b in registry.load_data_points()[(dp, 'general')].badges if b.startswith('derived:' + formula)]
+    if len(hits) != 1: raise ValueError(f"registry: {dp} has {len(hits)} steps derived:{formula}*")
+    return hits[0]
+
+
+OPEX_BADGE_TC = registry_badge('operating_expenses', 'total_costs_and_expenses-cost_of_revenue')   # fallback 2 (X98, X117)
+OPEX_BADGE_SUM = registry_badge('operating_expenses', 'sum(')   # fallback 3: sum of the printed operating lines (X89, X90)
+OPEX_BADGE_GPOI = registry_badge('operating_expenses', 'gross_profit-operating_income')   # fallback 4
 OTHER_IN_TOTAL_LB = re.compile(r'(?i)other \(?(income|expense)|interest|investment income|equity in|foreign (currency|exchange)')
 
 
@@ -1011,6 +1024,30 @@ def apply_weighted_class(rows, memberfacts):
 
 
 SBC_MEMBER_TAGS = ('AllocatedShareBasedCompensationExpense', 'ShareBasedCompensation')
+SBC_SE_TAG = 'AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue'
+
+
+def apply_sbc_equity_statement(rows, memberfacts):
+    """X122 (.89; registry data_points.csv sbc fallback 2, ruling 2026-11-21 (a)): sbc is the cash-flow add-back; a filing that
+    prints no add-back (the cell is not_presented, or only a note award-type sum, which is no registry step) takes the equity
+    statement's share-based compensation line of the SAME filing: the APIC column fact (EquityComponents=AdditionalPaidInCapital)
+    of AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue, exactly one twelve-month
+    value. One source per row: the equity-statement fact replaces the award-type sum, never adds to it (CB FY2014-20 and 2025:
+    'Share-based compensation expense' 400 vs note options 91 + restricted 308 = 399). A row served from the CF add-back is never
+    touched."""
+    for r in rows:
+        if r['data_point'] != 'sbc' or (r.get('column') or 'own') != 'own': continue
+        if not (r['status'] == 'not_presented' or (r['status'] == 'component_sum' and 'award_type_member_sum' in (r.get('flags') or ''))): continue
+        vals = {D(q[2]) for q in (x.split('|') for x in (memberfacts.get(r['accession']) or '').split('~'))
+                if len(q) == 4 and q[0] == SBC_SE_TAG and q[1] == '4' and q[3].rstrip(';') == 'EquityComponents=AdditionalPaidInCapital'}
+        if len(vals) != 1: continue
+        v = vals.pop()
+        was = f"{r['status']}={r.get('value')}" if r['status'] == 'component_sum' else r['status']
+        r.update(status='mapped', value=v, tags=SBC_SE_TAG, r_page='',
+                 nodes=f"{SBC_SE_TAG}[EquityComponents=AdditionalPaidInCapital]={standard_inputs._plain(v)} [SE]",
+                 why=f"no cash-flow share-based compensation add-back: the equity statement's APIC line of the same filing (registry sbc fallback 2; replaces {was})")
+        r['flags'] = ';'.join(x for x in ((r.get('flags') or '').replace('award_type_member_sum', ''), 'sbc_equity_statement') if x).replace(';;', ';').strip(';')
+    return rows
 
 
 def apply_sbc_award_members(rows, memberfacts):
@@ -1339,7 +1376,7 @@ def apply_cost_and_opex(rows, filings):
         else:
             continue
         r.update(status='component_sum', value=v, tags='printed totals', nodes=nodes, why=f'operating expenses = the lines between the top line and operating income, from {how}')
-        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals', OPEX_BADGE_GPOI if how.startswith('gross profit') else OPEX_BADGE_TC) if y)
     for r in rows:   # false-reason sweep 2026-11-14: a 'no node' reason where the filing prints opex lines or a wider costs total
         if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
         isf = [l for l in face(parse(F[r['accession']])[0], 'IS') if l['val'] is not None]
@@ -1361,7 +1398,7 @@ def apply_cost_and_opex(rows, filings):
                 r.update(status='component_sum', value=sum((l['val'] for l in ops), D(0)), tags='+'.join(l['tag'] for l in ops),
                          nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ops),
                          why=f"no operating-income line and no costs total: the operating lines printed after '{cl['lb']}' up to '{nxt['lb']}' (the first nonoperating line)")
-                r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_component_lines') if y)
+                r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_component_lines', OPEX_BADGE_SUM) if y)
                 continue
         if tot is not None:
             isf_all = [l for l in face(parse(F[r['accession']])[0], 'IS') if not l['tag'].endswith(('Abstract', 'Axis', 'Domain', 'Table', 'LineItems'))]   # DIS: cost rows carry members only
@@ -1370,7 +1407,7 @@ def apply_cost_and_opex(rows, filings):
             if not wider: continue
             got = _opex_from_costs_block(rows, r, F[r['accession']], tot, isf, cor)
             if got:
-                r.update(**got); r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_costs_block') if y); continue
+                r.update(**got); r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_costs_block', OPEX_BADGE_SUM) if y); continue
             r.update(status='combined', value=None, tags=tot['tag'], nodes=f"{tot['tag']}={tot['val']} [R{tot['rep']}.htm:{tot['ln']}]",
                      why=f"the only expense total printed, '{tot['lb']}', also holds " + ', '.join(f"'{w}'" for w in wider[:3]) + " (cost of revenue or nonoperating items); no operating-expense total is printed")
     return rows
@@ -2154,6 +2191,7 @@ if __name__ == '__main__':
     if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
     rows = apply_face_label_overrides(rows, filings, notefacts)
     rows = apply_sbc_award_members(rows, memberfacts)
+    rows = apply_sbc_equity_statement(rows, memberfacts)   # X122
     rows = apply_weighted_class(rows, memberfacts)
     rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)

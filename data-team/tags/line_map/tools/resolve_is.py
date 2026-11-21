@@ -164,6 +164,15 @@ def resolve_band(L, arcs, notes, acc=None):
         # a printed dash in the band (LMT 2016 'Other non-operating income, net') is the band's own other line: the printed-zero rule serves it
         if any(l['val'] is None and kind(l) == 'other' and not l['tag'].endswith(('Abstract', 'Member')) for l in face(L, 'IS') if oi['ln'] < l['ln'] < pt['ln']): oth = []
         oth = [member_row_value(l, acc) for l in oth]
+        # X123 (.89, Dhairya 2026-11-21 'ProductOrService members are revenue'): a revenue-table row (a ProductOrService member
+        # of the revenue line, DE 'Other income' = Revenues[ProductOrService=Other], WELL ProductAndServiceOther) is revenue,
+        # never an other-income part; a filing whose only other line is such a row prints no other income
+        rev_rows = [l for l in oth if '[ProductOrService=' in l['tag'] or l['tag'].endswith('Member')]
+        if rev_rows:
+            oth = [l for l in oth if l not in rev_rows]
+            if not oth:
+                out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; "
+                    + ', '.join(f"'{l['lb']}' (R{l['rep']}:{l['ln']})" for l in rev_rows) + " is a row of the revenue table (ProductOrService member): revenue, not other income", flags='revenue_table_member')
         if oth and all(l['val'] is not None for l in oth):
             sg = lambda l: wt[l['tag']] if l['tag'] in wt else (D(-1) if re.search(r'Expenses?$', l['tag']) and 'IncomeExpense' not in l['tag'] else D(1))
             out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(oth) == 1 else 'component_sum', oth,
@@ -171,7 +180,7 @@ def resolve_band(L, arcs, notes, acc=None):
                 flags='presented_within_expenses', value=sum((sg(l) * l['val'] for l in oth), D(0)))
         elif oth:
             out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; other income/expense lines " + ', '.join(f"'{l['lb']}' (R{l['rep']}:{l['ln']})" for l in oth) + " are printed but " + ', '.join(f"'{l['lb']}'" for l in oth if l['val'] is None) + " has no consolidated fact; an incomplete group is never summed", flags='other_part_no_fact')
-        else:
+        elif 'other_income_expense_net' not in out:
             out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; no other nonoperating line")
     if ie and (nt or mx) and all(AFFIL_LB.search(l['lb'] or '') or l['tag'].startswith('RelatedParty') for l in ie):
         ie = []   # CEG: 'Interest expense to affiliates' beside 'Interest expense, net' is a part, not the data point: the net-line path below

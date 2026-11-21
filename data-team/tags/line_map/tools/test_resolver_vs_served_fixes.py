@@ -445,22 +445,29 @@ def test_other_income_guards_twin_dash_and_incomplete_group():
     dash = _bmy(extra=(('IS', 'OtherNonoperatingIncome', 'Other non-operating income, net', None),))
     assert dash['status'] == 'not_presented'
     # a part with no consolidated fact: an incomplete group is never summed
-    inc = resolve_is.resolve(filing([('IS', 'OtherMember', 'Other income', None), ('IS', 'Revenues', 'Net sales and revenues', 100),
-                                                                 ('IS', 'OtherExpenses', 'Other expenses', 4), ('IS', 'CostsAndExpenses', 'Total', 60),
-                                                                 ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Income before income taxes', 40)]), {})['other_income_expense_net']
+    def inc_(first):
+        return resolve_is.resolve(filing([first, ('IS', 'Revenues', 'Net sales and revenues', 100),
+                                          ('IS', 'OtherExpenses', 'Other expenses', 4), ('IS', 'CostsAndExpenses', 'Total', 60),
+                                          ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Income before income taxes', 40)]), {})['other_income_expense_net']
+    inc = inc_(('IS', 'OtherNonoperatingIncome', 'Other income', None))
     assert inc['status'] == 'not_presented' and 'other_part_no_fact' in inc['flags']
+    # X123 (.89): a revenue-table member row is revenue, not a missing other-income part (WELL): the other line alone
+    inc = inc_(('IS', 'OtherMember', 'Other income', None))
+    assert inc['status'] == 'mapped' and inc['value'] == D(-4)
 
 
-def test_revenue_member_row_takes_its_member_fact():
-    # DE FY2024: 'Other Income' is a ProductOrService=Other row; its fact comes from rules/fsn_dropped_facts.csv
+def test_revenue_member_row_is_revenue_never_other_income():
+    # DE FY2024: 'Other Income' is a ProductOrService=Other row (its fact from rules/fsn_dropped_facts.csv); X123 (.89): a row of
+    # the revenue table is revenue, never other income (was served as other income 1,198 before .89)
     f = filing([('IS', 'OtherMember', 'Other Income', None), ('IS', 'Revenues', 'Net sales and revenues', 51716000000), ('IS', 'CostsAndExpenses', 'Total', 42510000000),
                 ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments', 'Income before Income Taxes', 9206000000)])
     old = dict(resolve_is.MEMBER_FACTS)
     try:
         resolve_is.MEMBER_FACTS[f['a']] = 'Revenues|4|1198000000|ProductOrService=Other;~Revenues|1|300000000|ProductOrService=Other;'
         r = resolve_is.resolve(f, {})['other_income_expense_net']
-        assert r['status'] == 'mapped' and r['value'] == D(1198000000) and r['nodes'] == 'Revenues[ProductOrService=Other]=1198000000 [R2.htm:1]'
-        assert resolve_all.NODE_GRAMMAR.match(r['nodes'])
+        assert r['status'] == 'not_presented' and 'revenue_table_member' in r['flags'] and "'Other Income' (R2:1)" in r['why']
+        l = resolve_is.member_row_value(dict(tag='OtherMember', val=None, lb='Other Income', rep=2, ln=1), f['a'])
+        assert l['tag'] == 'Revenues[ProductOrService=Other]' and l['val'] == D(1198000000)
     finally:
         resolve_is.MEMBER_FACTS.clear(); resolve_is.MEMBER_FACTS.update(old)
 
@@ -523,6 +530,7 @@ def test_operating_lines_without_a_total_or_oi_are_summed_up_to_the_first_nonope
     cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(1215), tags='CostOfRevenue', nodes='', why='', flags='')
     r = resolve_all.apply_cost_and_opex([_opex_row(f), cor], [f])[0]
     assert r['status'] == 'component_sum' and r['value'] == D(936) and 'opex_component_lines' in r['flags']
+    assert 'derived:sum(printed operating lines)' in r['flags'].split(';')   # X124: the registry badge of fallback 3
     f['calc'] = f['calc'].replace('InterestExpense|-1', 'InterestExpense|1')   # a calc that misses the printed pretax: no sum
     assert resolve_all.apply_cost_and_opex([_opex_row(f), dict(cor)], [f])[0]['status'] == 'not_presented'
     # a line the rule does not know as operating stops the run before two lines: no sum
