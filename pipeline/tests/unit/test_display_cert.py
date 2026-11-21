@@ -936,3 +936,14 @@ def test_verified_absent_is_a_year_class_and_json_writes_null_not_empty():
     run = dc.Run("T", "c", "0" * 64, "s", {}, cells=[shown])
     c = dc.certificate(run, None, "d", "a")["cells"][0]
     assert c["hide_class"] is None and c["reason_code"] is None
+
+
+def test_cf_inventory_change_hide_has_a_tag_family():
+    cells = [cell(dp="cf_inventory_change", display=dc.HIDDEN_ROW)]
+    assert dc.check_hidden_rows(cells, [])[0].severity == "INFO"
+    assert (
+        dc.check_hidden_rows(cells, [fact("IncreaseDecreaseInInventories", "5")])[
+            0
+        ].severity
+        == "FAIL"
+    )

@@ -176,6 +176,7 @@ HIDE_FAMILY: dict[str, tuple[str, ...]] = {
         "OperatingCostsAndExpenses",
     ),
     "shares_outstanding": ("CommonStockSharesOutstanding",),
+    "cf_inventory_change": ("IncreaseDecreaseInInventories",),
     "cf_ap_change": (
         "IncreaseDecreaseInAccountsPayable",
         "IncreaseDecreaseInAccountsPayableTrade",
