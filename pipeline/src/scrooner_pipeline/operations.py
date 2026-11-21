@@ -107,6 +107,19 @@ FRESHNESS_TARGETS = (
     ),
 )
 
+# A repeat of the same cik within this many days (either side) is not "transient".
+TRANSIENT_REPEAT_DAYS = 7
+# Row-level condition on analytics.mapper_error aliased e. Transient = the probe's own
+# TransientSecError class, or the older raw httpx 429/5xx HTTPStatusError message.
+MAPPER_TRANSIENT_CONDITION = f"""e.stage = 'filing_line_evidence'
+    and (e.error_type = 'TransientSecError'
+         or (e.error_type = 'HTTPStatusError' and e.message ~ (chr(39) || '(429|5[0-9][0-9]) ')))
+    and not exists (
+        select 1 from analytics.mapper_error o
+        where o.cik = e.cik and o.id <> e.id
+          and o.occurred_at between e.occurred_at - interval '{TRANSIENT_REPEAT_DAYS} days'
+                                and e.occurred_at + interval '{TRANSIENT_REPEAT_DAYS} days')"""
+
 DEAD_LETTER_QUERIES = {
     # "collector" excludes NotInBulkArchive -- found live 2026-09-10: it's
     # the ONLY error_type raw.collector_errors has ever recorded (97/97
@@ -122,7 +135,11 @@ DEAD_LETTER_QUERIES = {
     # for where this count still surfaces (visibility, never alerting).
     "collector": "select count(*) from raw.collector_errors where not resolved and error_type != 'NotInBulkArchive'",
     "normalizer": "select count(*) from core.normalizer_error where not resolved",
-    "mapper": "select count(*) from analytics.mapper_error where not resolved",
+    # "mapper" excludes a transient SEC HTTP failure of the filing-line evidence probe that
+    # is not repeated for the same cik (see MAPPER_TRANSIENT_CONDITION). Found live 2026-11-21:
+    # one 503 on FilingSummary.xml (id 134) failed the nightly gate 11-17..20. Everything
+    # else (other stages, other error classes, repeats) stays zero tolerance.
+    "mapper": f"select count(*) from analytics.mapper_error e where not e.resolved and not ({MAPPER_TRANSIENT_CONDITION})",
 }
 
 # Known-benign dead-letter categories, tracked for visibility but
@@ -133,7 +150,45 @@ EXPECTED_MISS_QUERIES = {
     "collector_not_in_bulk_archive": (
         "select count(*) from raw.collector_errors where not resolved and error_type = 'NotInBulkArchive'"
     ),
+    "mapper_transient_sec_http": (
+        f"select count(*) from analytics.mapper_error e where not e.resolved and ({MAPPER_TRANSIENT_CONDITION})"
+    ),
 }
+
+
+# FSN freshness (report-only unless the alert flag is on; the FSN nightly stage is still off,
+# so a green run proves only the old path). Cohort = companies with any fsn.filing row.
+FSN_FRESHNESS_SQL = """
+with cohort as (select company_id, max(filed) as fsn_newest
+                from fsn.filing where company_id is not null and form in ('10-K', '10-Q')
+                group by company_id),
+core_newest as (select f.company_id, max(f.filing_date) as core_newest
+                from core.filing f join cohort c on c.company_id = f.company_id
+                where f.form in ('10-K', '10-Q') group by f.company_id)
+select count(*),
+       count(*) filter (where n.core_newest > c.fsn_newest),
+       max(n.core_newest - c.fsn_newest) filter (where n.core_newest > c.fsn_newest)
+from cohort c join core_newest n using (company_id)
+"""
+FSN_FRESHNESS_NOTE = (
+    "FSN freshness is report-only unless --fsn-freshness-alert is set. The FSN nightly stage "
+    "is still off (founder gate), so a green run does not yet prove the FSN path."
+)
+
+
+def load_fsn_freshness(conn: psycopg.Connection) -> dict:
+    if _scalar(conn, "select to_regclass('fsn.filing')") is None:
+        return {"available": False, "reason": "fsn.filing does not exist", "note": FSN_FRESHNESS_NOTE}
+    with conn.cursor() as cur:
+        cur.execute(FSN_FRESHNESS_SQL)
+        cohort, behind, lag = cur.fetchone()
+    return {
+        "available": True,
+        "cohort_companies": int(cohort or 0),
+        "companies_behind": int(behind or 0),
+        "max_lag_days": int(lag) if lag is not None else 0,
+        "note": FSN_FRESHNESS_NOTE,
+    }
 
 
 @dataclass(frozen=True)
@@ -168,6 +223,9 @@ class OperationalSnapshot:
     # Never fed into evaluate_alerts(); defaulted so existing callers/tests
     # that don't care about this don't need to pass it.
     expected_misses: dict[str, int] = field(default_factory=dict)
+    # FSN-vs-core.filing lag (load_fsn_freshness); alerts only when fsn_alert_enabled.
+    fsn_freshness: dict | None = None
+    fsn_alert_enabled: bool = False
 
 
 def _scalar(conn: psycopg.Connection, sql: str):
@@ -181,6 +239,7 @@ def load_operational_snapshot(
     conn: psycopg.Connection,
     now: datetime | None = None,
     run_limit: int = 50,
+    fsn_alert_enabled: bool = False,
 ) -> OperationalSnapshot:
     generated_at = now or datetime.now(timezone.utc)
     freshness = tuple(
@@ -206,6 +265,8 @@ def load_operational_snapshot(
         dead_letters=dead_letters,
         recent_runs=tuple(get_recent_runs(conn, limit=run_limit)),
         expected_misses=expected_misses,
+        fsn_freshness=load_fsn_freshness(conn),
+        fsn_alert_enabled=fsn_alert_enabled,
     )
 
 
@@ -348,6 +409,9 @@ def evaluate_alerts(snapshot: OperationalSnapshot) -> list[str]:
             alerts.append(f"stuck_run:{run.id}:{run.job or 'unknown'}")
 
     alerts.extend(row_count_anomalies(snapshot.recent_runs, now=now))
+    fsn = snapshot.fsn_freshness
+    if snapshot.fsn_alert_enabled and fsn and fsn.get("companies_behind"):
+        alerts.append(f"fsn_behind_core:{fsn['companies_behind']}:max_lag_days={fsn['max_lag_days']}")
     return alerts
 
 
@@ -374,6 +438,7 @@ def snapshot_as_dict(snapshot: OperationalSnapshot) -> dict:
         ],
         "dead_letters": snapshot.dead_letters,
         "expected_misses": snapshot.expected_misses,
+        "fsn_freshness": snapshot.fsn_freshness,
         "recent_runs": [
             {
                 "run_id": run.id,
