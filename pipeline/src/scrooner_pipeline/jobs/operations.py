@@ -24,7 +24,9 @@ def status(
     """Print one machine-readable operational snapshot; performs no writes."""
     with get_connection() as conn:
         conn.execute("set transaction read only")
-        report = snapshot_as_dict(load_operational_snapshot(conn, fsn_alert_enabled=fsn_freshness_alert))
+        report = snapshot_as_dict(
+            load_operational_snapshot(conn, fsn_alert_enabled=fsn_freshness_alert)
+        )
     typer.echo(json.dumps(report, indent=2, default=str))
     if fail_on_alert and report["alerts"]:
         raise typer.Exit(1)

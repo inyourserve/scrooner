@@ -178,7 +178,11 @@ FSN_FRESHNESS_NOTE = (
 
 def load_fsn_freshness(conn: psycopg.Connection) -> dict:
     if _scalar(conn, "select to_regclass('fsn.filing')") is None:
-        return {"available": False, "reason": "fsn.filing does not exist", "note": FSN_FRESHNESS_NOTE}
+        return {
+            "available": False,
+            "reason": "fsn.filing does not exist",
+            "note": FSN_FRESHNESS_NOTE,
+        }
     with conn.cursor() as cur:
         cur.execute(FSN_FRESHNESS_SQL)
         cohort, behind, lag = cur.fetchone()
@@ -411,7 +415,9 @@ def evaluate_alerts(snapshot: OperationalSnapshot) -> list[str]:
     alerts.extend(row_count_anomalies(snapshot.recent_runs, now=now))
     fsn = snapshot.fsn_freshness
     if snapshot.fsn_alert_enabled and fsn and fsn.get("companies_behind"):
-        alerts.append(f"fsn_behind_core:{fsn['companies_behind']}:max_lag_days={fsn['max_lag_days']}")
+        alerts.append(
+            f"fsn_behind_core:{fsn['companies_behind']}:max_lag_days={fsn['max_lag_days']}"
+        )
     return alerts
 
 

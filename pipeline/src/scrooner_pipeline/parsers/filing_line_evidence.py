@@ -258,8 +258,19 @@ MIN_SECONDS_BETWEEN_REQUESTS = 2.0
 class PacedClient:
     """Wraps SECClient so this job sends at most one request per MIN_SECONDS_BETWEEN_REQUESTS."""
 
-    def __init__(self, client, min_gap: float = MIN_SECONDS_BETWEEN_REQUESTS, clock=time.monotonic, sleep=time.sleep):
-        self._client, self._gap, self._clock, self._sleep = client, min_gap, clock, sleep
+    def __init__(
+        self,
+        client,
+        min_gap: float = MIN_SECONDS_BETWEEN_REQUESTS,
+        clock=time.monotonic,
+        sleep=time.sleep,
+    ):
+        self._client, self._gap, self._clock, self._sleep = (
+            client,
+            min_gap,
+            clock,
+            sleep,
+        )
         self._last: float | None = None
 
     def get(self, url: str):
