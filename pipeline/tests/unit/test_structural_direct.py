@@ -434,6 +434,63 @@ def test_a_tag_era_cell_from_a_strictly_later_filing_is_kept(
         cells, stats = [same], {"held": [], "blanks": [{**key}]}
         assert sd.apply_direct(conn, cells, stats, [d]) == 1
         assert cells[0]["value"] == Decimal(100) and stats["blanks"] == []
+        # enforce_resolver (2026-11-21): the later copy 90 is a restatement (authority v2) and stays, listed; a later
+        # copy off by 10^3 is no restatement and is held
+        _, st = w.cells()
+        for v, kept in ((Decimal(90), True), (Decimal(100000), False)):
+            cells, stats = [{**later, "value": v}], {"held": [], "blanks": []}
+            sd.apply_direct(conn, cells, stats, [d])
+            sd.enforce_resolver(
+                cells,
+                stats,
+                st["resolver_values"],
+                w.periods(),
+                ctm._grain,
+                "r@1",
+                stats.pop("_filed_by_accession"),
+            )
+            assert (cells != []) is kept
+            assert (len(stats["resolver_kept_restated"]) == 1) is kept
+            assert (stats["held"] != []) is (not kept)
+
+
+@pytest.mark.integration
+def test_a_rejected_direct_claim_still_records_the_resolver_value(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """The STX shape: the stored copy of the resolver's filing differs from the node it printed, so the direct claim is
+    rejected; the resolver value is still recorded, so the tag-era copy left in its place is held, not served."""
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        w.filing(ACC1, date(2019, 2, 1), END)
+        w.core_fact(ACC1, "InvestmentIncomeNet", "2770000")
+        _csv(tmp_path, _row(ACC1, "2.77", node="2.77"), monkeypatch=monkeypatch)
+        cells, st = w.cells()
+        assert (
+            cells == [] and "differs from the resolver node" in st["rejected"][0]["why"]
+        )
+        (rv,) = st["resolver_values"]
+        assert (rv["canonical_concept_id"], rv["period_id"], rv["value"]) == (
+            w.cc["sd_inc"],
+            w.pid,
+            Decimal("2.77"),
+        )
+        tag_era = [
+            {
+                "canonical_concept_id": w.cc["sd_inc"],
+                "period_id": w.pid,
+                "value": Decimal(2770000),
+                "_accession": ACC1,
+            }
+        ]
+        stats = {"held": [], "blanks": []}
+        sd.enforce_resolver(
+            tag_era, stats, st["resolver_values"], w.periods(), ctm._grain, "r@1"
+        )
+        assert (
+            tag_era == []
+            and stats["blanks"][0]["reason_code"] == sd.DIFFERS_FROM_RESOLVER
+        )
 
 
 @pytest.mark.integration

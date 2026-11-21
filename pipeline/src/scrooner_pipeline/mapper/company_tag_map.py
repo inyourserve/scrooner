@@ -2085,6 +2085,18 @@ def resolve_for_company(
     add_derived_quarters(cells, stats, concept_info, periods)
 
     add_derived_cells(conn, company_id, cells, stats, concept_info, periods)
+    # a served value must equal its resolver node's value: any other copy of a resolver-claimed key is held (OPEN)
+    sd.enforce_resolver(
+        cells,
+        stats,
+        dstats["resolver_values"],
+        periods,
+        _grain,
+        RULE_ID,
+        stats.pop("_filed_by_accession", {}),
+    )
+    stats["structural_direct_resolver_held"] = stats["resolver_held"]
+    stats["structural_direct_resolver_kept_restated"] = stats["resolver_kept_restated"]
     # filer-scale hold (common/per_share_guard.py): a per-share value >= 1000 that is 10^3 or 10^6 times the same
     # filing's other columns of its tag is never written; the cell is HELD with a reasoned blank (stays OPEN)
     _bad = scale_error_cell_indexes(conn, company_id, cells, concept_info)

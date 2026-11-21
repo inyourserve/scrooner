@@ -600,6 +600,159 @@ def _part_value(
     return "no stored fact for the part in that filing and column"
 
 
+def _claim_value(c: sl.Claim) -> Decimal | None:
+    """The value the resolver row claims for its cell, or None when it carries none (a text-only row). Pure."""
+    if not c.value:
+        return None
+    try:
+        return Decimal(str(c.value).replace(",", ""))
+    except ArithmeticError:
+        return None
+
+
+DIFFERS_FROM_RESOLVER = "differs_from_resolver"
+_MAX_SCALE = 6  # a filing reports at most in millions (XBRL decimals -6)
+
+
+def _scale(v: Decimal) -> int:
+    """The power of ten a whole value is rounded to, read from its trailing zeros (capped at millions). Pure."""
+    if v != v.to_integral_value():
+        return 0
+    n, k = abs(int(v)), 0
+    while n and n % 10 == 0 and k < _MAX_SCALE:
+        n //= 10
+        k += 1
+    return k
+
+
+def _rounds_to(exact: Decimal, rounded: Decimal) -> bool:
+    k = _scale(rounded)
+    floor = 10 ** (
+        k + 1
+    )  # under two significant digits left, the rounding proves nothing
+    if k == 0 or abs(rounded) < floor:
+        return False
+    q = Decimal(10) ** k
+    return (exact / q).quantize(Decimal(1), rounding="ROUND_HALF_UP") * q == rounded
+
+
+def agrees(served: Decimal, want: Decimal) -> bool:
+    """Equal, or one is the other at a coarser reporting scale: a later filing reprints the column in millions with one
+    decimal (MRVL sbc FY2021: 241,500,000 in the FY2023 10-K, 241,539,000 in the FY2022 10-K the resolver read). A scale
+    error (2,770,000 vs 2.77) or a partial line (short-term debt vs total) never agrees. Pure."""
+    served, want = Decimal(served), Decimal(want)
+    return served == want or _rounds_to(want, served) or _rounds_to(served, want)
+
+
+def shape(served: Decimal, want: Decimal) -> str:
+    """How a served copy differs from the resolver value: scale (10^3 / 10^6), sign, zero_vs_value or other. Pure."""
+    served, want = Decimal(served), Decimal(want)
+    if want == 0 or served == 0:
+        return "zero_vs_value"
+    if served == -want:
+        return "sign"
+    r = abs(served / want)
+    if any(r in (k, 1 / k) for k in (Decimal(1000), Decimal(1000000))):
+        return "scale"
+    return "other"
+
+
+def restated_later(c: dict, r: dict, filed: dict) -> bool:
+    """Authority v2 (founder): a copy from a STRICTLY LATER filing than the resolver's is that filing's restated or
+    recast column (ABT 2016 operating income, NVDA dividends_per_share after the 2021 split) and stays served, unless
+    it differs by scale, sign or zero, which no restatement explains (STX dividends_per_share 2,770,000). Pure."""
+    of, nf = filed.get(c.get("_accession")), r.get("filed")
+    return bool(of and nf and of > nf) and shape(c["value"], r["value"]) == "other"
+
+
+def enforce_resolver(
+    cells: list[dict],
+    stats: dict,
+    resolver_values: list[dict],
+    periods: dict[int, tuple[date, date, str]],
+    grain_of,
+    rule_id: str,
+    filed: dict | None = None,
+) -> list[dict]:
+    """A served value must equal its resolver node's value (Dhairya 2026-11-21: STX dividends_per_share FY2022 served
+    2,770,000 and MRVL total_debt served the short-term part while the resolver held 2.77 and the full totals). Any cell
+    of a key the resolver claims, from either path (a rejected direct claim leaves the tag-era cell; a later filing's
+    copy is kept by apply_direct; a derived step fills a key), whose value differs is HELD: never served, an evidenced
+    defect blank naming both values and the resolver's accession (the cell stays OPEN). A restated column of a strictly
+    later filing (restated_later) stays served and is listed in stats['resolver_kept_restated']. `filed` maps accession
+    -> filing date. Returns the held cells. Pure."""
+    want = {(r["canonical_concept_id"], r["period_id"]): r for r in resolver_values}
+    filed = filed or {}
+    keep: list[dict] = []
+    held: list[dict] = []
+    restated: list[dict] = []
+    for c in cells:
+        r = want.get((c["canonical_concept_id"], c["period_id"]))
+        if r is None or agrees(c["value"], r["value"]):
+            keep.append(c)
+            continue
+        if restated_later(c, r, filed):
+            keep.append(c)
+            restated.append(
+                {
+                    "concept": r["concept"],
+                    "period_id": c["period_id"],
+                    "served": c["value"],
+                    "served_accession": c.get("_accession"),
+                    "resolver": r["value"],
+                    "resolver_accession": r["accession"],
+                }
+            )
+            continue
+        held.append(c)
+        key = {
+            "canonical_concept_id": c["canonical_concept_id"],
+            "period_id": c["period_id"],
+        }
+        stats.setdefault("held", []).append({**key, "reason": DIFFERS_FROM_RESOLVER})
+        stats["blanks"] = [
+            b
+            for b in stats.get("blanks", [])
+            if (b.get("canonical_concept_id"), b.get("period_id"))
+            != (key["canonical_concept_id"], key["period_id"])
+        ]
+        start, end, ptype = periods[c["period_id"]]
+        grain = grain_of(start, end, ptype)
+        if grain is None:
+            continue
+        stats["blanks"].append(
+            {
+                **key,
+                "concept_name": r["concept"],
+                "state": "defect",
+                "defect_class": "guard_hidden",
+                "owner": "data_engineer_l1",
+                "reason_code": DIFFERS_FROM_RESOLVER,
+                "reason": f"stored copy {c['value']} ({c.get('_accession') or c.get('value_source')}) differs from "
+                f"the resolver value {r['value']} ({r['accession']}): held, the served value must be the resolver's",
+                "rule_id": rule_id,
+                "period_start": start,
+                "period_end": end,
+                "grain": grain,
+            }
+        )
+    cells[:] = keep
+    stats["resolver_kept_restated"] = restated
+    stats["resolver_held"] = [
+        {
+            "concept": want[(c["canonical_concept_id"], c["period_id"])]["concept"],
+            "period_id": c["period_id"],
+            "served": c["value"],
+            "resolver": want[(c["canonical_concept_id"], c["period_id"])]["value"],
+            "resolver_accession": want[(c["canonical_concept_id"], c["period_id"])][
+                "accession"
+            ],
+        }
+        for c in held
+    ]
+    return held
+
+
 def direct_cells(
     conn: psycopg.Connection,
     company_id: int,
@@ -617,6 +770,7 @@ def direct_cells(
         "fix_won": 0,
         "fix_won_cells": [],
         "no_claim_row": [],
+        "resolver_values": [],
     }
     stats["refuted_reasons"] = refuted_map_reasons(
         conn, company_id, cik, rows, periods, concept_info, path
@@ -751,6 +905,20 @@ def direct_cells(
             if sl.instant_sum_refused_for(c, name, concept_info[cid][1]):
                 reject("instant component sum refused (only total_debt)")
                 continue
+        expect = _claim_value(c)
+        if (
+            expect is not None
+        ):  # the resolver's claim for the key: enforce_resolver holds any served value that differs
+            stats["resolver_values"].append(
+                {
+                    "canonical_concept_id": cid,
+                    "period_id": pid,
+                    "value": expect,
+                    "accession": c.accession,
+                    "filed": meta[c.accession][1],
+                    "concept": name,
+                }
+            )
         kind = sl.stated_kind(c.decision, c.flags)
         if kind:
             why = stated_zero_claim_problem(c)
@@ -882,6 +1050,10 @@ def direct_cells(
             # read of its (accession, tag) pairs); a filer_xbrl_errors correction already replaced the part value above
             _oth = other_columns(conn, company_id, {(c.accession, p[1]) for p in parts})
             if filer_scale_error(name, served, [o for vs in _oth.values() for o in vs]):
+                if (
+                    expect is not None
+                ):  # the claim itself is the filer-scale value: it is no reference to enforce
+                    stats["resolver_values"].pop()
                 reject(
                     f"{FILER_SCALE_REASON}: {served} is 10^3 or 10^6 times the filing's other columns of the tag"
                 )
@@ -986,6 +1158,7 @@ def apply_direct(
                 (accs,),
             )
             filed = dict(cur.fetchall())
+    stats["_filed_by_accession"] = filed
     use: list[dict] = []
     kept: list[dict] = []
     for d in direct:
