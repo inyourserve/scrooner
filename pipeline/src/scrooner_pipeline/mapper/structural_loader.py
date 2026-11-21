@@ -286,6 +286,38 @@ def parse_claim_parts(tags: str) -> tuple[tuple[int, str | None, str], ...]:
     return tuple(out)
 
 
+def orient_to_value(
+    decision: str,
+    parts: tuple[tuple[int, str | None, str], ...],
+    node_values: tuple[str, ...],
+    value: str,
+    flags: str,
+) -> tuple[tuple[int, str | None, str], ...]:
+    """A single-part `mapped` claim whose node prints the filer's RAW element value while the resolver's value is its
+    negation (flags band / presented_within_expenses / calc_weight_flip: the line is signed by its calc weight toward
+    pretax or its cash-flow role) carries no '-' on the node, so the parsed sign would serve the raw value (LIN
+    other_income_expense_net 2017-25: NetPeriodicDefinedBenefits... -164M is +164M of income; the resolver serves
+    164M). The part sign is the one under which the printed node equals the resolver's value. polarity_flip rows are
+    left alone (common/polarity normalises them at serve time). Anything that does not fit exactly is unchanged. Pure."""
+    if (
+        decision != "mapped"
+        or len(parts) != 1
+        or len(node_values) != 1
+        or not node_values[0]
+        or not value
+        or "polarity_flip" in (flags or "").split(";")
+    ):
+        return parts
+    try:
+        nv, v = Decimal(node_values[0]), Decimal(value)
+    except ArithmeticError:
+        return parts
+    sg, tax, tag = parts[0]
+    if v != 0 and sg * nv != v and -sg * nv == v:
+        return ((-sg, tax, tag),)
+    return parts
+
+
 def base_tag(tag: str) -> str:
     """The tag name of a claim part (a member part's text before its bracket)."""
     return tag.partition("[")[0]
@@ -564,7 +596,17 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                         cik=(r.get("cik") or "").zfill(10) if r.get("cik") else None,
                         data_point=dp,
                         decision=decision,
-                        parts=parts,
+                        parts=orient_to_value(
+                            decision,
+                            parts,
+                            tuple(
+                                x.strip() for x in r.get("node_values", "").split("+")
+                            )
+                            if r.get("node_values")
+                            else (),
+                            r.get("value", ""),
+                            r.get("flags", ""),
+                        ),
                         stmts=stmts if not tagless else (stmts[0],),
                         locs=locs if not tagless else (locs[0],),
                         accession=accn,

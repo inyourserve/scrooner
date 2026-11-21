@@ -159,7 +159,10 @@ def test_member_resolves_to_exactly_one_stored_fact():
     )
     # another member, another column, and a fact with extra axes are never a stand-in
     assert isinstance(
-        mf.resolve_member_part(rows, mf.split_member_part("Tag[CommonClassC]"), date(2016, 12, 31), None), str
+        mf.resolve_member_part(
+            rows, mf.split_member_part("Tag[CommonClassC]"), date(2016, 12, 31), None
+        ),
+        str,
     )
     assert isinstance(mf.resolve_member_part(rows, spec, date(2015, 12, 31), None), str)
 
@@ -178,7 +181,9 @@ def test_member_under_two_axes_is_ambiguous_unless_the_rule_names_the_axis():
     # a named axis is exact: the hint never overrides it
     named = mf.split_member_part("Tag[EquityComponents=CommonClassX]")
     assert (
-        mf.resolve_member_part(rows, named, date(2016, 12, 31), None, "ClassOfStock").part_tag
+        mf.resolve_member_part(
+            rows, named, date(2016, 12, 31), None, "ClassOfStock"
+        ).part_tag
         == "Tag[EquityComponents=CommonClassX]"
     )
 
@@ -186,16 +191,28 @@ def test_member_under_two_axes_is_ambiguous_unless_the_rule_names_the_axis():
 def test_two_stored_values_for_a_member_resolve_only_by_the_node_value():
     rows = _rows((0, "A=M;", "5"), (0, "A=M;", "6"))
     spec = mf.split_member_part("Tag[M]")
-    assert "two stored values" in mf.resolve_member_part(rows, spec, date(2016, 12, 31), None)
-    assert mf.resolve_member_part(rows, spec, date(2016, 12, 31), Decimal(6)).value == Decimal(6)
+    assert "two stored values" in mf.resolve_member_part(
+        rows, spec, date(2016, 12, 31), None
+    )
+    assert mf.resolve_member_part(
+        rows, spec, date(2016, 12, 31), Decimal(6)
+    ).value == Decimal(6)
 
 
-def test_loader_replaces_member_text_by_the_resolved_part_and_checks_the_node(tmp_path: Path):
+def test_loader_replaces_member_text_by_the_resolved_part_and_checks_the_node(
+    tmp_path: Path,
+):
     nodes = "Tag[CommonClassA]=5 [R3.htm:13]; Tag[CommonClassB]=7 [R3.htm:13] | why: class sum"
-    (c,) = sl.read_claims(_write(tmp_path, _row(nodes=nodes, value="12", flags="class_sum", period_end="2016-12-31")))[0]
+    (c,) = sl.read_claims(
+        _write(
+            tmp_path,
+            _row(nodes=nodes, value="12", flags="class_sum", period_end="2016-12-31"),
+        )
+    )[0]
     rows = {
         (1, c.accession, "Tag"): _rows(
-            (0, "ClassOfStock=CommonClassA;", "5"), (0, "ClassOfStock=CommonClassB;", "7")
+            (0, "ClassOfStock=CommonClassA;", "5"),
+            (0, "ClassOfStock=CommonClassB;", "7"),
         )
     }
     got, why = sl.resolve_member_claim(c, 1, rows)
@@ -580,7 +597,9 @@ def test_comparative_guard_refuses_a_no_filing_reason_a_later_10k_presents():
     assert cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), True) is None
     assert "R3" in cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), False)
     # statement-specific: a BS-only restriction does not see the IS column
-    assert cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), False, ("BS",)) is None
+    assert (
+        cg.refuse_no_filing_reason(GEV_COLS, date(2022, 12, 31), False, ("BS",)) is None
+    )
 
 
 def test_coverage_leaves_a_presented_no_filing_reason_open():
@@ -598,7 +617,69 @@ def test_coverage_leaves_a_presented_no_filing_reason_open():
 def test_a_stray_value_at_an_earlier_date_is_not_a_printed_column():
     # GEV: Dec 31 2022 cash/equity/goodwill sit on BS-tagged lines (CF opening balance, equity roll-forward) but the
     # FY2024 10-K balance sheet prints only 2024 and 2023: 3 of 40 tags is not a column
-    stray = [cg.Column("0001996810-25-000011", "10-K", "BS", date(2022, 12, 31), 0, 4, 3, 40)]
+    stray = [
+        cg.Column("0001996810-25-000011", "10-K", "BS", date(2022, 12, 31), 0, 4, 3, 40)
+    ]
     assert cg.presenting(stray, date(2022, 12, 31), True) == []
-    full = [cg.Column("0001996810-25-000011", "10-K", "BS", date(2023, 12, 31), 0, 4, 38, 40)]
+    full = [
+        cg.Column(
+            "0001996810-25-000011", "10-K", "BS", date(2023, 12, 31), 0, 4, 38, 40
+        )
+    ]
     assert cg.presenting(full, date(2023, 12, 31), True)
+
+
+def test_single_part_band_row_takes_the_sign_that_gives_the_resolver_value(
+    tmp_path: Path,
+):
+    """LIN other_income_expense_net FY2023: the band node prints the RAW pension element (-164M, a benefit) with no
+    '-' while the resolver serves +164M of income (calc weight toward pretax). The part sign must be -1 so the served
+    value is the resolver's; polarity_flip rows and rows whose sign already fits are untouched. Mutation: make
+    orient_to_value return its parts unchanged and this fails."""
+    node = (
+        "NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent=-164000000.0000 [R3.htm:10]"
+        " | why: band"
+    )
+    rows = [
+        _row(
+            data_point="other_income_expense_net",
+            decision="mapped",
+            nodes=node,
+            value="164000000",
+            flags="roles;band",
+        ),
+        _row(
+            data_point="other_income_expense_net",
+            decision="mapped",
+            period_end="2019-12-31",
+            nodes="OtherNonoperatingIncomeExpense=5.0000 [R3.htm:10] | why: w",
+            value="5",
+            flags="roles",
+        ),
+        _row(
+            data_point="interest_expense",
+            decision="mapped",
+            period_end="2020-12-31",
+            nodes="InterestExpense=-7.0000 [NOTE] | why: w",
+            value="7",
+            flags="roles;polarity_flip",
+        ),
+    ]
+    claims, rejects, _ = sl.read_claims(_write(tmp_path, *rows))
+    assert rejects == []
+    signs = {(c.data_point, c.period_end.year): c.parts[0][0] for c in claims}
+    assert signs == {
+        ("other_income_expense_net", 2018): -1,
+        ("other_income_expense_net", 2019): 1,
+        ("interest_expense", 2020): 1,
+    }
+
+
+def test_orient_to_value_leaves_non_fitting_and_multi_part_claims_alone():
+    p1 = ((1, None, "A"),)
+    assert sl.orient_to_value("mapped", p1, ("10",), "11", "") == p1
+    assert sl.orient_to_value("mapped", p1, ("10",), "-10", "") == ((-1, None, "A"),)
+    assert sl.orient_to_value("component_sum", p1, ("10",), "-10", "") == p1
+    p2 = ((1, None, "A"), (1, None, "B"))
+    assert sl.orient_to_value("mapped", p2, ("1", "2"), "-3", "") == p2
+    assert sl.orient_to_value("mapped", p1, ("0",), "0", "") == p1
