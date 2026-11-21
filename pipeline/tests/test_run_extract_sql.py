@@ -181,3 +181,18 @@ def test_a_slice_that_still_times_out_fails_naming_the_cik_and_writes_nothing(tm
         rx.run_dir(conn, str(tmp_path), regen=_regen)
     assert "CIK 831001" in str(e.value)
     assert not (tmp_path / "face.jsonl").exists()
+
+
+def test_ciks_from_a_directory_of_per_company_resolver_files(tmp_path):
+    """The plan step's default company list is the per-company resolver directory (75175bed replaced the single
+    resolver-all110 file): every *.csv's cik column, deduplicated, sorted numerically; an empty directory is an error."""
+    d = tmp_path / "resolver"
+    d.mkdir()
+    (d / "AAPL.csv").write_text("cik,ticker,data_point\n0000320193,AAPL,revenue\n0000320193,AAPL,capex\n")
+    (d / "MSFT.csv").write_text("cik,ticker,data_point\n0000789019,MSFT,revenue\n")
+    (d / "GOOGL.csv").write_text("cik,ticker,data_point\n1652044,GOOGL,revenue\n")
+    assert rx.ciks_from_csv(str(d)) == ["320193", "789019", "1652044"]
+    assert rx.main(["ciks", "--csv", str(d)]) is None
+    (tmp_path / "empty").mkdir()
+    with pytest.raises(SystemExit, match="no csv"):
+        rx.ciks_from_csv(str(tmp_path / "empty"))

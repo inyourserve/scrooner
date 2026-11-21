@@ -6,8 +6,10 @@ name: Standard extract for the resolver (FSN -> 7 JSON files, read-only)
 #   3. standard_run.py assemble OUT          (filings, notefacts, memberfacts, compfacts, zlines, clines, lentity .json)
 # (plus the optional sql-le pass: filings whose face has no undimensioned value get legal-entity rows, then assemble again.)
 #
-# Companies: `ciks` (comma list) OR `csv_path` (a csv with a cik or company_id column). With neither, the default is every
-# distinct cik of the newest data-team/tags/line_map/resolver-all110-*.csv, the list the resolver is graded on.
+# Companies: `ciks` (comma list) OR `csv_path` (a csv with a cik or company_id column, or a directory of such csvs). With
+# neither, the default is every distinct cik of the per-company resolver files data-team/tags/line_map/resolver/<TICKER>.csv
+# (the list the resolver is graded on; the newest resolver-all110-*.csv only when that directory does not exist).
+# 2026-11-21: the plan step failed with `ls: no match` after 75175bed split the single file into that directory.
 # The extract SQL selects by fsn.filing.company_id, successor CIK wins a shared period (48be1944).
 #
 # Read-only: the session is default_transaction_read_only=on, statement_timeout <= 15 min (the SQL files set 55s/115s
@@ -27,7 +29,7 @@ on:
         description: "CIKs, comma separated (empty = use csv_path, else the resolver-all110 default)"
         default: ""
       csv_path:
-        description: "Repo path of a csv with a cik or company_id column (used when ciks is empty)"
+        description: "Repo path of a csv with a cik or company_id column, or a directory of such csvs (used when ciks is empty)"
         default: ""
       batch:
         description: "CIKs per SQL batch (1..8)"
@@ -105,7 +107,7 @@ jobs:
             printf '%s' "$IN_CIKS" | grep -Eq '^[0-9]{1,10}(, ?[0-9]{1,10})*$' || { echo "::error::ciks must be comma-separated digits"; exit 1; }
           elif [ -n "$IN_CSV" ]; then
             case "$IN_CSV" in /*|*..*) echo "::error::csv_path must be a repo-relative path"; exit 1;; esac
-            [ -f "$IN_CSV" ] || { echo "::error::$IN_CSV not found in the repo"; exit 1; }
+            [ -f "$IN_CSV" ] || [ -d "$IN_CSV" ] || { echo "::error::$IN_CSV not found in the repo"; exit 1; }
           fi
       - name: Company list and shard matrix
         id: plan
@@ -119,7 +121,9 @@ jobs:
             src="$IN_CSV"
             CIKS=$($py scripts/ci/run_extract_sql.py ciks --csv "$IN_CSV")
           else
-            src=$(ls data-team/tags/line_map/resolver-all110-*.csv | sort | tail -1)
+            # the resolver output is per company since 75175bed (one directory); the single file is the pre-split fallback
+            src=data-team/tags/line_map/resolver
+            [ -d "$src" ] || src=$(ls data-team/tags/line_map/resolver-all110-*.csv | sort | tail -1)
             CIKS=$($py scripts/ci/run_extract_sql.py ciks --csv "$src")
           fi
           MATRIX=$($py scripts/ci/run_extract_sql.py shard --ciks "$CIKS" --n "$SHARDS")

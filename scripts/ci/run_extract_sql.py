@@ -3,8 +3,8 @@
 
   run_extract_sql.py run SQLDIR [--only le]   execute SQLDIR/<kind>-NN.sql in name order on ONE connection, append one
                                               JSON object per result row (column names as keys) to SQLDIR/<kind>.jsonl
-  run_extract_sql.py ciks --ciks A,B | --csv PATH
-                                              print the comma list of CIKs; a csv needs a cik or company_id column
+  run_extract_sql.py ciks --ciks A,B | --csv PATH|DIR
+                                              print the comma list of CIKs; a csv needs a cik or company_id column; a DIR = every *.csv in it
                                               (company_id is resolved to the CIK of the company's latest annual report)
   run_extract_sql.py manifest OUTDIR --out FILE --run-id ID --code-sha SHA --ciks LIST [--shards FILE]
                                               row counts and SHA-256 of every file in OUTDIR (+ per-shard row counts)
@@ -239,6 +239,13 @@ def _clean(ciks):
 
 
 def ciks_from_csv(path, conn_factory=connect):
+    """CIKs of one csv, or of every *.csv in a directory (the per-company resolver files
+    data-team/tags/line_map/resolver/<TICKER>.csv since 75175bed; the single resolver-all110 file no longer exists)."""
+    if os.path.isdir(path):
+        files = sorted(glob.glob(os.path.join(path, '*.csv')))
+        if not files:
+            raise SystemExit(f'no csv in {path}')
+        return sorted({c for f in files for c in ciks_from_csv(f, conn_factory)}, key=int)
     rows = list(csv.DictReader(open(path)))
     if not rows:
         raise SystemExit('empty csv')
