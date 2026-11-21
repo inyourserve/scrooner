@@ -2143,6 +2143,8 @@ def summarize(
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
+    # the hourly export writes to a fresh $RUNNER_TEMP/cov that nothing else creates (failed runs 44840727260, 44878997358)
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=columns, extrasaction="ignore")
         w.writeheader()

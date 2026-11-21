@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 import pytest
-from scrooner_pipeline.mapper.top100_coverage import Company, select_companies
+from scrooner_pipeline.mapper.top100_coverage import Company, select_companies, write_csv
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
@@ -368,3 +368,10 @@ def test_export_cli_parses_company_ids():
     assert mod.parse_args([]) == (pathlib.Path("data-team/strategy"), False, None)
     with pytest.raises(SystemExit):
         mod.parse_args(["--company-ids", "x"])
+
+
+def test_write_csv_creates_a_missing_output_dir(tmp_path):
+    """The hourly export writes into a fresh temp dir nobody created (runs 44840727260, 44878997358 failed)."""
+    out = tmp_path / "cov" / "top100-coverage-summary.csv"
+    write_csv(out, [{"rank": 1, "ticker": "NVDA"}], ["rank", "ticker"])
+    assert out.read_text().splitlines() == ["rank,ticker", "1,NVDA"]
