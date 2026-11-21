@@ -300,7 +300,7 @@ def fill_printed_zero_and_comparative(rows, td):
         if r['status'] == 'no_role' and r['data_point'] in standard_inputs.NO_ROLE_YIELDS_TO and k in cf and (r.get('column') or 'own') == 'own': r['status'] = 'not_presented'
         if r['status'] == 'derived' and r['data_point'] in standard_inputs.DERIVED_YIELDS_TO and k in cf and (r.get('column') or 'own') == 'own':   # printed beats derived (SPGI FY2014, BA CI FY2018-19)
             r['status'] = 'not_presented'
-            r['flags'] = ';'.join(x for x in (r.get('flags') or '').split(';') if x and x not in ('ci_parent_derived', 'derived_issued_less_treasury'))
+            r['flags'] = ';'.join(x for x in (r.get('flags') or '').split(';') if x and x not in ('ci_parent_derived', 'derived_issued_less_treasury', 'equity_parent_derived'))
         if r['status'] != 'not_presented': continue
         if k in pz and not (pz[k].get('stmt') == 'EQ' and k in cf and D(cf[k]['value']) != 0):   # an equity-statement dash yields to a later 10-K's printed value (MU FY2021 DPS 0.10)
             z = pz[k]
@@ -1780,6 +1780,34 @@ def role(f, L, arcs, notes, R):
                         flags='custom_note_element' + (';net_of_interest_received' if dp == 'cash_paid_for_interest' and re.search(r'(?i)received', t) else ''))
     return dict(status='not_presented', tags='', value=None, r_page='',
                 why=f"no {dp} line on the {stmt if stmt != 'NOTE' else 'statements'} of this filing" + (' nor an undimensioned note fact' if R['note_ok'] == 'Y' or stmt == 'NOTE' else ''))
+def apply_rounded_share_count(rows, memberfacts):
+    """X111 (Dhairya 2026-11-22, DIS FY2023-25): an undimensioned CommonStockSharesOutstanding that is an exact multiple of
+    100M (the filer tagged the rounded billions of the cover or a note: DIS 1,800,000,000) loses to the equity statement's
+    count of the same filing (CommonStockSharesOutstanding [EquityComponents=CommonStock], less a treasury-stock member)
+    when that count is within 10% of it and does not tie to it (DIS FY2024/25 tag 1.9B, the statement counts 1,812M/1,791M). A count the members tie to exactly stays (NEM FY2020: 804 - 4 =
+    800, printed in millions). No finer count in the filing: the row stays as it is (CVS FY2022)."""
+    for r in rows:
+        if r['data_point'] != 'shares_outstanding' or r['status'] != 'mapped' or r.get('value') in (None, ''): continue
+        v = D(r['value'])
+        if v <= 0 or v % 100000000 or 'CommonStockSharesOutstanding=' not in (r.get('nodes') or ''): continue
+        cs, tr = [], []
+        for t in (memberfacts.get(r['accession']) or '').split('~'):
+            x = t.split('|')
+            if len(x) < 4 or x[0] != 'CommonStockSharesOutstanding' or x[1] != '0': continue
+            mem = x[3].strip(';')
+            if mem == 'EquityComponents=CommonStock': cs.append(D(x[2]))
+            elif re.fullmatch(r'EquityComponents=Treasury\w*', mem): tr.append(D(x[2]))
+        if len(set(cs)) != 1 or len(set(tr)) > 1: continue
+        tot = cs[0] + (-abs(tr[0]) if tr else 0)
+        if tot == v or abs(tot - v) > v / 10: continue   # same order of count (DIS FY2025 tags 1.9B for 1,791M); a far count is another thing
+        was = r['value']
+        nodes = f"CommonStockSharesOutstanding[EquityComponents=CommonStock]={cs[0]} [MEMBER]" + (f"; -CommonStockSharesOutstanding[treasury]={abs(tr[0])} [MEMBER]" if tr else '')
+        r.update(value=tot, status='component_sum' if tr else 'mapped', nodes=nodes,
+                 why=f"X111: the undimensioned CommonStockSharesOutstanding {was} is a 100M-rounded figure; the equity statement of the same filing counts {tot}")
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'rounded_count_replaced') if x)
+    return rows
+
+
 def run(filings, notefacts, tick, td_rows):
     out = []
     for f in filings:
@@ -1868,6 +1896,8 @@ if __name__ == '__main__':
     filings = json.load(open('filings.json')); notefacts = json.load(open('notefacts.json'))
     tick = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
     import standard_inputs, total_debt
+    filings, _dup = standard_inputs.one_filing_per_period(filings)   # X110: one 10-K per filer and period, the latest filed
+    if _dup: print('X110 dropped duplicate-period filings:', [(f['a'], f['p'], f['fd']) for f in _dup], file=sys.stderr)
     def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
     memberfacts, compfacts, zlines, clines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json'), _read('clines.json')
     standard_inputs.fsn_dropped_facts(os.environ.get('FSN_DROPPED_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'fsn_dropped_facts.csv')), memberfacts, notefacts)
@@ -2018,6 +2048,7 @@ if __name__ == '__main__':
     rows = apply_bank_cash(rows, notefacts, compfacts, filings)
     rows = apply_lease_latest_print(rows, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
+    rows = apply_rounded_share_count(rows, memberfacts)   # X111
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
     rows = filing_reads.apply(rows, log=_frl)

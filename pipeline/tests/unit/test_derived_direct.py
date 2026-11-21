@@ -212,3 +212,31 @@ def test_cross_filing_parts_are_rejected_same_filing_serves(
         assert c["source_fact_ids"] == [] and c["_accession"] == ACC
         assert f"-TreasuryStockShares=527460237@{ACC}#R3" in c["serve_note"]
         assert acc2 not in c["serve_note"]
+
+
+EQ_NODES = (
+    "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=100575000000 [R6.htm:43];"
+    " -MinorityInterest=1338000000 [R6.htm:42] | why: parent equity not printed"
+)
+
+
+def test_parent_equity_is_total_equity_less_nci_with_its_flag_only(tmp_path):
+    # VZ FY2024 (Dhairya ruling 2026-11-21): stockholders_equity = total equity minus NCI from one filing, derived
+    claims, rejects, counts = _claim(
+        tmp_path,
+        "stockholders_equity",
+        EQ_NODES,
+        99237000000,
+        "core;DERIVED;equity_parent_derived",
+    )
+    (c,) = claims
+    assert not rejects and counts["derived_loaded_as_not_presented"] == 1
+    assert sd.derived_claim(c)
+    v, ev = sd.derived_value(_direct(c), [Decimal(100575000000), Decimal(1338000000)])
+    assert v == Decimal(99237000000)
+    assert ev.endswith(f"-MinorityInterest=1338000000@{ACC}#R6")
+    # without the flag the derived row is counted, not served
+    claims2, _r, counts2 = _claim(
+        tmp_path, "stockholders_equity", EQ_NODES, 99237000000, "core;DERIVED"
+    )
+    assert not claims2 and counts2.get("derived_loaded_as_not_presented", 0) == 0

@@ -125,8 +125,16 @@ def import_files(resolver_dir, files, skips_path=None):
         for fy in re.split(r'[;\s]+', s['fiscal_year']):
             if fy: skips[(s['ticker'], s['data_point'], fy)] = s['reason']
     kept, skipped = [], []
+    # X109 precedence (.87): several reads of one cell (the 2026-11-17, -21 and -22 passes) -> the latest-dated file decides;
+    # the earlier rows are listed as superseded. Dated by the file name <TICKER>-<YYYY-MM-DD>.csv.
+    def _date(fp): m = re.search(r'(\d{4}-\d{2}-\d{2})\.csv$', fp); return m.group(1) if m else ''
+    latest = {}
     for fp in files:
-        for e in csv.DictReader(open(fp)):
+        for e in csv.DictReader(open(fp, encoding='utf-8-sig')):
+            k = (e['ticker'], e['data_point'], str(e['fiscal_year']))
+            latest[k] = max(latest.get(k, ''), _date(fp))
+    for fp in files:
+        for e in csv.DictReader(open(fp, encoding='utf-8-sig')):
             tk = e['ticker']; src = os.path.basename(fp)
             res = list(csv.DictReader(open(os.path.join(resolver_dir, tk + '.csv'))))
             cik = res[0]['cik'] if res else ''
@@ -135,7 +143,9 @@ def import_files(resolver_dir, files, skips_path=None):
                        outcome=e['outcome'], value=e['value'], element=e['element'], accession=e['accession'], r_page=e['r_page'],
                        hide_class='', quote=e['quote'], rule_proposal=e['rule_proposal'], source_file=src)
             why = None
-            if e['outcome'] == 'RULE': why = 'RULE row: stays open (rule proposal, no value)'
+            if _date(fp) < latest[(tk, e['data_point'], str(e['fiscal_year']))]:
+                why = f"superseded by the {latest[(tk, e['data_point'], str(e['fiscal_year']))]} read of the same cell"
+            elif e['outcome'] == 'RULE': why = 'RULE row: stays open (rule proposal, no value)'
             elif (tk, e['data_point'], str(e['fiscal_year'])) in skips: why = skips[(tk, e['data_point'], str(e['fiscal_year']))]
             elif len(pes) != 1: why = f"no single resolver period for fiscal year {e['fiscal_year']} ({pes})"
             elif e['outcome'] == 'VALUE' and (not e['value'] or not ACC_RE.fullmatch(e['accession'] or '') or not e['r_page'] or not e['quote']):

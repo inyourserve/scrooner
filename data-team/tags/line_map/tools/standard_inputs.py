@@ -358,6 +358,19 @@ def amortization_location_total(notefacts, memberfacts):
     return out
 
 
+def one_filing_per_period(filings):
+    """(kept, dropped): one 10-K per filer and fiscal period. A filer that files a second full 10-K for a period it already
+    filed (CRM 0001108524-22-000008, filed 2022-02-24 for the year ended 2021-01-31, same lines as 0001108524-21-000014)
+    would otherwise get two resolver rows per key. The latest filed one wins (it supersedes the earlier one and is the
+    one the readers cite); the earlier accession is dropped and listed. Rule X110."""
+    best = {}
+    for f in filings:
+        k = (f['cik'], f['p'])
+        if k not in best or (f['fd'], f['a']) > (best[k]['fd'], best[k]['a']): best[k] = f
+    keep = {id(f) for f in best.values()}
+    return [f for f in filings if id(f) in keep], [f for f in filings if id(f) not in keep]
+
+
 def debt_vals(filings, notefacts, compfacts):
     """[{cik, a, p, vals: 'tag|qtrs|ddate|value~...'}]: the own-period and earlier-column undimensioned facts of each filing, the shape
     total_debt.run reads (formerly a separate debtvals extract)."""

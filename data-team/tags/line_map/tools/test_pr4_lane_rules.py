@@ -1172,3 +1172,21 @@ def test_a_recast_year_is_flagged_definition_change():
     rows = _lp_rows('revenue', 'Revenues', '66501', 'Revenues', '45000')
     r = resolve_all.apply_latest_print(rows, {'A18': 'Revenues|4|66000|2016-12-31'}, _lp_face('Revenues'))[0]
     assert 'latest_print' in r['flags'] and 'definition_change' not in r['flags']
+
+
+# ---- parent equity derived from total equity minus NCI of one filing, flagged for direct serving (.87; Dhairya 2026-11-21, VZ/T/PG)
+def test_parent_equity_not_printed_is_total_equity_less_nci_flagged_equity_parent_derived():
+    # VZ FY2024 R6: "Noncontrolling interests | 1,338"; "Total equity | 100,575"; no parent-equity line
+    face = [('BS', 'Assets', 'Total assets', 384711), ('BS', 'Liabilities', 'Total liabilities', 284136),
+            ('BS', 'CommonStockValue', 'Common stock', 429), ('BS', 'RetainedEarningsAccumulatedDeficit', 'Reinvested earnings', 98808),
+            ('BS', 'MinorityInterest', 'Noncontrolling interests', 1338),
+            ('BS', 'StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest', 'Total equity', 100575),
+            ('BS', 'LiabilitiesAndStockholdersEquity', 'Total liabilities and equity', 384711)]
+    f = filing(face)
+    eq = 'StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest'
+    f['calc'] = '~'.join([f"2|LiabilitiesAndStockholdersEquity|{c}|1" for c in ('Liabilities', eq)]
+                         + [f"2|{eq}|{c}|1" for c in ('CommonStockValue', 'RetainedEarningsAccumulatedDeficit', 'MinorityInterest')])
+    r = resolve.resolve(f)[0]['stockholders_equity']
+    assert r['status'] == 'derived' and r['value'] == 99237
+    assert 'equity_parent_derived' in r['note'].split(';')
+    assert r['nodes'].startswith(eq + '=') and '-MinorityInterest=1338' in r['nodes']

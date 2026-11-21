@@ -141,3 +141,25 @@ def test_import_accepts_the_only_after_tax_disclosed_class(tmp_path):
                                    r_page='R97.htm', quote='HIDE only_after_tax_disclosed - RSU and PSU expense stated after tax only', confidence='high')])
     kept, skipped = filing_reads.import_files(str(rd), [ev], str(skips))
     assert not skipped and [k['hide_class'] for k in kept] == ['only_after_tax_disclosed']
+
+
+def test_import_the_latest_dated_read_of_a_cell_supersedes_earlier_reads_and_bom_files_load(tmp_path):
+    rd = tmp_path / 'resolver'; rd.mkdir()
+    with open(rd / 'MRVL.csv', 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end']); w.writeheader()
+        for pe in ('2019-01-31', '2021-01-31'): w.writerow(dict(cik='0001835632', ticker='MRVL', data_point='sga_expense', period_end=pe))
+    skips = tmp_path / 'skips.csv'; skips.write_text('ticker,data_point,fiscal_year,reason\n')
+    cols = ['ticker', 'data_point', 'fiscal_year', 'outcome', 'value', 'element', 'accession', 'r_page', 'quote', 'rule_proposal', 'confidence']
+    base = dict(ticker='MRVL', data_point='sga_expense', element='us-gaap:SellingAndMarketingExpense', r_page='R4.htm', confidence='high')
+    def write(name, rows, bom=False):
+        p = tmp_path / name
+        with open(p, 'w', newline='', encoding='utf-8-sig' if bom else 'utf-8') as f:
+            w = csv.DictWriter(f, fieldnames=cols); w.writeheader()
+            for r in rows: w.writerow({c: r.get(c, '') for c in cols})
+        return str(p)
+    old = write('MRVL-2026-11-17.csv', [dict(base, fiscal_year='2019', outcome='VALUE', value='1', accession='0001058057-21-000009', quote='old read'),
+                                        dict(base, fiscal_year='2021', outcome='VALUE', value='467200000', accession='0001835632-23-000013', quote='only read')], bom=True)
+    new = write('MRVL-2026-11-22.csv', [dict(base, fiscal_year='2019', outcome='VALUE', value='424360000', accession='0001058057-21-000009', quote='new read')])
+    kept, skipped = filing_reads.import_files(str(rd), [new, old], str(skips))
+    assert sorted((k['fiscal_year'], k['value'], k['source_file']) for k in kept) == [('2019', '424360000', 'MRVL-2026-11-22.csv'), ('2021', '467200000', 'MRVL-2026-11-17.csv')]
+    assert len(skipped) == 1 and skipped[0]['value'] == '1' and 'superseded by the 2026-11-22 read' in skipped[0]['reason']

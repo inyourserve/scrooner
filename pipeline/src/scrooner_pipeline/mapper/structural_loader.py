@@ -187,6 +187,15 @@ DERIVED_DIRECT: dict[str, tuple[str, frozenset[str], frozenset[str]]] = {
         ),
         frozenset({"ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest"}),
     ),
+    # parent equity not printed (VZ, T, PG): total equity incl. NCI minus the NCI line of the same balance sheet
+    # (Dhairya ruling 2026-11-21, resolver .87 flag equity_parent_derived; replaces the PG hide precedent)
+    "stockholders_equity": (
+        "equity_parent_derived",
+        frozenset(
+            {"StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"}
+        ),
+        frozenset({"MinorityInterest"}),
+    ),
 }
 SKIP_ACTIONS = {"review_missing_column_value", "no_structural_node"}
 ACCN_RE = dl.ACCN_RE

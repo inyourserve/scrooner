@@ -126,7 +126,7 @@ def resolve(f):
             if ncis:
                 v = by[eq_incl]['val'] - sum(by[c]['val'] for c in ncis)
                 put('stockholders_equity', 'derived', [dict(node(by[eq_incl], ''), st='BS')] + [dict(node(by[c], ''), st='BS', neg=True) for c in ncis], v,
-                    f"parent equity not printed: {eq_incl} {by[eq_incl]['val']} - {'+'.join(ncis)} (same filing; Dhairya ruling 2026-11-13: parent equity excludes NCI)", 'DERIVED')
+                    f"parent equity not printed: {eq_incl} {by[eq_incl]['val']} - {'+'.join(ncis)} (same filing; Dhairya ruling 2026-11-13: parent equity excludes NCI)", 'DERIVED;equity_parent_derived')
             else:
                 put('stockholders_equity', 'combined', [], None, f"parent equity not printed: only {eq_incl} (includes NCI) on the face")
         if eqp:
