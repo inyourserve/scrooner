@@ -197,6 +197,7 @@ def _total_liabilities(
     se = by_base.get(("stockholders_equity", pid))
     if ta is None or se is None:
         return None, ""
+
     # one-filing rule: assets, equity and every operand from the same filing. The cells' recorded accessions are
     # the filing each value was served from; when they differ (GILD FY2015: assets from the FY2016 10-K, equity from
     # the FY2015 10-K, the same 18,534M) the inputs still come from one filing if ONE accession prints the assets, the
