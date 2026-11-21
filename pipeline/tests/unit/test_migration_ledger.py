@@ -61,7 +61,7 @@ def test_row_sql_has_name_and_real_hash(tmp_path):
     f = tmp_path / "0007_x.sql"
     f.write_text("select 1;")
     sql = ml.row_sql(f, "me")
-    assert "(7, '0007_x.sql', '" + ml.sha256_file(f) + "', 'me', 'transaction')" in sql
+    assert "(7, '0007_x.sql', '" + ml.sha256_file(f) + "', 'me', 'recorded', now())" in sql
 
 
 def _fresh(url):
@@ -93,7 +93,7 @@ def test_same_transaction_apply_rolls_back_ledger_with_a_failing_migration(dburl
 def test_constraints(dburl):
     with _fresh(dburl) as c:
         c.execute(LEDGER_SQL.read_text())
-        ok = "insert into ops.migration_ledger (number, filename, sha256, applied_by) values (%s, %s, %s, 'x')"
+        ok = "insert into ops.migration_ledger (number, filename, sha256, applied_by, applied_at) values (%s, %s, %s, 'x', now())"
         c.execute(ok, (5, "0005_a.sql", "a" * 64))
         for args in [(6, "0005_b.sql", "a" * 64), (7, "0007_a.sql", "xyz"), (5, "0005_c.sql", "a" * 64), (8, "bad name.sql", "a" * 64)]:
             with pytest.raises(psycopg.errors.IntegrityError):
@@ -126,6 +126,25 @@ def test_backfill_probe_is_read_only_and_proposes_only_applied(dburl, tmp_path):
     assert [p["verdict"] for p in plan] == ["APPLIED", "ABSENT", "PARTIAL", "UNPROBEABLE"]
     text = ml.render_plan(plan, True, "backfill-probe")
     assert text.count("insert into ops.migration_ledger") == 1 and "0001_here.sql" in text
+    # ruling 7: a backfill never writes applied_at; it states source and backfilled_at
+    assert "applied_at" not in text.split("insert into", 1)[1]
+    assert "'backfilled', now()" in text
+    with _fresh(dburl) as c:
+        c.execute(LEDGER_SQL.read_text())
+        body = text[text.index("begin;") + len("begin;") : text.rindex("commit;")]
+        c.execute(body)
+        c.commit()
+        row = c.execute("select source, applied_at, backfilled_at is not null from ops.migration_ledger").fetchall()
+        assert row == [("backfilled", None, True)]
+        # the API roles can never reach it, and a recorded row needs applied_at while a backfilled row must not have one
+        for bad in (
+            "insert into ops.migration_ledger (number, filename, sha256, applied_by, source, applied_at, backfilled_at) values (9, '0009_a.sql', repeat('a',64), 'x', 'backfilled', now(), now())",
+            "insert into ops.migration_ledger (number, filename, sha256, applied_by, source) values (9, '0009_a.sql', repeat('a',64), 'x', 'recorded')",
+            "insert into ops.migration_ledger (number, filename, sha256, applied_by, source, applied_at) values (9, '0009_a.sql', repeat('a',64), 'x', 'other', now())",
+        ):
+            with pytest.raises(psycopg.errors.IntegrityError):
+                with c.transaction():
+                    c.execute(bad)
 
 
 def test_check_migrations_live_as_ci_runs_it(dburl):

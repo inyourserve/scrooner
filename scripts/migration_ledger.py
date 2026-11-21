@@ -85,16 +85,17 @@ def sql_literal(text: str) -> str:
     return "'" + text.replace("'", "''") + "'"
 
 
-def row_sql(path: Path, applied_by: str, evidence: str = "transaction") -> str:
+def row_sql(path: Path, applied_by: str) -> str:
+    """Same-transaction row: source recorded, applied_at = the transaction time."""
     m = NAME_RE.match(path.name)
     if not m:
         raise ValueError(f"not a migration filename: {path.name}")
     if not applied_by.strip():
         raise ValueError("applied_by is required")
     return (
-        "insert into ops.migration_ledger (number, filename, sha256, applied_by, evidence) values "
+        "insert into ops.migration_ledger (number, filename, sha256, applied_by, source, applied_at) values "
         f"({int(m.group(1))}, {sql_literal(path.name)}, {sql_literal(sha256_file(path))}, "
-        f"{sql_literal(applied_by)}, {sql_literal(evidence)});"
+        f"{sql_literal(applied_by)}, 'recorded', now());"
     )
 
 
@@ -230,8 +231,8 @@ def render_plan(plan: list[dict], emit_sql: bool, applied_by: str) -> str:
         for p in plan:
             if p["verdict"] == "APPLIED":
                 lines.append(
-                    "insert into ops.migration_ledger (number, filename, sha256, applied_by, evidence) values "
-                    f"({p['number']}, {sql_literal(p['filename'])}, {sql_literal(p['sha256'])}, {sql_literal(applied_by)}, 'probe');"
+                    "insert into ops.migration_ledger (number, filename, sha256, applied_by, source, backfilled_at) values "
+                    f"({p['number']}, {sql_literal(p['filename'])}, {sql_literal(p['sha256'])}, {sql_literal(applied_by)}, 'backfilled', now());"
                 )
         lines.append("commit;")
     return "\n".join(lines)
