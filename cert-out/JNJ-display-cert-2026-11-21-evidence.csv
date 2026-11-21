@@ -1,0 +1,48 @@
+check,data_point,fiscal_year,result,served,filing,evidence
+shown,ppe_net,2016,MATCH,15912000000,15912000000.0000,PropertyPlantAndEquipmentNet=15912000000.0000@0000200406-17-000006#R2 (fsn reports R2)
+shown,gross_profit,2017,MATCH,51011000000,51011000000.0000,GrossProfit=51011000000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,cash_flow_financing,2015,MATCH,-11136000000,11136000000.0000,NetCashProvidedByUsedInFinancingActivities=-11136000000.0000@0000200406-18-000005#R8 (fsn reports R8)
+shown,stockholders_equity,2022,MATCH,76804000000,76804000000.0000,"StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=76804000000.0000@0000200406-23-000016#R3 (fsn reports R3,R8)"
+shown,other_income_expense_net,2024,MATCH,-4694000000,4694000000.0000,OtherNonoperatingIncomeExpense=-4694000000.0000@0000200406-25-000038#R5 (fsn reports R5)
+shown,cost_of_revenue,2023,MATCH,26553000000,26553000000.0000,CostOfGoodsAndServicesSold=26553000000.0000@0000200406-24-000013#R5 (fsn reports R5)
+shown,depreciation_and_amortization,2016,MATCH,3754000000,3754000000.0000,DepreciationDepletionAndAmortization=3754000000.0000@0000200406-17-000006#R8 (fsn reports R8)
+shown,interest_income,2025,MATCH,1056000000,1056000000.0000,InvestmentIncomeInterest=1056000000.0000@0000200406-26-000016#R5 (fsn reports R5)
+shown,accounts_payable,2019,MATCH,8544000000,8544000000.0000,AccountsPayableCurrent=8544000000.0000@0000200406-20-000010#R2 (fsn reports R2)
+shown,amortization_of_intangibles,2023,MATCH,4500000000,4500000000.0000,AmortizationOfIntangibleAssets=4500000000.0000@0000200406-24-000013#R64 (fsn reports -)
+shown,current_assets,2025,MATCH,55624000000,55624000000.0000,AssetsCurrent=55624000000.0000@0000200406-26-000016#R3 (fsn reports R3)
+shown,cfo,2023,MATCH,22791000000,22791000000.0000,NetCashProvidedByUsedInOperatingActivities=22791000000.0000@0000200406-24-000013#R10 (fsn reports R10)
+shown,revenue,2020,MATCH,82584000000,82584000000.0000,RevenueFromContractWithCustomerExcludingAssessedTax=82584000000.0000@0000200406-21-000008#R4 (fsn reports R4)
+shown,cash_flow_investing,2025,MATCH,-23588000000,23588000000.0000,NetCashProvidedByUsedInInvestingActivities=-23588000000.0000@0000200406-26-000016#R10 (fsn reports R10)
+shown,cash_and_equivalents,2019,MATCH,17305000000,17305000000.0000,CashAndCashEquivalentsAtCarryingValue=17305000000.0000@0000200406-20-000010#R2 (fsn reports R2)
+shown,accounts_receivable,2015,MATCH,10734000000,10734000000.0000,AccountsReceivableNetCurrent=10734000000.0000@0000200406-16-000071#R2 (fsn reports R2)
+shown,cash_paid_for_interest,2023,MATCH,1766000000,1766000000.0000,InterestPaidNet=1766000000.0000@0000200406-24-000013#R10 (fsn reports R10)
+shown,gross_profit,2016,MATCH,50101000000,50101000000.0000,GrossProfit=50101000000.0000@0000200406-19-000009#R4 (fsn reports R4)
+shown,interest_income,2016,MATCH,368000000,368000000.0000,InvestmentIncomeInterest=368000000.0000@0000200406-17-000006#R4 (fsn reports R4)
+shown,diluted_eps,2019,MATCH,5.6300,5.6300,EarningsPerShareDiluted=5.6300@0000200406-20-000010#R4 (fsn reports R4)
+shown,stockholders_equity,2025,MATCH,81544000000,81544000000.0000,"StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=81544000000.0000@0000200406-26-000016#R3 (fsn reports R3,R8)"
+shown,interest_income,2019,MATCH,357000000,357000000.0000,InvestmentIncomeInterest=357000000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,cash_and_equivalents,2015,MATCH,13732000000,13732000000.0000,"CashAndCashEquivalentsAtCarryingValue=13732000000.0000@0000200406-16-000071#R2 (fsn reports R2,R8)"
+shown,cash_flow_investing,2018,MATCH,-3167000000,3167000000.0000,NetCashProvidedByUsedInInvestingActivities=-3167000000.0000@0000200406-19-000009#R9 (fsn reports R9)
+shown,comprehensive_income,2019,MATCH,14450000000,14450000000.0000,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest=14450000000.0000@0000200406-20-000010#R5 (fsn reports R5)
+shown,revenue,2019,MATCH,82059000000.0000,82059000000.0000,RevenueFromContractWithCustomerExcludingAssessedTax=82059000000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,revenue,2024,MATCH,88821000000,88821000000.0000,RevenueFromContractWithCustomerExcludingAssessedTax=88821000000.0000@0000200406-25-000038#R5 (fsn reports R5)
+shown,cash_and_equivalents,2020,MATCH,13985000000,13985000000.0000,CashAndCashEquivalentsAtCarryingValue=13985000000.0000@0000200406-21-000008#R2 (fsn reports R2)
+shown,accounts_receivable,2017,MATCH,13490000000,13490000000.0000,AccountsReceivableNetCurrent=13490000000.0000@0000200406-18-000005#R2 (fsn reports R2)
+shown,diluted_eps,2025,MATCH,11.03,11.0300,EarningsPerShareDiluted=11.0300@0000200406-26-000016#R5 (fsn reports R5)
+shown,cash_flow_financing,2016,MATCH,-8551000000,8551000000.0000,NetCashProvidedByUsedInFinancingActivities=-8551000000.0000@0000200406-17-000006#R8 (fsn reports R8)
+shown,revenue,2018,MATCH,81581000000.0000,81581000000.0000,RevenueFromContractWithCustomerExcludingAssessedTax=81581000000.0000@0000200406-19-000009#R4 (fsn reports R4)
+total_debt,total_debt,2015,MATCH,19861000000,19861000000.0000,"face {'LongTermDebtNoncurrent': Decimal('12857000000.0000'), 'ShortTermBorrowings': Decimal('7004000000.0000')}; lease no lease facts"
+total_debt,total_debt,2016,MATCH,27126000000,27126000000.0000,"face {'LongTermDebtNoncurrent': Decimal('22442000000.0000'), 'ShortTermBorrowings': Decimal('4684000000.0000')}; lease no lease facts"
+total_debt,total_debt,2017,MATCH,34581000000,34581000000.0000,"face {'LongTermDebtNoncurrent': Decimal('30675000000.0000'), 'ShortTermBorrowings': Decimal('3906000000.0000')}; lease no lease facts"
+total_debt,total_debt,2018,MATCH,30480000000,30480000000.0000,"face {'LongTermDebtNoncurrent': Decimal('27684000000.0000'), 'ShortTermBorrowings': Decimal('2796000000.0000')}; lease no lease facts"
+total_debt,total_debt,2019,MATCH,27696000000,27696000000.0000,"face {'LongTermDebtNoncurrent': Decimal('26494000000.0000'), 'ShortTermBorrowings': Decimal('1202000000.0000')}; lease no lease facts"
+total_debt,total_debt,2020,MATCH,35266000000,35266000000.0000,"face {'LongTermDebtNoncurrent': Decimal('32635000000.0000'), 'ShortTermBorrowings': Decimal('2631000000.0000')}; lease no lease facts"
+total_debt,total_debt,2021,MATCH,33751000000,33751000000.0000,"face {'LongTermDebtNoncurrent': Decimal('29985000000.0000'), 'ShortTermBorrowings': Decimal('3766000000.0000')}; lease no lease facts"
+total_debt,total_debt,2022,MATCH,39642000000,39642000000.0000,"face {'LongTermDebtNoncurrent': Decimal('26886000000.0000'), 'ShortTermBorrowings': Decimal('12756000000.0000')}; lease no lease facts"
+total_debt,total_debt,2023,MATCH,29332000000,29332000000.0000,"face {'LongTermDebtNoncurrent': Decimal('25881000000.0000'), 'ShortTermBorrowings': Decimal('3451000000.0000')}; lease no lease facts"
+total_debt,total_debt,2024,MATCH,36634000000,36634000000.0000,"face {'LongTermDebtNoncurrent': Decimal('30651000000.0000'), 'ShortTermBorrowings': Decimal('5983000000.0000')}; lease no lease facts"
+total_debt,total_debt,2025,MATCH,47933000000,47933000000.0000,"face {'LongTermDebtNoncurrent': Decimal('39438000000.0000'), 'ShortTermBorrowings': Decimal('8495000000.0000')}; lease no lease facts"
+hidden_row,cf_ap_change,*,INFO,,,"no presented, undimensioned, annual ['IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade'] fact at a display-year end in any periodic filing"
+hidden_row,operating_expenses,*,INFO,,,"no presented, undimensioned, annual ['CostsAndExpenses', 'OperatingCostsAndExpenses', 'OperatingExpenses'] fact at a display-year end in any periodic filing"
+hidden_row,operating_income,*,INFO,,,"no presented, undimensioned, annual ['OperatingIncomeLoss'] fact at a display-year end in any periodic filing"
+hidden_row,shares_outstanding,*,INFO,,,"no presented, undimensioned, annual ['CommonStockSharesOutstanding'] fact at a display-year end in any periodic filing"
