@@ -251,3 +251,20 @@ def test_normalizer_backlog_measures_ingest_time_not_the_filing_date() -> None:
     assert reading.state(datetime(2026, 11, 10, 0, 53, tzinfo=timezone.utc)) == "fresh"
     # A normalizer that has ingested nothing for 6 days is stale.
     assert reading.state(datetime(2026, 11, 13, 19, 0, tzinfo=timezone.utc)) != "fresh"
+
+
+def test_mapper_gate_query_excludes_only_transient_probe_http_errors() -> None:
+    query = DEAD_LETTER_QUERIES["mapper"]
+    assert "not e.resolved" in query and "filing_line_evidence" in query
+    assert "TransientSecError" in query and "o.cik = e.cik" in query
+    assert "mapper_transient_sec_http" in EXPECTED_MISS_QUERIES
+
+
+def test_fsn_lag_alerts_only_when_flag_on_and_always_says_it_proves_nothing() -> None:
+    fsn = {"available": True, "cohort_companies": 3, "companies_behind": 2, "max_lag_days": 9, "note": "does not yet prove the FSN path"}
+    base = healthy_snapshot()
+    off = OperationalSnapshot(**{**base.__dict__, "fsn_freshness": fsn})
+    on = OperationalSnapshot(**{**base.__dict__, "fsn_freshness": fsn, "fsn_alert_enabled": True})
+    assert evaluate_alerts(off) == []
+    assert snapshot_as_dict(off)["fsn_freshness"]["note"]
+    assert evaluate_alerts(on) == ["fsn_behind_core:2:max_lag_days=9"]

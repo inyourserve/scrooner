@@ -41,6 +41,7 @@ import httpx
 import psycopg
 import structlog
 
+from scrooner_pipeline.collector.retry import is_retryable_http_error
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 from scrooner_pipeline.parsers.revenue_parser import (
@@ -241,6 +242,71 @@ def no_evidence_row(spec: LineSpec) -> dict:
     }
 
 
+class TransientSecError(Exception):
+    """SEC kept answering 429/5xx/transport errors after every retry. Logged to
+    analytics.mapper_error under this class name so the operations gate can tell a
+    transient fetch failure (visibility only) from a systemic one (zero tolerance)."""
+
+
+# Waits between whole-filing re-reads, on top of SECClient.get's own short per-request
+# backoff (which a real 503 on FilingSummary.xml outlasted, run 2026-11-17).
+TRANSIENT_RETRY_DELAYS = (30.0, 90.0, 180.0)
+# This job's own pace: one SEC request per 2 seconds (founder 2026-11-17).
+MIN_SECONDS_BETWEEN_REQUESTS = 2.0
+
+
+class PacedClient:
+    """Wraps SECClient so this job sends at most one request per MIN_SECONDS_BETWEEN_REQUESTS."""
+
+    def __init__(self, client, min_gap: float = MIN_SECONDS_BETWEEN_REQUESTS, clock=time.monotonic, sleep=time.sleep):
+        self._client, self._gap, self._clock, self._sleep = client, min_gap, clock, sleep
+        self._last: float | None = None
+
+    def get(self, url: str):
+        if self._last is not None:
+            wait = self._gap - (self._clock() - self._last)
+            if wait > 0:
+                self._sleep(wait)
+        try:
+            return self._client.get(url)
+        finally:
+            self._last = self._clock()
+
+    def __getattr__(self, name):
+        return getattr(self._client, name)
+
+
+def read_filing_with_retry(
+    client: SECClient,
+    cik: str,
+    accession: str,
+    sleep=time.sleep,
+    delays: tuple[float, ...] = TRANSIENT_RETRY_DELAYS,
+) -> list[dict] | None:
+    """read_filing, re-read after a backoff when SEC answers 429/5xx/transport error.
+    A non-transient error (403, parse bug) is raised unchanged on the first try.
+    Still transient after the last delay: raise TransientSecError."""
+    attempt = 0
+    while True:
+        try:
+            return read_filing(client, cik, accession)
+        except Exception as exc:
+            if not is_retryable_http_error(exc):
+                raise
+            if attempt >= len(delays):
+                raise TransientSecError(
+                    f"transient SEC error after {attempt + 1} reads: {exc}"
+                ) from exc
+            logger.warning(
+                "filing_line_evidence.transient_retry",
+                cik=cik,
+                attempt=attempt + 1,
+                wait=delays[attempt],
+            )
+            sleep(delays[attempt])
+            attempt += 1
+
+
 def find_targets(
     conn: psycopg.Connection, ciks: set[str] | None, force: bool
 ) -> list[tuple[int, str, str, str]]:
@@ -322,13 +388,14 @@ def run(
         "stopped_by_time_limit": 0,
     }
     started = time.monotonic()
-    with SECClient() as client:
+    with SECClient() as raw_client:
+        client = PacedClient(raw_client)
         for company_id, cik, accession, form in targets:
             if max_seconds is not None and time.monotonic() - started > max_seconds:
                 stats["stopped_by_time_limit"] = 1
                 break
             try:
-                rows = read_filing(client, cik, accession)
+                rows = read_filing_with_retry(client, cik, accession)
                 if rows is None:
                     # No rendered reports at all: store "no evidence" for this
                     # accession so it is not re-fetched every run.

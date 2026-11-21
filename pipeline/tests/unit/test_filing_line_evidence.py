@@ -447,3 +447,56 @@ class TestMissingRenderedStatements:
         assert (
             rows["research_and_development"]["line_present"] is None
         )  # IS not located: unknown
+
+
+def _status_error(code):
+    request = httpx.Request("GET", "https://www.sec.gov/x")
+    return httpx.HTTPStatusError(
+        f"Server error '{code} X' for url", request=request, response=httpx.Response(code, request=request)
+    )
+
+
+class TestTransientRetry:
+    def _patch(self, monkeypatch, outcomes):
+        calls = []
+
+        def fake(client, cik, accession):
+            calls.append(1)
+            out = outcomes[min(len(calls) - 1, len(outcomes) - 1)]
+            if isinstance(out, Exception):
+                raise out
+            return out
+
+        monkeypatch.setattr(fle, "read_filing", fake)
+        return calls
+
+    def test_transient_503_is_retried_with_backoff_then_succeeds(self, monkeypatch):
+        calls = self._patch(monkeypatch, [_status_error(503), _status_error(429), ["ok"]])
+        sleeps = []
+        assert fle.read_filing_with_retry(None, "1", "a", sleep=sleeps.append) == ["ok"]
+        assert len(calls) == 3 and sleeps == list(fle.TRANSIENT_RETRY_DELAYS[:2])
+
+    def test_still_transient_after_retries_is_a_transient_class(self, monkeypatch):
+        calls = self._patch(monkeypatch, [_status_error(503)])
+        with pytest.raises(fle.TransientSecError, match="503"):
+            fle.read_filing_with_retry(None, "1", "a", sleep=lambda s: None)
+        assert len(calls) == len(fle.TRANSIENT_RETRY_DELAYS) + 1
+
+    def test_non_transient_is_raised_unchanged_without_retry(self, monkeypatch):
+        calls = self._patch(monkeypatch, [_status_error(403)])
+        with pytest.raises(httpx.HTTPStatusError):
+            fle.read_filing_with_retry(None, "1", "a", sleep=lambda s: None)
+        assert len(calls) == 1
+
+    def test_paced_client_spaces_requests_two_seconds(self):
+        now, sleeps = [100.0], []
+
+        class C:
+            def get(self, url):
+                return url
+
+        paced = fle.PacedClient(C(), clock=lambda: now[0], sleep=sleeps.append)
+        paced.get("a")
+        now[0] += 0.5
+        paced.get("b")
+        assert sleeps == [1.5]
