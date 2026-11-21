@@ -5,7 +5,7 @@
   "pershare.never_derive@1": "registered, default OFF; required with the split rule (rule_flags.per_share_pair_enabled)"
  },
  "verifier": "verify/split-run7-4-2026-11-03 PASSED; its one change (filer-printed EPS pairs stand) is in run 7.5",
- "source": "cohort dry-run 7.5 (1,000/1,000), doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz",
+ "source": "cohort dry-run 7.5 (1,000/1,000), storage repo-archive/2026-11-21/doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz (see data-team/strategy/storage-manifest.csv)",
  "branch": "work/cashflow/split-release, cut from origin/main (the held RU-1 commit and the 0098/0099 migration commit are NOT carried; main's RU-1 policy, archive and deriver gate are used)",
  "cells_file": "split_release_1_cells.jsonl.gz (`release` marker column; sha256 over the uncompressed rows)",
  "sha256": "10cfa5fcbb5283682521cd267b044427664dc7c7fae2a5bee6ebfce9f7f9e778",
