@@ -1,4 +1,0 @@
-work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-gap_fill,20,MA,3932,cash_paid_for_interest,2025,2025-12-31,REASON,structural_not_presented,"no cash_paid_for_interest line on the statements of this filing nor an undimensioned note fact | absent in own filing 0001141391-26-000013: no face line on any statement, no undimensioned fact of 2 element(s), no later 10-K fact for the year; filing checks: calc LiabilitiesAndStockholdersEquity: ok;calc CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect: ok",,0001141391-26-000013,R8.htm,
-blank,20,MA,3932,dividends_per_share,2020,2020-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
-blank,20,MA,3932,dividends_per_share,2021,2021-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
