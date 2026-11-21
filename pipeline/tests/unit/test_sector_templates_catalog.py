@@ -71,8 +71,14 @@ def test_catalog_plan_groups_outs_and_excluded_rows(tmp_path: Path):
     assert summ["bank"] == {"companies": 1, "in_rows": 5, "out_rows": 5, "rows": 10}
 
 
-def test_unknown_group_and_duplicate_catalog_are_errors(tmp_path: Path):
+def test_unknown_group_and_duplicate_catalog_are_errors(tmp_path: Path, monkeypatch):
     bdc = st.RankedCompany(1, 1, "0001287750", "ARCC", 6726)
+    rows = st.build_catalog_plan(["revenue", "bdc_total_investment_income", "inventory", "current_assets"], [bdc])
+    by = {r.data_point: r for r in rows}
+    assert {r.template for r in rows} == {"bdc"}
+    assert by["bdc_total_investment_income"].in_template and by["revenue"].in_template
+    assert not by["inventory"].in_template and not by["current_assets"].in_template  # s8.4 OUT
+    monkeypatch.delitem(st.GROUP_OUT, "bdc")
     with pytest.raises(st.TemplateError):
         st.build_catalog_plan(["revenue"], [bdc])
     dup = tmp_path / "d.csv"

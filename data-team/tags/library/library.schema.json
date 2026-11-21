@@ -105,6 +105,12 @@
   "concept_catalog": {
    "type": "string"
   },
+  "standard_definition": {
+   "type": "string"
+  },
+  "fallback_badges": {
+   "type": "string"
+  },
   "links": {
    "type": "string"
   },

@@ -12,6 +12,7 @@ Inputs (all in the repo):
   data-team/tags/library/standard-tag-library.csv, company-overrides.csv, fsn-*.csv, needs-detail-answers-r1r2.csv  (folded in)
   data-team/tags/RULEBOOK.md, data-team/tags/cards/*.md, mind/entries/*.md, data-team/22-FILING-LESSONS-LEDGER.md
   data-team/47-fsn-store/company_tag_map/concepts_catalog.csv, pipeline/src/scrooner_pipeline/metrics/registry/*.csv
+  pipeline/src/scrooner_pipeline/metrics/registry/data_points.csv   the data-point definitions (linked per element's data_point, never copied by hand)
 Outputs (data-team/tags/library/):
   library.csv, library.json, library.schema.json, INDEX.md, browser.html, CHANGELOG.md (appended per build), coverage.json
 """
@@ -30,7 +31,7 @@ COLUMNS = [
     'deprecated_year', 'replaces', 'deprecated_by', 'deprecation_chain',
     'data_point', 'roles_rows', 'role_kind', 'rule_id', 'resolver_functions', 'tests', 'polarity', 'family', 'statements',
     'positions', 'calc_parents', 'filer_calc_parents', 'labels_seen', 'learned_filings', 'learned_companies', 'learned_statements', 'member_axes', 'custom',
-    'metrics', 'concept_catalog', 'links',
+    'metrics', 'concept_catalog', 'standard_definition', 'fallback_badges', 'links',
     'companies', 'filings_seen', 'years_seen', 'served_cells', 'example_cells',
     'proof_cells', 'proven_cells', 'proof_companies', 'certified_cells', 'last_verified', 'composite_uses',
     'fsn_lines_top100', 'fsn_companies_top100', 'legacy_decision', 'legacy_concept', 'legacy_caveat', 'company_overrides',
@@ -232,10 +233,22 @@ def main():
     # 8. metrics and concepts catalog: data point -> metric ids
     cat = {r['name'] for r in rows_of(os.path.join(ROOT, 'data-team', '47-fsn-store', 'company_tag_map', 'concepts_catalog.csv'))}
     met = collections.defaultdict(set)
-    for path in glob.glob(os.path.join(ROOT, 'pipeline', 'src', 'scrooner_pipeline', 'metrics', 'registry', '*.csv')):
+    reg_dir = os.path.join(ROOT, 'pipeline', 'src', 'scrooner_pipeline', 'metrics', 'registry')
+    for path in glob.glob(os.path.join(reg_dir, '*.csv')):
+        if os.path.basename(path) == 'data_points.csv':
+            continue   # the data-point definitions table, linked below; not a metric file
         for r in rows_of(path):
             for dp in re.findall(r'[a-z][a-z_]+', (r.get('seed_inputs') or '') + ' ' + (r.get('expression') or '')):
                 met[dp].add(r['metric_id'])
+    # data-point definitions (registry/data_points.csv, founder decision 2026-11-22): the general-sector row
+    # gives the definition and badge chain; sectors where the data point does not apply are named
+    dpdef = {}
+    for r in rows_of(os.path.join(reg_dir, 'data_points.csv')):
+        e = dpdef.setdefault(r['data_point'], {'na': []})
+        if r['sector'] == 'general':
+            e.update(defn=r['standard_definition'], badges=r['badges'])
+        if r['applies'] == 'no':
+            e['na'].append(r['sector'])
     for t in list(lib):
         dps = set(lib[t].get('data_point', []))
         for dp in dps:
@@ -243,6 +256,11 @@ def main():
                 add(t, 'metrics', m)
             if dp in cat:
                 add(t, 'concept_catalog', dp)
+            if dp in dpdef:
+                e = dpdef[dp]
+                add(t, 'standard_definition', f"{dp}: {e.get('defn', '(no general row)')}" + (f" [not applicable: {','.join(e['na'])}]" if e['na'] else ''))
+                add(t, 'fallback_badges', f"{dp}: {e.get('badges', '')}")
+                add(t, 'definition_links', f"def:registry/data_points.csv#{dp}")
 
     # 8b. learned from the filings themselves (learn_from_filings.py over the standard extract): every element filers use
     learned = {r['element']: r for r in rows_of(os.path.join(LIB, 'learned_elements.csv'))}
@@ -265,7 +283,7 @@ def main():
         for k, v in L.items():
             if k in row and v:
                 row[k] = j(v, 3 if k == 'example_cells' else 8 if k == 'composite_uses' else 20)
-        row['links'] = j([f'card:{c}' for c in row['cards'].split(';') if c] + [f'mind:{m}' for m in row['mind_ids'].split(';') if m] + [f'ledger:{l}' for l in row['ledger_lines'].split(';') if l][:10] + [f'test:{t}' for t in row['tests'].split(';') if t] + [f'fn:{x}' for x in row['resolver_functions'].split(';') if x])
+        row['links'] = j(L.get('definition_links', []) + [f'card:{c}' for c in row['cards'].split(';') if c] + [f'mind:{m}' for m in row['mind_ids'].split(';') if m] + [f'ledger:{l}' for l in row['ledger_lines'].split(';') if l][:10] + [f'test:{t}' for t in row['tests'].split(';') if t] + [f'fn:{x}' for x in row['resolver_functions'].split(';') if x])
         prob_n = len([x for x in (row['known_problems'] or '').split(';') if x])
         row['quality'] = f"companies={row['companies'] or 0};proven={row['proven_cells'] or 0};certified={row['certified_cells'] or 0};open_problems={prob_n};verified={row['last_verified'] or '-'}"
         need = ['data_point', 'rule_id', 'served_cells']

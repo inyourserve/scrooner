@@ -16,3 +16,6 @@ def test_build_writes_the_library_with_the_db_columns(tmp_path):
     # an element the resolver serves carries its data point, ruling and usage
     r = by['PaymentsForRepurchaseOfCommonStock']
     assert 'share_buybacks' in r['data_point'] and r['rule_id'] and int(r['served_cells']) > 0
+    # its data point links to the one definition table (metrics/registry/data_points.csv)
+    assert r['standard_definition'].startswith('share_buybacks: ') and 'def:registry/data_points.csv#share_buybacks' in r['links']
+    assert r['fallback_badges'].startswith('share_buybacks: as_printed')

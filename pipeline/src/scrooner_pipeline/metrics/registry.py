@@ -1,7 +1,12 @@
 """Load and validate the metric registry (registry/*.csv, one file per family).
 
-REGISTRY_VERSION is a hash of the registry files' names and bytes: any edit to any
-row changes it. A metric's own `version` is bumped by hand when its published formula
+REGISTRY_VERSION is a hash of the metric files' names and bytes: any edit to any
+row changes it.
+
+registry/data_points.csv is the one definition table for the display data points (one row per
+data point x sector template: standard definition, fallback order with a badge per step, sector
+applicability, filter note; founder decision 2026-11-22). It is not a metric file: load it with
+load_data_points(); DATA_POINTS_VERSION hashes it alone. A metric's own `version` is bumped by hand when its published formula
 changes meaning; `formula_ref` is `metric_id@version`.
 """
 
@@ -48,6 +53,44 @@ COLUMNS = [
 
 class RegistryError(ValueError):
     pass
+
+
+DATA_POINTS_FILE = "data_points.csv"
+DATA_POINT_COLUMNS = [
+    "data_point",
+    "sector",
+    "applies",
+    "statement",
+    "standard_definition",
+    "fallback_order",
+    "badges",
+    "inputs_one_filing",
+    "never_derive",
+    "not_applicable_reason",
+    "filter_note",
+    "rulings",
+]
+# mapper/sector_templates.py sic_group() values (+ the bdc company assignment).
+SECTORS = (
+    "general",
+    "bank",
+    "lender",
+    "broker_am",
+    "insurer",
+    "equity_reit",
+    "utility",
+    "bdc",
+)
+DATA_POINT_STATEMENTS = {"income_statement", "balance_sheet", "cash_flow"}
+# Badge vocabulary, one per fallback step. A shown cell carries the badge of the step that
+# produced it: as_printed (face line, undimensioned note fact or quoted text), combined:<what the
+# printed line also holds>, derived:<formula over printed lines of ONE filing>, perimeter:<how the
+# inputs' perimeter differs>. Cell states that carry no value are not badges: not_applicable
+# (applies = no), not_disclosed (no filing prints the figure or its inputs) and included_in:<dp>
+# (one printed line holds two template data points: it serves the one its label names first; the
+# other cell is a filter-exclusion reason, never a blank or zero; Dhairya 2026-11-22).
+BADGE_KINDS = ("as_printed", "combined:", "derived:", "perimeter:")
+CELL_STATES = ("not_applicable", "not_disclosed", "included_in:")
 
 
 @dataclass(frozen=True)
@@ -159,7 +202,12 @@ def _seed_inputs(raw: str, where: str) -> tuple[tuple[str, str], ...]:
 
 
 def registry_files(directory: Path | None = None) -> list[Path]:
-    return sorted((directory or REGISTRY_DIR).glob("*.csv"))
+    """The metric family files (every registry CSV except the data-point table)."""
+    return sorted(
+        p
+        for p in (directory or REGISTRY_DIR).glob("*.csv")
+        if p.name != DATA_POINTS_FILE
+    )
 
 
 def compute_registry_version(directory: Path | None = None) -> str:
@@ -298,6 +346,119 @@ def validate_registry(metrics: dict[str, Metric]) -> None:
         raise RegistryError("; ".join(problems))
 
 
+@dataclass(frozen=True)
+class DataPointDefinition:
+    data_point: str
+    sector: str
+    applies: bool
+    statement: str
+    standard_definition: str
+    fallback_order: tuple[str, ...]
+    badges: tuple[str, ...]
+    inputs_one_filing: bool
+    never_derive: bool
+    not_applicable_reason: str
+    filter_note: str
+    rulings: str
+
+
+def _badge_ok(b: str) -> bool:
+    if b == "as_printed":
+        return True
+    kind, sep, what = b.partition(":")
+    return bool(sep) and f"{kind}:" in BADGE_KINDS[1:] and bool(what.strip())
+
+
+def load_data_points(
+    directory: Path | None = None,
+) -> dict[tuple[str, str], DataPointDefinition]:
+    """registry/data_points.csv keyed by (data_point, sector); every rule is checked on load."""
+    path = (directory or REGISTRY_DIR) / DATA_POINTS_FILE
+    out: dict[tuple[str, str], DataPointDefinition] = {}
+    problems: list[str] = []
+    with path.open(newline="") as fh:
+        reader = csv.DictReader(fh)
+        if reader.fieldnames != DATA_POINT_COLUMNS:
+            raise RegistryError(
+                f"{path.name}: columns {reader.fieldnames} != {DATA_POINT_COLUMNS}"
+            )
+        for i, row in enumerate(reader, start=2):
+            w = f"{path.name}:{i}"
+            key = (row["data_point"], row["sector"])
+            if key in out:
+                problems.append(f"{w}: duplicate {key}")
+            if row["sector"] not in SECTORS:
+                problems.append(f"{w}: sector {row['sector']!r}")
+            if row["statement"] not in DATA_POINT_STATEMENTS:
+                problems.append(f"{w}: statement {row['statement']!r}")
+            try:
+                applies = _yes(row["applies"], w)
+                one = _yes(row["inputs_one_filing"], w)
+                never = _yes(row["never_derive"], w)
+            except RegistryError as exc:
+                problems.append(str(exc))
+                continue
+            steps = tuple(
+                x.strip() for x in row["fallback_order"].split(" > ") if x.strip()
+            )
+            badges = tuple(x.strip() for x in row["badges"].split("|") if x.strip())
+            if not row["standard_definition"].strip():
+                problems.append(f"{w}: standard_definition is empty")
+            if not steps or len(steps) != len(badges):
+                problems.append(
+                    f"{w}: {len(steps)} fallback steps but {len(badges)} badges"
+                )
+            if (
+                badges
+                and badges[0] != "as_printed"
+                and not badges[0].startswith("derived:sum(")
+            ):
+                problems.append(
+                    f"{w}: the first step must be the printed line (as_printed)"
+                )
+            for b in badges:
+                if not _badge_ok(b):
+                    problems.append(f"{w}: badge {b!r} not in {BADGE_KINDS}")
+            if never and any(b.startswith(("derived:", "perimeter:")) for b in badges):
+                problems.append(f"{w}: never_derive data point has a derived step")
+            if not one:
+                problems.append(
+                    f"{w}: inputs_one_filing must be yes (no two-filing derivation)"
+                )
+            if applies == bool(row["not_applicable_reason"].strip()):
+                problems.append(
+                    f"{w}: not_applicable_reason must be set exactly when applies = no"
+                )
+            if applies and not row["filter_note"].strip():
+                problems.append(f"{w}: filter_note is empty")
+            out[key] = DataPointDefinition(
+                data_point=row["data_point"],
+                sector=row["sector"],
+                applies=applies,
+                statement=row["statement"],
+                standard_definition=row["standard_definition"],
+                fallback_order=steps,
+                badges=badges,
+                inputs_one_filing=one,
+                never_derive=never,
+                not_applicable_reason=row["not_applicable_reason"],
+                filter_note=row["filter_note"],
+                rulings=row["rulings"],
+            )
+    for dp in {k[0] for k in out}:
+        missing = [s for s in SECTORS if (dp, s) not in out]
+        if missing:
+            problems.append(f"{path.name}: {dp} has no row for sector(s) {missing}")
+    if problems:
+        raise RegistryError("; ".join(problems[:30]))
+    return out
+
+
+def compute_data_points_version(directory: Path | None = None) -> str:
+    p = (directory or REGISTRY_DIR) / DATA_POINTS_FILE
+    return hashlib.sha256(p.name.encode() + b"\0" + p.read_bytes()).hexdigest()[:16]
+
+
 _CACHE: dict[str, object] = {}
 
 
@@ -314,4 +475,6 @@ def registry_version() -> str:
 def __getattr__(name: str):
     if name == "REGISTRY_VERSION":
         return compute_registry_version()
+    if name == "DATA_POINTS_VERSION":
+        return compute_data_points_version()
     raise AttributeError(name)

@@ -155,3 +155,78 @@ def test_perimeter_metadata_for_ebitda_fcf_roic_is_explicit():
     assert "oil_gas" in REG["fcf"].perimeter_spec["capex_excludes"]
     assert REG["roic"].perimeter_spec["operating_leases"] == "excluded_from_invested_capital"
     assert REG["roic"].perimeter_spec["finance_leases"] == "included_in_total_debt"
+
+
+# --- display data-point definitions (registry/data_points.csv; founder decision 2026-11-22) ---
+from scrooner_pipeline.mapper.sector_templates import GROUP_ONLY, GROUP_OUT  # noqa: E402
+from scrooner_pipeline.metrics.registry import SECTORS, load_data_points  # noqa: E402
+
+DP = load_data_points()
+
+
+@pytest.mark.unit
+def test_data_point_table_is_not_read_as_a_metric_file():
+    assert "data_points.csv" not in {p.name for p in __import__(
+        "scrooner_pipeline.metrics.registry", fromlist=["registry_files"]).registry_files()}
+    assert set(REG) & {k[0] for k in DP} == {"net_interest_income"}  # bank line and bank metric share the id
+
+
+@pytest.mark.unit
+def test_every_display_data_point_has_one_definition_per_sector_and_is_a_catalog_concept():
+    cat = {r["name"] for r in csv.DictReader(
+        (REPO / "data-team/47-fsn-store/company_tag_map/concepts_catalog.csv").open())}
+    dps = {k[0] for k in DP}
+    assert len(DP) == len(dps) * len(SECTORS)
+    assert dps <= cat, sorted(dps - cat)
+    shown = set()
+    for p in (REPO / "data-team/strategy/open-shown").glob("*.csv"):
+        shown |= {r["data_point"] for r in csv.DictReader(p.open())}
+    assert shown <= dps, sorted(shown - dps)
+
+
+@pytest.mark.unit
+def test_data_point_applicability_agrees_with_the_sector_templates_both_ways():
+    for (dp, sec), d in DP.items():
+        out = dp in GROUP_OUT.get(sec, frozenset()) or (dp in GROUP_ONLY and sec not in GROUP_ONLY[dp])
+        assert d.applies == (not out), (dp, sec)
+
+
+@pytest.mark.unit
+def test_dhairya_2026_11_22_calls_are_in_the_table():
+    for sec in ("bank", "insurer"):
+        for dp in ("current_assets", "current_liabilities"):
+            assert not DP[(dp, sec)].applies and "unclassified balance sheet" in DP[(dp, sec)].not_applicable_reason
+    assert DP[("current_assets", "general")].applies
+    assert "perimeter:medical costs as cost of revenue" in DP[("gross_profit", "general")].badges
+    assert any(b.startswith("derived:zero_balance:") for b in DP[("amortization_of_intangibles", "general")].badges)
+    assert all("included_in:" in d.filter_note for d in DP.values() if d.applies)
+
+
+@pytest.mark.unit
+def test_eps_is_never_derived_and_every_derivation_uses_one_filing():
+    for k in (("basic_eps", "general"), ("diluted_eps", "general")):
+        assert DP[k].never_derive and DP[k].badges == ("as_printed",)
+    assert all(d.inputs_one_filing for d in DP.values())
+
+
+@pytest.mark.unit
+def test_data_point_loader_rejects_bad_rows(tmp_path):
+    copy = tmp_path / "registry"
+    shutil.copytree(REGISTRY_DIR, copy)
+    f = copy / "data_points.csv"
+    text = f.read_text()
+    assert load_data_points(copy)
+    bad = [
+        text.replace("|combined:<items named in the label>", "|guessed:<items>", 1),  # unknown badge kind
+        "",  # EPS with a derived step: built below
+        text.replace(",general,yes,", ",generalx,yes,", 1),  # unknown sector
+        text.replace(",yes,no,,", ",yes,no,reason given while applicable,", 1),
+    ]
+    eps = [ln for ln in text.splitlines() if ln.startswith("basic_eps,general,")][0]
+    bad[1] = text.replace(eps, eps.replace(",as_printed,yes,yes,", ",as_printed|derived:net_income/weighted_basic_shares,yes,yes,", 1)
+                          .replace("holding exactly the data point,", "holding exactly the data point > 2. net income / shares,", 1), 1)
+    for b in bad:
+        assert b != text
+        f.write_text(b)
+        with pytest.raises(RegistryError):
+            load_data_points(copy)

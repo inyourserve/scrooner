@@ -917,3 +917,6 @@
 - ~ NonoperatingIncomeExpense: served_cells
 - ~ PaymentsForProceedsFromProductiveAssets: served_cells
 - ~ PaymentsToAcquirePropertyPlantAndEquipment: served_cells
+
+## 2026-11-22 (resolver-all110-.87): 1 element changes, 28001 rows, coverage 64.1%
+- ~ IntangibleAssetsNetIncludingGoodwill: rule_id

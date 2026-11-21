@@ -460,6 +460,9 @@ GROUP_OUT: dict[str, frozenset[str]] = {
             "accounts_payable",
             "operating_income",
             "capex",
+            # unclassified balance sheet: no current subtotal (Dhairya 2026-11-22, narrows s8.3)
+            "current_assets",
+            "current_liabilities",
         }
     ),
     "lender": frozenset({"gross_profit", "inventory"}),
@@ -471,6 +474,8 @@ GROUP_OUT: dict[str, frozenset[str]] = {
             "inventory",
             "research_and_development",
             "capex",
+            "current_assets",
+            "current_liabilities",
         }
     ),
     "equity_reit": frozenset(
@@ -478,6 +483,18 @@ GROUP_OUT: dict[str, frozenset[str]] = {
     ),
     "utility": frozenset({"gross_profit", "research_and_development"}),
     "general": frozenset(),
+    # ASC 946 investment company, OUT by definition (SECTOR-TEMPLATES-2026-11-01 s8.4)
+    "bdc": frozenset(
+        {
+            "gross_profit",
+            "cost_of_revenue",
+            "inventory",
+            "research_and_development",
+            "current_assets",
+            "current_liabilities",
+            "capex",
+        }
+    ),
 }
 # Concepts that belong to one group only (every other group has them OUT).
 # (net_interest_income matches the existing ranks 1-50 template: bank rows only.)
@@ -576,7 +593,7 @@ def build_catalog_plan(
     template_version: str = CATALOG_VERSION,
 ) -> list[TemplateRow]:
     """Every company's full row set: each catalog concept IN, except the group's OUT set
-    (with its reason). A group with no definition (e.g. bdc) is an error."""
+    (with its reason). A group with no definition is an error."""
     problems: list[str] = []
     ids = Counter(c.company_id for c in companies)
     problems += [f"company id {i} listed twice" for i, n in ids.items() if n > 1]
