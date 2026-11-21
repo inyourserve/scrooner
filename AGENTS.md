@@ -19,6 +19,7 @@ Use progressive disclosure. Do not read the repository's planning history by def
 - Database schema/migration: the relevant file in `pipeline/db/migrations/`
 - Release/commit: `data-team/08-RELEASE-MANAGER.md`
 - Frontend: `apps/app/` and the relevant file under `doc/design/`
+- Which system owns what, and what not to build: `data-team/SYSTEMS.md` (check it before creating any new module, registry, table or file family).
 
 Search before opening long files. Prefer `rg -n "term" file` and read a narrow range. Use `mind/mind.py search` only when prior case knowledge is useful.
 
