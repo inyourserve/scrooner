@@ -166,6 +166,7 @@ def test_ask_contract_shows_interpretation_and_does_not_run_by_default(monkeypat
         "value": "0.3",
         "value_range": None,
         "n": None,
+        "include_missing": False,
     }
     assert "result" not in body
     assert body["unrecognized"] == []

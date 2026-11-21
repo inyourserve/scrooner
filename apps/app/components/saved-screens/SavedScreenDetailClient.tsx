@@ -11,7 +11,7 @@ import { savedScreensApi } from "@/lib/saved-screens/client";
 import type { SavedScreen } from "@/lib/saved-screens/types";
 import { metricByName } from "@/lib/screener/catalog";
 import { formatMetricValue, metricPeriod, resultColumnLabel, resultColumnUnit } from "@/lib/screener/format";
-import { collectMetricNames, collectPredicateMetricNames, type MetricDefinition } from "@/lib/screener/types";
+import { collectMetricNames, collectPredicateMetricNames, MISSING_REASON_LABELS, type MetricDefinition } from "@/lib/screener/types";
 
 export function SavedScreenDetailClient({ initialScreen, initialPage, metrics }: { initialScreen: SavedScreen; initialPage: number; metrics: MetricDefinition[] }) {
   const router = useRouter();
@@ -81,7 +81,7 @@ export function SavedScreenDetailClient({ initialScreen, initialPage, metrics }:
               <td>{(page - 1) * 50 + index + 1}</td>
               <th scope="row">{company.ticker ? <Link className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`/stocks/${company.ticker.toLowerCase()}`}><strong>{company.ticker}</strong><span title={company.company_name}>{company.company_name}</span></Link> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}</th>
               <td data-text="true"><span className="classification" title={company.sic_description || "Unclassified"}>{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>
-              {metricNames.map((name) => { const value = company.metrics[name]; const definition = metricByName(metrics, name); return <td className="results-metric-cell" data-filtered={filteredMetricNames.has(name) || undefined} data-numeric="true" key={name}>{value ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}</td>; })}
+              {metricNames.map((name) => { const value = company.metrics[name]; const definition = metricByName(metrics, name); return <td className="results-metric-cell" data-filtered={filteredMetricNames.has(name) || undefined} data-numeric="true" key={name}>{value && value.value != null ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : value?.missing ? <><span className="metric-value missing" aria-label="No value">—</span><small className="missing-reason-chip" data-bucket={value.missing.bucket} title={value.missing.code ?? undefined}>{value.missing.label ?? MISSING_REASON_LABELS[value.missing.bucket]}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}</td>; })}
             </tr>)}</tbody>
           </table>
         </div>

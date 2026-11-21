@@ -1873,3 +1873,40 @@ a.company-link:hover strong {
   .account-panel__identity { align-items: flex-start; gap: 12px; }
   .account-panel__actions { flex-direction: column; align-items: stretch; }
 }
+
+
+/* Screener exclusion reasons (2026-11-22): summary line, grouped panel, kept-without-value chip */
+.exclusion-summary {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--ds-font-size-13);
+}
+
+.coverage-group h4 {
+  margin: 10px 0 2px;
+  font-size: var(--ds-font-size-12);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.coverage-group h4 span {
+  color: var(--text-secondary);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.missing-reason-chip {
+  display: inline-block;
+  max-width: 16ch;
+  padding: 1px 6px;
+  border: 1px solid var(--ds-color-border-warning);
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-sans, inherit);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.include-missing-check {
+  grid-column: 2 / -1;
+  font-size: var(--ds-font-size-12);
+}

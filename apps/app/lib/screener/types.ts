@@ -32,6 +32,9 @@ export interface FilterRow {
   operator: MetricOperator;
   value: string;
   highValue: string;
+  // Keep companies with no value for this metric (shown as "—" with the
+  // reason) instead of excluding them. Not valid on Top N / Bottom N.
+  includeMissing?: boolean;
 }
 
 export interface CategoryFilter {
@@ -46,6 +49,7 @@ export interface MetricPredicatePayload {
   value?: string | null;
   value_range?: [string, string] | null;
   n?: number | null;
+  include_missing?: boolean;
 }
 
 export interface CategoricalPredicatePayload {
@@ -107,11 +111,38 @@ export function collectMetricNames(query: ScreenQueryPayload): string[] {
   return [...names];
 }
 
+export type MissingReasonBucket =
+  | "not_in_template"
+  | "history_horizon"
+  | "undefined_by_math"
+  | "not_presented"
+  | "stale"
+  | "open_gap";
+
+/** Mirrors pipeline screener/missing_reasons.py BUCKET_LABELS (the backend
+ * also sends its labels; these are the fallback and the display order). */
+export const MISSING_REASON_LABELS: Record<MissingReasonBucket, string> = {
+  not_in_template: "Not applicable to sector",
+  history_horizon: "No prior-year filing",
+  undefined_by_math: "Undefined (zero or negative base)",
+  not_presented: "Not disclosed in filings",
+  stale: "Latest value older than latest filing",
+  open_gap: "No value yet (our gap)",
+};
+
+export interface MissingReason {
+  code: string | null;
+  bucket: MissingReasonBucket;
+  label?: string;
+}
+
 export interface ResolvedMetric {
-  value: string;
-  period_label: string;
-  period_end: string;
-  formula_version: number;
+  // null only when a filter kept the company without a value (include_missing).
+  value: string | null;
+  period_label: string | null;
+  period_end: string | null;
+  formula_version: number | null;
+  missing?: MissingReason;
 }
 
 export interface MatchedCompany {
@@ -129,12 +160,25 @@ export interface MissingCompany {
   cik: string;
   company_name: string;
   missing_metrics: string[];
+  reasons?: Record<string, MissingReason>;
+}
+
+/** matched + excluded + not_matched = total_candidates. */
+export interface ExclusionSummary {
+  total_candidates: number;
+  matched: number;
+  excluded: number;
+  not_matched: number;
+  by_bucket: Partial<Record<MissingReasonBucket, number>>;
+  by_metric: Record<string, Partial<Record<MissingReasonBucket, number>>>;
+  bucket_labels?: Record<string, string>;
 }
 
 export interface ScreenResult {
   matched: MatchedCompany[];
   excluded_missing_data: MissingCompany[];
   excluded_inactive: string[];
+  exclusion_summary?: ExclusionSummary | null;
 }
 
 export interface QueryBuildResult {

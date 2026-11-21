@@ -42,7 +42,7 @@ def _canon_predicate(p) -> dict:
     if isinstance(p, PredicateGroup):
         return _canon_group(p)
     if isinstance(p, MetricPredicate):
-        return {
+        canon = {
             "type": "metric",
             "metric_name": p.metric_name,
             "operator": p.operator,
@@ -50,6 +50,10 @@ def _canon_predicate(p) -> dict:
             "value_range": p.value_range,
             "n": p.n,
         }
+        # Only when set, so every query without it keeps its existing hash.
+        if p.include_missing:
+            canon["include_missing"] = True
+        return canon
     if isinstance(p, CategoricalPredicate):
         return {
             "type": "categorical",

@@ -18,6 +18,7 @@ export interface ScreenRunPage {
   items: import("@/lib/screener/types").MatchedCompany[];
   excluded_missing_data: import("@/lib/screener/types").MissingCompany[];
   excluded_inactive: string[];
+  exclusion_summary?: import("@/lib/screener/types").ExclusionSummary | null;
   cursor: string | null;
   previous_cursor?: string | null;
   next_cursor: string | null;

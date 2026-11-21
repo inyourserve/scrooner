@@ -14,13 +14,16 @@ import { queryToBuilderState } from "@/lib/screener/interpretation";
 import { buildScreenQuery } from "@/lib/screener/query";
 import type {
   CategoryFilter,
+  ExclusionSummary,
   FilterRow,
   MetricDefinition,
   MetricOperator,
+  MissingCompany,
+  MissingReasonBucket,
   ScreenQueryPayload,
   ScreenResult,
 } from "@/lib/screener/types";
-import { collectMetricNames, collectPredicateMetricNames, DEFAULT_COMPARISON_METRICS } from "@/lib/screener/types";
+import { collectMetricNames, collectPredicateMetricNames, DEFAULT_COMPARISON_METRICS, MISSING_REASON_LABELS } from "@/lib/screener/types";
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
 import { PageShell } from "@/components/layout/PageShell";
@@ -64,6 +67,28 @@ function errorDetail(payload: unknown, fallback: string) {
       .join(" ");
   }
   return fallback;
+}
+
+const REASON_ORDER = Object.keys(MISSING_REASON_LABELS) as MissingReasonBucket[];
+
+function reasonLabel(bucket: MissingReasonBucket, summary?: ExclusionSummary | null) {
+  return summary?.bucket_labels?.[bucket] ?? MISSING_REASON_LABELS[bucket] ?? bucket;
+}
+
+/** A company's reason bucket: its first missing metric's (the same rule the
+ * backend's exclusion_summary.by_bucket uses), or our own gap if unknown. */
+function primaryBucket(company: MissingCompany): MissingReasonBucket {
+  const first = company.missing_metrics[0];
+  return (first && company.reasons?.[first]?.bucket) || "open_gap";
+}
+
+/** "N match · M excluded: No prior-year filing (12), Not applicable to sector (40)" */
+export function exclusionSummaryText(summary: ExclusionSummary): string {
+  const reasons = REASON_ORDER
+    .filter((bucket) => (summary.by_bucket[bucket] ?? 0) > 0)
+    .map((bucket) => `${reasonLabel(bucket, summary)} (${summary.by_bucket[bucket]})`);
+  const head = `${summary.matched} match · ${summary.excluded} excluded`;
+  return reasons.length > 0 ? `${head}: ${reasons.join(", ")}` : head;
 }
 
 async function requestMetricCatalog(): Promise<MetricDefinition[]> {
@@ -173,7 +198,7 @@ export function ScreenerClient({
     }
     setInterpretedFrom(page.query_text);
     setLastQuery(page.normalized_query);
-    setResult({ matched: page.items, excluded_missing_data: page.excluded_missing_data, excluded_inactive: page.excluded_inactive });
+    setResult({ matched: page.items, excluded_missing_data: page.excluded_missing_data, excluded_inactive: page.excluded_inactive, exclusion_summary: page.exclusion_summary ?? null });
     setRunPage(page);
     setPageNumber(pageNumber);
     setRequestState("success");
@@ -573,6 +598,7 @@ export function ScreenerClient({
                 <p className="workspace-eyebrow">Company screener</p>
                 <ResultsTitle className="ds-workspace-title" ref={resultsTitleRef} id="results-title" tabIndex={-1}>Query results</ResultsTitle>
                 {requestState === "success" && result && <p className="results-source-query"><strong>{runPage?.total_count ?? result.matched.length}</strong> {(runPage?.total_count ?? result.matched.length) === 1 ? "result" : "results"} · Page {pageNumber} of {Math.max(1, Math.ceil((runPage?.total_count ?? result.matched.length) / pageSize))}{interpretedFrom && <span className="results-query-context">From “{interpretedFrom}”</span>}</p>}
+                {requestState === "success" && result?.exclusion_summary && <p className="exclusion-summary" role="status" title={`${result.exclusion_summary.not_matched} did not meet the criteria · ${result.exclusion_summary.total_candidates} companies screened`}>{exclusionSummaryText(result.exclusion_summary)}</p>}
                 {requestState === "success" && runPage?.corrections && runPage.corrections.length > 0 && <p className="query-corrections" role="status"><strong>Corrected:</strong> {runPage.corrections.map((correction) => `“${correction.source_text}” → “${correction.corrected_text}”`).join(" · ")}</p>}
               </div>
               {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} runId={runPage?.run_id} />}
@@ -652,9 +678,14 @@ export function ScreenerClient({
                         {visibleMetricNames.map((metricName) => {
                           const value = company.metrics[metricName];
                           const definition = metricByName(metrics, metricName);
+                          const missing = value?.missing;
                           return (
                             <td className="results-metric-cell" data-filtered={filteredMetricNames.has(metricName) || undefined} data-numeric="true" key={metricName}>
-                              {value ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}
+                              {value && value.value != null
+                                ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></>
+                                : missing
+                                  ? <><span className="metric-value missing" aria-label="No value">—</span><small className="missing-reason-chip" data-bucket={missing.bucket} title={missing.code ?? undefined}>{missing.label ?? reasonLabel(missing.bucket, result.exclusion_summary)}</small></>
+                                  : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}
                             </td>
                           );
                         })}
@@ -678,20 +709,34 @@ export function ScreenerClient({
                   {[10, 25, 50].map((size) => <Button key={size} type="button" variant={pageSize === size ? "primary" : "secondary"} size="small" disabled={resultsUpdating} onClick={() => void changePageSize(size)}>{size}</Button>)}
                 </div>
               </nav>}
-              {result.excluded_missing_data.length > 0 && (
-                <details className="coverage-panel">
-                  <summary>
-                    <span className="coverage-icon" aria-hidden="true">i</span>
-                    <span><strong>{result.excluded_missing_data.length} {result.excluded_missing_data.length === 1 ? "company was" : "companies were"} excluded for missing data</strong><small>Missing data is not treated as a failed financial criterion.</small></span>
-                  </summary>
-                  <div className="coverage-detail">
-                    {result.excluded_missing_data.map((company) => (
-                      <p key={company.cik}><strong>{company.company_name}</strong><span>{company.missing_metrics.map((name) => metricByName(metrics, name)?.display_name ?? name).join(", ")}</span></p>
-                    ))}
-                  </div>
-                </details>
-              )}
               </>
+            )}
+
+            {requestState === "success" && result && result.excluded_missing_data.length > 0 && (
+              <details className="coverage-panel">
+                <summary>
+                  <span className="coverage-icon" aria-hidden="true">i</span>
+                  <span><strong>{result.excluded_missing_data.length} {result.excluded_missing_data.length === 1 ? "company was" : "companies were"} excluded for missing data</strong><small>Missing data is not treated as a failed financial criterion. Tick “Include companies with no value” on a condition to keep them.</small></span>
+                </summary>
+                <div className="coverage-detail">
+                  {REASON_ORDER.map((bucket) => {
+                    const group = result.excluded_missing_data.filter((company) => primaryBucket(company) === bucket);
+                    if (group.length === 0) return null;
+                    return (
+                      <section className="coverage-group" key={bucket} data-bucket={bucket} aria-label={`${reasonLabel(bucket, result.exclusion_summary)} (${group.length})`}>
+                        <h4>{reasonLabel(bucket, result.exclusion_summary)} <span>({group.length})</span></h4>
+                        {group.map((company) => (
+                          <p key={company.cik}><strong>{company.company_name}</strong><span>{company.missing_metrics.map((name) => {
+                            const reason = company.reasons?.[name];
+                            const display = metricByName(metrics, name)?.display_name ?? name;
+                            return reason ? `${display}: ${reason.label ?? reasonLabel(reason.bucket, result.exclusion_summary)}` : display;
+                          }).join(", ")}</span></p>
+                        ))}
+                      </section>
+                    );
+                  })}
+                </div>
+              </details>
             )}
 
             {resultsFirst && queryPanel}
@@ -770,7 +815,7 @@ export function ScreenerClient({
               <div>
                 <p className="step-label">Criteria</p>
                 <h2>Filter companies</h2>
-                <p>Companies must meet every condition. Missing values are excluded.</p>
+                <p>Companies must meet every condition. Companies with no value are excluded with the reason, unless you include them on that condition.</p>
               </div>
               <Button type="button" variant="ghost" onClick={resetScreen}>Reset</Button>
             </div>
@@ -800,7 +845,11 @@ export function ScreenerClient({
                     </div>
                     <div className="filter-control">
                       <label className="sr-only" htmlFor={`${row.id}-operator`}>Operator for condition {index + 1}</label>
-                      <select className="ds-control" id={`${row.id}-operator`} value={row.operator} onChange={(event) => updateRow(row.id, { operator: event.target.value as MetricOperator, value: "", highValue: "" })}>
+                      <select className="ds-control" id={`${row.id}-operator`} value={row.operator} onChange={(event) => {
+                        const operator = event.target.value as MetricOperator;
+                        // A missing value has no rank, so Top N / Bottom N never keeps one.
+                        updateRow(row.id, { operator, value: "", highValue: "", ...(operator === "top_n" || operator === "bottom_n" ? { includeMissing: false } : {}) });
+                      }}>
                         {metric?.operators.map((operator) => <option value={operator} key={operator}>{OPERATOR_LABELS[operator]}</option>)}
                       </select>
                     </div>
@@ -829,6 +878,12 @@ export function ScreenerClient({
                         </>
                       )}
                     </div>
+                    {!ranked && (
+                      <label className="check-label include-missing-check">
+                        <input className="ds-checkbox" type="checkbox" checked={row.includeMissing === true} onChange={(event) => updateRow(row.id, { includeMissing: event.target.checked })} aria-label={`Include companies with no value for condition ${index + 1}`} />
+                        <span>Include companies with no value</span>
+                      </label>
+                    )}
                     <IconButton tone="destructive" label={`Remove condition ${index + 1}`} icon={<span aria-hidden="true">×</span>} onClick={() => setRows((current) => current.filter((candidate) => candidate.id !== row.id))} />
                     {errors[row.id] && <p className="field-error" id={`${row.id}-error`}>{errors[row.id]}</p>}
                   </div>

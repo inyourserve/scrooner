@@ -109,6 +109,7 @@ export function queryToBuilderState(
       operator: predicate.operator,
       value: lowValue,
       highValue,
+      includeMissing: predicate.include_missing === true,
     };
   });
 

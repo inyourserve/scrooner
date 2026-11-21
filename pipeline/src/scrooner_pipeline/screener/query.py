@@ -39,9 +39,17 @@ Two execution paths, chosen by whether `query.where` is set:
   every predicate reads a plain column off the SAME row). Per-predicate
   exclusion attribution has no single well-defined meaning under OR/NOT
   (a company can be excluded by one branch and still match via another),
-  so excluded_missing_data is intentionally left empty for this path with
-  an explicit `exclusion_detail` note, rather than a false claim of
-  precision the tree doesn't support.
+  so the path reports (since 2026-11-22) every active company that did
+  not match AND has no value for at least one leaf metric, citing those
+  metrics ("not matched and no value for X"), with an `exclusion_detail`
+  note saying exactly that -- never a silent drop, never a claim that the
+  missing value alone caused the exclusion.
+
+Every excluded company carries `reasons: {metric: {code, bucket, label}}`
+(screener/missing_reasons.py) and the result carries `exclusion_summary`
+(matched + excluded + not_matched = total_candidates). A predicate with
+`include_missing` keeps a company with no value; its matched entry then
+shows that metric as `{"value": None, "missing": {code, bucket, label}}`.
 
 Read-only against `core`/`analytics` -- the Screener never writes,
 same discipline as every phase before it.
@@ -57,6 +65,7 @@ from scrooner_pipeline.common.sector_applicability import (
     is_bank_sic,
     load_bank_company_ids,
 )
+from scrooner_pipeline.screener import missing_reasons
 from scrooner_pipeline.screener.evaluate import (
     evaluate_between,
     evaluate_comparison,
@@ -182,6 +191,188 @@ def _annotate_stale_suppression(
             excluded_missing_data[company_id].setdefault("suppressed_reasons", {})[
                 name
             ] = reason
+
+
+def _explain_missing(
+    conn: psycopg.Connection,
+    entries: dict[int, dict],
+    sic_by_company: dict[int, str | None],
+    dataset_version: int,
+    catalog: dict[str, int],
+) -> None:
+    """Give every (company, missing metric) in `entries` a reason entry under
+    entry["reasons"]. Bank and stale reasons come first and are never
+    overwritten; every other pair gets its stored metric_value reason or its
+    template OUT reason in one batched lookup, else open_gap. Read-only."""
+    if not entries:
+        return
+    _annotate_bank_suppression(conn, entries, sic_by_company)
+    _annotate_stale_suppression(conn, entries, dataset_version, catalog)
+    pending: list[tuple[int, str]] = []
+    for company_id, entry in entries.items():
+        reasons = entry.setdefault("reasons", {})
+        for name in entry["missing_metrics"]:
+            suppressed = entry.get("suppressed_reasons", {}).get(name)
+            if suppressed is not None:
+                is_bank = BANK_SUPPRESSED_METRICS.get(name) == suppressed
+                reasons[name] = missing_reasons.reason_entry(
+                    suppressed,
+                    missing_reasons.NOT_IN_TEMPLATE
+                    if is_bank
+                    else missing_reasons.STALE,
+                )
+            else:
+                pending.append((company_id, name))
+    resolved = missing_reasons.resolve_reasons(conn, pending, dataset_version, catalog)
+    for company_id, name in pending:
+        entries[company_id]["reasons"][name] = resolved.get(
+            (company_id, name),
+            missing_reasons.reason_entry(
+                missing_reasons.NO_ROW, missing_reasons.OPEN_GAP
+            ),
+        )
+
+
+def build_exclusion_summary(
+    total_candidates: int, matched: int, excluded: list[dict]
+) -> dict:
+    """matched + excluded + not_matched = total_candidates. `excluded` is
+    the excluded_missing_data list (each with `reasons`); a company counts
+    once in by_bucket, under its first missing metric's bucket, and once per
+    missing metric in by_metric. `not_matched` holds every candidate with
+    values that failed a condition (or fell outside a top/bottom N or the
+    result limit)."""
+    by_bucket: dict[str, int] = {}
+    by_metric: dict[str, dict[str, int]] = {}
+    for entry in excluded:
+        reasons = entry.get("reasons") or {}
+        names = entry.get("missing_metrics") or []
+        for i, name in enumerate(names):
+            b = (reasons.get(name) or {}).get("bucket", missing_reasons.OPEN_GAP)
+            if i == 0:
+                by_bucket[b] = by_bucket.get(b, 0) + 1
+            slot = by_metric.setdefault(name, {})
+            slot[b] = slot.get(b, 0) + 1
+    not_matched = total_candidates - matched - len(excluded)
+    if not_matched < 0:
+        raise RuntimeError(
+            "exclusion accounting is inconsistent: matched + excluded exceeds candidates"
+        )
+    return {
+        "total_candidates": total_candidates,
+        "matched": matched,
+        "excluded": len(excluded),
+        "not_matched": not_matched,
+        "by_bucket": {
+            b: by_bucket[b] for b in missing_reasons.BUCKETS if b in by_bucket
+        },
+        "by_metric": {
+            name: {b: v[b] for b in missing_reasons.BUCKETS if b in v}
+            for name, v in sorted(by_metric.items())
+        },
+        "bucket_labels": dict(missing_reasons.BUCKET_LABELS),
+    }
+
+
+def _count_candidates(
+    conn: psycopg.Connection, dataset_version: int, include_inactive: bool
+) -> int:
+    statement = (
+        "select count(*) from analytics.company_screening_snapshot where dataset_version = %s"
+        if include_inactive
+        else "select count(*) from analytics.company_screening_snapshot "
+        "where dataset_version = %s and status = 'active'"
+    )
+    with conn.cursor() as cur:
+        cur.execute(statement, (dataset_version,))
+        return int(cur.fetchone()[0])
+
+
+def _include_missing_names(query: ScreenQuery) -> set[str]:
+    names = {p.metric_name for p in query.metric_predicates if p.include_missing}
+    if query.where is not None:
+        names |= _collect_metric_names(query.where, include_missing_only=True)
+    return names
+
+
+def _attach_included_missing(
+    conn: psycopg.Connection,
+    matched: list[dict],
+    query: ScreenQuery,
+    dataset_version: int,
+    catalog: dict[str, int],
+) -> None:
+    """A matched company kept by include_missing shows that metric as
+    {"value": None, "missing": reason} instead of leaving it absent."""
+    names = sorted(_include_missing_names(query))
+    if not names or not matched:
+        return
+    entries: dict[int, dict] = {}
+    sic: dict[int, str | None] = {}
+    for m in matched:
+        missing = [n for n in names if m["metrics"].get(n, {}).get("value") is None]
+        if missing:
+            entries[m["company_id"]] = {"missing_metrics": missing}
+            sic[m["company_id"]] = m.get("sic_code")
+    _explain_missing(conn, entries, sic, dataset_version, catalog)
+    for m in matched:
+        entry = entries.get(m["company_id"])
+        if entry is None:
+            continue
+        for name in entry["missing_metrics"]:
+            m["metrics"][name] = {
+                "value": None,
+                "period_label": None,
+                "period_end": None,
+                "formula_version": None,
+                "missing": entry["reasons"][name],
+            }
+
+
+def _where_path_exclusions(
+    conn: psycopg.Connection,
+    query: ScreenQuery,
+    dataset_version: int,
+    catalog: dict[str, int],
+) -> tuple[dict[int, dict], dict[int, str | None]]:
+    """Boolean-tree path: every candidate that did not match and has no
+    value for at least one leaf metric (leaves with include_missing kept
+    their nulls, so they are not cited). One set-based query."""
+    names = sorted(
+        _collect_metric_names(
+            query.where, include_missing_only=False, skip_include_missing=True
+        )
+    )
+    if not names:
+        return {}, {}
+    tree, params = _compile_node(query.where, catalog)
+    null_flags = [sql.SQL("{} is null").format(sql.Identifier(n)) for n in names]
+    status_clause = (
+        sql.SQL("") if query.include_inactive else sql.SQL(" and status = 'active'")
+    )
+    statement = sql.SQL(
+        "select company_id, cik, company_name, sic_code, {flags} "
+        "from analytics.company_screening_snapshot where dataset_version = %s{status} "
+        "and ({tree}) is not true and ({any_null}) order by company_id"
+    ).format(
+        flags=sql.SQL(", ").join(null_flags),
+        status=status_clause,
+        tree=tree,
+        any_null=sql.SQL(" or ").join(null_flags),
+    )
+    with conn.cursor() as cur:
+        cur.execute(statement, [dataset_version, *params])
+        rows = cur.fetchall()
+    excluded: dict[int, dict] = {}
+    sic: dict[int, str | None] = {}
+    for row in rows:
+        excluded[row[0]] = {
+            "cik": row[1],
+            "company_name": row[2],
+            "missing_metrics": [n for n, flag in zip(names, row[4:]) if flag],
+        }
+        sic[row[0]] = row[3]
+    return excluded, sic
 
 
 _IDENTITY_FIELDS = (
@@ -346,6 +537,8 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
                 )
             clause = sql.SQL("{} " + node.operator + " %s").format(column)
             metric_params.append(node.value)
+        if node.include_missing:
+            clause = sql.SQL("({} is null or ({}))").format(column, clause)
         return clause, metric_params
 
     raise TypeError(f"unknown predicate node: {node!r}")
@@ -447,13 +640,21 @@ def _compile_flat_prefilter(
     return sql.SQL(" and ").join(clauses), params
 
 
-def _collect_metric_names(node) -> set[str]:
+def _collect_metric_names(
+    node, include_missing_only: bool = False, skip_include_missing: bool = False
+) -> set[str]:
     if isinstance(node, PredicateGroup):
         names: set[str] = set()
         for child in node.predicates:
-            names |= _collect_metric_names(child)
+            names |= _collect_metric_names(
+                child, include_missing_only, skip_include_missing
+            )
         return names
     if isinstance(node, MetricPredicate):
+        if include_missing_only and not node.include_missing:
+            return set()
+        if skip_include_missing and node.include_missing:
+            return set()
         return {node.metric_name}
     return set()
 
@@ -513,10 +714,14 @@ def run_query(
         rows = _select_snapshot_rows(
             conn, dataset_version, needed_names, where_clause, params
         )
+        where_excluded, where_sic = _where_path_exclusions(
+            conn, query, dataset_version, catalog
+        )
+        excluded_missing_data.update(where_excluded)
         exclusion_detail = (
-            "per-predicate exclusion attribution is not available for boolean-tree "
-            "('where') queries -- a company excluded by one branch may still match via "
-            "another, so 'missing data caused this exclusion' has no single meaning here"
+            "boolean-tree ('where') query: each excluded company did not match AND has "
+            "no value for the listed metrics -- under OR/NOT a value might still have "
+            "failed, so the missing value is reported, not claimed as the only cause"
         )
     else:
         # A safe, superset-preserving SQL pre-filter (see
@@ -570,6 +775,9 @@ def run_query(
             for company_id, info in surviving.items():
                 resolved_row = resolved.get((company_id, metric_id))
                 value = resolved_row["value"] if resolved_row else None
+                if value is None and pred.include_missing:
+                    next_surviving[company_id] = info
+                    continue
                 if value is None:
                     excluded_missing_data.setdefault(
                         company_id,
@@ -666,17 +874,29 @@ def run_query(
     if query.limit is not None:
         matched = matched[: query.limit]
 
-    _annotate_bank_suppression(
-        conn,
-        excluded_missing_data,
-        {company_id: identity.get("sic_code") for company_id, identity, _ in rows},
+    sic_by_company = {
+        company_id: identity.get("sic_code") for company_id, identity, _ in rows
+    }
+    if query.where is not None:
+        sic_by_company.update(where_sic)
+    _explain_missing(
+        conn, excluded_missing_data, sic_by_company, dataset_version, catalog
     )
-    _annotate_stale_suppression(conn, excluded_missing_data, dataset_version, catalog)
+    _attach_included_missing(conn, matched, query, dataset_version, catalog)
+    if any(m["company_id"] in excluded_missing_data for m in matched):
+        raise RuntimeError("a company cannot be both matched and excluded")
+    excluded_list = list(excluded_missing_data.values())
+    exclusion_summary = build_exclusion_summary(
+        _count_candidates(conn, dataset_version, query.include_inactive),
+        len(matched),
+        excluded_list,
+    )
 
     result = {
         "matched": matched,
-        "excluded_missing_data": list(excluded_missing_data.values()),
+        "excluded_missing_data": excluded_list,
         "excluded_inactive": excluded_inactive,
+        "exclusion_summary": exclusion_summary,
         "dataset_version": dataset_version,
     }
     if exclusion_detail:
@@ -696,6 +916,7 @@ def load_screen_result_page(
     query: ScreenQuery,
     dataset_version: int,
     company_ids: list[int],
+    catalog: dict[str, int] | None = None,
 ) -> list[dict] | None:
     """Rebuild one page of a stored screen run from its own snapshot
     version (migration 0074: runs store matched company IDs, not a copy of
@@ -719,7 +940,7 @@ def load_screen_result_page(
         # companies and getting none back means the version is gone.
         return None
     by_id = {company_id: (identity, metrics) for company_id, identity, metrics in rows}
-    return [
+    items = [
         {
             **by_id[company_id][0],
             "company_id": company_id,
@@ -727,3 +948,38 @@ def load_screen_result_page(
         }
         for company_id in company_ids
     ]
+    if _include_missing_names(query):
+        if catalog is None:
+            catalog = load_screenable_metric_catalog(conn)
+        _attach_included_missing(conn, items, query, dataset_version, catalog)
+    return items
+
+
+def explain_stored_exclusions(
+    conn: psycopg.Connection,
+    dataset_version: int,
+    excluded: list[dict],
+    total_candidates: int,
+    matched: int,
+    catalog: dict[str, int] | None = None,
+) -> tuple[list[dict], dict]:
+    """A saved run's later pages: recompute each excluded company's reasons
+    and the exclusion summary from the run's own snapshot version (the run
+    stores only CIKs and metric names; reasons are deterministic per
+    version). `excluded` entries carry company_id, sic_code, cik,
+    company_name, missing_metrics (screen_runs._read_page resolves them in
+    its own query). Returns (excluded_missing_data, exclusion_summary)."""
+    if catalog is None:
+        catalog = load_screenable_metric_catalog(conn)
+    entries: dict[int, dict] = {}
+    sic: dict[int, str | None] = {}
+    for item in excluded:
+        entries[item["company_id"]] = {
+            "cik": item["cik"],
+            "company_name": item["company_name"],
+            "missing_metrics": [n for n in item.get("missing_metrics") or [] if n],
+        }
+        sic[item["company_id"]] = item.get("sic_code")
+    _explain_missing(conn, entries, sic, dataset_version, catalog)
+    out = list(entries.values())
+    return out, build_exclusion_summary(total_candidates, matched, out)

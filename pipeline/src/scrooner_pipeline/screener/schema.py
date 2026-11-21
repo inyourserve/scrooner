@@ -31,9 +31,19 @@ class MetricPredicate(BaseModel):
     value: Decimal | None = None
     value_range: tuple[Decimal, Decimal] | None = None
     n: int | None = None
+    # Keep companies with no value for this metric instead of excluding them
+    # (2026-11-22, a screener never drops a company silently). Off by
+    # default; the AI layer never sets it unless the user asks for it. Not
+    # valid on top_n/bottom_n (a null has no rank) or under `not` (a kept
+    # null would flip to excluded, which is ambiguous).
+    include_missing: bool = False
 
     @model_validator(mode="after")
     def _check_operator_fields(self) -> "MetricPredicate":
+        if self.include_missing and self.operator in RANKED_OPERATORS:
+            raise ValueError(
+                f"include_missing is not valid on {self.operator!r} (a missing value has no rank)"
+            )
         if self.operator in COMPARISON_OPERATORS:
             if self.value is None:
                 raise ValueError(f"operator {self.operator!r} requires 'value'")
@@ -82,12 +92,22 @@ class PredicateGroup(BaseModel):
     def _check_shape(self) -> "PredicateGroup":
         if self.op == "not" and len(self.predicates) != 1:
             raise ValueError("'not' takes exactly one child predicate")
+        if self.op == "not" and _subtree_has_include_missing(self.predicates[0]):
+            raise ValueError("include_missing is not valid inside a 'not' clause")
         for p in self.predicates:
             if isinstance(p, MetricPredicate) and p.operator in RANKED_OPERATORS:
                 raise ValueError(
                     f"operator {p.operator!r} is not valid inside a boolean-tree 'where' clause"
                 )
         return self
+
+
+def _subtree_has_include_missing(node) -> bool:
+    if isinstance(node, MetricPredicate):
+        return node.include_missing
+    if isinstance(node, PredicateGroup):
+        return any(_subtree_has_include_missing(c) for c in node.predicates)
+    return False
 
 
 class CategoricalPredicate(BaseModel):

@@ -45,6 +45,11 @@ class FakeCursor:
     def fetchall(self):
         return self._rows
 
+    def fetchone(self):
+        # Candidate count for exclusion_summary (screener/query.py
+        # _count_candidates); a universe larger than any fixture here.
+        return (10_000,)
+
 
 class FakeConn:
     def __init__(self, answers):

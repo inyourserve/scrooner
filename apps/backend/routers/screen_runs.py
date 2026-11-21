@@ -21,7 +21,11 @@ from scrooner_pipeline.ai_query.edit_templates import interpret_edit
 from scrooner_pipeline.ai_query.rules import interpret
 from db_pool import get_pooled_connection
 from scrooner_pipeline.screener.cache_key import compute_query_hash
-from scrooner_pipeline.screener.query import load_screen_result_page, run_query
+from scrooner_pipeline.screener.query import (
+    explain_stored_exclusions,
+    load_screen_result_page,
+    run_query,
+)
 from scrooner_pipeline.screener.schema import ScreenQuery
 
 
@@ -164,6 +168,7 @@ def _read_page(
                    coalesce((
                        select jsonb_agg(jsonb_build_object(
                                   'cik', m.cik, 'company_name', s.company_name,
+                                  'company_id', s.company_id, 'sic_code', s.sic_code,
                                   'missing_metrics', string_to_array(m.metrics, ','))
                               order by m.ord)
                        from unnest(r.excluded_missing_ciks, r.excluded_missing_metrics) with ordinality as m(cik, metrics, ord)
@@ -174,7 +179,11 @@ def _read_page(
                         else array(select s.cik from analytics.company_screening_snapshot s
                                    where s.dataset_version = r.dataset_version and s.status != 'active'
                                    order by s.company_id)
-                   end
+                   end,
+                   (select count(*) from analytics.company_screening_snapshot s
+                     where s.dataset_version = r.dataset_version
+                       and (coalesce((r.normalized_query ->> 'include_inactive')::boolean, false)
+                            or s.status = 'active'))
             from app.user_screen_run u
             join app.screen_result r on r.id = u.screen_result_id
             where u.id = %s and u.user_id = %s
@@ -193,18 +202,30 @@ def _read_page(
         ran_at,
         missing,
         inactive,
+        total_candidates,
     ) = run
 
     # Values come from the run's OWN snapshot version (migration 0074), so
     # a page always shows the numbers the run matched on, never today's.
+    catalog = get_cached_metric_catalog(conn)
     items = load_screen_result_page(
-        conn, ScreenQuery.model_validate(normalized_query), dataset_version, page_ids
+        conn,
+        ScreenQuery.model_validate(normalized_query),
+        dataset_version,
+        page_ids,
+        catalog=catalog,
     )
     if items is None:
         raise HTTPException(
             status_code=410,
             detail="This screen run's data version has been retired; run the screen again",
         )
+
+    # Reasons and the summary are recomputed from the run's own version
+    # (deterministic per version), so every page explains every exclusion.
+    missing, exclusion_summary = explain_stored_exclusions(
+        conn, dataset_version, missing, int(total_candidates), total_count, catalog
+    )
 
     previous_cursor = _encode_cursor(max(0, start - page_size)) if start > 0 else None
     next_cursor = (
@@ -217,6 +238,7 @@ def _read_page(
         "total_count": total_count,
         "excluded_missing_data": missing,
         "excluded_inactive": inactive,
+        "exclusion_summary": exclusion_summary,
         "items": json.loads(json.dumps(items, default=_json_default)),
         "next_cursor": next_cursor,
         "cursor": cursor,
@@ -335,6 +357,7 @@ def create_run_from_query(
         "total_count": len(matches),
         "excluded_missing_data": exclusions["excluded_missing_data"],
         "excluded_inactive": exclusions["excluded_inactive"],
+        "exclusion_summary": result.get("exclusion_summary"),
         "items": visible,
         "next_cursor": next_cursor,
         "cursor": None,

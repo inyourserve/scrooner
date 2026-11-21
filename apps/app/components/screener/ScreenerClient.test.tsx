@@ -217,6 +217,55 @@ describe("ScreenerClient", () => {
     expect(screen.queryByText("Why matched")).not.toBeInTheDocument();
   });
 
+  it("shows how many matched and why each excluded company had no value", async () => {
+    const result: ScreenResult = {
+      matched: [
+        {
+          company_id: 1, cik: "0000000001", company_name: "Kept Co", sic_code: "3571", sic_description: "Computers", status: "active", ticker: "KEPT",
+          metrics: { roe: { value: null, period_label: null, period_end: null, formula_version: null, missing: { code: "missing:prior_period(2024_FY)", bucket: "history_horizon", label: "No prior-year filing" } } },
+        },
+      ],
+      excluded_missing_data: [
+        { cik: "0000000002", company_name: "Bank Co", missing_metrics: ["roe"], reasons: { roe: { code: "not meaningful for banks", bucket: "not_in_template", label: "Not applicable to sector" } } },
+        { cik: "0000000003", company_name: "Gap Co", missing_metrics: ["roe"], reasons: { roe: { code: "no_row", bucket: "open_gap", label: "No value yet (our gap)" } } },
+        { cik: "0000000004", company_name: "Gap Two", missing_metrics: ["roe"], reasons: { roe: { code: "no_row", bucket: "open_gap", label: "No value yet (our gap)" } } },
+      ],
+      excluded_inactive: [],
+      exclusion_summary: {
+        total_candidates: 10, matched: 1, excluded: 3, not_matched: 6,
+        by_bucket: { not_in_template: 1, open_gap: 2 }, by_metric: { roe: { not_in_template: 1, open_gap: 2 } },
+      },
+    };
+    screenPayload = result;
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
+    fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
+
+    expect(await screen.findByText("1 match · 3 excluded: Not applicable to sector (1), No value yet (our gap) (2)")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Not applicable to sector (1)" })).toHaveTextContent("Bank Co");
+    expect(screen.getByRole("region", { name: "No value yet (our gap) (2)" })).toHaveTextContent("Gap Two");
+    const chip = screen.getByText("No prior-year filing");
+    expect(chip).toHaveClass("missing-reason-chip");
+    expect(chip).toHaveAttribute("title", "missing:prior_period(2024_FY)");
+  });
+
+  it("sends include_missing when a condition keeps companies with no value", async () => {
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
+    const screenBodies = () => vi.mocked(fetch).mock.calls
+      .filter(([input]) => String(input) === "/api/screen")
+      .map(([, init]) => JSON.parse(String(init?.body)) as ScreenQueryPayload);
+
+    fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
+    await waitFor(() => expect(screenBodies()).toHaveLength(1));
+    expect(screenBodies()[0].metric_predicates[0]).not.toHaveProperty("include_missing");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "Include companies with no value for condition 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Run screen" }));
+    await waitFor(() => expect(screenBodies()).toHaveLength(2));
+    expect(screenBodies()[1].metric_predicates[0]).toMatchObject({ metric_name: "roe", operator: ">", include_missing: true });
+  });
+
   it("preserves criteria and presents an API failure separately", async () => {
     screenPayload = { detail: "Screening service unavailable." };
     screenOk = false;

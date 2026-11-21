@@ -97,6 +97,11 @@ class InactiveCursor:
             return []
         return [("inactive-cik",)]
 
+    def fetchone(self):
+        # Candidate count for exclusion_summary (screener/query.py
+        # _count_candidates); a universe larger than any fixture here.
+        return (10_000,)
+
 
 class InactiveConnection:
     def cursor(self):

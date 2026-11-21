@@ -121,6 +121,8 @@ export function buildScreenQuery(options: BuildOptions): QueryBuildResult {
       return [{ metric_name: row.metricName, operator: row.operator, n }];
     }
 
+    // Sent only when on, so a query without it is byte-identical to before.
+    const keepMissing = row.includeMissing ? { include_missing: true } : {};
     const low = toApiValue(row.value, metric);
     if (low === null) {
       errors[row.id] = "Enter a valid numeric value.";
@@ -137,10 +139,10 @@ export function buildScreenQuery(options: BuildOptions): QueryBuildResult {
         errors[row.id] = "The first value must be lower than the second.";
         return [];
       }
-      return [{ metric_name: row.metricName, operator: row.operator, value_range: [low, high] as [string, string] }];
+      return [{ metric_name: row.metricName, operator: row.operator, value_range: [low, high] as [string, string], ...keepMissing }];
     }
 
-    return [{ metric_name: row.metricName, operator: row.operator, value: low }];
+    return [{ metric_name: row.metricName, operator: row.operator, value: low, ...keepMissing }];
   });
 
   if (category.enabled && !category.value) {

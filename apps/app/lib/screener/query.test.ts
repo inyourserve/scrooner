@@ -139,3 +139,23 @@ describe("buildScreenQuery", () => {
     expect(built.errors.limit).toMatch(/positive whole number/i);
   });
 });
+
+describe("include companies with no value", () => {
+  const base = { category: { enabled: false, field: "sic_code" as const, value: "" }, sortBy: "", sortDesc: true, limit: "", includeInactive: false, metrics };
+
+  it("sends include_missing only for a ticked comparison or range condition", () => {
+    const rows: FilterRow[] = [
+      { id: "a", metricName: "roe", operator: ">", value: "10", highValue: "", includeMissing: true },
+      { id: "b", metricName: "roic", operator: "between", value: "1", highValue: "5", includeMissing: true },
+      { id: "c", metricName: "debt_to_equity", operator: "<", value: "1", highValue: "" },
+    ];
+    const { query } = buildScreenQuery({ ...base, rows });
+    expect(query?.metric_predicates.map((p) => p.include_missing)).toEqual([true, true, undefined]);
+  });
+
+  it("never sends it on a Top N condition (a missing value has no rank)", () => {
+    const rows: FilterRow[] = [{ id: "a", metricName: "roe", operator: "top_n", value: "5", highValue: "", includeMissing: true }];
+    const { query } = buildScreenQuery({ ...base, rows });
+    expect(query?.metric_predicates[0]).toEqual({ metric_name: "roe", operator: "top_n", n: 5 });
+  });
+});
