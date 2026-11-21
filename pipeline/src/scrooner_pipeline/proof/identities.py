@@ -542,10 +542,37 @@ def _check_splits(
     """Founder decision 2026-11-16 (CERTIFICATION-METHOD): a combined face line split into data points from the notes
     must be the SUM of its parts. For each combined row spanning a served cell (Shown.combined_splits), when every
     spanned concept is served, PROVEN, printed and read from ONE filing, and that filing prints the combined line in
-    the column, the parts' sum must equal the printed line within the filer's rounding. Judged only for additive
-    splits (parts and line all non-negative): a combined line that nets signed concepts (interest income less
-    interest expense) is not a sum of the shown values. A part that is missing, unproven or from another filing
+    the column, the parts' SIGNED sum (split_part_weight below) must equal the printed line within the filer's rounding.
+    Judged only when parts and line are all non-negative. A part that is missing, unproven or from another filing
     leaves the split unjudged here (that is coverage, not a wrong value)."""
+
+    def split_part_weight(
+        st: FilingStructure,
+        line_tag: str,
+        concept: str,
+        member: Proof,
+        members: dict[str, Proof | None],
+    ) -> Decimal:
+        """The sign a split part enters its combined face line with. (1) The filing's own calc weight when the part's one
+        printed tag is a calc child of the line. (2) Otherwise (the part is a NOTE fact, MRK 'Other (income) expense, net'
+        = other 831 + interest income 343 - interest expense 772 = 402 FY2018) the concept's polarity
+        (common/polarity.py): when the split mixes fixed-positive concepts (expenses) with signed ones, the line is a
+        signed net line and every expense part enters it negatively. A split of only expenses (or only signed concepts)
+        adds plainly (D&A = depreciation + amortization)."""
+        from scrooner_pipeline.common.polarity import (
+            is_fixed_positive,
+        )
+
+        tags = member.shown.tags
+        if len(tags) == 1:
+            for child, negative in st.calc_children.get(line_tag) or []:
+                if child == tags[0]:
+                    return Decimal(-1) if negative else Decimal(1)
+        fixed = {c: is_fixed_positive(c) for c, m in members.items() if m is not None}
+        if len(set(fixed.values())) > 1 and fixed[concept]:
+            return Decimal(-1)
+        return Decimal(1)
+
     out: list[tuple[dict[str, Any], dict[str, Proof], str]] = []
     if not structures:
         return out
@@ -573,7 +600,15 @@ def _check_splits(
             vals = [m.shown.value for m in members.values() if m is not None]
             if line.value < 0 or any(v < 0 for v in vals):
                 continue
-            total = sum(vals, Decimal(0))
+            weights = {
+                c: split_part_weight(st, tag, c, m, members)
+                for c, m in members.items()
+                if m is not None
+            }
+            total = sum(
+                (weights[c] * m.shown.value for c, m in members.items() if m),
+                Decimal(0),
+            )
             tol = tolerance([*vals, line.value])
             for m in members.values():
                 assert m is not None
@@ -582,6 +617,7 @@ def _check_splits(
                     "combined_tag": tag,
                     "combined_line": str(line.value),
                     "parts_sum": str(total),
+                    "weights": {c: str(w) for c, w in weights.items()},
                     "accession": acc,
                 }
             if abs(total - line.value) <= tol:

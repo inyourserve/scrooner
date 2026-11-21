@@ -131,7 +131,7 @@ RULES: dict[str, Rule] = {
         ),
         Rule(
             "split_parts",
-            1,
+            2,
             legacy_version=0,
             check_keys=("split_parts",),
             applies=_has_splits,
@@ -139,7 +139,9 @@ RULES: dict[str, Rule] = {
                 "proof/identities.py:_check_splits",
                 "proof/shown.py:combined_splits_for",
             ),
-            note="v1: split parts of a combined face line must sum to it (founder decision 2026-11-16)",
+            note="v1: split parts of a combined face line must sum to it (founder decision 2026-11-16). v2 "
+            "(2026-11-22): the sum is SIGNED (calc weight, else polarity: an expense part enters a net line "
+            "negatively); v1 added interest expense to MRK's 'Other (income) expense, net' and failed it",
         ),
         # stated zero (ruling 2026-11-16): a cell served from a zero the filing states, value_source stated_zero
         Rule(

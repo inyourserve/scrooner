@@ -69,8 +69,8 @@ RULE_PINS = {
         "db8d6afd3efc6dc1347e80380e7935c245663c40e75ea89a43d620068d33864a",
     ),
     "split_parts": (
-        1,
-        "f9de84f1ed2fb4feeb5f3ed7fcf9749ef6baf95cf5b0fd7f49ba48cc8d3f19cd",
+        2,
+        "a0680a9dd345c1e43f261f5a685ac97466d047564527d875e30ff4e55918d364",
     ),
     "text_stated": (
         1,

@@ -49,7 +49,7 @@ def test_record_is_built_from_what_ran_and_stored_in_row_checks():
     row = p.row()
     assert row["checks"]["rules"] == R.rules_used(p.shown, p.checks)
     assert row["checks"]["rules"]["component_sum_authority"] == 2
-    assert row["checks"]["rules"]["split_parts"] == 1
+    assert row["checks"]["rules"]["split_parts"] == 2
     assert (
         "rules" not in p.checks
     )  # in-memory checks stay check-only (_finish iterates them)
@@ -58,7 +58,7 @@ def test_record_is_built_from_what_ran_and_stored_in_row_checks():
 
 
 def test_currency_rule_version_and_floor():
-    ok = {"rules": {"claim": 1, "split_parts": 1}}
+    ok = {"rules": {"claim": 1, "split_parts": 2}}
     assert R.row_is_current(FLOOR, ok, FLOOR)
     assert not R.row_is_current("cell_proof_v1_old", ok, FLOOR)  # floor bump = history
     assert not R.row_is_current(FLOOR, {"rules": {"claim": 1, "split_parts": 0}}, FLOOR)
@@ -75,7 +75,10 @@ def test_a_rule_change_selects_only_cells_that_used_the_rule():
     assert R.reproof_rules(None, plain, chk) == []
     assert R.reproof_rules(None, comp, chk) == ["component_sum_authority"]
     # a combined-spanned cell is also re-proved by resolver_beats_combined (0 -> 1, ONE-PATH 2026-11-16)
-    assert R.reproof_rules(None, split, chk) == ["resolver_beats_combined", "split_parts"]
+    assert R.reproof_rules(None, split, chk) == [
+        "resolver_beats_combined",
+        "split_parts",
+    ]
     cur = R.rules_used(comp, chk)
     assert R.reproof_rules(cur, comp, chk) == []
     assert R.reproof_rules({**cur, "component_sum_authority": 1}, comp, chk) == [

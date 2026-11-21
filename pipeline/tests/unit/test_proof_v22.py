@@ -31,19 +31,41 @@ def test_a_later_filings_era_part_it_does_not_print_never_counts_as_zero():
         None,
         zero_ok=lambda a, t: True,
     )
-    assert win == ("Q221", D("21735"))  # the latest filing, read with the cell's own complete part set
+    assert win == (
+        "Q221",
+        D("21735"),
+    )  # the latest filing, read with the cell's own complete part set
 
 
 def _split_cells(dep, amort):
     from scrooner_pipeline.proof.prove import PROVEN, Proof, Shown
 
-    split = (("DepreciationDepletionAndAmortization", ("depreciation_and_amortization", "amortization_of_intangibles")),)
+    split = (
+        (
+            "DepreciationDepletionAndAmortization",
+            ("depreciation_and_amortization", "amortization_of_intangibles"),
+        ),
+    )
 
     def mk(name, v):
-        s = Shown(1, name, "FY", date(2019, 1, 1), date(2019, 12, 31), D(v), (), "A-1", (1,), combined_splits=split)
+        s = Shown(
+            1,
+            name,
+            "FY",
+            date(2019, 1, 1),
+            date(2019, 12, 31),
+            D(v),
+            (),
+            "A-1",
+            (1,),
+            combined_splits=split,
+        )
         return Proof(shown=s, verdict=PROVEN)
 
-    return [mk("depreciation_and_amortization_resolved", dep), mk("amortization_of_intangibles", amort)]
+    return [
+        mk("depreciation_and_amortization_resolved", dep),
+        mk("amortization_of_intangibles", amort),
+    ]
 
 
 def _structure_with_line(value):
@@ -51,7 +73,9 @@ def _structure_with_line(value):
 
     st = FilingStructure("A-1", "1", "10-K", date(2020, 2, 1), date(2019, 12, 31))
     tag = "DepreciationDepletionAndAmortization"
-    st.num[(tag, date(2019, 12, 31), 4)].append(NumValue(tag, "us-gaap/2019", date(2019, 12, 31), 4, "USD", D(value), -6))
+    st.num[(tag, date(2019, 12, 31), 4)].append(
+        NumValue(tag, "us-gaap/2019", date(2019, 12, 31), 4, "USD", D(value), -6)
+    )
     return st
 
 
@@ -71,7 +95,14 @@ def test_split_parts_must_sum_to_the_combined_face_line():
     assert counts == {"split:DepreciationDepletionAndAmortization": 1}
     # the combined line is not printed in the filing: not judged here
     none = _split_cells("156700000", "30100000")
-    apply_identities(none, structures={"A-1": _structure_with_line("199700000").__class__("A-1", "1", "10-K", None, None)})
+    apply_identities(
+        none,
+        structures={
+            "A-1": _structure_with_line("199700000").__class__(
+                "A-1", "1", "10-K", None, None
+            )
+        },
+    )
     assert [p.verdict for p in none] == [PROVEN, PROVEN]
 
 
@@ -88,3 +119,83 @@ def test_a_later_filing_that_prints_its_era_parts_keeps_them():
     filed = {"A": date(2019, 1, 1), "B": date(2021, 1, 1)}
     win = component_sum_authority_by_era(copies, own, {"A": own, "B": era}, filed)
     assert win == ("B", D("13"))
+
+
+def _mrk_cells(other, interest_income, interest_expense):
+    from scrooner_pipeline.proof.prove import PROVEN, Proof, Shown
+
+    concepts = ("other_income_expense_net", "interest_income", "interest_expense")
+    split = (("OtherNonoperatingIncomeExpense", concepts),)
+    rows = (
+        (
+            "other_income_expense_net",
+            other,
+            (
+                "InterestExpense",
+                "InvestmentIncomeInterest",
+                "OtherNonoperatingIncomeExpense",
+            ),
+        ),
+        ("interest_income", interest_income, ("InvestmentIncomeInterest",)),
+        ("interest_expense_resolved", interest_expense, ("InterestExpense",)),
+    )
+    return [
+        Proof(
+            shown=Shown(
+                1,
+                n,
+                "FY",
+                date(2018, 1, 1),
+                date(2018, 12, 31),
+                D(v),
+                tags,
+                "M-1",
+                (1,),
+                combined_splits=split,
+            ),
+            verdict=PROVEN,
+        )
+        for n, v, tags in rows
+    ]
+
+
+def _mrk_structure(calc=None):
+    from scrooner_pipeline.proof.fsn import FilingStructure, NumValue
+
+    st = FilingStructure("M-1", "310158", "10-K", date(2019, 2, 27), date(2018, 12, 31))
+    tag, dd = "OtherNonoperatingIncomeExpense", date(2018, 12, 31)
+    st.num[(tag, dd, 4)].append(
+        NumValue(tag, "us-gaap/2018", dd, 4, "USD", D("402000000"), -6)
+    )
+    for parent, kids in (calc or {}).items():
+        st.calc_children[parent] = kids
+    return st
+
+
+def test_mrk_split_of_a_net_line_signs_note_interest_parts_by_polarity():
+    # MRK FY2018: 'Other (income) expense, net' 402 = other 831 + interest income 343 - interest expense 772; the
+    # interest parts are NOTE facts, not calc children of the face line. v1 summed them raw (1,946 vs 402: DISAGREE).
+    from scrooner_pipeline.proof.identities import SPLIT_REASON, apply_identities
+    from scrooner_pipeline.proof.prove import DISAGREE, PROVEN
+
+    ok = _mrk_cells("831000000", "343000000", "772000000")
+    apply_identities(ok, structures={"M-1": _mrk_structure()})
+    assert [p.verdict for p in ok] == [PROVEN, PROVEN, PROVEN]
+    assert ok[0].checks["split_parts"]["parts_sum"] == "402000000"
+    assert ok[0].checks["split_parts"]["weights"]["interest_expense"] == "-1"
+    # a wrong band still fails
+    bad = _mrk_cells("700000000", "343000000", "772000000")
+    apply_identities(bad, structures={"M-1": _mrk_structure()})
+    assert {p.verdict for p in bad} == {DISAGREE}
+    assert {p.reason_code for p in bad} == {SPLIT_REASON}
+    # the filing's own calc weight wins where the part IS a calc child (here: an implausible +1 on the expense)
+    kids = {
+        "OtherNonoperatingIncomeExpense": [
+            ("InterestExpense", False),
+            ("InvestmentIncomeInterest", False),
+        ]
+    }
+    calc = _mrk_cells("831000000", "343000000", "772000000")
+    apply_identities(calc, structures={"M-1": _mrk_structure(kids)})
+    assert calc[0].checks["split_parts"]["weights"]["interest_expense"] == "1"
+    assert {p.verdict for p in calc} == {DISAGREE}
