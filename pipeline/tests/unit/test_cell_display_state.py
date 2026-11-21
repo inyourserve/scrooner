@@ -40,14 +40,35 @@ def _cell(cid, dp, end, display, hc="", **kw):
     return r
 
 
-def test_hide_class_values_match_the_classes_apply_display_assigns():
-    sql = _migration_sql()
+def _effective_hide_classes() -> set[str]:
+    """The hide_class CHECK in force: 0130's column CHECK, replaced by the newest later migration that re-adds
+    cell_display_state_hide_class_check (0133 added only_after_tax_disclosed; 0130 is applied and never edited)."""
     listed = set(
         re.findall(
             r"'(\w+)'",
-            re.search(r"hide_class\s+text\s+check \(hide_class in \(([^)]*)\)", sql).group(1),
+            re.search(
+                r"hide_class\s+text\s+check \(hide_class in \(([^)]*)\)",
+                _migration_sql(),
+            ).group(1),
         )
     )
+    later = sorted(
+        p
+        for p in list(DB.glob("pending/*.sql")) + list(DB.glob("migrations/*.sql"))
+        if p.name[:4] > "0130"
+    )
+    for p in later:
+        m = re.search(
+            r"add constraint cell_display_state_hide_class_check\s+check \(hide_class in \(([^)]*)\)",
+            p.read_text(),
+        )
+        if m:
+            listed = set(re.findall(r"'(\w+)'", m.group(1)))
+    return listed
+
+
+def test_hide_class_values_match_the_classes_apply_display_assigns():
+    listed = _effective_hide_classes()
     assert listed == set(cds.HIDE_CLASSES)
     # HIDE_ELIGIBLE's values are a subset; verified_absent is assigned directly by apply_display
     assert set(t100.HIDE_ELIGIBLE.values()) | {t100.HC_VERIFIED_ABSENT} == listed
@@ -56,7 +77,14 @@ def test_hide_class_values_match_the_classes_apply_display_assigns():
 def test_state_rows_grain_hide_class_and_out():
     rows = [
         _cell(1, "cash_and_equivalents", "2024-12-31", t100.SHOWN_VALUE),
-        _cell(1, "revenue", "2024-12-31", t100.HIDDEN_ROW, "structural_not_presented", reason="not presented"),
+        _cell(
+            1,
+            "revenue",
+            "2024-12-31",
+            t100.HIDDEN_ROW,
+            "structural_not_presented",
+            reason="not presented",
+        ),
         _cell(1, "sbc", "2024-12-31", t100.OPEN),
     ]
     out = [_cell(1, "net_interest_income", "2024-12-31", "")]
@@ -65,20 +93,37 @@ def test_state_rows_grain_hide_class_and_out():
     assert got[("revenue", "FY")][4:6] == ("HIDDEN_ROW", "structural_not_presented")
     assert got[("revenue", "FY")][7] == "not presented"
     assert got[("sbc", "FY")][4:6] == ("OPEN", None)
-    assert got[("net_interest_income", "FY")][4:] == ("OUT", None, None, None, None, "0.68", "run1")
+    assert got[("net_interest_income", "FY")][4:] == (
+        "OUT",
+        None,
+        None,
+        None,
+        None,
+        "0.68",
+        "run1",
+    )
 
 
 def test_hidden_cell_with_a_pipeline_state_class_is_refused():
     with pytest.raises(ValueError):
-        cds.state_rows([_cell(1, "sbc", "2024-12-31", t100.HIDDEN_YEAR, "")], [], "r", None)
+        cds.state_rows(
+            [_cell(1, "sbc", "2024-12-31", t100.HIDDEN_YEAR, "")], [], "r", None
+        )
     with pytest.raises(ValueError):
-        cds.state_rows([_cell(1, "sbc", "2024-12-31", t100.HIDDEN_YEAR, "era_unmapped")], [], "r", None)
+        cds.state_rows(
+            [_cell(1, "sbc", "2024-12-31", t100.HIDDEN_YEAR, "era_unmapped")],
+            [],
+            "r",
+            None,
+        )
 
 
 @pytest.fixture
 def db(isolated_database_url):
     with psycopg.connect(isolated_database_url) as c:
-        c.execute("drop schema if exists analytics cascade; drop schema if exists core cascade")
+        c.execute(
+            "drop schema if exists analytics cascade; drop schema if exists core cascade"
+        )
         c.execute("create schema core; create schema analytics")
         c.execute(_migration_sql())
         c.commit()
@@ -87,7 +132,8 @@ def db(isolated_database_url):
 
 def _count(c, cid):
     return c.execute(
-        "select count(*) from analytics.cell_display_state where company_id = %s", (cid,)
+        "select count(*) from analytics.cell_display_state where company_id = %s",
+        (cid,),
     ).fetchone()[0]
 
 
@@ -101,7 +147,9 @@ def test_writer_replaces_only_the_exported_company(db):
     cds.write_display_state(db, cds.state_rows(base, [], "r1", "0.68"))
     assert (_count(db, 1), _count(db, 2)) == (2, 2)
     # re-export company 1 alone with one cell now hidden and one fewer row: company 2 is untouched
-    again = [_cell(1, "revenue", "2024-12-31", t100.HIDDEN_ROW, "structural_not_presented")]
+    again = [
+        _cell(1, "revenue", "2024-12-31", t100.HIDDEN_ROW, "structural_not_presented")
+    ]
     written = cds.write_display_state(db, cds.state_rows(again, [], "r2", "0.69"))
     assert written == {1: 1}
     assert (_count(db, 1), _count(db, 2)) == (1, 2)
@@ -117,12 +165,17 @@ def test_writer_batches_and_rolls_back_a_company_on_error(db):
     cells = [_cell(1, "revenue", "2024-12-31", t100.SHOWN_VALUE)]
     cds.write_display_state(db, cds.state_rows(cells, [], "r1", None))
     rows = cds.state_rows(
-        [_cell(1, "revenue", "2024-12-31", t100.SHOWN_VALUE), _cell(1, "sbc", "2024-12-31", t100.OPEN)],
+        [
+            _cell(1, "revenue", "2024-12-31", t100.SHOWN_VALUE),
+            _cell(1, "sbc", "2024-12-31", t100.OPEN),
+        ],
         [],
         "r2",
         None,
     )
-    bad = rows + [(1, "x", "2024-12-31", "FY", "HIDDEN_ROW", None, None, None, None, None, "r2")]
+    bad = rows + [
+        (1, "x", "2024-12-31", "FY", "HIDDEN_ROW", None, None, None, None, None, "r2")
+    ]
     with pytest.raises(psycopg.errors.CheckViolation):
         cds.write_display_state(db, bad)
     # the failed company transaction rolled back: the old row is still there
@@ -178,7 +231,9 @@ def test_constraint_accepts_valid_combinations(db, display, hc):
 
 def test_every_flow_coverage_export_writes_display_state():
     flow = (Path(__file__).parents[3] / "scripts" / "top100_flow.sh").read_text()
-    calls = [ln for ln in flow.splitlines() if "pipeline/scripts/top100_coverage.py" in ln]
+    calls = [
+        ln for ln in flow.splitlines() if "pipeline/scripts/top100_coverage.py" in ln
+    ]
     assert len(calls) == 2
     assert all("--write-display-state" in ln for ln in calls)
     assert not any("default_transaction_read_only" in ln for ln in calls)

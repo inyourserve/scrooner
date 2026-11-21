@@ -1272,6 +1272,7 @@ def build_rows(
     )
     attach_only_combined(rows, load_only_combined())
     attach_absent_in_own(rows, load_absent_in_own())
+    attach_filing_read_hides(rows, load_filing_read_hides())
     attach_presence(rows, load_presence(conn, ids))
     attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
@@ -1887,12 +1888,92 @@ HC_STRUCTURAL = "structural_not_presented"
 HC_COMBINED = "line_presented_combined"
 HC_PRE_FILING = "pre_filing"
 HC_VERIFIED_ABSENT = "verified_absent"
+# ruling 2026-11-21 (Dhairya, resolver .86): share-based compensation the filing discloses ONLY after tax is never served
+# as sbc (VZ FY2017-25 RSU/PSU narrative, GE FY2015-17 note); the year is hidden with this class, evidenced by the read
+HC_AFTER_TAX = "only_after_tax_disclosed"
 HIDE_ELIGIBLE: dict[str, str] = {
     **{code: HC_STRUCTURAL for code in NOT_PRESENTED_CODES},
     **{code: HC_PRE_FILING for code in NO_PERIOD_CODES},
     "line_presented_combined": HC_COMBINED,
     "only_combined": HC_COMBINED,
+    HC_AFTER_TAX: HC_AFTER_TAX,
 }
+# the resolver flag a full 10-K read writes (data-team/tags/line_map/tools/filing_reads.py apply: `filing_read_hide;<class>`)
+# -> the display hide class. never_reported is doc 02's "a line never presented" (structural_not_presented).
+FILING_READ_HIDE = "filing_read_hide"
+READER_HIDE_CLASSES: dict[str, str] = {
+    "structural_not_presented": HC_STRUCTURAL,
+    "never_reported": HC_STRUCTURAL,
+    "line_presented_combined": HC_COMBINED,
+    "verified_absent": HC_VERIFIED_ABSENT,
+    "pre_filing": HC_PRE_FILING,
+    HC_AFTER_TAX: HC_AFTER_TAX,
+}
+# (reader class, display hide class, evidence text, accession, locator)
+ReaderHide = tuple[str, str, str, str, str]
+
+
+def load_filing_read_hides(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str, str], ReaderHide]:
+    """(ticker, data_point, period_end) -> ReaderHide for every resolver row flagged `filing_read_hide;<class>` (read,
+    never recomputed). A class outside READER_HIDE_CLASSES is skipped (the cell stays what it was: open work). A derived
+    row keeps its flag but is a counted value, so attach never hides it. Missing file: empty."""
+    out: dict[tuple[str, str, str], ReaderHide] = {}
+    if not rf.resolver_files(resolver_dir):
+        return out
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
+            flags = (r.get("flags") or "").split(";")
+            if FILING_READ_HIDE not in flags:
+                continue
+            i = flags.index(FILING_READ_HIDE)
+            cls = flags[i + 1] if i + 1 < len(flags) else ""
+            hc = READER_HIDE_CLASSES.get(cls)
+            if hc is None:
+                continue
+            quote = (r.get("quote") or "").strip()
+            out[(r["ticker"], r["data_point"], r["period_end"])] = (
+                cls,
+                hc,
+                f"filing read, {cls}: {quote}" if quote else f"filing read, {cls}",
+                r.get("accession") or "",
+                (r.get("locator") or "").strip(),
+            )
+    return out
+
+
+def attach_filing_read_hides(
+    rows: list[dict[str, Any]],
+    hides: dict[tuple[str, str, str], ReaderHide],
+) -> None:
+    """Carry the reader's hide class, quote, locator and accession on each non-value cell the resolver flags
+    `filing_read_hide` (`_reader_hide` = display hide class, `_reader_class` = the reader's own class). Matching is
+    only_combined's: exact period or exactly one fsn_end_matches period. A proven or derived value is never hidden. Pure."""
+    by_key: dict[tuple[str, str], list[tuple[date, ReaderHide]]] = defaultdict(list)
+    for (tk, dp, pe), v in hides.items():
+        by_key[(tk, dp)].append((date.fromisoformat(pe), v))
+    for r in rows:
+        if r["class"] in ("PROVEN", "DERIVED") or r.get("_stated_zero"):
+            continue
+        hit = hides.get((r["ticker"], r["data_point"], r["period_end"]))
+        if hit is None:
+            end = date.fromisoformat(r["period_end"])
+            near = [
+                v
+                for d, v in by_key.get((r["ticker"], r["data_point"]), ())
+                if fsn_end_matches(d, end)
+            ]
+            hit = near[0] if len(near) == 1 else None
+        if not hit:
+            continue
+        r["_reader_class"], r["_reader_hide"], r["evidence"], acc, loc = hit
+        r["_oc_accession"] = acc
+        if acc:
+            r["accession"] = acc
+        if loc:
+            r["r_page"] = loc
+            r["locator_source"] = FILING_READ_HIDE
 
 
 def apply_display(rows: list[dict[str, Any]]) -> None:
@@ -1937,6 +2018,14 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         hc: str | None = None
         if r["class"] in ("PROVEN", "DERIVED") or r.get("_stated_zero"):
             r["display"] = SHOWN_VALUE
+        elif r.get("_reader_hide") and (
+            r["_reader_hide"] != HC_VERIFIED_ABSENT
+            or r.get("data_point") in VERIFIED_ABSENT_HIDE
+        ):
+            # a full 10-K read's hide (filing_reads.py): the reader's class is the ruling; the year is hidden with that
+            # class and the read's quote (a row whose every year is such a hide collapses below). Still subject to the
+            # line-level presence test.
+            r["display"], hc = HIDDEN_YEAR, r["_reader_hide"]
         elif r.get("_only_combined") == "years":
             r["display"], hc = HIDDEN_YEAR, HC_COMBINED
         elif r.get("_only_combined") == "row":
@@ -2057,6 +2146,8 @@ def hidden_evidence(
                     "earliest_10k_presenting": r.get("_first_presenting") or "",
                     "basis": "before_first_periodic_filing"
                     if r.get("_before_first_filing")
+                    else f"filing_read:{r['_reader_class']}"
+                    if r.get("_reader_hide")
                     else "reported_only_combined"
                     if r.get("_only_combined")
                     else "absent_in_own_filing"

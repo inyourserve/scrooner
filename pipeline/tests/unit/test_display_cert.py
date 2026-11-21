@@ -866,3 +866,26 @@ def test_certificate_marks_undrawn_shown_cells_sampled_and_failed_hides_mismatch
         and by[("d1", "2023")]["result"] == "SAMPLED"
     )
     assert by[("sga_expense", "2016")]["result"] == "MISMATCH"
+
+
+def test_only_after_tax_hidden_year_is_a_doc02_class_judged_by_the_printed_line_test():
+    """Ruling 2026-11-21 (Dhairya): sbc disclosed only after tax is never served as sbc. The class is valid and, like
+    only-combined, a presented year passes when the pure line is not printed. Mutation: drop it from LINE_NOT_PURE."""
+    shown = cell(dp="sbc", tag="ShareBasedCompensation", pe="2024-12-31")
+    hid = dc.Cell(
+        "sbc",
+        "2019",
+        "2019-12-31",
+        dc.HIDDEN_YEAR,
+        None,
+        "",
+        "",
+        "",
+        (),
+        hide_class="only_after_tax_disclosed",
+    )
+    assert dc.check_hide_reasons([hid]) == []
+    ye = {"A": ["2019-12-31|4"]}
+    assert [f.severity for f in dc.check_hidden_years([shown, hid], ye, {})] == ["INFO"]
+    printed = dc.check_hidden_years([shown, hid], ye, {"A": {"ShareBasedCompensation"}})
+    assert [f.severity for f in printed] == ["FAIL"]

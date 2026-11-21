@@ -30,7 +30,7 @@ COLUMNS = (
     "run_id",
 )
 HIDDEN = (t100.HIDDEN_ROW, t100.HIDDEN_YEAR)
-# the four hide classes apply_display can assign (HIDE_ELIGIBLE's values plus HC_VERIFIED_ABSENT, which apply_display
+# the hide classes apply_display can assign (HIDE_ELIGIBLE's values plus HC_VERIFIED_ABSENT, which apply_display
 # assigns directly for VERIFIED_ABSENT_HIDE data points); the table's CHECK holds the same set
 HIDE_CLASSES = frozenset(
     {
@@ -38,6 +38,7 @@ HIDE_CLASSES = frozenset(
         t100.HC_COMBINED,
         t100.HC_PRE_FILING,
         t100.HC_VERIFIED_ABSENT,
+        t100.HC_AFTER_TAX,
     }
 )
 

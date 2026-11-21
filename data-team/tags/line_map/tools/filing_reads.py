@@ -18,7 +18,7 @@ apply(rows, path): the rule, run last in resolve_all (XBRL the resolver resolved
     is served as a text_stated row (RESOLVER-OUTPUT-FORMAT.md contract: mapped, nodes empty, quote + locator +
     quote_period = period_end; flags `filing_read;text_stated`), accession = the filing read, column own or comparative.
     A derived_not_printed row is replaced the same way (a printed figure beats an own derivation, X67).
-  - HIDE: the row carries flags `filing_read_hide;<class>` (structural_not_presented, line_presented_combined,
+  - HIDE: the row carries flags `filing_read_hide;<class>` (structural_not_presented, line_presented_combined, only_after_tax_disclosed,
     never_reported), the quote and locator; a valued row becomes not_presented (the reader's class is the ruling, e.g.
     DE other income FY2022-25 under ruling 9). A derived row stays as it is (counted, not served).
 Nothing here is inferred: every applied row carries the exact quote and the R page of the filing read."""
@@ -30,7 +30,7 @@ CELLS = os.path.join(HERE, '..', 'rules', 'filing_read_cells.csv')
 SKIPS = os.path.join(HERE, '..', 'rules', 'filing_read_skips.csv')
 OUT_COLS = ['cik', 'ticker', 'data_point', 'period_end', 'fiscal_year', 'outcome', 'value', 'element', 'accession', 'r_page', 'hide_class',
             'quote', 'rule_proposal', 'source_file']
-HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing)\b')
+HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed)\b')
 BLANK = ('combined', 'not_presented', 'no_role', 'not_in_template', 'derived', 'open')
 ACC_RE = re.compile(r'\d{10}-\d{2}-\d{6}')
 

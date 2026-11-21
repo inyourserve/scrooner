@@ -127,3 +127,17 @@ def test_committed_cells_file_is_consistent_with_its_skips_and_the_resolver_peri
     skips = {(s['ticker'], s['data_point'], fy) for s in csv.DictReader(open(filing_reads.SKIPS)) for fy in s['fiscal_year'].split(';')}
     assert not [r for r in cells_ if (r['ticker'], r['data_point'], r['fiscal_year']) in skips], 'a skipped row is in the cells file'
     assert all(r['outcome'] in ('VALUE', 'HIDE') for r in cells_)
+
+
+def test_import_accepts_the_only_after_tax_disclosed_class(tmp_path):
+    """Ruling 2026-11-21 (Dhairya): sbc disclosed only after tax is never served as sbc; the read lands as a hide of
+    class only_after_tax_disclosed (VZ FY2017-25, GE FY2015-17). Mutation: drop the class from HIDE_RE and this fails."""
+    rd = tmp_path / 'resolver'; rd.mkdir()
+    with open(rd / 'VZ.csv', 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['cik', 'ticker', 'data_point', 'period_end']); w.writeheader()
+        w.writerow(dict(cik='0000732712', ticker='VZ', data_point='sbc', period_end='2019-12-31'))
+    skips = tmp_path / 'skips.csv'; skips.write_text('ticker,data_point,fiscal_year,reason\n')
+    ev = _evidence(tmp_path, [dict(ticker='VZ', data_point='sbc', fiscal_year='2019', outcome='HIDE', element='', accession='0000732712-22-000008',
+                                   r_page='R97.htm', quote='HIDE only_after_tax_disclosed - RSU and PSU expense stated after tax only', confidence='high')])
+    kept, skipped = filing_reads.import_files(str(rd), [ev], str(skips))
+    assert not skipped and [k['hide_class'] for k in kept] == ['only_after_tax_disclosed']
