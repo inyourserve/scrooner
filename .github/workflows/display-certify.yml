@@ -3,7 +3,8 @@ name: Display certification (approver)
 # Manual. Runs pipeline/scripts/certify_display.py --live for certification requests
 # (data-team/strategy/approvals/requests/). Method: CERTIFICATION-METHOD-2026-11-16.md.
 # Read-only: indexed SELECTs on fsn.* under a 15 s statement_timeout, one connection, no SEC
-# downloads. It writes nothing to the database or the repo: the verdicts and evidence are attached
+# downloads. It writes nothing to the database or to main. The verdicts, evidence and JSON certificates
+# (schema display-certificate/1) are pushed to branch certify-out/run-<run id> and attached
 # as an artifact and printed in the job summary; the approver reads them and commits the verdict.
 on:
   workflow_dispatch:
@@ -13,7 +14,9 @@ on:
         default: "pending"
 
 permissions:
-  contents: read
+  # write only to push the outputs to a throwaway certify-out/run-<id> branch (never main); the approver
+  # reviews that branch and commits the verdict and JSON certificate to main
+  contents: write
 
 concurrency:
   group: display-certify
@@ -76,3 +79,19 @@ jobs:
           name: display-certification
           path: cert-out/
           if-no-files-found: ignore
+      - name: Publish outputs to a review branch (never main)
+        if: always()
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -eu
+          ls cert-out/*-display-cert-* >/dev/null 2>&1 || { echo "nothing to publish"; exit 0; }
+          B="certify-out/run-$RUN_ID"
+          git config user.name "display-certify"
+          git config user.email "display-certify@users.noreply.github.com"
+          git checkout --orphan "$B"
+          git rm -rq --cached . >/dev/null
+          git add -f cert-out/
+          git commit -qm "display-certify outputs, run $RUN_ID (for approver review; not a verdict)"
+          git push -q origin "HEAD:refs/heads/$B"
+          echo "published to branch $B"

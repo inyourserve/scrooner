@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "display-certificate/1",
+  "title": "Scrooner display certificate (written by pipeline/scripts/certify_display.py)",
+  "description": "One certificate per certified coverage file. cells holds EVERY cell of the file. evidence: drawn = individually matched to the filing (counts toward the bound); census = every total_debt year and every hidden cell's hide proof; sampled = covered by the bound, never present as individually verified. Approver rulings: data-team/strategy/approvals/CERT-REGISTRY-rulings-2026-11-21.md. Money and counts are decimal strings.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "ticker", "company_id", "verdict", "coverage_path", "coverage_sha256", "sample_hash", "seed",
+               "detector_version", "resolver", "code_sha", "method", "approver", "certified_at", "counts", "bound", "gate", "cells"],
+  "properties": {
+    "schema": {"const": "display-certificate/1"},
+    "ticker": {"type": "string", "minLength": 1},
+    "company_id": {"type": ["integer", "null"], "description": "From the request file; null only for a run without --request."},
+    "verdict": {"enum": ["PASS", "FAIL", "REVIEW"], "description": "Load only PASS into analytics.display_cell_certificate."},
+    "coverage_path": {"type": "string"},
+    "coverage_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sample_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "Equals coverage_sha256: the certificate's identity."},
+    "seed": {"type": "string", "description": "<TICKER>-<first 12 hex of coverage_sha256>; fixes the draw."},
+    "detector_version": {"type": ["string", "null"], "description": "Request line 'proof DETECTOR_VERSION'."},
+    "resolver": {"type": ["string", "null"], "description": "Request line 'resolver' (repo path)."},
+    "code_sha": {"type": ["string", "null"], "description": "Request line 'code'."},
+    "method": {"type": "string"},
+    "approver": {"type": "string", "minLength": 1},
+    "certified_at": {"type": "string", "description": "ISO date of the run."},
+    "counts": {"type": "object", "additionalProperties": {"type": "integer"}},
+    "bound": {
+      "type": "object", "additionalProperties": false, "required": ["n", "errors", "upper_95"],
+      "properties": {
+        "n": {"type": "integer", "description": "Drawn cells."},
+        "errors": {"type": "integer"},
+        "upper_95": {"type": "string", "description": "Exact Clopper-Pearson one-sided 95% upper bound, decimal string."}
+      }
+    },
+    "gate": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "severity", "detail"]}},
+    "cells": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["data_point", "fiscal_year", "period_end", "grain", "display", "hide_class", "reason_code", "shown_value",
+                     "accession", "r_page", "tag", "parts", "evidence", "result", "detail"],
+        "properties": {
+          "data_point": {"type": "string"},
+          "fiscal_year": {"type": "string"},
+          "period_end": {"type": "string"},
+          "grain": {"enum": ["FY", "I"], "description": "analytics.cell_display_state grain: I instant, FY annual duration."},
+          "display": {"enum": ["SHOWN_VALUE", "HIDDEN_ROW", "HIDDEN_YEAR", "OPEN"]},
+          "hide_class": {"type": ["string", "null"]},
+          "reason_code": {"type": ["string", "null"]},
+          "shown_value": {"type": ["string", "null"]},
+          "accession": {"type": ["string", "null"]},
+          "r_page": {"type": ["string", "null"]},
+          "tag": {"type": ["string", "null"]},
+          "parts": {"type": "array", "items": {"type": "object", "required": ["tag", "dims", "value", "sign", "accession", "r_page"]}},
+          "evidence": {"enum": ["drawn", "census", "sampled"]},
+          "result": {"enum": ["MATCH", "MISMATCH", "NOT_FOUND", "LOCATOR", "REVIEW", "SAMPLED"]},
+          "detail": {"type": "string"}
+        }
+      }
+    }
+  }
+}
