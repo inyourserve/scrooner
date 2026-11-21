@@ -55,7 +55,7 @@ def test_display_rows_years_values_and_open():
     assert d[("f", 2019)] == "OPEN"
     assert [d[("g", y)] for y in (2020, 2021, 2022, 2023)] == ["OPEN"] * 4
     work = {(r["data_point"], r["fiscal_year"]): t100.work_type(r) for r in rows}
-    assert work[("d", 2020)] == "combined_split" and work[("c", 2020)] == "gap_fill"
+    assert work[("d", 2020)] == "combined_split" and work[("c", 2020)] == "blank"
     assert [work[("g", y)] for y in (2020, 2021, 2022, 2023)] == [
         "proof",
         "held",
@@ -141,3 +141,19 @@ def test_verifier_certified_is_the_latest_registry_verdict(tmp_path):
     assert [s["verifier_certified"] for s in out] == ["no", "yes", "yes", "no"]
     assert [s["gate_ready"] for s in out] == ["yes"] * 4
     assert t100.SUMMARY_DISPLAY_COLS[-2:] == ["gate_ready", "verifier_certified"]
+
+def test_structural_not_presented_is_rejected_for_one_year_of_a_row_shown_elsewhere():
+    """Rulings 2026-11-21 item 14 (GILD total_liabilities FY2015): the class means the row is never reported."""
+    rows = [
+        _cell("t", 2015, "REASON", "structural_not_presented"),
+        _cell("t", 2016, "PROVEN"),
+        _cell("u", 2015, "REASON", "docmap_not_presented"),
+        _cell("u", 2016, "REASON", "structural_not_presented"),
+    ]
+    t100.apply_display(rows)
+    t15 = rows[0]
+    assert t15["display"] == "OPEN" and t15["class"] == "BLANK" and t15["hide_class"] == ""
+    assert t15["reason_code"] == t100.NOT_PRESENTED_BUT_SHOWN
+    # a row never reported in any year keeps the class and is hidden as before
+    assert rows[2]["display"] == rows[3]["display"] == "HIDDEN_ROW"
+    assert rows[2]["class"] == "REASON"

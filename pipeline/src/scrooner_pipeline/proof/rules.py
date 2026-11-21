@@ -129,7 +129,7 @@ RULES: dict[str, Rule] = {
         ),
         Rule(
             "resolver_beats_combined",
-            1,
+            2,
             legacy_version=0,
             applies=_has_splits,
             owners=(
@@ -138,7 +138,9 @@ RULES: dict[str, Rule] = {
             ),
             note="v1 (ONE-PATH, founder 2026-11-16): a structural (resolver) concept/component row of the cell beats an "
             "older company_tag_map combined row; the combined veto no longer fires. Selects the cells a combined row "
-            "spans (the cells whose verdict can change)",
+            "spans (the cells whose verdict can change). v2 (2026-11-22): load_shown also loads the concepts of served "
+            "stated_zero/text_stated/printed_zero values (no map claim row), so such a cell gets a proof row instead of "
+            "surfacing as UNCHECKED no_proof_row (GILD interest_income FY2024); existing verdicts do not change",
         ),
         Rule(
             "split_parts",
