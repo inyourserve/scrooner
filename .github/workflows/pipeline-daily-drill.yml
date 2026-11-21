@@ -144,7 +144,6 @@ jobs:
       contents: read
     env:
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
-      INSTANCE_MIN_INTERVAL: "0.5"
       DAY: ${{ needs.extract.outputs.day }}
     steps:
       - uses: actions/checkout@v4
