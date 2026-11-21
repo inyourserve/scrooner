@@ -8,7 +8,7 @@ Automatic, from the top100-flow workflow gate. Method: CERTIFICATION-METHOD-2026
 - cells by display class: HIDDEN_ROW=33, SHOWN_VALUE=473
 - proof DETECTOR_VERSION: `cell_proof_v21_2026-11-16`
 - resolver: `data-team/tags/line_map/resolver`
-- code: `a8fa7601020c7dfcd8d26a6571d0aaa97e464039`
-- run: https://github.com/inyourserve/scrooner/actions/runs/44946951097
+- code: `8fe836f15f67a2fa33f82646fb1f9e46904dfc5b`
+- run: https://github.com/inyourserve/scrooner/actions/runs/44951495123
 - re-cert token: `data-team/strategy/approvals/recert/JNJ-2026-11-21.md` (certified-guard passed once under this token)
 - gate: 0 OPEN; every shown cell and part has an accession and R page; no no_public_filing_for_period or before_first_10k on a shown cell.
