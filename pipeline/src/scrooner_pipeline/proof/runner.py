@@ -42,6 +42,7 @@ from scrooner_pipeline.proof.rules import (
     RULES_KEY,
     reproof_rules,
     rules_used,
+    stale_rules,
     stored_rules,
 )
 from scrooner_pipeline.proof.shown import (
@@ -382,6 +383,32 @@ def purge_unserved(
     return len(stale)
 
 
+def stale_companies(
+    conn: psycopg.Connection, company_ids: list[int], floor: date | None = None
+) -> dict[int, Counter]:
+    """Read-only: the companies holding a floor-version proof row whose recorded rules moved version (or that has no
+    record yet), with the count per moved rule. After a rule bump these are exactly the companies a rule-scoped
+    `run --write` must touch; every other company's verdicts are current. Reads only checks->'rules' (small)."""
+    out: dict[int, Counter] = {}
+    for i in range(0, len(company_ids), 50):
+        for cid, rec in conn.execute(
+            f"""select company_id, checks->'{RULES_KEY}'
+               from analytics.cell_proof
+               where company_id = any(%s) and basis = 'latest' and rule_id = %s and detector_version = %s
+                 and period_end >= %s""",
+            (
+                company_ids[i : i + 50],
+                RULE_ID,
+                DETECTOR_VERSION,
+                floor or HISTORY_FLOOR,
+            ),
+        ).fetchall():
+            why = stale_rules({RULES_KEY: rec} if isinstance(rec, dict) else {})
+            if why:
+                out.setdefault(cid, Counter()).update(why)
+    return out
+
+
 def table_exists(conn: psycopg.Connection) -> bool:
     with conn.cursor() as cur:
         cur.execute("select to_regclass('analytics.cell_proof')")
@@ -398,6 +425,7 @@ def run(
     floor: date | None = None,
     fsn_source: str = "db",
     scoped: bool = False,
+    only_stale: bool = False,
 ) -> dict[str, Any]:
     # reads run in autocommit: one transaction across companies and FSN downloads held
     # AccessShareLocks on canonical_fact for 19 min and blocked a migration ALTER (2026-11-01)
@@ -416,6 +444,12 @@ def run(
         )
     cache = StructureCache(fsn_root, conn, fsn_source)
     totals: dict[str, Any] = {"companies": 0, "cells": 0, "errored": 0}
+    # --only-stale: prove only the companies holding a proof row at an older rule version (a rule bump); a company
+    # whose rows are all current is skipped without loading a filing
+    stale = stale_companies(conn, sorted(ids.values()), floor) if only_stale else None
+    if stale is not None:
+        totals["stale_rules"] = dict(sum(stale.values(), Counter()).most_common())
+        totals["skipped_current"] = 0
     verdicts: Counter = Counter()
     identity_breaks: Counter = Counter()
     reasons: Counter = Counter()
@@ -426,6 +460,9 @@ def run(
         for cik in sorted(ciks):
             company_id = ids.get(cik)
             if company_id is None:
+                continue
+            if stale is not None and company_id not in stale:
+                totals["skipped_current"] += 1
                 continue
             totals["companies"] += 1
             cache.company = cik

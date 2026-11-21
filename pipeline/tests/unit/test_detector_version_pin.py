@@ -89,6 +89,37 @@ RULE_PINS = {
 }
 
 
+# EVERY rule's version, owner or not (2026-11-22). A version bump makes every proof row that used the rule NOT current:
+# coverage shows those cells as UNCHECKED proof_stale (mapper/top100_coverage.py) until a rule-scoped
+# `scrooner-proof run --write` re-proves them (the top100_flow.sh proof step, or for every affected company at once
+# `scrooner-proof run --ciks <top-100> --write --only-stale`). The hourly export is read-only and only reports them.
+# So a bump is not done when this pin is re-set: it is done when the re-prove has run (the component_parts v1->v3 bumps
+# left ~460 PROVEN cells reported as missing proof, open shown 1,485 -> 1,648, values unchanged).
+RULE_VERSIONS = {
+    "claim": 1,
+    "period_length": 1,
+    "statement_face": 1,
+    "identity_tie": 1,
+    "components_sum": 1,
+    "unit_scale": 1,
+    "component_parts": 3,
+    "printed_zero": 1,
+    "restated_history": 1,
+    "pre_filing": 1,
+    "derivation": 1,
+    "non_interest_band": 1,
+    "filer_xbrl_correction": 1,
+    "quarantine_lifted": 1,
+    "perimeter": 1,
+    "identities": 1,
+    "component_sum_authority": 2,
+    "resolver_beats_combined": 2,
+    "split_parts": 2,
+    "stated_zero": 1,
+    "text_stated": 1,
+}
+
+
 def _owner_nodes(tree: ast.Module, rel: str) -> dict[str, ast.FunctionDef]:
     wanted = {
         o.split(":")[1]
@@ -156,3 +187,13 @@ def test_rule_owner_change_needs_rule_version_bump():
             f"the code rule {rid} owns changed. Bump its version in proof/rules.py (only cells that used it are "
             f"re-proved), then set RULE_PINS[{rid!r}] to ({RULES[rid].version}, {rule_hash(rid)!r})"
         )
+
+
+def test_every_rule_version_is_pinned_and_a_bump_names_the_reprove():
+    current = {rid: r.version for rid, r in RULES.items()}
+    assert current == RULE_VERSIONS, (
+        "a rule version in proof/rules.py changed (or a rule was added/removed). Every proof row that used a bumped "
+        "rule is now proof_stale in coverage until re-proved: run `scrooner-proof run --ciks <top-100> --write "
+        "--only-stale` (rule-scoped, writes only the stale cells) or the top100_flow.sh proof step per company, then "
+        f"set RULE_VERSIONS here to {current}"
+    )

@@ -50,6 +50,12 @@ def run_cmd(
         help="Write every cell's proof. Default with --write is rule-scoped: only cells with no current row or whose "
         "recorded rules changed are written, unselected legacy rows are stamped with their rule record.",
     ),
+    only_stale: bool = typer.Option(
+        False,
+        "--only-stale",
+        help="Prove only companies holding a proof row at an older rule version (after a rule bump in proof/rules.py); "
+        "with --write (rule-scoped) only those cells are rewritten. Companies whose rows are all current are skipped.",
+    ),
     statement_timeout: str = typer.Option("10min"),
     floor: str = typer.Option(
         None,
@@ -73,6 +79,7 @@ def run_cmd(
                 floor=date.fromisoformat(floor) if floor else None,
                 fsn_source=fsn_source,
                 scoped=not full,
+                only_stale=only_stale,
             )
     except DecompressError as exc:
         typer.echo(f"cell-proof ABORTED, nothing written: {exc}", err=True)

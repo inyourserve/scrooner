@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import csv
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
@@ -55,7 +55,7 @@ from scrooner_pipeline.mapper import resolver_files as rf
 from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
-from scrooner_pipeline.proof.rules import row_is_current
+from scrooner_pipeline.proof.rules import row_is_current, stale_rules
 
 CLASSES = ("PROVEN", "REASON", "DERIVED", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
 REASON_STATES = {
@@ -99,6 +99,11 @@ DERIVED_INPUTS = {
 FIRST_FY = 2015
 UNMAPPED = "era_unmapped"
 COMBINED = "line_presented_combined"
+# a served cell whose newest floor-version proof row used a rule that has since moved version (proof/rules.py): the
+# verdict exists but is not current. It stays OPEN (not proven) and is never no_proof_row: the next rule-scoped
+# `scrooner-proof run --write` (top100_flow.sh proof step) re-proves exactly these cells (2026-11-22: the
+# component_parts v1->v3 bumps turned ~460 PROVEN cells into no_proof_row with their values unchanged)
+PROOF_STALE = "proof_stale"
 # reason_class values of a tagless not_in_template row that records a printed combined line
 COMBINED_CLASSES = {
     COMBINED,
@@ -172,7 +177,7 @@ NO_PERIOD_CODES = {
     PRE_FILING_CODE,  # no balance sheet of the shown filing presents the date (CRWD cash 2018-01-31)
 }
 NOT_PRESENTED_BUT_SHOWN = "not_presented_but_row_shown"
-WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
+WORK_TYPES = ("combined_split", "gap_fill", "proof", "reprove", "blank", "held")
 
 
 def candidates(dp: str) -> list[str]:
@@ -647,6 +652,29 @@ def combined_reason_text(text: str | None, label: str) -> str:
     return text
 
 
+def stale_reason_text(why: list[str] | None) -> str:
+    """The reason text of a proof_stale cell: the rules whose version moved since its newest proof row. Pure."""
+    return (
+        "proof at an older rule version ("
+        + ", ".join(why or ["unrecorded"])
+        + "); re-proved by the next rule-scoped proof --write"
+    )
+
+
+def stale_summary(rows: list[dict[str, Any]]) -> dict[str, int]:
+    """Shown proof_stale cells per moved rule ('cells' = all of them): the cells a rule-scoped proof --write
+    re-proves. The hourly export is read-only, so it reports them; the flow's proof step re-proves them. Pure."""
+    out: Counter = Counter()
+    for r in rows:
+        if r.get("reason_code") == PROOF_STALE and r.get("display") in (
+            OPEN,
+            SHOWN_VALUE,
+        ):
+            out["cells"] += 1
+            out.update(r.get("_stale_rules") or ["unrecorded"])
+    return dict(out.most_common())
+
+
 def cls_is_value(svalue: Any, verdict: str | None) -> bool:
     """Parts are listed for a cell that serves a value with a proof row."""
     return svalue is not None and verdict is not None
@@ -665,8 +693,10 @@ def classify(
     tagmap_reason_class: str | None = None,
     in_template: bool | None = None,
     combined_evidence: bool = False,
+    stale_proof: bool = False,
 ) -> tuple[str, str | None]:
-    """(class, reason_code). Pure. Precedence: proof verdict, served-but-unproven value, stored reason, blank."""
+    """(class, reason_code). Pure. Precedence: proof verdict, served-but-unproven value, stored reason, blank.
+    stale_proof: the cell has no current proof row but its newest floor row is at an older rule version."""
     if proof_verdict == "PROVEN":
         if served_value is None:
             return "BLANK", "proof_proven_but_no_served_value"
@@ -678,7 +708,7 @@ def classify(
     if proof_verdict == "UNCHECKED":
         return "UNCHECKED", proof_reason or "proof_unchecked"
     if served_value is not None:
-        return "UNCHECKED", "no_proof_row"
+        return "UNCHECKED", PROOF_STALE if stale_proof else "no_proof_row"
     if proof_verdict == "NOT_PRESENTED":
         return "REASON", proof_reason or "not_presented"
     # a combined line with filing evidence (accession, printed line, R page) is the reason: the filing prints one line
@@ -844,12 +874,17 @@ def pick_fy_period(
 
 
 def load_current_proofs(
-    conn: Any, ids: list[int], names: list[str]
+    conn: Any,
+    ids: list[int],
+    names: list[str],
+    stale: dict[tuple[int, str, date, date], list[str]] | None = None,
 ) -> dict[tuple[int, str, date, date], tuple]:
     """The verdict of each cell key: its newest analytics.cell_proof row at the CURRENT floor version whose recorded rules
     are all at their current version (proof/rules.py row_is_current; a row with no record is not current).
     A row of an older detector is history, never the verdict (a held cell is not re-proved, so a pre-R13
-    restated_copies_disagree row outlived its rule for 48 MSFT cells)."""
+    restated_copies_disagree row outlived its rule for 48 MSFT cells).
+    `stale`, when given, receives the keys whose newest floor row is NOT current, with why (rules.stale_rules): such a
+    cell has a verdict at an older rule version (proof_stale), not a missing proof."""
     proofs: dict[tuple[int, str, date, date], tuple] = {}
     # chunked by company: one scan over the whole top-100 dropped the pooled connection (3 of 3 runs, 2026-11-16)
     for i in range(0, len(ids), 10):
@@ -867,6 +902,8 @@ def load_current_proofs(
             # ONE-PATH step 1: current = at the floor AND every rule the row used is at its current version
             if row_is_current(DETECTOR_VERSION, row[13], DETECTOR_VERSION):
                 proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+            elif stale is not None:
+                stale[(row[0], row[1], row[2], row[3])] = stale_rules(row[13])
     return proofs
 
 
@@ -987,7 +1024,8 @@ def build_rows(
         served[(cid, name, s, e)] = v
         served_family[(cid, name, s, e)] = fam or ""
         served_fact_id[(cid, name, s, e)] = fid
-    proofs = load_current_proofs(conn, ids, names)
+    stale: dict[tuple[int, str, date, date], list[str]] = {}
+    proofs = load_current_proofs(conn, ids, names, stale)
     blanks: dict[tuple[int, str, date, date], tuple] = {}
     for row in conn.execute(
         """select distinct on (company_id, data_point_name, period_start, period_end)
@@ -1087,9 +1125,12 @@ def build_rows(
                         sfid = served_fact_id.get((c.company_id, n, s, e))
                         break
                 prow = brow = pname = None
+                srules: list[str] | None = None
                 for n in ([sname] if sname else []) + cand:
                     if prow is None and (c.company_id, n, s, e) in proofs:
                         prow, pname = proofs[(c.company_id, n, s, e)], n
+                    if srules is None and (c.company_id, n, s, e) in stale:
+                        srules = stale[(c.company_id, n, s, e)]
                     if brow is None and (c.company_id, n, s, e) in blanks:
                         brow = blanks[(c.company_id, n, s, e)]
                 tm = None
@@ -1145,6 +1186,7 @@ def build_rows(
                     tm[2] if tm else None,
                     in_tpl.get((c.company_id, dp)),
                     comb,
+                    stale_proof=prow is None and srules is not None,
                 )
                 # ONE filing per locator: the accession and the page always come from the same fsn filing.
                 #  - a cell with a proof: the proof's shown_accession and that filing's line/report of the shown tag;
@@ -1214,7 +1256,11 @@ def build_rows(
                 reason_text = reason_fields(
                     cls,
                     code,
-                    ptext or (brow[2] if brow else None) or (tm[1] if tm else None),
+                    stale_reason_text(srules)
+                    if code == PROOF_STALE
+                    else ptext
+                    or (brow[2] if brow else None)
+                    or (tm[1] if tm else None),
                 )[1]
                 if cls == "REASON" and code == COMBINED:
                     reason_text = combined_reason_text(
@@ -1271,6 +1317,7 @@ def build_rows(
                         "docmap_status": dm["status"],
                         "parts": parts,
                         "_parts_blank": parts_blank,
+                        "_stale_rules": srules if code == PROOF_STALE else None,
                         "_before_first_filing": yp["before_first"],
                         "_comparative_only": yp["comparative_only"],
                         "_presented": yp["presented"],
@@ -2327,6 +2374,8 @@ def work_type(r: dict[str, Any]) -> str:
         return "blank"
     if cls == "REASON":
         return "combined_split" if code in {COMBINED, *COMBINED_CLASSES} else "gap_fill"
+    if code == PROOF_STALE:
+        return "reprove"  # a verdict exists at an older rule version: a scoped proof --write, not new proof work
     return "proof"  # UNCHECKED, DISAGREE
 
 
@@ -2717,6 +2766,9 @@ def main(
         f"hidden rows {sum(r['hidden_rows'] for r in summary)}, hidden years {sum(r['hidden_years'] for r in summary)}; "
         f"gate ready {sum(1 for r in summary if r['gate_ready'] == 'yes')}, "
         f"verifier certified {sum(1 for r in summary if r['verifier_certified'] == 'yes')}"
+    )
+    print(
+        f"proof_stale (verdict at an older rule version, not missing): {stale_summary(rows)}"
     )
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     pc = sum(1 for r in rows if r.get("parts"))

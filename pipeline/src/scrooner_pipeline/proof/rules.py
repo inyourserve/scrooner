@@ -20,6 +20,10 @@ version fails, and all code NOT owned by a rule stays under the floor pin.
 legacy_version: rows written before this registry carry no record. A legacy row ran the rule at `legacy_version`
 (0 = the rule did not exist yet, so every cell that would use it is selected). The scoped run (proof/runner.py)
 stamps legacy rows whose rules are all unchanged and re-proves the rest. Retire legacy_version at the next floor bump.
+
+After a rule bump: coverage reports each cell whose newest row used the bumped rule as UNCHECKED proof_stale (never
+no_proof_row; stale_rules says which rule moved) until `scrooner-proof run --ciks <...> --write --only-stale` (or the
+top100_flow.sh proof step) re-proves it. The pin test also pins every rule's version (RULE_VERSIONS) so a bump is seen.
 """
 
 from __future__ import annotations
@@ -217,6 +221,20 @@ def row_is_current(
     """A proof row is the cell's verdict when it is at the floor version AND every rule it used is at its current
     version. A row without a record (legacy, not yet stamped) is not current: it cannot show which rules it ran."""
     return detector_version == floor and rules_current(stored_rules(checks))
+
+
+def stale_rules(checks: Mapping[str, Any] | None) -> list[str]:
+    """Why a floor-version row is not current, as 'rule:v<stored>->v<current>' (a rule no longer registered:
+    'rule:v<stored>->gone'; a row without a record: 'unrecorded'). Empty = the row is current. Pure. Coverage reports
+    such a cell as proof_stale (a verdict exists but a rule it used moved), never no_proof_row."""
+    rec = stored_rules(checks)
+    if rec is None:
+        return ["unrecorded"]
+    return [
+        f"{rid}:v{v}->" + (f"v{RULES[rid].version}" if rid in RULES else "gone")
+        for rid, v in sorted(rec.items())
+        if rid not in RULES or RULES[rid].version != v
+    ]
 
 
 def row_holds_disagree(
