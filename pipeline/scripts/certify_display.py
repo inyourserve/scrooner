@@ -60,9 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out-dir", type=Path, default=Path("."))
     ap.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     ap.add_argument("--no-registry", action="store_true")
+    ap.add_argument("--approver", default="Ritwik (cloud)")
     ap.add_argument("--date", default=date.today().isoformat())
     a = ap.parse_args(argv)
     company_id = None
+    req = None
     if a.request:
         req = dc.read_request(a.request)
         a.ticker, company_id = req.ticker, req.company_id
@@ -95,6 +97,10 @@ def main(argv: list[str] | None = None) -> int:
     a.out_dir.mkdir(parents=True, exist_ok=True)
     md = a.out_dir / f"{t}-display-cert-{a.date}.md"
     md.write_text(dc.render(run, a.date))
+    # machine-readable certificate for the registry loader (schema display-certificate/1)
+    (a.out_dir / f"{t}-display-cert-{a.date}.json").write_text(
+        json.dumps(dc.certificate(run, req, a.date, a.approver), indent=1) + "\n"
+    )
     with open(
         a.out_dir / f"{t}-display-cert-{a.date}-evidence.csv", "w", newline=""
     ) as fh:

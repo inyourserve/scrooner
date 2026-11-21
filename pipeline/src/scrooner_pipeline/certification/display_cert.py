@@ -1096,6 +1096,7 @@ class Run:
     shown: list[CellCheck] = field(default_factory=list)
     debt: list[DebtCheck] = field(default_factory=list)
     hides: list[Finding] = field(default_factory=list)
+    cells: list[Cell] = field(default_factory=list)  # every cell of the coverage file
 
     @property
     def errors(self) -> int:
@@ -1157,6 +1158,7 @@ def certify(
     for c in p.cells:
         counts[c.display] += 1
     run = Run(ticker, str(coverage), p.sha, p.seed, dict(counts), gate=gate(p.cells))
+    run.cells = p.cells
     run.hides += check_hide_reasons(p.cells)
     need_tags = (
         {t.tag for c in p.sample for t in terms(c)}
@@ -1444,6 +1446,9 @@ class Request:
     company_id: int
     coverage: str  # repo-relative path
     sha256: str
+    detector_version: str | None = None  # "proof DETECTOR_VERSION" line
+    resolver: str | None = None  # "resolver" line (repo path)
+    code_sha: str | None = None  # "code" line (git sha the export was built from)
 
 
 _REQ_TITLE = re.compile(
@@ -1460,7 +1465,20 @@ def read_request(path: Path) -> Request:
         raise ValueError(
             f"{path}: not a certification request (needs title, coverage csv and sha256 lines)"
         )
-    return Request(m["t"], int(m["c"]), cov[1], sha[1])
+
+    def line(name: str) -> str | None:
+        hit = re.search(rf"^- {name}: `([^`]+)`", text, re.MULTILINE)
+        return hit[1] if hit else None
+
+    return Request(
+        m["t"],
+        int(m["c"]),
+        cov[1],
+        sha[1],
+        detector_version=line("proof DETECTOR_VERSION"),
+        resolver=line("resolver"),
+        code_sha=line("code"),
+    )
 
 
 def resolve_cik(conn, company_id: int) -> str:
@@ -1491,3 +1509,128 @@ def to_json(run: Run) -> str:
         },
         indent=1,
     )
+
+
+# ---------------------------------------------------------------- machine-readable certificate
+CERTIFICATE_SCHEMA = "display-certificate/1"
+CERTIFICATE_SCHEMA_PATH = (
+    Path(__file__).parent / "schemas" / "display_certificate.v1.schema.json"
+)
+
+
+def _grain(dp: str) -> str:
+    """analytics.cell_display_state grain (0130): 'I' instant, 'FY' annual duration."""
+    return "I" if dp in INSTANT_DPS else "FY"
+
+
+def certificate(
+    run: Run, req: Request | None, certified_at: str, approver: str
+) -> dict:
+    """The certificate as data (schema display-certificate/1), one entry per cell of the coverage
+    file. evidence: drawn = individually matched to the filing; census = every total_debt year and
+    every hidden cell's hide proof; sampled = covered by the bound, not individually checked."""
+    drawn = {s.cell.key: s for s in run.shown}
+    debt = {d.cell.key: d for d in run.debt}
+    row_hide = {f.data_point: f for f in run.hides if f.check == "hidden_row"}
+    year_hide = {
+        (f.data_point, f.fiscal_year): f for f in run.hides if f.check == "hidden_year"
+    }
+    reason_fail = {
+        (f.data_point, f.fiscal_year): f for f in run.hides if f.check == "hide_reason"
+    }
+    gate_fail = {(f.data_point, f.fiscal_year): f for f in run.gate}
+    cells = []
+    for c in run.cells:
+        if c.key in drawn:
+            ev, res, why = "drawn", drawn[c.key].result, drawn[c.key].evidence
+        elif c.key in debt:
+            ev, res, why = "census", debt[c.key].result, debt[c.key].evidence
+        elif c.display in (HIDDEN_ROW, HIDDEN_YEAR):
+            f = reason_fail.get(c.key) or (
+                row_hide.get(c.data_point)
+                if c.display == HIDDEN_ROW
+                else year_hide.get(c.key)
+            )
+            ev = "census"
+            if f is None:  # a hidden year that no periodic filing presents
+                res, why = (
+                    "MATCH",
+                    "pre-filing year: no periodic filing presents this period",
+                )
+            else:
+                res, why = (
+                    {"INFO": "MATCH", "FAIL": "MISMATCH"}.get(f.severity, "REVIEW"),
+                    f.detail,
+                )
+        elif c.display == SHOWN:
+            ev, res, why = (
+                "sampled",
+                "SAMPLED",
+                "covered by the certificate's bound; not individually checked",
+            )
+        else:
+            ev, res, why = "census", "MISMATCH", "OPEN cell"
+        if c.key in gate_fail:
+            res, why = "MISMATCH", gate_fail[c.key].detail
+        cells.append(
+            {
+                "data_point": c.data_point,
+                "fiscal_year": c.fiscal_year,
+                "period_end": c.period_end,
+                "grain": _grain(c.data_point),
+                "display": c.display,
+                "hide_class": c.hide_class,
+                "reason_code": c.reason_code,
+                "shown_value": None if c.value is None else str(c.value),
+                "accession": c.accession or None,
+                "r_page": c.r_page or None,
+                "tag": c.tag or None,
+                "parts": [
+                    {
+                        "tag": x.tag,
+                        "dims": x.dims,
+                        "value": str(x.value),
+                        "sign": x.sign,
+                        "accession": x.accession,
+                        "r_page": x.r_page,
+                    }
+                    for x in c.parts
+                ],
+                "evidence": ev,
+                "result": res,
+                "detail": why,
+            }
+        )
+    n, k = len(run.shown), run.errors
+    return {
+        "schema": CERTIFICATE_SCHEMA,
+        "ticker": run.ticker,
+        "company_id": req.company_id if req else None,
+        "verdict": run.verdict,
+        "coverage_path": req.coverage if req else run.coverage_path,
+        "coverage_sha256": run.coverage_sha256,
+        "sample_hash": run.coverage_sha256,
+        "seed": run.seed,
+        "detector_version": req.detector_version if req else None,
+        "resolver": req.resolver if req else None,
+        "code_sha": req.code_sha if req else None,
+        "method": "data-team/strategy/approvals/CERTIFICATION-METHOD-2026-11-16.md",
+        "approver": approver,
+        "certified_at": certified_at,
+        "counts": dict(sorted(run.counts.items())),
+        "bound": {
+            "n": n,
+            "errors": k,
+            "upper_95": f"{clopper_pearson_upper(k, n):.6f}",
+        },
+        "gate": [
+            {
+                "data_point": f.data_point,
+                "fiscal_year": f.fiscal_year,
+                "severity": f.severity,
+                "detail": f.detail,
+            }
+            for f in run.gate
+        ],
+        "cells": cells,
+    }

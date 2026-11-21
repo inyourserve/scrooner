@@ -712,3 +712,157 @@ def test_gate_censuses_implausible_per_share_values_outside_the_draw():
     )
     ok = cell(dp="diluted_eps", value="5.51", tag="EarningsPerShareDiluted")
     assert [f.severity for f in dc.gate([bad, ok])] == ["FAIL"]
+
+
+def _check_schema(obj, schema, path="$"):
+    """Minimal validator for the subset of JSON Schema the certificate schema uses (no new dependency)."""
+    t = schema.get("type")
+    if t is not None:
+        kinds = t if isinstance(t, list) else [t]
+        py = {
+            "object": dict,
+            "array": list,
+            "string": str,
+            "integer": int,
+            "null": type(None),
+        }
+        assert any(
+            isinstance(obj, py[k]) and not (k == "integer" and isinstance(obj, bool))
+            for k in kinds
+        ), (path, obj, t)
+    if "const" in schema:
+        assert obj == schema["const"], (path, obj)
+    if "enum" in schema:
+        assert obj in schema["enum"], (path, obj)
+    if "pattern" in schema and isinstance(obj, str):
+        import re as _re
+
+        assert _re.search(schema["pattern"], obj), (path, obj)
+    if isinstance(obj, dict):
+        for k in schema.get("required", []):
+            assert k in obj, (path, k)
+        props = schema.get("properties", {})
+        if schema.get("additionalProperties") is False:
+            assert set(obj) <= set(props), (path, set(obj) - set(props))
+        for k, v in obj.items():
+            if k in props:
+                _check_schema(v, props[k], f"{path}.{k}")
+    if isinstance(obj, list) and "items" in schema:
+        for i, v in enumerate(obj):
+            _check_schema(v, schema["items"], f"{path}[{i}]")
+
+
+def test_certificate_json_matches_schema_and_classifies_every_cell(tmp_path):
+    import json
+
+    p = tmp_path / "cov.csv"
+    with open(p, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow([*HDR, "reason_code", "hide_class"])
+        w.writerow(
+            [
+                "revenue",
+                "2023",
+                "2023-12-31",
+                "100",
+                ACC,
+                "R4",
+                "Revenues",
+                "",
+                dc.SHOWN,
+                "",
+                "",
+            ]
+        )
+        w.writerow(
+            [
+                "sbc",
+                "2023",
+                "2023-12-31",
+                "",
+                "",
+                "",
+                "",
+                "",
+                dc.HIDDEN_ROW,
+                "x",
+                "structural_not_presented",
+            ]
+        )
+        w.writerow(
+            [
+                "total_debt",
+                "2023",
+                "2023-12-31",
+                "120",
+                ACC,
+                "R4",
+                "",
+                f"LongTermDebtNoncurrent=100@{ACC}#R4;CommercialPaper=20@{ACC}#R4",
+                dc.SHOWN,
+                "",
+                "",
+            ]
+        )
+    facts = [
+        fact("Revenues", "100"),
+        fact("LongTermDebtNoncurrent", "100", qtrs=0),
+        fact("CommercialPaper", "20", qtrs=0),
+    ]
+    run = dc.certify("T", "1", p, Src(facts))
+    req = dc.Request(
+        "T", 7, "x/T.csv", run.coverage_sha256, "cell_proof_v21", "res.csv", "abc123"
+    )
+    cert = json.loads(
+        json.dumps(dc.certificate(run, req, "2026-11-21", "Ritwik (cloud)"))
+    )
+    _check_schema(cert, json.loads(dc.CERTIFICATE_SCHEMA_PATH.read_text()))
+    assert (
+        cert["verdict"] == "PASS"
+        and cert["sample_hash"] == run.coverage_sha256
+        and cert["company_id"] == 7
+    )
+    ev = {
+        c["data_point"]: (c["evidence"], c["result"], c["grain"]) for c in cert["cells"]
+    }
+    assert ev == {
+        "revenue": ("drawn", "MATCH", "FY"),
+        "sbc": ("census", "MATCH", "FY"),
+        "total_debt": ("census", "MATCH", "I"),
+    }
+    assert cert["detector_version"] == "cell_proof_v21" and cert["bound"] == {
+        "n": 1,
+        "errors": 0,
+        "upper_95": "0.950000",
+    }
+
+
+def test_certificate_marks_undrawn_shown_cells_sampled_and_failed_hides_mismatch(
+    tmp_path,
+):
+    cells = [cell(dp=f"d{i}") for i in range(40)]
+    run = dc.Run("T", "c", "0" * 64, "s", {}, cells=cells)
+    run.shown = [dc.CellCheck(cells[0], "MATCH", D(100), "ok")]
+    hid = dc.Cell(
+        "sga_expense",
+        "2016",
+        "2016-12-31",
+        dc.HIDDEN_ROW,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "era_unmapped",
+        None,
+    )
+    run.cells.append(hid)
+    run.hides = [dc.Finding("hide_reason", "sga_expense", "2016", "FAIL", "bad class")]
+    cert = dc.certificate(run, None, "2026-11-21", "a")
+    by = {(c["data_point"], c["fiscal_year"]): c for c in cert["cells"]}
+    assert by[("d0", "2023")]["evidence"] == "drawn"
+    assert (
+        by[("d1", "2023")]["evidence"] == "sampled"
+        and by[("d1", "2023")]["result"] == "SAMPLED"
+    )
+    assert by[("sga_expense", "2016")]["result"] == "MISMATCH"
