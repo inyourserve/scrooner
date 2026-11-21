@@ -2074,6 +2074,33 @@ def attach_badges(
             r["_badge_issue"] = f"badge_undecided: {exc}"
 
 
+# doc 02 display rule 1 defines verified_absent for a YEAR inside the filing window; a row hidden in every year is
+# structural_not_presented (certify_display.check_hide_reasons; JNJ 674389ae and MA 13e6d648, rulings addendum 9). The
+# line-level proof behind a verified-absent year (no presented fact of the family at any display-year end) is the
+# structural proof, so the evidence carries over unchanged.
+ROW_CLASS_OF_YEAR_CLASS: dict[str, str] = {HC_VERIFIED_ABSENT: HC_STRUCTURAL}
+
+
+def whole_row_hide_class(hc: str) -> str:
+    """The hide class a cell carries when its whole row is hidden: a year-only class becomes its row class. Pure."""
+    return ROW_CLASS_OF_YEAR_CLASS.get(hc, hc)
+
+
+def collapse_to_hidden_row(cells: list[dict[str, Any]]) -> None:
+    """Hide a row all of whose cells are hidden years, in place. A row of only pre-filing years is one hidden row
+    (pre_filing, as before). Otherwise the pre-filing years stay hidden years (pre_filing is a year class, never a row
+    class) and every other year becomes HIDDEN_ROW with whole_row_hide_class of its class. Pure."""
+    if all(c.get("hide_class") == HC_PRE_FILING for c in cells):
+        for c in cells:
+            c["display"] = HIDDEN_ROW
+        return
+    for c in cells:
+        if c.get("hide_class") == HC_PRE_FILING:
+            continue
+        c["display"] = HIDDEN_ROW
+        c["hide_class"] = whole_row_hide_class(c.get("hide_class") or "")
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] and row['hide_class'] for every cell. Pure, in place. Precedence per cell: a proven or derived
     value is shown; a year that NO periodic report presents (row['_presented'] false) and that either ends before the
@@ -2180,9 +2207,9 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
                     c["display"] = OPEN
                     c["hide_class"] = ""
         elif not rest and cells:
-            # every year is before the first filing: nothing of this row can be shown
-            for c in cells:
-                c["display"] = HIDDEN_ROW
+            # every year is a hidden year (before the first filing, verified absent, comparative-only): nothing of this
+            # row can be shown, so it is one hidden row, with a ROW class (whole_row_hide_class)
+            collapse_to_hidden_row(cells)
         hits = next((c["_line_hits"] for c in cells if c.get("_line_hits")), None)
         if hits:
             # hide audit rule 2: a row hidden as never reported is wrong when any filing of the company prints a line
@@ -2339,12 +2366,35 @@ PAGELESS_COLS = [
 ]
 
 
+# the verifier's certificates (certify_display, one line per verdict, appended in order)
+CERT_REGISTRY = Path("data-team/strategy/approvals/registry.csv")
+
+
+def load_verifier_verdicts(path: Path = CERT_REGISTRY) -> dict[str, str]:
+    """ticker -> the verdict of its LATEST registry line (latest date; same date: the later line). Missing file:
+    empty."""
+    if not path.exists():
+        return {}
+    latest: dict[str, tuple[str, int, str]] = {}
+    with path.open(newline="") as fh:
+        for i, r in enumerate(csv.DictReader(fh)):
+            tk, key = (r.get("ticker") or "").strip(), (r.get("date") or "").strip()
+            if tk and (tk not in latest or (key, i) >= latest[tk][:2]):
+                latest[tk] = (key, i, (r.get("verdict") or "").strip().upper())
+    return {tk: v[2] for tk, v in latest.items()}
+
+
 def summarize(
     rows: list[dict[str, Any]],
     companies: list[Company],
     notes: dict[int, str],
     as_of: str,
+    verdicts: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
+    """One summary line per company. gate_ready is the top100-flow MECHANICAL gate (shown cells, 0 OPEN, 0 pageless,
+    0 blank parts); verifier_certified is the verifier's certificate (latest registry.csv verdict PASS). They are
+    different claims and never merged (MA 2026-11-21)."""
+    verdicts = verdicts or {}
     if any("display" not in r for r in rows):
         apply_display(rows)
     by: dict[int, dict[str, int]] = defaultdict(lambda: dict.fromkeys(CLASSES, 0))
@@ -2397,12 +2447,15 @@ def summarize(
                 "pct_shown_values": f"{100 * dd[SHOWN_VALUE] / shown:.1f}"
                 if dd and shown
                 else "",
-                "display_certified": "yes"
+                "gate_ready": "yes"
                 if dd
                 and shown
                 and dd[OPEN] == 0
                 and dd["pageless_shown"] == 0
                 and dd["parts_blank_shown"] == 0
+                else "no",
+                "verifier_certified": "yes"
+                if verdicts.get(c.ticker) == "PASS"
                 else "no",
                 "pct_proven_plus_reason": f"{100 * (t['PROVEN'] + t['REASON'] + t['DERIVED']) / total:.1f}"
                 if total
@@ -2448,7 +2501,8 @@ SUMMARY_DISPLAY_COLS = [
     "pct_shown_values",
     "pageless_shown",
     "parts_blank_shown",
-    "display_certified",
+    "gate_ready",
+    "verifier_certified",
 ]
 
 
@@ -2547,7 +2601,7 @@ def main(
         )
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
     _display_state(rows, list(OUT_CELLS), now, write_display_state)
-    summary = summarize(rows, companies, notes, as_of)
+    summary = summarize(rows, companies, notes, as_of, load_verifier_verdicts())
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
     scols = [
         "rank",
@@ -2576,7 +2630,8 @@ def main(
         f"display: shown values {sum(r['shown_values'] for r in summary)} of "
         f"{sum(r['shown_cells'] for r in summary)} shown cells; open {len(oq)} {wt}; "
         f"hidden rows {sum(r['hidden_rows'] for r in summary)}, hidden years {sum(r['hidden_years'] for r in summary)}; "
-        f"certified {sum(1 for r in summary if r['display_certified'] == 'yes')}"
+        f"gate ready {sum(1 for r in summary if r['gate_ready'] == 'yes')}, "
+        f"verifier certified {sum(1 for r in summary if r['verifier_certified'] == 'yes')}"
     )
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     pc = sum(1 for r in rows if r.get("parts"))

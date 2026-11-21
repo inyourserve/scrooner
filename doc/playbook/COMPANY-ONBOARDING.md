@@ -108,7 +108,7 @@ Each step lists four properties. **List:** is it one command or dispatch keyed b
   - `top100-coverage.csv` and the summary
   - `top100-open-shown-cells-*`, `top100-hidden-rows-*` and `top100-hidden-years-*`
   - in the flow, `data-team/strategy/open-shown/<TICKER>.csv`, the **Tag Expert queue**
-- **Pass:** `display_certified = yes`: shown cells > 0, 0 OPEN, 0 `pageless_shown` and 0 `parts_blank_shown`.
+- **Pass:** `gate_ready = yes`: shown cells > 0, 0 OPEN, 0 `pageless_shown` and 0 `parts_blank_shown`. This is the mechanical gate only; `verifier_certified = yes` means the latest verdict in `data-team/strategy/approvals/registry.csv` is PASS.
 - **Idem:** read-only. **Width: a hard limit today.**
   - `main()` keeps only `rank <= 100` of `doc/data-moat/team/top1000/shards.csv`. A company outside that set has no coverage row, so it can never pass the gate.
   - Each flow job rebuilds coverage for all 100 companies.

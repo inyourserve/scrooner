@@ -107,7 +107,37 @@ def test_summary_certified_needs_no_open_and_locators():
     for rows, want in ((ok, "yes"), (bad, "no")):
         t100.apply_display(rows)
         s = t100.summarize(rows, [Co()], {}, "x")[0]
-        assert s["display_certified"] == want
+        assert s["gate_ready"] == want
+        # the mechanical gate is never the verifier's certificate (MA 2026-11-21)
+        assert s["verifier_certified"] == "no"
+        assert "display_certified" not in s
     s = t100.summarize(ok, [Co()], {}, "x")[0]
     assert (s["shown_cells"], s["shown_values"], s["hidden_rows"]) == (1, 1, 1)
     assert s["pct_shown_values"] == "100.0"
+
+
+def test_verifier_certified_is_the_latest_registry_verdict(tmp_path):
+    class Co:
+        def __init__(self, cid, tk):
+            self.rank, self.ticker, self.company_id = cid, tk, cid
+
+    reg = tmp_path / "registry.csv"
+    reg.write_text(
+        "ticker,date,verdict,coverage_sha256,seed,n,errors,upper_bound_95,approver\n"
+        "AAA,2026-11-16,PASS,s,x,32,0,0.08,R\n"
+        "AAA,2026-11-21,FAIL,s,x,32,0,0.08,R\n"
+        "BBB,2026-11-16,FAIL,s,x,32,0,0.08,R\n"
+        "BBB,2026-11-16,PASS,s,x,32,0,0.08,R\n"
+        "CCC,2026-11-21,PASS,s,x,32,0,0.08,R\n"
+        "CCC,2026-11-16,FAIL,s,x,32,0,0.08,R\n"
+    )
+    v = t100.load_verifier_verdicts(reg)
+    assert v == {"AAA": "FAIL", "BBB": "PASS", "CCC": "PASS"}
+    assert t100.load_verifier_verdicts(tmp_path / "none.csv") == {}
+    cos = [Co(i, tk) for i, tk in enumerate(("AAA", "BBB", "CCC", "DDD"), 1)]
+    rows = [_cell("a", 2020, "PROVEN", company_id=c.company_id) for c in cos]
+    t100.apply_display(rows)
+    out = t100.summarize(rows, cos, {}, "x", v)
+    assert [s["verifier_certified"] for s in out] == ["no", "yes", "yes", "no"]
+    assert [s["gate_ready"] for s in out] == ["yes"] * 4
+    assert t100.SUMMARY_DISPLAY_COLS[-2:] == ["gate_ready", "verifier_certified"]

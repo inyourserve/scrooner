@@ -98,7 +98,7 @@ for c in ${(s:,:)IDS}; do
 import csv
 for r in csv.DictReader(open('$CV/top100-coverage-summary.csv')):
     if r['company_id']=='$c':
-        print(r['ticker'], 'shown %s/%s %s open=%s' % (r['shown_values'], r['shown_cells'], r['pct_shown_values'] or '-', r['open_shown']), 'FULL' if r['display_certified']=='yes' else 'NOT_CERTIFIED')" 2>&1)
+        print(r['ticker'], 'shown %s/%s %s open=%s' % (r['shown_values'], r['shown_cells'], r['pct_shown_values'] or '-', r['open_shown']), ('GATE_READY' if r['gate_ready']=='yes' else 'NOT_GATE_READY') + (' VERIFIER_CERTIFIED' if r['verifier_certified']=='yes' else ''))" 2>&1)
   echo "$(date -u +%H:%MZ)\t$c\t$line${HELD[$c]:+ ${HELD[$c]}}" | tee -a $S/flow_results.tsv
 done
 [ -z "$CI_MODE" ] && { cd $REPO && git worktree remove --force $W 2>/dev/null; git worktree prune; }

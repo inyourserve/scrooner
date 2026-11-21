@@ -297,11 +297,11 @@ jobs:
         run: |
           mkdir -p summary
           find parts -name flow_results.tsv -exec cat {} + | sort -t "$(printf '\t')" -k2,2n -u > summary/body.tsv || true
-          { printf 'time\tcompany_id\tticker cells pct open-or-FULL [HELD]\n'; cat summary/body.tsv; } > summary/flow_results.tsv
+          { printf 'time\tcompany_id\tticker cells pct gate (GATE_READY or NOT_GATE_READY) [VERIFIER_CERTIFIED] [HELD]\n'; cat summary/body.tsv; } > summary/flow_results.tsv
           {
             echo "### Top-100 flow results ($(wc -l < summary/body.tsv) of ${{ needs.plan.outputs.count }} companies)"
             echo '```'; cat summary/flow_results.tsv; echo '```'
-            echo "FULL: $(grep -c ' FULL' summary/body.tsv || true); HELD_CERTIFIED: $(grep -c HELD_CERTIFIED summary/body.tsv || true); NO_RESULT_LINE: $(grep -c NO_RESULT_LINE summary/body.tsv || true)"
+            echo "GATE_READY: $(grep -c ' GATE_READY' summary/body.tsv || true); VERIFIER_CERTIFIED: $(grep -c VERIFIER_CERTIFIED summary/body.tsv || true); HELD_CERTIFIED: $(grep -c HELD_CERTIFIED summary/body.tsv || true); NO_RESULT_LINE: $(grep -c NO_RESULT_LINE summary/body.tsv || true)"
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
