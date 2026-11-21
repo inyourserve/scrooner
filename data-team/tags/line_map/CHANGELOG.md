@@ -1,0 +1,8 @@
+# Resolver changelog
+
+One line per resolver version pushed to `main` (the resolver output is `resolver/<TICKER>.csv`; a push fires the top-100 flow). Two lanes release: the cloud "SEC/FSN Tag Expert" and the local resolver lane (scrooner-cf). Before every push: fetch, rebase onto the latest version here, take the next number, name the evidence files consumed so the other lane skips them. Older versions (.1 to .85): `git log --oneline origin/main -- data-team/tags/line_map`.
+
+| version | date | sha | lane | inputs | consumed | summary |
+|---|---|---|---|---|---|---|
+| .85 | 2026-11-20 | cb7adca3 | cloud Tag Expert | run8 (pre-11-16 extract) | open-shown-fixes 2026-11-17 (oracle BAD rows: AVGO, AMZN, META) | BAD 216 -> 197 |
+| .86 | 2026-11-21 | (this commit) | released by local resolver lane (scrooner-cf) from open-shown-fixes BAC,BLK,CB,CRM,DE,GE,LIN,MRVL,MU,ORCL,PG,STX,T,UNH,VZ,XOM-2026-11-21 | standard-extract artifact of run 44890468680 (main, 2026-11-21 09:37Z) | the 16 2026-11-21 files: 605 rows applied as X109 filing reads, 91 skipped (RULE rows, ruling conflicts, 11 HIDE rows with a class outside the contract, listed in `_filing-reads-skipped-2026-11-21.csv`) | X109 filing reads (rulings a-e of 2026-11-21 applied through the read rows: sbc = CF add-back, cash paid for interest = InterestPaidNet latest print, a coarser rounding never replaces the finer figure, non-interest band lines are other income, text-stated interest revenue). Generic class rules for these (sga era tag, one-vintage derived parts, opex incl. OtherOperatingIncomeExpenseNet, ProductOrService members are revenue, dimensioned face line, trade payables from the note, segment-only components never serve) are the next versions. |

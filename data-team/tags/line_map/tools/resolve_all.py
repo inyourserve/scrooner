@@ -2018,6 +2018,10 @@ if __name__ == '__main__':
     rows = apply_bank_cash(rows, notefacts, compfacts, filings)
     rows = apply_lease_latest_print(rows, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
+    import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
+    _frl = []
+    rows = filing_reads.apply(rows, log=_frl)
+    print('filing reads:', collections.Counter(x[0] for x in _frl), file=sys.stderr)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
