@@ -1,0 +1,58 @@
+check,data_point,fiscal_year,result,served,filing,evidence
+shown,cash_flow_financing,2020,MATCH,-6120000000,6120000000.0000,NetCashProvidedByUsedInFinancingActivities=-6120000000.0000@0000200406-21-000008#R9 (fsn reports R9)
+shown,sga_expense,2015,MATCH,21203000000,21203000000.0000,SellingGeneralAndAdministrativeExpense=21203000000.0000@0000200406-16-000071#R4 (fsn reports R4)
+shown,total_liabilities,2021,MATCH,107995000000,107995000000.0000,Liabilities=107995000000.0000@0000200406-22-000022#R3 (fsn reports R3)
+shown,weighted_basic_shares,2019,MATCH,2645100000,2645100000.0000,WeightedAverageNumberOfSharesOutstandingBasic=2645100000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,cost_of_revenue,2023,MATCH,26553000000,26553000000.0000,CostOfGoodsAndServicesSold=26553000000.0000@0000200406-24-000013#R5 (fsn reports R5)
+shown,income_tax_expense,2016,MATCH,3263000000,3263000000.0000,IncomeTaxExpenseBenefit=3263000000.0000@0000200406-17-000006#R4 (fsn reports R4)
+shown,other_income_expense_net,2022,MATCH,-810000000,810000000.0000,OtherNonoperatingIncomeExpense=-810000000.0000@0000200406-25-000038#R5 (fsn reports R5)
+shown,diluted_eps,2019,MATCH,5.6300,5.6300,EarningsPerShareDiluted=5.6300@0000200406-20-000010#R4 (fsn reports R4)
+shown,dividends_per_share,2018,MATCH,3.54,3.5400,CommonStockDividendsPerShareCashPaid=3.5400@0000200406-19-000009#R8 (fsn reports R8)
+shown,ppe_net,2016,MATCH,15912000000,15912000000.0000,PropertyPlantAndEquipmentNet=15912000000.0000@0000200406-17-000006#R2 (fsn reports R2)
+shown,cash_paid_for_income_taxes,2023,MATCH,8574000000,8574000000.0000,IncomeTaxesPaidNet=8574000000.0000@0000200406-26-000016#R83 (fsn reports -)
+shown,cfo,2021,MATCH,23410000000,23410000000.0000,NetCashProvidedByUsedInOperatingActivities=23410000000.0000@0000200406-22-000022#R10 (fsn reports R10)
+shown,revenue,2018,MATCH,81581000000.0000,81581000000.0000,RevenueFromContractWithCustomerExcludingAssessedTax=81581000000.0000@0000200406-19-000009#R4 (fsn reports R4)
+shown,cost_of_revenue,2020,MATCH,28427000000,28427000000.0000,CostOfGoodsAndServicesSold=28427000000.0000@0000200406-21-000008#R4 (fsn reports R4)
+shown,other_income_expense_net,2019,MATCH,-2525000000,2525000000.0000,OtherNonoperatingIncomeExpense=-2525000000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,interest_income,2020,MATCH,111000000,111000000.0000,InvestmentIncomeInterest=111000000.0000@0000200406-21-000008#R4 (fsn reports R4)
+shown,inventory,2024,MATCH,12444000000,12444000000.0000,InventoryNet=12444000000.0000@0000200406-25-000038#R3 (fsn reports R3)
+shown,sbc,2018,MATCH,978000000,978000000.0000,ShareBasedCompensation=978000000.0000@0000200406-19-000009#R9 (fsn reports R9)
+shown,stockholders_equity,2015,MATCH,71150000000,71150000000.0000,"StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=71150000000.0000@0000200406-16-000071#R2 (fsn reports R2,R7)"
+shown,other_income_expense_net,2023,MATCH,-6634000000,6634000000.0000,OtherNonoperatingIncomeExpense=-6634000000.0000@0000200406-24-000013#R5 (fsn reports R5)
+shown,cfo,2024,MATCH,24266000000,24266000000.0000,NetCashProvidedByUsedInOperatingActivities=24266000000.0000@0000200406-25-000038#R10 (fsn reports R10)
+shown,cash_paid_for_income_taxes,2015,MATCH,2865000000,2865000000.0000,IncomeTaxesPaid=2865000000.0000@0000200406-16-000071#R8 (fsn reports R8)
+shown,interest_income,2024,MATCH,1332000000,1332000000.0000,InvestmentIncomeInterest=1332000000.0000@0000200406-25-000038#R5 (fsn reports R5)
+shown,cash_flow_financing,2019,MATCH,-18015000000,18015000000.0000,NetCashProvidedByUsedInFinancingActivities=-18015000000.0000@0000200406-20-000010#R9 (fsn reports R9)
+shown,comprehensive_income,2024,MATCH,14852000000,14852000000.0000,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest=14852000000.0000@0000200406-25-000038#R6 (fsn reports R6)
+shown,cash_flow_investing,2025,MATCH,-23588000000,23588000000.0000,NetCashProvidedByUsedInInvestingActivities=-23588000000.0000@0000200406-26-000016#R10 (fsn reports R10)
+shown,basic_eps,2016,MATCH,6.0400,6.0400,EarningsPerShareBasic=6.0400@0000200406-17-000006#R4 (fsn reports R4)
+shown,stockholders_equity,2021,MATCH,74023000000,74023000000.0000,"StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=74023000000.0000@0000200406-22-000022#R3 (fsn reports R3,R8)"
+shown,cash_paid_for_income_taxes,2025,MATCH,6539000000,6539000000.0000,IncomeTaxesPaidNet=6539000000.0000@0000200406-26-000016#R83 (fsn reports -)
+shown,research_and_development,2018,MATCH,10775000000,10775000000.0000,ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost=10775000000.0000@0000200406-19-000009#R4 (fsn reports R4)
+shown,cost_of_revenue,2019,MATCH,27556000000,27556000000.0000,CostOfGoodsAndServicesSold=27556000000.0000@0000200406-20-000010#R4 (fsn reports R4)
+shown,basic_eps,2022,MATCH,6.83,6.8300,EarningsPerShareBasic=6.8300@0000200406-23-000016#R5 (fsn reports R5)
+derived,shares_outstanding,2015,MATCH,2755162000,2755162000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-16-000071#R3 (fsn reports R3); -TreasuryStockShares=364681000.0000@0000200406-16-000071#R3 (fsn reports R3)
+derived,shares_outstanding,2016,MATCH,2706511000,2706511000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-17-000006#R3 (fsn reports R3); -TreasuryStockShares=413332000.0000@0000200406-17-000006#R3 (fsn reports R3)
+derived,shares_outstanding,2017,MATCH,2682525000,2682525000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-18-000005#R3 (fsn reports R3); -TreasuryStockShares=437318000.0000@0000200406-18-000005#R3 (fsn reports R3)
+derived,shares_outstanding,2018,MATCH,2662324000,2662324000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-19-000009#R3 (fsn reports R3); -TreasuryStockShares=457519000.0000@0000200406-19-000009#R3 (fsn reports R3)
+derived,shares_outstanding,2019,MATCH,2632507000,2632507000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-20-000010#R3 (fsn reports R3); -TreasuryStockShares=487336000.0000@0000200406-20-000010#R3 (fsn reports R3)
+derived,shares_outstanding,2020,MATCH,2632512000,2632512000.0000,"CommonStockSharesIssued=3119843000.0000@0000200406-21-000008#R3 (fsn reports R2,R3); -TreasuryStockShares=487331000.0000@0000200406-21-000008#R3 (fsn reports R3)"
+derived,shares_outstanding,2021,MATCH,2628965000,2628965000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-22-000022#R4 (fsn reports R4); -TreasuryStockShares=490878000.0000@0000200406-22-000022#R4 (fsn reports R4)
+derived,shares_outstanding,2022,MATCH,2613597000,2613597000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-23-000016#R4 (fsn reports R4); -TreasuryStockShares=506246000.0000@0000200406-23-000016#R4 (fsn reports R4)
+derived,shares_outstanding,2023,MATCH,2407078000,2407078000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-24-000013#R4 (fsn reports R4); -TreasuryStockCommonShares=712765000.0000@0000200406-24-000013#R4 (fsn reports R4)
+derived,shares_outstanding,2024,MATCH,2406922000,2406922000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-25-000038#R4 (fsn reports R4); -TreasuryStockCommonShares=712921000.0000@0000200406-25-000038#R4 (fsn reports R4)
+derived,shares_outstanding,2025,MATCH,2407939000,2407939000.0000,CommonStockSharesIssued=3119843000.0000@0000200406-26-000016#R4 (fsn reports R4); -TreasuryStockCommonShares=711904000.0000@0000200406-26-000016#R4 (fsn reports R4)
+total_debt,total_debt,2015,MATCH,19861000000,19861000000.0000,"face {'LongTermDebtNoncurrent': Decimal('12857000000.0000'), 'ShortTermBorrowings': Decimal('7004000000.0000')}; lease no lease facts"
+total_debt,total_debt,2016,MATCH,27126000000,27126000000.0000,"face {'LongTermDebtNoncurrent': Decimal('22442000000.0000'), 'ShortTermBorrowings': Decimal('4684000000.0000')}; lease no lease facts"
+total_debt,total_debt,2017,MATCH,34581000000,34581000000.0000,"face {'LongTermDebtNoncurrent': Decimal('30675000000.0000'), 'ShortTermBorrowings': Decimal('3906000000.0000')}; lease no lease facts"
+total_debt,total_debt,2018,MATCH,30480000000,30480000000.0000,"face {'LongTermDebtNoncurrent': Decimal('27684000000.0000'), 'ShortTermBorrowings': Decimal('2796000000.0000')}; lease no lease facts"
+total_debt,total_debt,2019,MATCH,27696000000,27696000000.0000,"face {'LongTermDebtNoncurrent': Decimal('26494000000.0000'), 'ShortTermBorrowings': Decimal('1202000000.0000')}; lease no lease facts"
+total_debt,total_debt,2020,MATCH,35266000000,35266000000.0000,"face {'LongTermDebtNoncurrent': Decimal('32635000000.0000'), 'ShortTermBorrowings': Decimal('2631000000.0000')}; lease no lease facts"
+total_debt,total_debt,2021,MATCH,33751000000,33751000000.0000,"face {'LongTermDebtNoncurrent': Decimal('29985000000.0000'), 'ShortTermBorrowings': Decimal('3766000000.0000')}; lease no lease facts"
+total_debt,total_debt,2022,MATCH,39642000000,39642000000.0000,"face {'LongTermDebtNoncurrent': Decimal('26886000000.0000'), 'ShortTermBorrowings': Decimal('12756000000.0000')}; lease no lease facts"
+total_debt,total_debt,2023,MATCH,29332000000,29332000000.0000,"face {'LongTermDebtNoncurrent': Decimal('25881000000.0000'), 'ShortTermBorrowings': Decimal('3451000000.0000')}; lease no lease facts"
+total_debt,total_debt,2024,MATCH,36634000000,36634000000.0000,"face {'LongTermDebtNoncurrent': Decimal('30651000000.0000'), 'ShortTermBorrowings': Decimal('5983000000.0000')}; lease no lease facts"
+total_debt,total_debt,2025,MATCH,47933000000,47933000000.0000,"face {'LongTermDebtNoncurrent': Decimal('39438000000.0000'), 'ShortTermBorrowings': Decimal('8495000000.0000')}; lease no lease facts"
+hidden_row,cf_ap_change,*,INFO,,,"no presented, undimensioned, annual ['IncreaseDecreaseInAccountsPayable', 'IncreaseDecreaseInAccountsPayableTrade'] fact at a display-year end in any periodic filing"
+hidden_row,operating_expenses,*,INFO,,,"no presented, undimensioned, annual ['CostsAndExpenses', 'OperatingCostsAndExpenses', 'OperatingExpenses'] fact at a display-year end in any periodic filing"
+hidden_row,operating_income,*,INFO,,,"no presented, undimensioned, annual ['OperatingIncomeLoss'] fact at a display-year end in any periodic filing"
