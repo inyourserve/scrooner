@@ -109,8 +109,11 @@ def refuse_no_filing_reason(
     )
 
 
-def read_columns(conn: Any, company_ids: list[int]) -> dict[int, list[Column]]:
-    """company id -> every statement column its stored annual filings print (read-only, one query)."""
+def read_columns(
+    conn: Any, company_ids: list[int], forms: Iterable[str] = ANNUAL_FORMS
+) -> dict[int, list[Column]]:
+    """company id -> every statement column its stored filings of `forms` print (annual filings by default; the hide
+    audit passes 10-Q forms too). Read-only, one query."""
     out: dict[int, list[Column]] = defaultdict(list)
     if not company_ids:
         return out
@@ -127,7 +130,7 @@ def read_columns(conn: Any, company_ids: list[int]) -> dict[int, list[Column]]:
                   count(distinct b.tag_id), t.n
            from base b join tot t on t.fid = b.fid and t.stmt = b.stmt
            group by b.company_id, b.accession, b.form, b.stmt, b.ddate, b.qtrs, t.n""",
-        (list(FACE_STMTS), company_ids, list(ANNUAL_FORMS), ANNUAL_QTRS),
+        (list(FACE_STMTS), company_ids, list(forms), ANNUAL_QTRS),
     ).fetchall():
         out[cid].append(
             Column(acc, form, stmt, ddate, int(qtrs), rep, int(n), int(total))

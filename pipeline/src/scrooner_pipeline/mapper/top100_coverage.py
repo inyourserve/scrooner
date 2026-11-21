@@ -50,6 +50,7 @@ from scrooner_pipeline.common.company_filings import (
 )
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import comparative_guard as cg
+from scrooner_pipeline.mapper import hide_audit as ha
 from scrooner_pipeline.mapper import resolver_files as rf
 from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
@@ -1048,7 +1049,13 @@ def build_rows(
     }
     idx = _locator_index(conn, cited, shown_tags)
     earliest = _earliest_filings(conn, ids)
-    columns = cg.read_columns(conn, ids)
+    # one read of every 10-K / 10-Q column: the annual ones feed the no-filing reason guard, all of them the
+    # hide audit's period test (a year some 10-K or 10-Q presents is never hidden as pre-filing)
+    periodic_columns = ha.read_presenting_columns(conn, ids)
+    columns = {
+        cid: [x for x in cols if x.form in cg.ANNUAL_FORMS]
+        for cid, cols in periodic_columns.items()
+    }
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -1274,6 +1281,18 @@ def build_rows(
     attach_absent_in_own(rows, load_absent_in_own())
     attach_filing_read_hides(rows, load_filing_read_hides())
     attach_presence(rows, load_presence(conn, ids))
+    ha.attach_period_presence(rows, periodic_columns, INSTANT_DPS)
+    vocab = ha.build_vocab(resolver_dir=RESOLVER_DIR)
+    ha.attach_line_hits(
+        rows,
+        ha.hits_by_row(
+            ha.load_line_hits(conn, ids, vocab, date(FIRST_FY, 1, 1)),
+            vocab,
+            {c.company_id: c.ticker for c in live},
+            {(r["company_id"], r["data_point"]) for r in rows},
+            INSTANT_DPS,
+        ),
+    )
     attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
     note = {
@@ -2048,6 +2067,19 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             # no-period reasons): a period in which any periodic filing prints THIS data point's line is never hidden; it
             # stays OPEN until filled (BA 2026-11-16). A period presented without the line may still be hidden.
             r["display"], hc = OPEN, None
+        if r["display"] == HIDDEN_YEAR and hc == HC_PRE_FILING:
+            # hide audit rule 1: "pre-filing" needs NO 10-K or 10-Q of the company to print a column for the period
+            # (own or comparative); rule 3: a year only a registration statement presents stays hidden, as
+            # no_10k_presents_period (the legacy no_public_filing_for_period is renamed)
+            col = r.get("_period_presenting")
+            if col is not None:
+                ha.reopen(r, ha.RULE_YEAR, hc, col.accession, ha.year_evidence(col))
+                hc = None
+            else:
+                if r.get("reason_code") == ha.LEGACY_NO_FILING:
+                    r["reason_code"] = ha.NO_10K_REASON
+                if not r.get("evidence"):
+                    r["evidence"] = ha.no_10k_evidence(r)
         r["hide_class"] = hc or ""
         by_row[(r["company_id"], r.get("data_point"))].append(r)
     for cells in by_row.values():
@@ -2072,6 +2104,19 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
             # every year is before the first filing: nothing of this row can be shown
             for c in cells:
                 c["display"] = HIDDEN_ROW
+        hits = next((c["_line_hits"] for c in cells if c.get("_line_hits")), None)
+        if hits:
+            # hide audit rule 2: a row hidden as never reported is wrong when any filing of the company prints a line
+            # the resolver or tag library maps to the data point (or a learned label of it): open, citing the line
+            for c in cells:
+                if c["display"] == HIDDEN_ROW and c.get("hide_class") == HC_STRUCTURAL:
+                    ha.reopen(
+                        c,
+                        ha.RULE_ROW,
+                        HC_STRUCTURAL,
+                        hits[0].accession,
+                        ha.row_evidence(hits),
+                    )
         if any(c.get("_family_hit") for c in cells):
             # a row hidden as never reported must have no year whose own filing prints the line (MO other income FY2015):
             # a row with any printed year is not a hidden row; its cells are judged per year (open until filled)
@@ -2434,6 +2479,9 @@ def main(
     hr, hy = hidden_evidence(rows)
     write_csv(out_dir / f"top100-hidden-rows-{stamp}.csv", hr, HIDDEN_ROW_COLUMNS)
     write_csv(out_dir / f"top100-hidden-years-{stamp}.csv", hy, HIDDEN_YEAR_COLUMNS)
+    audit = ha.audit_rows(rows)
+    write_csv(out_dir / f"top100-hide-audit-{stamp}.csv", audit, ha.AUDIT_COLUMNS)
+    print(f"hide audit: {ha.audit_summary(audit)}")
     wt = {k: sum(1 for r in oq if r["work"] == k) for k in WORK_TYPES}
     print(
         f"display: shown values {sum(r['shown_values'] for r in summary)} of "
