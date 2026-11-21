@@ -1,0 +1,2076 @@
+{
+ "run_id": "44890468680",
+ "code_sha": "04cfc116fb675d7af5f8e9d0b43a3d7102b9d091",
+ "ciks": "1800,2488,4962,6281,6951,8670,12927,14272,18230,19617,21344,24741,40545,50863,51143,59478,60667,63908,64040,64803,70858,72971,76334,77476,78003,80424,80661,93410,97476,97745,100885,101829,104169,106040,109198,200406,310158,310764,313616,315189,316709,318154,319201,320193,354950,707549,723125,731766,732712,732717,753308,764180,766704,789019,804328,829224,831001,858877,875320,882095,886982,895421,896159,909832,927628,927653,936468,1001838,1018724,1035002,1035267,1045609,1045810,1065280,1075531,1108524,1137789,1141391,1163165,1164727,1262039,1283699,1318605,1321655,1326801,1327567,1341439,1373715,1403161,1413329,1467373,1510295,1534701,1535527,1543151,1551152,1551182,1571996,1594805,1596532,1613103,1652044,1707925,1730168,1744489,1835632,1996810,2012383,2023554,2115436",
+ "n_ciks": 110,
+ "files": {
+  "bs.jsonl": {
+   "rows": 1297,
+   "sha256": "45f77d50872e9d6a6646ee3f1e70824d7635230aceeeb84027a8fcc962c20a3d",
+   "bytes": 9624770
+  },
+  "clines.json": {
+   "rows": 1228,
+   "sha256": "8e4d7b12c1831459649c73ce186ae0aa6f431ef86507ef6ee4d1db96bdf41700",
+   "bytes": 280183
+  },
+  "compfacts.json": {
+   "rows": 1297,
+   "sha256": "1cb383eeb2f0232458a1f2ef7cb5aa02a4bd5230b77e29f7cd862164c444e675",
+   "bytes": 21171100
+  },
+  "face.jsonl": {
+   "rows": 1297,
+   "sha256": "11cb1c0294a974e10baca03122d731bddc69108312343837bf2126302b5d3d96",
+   "bytes": 13556836
+  },
+  "filings.json": {
+   "rows": 1297,
+   "sha256": "3182dd1f9491508212337106079cd9bddd0e01a02e139a1737925506530f46d1",
+   "bytes": 28582409
+  },
+  "lentity.json": {
+   "rows": 0,
+   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+   "bytes": 2
+  },
+  "lines.jsonl": {
+   "rows": 1297,
+   "sha256": "2d1ce3be22d8ec006d5ba45db4400cabf2960af816cd0034da75d0eaa2e23381",
+   "bytes": 27802151
+  },
+  "memberfacts.json": {
+   "rows": 1233,
+   "sha256": "17232f1036a7602b9f04abffcf37d7053fb2afd7d00233157e86e4b108b926a6",
+   "bytes": 772815
+  },
+  "notefacts.json": {
+   "rows": 1297,
+   "sha256": "e144f0309d0d3b5fa498d6bf2a7c23dc9f33150daa112c8e9fd2ff28e91df1f1",
+   "bytes": 11023685
+  },
+  "notes.jsonl": {
+   "rows": 1297,
+   "sha256": "7ab697bb17f6f3f88bd1c8fd32cdc79288654da771084e2dfb635ee4f17bc0d9",
+   "bytes": 19738927
+  },
+  "retries.json": {
+   "rows": 220,
+   "sha256": "661dcb60b4d2bbfbff004f7f3cdf58c6662e523d38916752656006a19522ba5b",
+   "bytes": 35383
+  },
+  "zlines.json": {
+   "rows": 106,
+   "sha256": "272d63888270c2b926b370097c077e68e770dbf4e58ac5e882eeef493c3a8099",
+   "bytes": 17339
+  }
+ },
+ "retries": [
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1800",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "2488",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "4962",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "6281",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "6951",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "8670",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "12927",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "14272",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "18230",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "19617",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "21344",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "24741",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "40545",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "50863",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "51143",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "59478",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "60667",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "63908",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "64040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "64803",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "70858",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "72971",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "76334",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "77476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "78003",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "80424",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "80661",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "93410",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1800",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "2488",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "4962",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "6281",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "6951",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "8670",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "12927",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "14272",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "18230",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "19617",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "21344",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "24741",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "40545",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "50863",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "51143",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "59478",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "60667",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "63908",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "64040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "64803",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "70858",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "72971",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "76334",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "77476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "78003",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "80424",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "80661",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "93410",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "97476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "97745",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "100885",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "101829",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "104169",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "106040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "109198",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "200406",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "310158",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "310764",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "313616",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "315189",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "316709",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "318154",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "319201",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "320193",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "354950",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "707549",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "723125",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "731766",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "732712",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "732717",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "753308",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "764180",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "766704",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "789019",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "804328",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "829224",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "97476",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "97745",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "100885",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "101829",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "104169",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "106040",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "109198",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "200406",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "310158",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "310764",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "313616",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "315189",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "316709",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "318154",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "319201",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "320193",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "354950",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "707549",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "723125",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "731766",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "732712",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "732717",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "753308",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "764180",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "766704",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "789019",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "804328",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "829224",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "831001",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "858877",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "875320",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "882095",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "886982",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "895421",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "896159",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "909832",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "927628",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "927653",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "936468",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1001838",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1018724",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1035002",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1035267",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1045609",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1045810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1065280",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1075531",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1108524",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1137789",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1141391",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1163165",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1164727",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "1262039",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "1283699",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "1318605",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "831001",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "858877",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "875320",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "882095",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "886982",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "895421",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "896159",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "909832",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "927628",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "927653",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "936468",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1001838",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1018724",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1035002",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1035267",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1045609",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1045810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1065280",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1075531",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1108524",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1137789",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1141391",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1163165",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1164727",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "1262039",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "1283699",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "1318605",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 2
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1321655",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1326801",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1327567",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1341439",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1373715",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1403161",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1413329",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-01.sql",
+   "kind": "face",
+   "cik": "1467373",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1510295",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1534701",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1535527",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-02.sql",
+   "kind": "face",
+   "cik": "1543151",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1551152",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1551182",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1571996",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-03.sql",
+   "kind": "face",
+   "cik": "1594805",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1596532",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1613103",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1652044",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-04.sql",
+   "kind": "face",
+   "cik": "1707925",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1730168",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1744489",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1835632",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-05.sql",
+   "kind": "face",
+   "cik": "1996810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "2012383",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "2023554",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "face-06.sql",
+   "kind": "face",
+   "cik": "2115436",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1321655",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1326801",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1327567",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 3
+  },
+  {
+   "file": "notes-00.sql",
+   "kind": "notes",
+   "cik": "1341439",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1373715",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1403161",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1413329",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-01.sql",
+   "kind": "notes",
+   "cik": "1467373",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1510295",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1534701",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1535527",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-02.sql",
+   "kind": "notes",
+   "cik": "1543151",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1551152",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1551182",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1571996",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-03.sql",
+   "kind": "notes",
+   "cik": "1594805",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1596532",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1613103",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1652044",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-04.sql",
+   "kind": "notes",
+   "cik": "1707925",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1730168",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1744489",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1835632",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-05.sql",
+   "kind": "notes",
+   "cik": "1996810",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "2012383",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "2023554",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  },
+  {
+   "file": "notes-06.sql",
+   "kind": "notes",
+   "cik": "2115436",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": null,
+   "outcome": "ok_alone",
+   "shard": 3
+  }
+ ],
+ "shards": {
+  "0": {
+   "lines": 339,
+   "bs": 339,
+   "notes": 339,
+   "face": 339
+  },
+  "1": {
+   "lines": 343,
+   "bs": 343,
+   "notes": 343,
+   "face": 343
+  },
+  "2": {
+   "lines": 328,
+   "bs": 328,
+   "notes": 328,
+   "face": 328
+  },
+  "3": {
+   "lines": 287,
+   "bs": 287,
+   "notes": 287,
+   "face": 287
+  }
+ }
+}
