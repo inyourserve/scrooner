@@ -231,9 +231,9 @@ jobs:
           fi
           if git diff --cached --quiet; then echo "$TK: open-shown unchanged"; exit 0; fi
           git commit -q -m "Open shown cells for $TK: $N (top100-flow run $GITHUB_RUN_ID)"
-          for i in 1 2 3 4 5 6 7 8 9 10; do
+          for i in $(seq 1 30); do
             git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && { echo pushed; exit 0; }
-            sleep $((RANDOM % 8 + 2))
+            sleep $((RANDOM % 20 + 3))
           done
           echo "::error::push failed after retries"; exit 1
       - name: Commit this company's coverage rows (summary row always; the flow exports only its own company)
@@ -249,14 +249,14 @@ jobs:
           if [ -z "$CV" ] || [ ! -f "$CV/top100-coverage-summary.csv" ]; then echo "no coverage export in the artifact: nothing to merge"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for i in 1 2 3 4 5 6 7 8 9 10; do
-            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 8 + 2)); continue; }
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
             python3 -I scripts/ci/top100_coverage_merge.py --from "$CV" --into data-team/strategy --company-ids "$CID" --summary-only || { echo "::error::merge failed"; exit 1; }
             git add data-team/strategy/top100-coverage-summary.csv
             git diff --cached --quiet && { echo "coverage summary row for $CID unchanged"; exit 0; }
             git commit -q -m "Coverage row for company $CID (top100-flow run $GITHUB_RUN_ID)"
             git push -q origin HEAD:main && { echo pushed; exit 0; }
-            sleep $((RANDOM % 8 + 2))
+            sleep $((RANDOM % 20 + 3))
           done
           echo "::error::push failed after retries"; exit 1
       - name: Commit certification files on PASS
@@ -276,9 +276,9 @@ jobs:
           git add data-team/strategy/certification/*-coverage-*.csv data-team/strategy/approvals/requests/*-request-*.md
           git commit -q -m "Certification request from top100-flow: company $CID passed the display gate ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
           # up to 16 jobs push at once; only new files are added, so a rebase never conflicts
-          for i in 1 2 3 4 5 6 7 8 9 10; do
+          for i in $(seq 1 30); do
             git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && { echo pushed; exit 0; }
-            sleep $((RANDOM % 8 + 2))
+            sleep $((RANDOM % 20 + 3))
           done
           echo "::error::push failed after retries"; exit 1
 
