@@ -634,7 +634,8 @@ def test_single_part_band_row_takes_the_sign_that_gives_the_resolver_value(
 ):
     """LIN other_income_expense_net FY2023: the band node prints the RAW pension element (-164M, a benefit) with no
     '-' while the resolver serves +164M of income (calc weight toward pretax). The part sign must be -1 so the served
-    value is the resolver's; polarity_flip rows and rows whose sign already fits are untouched. Mutation: make
+    value is the resolver's, polarity_flip rows included (UNP cash taxes is a signed concept serve-time polarity never
+    flips); a row whose sign already fits is untouched. Mutation: make
     orient_to_value return its parts unchanged and this fails."""
     node = (
         "NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent=-164000000.0000 [R3.htm:10]"
@@ -664,6 +665,14 @@ def test_single_part_band_row_takes_the_sign_that_gives_the_resolver_value(
             value="7",
             flags="roles;polarity_flip",
         ),
+        _row(
+            data_point="cash_paid_for_income_taxes",
+            decision="mapped",
+            period_end="2021-12-31",
+            nodes="IncomeTaxesPaidNet=-1658000000.0000 [NOTE] | why: w",
+            value="1658000000",
+            flags="roles;polarity_flip",
+        ),
     ]
     claims, rejects, _ = sl.read_claims(_write(tmp_path, *rows))
     assert rejects == []
@@ -671,7 +680,8 @@ def test_single_part_band_row_takes_the_sign_that_gives_the_resolver_value(
     assert signs == {
         ("other_income_expense_net", 2018): -1,
         ("other_income_expense_net", 2019): 1,
-        ("interest_expense", 2020): 1,
+        ("interest_expense", 2020): -1,
+        ("cash_paid_for_income_taxes", 2021): -1,
     }
 
 

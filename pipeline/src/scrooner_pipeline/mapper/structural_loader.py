@@ -297,15 +297,16 @@ def orient_to_value(
     negation (flags band / presented_within_expenses / calc_weight_flip: the line is signed by its calc weight toward
     pretax or its cash-flow role) carries no '-' on the node, so the parsed sign would serve the raw value (LIN
     other_income_expense_net 2017-25: NetPeriodicDefinedBenefits... -164M is +164M of income; the resolver serves
-    164M). The part sign is the one under which the printed node equals the resolver's value. polarity_flip rows are
-    left alone (common/polarity normalises them at serve time). Anything that does not fit exactly is unchanged. Pure."""
+    164M). The part sign is the one under which the printed node equals the resolver's value. polarity_flip rows
+    are oriented too: common/polarity normalises only fixed-positive concepts and only flips a negative, so a value that
+    arrives positive is never flipped twice, and a signed concept (cash_paid_for_income_taxes, UNP FY2021
+    IncomeTaxesPaidNet -1,658M in the note, paid 1,658M) is served as the resolver's value. Anything that does not fit exactly is unchanged. Pure."""
     if (
         decision != "mapped"
         or len(parts) != 1
         or len(node_values) != 1
         or not node_values[0]
         or not value
-        or "polarity_flip" in (flags or "").split(";")
     ):
         return parts
     try:
