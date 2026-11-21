@@ -1,9 +1,9 @@
 work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
 proof,23,CVX,1086,cash_and_equivalents,2018,2018-12-31,UNCHECKED,no_proof_row,the filing presents no cash_and_equivalents_resolved line on its BS,9342000000.0000,0000093410-20-000010,R5.htm,
 proof,23,CVX,1086,cash_and_equivalents,2020,2020-12-31,UNCHECKED,no_proof_row,CashAndCashEquivalentsAtCarryingValue = 5596000000.0000 exists in 0000093410-22-000066 but the balance sheet prints no column dated 2020-12-31; the statement face proves nothing here,5596000000,0000093410-22-000066,R4.htm,
-blank,23,CVX,1086,dividends_per_share,2015,2015-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
-blank,23,CVX,1086,dividends_per_share,2016,2016-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
-blank,23,CVX,1086,dividends_per_share,2017,2017-12-31,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
+blank,23,CVX,1086,dividends_per_share,2015,2015-12-31,BLANK,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,
+blank,23,CVX,1086,dividends_per_share,2016,2016-12-31,BLANK,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,
+blank,23,CVX,1086,dividends_per_share,2017,2017-12-31,BLANK,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,
 gap_fill,23,CVX,1086,gross_profit,2015,2015-12-31,REASON,structural_not_presented,"the income statement of this filing has no gross_profit node (no line holds the role in the filer's tree; rulings C1/S12) | absent in own filing 0000093410-16-000049: no face line on any statement, no undimensioned fact of 0 element(s), no later 10-K fact for the year; filing checks: calc LiabilitiesAndStockholdersEquity: ok;calc CashAndCashEquivalentsPeriodIncreaseDecrease: ok",,0000093410-16-000049,R2.htm,
 proof,23,CVX,1086,other_income_expense_net,2015,2015-12-31,UNCHECKED,no_proof_row,the filing presents no other_income_expense_net line on its IS,3868000000,0000093410-17-000013,R2.htm,
 blank,23,CVX,1086,shares_outstanding,2022,2022-12-31,BLANK,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,0000093410-23-000009,R8.htm,
