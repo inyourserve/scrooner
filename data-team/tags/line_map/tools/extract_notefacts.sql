@@ -80,7 +80,7 @@ company_filings as (
    )
 ),
 fl as (select id, accession, period from company_filings where form in ('10-K','20-F','40-F') and period>='2014-06-01'),
-tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
+tg as (select id, tag from fsn.tag where (not custom and (tag ~ (select r from rx) or tag like '%Accretion%')) or (custom and tag ~* '^PropertyPlants?AndEquipment\w*Net$')),   -- GS gs:PropertyPlantsAndEquipmentNet: the filer's own PP&E note element (GS FY2014-22 ppe_net)
 tgm as (select id, tag from fsn.tag where (custom and tag ~* '^AmortizationOf\w*Intangible\w*$') or (custom and tag ~* '^PropertyPlants?AndEquipment\w*Net$') or not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'NotesReceivableNet' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(PaymentsToAcquirePropertyPlantAndEquipment|PaymentsToAcquireProductiveAssets|PaymentsForCapitalImprovements|PaymentsToAcquireOtherPropertyPlantAndEquipment|PaymentsForConstructionInProcess)$' or tag ~ '^(InterestExpense\w*|InterestAndDebtExpense|FinancingInterestExpense)$' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
