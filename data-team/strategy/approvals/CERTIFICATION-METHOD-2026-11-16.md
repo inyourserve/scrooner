@@ -40,3 +40,12 @@ The checks above run as one tool, `pipeline/scripts/certify_display.py` (logic i
 - **Machine-readable certificate (2026-11-21):** each run also writes `<TICKER>-display-cert-<date>.json`, using schema `pipeline/src/scrooner_pipeline/certification/schemas/display_certificate.v1.schema.json` (`display-certificate/1`).
   - It holds every cell of the coverage file, with `evidence`: `drawn`, `census` or `sampled`. It also holds the request's versions and the bound.
   - The workflow pushes its outputs to branch `certify-out/run-<id>`, never main. The approver reviews that branch and commits the certificate to `data-team/strategy/approvals/certificates/<TICKER>-<coverage sha256 first 12>.json`, which the registry loader reads (rulings: CERT-REGISTRY-rulings-2026-11-21.md).
+- **Badges (founder decision 2026-11-22, doc 02 "one standard definition per metric, shown with a badge"; supersedes display rule 2):** when an export carries a `badge` column, every shown cell must carry a badge that `metrics/registry/data_points.csv` lists for its data point and sector. A `<placeholder>` step accepts any filled-in text. The rules, checked as a census over every shown cell:
+  - A data point that is not applicable to the sector (for example bank or insurer current_assets) has no shown value.
+  - A never_derive data point (EPS) is never `derived:`.
+  - A `derived:` value takes every part from one filing.
+  - Every `combined:` and `derived:` cell is value-checked, drawn or not. A combined cell must equal the printed combined line (same tag, period, duration and dimensions, on the cited R page). A derived cell must match its parts or its identity.
+- **Derived identities** (census over every derived cell, drawn or not):
+  - total_liabilities = assets - total equity incl. NCI - temporary equity. GILD FY2015: 51,716 - 19,113 - 2 = 32,601, the sum of its printed liability lines.
+  - shares_outstanding = shares issued - treasury shares, from the same filing.
+  - gross_profit = shown revenue - shown cost of revenue.

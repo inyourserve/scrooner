@@ -237,6 +237,12 @@ class Cell:
     hide_class: str | None = (
         None  # None when the export has no hide_class column (before main 532fc006)
     )
+    badge: str | None = (
+        None  # None when the export has no badge column (founder decision 2026-11-22)
+    )
+    sector: str = (
+        "general"  # data_points.csv sector; the export's sector column when present
+    )
 
     @property
     def hide_basis(self) -> str | None:
@@ -327,6 +333,8 @@ def read_coverage(path: Path) -> list[Cell]:
                 hide_class=(r["hide_class"] or "").strip()
                 if "hide_class" in r
                 else None,
+                badge=(r["badge"] or "").strip() if "badge" in r else None,
+                sector=(r.get("sector") or "general").strip() or "general",
             )
         )
     return cells
@@ -1197,8 +1205,10 @@ def certify(
     run = Run(ticker, str(coverage), p.sha, p.seed, dict(counts), gate=gate(p.cells))
     run.cells = p.cells
     run.hides += check_hide_reasons(p.cells)
+    run.gate += check_badges(p.cells)
     need_tags = (
         {t.tag for c in p.sample for t in terms(c)}
+        | {t.tag for c in p.cells if has_value_badge(c) for t in terms(c) if t.tag}
         | DEBT_FACE_TAGS
         | LEASE_TAGS
         | DERIVED_TAGS
@@ -1208,7 +1218,7 @@ def certify(
         c
         for c in p.cells
         if c.display == SHOWN
-        and is_derived(c)
+        and (is_derived(c) or has_value_badge(c))
         and c.key not in sampled
         and c.data_point != "total_debt"
     ]
@@ -1237,7 +1247,10 @@ def certify(
     run.debt = [check_debt(c, facts) for c in p.debt]
     # Census, not sample: every derived cell is checked against its identity (founder 2026-11-17
     # allows derived instants; each one is a computation the filing does not print).
-    run.derived = [check_derived(c, p.cells, facts) for c in derived_census]
+    run.derived = [
+        check_derived(c, p.cells, facts) if is_derived(c) else check_cell(c, facts)
+        for c in derived_census
+    ]
     year_ends = source.periodic_year_ends(cik)
     if not year_ends:
         # A wrong CIK would make every hide look evidenced: refuse instead.
@@ -1693,3 +1706,66 @@ def certificate(
         ],
         "cells": cells,
     }
+
+
+# ---------------------------------------------------------------- badges (founder decision 2026-11-22, doc 02)
+BADGE_VALUE_KINDS = ("combined:", "derived:")
+
+
+def has_value_badge(c: Cell) -> bool:
+    return bool(c.badge) and str(c.badge).startswith(BADGE_VALUE_KINDS)
+
+
+def badge_allowed(badge: str, allowed: tuple[str, ...]) -> bool:
+    """A registry badge with a <placeholder> accepts any filled-in text after its fixed prefix."""
+    for b in allowed:
+        if "<" in b:
+            prefix = b.split("<", 1)[0]
+            if badge.startswith(prefix) and badge[len(prefix) :].strip():
+                return True
+        elif badge == b:
+            return True
+    return False
+
+
+def _filings(c: Cell) -> set[str]:
+    accs = set()
+    for part in c.parts:
+        accs.add(part.accession)
+    if c.accession:
+        accs.add(c.accession)
+    return accs
+
+
+def check_badges(cells: list[Cell], defs: dict | None = None) -> list[Finding]:
+    """Gate census over every SHOWN cell of an export that carries a badge column: the badge is one
+    the registry (metrics/registry/data_points.csv) lists for the data point and sector; a
+    never_derive point (EPS) is never derived; a derived value comes from one filing. Values are
+    checked separately: every combined/derived cell is in the value census (certify)."""
+    if not any(c.badge is not None for c in cells):
+        return []
+    if defs is None:
+        from scrooner_pipeline.metrics.registry import load_data_points
+
+        defs = load_data_points()
+    out = []
+    for c in cells:
+        if c.display != SHOWN or c.badge is None:
+            continue
+        d = defs.get((c.data_point, c.sector))
+        why = ""
+        if not c.badge:
+            why = "shown cell has no badge"
+        elif d is None:
+            why = f"no data_points.csv row for {c.data_point}/{c.sector}"
+        elif not d.applies:
+            why = f"{c.data_point} is not applicable to sector {c.sector}: a shown value is wrong"
+        elif c.badge.startswith("derived:") and d.never_derive:
+            why = f"{c.data_point} is never derived (founder 2026-11-17), badge {c.badge!r}"
+        elif not badge_allowed(c.badge, d.badges):
+            why = f"badge {c.badge!r} is not a {c.data_point}/{c.sector} fallback step ({' | '.join(d.badges)})"
+        elif c.badge.startswith("derived:") and len(_filings(c)) > 1:
+            why = "derivation uses more than one filing (doc 02: one filing per derivation)"
+        if why:
+            out.append(Finding("badge", *c.key, "FAIL", why))
+    return out

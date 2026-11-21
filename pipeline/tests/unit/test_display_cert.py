@@ -1008,3 +1008,128 @@ def test_every_derived_cell_is_checked_not_only_drawn_ones(tmp_path):
         run.derived[0].cell.fiscal_year
     )  # a derived cell the draw did not pick
     assert dc.certify("T", "1", cov, Src(facts(undrawn)), seed="s").verdict == "FAIL"
+
+
+def _bcell(dp, badge, value="10", tag="X", parts=(), acc=ACC):
+    return dc.Cell(
+        dp,
+        "2023",
+        "2023-12-31",
+        dc.SHOWN,
+        D(value),
+        acc,
+        "R4",
+        tag,
+        tuple(parts),
+        "",
+        "",
+        badge,
+    )
+
+
+def test_badges_follow_the_real_registry():
+    """Founder decision 2026-11-22 (doc 02): registry metrics/registry/data_points.csv."""
+    ok = [
+        _bcell("shares_outstanding", "derived:shares_issued-treasury_shares", tag=""),
+        _bcell("inventory", "combined:inventories and supplies"),
+        _bcell("revenue", "as_printed"),
+    ]
+    assert dc.check_badges(ok) == []
+    bad = [
+        _bcell(
+            "diluted_eps", "derived:net_income/weighted_diluted_shares", tag=""
+        ),  # never derived
+        _bcell(
+            "inventory", "derived:raw+wip+finished", tag=""
+        ),  # not an inventory fallback step
+        _bcell("revenue", ""),  # shown with no badge
+        dc.Cell(
+            "current_assets",
+            "2023",
+            "2023-12-31",
+            dc.SHOWN,
+            D(1),
+            ACC,
+            "R2",
+            "AssetsCurrent",
+            (),
+            "",
+            "",
+            "as_printed",
+            "bank",
+        ),
+    ]
+    out = dc.check_badges(bad)
+    assert [f.data_point for f in out] == [
+        "diluted_eps",
+        "inventory",
+        "revenue",
+        "current_assets",
+    ]
+    assert "never derived" in out[0].detail and "not applicable" in out[3].detail
+
+
+def test_derived_badge_must_use_one_filing():
+    parts = dc.parse_parts(f"A=10@{ACC}#R4;-B=3@0000000002-24-000002#R4")
+    c = _bcell("ppe_net", "derived:ppe_gross-accumulated_depreciation", "7", "", parts)
+    assert [f.severity for f in dc.check_badges([c])] == ["FAIL"]
+
+
+def test_export_without_badge_column_skips_badge_checks():
+    assert dc.check_badges([cell()]) == []
+
+
+def test_every_combined_cell_is_value_checked_not_only_drawn_ones(tmp_path):
+    years = range(2015, 2025)
+    p = tmp_path / "cov.csv"
+    with open(p, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow([*HDR, "badge"])
+        for dp in ("revenue", "cfo", "net_income", "income_tax_expense"):
+            for y in years:
+                w.writerow(
+                    [
+                        dp,
+                        str(y),
+                        f"{y}-12-31",
+                        "100",
+                        ACC,
+                        "R4",
+                        "Revenues",
+                        "",
+                        dc.SHOWN,
+                        "as_printed",
+                    ]
+                )
+        for y in years:
+            w.writerow(
+                [
+                    "inventory",
+                    str(y),
+                    f"{y}-12-31",
+                    "50",
+                    ACC,
+                    "R2",
+                    "InventoryAndSupplies",
+                    "",
+                    dc.SHOWN,
+                    "combined:inventories and supplies",
+                ]
+            )
+
+    def facts(bad=None):
+        return [fact("Revenues", "100", ddate=f"{y}-12-31") for y in years] + [
+            fact(
+                "InventoryAndSupplies",
+                "51" if y == bad else "50",
+                ddate=f"{y}-12-31",
+                qtrs=0,
+                reports=("R2",),
+            )
+            for y in years
+        ]
+
+    run = dc.certify("T", "1", p, Src(facts()), seed="s")
+    assert run.derived and run.verdict == "PASS", [f.detail for f in run.gate]
+    undrawn = int(run.derived[0].cell.fiscal_year)
+    assert dc.certify("T", "1", p, Src(facts(undrawn)), seed="s").verdict == "FAIL"
