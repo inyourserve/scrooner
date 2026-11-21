@@ -917,3 +917,114 @@
 - ~ NonoperatingIncomeExpense: served_cells
 - ~ PaymentsForProceedsFromProductiveAssets: served_cells
 - ~ PaymentsToAcquirePropertyPlantAndEquipment: served_cells
+
+## 2026-11-21 (resolver-learn-2026-11-21@dde442482746e954d624a77fdbc65661d84f5cc3): 109 element changes, 28037 rows, coverage 64.4%
+- ~ AccountsAndOtherReceivablesNetCurrent: served_cells
+- ~ AccountsPayableCurrent: served_cells
+- ~ AccountsPayableTradeCurrent: served_cells
+- ~ AccountsReceivableNetCurrent: served_cells
+- ~ AllocatedShareBasedCompensationExpense: served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id, served_cells
+- + AmortizationOfPurchasedIntangiblesFromBusinessCombinations
+- ~ AmortizationofAcquiredIntangibleAssets: data_point
+- ~ AmortizationofIntangibleAssetsIncludingDiscontinuedOperation: data_point
+- ~ Assets: served_cells
+- ~ AssetsCurrent: served_cells
+- ~ AssetsDisposedOfByMethodOtherThanSaleInPeriodOfDispositionGainLossOnDisposition1: served_cells
+- ~ BroadcastProgrammingAndOther: data_point, served_cells
+- ~ BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1: data_point
+- ~ CapitalLeaseObligations: served_cells
+- ~ CashAndCashEquivalentsAtCarryingValue: served_cells
+- ~ CommercialPaper: served_cells
+- ~ CommonStockDividendsPerShareDeclared: served_cells
+- ~ CommonStockSharesIssued: served_cells
+- ~ CommonStockSharesOutstanding: served_cells
+- + CompensationExpenseForStockAppreciationRightsRestrictedStockPerformanceUnitsAndRestrictedStockUnits
+- ~ ComprehensiveIncomeNetOfTax: served_cells
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ CostOfGoodsSold: served_cells
+- ~ CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization: served_cells
+- ~ CostOfRevenue: served_cells
+- ~ CostOfServices: served_cells
+- ~ CostOfServicesExcludingDepreciationDepletionAndAmortization: data_point, served_cells
+- ~ CostsAndExpenses: served_cells
+- ~ DebtCurrent: served_cells
+- ~ DeferredCreditsAndOtherLiabilitiesNoncurrent: served_cells
+- ~ DepreciationAmortizationAndAccretionNet: served_cells
+- ~ DepreciationDepletionAndAmortization: served_cells
+- ~ DividendsOrSubcoDistributionsPaid: data_point, served_cells
+- ~ EarningsPerShareBasic: served_cells
+- ~ EarningsPerShareDiluted: served_cells
+- ~ FinanceLeaseLiability: served_cells
+- ~ FinanceLeaseLiabilityNoncurrent: data_point
+- ~ FinancialServicesRevenue: data_point
+- ~ GainLossOnInvestments: served_cells
+- ~ GainLossOnSaleOfBusiness: data_point
+- ~ Goodwill: served_cells
+- ~ GoodwillAndIndefiniteLivedIntangiblesImpairmentCharges: data_point, served_cells
+- ~ GoodwillImpairmentLossAndAssetsDisposedOfByMethodOtherThanSaleInPeriodOfDispositionLossOnDisposition: served_cells
+- ~ GrossProfit: served_cells
+- ~ IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest: served_cells
+- ~ IncomeLossFromEquityMethodInvestments: data_point, served_cells
+- ~ IncomeTaxExpenseBenefit: served_cells
+- ~ IncomeTaxesPaidNet: served_cells
+- ~ IncreaseDecreaseInAccountsAndNotesReceivable: served_cells
+- ~ IncreaseDecreaseInAccountsPayable: served_cells
+- ~ IncreaseDecreaseInAccountsPayableTrade: served_cells
+- ~ IncreaseDecreaseInAccountsReceivable: served_cells
+- ~ IncreaseDecreaseInInventories: served_cells
+- ~ IncreaseDecreaseInReceivables: served_cells
+- ~ IntangibleAssetsNetExcludingGoodwill: served_cells
+- ~ InterestExpenseDebt: served_cells
+- ~ InterestExpenseNonoperating: served_cells
+- ~ InterestExpenseOfFinancialProducts: data_point
+- ~ InterestIncomeExpenseNonoperatingNet: data_point
+- ~ InterestIncomeOperatingAndNonoperating: served_cells
+- ~ InterestPaidNet: served_cells
+- ~ InterestRevenueExpenseNet: served_cells
+- ~ Interestpaidnetofinterestreceived: served_cells
+- ~ InventoryNet: served_cells
+- ~ Liabilities: served_cells
+- ~ LiabilitiesCurrent: data_point, served_cells
+- ~ LongTermDebt: served_cells
+- ~ LongTermDebtAndCapitalLeaseObligations: served_cells
+- ~ LongTermDebtCurrent: served_cells
+- ~ LongTermDebtNoncurrent: data_point, served_cells
+- ~ MinorityInterest: served_cells
+- ~ NetCashProvidedByUsedInFinancingActivities: served_cells
+- ~ NetCashProvidedByUsedInInvestingActivities: served_cells
+- ~ NetCashProvidedByUsedInOperatingActivities: served_cells
+- ~ NetIncomeLoss: served_cells
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ OilAndGasRevenue: data_point
+- ~ OperatingExpenses: served_cells
+- ~ OperatingIncomeLoss: served_cells
+- ~ OtherCostOfOperatingRevenue: served_cells
+- ~ OtherCostOfServices: data_point, served_cells
+- ~ OtherIncome: data_point
+- ~ OtherNonoperatingExpense: served_cells
+- ~ OtherNonrecurringIncomeExpense: served_cells
+- ~ PaymentsForRepurchaseOfCommonStock: served_cells
+- ~ PaymentsOfDividends: served_cells
+- ~ PaymentsOfOrdinaryDividends: served_cells
+- ~ PaymentsToAcquireProductiveAssets: served_cells
+- ~ PaymentsToAcquirePropertyPlantAndEquipment: served_cells
+- ~ PropertyPlantAndEquipmentNet: served_cells
+- ~ ReceivablesNetCurrent: served_cells
+- ~ ResearchAndDevelopmentExpense: served_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: served_cells
+- ~ Revenues: served_cells
+- ~ SalesRevenueGoodsNet: data_point
+- ~ SalesRevenueNet: served_cells
+- ~ SellingGeneralAndAdministrativeExpense: served_cells
+- ~ ShareBasedCompensation: served_cells
+- ~ StockOptionPlanExpense: data_point, served_cells
+- ~ StockholdersEquity: served_cells
+- ~ StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest: served_cells
+- ~ SubsidiaryEarningsFromContinuingOperations: served_cells
+- ~ TradeReceivablesHeldForSaleAmount: data_point, served_cells
+- ~ TreasuryStockCommonShares: served_cells
+- ~ TreasuryStockShares: served_cells
+- ~ VenezuelaDeconsolidationCharge: served_cells
+- ~ WeightedAverageNumberOfDilutedSharesOutstanding: served_cells
+- ~ WeightedAverageNumberOfSharesOutstandingBasic: served_cells
