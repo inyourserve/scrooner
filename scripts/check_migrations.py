@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -72,8 +73,30 @@ def check(migration_dir: Path) -> tuple[list[str], list[int]]:
     return failures, versions
 
 
+def check_live(db_url: str) -> list[str]:
+    """Repo files vs ops.migration_ledger (migration 0131): fail on a name or hash disagreement."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import migration_ledger as ml
+
+    conn = ml.connect_readonly(db_url)
+    try:
+        ledger = ml.fetch_ledger(conn)
+    except RuntimeError as exc:
+        return [str(exc)]
+    finally:
+        conn.rollback()
+        conn.close()
+    return ml.compare(ml.repo_files(), ledger)
+
+
 def main() -> int:
     failures, versions = check(MIGRATION_DIR)
+    if "--live" in sys.argv[1:]:
+        db_url = os.environ.get("DATABASE_URL")
+        if not db_url:
+            failures.append("--live needs DATABASE_URL")
+        else:
+            failures.extend(check_live(db_url))
     if failures:
         print("\n".join(failures), file=sys.stderr)
         return 1

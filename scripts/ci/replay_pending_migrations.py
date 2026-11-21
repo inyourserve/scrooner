@@ -71,6 +71,11 @@ BEHAVIOUR_SMOKES: list[tuple[str, str, str, bool]] = [
              "values (1, 'x', '2024-12-31', 'FY', 'OPEN', 'pre_filing')", "cell_display_state_hide_class_iff_hidden", True),
     ("0130", "insert into analytics.cell_display_state (company_id, data_point, period_end, grain, display, hide_class) "
              "values (1, 'x', '2024-12-31', 'FY', 'HIDDEN_YEAR', 'made_up')", "cell_display_state_hide_class_check", True),
+    ("0131", "insert into ops.migration_ledger (number, filename, sha256, applied_by) values (1, '0002_x.sql', repeat('a', 64), 'x')",
+     "migration_ledger_number_matches_filename", True),
+    ("0132", "insert into analytics.display_cell_certificate (company_id, data_point, period_end, grain, shown_value, proof_version, "
+            "accession, sample_hash, certificate_path, approver, certified_at, invalidated_at) values (1, 'x', '2024-12-31', 'FY', 1, 'v', "
+            "'0000000000-00-000000', repeat('a', 64), 'p', 'a', now(), now())", "display_cell_certificate_invalidation_pair", True),
 ]
 
 

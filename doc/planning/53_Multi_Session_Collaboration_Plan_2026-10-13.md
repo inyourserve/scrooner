@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0131.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0133.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -84,6 +84,20 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0128 | Data Engineer (company x tag x metric library) | `analytics.tag_library_entry` (tag x statement x data point x role: rule, polarity, family, deprecated_by/replaces, proven/certified cells, companies mapped, known problems, last_verified), `analytics.resolver_decision` (newest resolver-all110 cells), view `analytics.company_tag_metric` (company x tag -> data point -> metric). Founder direction via Dhairya 2026-11-16 | file on main at `pipeline/db/pending/0128_company_tag_metric_library.sql` (pending, not in `migrations/`, because 0124-0127 are not all on main); NOT applied; apply needs the founder's typed words; loader `scrooner-map rebuild-company-tag-library` + `pipeline-tag-library-rebuild.yml` **APPLIED to dev Supabase 2026-11-16 18:59 UTC (founder typed approval 2026-11-17, doc 02 at 93c8d6ba); file moved to `pipeline/db/migrations/`.** |
 | 0129 | Data Engineer (advisor fixes) | fixed `search_path = pg_catalog, <schema>` on 8 trigger functions (advisor `function_search_path_mutable`); metadata-only | file `pipeline/db/pending/0129_trigger_function_search_path.sql`; replayed in CI; NOT applied; needs the founder's typed words (FOUNDER-QUEUE.md) |
 | 0130 | Data Engineer (per-cell display state) | `analytics.cell_display_state` (company x data point x period end x grain: SHOWN_VALUE / HIDDEN_ROW / HIDDEN_YEAR / OUT / OPEN, hide_class CHECK, evidence, r_page, resolver_version, run_id); supersedes dropped 0127. Founder approval 2026-11-17 (doc 02) | file `pipeline/db/pending/0130_cell_display_state.sql`; replayed in CI; writer `mapper/cell_display_state.py` via `top100_coverage.py --write-display-state`; APPLIED to dev Supabase 2026-11-17 (founder approval 2026-11-17, doc 02) by file only, before 0129 (not approved); the file stays in `pending/` because moving it to `migrations/` would break contiguity while 0129 is pending; move it once 0129 lands |
+| 0131 | Data Engineer (review-response P1.2) | `ops.migration_ledger` (number, filename, sha256, applied_at, applied_by, evidence); same-transaction ledger row; `scripts/check_migrations.py --live` | file `pipeline/db/pending/0131_ops_migration_ledger.sql` on branch `work/ops/ledger-and-cert-registry-2026-11-21`; replayed in CI; NOT applied; needs the founder's typed words |
+| 0132 | Data Engineer (review-response P1.3) | `analytics.display_cell_certificate` (+ status view with invalidation by join, `invalidate_display_cell_certificates()`, `company_certification_derived`); `company_certification` (0097) deprecated by comment | file `pipeline/db/pending/0132_display_cell_certificate.sql`, same branch; depends on 0130; NOT applied; needs the founder's typed words |
+
+### Applying a migration (ledger rule, 0131)
+
+Once `ops.migration_ledger` exists, a migration and its ledger row go in ONE transaction, so a failed migration leaves no row and an applied one is always recorded with the hash of the exact file that ran:
+
+```
+f=pipeline/db/migrations/NNNN_name.sql   # or pipeline/db/pending/ until contiguous
+{ cat "$f"; echo; python3 scripts/migration_ledger.py row "$f" --by "<applier>"; } | psql "$DATABASE_URL" --single-transaction --set ON_ERROR_STOP=1
+python3 scripts/check_migrations.py --live      # fails when repo files and ledger disagree on name or hash
+```
+
+First time only: 0131 itself is applied with the same command (the row insert runs after the file creates the table), then `python3 scripts/migration_ledger.py backfill --emit-sql` (read-only probe, one connection, statement_timeout set) proposes rows for the migrations already live; a human reviews the PARTIAL / ABSENT / UNPROBEABLE ones before the emitted `begin; insert ...; commit;` is run under the founder's typed words. Backfilled rows carry `evidence = 'probe'` and an `applied_at` that is the backfill time, not the real apply time. Editing an applied file changes its hash and `--live` fails: add a new migration instead.
 
 ## scrooner-98 queue (lane A)
 
