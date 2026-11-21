@@ -175,3 +175,40 @@ def test_loader_predictor_slices_reload_by_concept_and_the_guard(isolated_databa
         dl.load(conn, paths, apply=True, no_filing_ciks={"77"})
         nf = [r for r in snap(conn, cid) if r[5] == ep.NO_FILING_REASON]
         assert nf and nf[0][2] == "2015-01-01"
+
+
+def test_uncovered_pieces():
+    d = date
+    assert eg.uncovered(d(2015, 1, 1), d(2015, 12, 31), []) == [(d(2015, 1, 1), d(2015, 12, 31))]
+    assert eg.uncovered(d(2015, 1, 1), d(2015, 12, 31), [(d(2014, 7, 1), d(2015, 12, 31))]) == []
+    assert eg.uncovered(d(2015, 1, 1), None, [(d(2015, 3, 1), d(2015, 3, 31))]) == [
+        (d(2015, 1, 1), d(2015, 2, 28)), (d(2015, 4, 1), None)]
+
+
+@pytest.mark.integration
+def test_guard_beside_a_tagless_reason_row_of_the_same_concept(isolated_database_url, tmp_path: Path):
+    """Run 44939074130 (PG/VZ/T stockholders_equity FY2015): structural-load keeps its not_presented row beside the
+    predictor's value slice ('both kept'); holding that slice must not insert an overlapping tagless guard row
+    (trigger company_tag_map_no_overlap raised and era-guard exited 41)."""
+    (tmp_path / "ZZE-docmap-2026-11-12.csv").write_text(CSV)
+    (tmp_path / "ZZE-docmap-2026-11-12.md").write_text(MD)
+    eras = tmp_path / "eras"
+    write_preds(eras)
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = conn.execute("insert into core.company (cik, company_name, primary_ticker) values ('0000000077', 'Z', 'ZZE') returning id").fetchone()[0]
+        conn.commit()
+        assert dl.load(conn, sorted(tmp_path.glob("*-docmap-*.csv")), apply=True, predictor_eras=eras)["blocked"] == {}
+        rev = conn.execute("select id from analytics.canonical_concept where name = 'revenue_sanity_resolved'").fetchone()[0]
+        # the structural reason row covers FY2022 and the first half of FY2023 beside the predictor value slices
+        conn.execute("insert into analytics.company_tag_map (company_id, cik, stmt, decision, canonical_concept_id, era_from, era_to, "
+                     "reason, reason_class, decided_by, rule_id) values (%s, '0000000077', 'IS', 'not_presented', %s, '2022-01-01', "
+                     "'2023-06-30', 'not on the face', 'not_presented', 'structural_resolver', 'company_tag_map.structural@1')", (cid, rev))
+        conn.commit()
+        rep = eg.hold_unproven(conn, [cid], apply=True)
+        assert rep["applied"] and rep["held"] == 6 and rep["covered"] == 1
+        guard = conn.execute("select era_from::text, era_to::text from analytics.company_tag_map where company_id = %s "
+                             "and decided_by = %s and canonical_concept_id = %s order by era_from", (cid, eg.GUARD_BY, rev)).fetchall()
+        # revenue: FY2021 held whole, FY2022 already explained (no guard row), FY2023 only the uncovered half
+        assert guard == [("2021-01-01", "2021-12-31"), ("2023-07-01", "2023-12-31")]
+        assert len([r for r in snap(conn, cid) if r[0] == eg.GUARD_BY]) == 5  # + gross_profit FY2021-23
+        assert not [r for r in snap(conn, cid) if r[0] == ep.PREDICTOR_BY]
