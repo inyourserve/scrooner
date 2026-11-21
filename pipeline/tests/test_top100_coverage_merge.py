@@ -9,7 +9,11 @@ import subprocess
 import sys
 
 import pytest
-from scrooner_pipeline.mapper.top100_coverage import Company, select_companies, write_csv
+from scrooner_pipeline.mapper.top100_coverage import (
+    Company,
+    select_companies,
+    write_csv,
+)
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
@@ -375,3 +379,72 @@ def test_write_csv_creates_a_missing_output_dir(tmp_path):
     out = tmp_path / "cov" / "top100-coverage-summary.csv"
     write_csv(out, [{"rank": 1, "ticker": "NVDA"}], ["rank", "ticker"])
     assert out.read_text().splitlines() == ["rank,ticker", "1,NVDA"]
+
+
+def test_an_export_appending_badge_and_sector_migrates_the_committed_header(tmp_path):
+    """2026-11-22: the export appends badge and sector (top100_coverage.CSV_COLUMNS); the committed file takes the longer
+    header with those columns blank for the other companies, and an older export (without them) still merges."""
+    into = tmp_path / "strategy"
+    _write(
+        into / merge.FULL,
+        FH,
+        [
+            {
+                "rank": "1",
+                "ticker": "NVDA",
+                "company_id": "2733",
+                "data_point": "revenue",
+                "period_end": "2025-01-31",
+                "display": "SHOWN_VALUE",
+            }
+        ],
+    )
+    _write(into / merge.SUMMARY, SH, [])
+    src = tmp_path / "export"
+    _write(
+        src / merge.FULL,
+        FH + ["badge", "sector"],
+        [
+            {
+                "rank": "2",
+                "ticker": "AAPL",
+                "company_id": "3",
+                "data_point": "revenue",
+                "period_end": "2025-09-30",
+                "display": "SHOWN_VALUE",
+                "badge": "as_printed",
+                "sector": "general",
+            }
+        ],
+    )
+    _write(src / merge.SUMMARY, SH, [])
+    assert merge.main(["--from", str(src), "--into", str(into)]) == 0
+    got = _read(into / merge.FULL)
+    assert list(got[0]) == FH + ["badge", "sector"]
+    assert [(r["company_id"], r["badge"]) for r in got] == [
+        ("2733", ""),
+        ("3", "as_printed"),
+    ]
+    old = tmp_path / "old"
+    _write(
+        old / merge.FULL,
+        FH,
+        [
+            {
+                "rank": "1",
+                "ticker": "NVDA",
+                "company_id": "2733",
+                "data_point": "revenue",
+                "period_end": "2026-01-31",
+                "display": "OPEN",
+            }
+        ],
+    )
+    _write(old / merge.SUMMARY, SH, [])
+    assert merge.main(["--from", str(old), "--into", str(into)]) == 0
+    got = _read(into / merge.FULL)
+    assert (
+        list(got[0]) == FH + ["badge", "sector"]
+        and got[0]["period_end"] == "2026-01-31"
+        and got[1]["badge"] == "as_printed"
+    )

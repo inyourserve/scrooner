@@ -827,3 +827,77 @@ def test_fy_periods_votes_the_company_year_style():
     got = _fy_periods(Conn(), [1, 2], D(2026, 11, 21), ann)
     assert got[(1, 2016, "duration")][1] == D(2016, 10, 30)
     assert got[(2, 2019, "duration")][1] == D(2019, 12, 31)
+
+
+def test_derived_cell_carries_its_signed_parts_with_accession_and_page():
+    """certify_display (founder 2026-11-22 registry badges) needs the parts of a derived cell, each with accession
+    and R page: gross profit = revenue - cost of revenue from one filing. A sum that misses the shown value
+    (liabilities = assets - parent equity with NCI on the face) gives no parts: the identity check stays."""
+    from scrooner_pipeline.mapper.top100_coverage import DERIVED_FAMILY, resolve_derived
+
+    rows = [
+        {**_row("revenue", val="20"), "tag": "Revenues", "r_page": "R4.htm"},
+        {
+            **_row("cost_of_revenue", val="8"),
+            "tag": "us-gaap:CostOfRevenue",
+            "r_page": "R4",
+        },
+        {
+            **_row(
+                "gross_profit", cls="UNCHECKED", acc="", fam=DERIVED_FAMILY, val="12"
+            ),
+            "tag": "",
+        },
+    ]
+    resolve_derived(rows)
+    assert rows[2]["class"] == "DERIVED"
+    assert rows[2]["parts"] == "Revenues=20@A#R4;-CostOfRevenue=8@A#R4"
+    rows = [
+        {**_row("total_assets", val="100"), "tag": "Assets"},
+        {**_row("stockholders_equity", val="40"), "tag": "StockholdersEquity"},
+        {
+            **_row(
+                "total_liabilities",
+                cls="UNCHECKED",
+                acc="",
+                fam=DERIVED_FAMILY,
+                val="55",
+            ),
+            "tag": "",
+        },
+    ]
+    resolve_derived(rows)
+    assert rows[2]["class"] == "DERIVED" and rows[2].get("parts", "") == ""
+
+
+def test_export_carries_badge_and_sector_columns():
+    from scrooner_pipeline.mapper import top100_coverage as t100
+
+    assert t100.CSV_COLUMNS[-2:] == ["badge", "sector"]
+    rows = [
+        {
+            "ticker": "T",
+            "data_point": "revenue",
+            "period_end": "2024-12-31",
+            "display": t100.SHOWN_VALUE,
+            "_sector": "bank",
+        },
+        {
+            "ticker": "T",
+            "data_point": "revenue",
+            "period_end": "2023-12-31",
+            "display": t100.OPEN,
+        },
+    ]
+    from datetime import date
+
+    t100.attach_badges(
+        rows,
+        {
+            ("T", "revenue"): [
+                (date(2024, 12, 31), {"decision": "mapped", "flags": "", "nodes": ""})
+            ]
+        },
+    )
+    assert (rows[0]["badge"], rows[0]["sector"]) == ("as_printed", "bank")
+    assert (rows[1]["badge"], rows[1]["sector"]) == ("", "general")

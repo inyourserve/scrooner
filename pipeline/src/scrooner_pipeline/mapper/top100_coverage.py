@@ -134,6 +134,8 @@ CSV_COLUMNS = [
     "hide_class",
     "stated_zero",
     "text_stated",
+    "badge",  # registry/data_points.csv fallback step of a shown cell (metrics/registry.badge_for); certify_display checks it
+    "sector",  # the data_points.csv sector template the badge was read under
 ]
 
 
@@ -1314,6 +1316,71 @@ def build_rows(
     return rows, note
 
 
+# the sign of each DERIVED_INPUTS input in the identity (gross profit = revenue - cost; liabilities = assets - equity)
+DERIVED_INPUT_SIGNS = {"gross_profit": (1, -1), "total_liabilities": (1, -1)}
+
+
+def derived_input_parts(r: dict[str, Any], inputs: list[dict[str, Any] | None]) -> str:
+    """The export's parts text (`[-]tag=value@accession#R<page>` joined by ';') of a cell derived from its proven
+    inputs (certify_display reads it, founder 2026-11-22 registry badges), or '' when it cannot be stated exactly:
+    every input must sit in ONE accession with an R page and a single tag (or its own parts), and the signed parts
+    must sum to the shown value. An input sum that misses the value (total_liabilities = assets - parent equity when
+    the balance sheet also prints NCI or temporary equity) gives '' and the cell stays with its identity check. Pure."""
+    signs = DERIVED_INPUT_SIGNS.get(r["data_point"])
+    if not signs or len(inputs) != len(signs) or r.get("shown_value", "") == "":
+        return ""
+    out: list[tuple[int, str, Decimal, str, str]] = []
+    for sg, i in zip(signs, inputs, strict=True):
+        if (
+            i is None
+            or not i.get("_shown_acc")
+            or not i.get("r_page")
+            or i.get("shown_value", "") == ""
+        ):
+            return ""
+        acc = i["_shown_acc"]
+        if i.get("parts"):
+            for raw in str(i["parts"]).split(";"):
+                m = re.match(
+                    r"^(-?)([A-Za-z0-9_]+(?:\[[^\]]*\])?)=(-?[0-9.]+)@([0-9-]+)#(R?\d+)$",
+                    raw.strip(),
+                )
+                if not m or m.group(4) != acc:
+                    return ""
+                out.append(
+                    (
+                        sg * (-1 if m.group(1) else 1),
+                        m.group(2),
+                        Decimal(m.group(3)),
+                        acc,
+                        m.group(5),
+                    )
+                )
+            continue
+        tags = [t for t in (i.get("tag") or "").split(",") if t]
+        if len(tags) != 1:
+            return ""
+        page = re.match(r"^R?(\d+)", str(i["r_page"]))
+        if not page:
+            return ""
+        out.append(
+            (
+                sg,
+                tags[0].split(":")[-1],
+                Decimal(str(i["shown_value"])),
+                acc,
+                f"R{page.group(1)}",
+            )
+        )
+    if len({o[3] for o in out}) != 1 or sum(
+        sg * v for sg, _t, v, _a, _p in out
+    ) != Decimal(str(r["shown_value"])):
+        return ""
+    return ";".join(
+        f"{'-' if sg < 0 else ''}{t}={_num(v)}@{a}#{pg}" for sg, t, v, a, pg in out
+    )
+
+
 def _vkey(v: Any) -> str:
     return format(Decimal(str(v)).normalize(), "f")
 
@@ -1542,6 +1609,8 @@ def resolve_derived(
         first = host or next((i for i in inputs if i is not None), None)
         if ok and first is not None:
             r["class"], r["reason_code"] = "DERIVED", DERIVED_CODE
+            r["parts"] = derived_input_parts(r, inputs)
+            r["_parts_blank"] = 0
             r["reason"] = (
                 f"{r['data_point']} is not printed; derived from {r['evidence']}, "
                 "inputs proven against one filing"
@@ -2057,6 +2126,8 @@ def attach_badges(
     for r in rows:
         r["_badge"] = None
         r["_badge_issue"] = ""
+        r["badge"] = ""
+        r["sector"] = r.get("_sector") or "general"
         if r.get("display") != SHOWN_VALUE:
             continue
         end = date.fromisoformat(r["period_end"])
@@ -2068,7 +2139,7 @@ def attach_badges(
             r["_badge_issue"] = "no_resolver_row"
             continue
         try:
-            r["_badge"] = reg.badge_for(
+            r["_badge"] = r["badge"] = reg.badge_for(
                 r["data_point"], r.get("_sector") or "general", hit
             )
         except reg.BadgeUndecided as exc:

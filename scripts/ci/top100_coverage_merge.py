@@ -11,7 +11,10 @@ mid-reload (values rewritten, proof not yet rerun) and an export of that moment 
 (0.0% and 41% snapshots went to main on 2026-11-16).
 
 Each target file is written to a temp file next to it and renamed into place, so a reader never sees a partial file.
-Header columns must match between export and target; a mismatch is an error (exit 2), never a silent reshaping.
+Header columns must match between export and target; a mismatch is an error (exit 2), never a silent reshaping. The one
+exception is a header that only APPENDS listed columns (APPENDABLE: badge and sector, 2026-11-22) to the other (an
+export written by newer code, or by older code still in flight): the longer header is kept and the rows without those columns carry them
+blank; the report names the columns.
 Summary rows stay sorted by rank. Exit 0 and a one-line report per file; nothing else is touched.
 """
 
@@ -26,6 +29,8 @@ from pathlib import Path
 
 SUMMARY = "top100-coverage-summary.csv"
 FULL = "top100-coverage.csv"
+# columns a newer export may append (top100_coverage.CSV_COLUMNS, certify_display badge checks of 2026-11-22)
+APPENDABLE = ("badge", "sector")
 
 
 def parse_ids(raw: str | None) -> set[str] | None:
@@ -106,12 +111,31 @@ def merge_file(
     src: Path, dst: Path, only: set[str] | None, keep: set[str], sort_rank: bool
 ) -> str:
     sh, srows = read_csv(src)
+    added: list[str] = []
     if dst.exists():
         dh, drows = read_csv(dst)
         if dh != sh:
-            raise SystemExit(
-                f"header mismatch for {dst.name}: export {sh} vs committed {dh}"
-            )
+            if (
+                len(sh) > len(dh)
+                and sh[: len(dh)] == dh
+                and set(sh[len(dh) :]) <= set(APPENDABLE)
+            ):
+                added, dh = (
+                    sh[len(dh) :],
+                    sh,
+                )  # the export appends columns: committed rows carry them blank
+            elif (
+                len(dh) > len(sh)
+                and dh[: len(sh)] == sh
+                and set(dh[len(sh) :]) <= set(APPENDABLE)
+            ):
+                added = dh[
+                    len(sh) :
+                ]  # an older export: its rows carry the committed file's newer columns blank
+            else:
+                raise SystemExit(
+                    f"header mismatch for {dst.name}: export {sh} vs committed {dh}"
+                )
     else:
         dh, drows = sh, []
     out, replaced, kept = merge_rows(drows, srows, only, keep)
@@ -121,6 +145,7 @@ def merge_file(
     return (
         f"{dst.name}: replaced {len(replaced)} company(ies) {sorted(replaced, key=int)}, "
         f"kept {len(kept)} in flight {sorted(kept, key=int)}, {len(out)} rows"
+        + (f"; appended columns blank where absent: {added}" if added else "")
     )
 
 

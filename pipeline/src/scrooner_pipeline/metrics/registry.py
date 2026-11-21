@@ -513,6 +513,11 @@ def badge_for(
     flags = resolver_flags(resolver_row)
     derived = [b for b in d.badges if b.startswith("derived:")]
     where = f"{dp}/{sector} {decision} {sorted(flags)}"
+    # the resolver names the step it took (resolver .89: flag `derived:<formula>` from this file's badges, e.g. opex
+    # X117 derived:total_costs_and_expenses-cost_of_revenue vs X89 derived:sum(printed operating lines)): that step
+    stepped = [f for f in flags if f.startswith("derived:") and f in d.badges]
+    if decision in ("component_sum", "derived_not_printed") and len(stepped) == 1:
+        return stepped[0]
     if decision == "derived_not_printed" or "DERIVED" in flags:
         named = [DERIVED_FLAG_BADGES[f] for f in flags if f in DERIVED_FLAG_BADGES]
         if named:

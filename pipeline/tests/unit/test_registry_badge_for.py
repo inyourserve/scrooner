@@ -46,7 +46,7 @@ def test_every_printed_step_gives_as_printed():
             "total_liabilities",
             "derived_not_printed",
             "core;DERIVED",
-            "derived:liabilities_and_equity-total_equity",
+            "derived:liabilities_and_equity-total_equity-temporary_equity",
         ),
         (
             "income_before_tax",
@@ -231,3 +231,25 @@ def test_every_badge_from_the_live_resolver_output_is_a_step_of_its_data_point()
     assert "as_printed" in seen
     assert any(b.startswith("derived:") for b in seen)
     assert any(b.startswith("combined:") for b in seen)
+
+
+def test_a_derived_flag_on_the_resolver_row_names_the_step():
+    """resolver .89: an opex component_sum names its step in a `derived:` flag (X117 costs total - COR vs X89 sum of
+    the printed operating lines); without a flag the only additive step is the answer."""
+    row = _row(
+        "component_sum", "roles;derived:total_costs_and_expenses-cost_of_revenue"
+    )
+    assert (
+        reg.badge_for("operating_expenses", "general", row)
+        == "derived:total_costs_and_expenses-cost_of_revenue"
+    )
+    assert (
+        reg.badge_for("operating_expenses", "general", _row("component_sum", "roles"))
+        == "derived:sum(printed operating lines)"
+    )
+    # a flag that is not one of the data point's steps is ignored
+    row = _row("component_sum", "roles;derived:revenue-cost_of_revenue")
+    assert (
+        reg.badge_for("operating_expenses", "general", row)
+        == "derived:sum(printed operating lines)"
+    )
