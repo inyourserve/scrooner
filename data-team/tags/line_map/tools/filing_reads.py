@@ -33,6 +33,17 @@ OUT_COLS = ['cik', 'ticker', 'data_point', 'period_end', 'fiscal_year', 'outcome
 HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed)\b')
 BLANK = ('combined', 'not_presented', 'no_role', 'not_in_template', 'derived', 'open')
 ACC_RE = re.compile(r'\d{10}-\d{2}-\d{6}')
+BADGE_RE = re.compile(r'^\s*badge=(\w+):([^;]*)')
+
+
+def badge_flag(t):
+    """X113 (.88): a read whose rule_proposal starts 'badge=<kind>:<label>' (founder 2026-11-22: a printed combined line is a
+    VALUE with a badge, e.g. 'badge=combined:Other income/(expense), net') -> the flag '<kind>:<label>' carried to display.
+    Flags are split on ';' and ',' downstream, so those two characters inside the label are percent-encoded (%3B, %2C)."""
+    m = BADGE_RE.match(t.get('rule_proposal') or '')
+    if not m: return ''
+    label = m.group(2).strip().replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+    return f"{m.group(1)}:{label}" if label else ''
 
 
 def _unit(v):
@@ -82,14 +93,15 @@ def apply(rows, path=None, log=None):
         rv = D(r['value']) if r.get('value') not in (None, '') and r['status'] not in BLANK else None
         if t['outcome'] == 'VALUE':
             ev = D(t['value'])
+            badge = badge_flag(t)
             if rv is not None and rv == ev:
-                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read') if x)
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read', badge) if x)
                 if log is not None: log.append(('agree', r['ticker'], r['data_point'], r['period_end']))
                 continue
             if rv is not None and _unit(ev) > _unit(rv) and abs(rv - ev) <= _unit(ev) / 2:
                 # ruling c (Dhairya 2026-11-21): a coarser rounding of the same figure never replaces the finer value (XOM sbc FY2024 835M, not 0.8B;
                 # MRVL total_debt FY2022 4,547,977k over the FY2023 10-K's 4,548.0M). The read agrees; the finer node stays.
-                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read') if x)
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read', badge) if x)
                 if log is not None: log.append(('agree_finer', r['ticker'], r['data_point'], r['period_end']))
                 continue
             rounding = False
@@ -99,10 +111,17 @@ def apply(rows, path=None, log=None):
                      quote=t['quote'], locator=_locator(t), quote_period=str(r['period_end']),
                      why=(f"filing read ({t['source_file']}): the {('later print rounds the figure the resolver served (' + was + '); the latest print wins (ruling e, 2026-11-21)') if rounding else ('reader found the value in the filing where the resolver had ' + was)}"
                           + (f"; reader note: {t['rule_proposal']}" if t.get('rule_proposal') else '')))
-            r['flags'] = ';'.join(x for x in ('filing_read', 'text_stated', 'rounding_vintage' if rounding else '', f"replaces:{was.split('=')[0]}") if x)
+            # X118 (.88): a read of 0 is served under the stated_zero contract (structural_loader refuses a text_stated 0: TMUS/DELL DPS, GOOG dividends)
+            r['flags'] = ';'.join(x for x in ('filing_read', 'stated_zero' if ev == 0 else 'text_stated', 'rounding_vintage' if rounding else '', f"replaces:{was.split('=')[0]}", badge) if x)
             if log is not None: log.append(('rounding_vintage' if rounding else 'value', r['ticker'], r['data_point'], r['period_end'], was, str(ev)))
         elif t['outcome'] == 'HIDE':
             hc = t.get('hide_class') or ''
+            if hc == 'line_presented_combined' and rv is not None and any(f.startswith('derived:') for f in (r.get('flags') or '').split(';')):
+                # X117 (.88): the registry's fallback order (metrics/registry/data_points.csv, founder 2026-11-22) derives the cell from
+                # the combined line's own filing (badge derived:<formula>); the 'combined -> hide' read is reversed by that decision
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read_hide_reversed') if x)
+                if log is not None: log.append(('hide_reversed', r['ticker'], r['data_point'], r['period_end'], hc))
+                continue
             if r['status'] in ('derived',):   # counted, not served: the hide class is recorded, the row stays
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read_hide', hc) if x)
                 r.update(quote=t['quote'], locator=_locator(t))

@@ -88,7 +88,51 @@ def apply_opex_costs_total_less_cor(rows, filings=()):
         v = D(m.group(2)) - D(cor['value'])
         r.update(status='component_sum', value=v, tags='printed totals', nodes=f"CostsAndExpenses={m.group(2)} [{m.group(3)}]; -cost_of_revenue={cor['value']}",
                  why="operating expenses = total costs and expenses - cost of revenue; the lines printed between the costs total and operating income (other income, impairment) are not operating expenses (wave 4A ruling)")
-        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals', OPEX_BADGE_TC) if y)
+    return rows
+
+
+OPEX_BADGE_TC = 'derived:total_costs_and_expenses-cost_of_revenue'   # registry badge (metrics/registry/data_points.csv, fa369851)
+OTHER_IN_TOTAL_LB = re.compile(r'(?i)other \(?(income|expense)|interest|investment income|equity in|foreign (currency|exchange)')
+
+
+def apply_opex_combined_total_less_cor(rows, filings=()):
+    """X117 (.88; registry data_points.csv operating_expenses fallback 2, founder 2026-11-22, reverses 'opex only inside total costs
+    and expenses -> hide'; DIS FY2015-25, BMY precedent): an operating_expenses cell left `combined` on the own face's only costs total
+    ('Total costs and expenses' CostsAndExpenses) = that total - the same filing's own cost_of_revenue - the other (income) expense /
+    interest lines printed inside the total (by their calc weight). Everything from one filing; the result must tie exactly to the
+    operating lines printed inside the total (calc weight, else +1); a nonoperating line inside the total without a calc weight leaves
+    the cell combined.
+    Status component_sum, the nodes are the printed lines (COR members included); flag derived:total_costs_and_expenses-cost_of_revenue."""
+    F = {f['a']: f for f in filings}
+    by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    for r in rows:
+        if r['data_point'] != 'operating_expenses' or r.get('status') != 'combined' or (r.get('column') or 'own') != 'own': continue
+        m = re.match(r'(CostsAndExpenses|CostsAndExpenses\w*)=(-?[\d.]+) \[R(\d+)\.htm:(\d+)\]', r.get('nodes') or '')
+        cor, f = by.get((r['accession'], 'cost_of_revenue')), F.get(r['accession'])
+        if not m or not f or not cor or cor.get('status') not in ('mapped', 'component_sum') or cor.get('value') in (None, '') or cor['accession'] != r['accession']: continue
+        L, arcs = parse(f)
+        rep, tln, tot = int(m.group(3)), int(m.group(4)), D(m.group(2))
+        isf = [l for l in L if l['st'] == 'IS' and l['rep'] == rep]
+        cor_parts = re.findall(r'(?:^|; )(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[R\d+\.htm:(\d+)\]', (cor.get('nodes') or '').split(' | ')[0])
+        if not cor_parts or any(sg for sg, *_ in cor_parts): continue
+        first = min(int(x[4]) for x in cor_parts)
+        if first >= tln: continue
+        inside = [l for l in isf if first < l['ln'] < tln and l['val'] is not None and l['tag'] not in {x[1] for x in cor_parts}]
+        g = next((ch for ch in arcs.get(m.group(1), {}).values() if len(ch) >= 2), None)
+        w = dict(g) if g else {}
+        nonop = [l for l in inside if NONOP_EL.search(l['tag']) or OTHER_IN_TOTAL_LB.search(l['lb'] or '')]
+        if any(l['tag'] not in w for l in nonop): continue   # sign of the line inside the total unknown
+        v = tot - D(cor['value']) - sum((w[l['tag']] * l['val'] for l in nonop), D(0))
+        ops = [l for l in inside if l not in nonop]
+        if not ops or v != sum((w.get(l['tag'], D(1)) * l['val'] for l in ops), D(0)): continue   # exact tie with the operating lines printed inside the total
+        nodes = '; '.join([f"{m.group(1)}={m.group(2)} [R{rep}.htm:{tln}]"] + [f"-{t}{dim}={x} [R{rep}.htm:{ln}]" for _, t, dim, x, ln in cor_parts]
+                          + [f"{'-' if w[l['tag']] > 0 else ''}{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in nonop])
+        was = r.get('why') or ''
+        r.update(status='component_sum', value=v, tags='printed totals', nodes=nodes,
+                 why=f"operating expenses = the only costs total printed ({tot}) - cost of revenue ({cor['value']})" + (f" - the other (income) expense lines inside it ({', '.join(l['tag'] for l in nonop)})" if nonop else '')
+                     + ", all from one filing (registry fallback 2, founder 2026-11-22; replaces: " + was[:80] + ')')
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), OPEX_BADGE_TC) if y)
     return rows
 
 
@@ -232,6 +276,11 @@ def apply_latest_print(rows, compfacts, filings=()):
                 sgn, how = 1, f"the way it resolves {dp}"
             new = sgn * sum(w * next(iter(facts[t])) for w, t, _, _ in parts)
             old = D(r['value'])
+            # X115 (.88, DIS interest_expense FY2021-22): the later column takes the concept's sign too (rules/polarity.csv): a single
+            # mapped element the later filing stores negated (InterestExpense -1,546 in the FY2023 10-K) is normalised; the node keeps the raw fact
+            pol = POLARITY.get(dp)
+            flip = bool(pol and pol['normalise'] == 'Y' and pol['sign'] == '+' and (r['status'] if parts is mine else b['status']) == 'mapped' and new < 0)
+            if flip: new = -new
             if new == old: continue
             if line_renamed and (old == 0 or not D('0.5') <= new / old <= 2): continue   # another line's role, not a rename (PLD FY2017 development spend 1,606 vs capex 111)
             if not LP_PER_SHARE.search(dp) and (new != new.to_integral() or old != old.to_integral()): continue   # money only: a ratio fact under the element (LOW 0.0593) is not the figure
@@ -249,7 +298,8 @@ def apply_latest_print(rows, compfacts, filings=()):
             r.update(status=r['status'] if parts is mine else b['status'], value=new, tags=r.get('tags', '') if parts is mine else b.get('tags', ''), accession=b['accession'], column='comparative',
                      nodes='; '.join(f"{'-' if w < 0 else ''}{t}={next(iter(facts[t]))} [{loc(t, l)}]" for w, t, _, l in parts),
                      why=f"latest print: the FY+{k} 10-K {b['accession']} re-presents the year as {new} (own filing {old}), recomputed from {how}; one vintage per year (rulings 2026-11-17)")
-            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print', 'split_adjusted' if split else '') if x)
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'latest_print', 'split_adjusted' if split else '', 'polarity_flip' if flip else '') if x)
+            if flip: r['why'] += f"; polarity: the later filing reports {-new} on an element of the opposite sign; {dp} is positive (rules/polarity.csv), value normalised"
             if split: r['why'] += f"; split_adjusted: the later print differs from the own print {old} by a {split}-for-1 split ratio"
     # Dhairya wave 4A (RTX FY2016-19, recast for the Otis / Carrier spin): a year whose latest-print revenue differs from its own print by
     # more than 10% was recast to another basis (discontinued operations, a spin): its latest-print cells carry definition_change
@@ -260,6 +310,41 @@ def apply_latest_print(rows, compfacts, filings=()):
         for x in rows:
             if (x['cik'], str(x['period_end'])) == k and 'latest_print' in (x.get('flags') or '') and 'definition_change' not in x['flags']:
                 x['flags'] += ';definition_change'
+    return rows
+
+
+def apply_amort_finer_print(rows, compfacts):
+    """X116 (.88, MRK FY2018/2019/2023; ruling 15 'finer figure wins'): an amortization_of_intangibles cell served from a rounded
+    note fact (note_only; the fact rounds to 10^8 or coarser: '$2.9 billion') yields to the CF face figure of the latest later
+    10-K that presents the year (FY+2, else FY+1), when THAT filing proves its own amortization from the same CF element
+    (amort_by_note_equality: the generic 'Amortization' add-back equals its intangible note) and its comparative column carries
+    exactly one value of that element for the year, within 20% of the rounded note (MRK FY2018 2,900 -> 3,103; FY2019 2,000 ->
+    1,695, recast for the Organon spin-off). Flags finer_print;latest_print; the node cites the later filing's line."""
+    dp = 'amortization_of_intangibles'
+    own = collections.defaultdict(list)
+    for r in rows:
+        if r['data_point'] == dp and (r.get('column') or 'own') == 'own': own[r.get('cik')].append(r)
+    for cik, lst in own.items():
+        for r in lst:
+            if r.get('status') != 'mapped' or 'note_only' not in (r.get('flags') or '') or r.get('value') in (None, ''): continue
+            v = D(r['value'])
+            if v <= 0 or v % (10 ** 8): continue
+            pe = date.fromisoformat(str(r['period_end']))
+            for k in (2, 1):
+                b = next((x for x in lst if abs((date.fromisoformat(str(x['period_end'])) - pe).days - 365 * k) <= 45), None)
+                if b is None or b.get('status') != 'mapped' or 'amort_by_note_equality' not in (b.get('flags') or ''): continue
+                m = re.match(r'(\w+)=(-?[\d.]+) \[(R\d+\.htm:\d+)\]', b.get('nodes') or '')
+                if not m: continue
+                tag, loc = m.group(1), m.group(3)
+                vals = {D(x) for t, q, x, dd in standard_inputs._facts(compfacts.get(b['accession']), 4) if t == tag and q == '4' and dd == str(r['period_end'])}
+                if len(vals) != 1: continue
+                nv = abs(next(iter(vals)))
+                if nv == v or abs(nv - v) > v / 5: break
+                r.update(value=nv, tags=tag, accession=b['accession'], column='comparative', nodes=f"{tag}={next(iter(vals))} [{loc}@{b['accession']}]",
+                         why=f"finer figure wins (ruling 15): the own filing states intangible amortization only as the rounded note fact {v}; the FY+{k} 10-K "
+                             f"{b['accession']} prints the year on its CF face line {tag} ({loc}), the line it proves against its own intangible note")
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'finer_print', 'latest_print') if x)
+                break
     return rows
 
 
@@ -1808,6 +1893,41 @@ def apply_rounded_share_count(rows, memberfacts):
     return rows
 
 
+SHARE_DPS = {'weighted_basic_shares': D('0.03'), 'weighted_diluted_shares': D('0.03'), 'shares_outstanding': D('0.15')}
+NODE_NUM = re.compile(r'(\w+(?:\[[^\]]*\])?=)(-?\d+(?:\.\d+)?)')
+
+
+def apply_share_scale(rows):
+    """X114 (.88, COP FY2014-21 weighted shares, RTX FY2014-18 issued/treasury, SYK FY2014 outstanding): a share count the filer
+    tagged at its printed scale ('Average Common Shares Outstanding (in thousands)' stored as 1,078,030) is scaled by the
+    10^3 or 10^6 that makes it agree with the same period's net income / basic EPS (weighted counts within 3%, a year-end
+    count within 15%), when the stored value is under 1/100 of that implied count. Every node number of the row is scaled
+    with it (issued - treasury derivations stay consistent); flags filer_scale_error;share_scale_x<k>. No net income or EPS
+    for the period, or no scale that agrees: the row stays as it is (a split-adjusted count, ISRG 2015, is a 3x gap, not 10^3)."""
+    vals = {}
+    for r in rows:
+        if r['data_point'] in ('net_income', 'basic_eps') and r.get('status') in ('mapped', 'component_sum', 'derived') and r.get('value') not in (None, ''):
+            vals[(r.get('cik'), r['period_end'], r['data_point'])] = D(r['value'])
+    for r in rows:
+        tol = SHARE_DPS.get(r['data_point'])
+        if tol is None or r.get('status') not in ('mapped', 'component_sum', 'derived') or r.get('value') in (None, ''): continue
+        ni, eps = vals.get((r.get('cik'), r['period_end'], 'net_income')), vals.get((r.get('cik'), r['period_end'], 'basic_eps'))
+        v = D(r['value'])
+        if not ni or not eps or v <= 0: continue
+        imp = abs(ni / eps)
+        if v * 100 >= imp: continue
+        k = next((k for k in (D(1000), D(10 ** 6)) if abs(v * k / imp - 1) <= tol), None)
+        if k is None: continue
+        nodes = r.get('nodes') or ''
+        head, sep, tail = nodes.partition(' | why')
+        r['nodes'] = NODE_NUM.sub(lambda m: m.group(1) + str((D(m.group(2)) * k).to_integral()), head) + sep + tail
+        r['value'] = (v * k).to_integral()
+        r['why'] = ((r.get('why') or '') + f"; X114 filer scale error: the share count is stored at the printed scale ({standard_inputs._plain(v)}); "
+                    f"x{k:f} agrees with net income / basic EPS of the period ({ni:f} / {eps:f} = {imp:.0f})").lstrip('; ')
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filer_scale_error', f'share_scale_x{k:f}') if x)
+    return rows
+
+
 def run(filings, notefacts, tick, td_rows):
     out = []
     for f in filings:
@@ -2044,10 +2164,13 @@ if __name__ == '__main__':
     rows = apply_text_disclosures(rows)
     rows = apply_net_ie_not_of_income(rows)
     rows = apply_scale_flags(rows)
+    rows = apply_share_scale(rows)   # X114
     rows = apply_opex_costs_total_less_cor(rows, filings)
+    rows = apply_opex_combined_total_less_cor(rows, filings)   # X117
     rows = apply_bank_cash(rows, notefacts, compfacts, filings)
     rows = apply_lease_latest_print(rows, compfacts, filings)
     rows = apply_latest_print(rows, compfacts, filings)
+    rows = apply_amort_finer_print(rows, compfacts)   # X116
     rows = apply_rounded_share_count(rows, memberfacts)   # X111
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []

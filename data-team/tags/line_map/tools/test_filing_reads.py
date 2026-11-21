@@ -163,3 +163,35 @@ def test_import_the_latest_dated_read_of_a_cell_supersedes_earlier_reads_and_bom
     kept, skipped = filing_reads.import_files(str(rd), [new, old], str(skips))
     assert sorted((k['fiscal_year'], k['value'], k['source_file']) for k in kept) == [('2019', '424360000', 'MRVL-2026-11-22.csv'), ('2021', '467200000', 'MRVL-2026-11-17.csv')]
     assert len(skipped) == 1 and skipped[0]['value'] == '1' and 'superseded by the 2026-11-22 read' in skipped[0]['reason']
+
+
+def test_badge_in_rule_proposal_becomes_a_display_flag_on_agreeing_and_served_reads(tmp_path):
+    # X113 (.88, f5f600cb): a printed combined line read as VALUE carries 'badge=combined:<label>' at the start of rule_proposal
+    bp = "badge=combined:Other income/(expense), net; printed combined line served as other_income_expense_net"
+    p = cells(tmp_path, dict(read(dp='other_income_expense_net', value='269000000'), rule_proposal=bp))
+    agree = filing_reads.apply([row(status='mapped', value=D(269000000), dp='other_income_expense_net', nodes='NonoperatingIncomeExpense=269000000 [R3.htm:9]')], p)[0]
+    assert agree['flags'].split(';') == ['roles', 'filing_read', 'combined:Other income/(expense)%2C net']
+    served = filing_reads.apply([row(status='combined', dp='other_income_expense_net')], p)[0]
+    fl = served['flags'].split(';')
+    assert 'text_stated' in fl and 'combined:Other income/(expense)%2C net' in fl and served['value'] == D(269000000)
+    # no badge -> no flag
+    p2 = cells(tmp_path, read(dp='other_income_expense_net', value='269000000'))
+    assert not any(f.startswith('combined:') for f in filing_reads.apply([row(dp='other_income_expense_net')], p2)[0]['flags'].split(';'))
+
+
+def test_combined_hide_read_does_not_remove_a_registry_derived_cell(tmp_path):
+    # X117 (.88): DIS operating_expenses read as HIDE line_presented_combined; the registry fallback derives total costs - COR
+    p = cells(tmp_path, read(dp='operating_expenses', outcome='HIDE', value='', hc='line_presented_combined', quote='HIDE line_presented_combined - only total'))
+    r = filing_reads.apply([row(status='component_sum', value=D(20749000000), dp='operating_expenses', flags='roles;derived:total_costs_and_expenses-cost_of_revenue')], p)[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(20749000000) and 'filing_read_hide_reversed' in r['flags']
+    r = filing_reads.apply([row(status='component_sum', value=D(20749000000), dp='operating_expenses', flags='roles')], p)[0]
+    assert r['status'] == 'not_presented'   # no registry badge: the read's hide stands
+
+
+def test_a_read_of_zero_is_served_as_stated_zero_never_text_stated(tmp_path):
+    # X118 (.88): structural_loader refuses text_stated with value 0 (TMUS DPS 2015-22 'has never paid dividends')
+    p = cells(tmp_path, read(dp='dividends_per_share', value='0', quote='"We have never paid or declared any cash dividends"'))
+    fl = filing_reads.apply([row(dp='dividends_per_share')], p)[0]['flags'].split(';')
+    assert 'stated_zero' in fl and 'text_stated' not in fl
+    fl = filing_reads.apply([row()], cells(tmp_path, read()))[0]['flags'].split(';')
+    assert 'text_stated' in fl and 'stated_zero' not in fl
