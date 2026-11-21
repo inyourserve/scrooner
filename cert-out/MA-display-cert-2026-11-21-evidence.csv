@@ -1,0 +1,73 @@
+check,data_point,fiscal_year,result,served,filing,evidence
+shown,depreciation_and_amortization,2018,MATCH,459000000,459000000.0000,DepreciationAmortizationAndAccretionNet=459000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,weighted_basic_shares,2019,MATCH,1017000000.0000,1017000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=1017000000.0000@0001141391-20-000032#R2 (fsn reports R2)
+shown,share_buybacks,2018,MATCH,4933000000,4933000000.0000,PaymentsForRepurchaseOfCommonStock=4933000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,dividends_per_share,2015,MATCH,0.67,0.6700,CommonStockDividendsPerShareDeclared=0.6700@0001141391-16-000085#R7 (fsn reports R7)
+shown,cash_flow_financing,2016,MATCH,-2344000000,2344000000.0000,NetCashProvidedByUsedInFinancingActivities=-2344000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,cfo,2019,MATCH,8183000000,8183000000.0000,NetCashProvidedByUsedInOperatingActivities=8183000000.0000@0001141391-20-000032#R7 (fsn reports R7)
+shown,cash_flow_investing,2018,MATCH,-506000000,506000000.0000,NetCashProvidedByUsedInInvestingActivities=-506000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,weighted_diluted_shares,2015,MATCH,1137000000.0000,1137000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=1137000000.0000@0001141391-16-000085#R4 (fsn reports R4)
+shown,cf_ap_change,2020,MATCH,26000000,26000000.0000,IncreaseDecreaseInAccountsPayable=26000000.0000@0001141391-21-000018#R7 (fsn reports R7)
+shown,cash_flow_financing,2020,MATCH,-2152000000,2152000000.0000,NetCashProvidedByUsedInFinancingActivities=-2152000000.0000@0001141391-21-000018#R7 (fsn reports R7)
+shown,cash_paid_for_interest,2022,MATCH,414000000,414000000.0000,InterestPaidNet=414000000.0000@0001141391-23-000020#R66 (fsn reports -)
+shown,income_tax_expense,2021,MATCH,1620000000,1620000000.0000,IncomeTaxExpenseBenefit=1620000000.0000@0001141391-22-000023#R3 (fsn reports R3)
+shown,stockholders_equity,2021,MATCH,7312000000,7312000000.0000,StockholdersEquity=7312000000.0000@0001141391-22-000023#R5 (fsn reports R5)
+shown,total_liabilities,2021,MATCH,30257000000,30257000000.0000,Liabilities=30257000000.0000@0001141391-22-000023#R5 (fsn reports R5)
+shown,net_income,2022,MATCH,9930000000,9930000000.0000,"ProfitLoss=9930000000.0000@0001141391-23-000020#R3 (fsn reports R3,R4,R7,R8)"
+shown,depreciation_and_amortization,2019,MATCH,522000000,522000000.0000,DepreciationAmortizationAndAccretionNet=522000000.0000@0001141391-20-000032#R7 (fsn reports R7)
+shown,cfo,2021,MATCH,9463000000,9463000000.0000,NetCashProvidedByUsedInOperatingActivities=9463000000.0000@0001141391-22-000023#R8 (fsn reports R8)
+shown,sbc,2018,MATCH,196000000,196000000.0000,ShareBasedCompensation=196000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,dividends_per_share,2017,MATCH,0.91,0.9100,CommonStockDividendsPerShareDeclared=0.9100@0001141391-18-000009#R7 (fsn reports R7)
+shown,capex,2018,MATCH,504000000,504000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=330000000.0000@0001141391-19-000013#R8 (fsn reports R8); PaymentsToAcquireSoftware=174000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,sbc,2016,MATCH,149000000,149000000.0000,ShareBasedCompensation=149000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,total_liabilities,2019,MATCH,23245000000,23245000000.0000,Liabilities=23245000000.0000@0001141391-20-000032#R4 (fsn reports R4)
+shown,cf_ap_change,2018,MATCH,101000000,101000000.0000,IncreaseDecreaseInAccountsPayable=101000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,diluted_eps,2024,MATCH,13.89,13.8900,EarningsPerShareDiluted=13.8900@0001141391-25-000011#R3 (fsn reports R3)
+shown,cf_ap_change,2025,MATCH,45000000,45000000.0000,IncreaseDecreaseInAccountsPayable=45000000.0000@0001141391-26-000013#R8 (fsn reports R8)
+shown,cash_flow_investing,2020,MATCH,-1879000000,1879000000.0000,NetCashProvidedByUsedInInvestingActivities=-1879000000.0000@0001141391-21-000018#R7 (fsn reports R7)
+shown,total_assets,2016,MATCH,18675000000,18675000000.0000,Assets=18675000000.0000@0001141391-17-000014#R2 (fsn reports R2)
+shown,current_assets,2025,MATCH,23558000000,23558000000.0000,AssetsCurrent=23558000000.0000@0001141391-26-000013#R5 (fsn reports R5)
+shown,operating_expenses,2015,MATCH,4589000000,4589000000.0000,OperatingExpenses=4589000000.0000@0001141391-16-000085#R4 (fsn reports R4)
+shown,cash_paid_for_interest,2020,MATCH,311000000,311000000.0000,InterestPaidNet=311000000.0000@0001141391-21-000018#R63 (fsn reports -)
+shown,accounts_receivable,2016,MATCH,1416000000,1416000000.0000,AccountsReceivableNetCurrent=1416000000.0000@0001141391-17-000014#R2 (fsn reports R2)
+shown,current_liabilities,2021,MATCH,13162000000,13162000000.0000,LiabilitiesCurrent=13162000000.0000@0001141391-22-000023#R5 (fsn reports R5)
+total_debt,total_debt,2015,MATCH,3268000000,3268000000.0000,face {'LongTermDebtNoncurrent': Decimal('3268000000.0000')}; lease no lease facts
+total_debt,total_debt,2016,MATCH,5180000000,5180000000.0000,face {'LongTermDebtNoncurrent': Decimal('5180000000.0000')}; lease no lease facts
+total_debt,total_debt,2017,MATCH,5424000000,5424000000.0000,face {'LongTermDebtNoncurrent': Decimal('5424000000.0000')}; lease no lease facts
+total_debt,total_debt,2018,MATCH,6334000000,6334000000.0000,"face {'LongTermDebtCurrent': Decimal('500000000.0000'), 'LongTermDebtNoncurrent': Decimal('5834000000.0000')}; lease no lease facts"
+total_debt,total_debt,2019,MATCH,8527000000,8527000000.0000,"face {'LongTermDebtCurrent': Decimal('0.0000'), 'LongTermDebtNoncurrent': Decimal('8527000000.0000')}; lease no lease facts"
+total_debt,total_debt,2020,MATCH,12672000000,12672000000.0000,"face {'LongTermDebtCurrent': Decimal('649000000.0000'), 'LongTermDebtNoncurrent': Decimal('12023000000.0000')}; lease no lease facts"
+total_debt,total_debt,2021,MATCH,13901000000,13901000000.0000,"face {'LongTermDebtCurrent': Decimal('792000000.0000'), 'LongTermDebtNoncurrent': Decimal('13109000000.0000')}; lease no lease facts"
+total_debt,total_debt,2022,MATCH,14023000000,14023000000.0000,"face {'LongTermDebtCurrent': Decimal('274000000.0000'), 'LongTermDebtNoncurrent': Decimal('13749000000.0000')}; lease no lease facts"
+total_debt,total_debt,2023,MATCH,15681000000,15681000000.0000,"face {'LongTermDebtCurrent': Decimal('1337000000.0000'), 'LongTermDebtNoncurrent': Decimal('14344000000.0000')}; lease no lease facts"
+total_debt,total_debt,2024,MATCH,18226000000,18226000000.0000,"face {'LongTermDebtCurrent': Decimal('750000000.0000'), 'LongTermDebtNoncurrent': Decimal('17476000000.0000')}; lease no lease facts"
+total_debt,total_debt,2025,MATCH,19000000000,19000000000.0000,"face {'LongTermDebtCurrent': Decimal('749000000.0000'), 'LongTermDebtNoncurrent': Decimal('18251000000.0000')}; lease no lease facts"
+hide_reason,gross_profit,2015,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2016,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2017,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2018,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2019,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2020,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2021,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2022,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2023,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2024,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,gross_profit,2025,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2015,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2016,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2017,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2018,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2019,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2020,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2021,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2022,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2023,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2024,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hide_reason,inventory,2025,FAIL,,,"verified_absent applies to a year, not a whole row (that is structural_not_presented)"
+hidden_row,cf_inventory_change,*,REVIEW,,,no tag family on file for this data point: approver checks the filings by hand
+hidden_row,comprehensive_income,*,INFO,,,"no presented, undimensioned, annual ['ComprehensiveIncomeNetOfTax'] fact at a display-year end in any periodic filing"
+hidden_row,cost_of_revenue,*,INFO,,,"no presented, undimensioned, annual ['CostOfGoodsAndServicesSold', 'CostOfRevenue'] fact at a display-year end in any periodic filing"
+hidden_row,gross_profit,*,INFO,,,"no presented, undimensioned, annual ['GrossProfit'] fact at a display-year end in any periodic filing"
+hidden_row,interest_income,*,INFO,,,"no presented, undimensioned, annual ['InterestAndOtherIncome', 'InterestIncomeNonoperating', 'InterestIncomeOperating', 'InterestIncomeOther', 'InvestmentIncomeInterest', 'InvestmentIncomeInterestAndDividend'] fact at a display-year end in any periodic filing"
+hidden_row,inventory,*,INFO,,,"no presented, undimensioned, annual ['InventoryNet'] fact at a display-year end in any periodic filing"
+hidden_row,research_and_development,*,INFO,,,"no presented, undimensioned, annual ['ResearchAndDevelopmentExpense'] fact at a display-year end in any periodic filing"
