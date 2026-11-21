@@ -101,6 +101,7 @@ def db(isolated_database_url):
         c.execute("insert into fsn.dim (id, dimh, segments, segt) overriding system value values (0, '0x00000000', '', false)")
         c.execute(re.sub(r"references core\.company \(id\)", "", _sql("0130")))
         c.execute(_sql("0132"))
+        c.execute(_sql("0134"))
         c.commit()
         yield c
 
@@ -268,3 +269,100 @@ def test_unknown_accession_is_unverifiable(db):
         db.execute("update analytics.display_cell_certificate set invalidated_at = now() where id = (select min(id) from analytics.display_cell_certificate)")
     db.rollback()
     assert db.execute("select distinct certified_at::date from analytics.display_cell_certificate").fetchall() == [(cert.certified_at.date(),)]
+
+
+OPTIONAL_TEXT = ("hide_class", "reason_code", "r_page", "tag", "accession")
+
+
+def test_blank_optional_text_is_null_in_the_parsed_certificate():
+    """The committed JNJ JSON holds "" for hide_class on 462 shown cells; the loader must hand NULL to the database."""
+    raw = json.loads(JNJ.read_text())
+    assert sum(1 for c in raw["cells"] if c["hide_class"] == "") == 462  # the input really has the blank
+    cert = dl.parse(JNJ, ROOT)
+    for cell in cert.cells:
+        for f in OPTIONAL_TEXT:
+            v = getattr(cell, f)
+            assert v is None or (v.strip() == v and v != ""), (f, v)
+    assert all(r[6] != "" for r in dl.rows(cert))
+    assert dl._opt("  ") is None and dl._opt("") is None and dl._opt(" a ") == "a" and dl._opt(None) is None
+
+
+def test_jnj_shown_cells_are_valid_not_stale_display(db):
+    cert = dl.parse(JNJ, ROOT)
+    _seed(db, cert)
+    dl.load(db, cert, apply=True)
+    assert db.execute("select count(*) from analytics.display_cell_certificate where btrim(hide_class) = ''").fetchone()[0] == 0
+    assert _statuses(db) == {"valid": 506}
+
+
+def test_blank_optional_text_is_refused_by_the_table(db):
+    cert = dl.parse(GILD, ROOT)
+    _seed(db, cert)
+    dl.load(db, cert, apply=True)
+    for col in ("hide_class", "reason_code", "r_page", "tag", "detector_version", "resolver", "code_sha", "draw_seed"):
+        with pytest.raises(psycopg.errors.CheckViolation):
+            db.execute(f"update analytics.display_cell_certificate set {col} = ' ' where id = (select min(id) from analytics.display_cell_certificate)")
+        db.rollback()
+
+
+def test_0134_text_has_the_fixes():
+    sql = _sql("0134")
+    assert sql.rstrip().endswith(";")
+    assert "idx_fsn_value_series" in sql and "later.dim_id = 0" in sql
+    assert "lf.company_id = c.company_id" in sql
+    assert "btrim(hide_class) = ''" in sql
+
+
+def _dimensioned_cell_setup(db):
+    """GILD, with the total_assets drawn cell keyed to a dimensioned member; the base filing prints V under dim D."""
+    import dataclasses
+
+    cert = dl.parse(GILD, ROOT)
+    cell = _cell(cert, "total_assets", "drawn")
+    tag = cell.restate_keys[0][0]
+    new = dataclasses.replace(cell, restate_keys=((tag, "Seg=Mem;"),))
+    cert = dataclasses.replace(cert, cells=tuple(new if x is cell else x for x in cert.cells))
+    tags = _seed(db, cert)
+    did = db.execute("insert into fsn.dim (dimh, segments, segt) values ('0x01', 'Seg=Mem;', true) returning id").fetchone()[0]
+    return cert, new, tags, did
+
+
+def _print_dim(db, cert, tags, cell, accession, value, did, accepted="2020-01-01", form="10-K", new_filing=False):
+    cid = cert.company_id
+    if new_filing:
+        db.execute("insert into fsn.filing (accession, company_id, cik, form, fsn_set, accepted) values (%s, %s, 'x', %s, 's', %s)", (accession, cid, form, accepted))
+    fid = db.execute("select id from fsn.filing where accession = %s", (accession,)).fetchone()[0]
+    db.execute(
+        "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, value) values (%s, %s, %s, %s, %s, 'USD', %s, %s)",
+        (fid, cid, tags[cell.restate_keys[0][0]], cell.period_end, 0 if cell.grain == "I" else 4, did, value),
+    )
+    db.commit()
+
+
+def test_restatement_detected_on_the_dimensioned_branch(db):
+    cert, cell, tags, did = _dimensioned_cell_setup(db)
+    _print_dim(db, cert, tags, cell, cell.accession, cell.shown_value, did)
+    dl.load(db, cert, apply=True)
+    assert _statuses(db) == {"valid": 506}
+    _print_dim(db, cert, tags, cell, "0000000000-27-000005", cell.shown_value, did, accepted="2027-02-01", new_filing=True)
+    assert _statuses(db) == {"valid": 506}  # same value on a later filing: no restatement
+    _print_dim(db, cert, tags, cell, "0000000000-27-000006", cell.shown_value + 1, did, accepted="2027-05-01", form="10-Q", new_filing=True)
+    assert _statuses(db) == {"valid": 505, "stale_restated": 1}
+    assert db.execute("select analytics.invalidate_display_cell_certificates(%s)", (cert.company_id,)).fetchone()[0] == 1
+
+
+def test_later_filing_of_another_company_is_not_a_restatement(db):
+    cert = dl.parse(GILD, ROOT)
+    tags = _seed(db, cert)
+    cell = _cell(cert, "total_assets", "drawn")
+    _print_value(db, cert, tags, cell, cell.accession, cell.shown_value)
+    dl.load(db, cert, apply=True)
+    db.execute("insert into core.company values (999, 'y')")
+    db.execute("insert into fsn.filing (accession, company_id, cik, form, fsn_set, accepted) values ('0000000000-27-000099', 999, 'y', '10-K', 's', '2027-02-01')")
+    fid = db.execute("select id from fsn.filing where accession = '0000000000-27-000099'").fetchone()[0]
+    db.execute(
+        "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, value) values (%s, 999, %s, %s, %s, 'USD', 0, %s)",
+        (fid, tags[cell.restate_keys[0][0]], cell.period_end, 0 if cell.grain == "I" else 4, cell.shown_value + 1),
+    )
+    db.commit()
+    assert _statuses(db) == {"valid": 506}

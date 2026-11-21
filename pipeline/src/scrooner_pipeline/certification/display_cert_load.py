@@ -127,6 +127,14 @@ def validate(instance: Any, schema: dict, where: str = "$") -> list[str]:
     return errs
 
 
+def _opt(v: Any) -> Any:
+    """An optional text field: '' or whitespace is NULL (0134 CHECK; a '' hide_class read every shown cell as stale_display)."""
+    if isinstance(v, str):
+        v = v.strip()
+        return v or None
+    return v
+
+
 def _restate_keys(cell: dict) -> tuple[tuple[str, str], ...]:
     if cell["display"] != "SHOWN_VALUE":
         return ()
@@ -202,12 +210,12 @@ def parse(json_path: Path, repo_root: Path) -> Certificate:
                 date.fromisoformat(c["period_end"]),
                 c["grain"],
                 c["display"],
-                c["hide_class"],
-                c["reason_code"] or None,
+                _opt(c["hide_class"]),
+                _opt(c["reason_code"]),
                 value,
-                c["accession"],
-                c["r_page"],
-                c["tag"],
+                _opt(c["accession"]),
+                _opt(c["r_page"]),
+                _opt(c["tag"]),
                 _restate_keys(c),
                 c["evidence"],
                 c["result"],
@@ -233,10 +241,10 @@ def parse(json_path: Path, repo_root: Path) -> Certificate:
         doc["approver"],
         doc["coverage_path"],
         doc["sample_hash"],
-        doc["seed"],
-        doc["detector_version"],
-        doc["resolver"],
-        doc["code_sha"],
+        _opt(doc["seed"]),
+        _opt(doc["detector_version"]),
+        _opt(doc["resolver"]),
+        _opt(doc["code_sha"]),
         drawn,
         tuple(cells),
         rel,
