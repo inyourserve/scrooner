@@ -31,7 +31,9 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-SCHEMA_PATH = Path(__file__).resolve().parent / "schemas" / "display_certificate.v1.schema.json"
+SCHEMA_PATH = (
+    Path(__file__).resolve().parent / "schemas" / "display_certificate.v1.schema.json"
+)
 CHUNK = 5000
 
 
@@ -48,7 +50,9 @@ class CertCell:
     accession: str | None
     r_page: str | None
     tag: str | None
-    restate_keys: tuple[tuple[str, str], ...]  # (tag, dims) the restatement check compares
+    restate_keys: tuple[
+        tuple[str, str], ...
+    ]  # (tag, dims) the restatement check compares
     evidence: str
     result: str
 
@@ -81,8 +85,18 @@ def validate(instance: Any, schema: dict, where: str = "$") -> list[str]:
     t = schema.get("type")
     if t is not None:
         types = t if isinstance(t, list) else [t]
-        py = {"string": str, "integer": int, "object": dict, "array": list, "null": type(None)}
-        ok = any(isinstance(instance, py[x]) and not (x == "integer" and isinstance(instance, bool)) for x in types)
+        py = {
+            "string": str,
+            "integer": int,
+            "object": dict,
+            "array": list,
+            "null": type(None),
+        }
+        ok = any(
+            isinstance(instance, py[x])
+            and not (x == "integer" and isinstance(instance, bool))
+            for x in types
+        )
         if not ok:
             return errs + [f"{where}: expected {types}, got {type(instance).__name__}"]
     if isinstance(instance, str):
@@ -117,7 +131,9 @@ def _restate_keys(cell: dict) -> tuple[tuple[str, str], ...]:
     if cell["display"] != "SHOWN_VALUE":
         return ()
     if cell["parts"]:
-        return tuple(dict.fromkeys((p["tag"], p.get("dims") or "") for p in cell["parts"]))
+        return tuple(
+            dict.fromkeys((p["tag"], p.get("dims") or "") for p in cell["parts"])
+        )
     return ((cell["tag"], ""),) if cell["tag"] else ()
 
 
@@ -130,15 +146,21 @@ def parse(json_path: Path, repo_root: Path) -> Certificate:
     if errs:
         raise ValueError(f"{name}: schema violations: " + "; ".join(errs[:5]))
     if doc["verdict"] != "PASS":
-        raise ValueError(f"{name}: verdict is {doc['verdict']}, only PASS certificates are loaded")
+        raise ValueError(
+            f"{name}: verdict is {doc['verdict']}, only PASS certificates are loaded"
+        )
     if doc["company_id"] is None:
-        raise ValueError(f"{name}: company_id is null (certificate made without --request)")
+        raise ValueError(
+            f"{name}: company_id is null (certificate made without --request)"
+        )
     if doc["sample_hash"] != doc["coverage_sha256"]:
         raise ValueError(f"{name}: sample_hash differs from coverage_sha256")
     cov_path = repo_root / doc["coverage_path"]
     actual = hashlib.sha256(cov_path.read_bytes()).hexdigest()
     if actual != doc["coverage_sha256"]:
-        raise ValueError(f"{name}: coverage file hashes to {actual}, certificate states {doc['coverage_sha256']}")
+        raise ValueError(
+            f"{name}: coverage file hashes to {actual}, certificate states {doc['coverage_sha256']}"
+        )
     shown: dict[tuple[str, str], dict[str, str]] = {}
     with cov_path.open(newline="", encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
@@ -152,24 +174,43 @@ def parse(json_path: Path, repo_root: Path) -> Certificate:
             raise ValueError(f"{name}: duplicate cell {key}")
         seen.add(key)
         if (c["evidence"] == "sampled") != (c["result"] == "SAMPLED"):
-            raise ValueError(f"{name}: {key} evidence {c['evidence']} with result {c['result']}")
+            raise ValueError(
+                f"{name}: {key} evidence {c['evidence']} with result {c['result']}"
+            )
         if c["evidence"] == "drawn" and c["result"] != "MATCH":
-            raise ValueError(f"{name}: drawn cell {key} result {c['result']}, a PASS certificate needs MATCH")
+            raise ValueError(
+                f"{name}: drawn cell {key} result {c['result']}, a PASS certificate needs MATCH"
+            )
         value = None
         if c["display"] == "SHOWN_VALUE":
-            r = shown.get((c["data_point"], c["fiscal_year"]))
-            if r is None or c["shown_value"] is None or c["accession"] is None:
-                raise ValueError(f"{name}: shown cell {key} is not a complete SHOWN_VALUE cell of the coverage file")
+            sr = shown.get((c["data_point"], c["fiscal_year"]))
+            if sr is None or c["shown_value"] is None or c["accession"] is None:
+                raise ValueError(
+                    f"{name}: shown cell {key} is not a complete SHOWN_VALUE cell of the coverage file"
+                )
             value = Decimal(c["shown_value"])
-            if r["accession"] != c["accession"] or Decimal(r["shown_value"]) != value:
-                raise ValueError(f"{name}: {key} disagrees with the coverage file (accession or value)")
+            if sr["accession"] != c["accession"] or Decimal(sr["shown_value"]) != value:
+                raise ValueError(
+                    f"{name}: {key} disagrees with the coverage file (accession or value)"
+                )
         elif c["shown_value"] is not None:
             raise ValueError(f"{name}: hidden cell {key} carries a shown_value")
         cells.append(
             CertCell(
-                c["data_point"], int(c["fiscal_year"]), date.fromisoformat(c["period_end"]), c["grain"], c["display"],
-                c["hide_class"], c["reason_code"] or None, value, c["accession"], c["r_page"], c["tag"],
-                _restate_keys(c), c["evidence"], c["result"],
+                c["data_point"],
+                int(c["fiscal_year"]),
+                date.fromisoformat(c["period_end"]),
+                c["grain"],
+                c["display"],
+                c["hide_class"],
+                c["reason_code"] or None,
+                value,
+                c["accession"],
+                c["r_page"],
+                c["tag"],
+                _restate_keys(c),
+                c["evidence"],
+                c["result"],
             )
         )
     drawn = sum(1 for x in cells if x.evidence == "drawn")
@@ -185,8 +226,20 @@ def parse(json_path: Path, repo_root: Path) -> Certificate:
     except ValueError:
         rel = str(json_path)
     return Certificate(
-        doc["ticker"], doc["company_id"], doc["verdict"], when, doc["approver"], doc["coverage_path"], doc["sample_hash"],
-        doc["seed"], doc["detector_version"], doc["resolver"], doc["code_sha"], drawn, tuple(cells), rel,
+        doc["ticker"],
+        doc["company_id"],
+        doc["verdict"],
+        when,
+        doc["approver"],
+        doc["coverage_path"],
+        doc["sample_hash"],
+        doc["seed"],
+        doc["detector_version"],
+        doc["resolver"],
+        doc["code_sha"],
+        drawn,
+        tuple(cells),
+        rel,
     )
 
 
@@ -205,10 +258,29 @@ def rows(cert: Certificate) -> list[tuple]:
 
     return [
         (
-            cert.company_id, c.data_point, c.period_end, c.grain, c.fiscal_year, c.display, c.hide_class, c.reason_code,
-            c.shown_value, c.accession, c.r_page, c.tag, Jsonb([{"tag": t, "dims": d} for t, d in c.restate_keys]),
-            c.evidence, c.result, cert.sample_hash, cert.detector_version, cert.resolver, cert.code_sha, cert.seed,
-            cert.path, cert.approver, cert.certified_at,
+            cert.company_id,
+            c.data_point,
+            c.period_end,
+            c.grain,
+            c.fiscal_year,
+            c.display,
+            c.hide_class,
+            c.reason_code,
+            c.shown_value,
+            c.accession,
+            c.r_page,
+            c.tag,
+            Jsonb([{"tag": t, "dims": d} for t, d in c.restate_keys]),
+            c.evidence,
+            c.result,
+            cert.sample_hash,
+            cert.detector_version,
+            cert.resolver,
+            cert.code_sha,
+            cert.seed,
+            cert.path,
+            cert.approver,
+            cert.certified_at,
         )
         for c in cert.cells
     ]
@@ -224,7 +296,13 @@ def load(conn, cert: Certificate, apply: bool) -> int:
                 "select count(*) from unnest(%s::text[], %s::date[], %s::text[]) as t(d, p, g) "
                 "where not exists (select 1 from analytics.display_cell_certificate x where x.company_id = %s "
                 "and x.data_point = t.d and x.period_end = t.p and x.grain = t.g and x.sample_hash = %s)",
-                ([r[1] for r in data], [r[2] for r in data], [r[3] for r in data], cert.company_id, cert.sample_hash),
+                (
+                    [r[1] for r in data],
+                    [r[2] for r in data],
+                    [r[3] for r in data],
+                    cert.company_id,
+                    cert.sample_hash,
+                ),
             )
             n = cur.fetchone()[0]
             conn.rollback()
@@ -234,25 +312,40 @@ def load(conn, cert: Certificate, apply: bool) -> int:
         for i in range(0, len(data), CHUNK):
             cur.executemany(INSERT, data[i : i + CHUNK])
         after = cur.execute(count_sql, (cert.company_id,)).fetchone()[0]
-        cur.execute("select analytics.invalidate_display_cell_certificates(%s)", (cert.company_id,))
+        cur.execute(
+            "select analytics.invalidate_display_cell_certificates(%s)",
+            (cert.company_id,),
+        )
     conn.commit()
     return after - before
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("certificate", type=Path)
-    ap.add_argument("--apply", action="store_true", help="write (production write: founder's typed words)")
-    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[4])
+    ap.add_argument(
+        "--apply",
+        action="store_true",
+        help="write (production write: founder's typed words)",
+    )
+    ap.add_argument(
+        "--repo-root", type=Path, default=Path(__file__).resolve().parents[4]
+    )
     ap.add_argument("--db-url", default=os.environ.get("DATABASE_URL"))
     args = ap.parse_args(argv)
     cert = parse(args.certificate.resolve(), args.repo_root)
     by: dict[str, int] = {}
     for c in cert.cells:
         by[c.evidence] = by.get(c.evidence, 0) + 1
-    print(f"{cert.ticker} {cert.certified_at.date()} {cert.verdict}: {len(cert.cells)} cells {by}, sample_hash {cert.sample_hash[:12]}")
+    print(
+        f"{cert.ticker} {cert.certified_at.date()} {cert.verdict}: {len(cert.cells)} cells {by}, sample_hash {cert.sample_hash[:12]}"
+    )
     if not args.db_url:
-        print("dry run (no DATABASE_URL): validated against the schema and the coverage file only")
+        print(
+            "dry run (no DATABASE_URL): validated against the schema and the coverage file only"
+        )
         return 0
     import psycopg
 
