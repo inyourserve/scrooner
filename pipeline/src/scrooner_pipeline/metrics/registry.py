@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -452,6 +453,111 @@ def load_data_points(
     if problems:
         raise RegistryError("; ".join(problems[:30]))
     return out
+
+
+class BadgeUndecided(RegistryError):
+    """The resolver row does not name exactly one fallback step of its data point: the cell gets no badge and stays
+    OPEN (never defaulted to as_printed; one-display-path plan 2026-11-22, section 3)."""
+
+
+# Resolver flags that name the derivation of a derived_not_printed row (RESOLVER-OUTPUT-FORMAT.md, "Derived pairs
+# served directly") -> the data_points.csv badge of that step.
+DERIVED_FLAG_BADGES = {
+    "derived_issued_less_treasury": "derived:shares_issued-treasury_shares",
+    "ci_parent_derived": "derived:ci_incl_nci-ci_nci",
+    "equity_parent_derived": "derived:total_equity-noncontrolling_interest",
+}
+_QUOTED_LABEL = re.compile(r"'([^']+)'")
+_PLACEHOLDER = re.compile(r"<[^>]*>")
+
+
+def resolver_flags(row: dict) -> set[str]:
+    return {f.strip() for f in (row.get("flags") or "").split(";") if f.strip()}
+
+
+def printed_label(row: dict) -> str:
+    """The printed line label the resolver quotes in its `why:` evidence (first quoted text), or ''."""
+    nodes = row.get("nodes") or ""
+    why = nodes.split("| why:", 1)[1] if "| why:" in nodes else ""
+    m = _QUOTED_LABEL.search(why)
+    return m.group(1).strip() if m else ""
+
+
+def _derived_formula(badge: str) -> str:
+    return badge[len("derived:") :]
+
+
+def badge_for(
+    dp: str,
+    sector: str,
+    resolver_row: dict,
+    data_points: dict[tuple[str, str], DataPointDefinition] | None = None,
+) -> str:
+    """The badge of the fallback step that produced a resolver row's value (registry/data_points.csv `badges`).
+
+    mapped -> as_printed (face line, note fact, printed zero, quoted text); combined -> the data point's combined step,
+    its <placeholder> filled with the printed label; derived_not_printed (or a DERIVED flag) -> the derived step the
+    flag names (DERIVED_FLAG_BADGES), else the data point's only derived step that is not a sum of printed lines;
+    component_sum -> the data point's only additive derived step (sum(...) or a+b, no minus). Anything else, an
+    ambiguous step, or a step the data point does not have raises BadgeUndecided. A perimeter badge is never inferred:
+    the resolver output carries no perimeter signal yet."""
+    defs = data_points if data_points is not None else _data_points()
+    d = defs.get((dp, sector))
+    if d is None:
+        raise BadgeUndecided(f"{dp}/{sector}: no data_points.csv row")
+    if not d.applies:
+        raise BadgeUndecided(
+            f"{dp}/{sector}: not_applicable is a cell state, not a badge"
+        )
+    decision = resolver_row.get("decision") or ""
+    flags = resolver_flags(resolver_row)
+    derived = [b for b in d.badges if b.startswith("derived:")]
+    where = f"{dp}/{sector} {decision} {sorted(flags)}"
+    if decision == "derived_not_printed" or "DERIVED" in flags:
+        named = [DERIVED_FLAG_BADGES[f] for f in flags if f in DERIVED_FLAG_BADGES]
+        if named:
+            cands = [b for b in named if b in d.badges]
+        else:
+            cands = [
+                b
+                for b in derived
+                if not _derived_formula(b).startswith(("sum(", "zero_balance:"))
+            ]
+    elif decision == "component_sum":
+        cands = [
+            b
+            for b in derived
+            if "-" not in _derived_formula(b)
+            and not _derived_formula(b).startswith("zero_balance:")
+        ]
+    elif decision == "mapped":
+        cands = ["as_printed"] if "as_printed" in d.badges else []
+    elif decision == "combined":
+        label = printed_label(resolver_row)
+        cands = list(dict.fromkeys(b for b in d.badges if b.startswith("combined:")))
+        if len(cands) > 1:
+            low = label.lower()
+            cands = [
+                b
+                for b in cands
+                if not _PLACEHOLDER.search(b) and b[len("combined:") :].lower() in low
+            ]
+        if len(cands) == 1 and _PLACEHOLDER.search(cands[0]):
+            if not label:
+                raise BadgeUndecided(f"{where}: combined line without a printed label")
+            cands = ["combined:" + label]
+    else:
+        raise BadgeUndecided(f"{where}: decision carries no value")
+    cands = list(dict.fromkeys(cands))
+    if len(cands) != 1:
+        raise BadgeUndecided(f"{where}: {len(cands)} matching steps {cands}")
+    return cands[0]
+
+
+def _data_points() -> dict[tuple[str, str], DataPointDefinition]:
+    if "dps" not in _CACHE:
+        _CACHE["dps"] = load_data_points()
+    return _CACHE["dps"]  # type: ignore[return-value]
 
 
 def compute_data_points_version(directory: Path | None = None) -> str:

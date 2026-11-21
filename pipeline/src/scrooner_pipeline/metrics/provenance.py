@@ -90,6 +90,9 @@ class InputCell:
     rules_commit: str | None = (
         None  # frozen rules commit behind that rule (predictor output)
     )
+    badge: str | None = (
+        None  # the shown cell's badge (cell_display_state.badge); None = as_printed or unknown
+    )
 
 
 @dataclass(frozen=True)
@@ -124,6 +127,13 @@ class CellRecord:
         ):
             return "PROVEN"
         return "UNCHECKED"
+
+
+def metric_badge(cells) -> str | None:
+    """A metric's badge: the union of its inputs' non-as_printed badges, sorted and joined by '; ' (registry rule "a
+    badge is carried to every ratio that uses it", data_points.csv filter_note). None when every input is as printed."""
+    got = sorted({c.badge for c in cells if c.badge and c.badge != "as_printed"})
+    return "; ".join(got) or None
 
 
 _REGISTRY_NULL_PREFIXES = (

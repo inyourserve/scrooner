@@ -973,8 +973,9 @@ def build_rows(
     }
     served: dict[tuple[int, str, date, date], Decimal] = {}
     served_family: dict[tuple[int, str, date, date], str] = {}
-    for cid, name, s, e, v, fam in conn.execute(
-        """select f.company_id, c.name, p.start_date, p.end_date, f.value, f.family
+    served_fact_id: dict[tuple[int, str, date, date], int] = {}
+    for cid, name, s, e, v, fam, fid in conn.execute(
+        """select f.company_id, c.name, p.start_date, p.end_date, f.value, f.family, f.id
            from analytics.canonical_fact f join core.period p on p.id = f.period_id
            join analytics.canonical_concept c on c.id = f.canonical_concept_id
            where f.company_id = any(%s) and c.name = any(%s) and p.fiscal_period = 'FY' and p.fiscal_year >= %s""",
@@ -982,6 +983,7 @@ def build_rows(
     ).fetchall():
         served[(cid, name, s, e)] = v
         served_family[(cid, name, s, e)] = fam or ""
+        served_fact_id[(cid, name, s, e)] = fid
     proofs = load_current_proofs(conn, ids, names)
     blanks: dict[tuple[int, str, date, date], tuple] = {}
     for row in conn.execute(
@@ -1052,6 +1054,7 @@ def build_rows(
     # one read of every 10-K / 10-Q column: the annual ones feed the no-filing reason guard, all of them the
     # hide audit's period test (a year some 10-K or 10-Q presents is never hidden as pre-filing)
     periodic_columns = ha.read_presenting_columns(conn, ids)
+    sectors = load_sectors(conn, ids)
     columns = {
         cid: [x for x in cols if x.form in cg.ANNUAL_FORMS]
         for cid, cols in periodic_columns.items()
@@ -1072,12 +1075,13 @@ def build_rows(
                     continue
                 s, e = per
                 cand = candidates(dp)
-                svalue = sname = None
+                svalue = sname = sfid = None
                 sfam = ""
                 for n in cand:
                     if (c.company_id, n, s, e) in served:
                         svalue, sname = served[(c.company_id, n, s, e)], n
                         sfam = served_family.get((c.company_id, n, s, e), "")
+                        sfid = served_fact_id.get((c.company_id, n, s, e))
                         break
                 prow = brow = pname = None
                 for n in ([sname] if sname else []) + cand:
@@ -1256,6 +1260,8 @@ def build_rows(
                         "evidence": "",
                         "_shown_acc": pacc or "",
                         "_family": sfam,
+                        "_canonical_fact_id": sfid,
+                        "_sector": sectors.get(c.company_id, "general"),
                         "tag": ptag or "",
                         "value_source": psrc
                         or ("canonical_fact" if svalue is not None else ""),
@@ -1295,6 +1301,7 @@ def build_rows(
     )
     attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
+    attach_badges(rows, load_resolver_steps())
     note = {
         c.company_id: (
             "TEMPLATE_UNAVAILABLE"
@@ -1995,6 +2002,78 @@ def attach_filing_read_hides(
             r["locator_source"] = FILING_READ_HIDE
 
 
+def load_sectors(conn: Any, ids: list[int]) -> dict[int, str]:
+    """company_id -> registry sector (mapper/sector_templates.sic_group of core.company cik and sic_code); one read."""
+    from scrooner_pipeline.mapper.sector_templates import sic_group
+
+    out: dict[int, str] = {}
+    for cid, cik, sic in conn.execute(
+        "select id, cik, sic_code from core.company where id = any(%s)", (ids,)
+    ).fetchall():
+        sic_s = (sic or "").strip()
+        out[cid] = sic_group(
+            str(cik).zfill(10), int(sic_s) if sic_s.isdigit() else None
+        )
+    return out
+
+
+# resolver decisions that put a value (or a combined line) in a cell: the rows a badge is read from
+_BADGE_DECISIONS = {"mapped", "component_sum", "derived_not_printed", "combined"}
+
+
+def load_resolver_steps(
+    resolver_dir: Path = RESOLVER_DIR,
+) -> dict[tuple[str, str], list[tuple[date, dict[str, str]]]]:
+    """(ticker, data_point) -> [(resolver period_end, {decision, flags, nodes})] for the rows whose decision names a
+    fallback step (the CURRENT resolver output, read through resolver_files). Missing file: empty."""
+    out: dict[tuple[str, str], list[tuple[date, dict[str, str]]]] = defaultdict(list)
+    if not rf.resolver_files(resolver_dir):
+        return out
+    with rf.open_rows(resolver_dir) as rows:
+        for r in rows:
+            if r.get("decision") not in _BADGE_DECISIONS:
+                continue
+            out[(r["ticker"], r["data_point"])].append(
+                (
+                    date.fromisoformat(r["period_end"]),
+                    {k: r.get(k) or "" for k in ("decision", "flags", "nodes")},
+                )
+            )
+    return out
+
+
+def attach_badges(
+    rows: list[dict[str, Any]],
+    steps: dict[tuple[str, str], list[tuple[date, dict[str, str]]]],
+) -> None:
+    """Set row['_badge'] on every SHOWN_VALUE cell: metrics/registry.badge_for of the resolver row of the same
+    (ticker, data point, period end) (an exact end first, else the FSN month-end rounding of the cell's end). A shown
+    cell with no resolver row, or whose row names no single fallback step, gets _badge None and the reason in
+    row['_badge_issue'] (one-display-path plan step 2). Pure, in place. It changes no display: until the shown_cell
+    switch (plan steps 5-6, migration 0135) the badge is recorded, never enforced."""
+    from scrooner_pipeline.metrics import registry as reg
+
+    for r in rows:
+        r["_badge"] = None
+        r["_badge_issue"] = ""
+        if r.get("display") != SHOWN_VALUE:
+            continue
+        end = date.fromisoformat(r["period_end"])
+        cands = steps.get((r["ticker"], r["data_point"]), ())
+        hit = next((v for d, v in cands if d == end), None) or next(
+            (v for d, v in cands if fsn_end_matches(d, end)), None
+        )
+        if hit is None:
+            r["_badge_issue"] = "no_resolver_row"
+            continue
+        try:
+            r["_badge"] = reg.badge_for(
+                r["data_point"], r.get("_sector") or "general", hit
+            )
+        except reg.BadgeUndecided as exc:
+            r["_badge_issue"] = f"badge_undecided: {exc}"
+
+
 def apply_display(rows: list[dict[str, Any]]) -> None:
     """Set row['display'] and row['hide_class'] for every cell. Pure, in place. Precedence per cell: a proven or derived
     value is shown; a year that NO periodic report presents (row['_presented'] false) and that either ends before the
@@ -2402,6 +2481,16 @@ def _display_state(
     print(
         f"display-state {'WRITE' if write else 'dry run'}: {len(table_rows)} rows, "
         f"{len({t[0] for t in table_rows})} companies, {counts}"
+    )
+    shown = [r for r in rows if r.get("display") == SHOWN_VALUE]
+    issues: dict[str, int] = {}
+    for r in shown:
+        if not r.get("_badge"):
+            k = (r.get("_badge_issue") or "none").split(":", 1)[0]
+            issues[k] = issues.get(k, 0) + 1
+    print(
+        f"badges (recorded, not enforced before 0135): {sum(1 for r in shown if r.get('_badge'))} of "
+        f"{len(shown)} shown cells badged; without a badge {issues}"
     )
     if not write:
         return

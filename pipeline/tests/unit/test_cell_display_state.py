@@ -4,6 +4,7 @@ Pure tests build the table rows; DB tests run the migration's own SQL (foreign k
 is created in an isolated test database) and prove the writer's scoping and the constraints."""
 
 import re
+from decimal import Decimal
 from pathlib import Path
 
 import psycopg
@@ -93,7 +94,7 @@ def test_state_rows_grain_hide_class_and_out():
     assert got[("revenue", "FY")][4:6] == ("HIDDEN_ROW", "structural_not_presented")
     assert got[("revenue", "FY")][7] == "not presented"
     assert got[("sbc", "FY")][4:6] == ("OPEN", None)
-    assert got[("net_interest_income", "FY")][4:] == (
+    assert got[("net_interest_income", "FY")][4:11] == (
         "OUT",
         None,
         None,
@@ -102,6 +103,116 @@ def test_state_rows_grain_hide_class_and_out():
         "0.68",
         "run1",
     )
+
+
+def test_shown_cell_has_badge_and_value():
+    """One-display-path step 2: a SHOWN_VALUE cell carries badge, value and canonical_fact_id after COLUMNS; every
+    other cell carries none of them."""
+    rows = [
+        _cell(
+            1,
+            "gross_profit",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            shown_value="1234.50",
+            _badge="derived:revenue-cost_of_revenue",
+            _canonical_fact_id=77,
+        ),
+        _cell(
+            1,
+            "revenue",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            shown_value="9000",
+            _badge="as_printed",
+            _canonical_fact_id=78,
+        ),
+        _cell(
+            1,
+            "sbc",
+            "2024-12-31",
+            t100.OPEN,
+            shown_value="5",
+            _badge="as_printed",
+            _canonical_fact_id=79,
+        ),
+        _cell(
+            1, "inventory", "2024-12-31", t100.HIDDEN_ROW, "structural_not_presented"
+        ),
+    ]
+    got = {t[1]: t for t in cds.state_rows(rows, [], "r", "v")}
+    assert len(cds.COLUMNS + cds.BADGE_COLUMNS) == 14
+    assert all(len(t) == 14 for t in got.values())
+    assert got["gross_profit"][11:] == (
+        "derived:revenue-cost_of_revenue",
+        Decimal("1234.50"),
+        77,
+    )
+    assert got["revenue"][11:] == ("as_printed", Decimal(9000), 78)
+    assert got["sbc"][11:] == (None, None, None)
+    assert got["inventory"][11:] == (None, None, None)
+
+
+def test_attach_badges_reads_the_resolver_step_and_records_undecided_cells():
+    from datetime import date
+
+    steps = {
+        ("T", "gross_profit"): [
+            (
+                date(2024, 12, 31),
+                {
+                    "decision": "derived_not_printed",
+                    "flags": "core;DERIVED",
+                    "nodes": "",
+                },
+            )
+        ],
+        # FSN month-end key against a 52/53-week true end
+        ("T", "revenue"): [
+            (date(2024, 9, 30), {"decision": "mapped", "flags": "core", "nodes": ""})
+        ],
+        ("T", "other_income_expense_net"): [
+            (
+                date(2024, 12, 31),
+                {"decision": "component_sum", "flags": "roles", "nodes": ""},
+            )
+        ],
+    }
+    rows = [
+        _cell(1, "gross_profit", "2024-12-31", t100.SHOWN_VALUE, _sector="general"),
+        _cell(1, "revenue", "2024-09-28", t100.SHOWN_VALUE, _sector="general"),
+        _cell(
+            1,
+            "other_income_expense_net",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            _sector="general",
+        ),
+        _cell(
+            1, "cash_and_equivalents", "2024-12-31", t100.SHOWN_VALUE, _sector="general"
+        ),
+        _cell(1, "gross_profit", "2023-12-31", t100.OPEN, _sector="general"),
+    ]
+    before = [r["display"] for r in rows]
+    t100.attach_badges(rows, steps)
+    assert [
+        r["display"] for r in rows
+    ] == before  # records, never changes what is shown
+    assert [r["_badge"] for r in rows] == [
+        "derived:revenue-cost_of_revenue",
+        "as_printed",
+        None,
+        None,
+        None,
+    ]
+    assert rows[2]["_badge_issue"].startswith("badge_undecided")
+    assert rows[3]["_badge_issue"] == "no_resolver_row"
+    assert rows[4]["_badge_issue"] == ""
+
+
+def test_writer_writes_the_0130_columns_until_0135():
+    assert cds.WRITE_BADGE_COLUMNS is False
+    assert "badge" not in cds.INSERT_SQL
 
 
 def test_hidden_cell_with_a_pipeline_state_class_is_refused():
