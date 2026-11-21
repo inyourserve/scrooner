@@ -19,4 +19,3 @@ held,17,V,5718,sga_expense,2022,2022-09-30,HELD,components_without_single_calc_p
 held,17,V,5718,sga_expense,2023,2023-09-30,HELD,components_without_single_calc_parent,held by the tag-map mapper: components_without_single_calc_parent,,0001403161-23-000099,R5.htm,
 held,17,V,5718,sga_expense,2024,2024-09-30,HELD,components_without_single_calc_parent,held by the tag-map mapper: components_without_single_calc_parent,,0001403161-24-000058,R5.htm,
 held,17,V,5718,sga_expense,2025,2025-09-30,HELD,components_without_single_calc_parent,held by the tag-map mapper: components_without_single_calc_parent,,0001403161-25-000089,R5.htm,
-gap_fill,17,V,5718,shares_outstanding,2026,2026-09-30,REASON,docmap_not_presented,"BS parenthetical R4 prints shares outstanding per class only (Class A 1,728m; B-1/B-2/B-3; C); no undimensioned CommonStockSharesOutstanding; dei cover count is never used; check: hand R4.htm",,0001403161-26-000134,R4.htm,
