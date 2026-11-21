@@ -978,6 +978,21 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     if qtrs is None:
         p.reason_text = f"grain {shown.period_grain} has no FSN duration"
         return p
+    if shown.accession and structure.adsh != shown.accession:
+        # one vintage: every part of the sum is read from the filing the shown value comes from. Another filing's
+        # parts (the own-year 10-K's G&A 6,872 + S&M under GOOG FY2017 SG&A, shown from the FY2019 10-K's 6,840)
+        # judge a different print, so the cell cannot be checked in that filing: UNCHECKED, never a mismatch.
+        p.checks["component_parts"] = {
+            "status": "n/a",
+            "why": "parts_not_in_the_shown_filing",
+            "shown_accession": shown.accession,
+            "structure_accession": structure.adsh,
+        }
+        p.reason_text = (
+            f"component sum not provable: the shown value comes from {shown.accession}, the parts would be read "
+            f"from {structure.adsh}; a tie never mixes filing vintages"
+        )
+        return p
     notes: list[str] = []
     total = Decimal(0)
     found: list[dict[str, Any]] = []

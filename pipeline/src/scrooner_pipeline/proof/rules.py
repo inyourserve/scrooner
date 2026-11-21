@@ -87,7 +87,15 @@ RULES: dict[str, Rule] = {
             owners=("proof/prove.py:_check_components_sum",),
         ),
         Rule("unit_scale", 1, check_keys=("unit_scale",)),
-        Rule("component_parts", 1, check_keys=("component_parts",)),
+        Rule(
+            "component_parts",
+            2,
+            check_keys=("component_parts",),
+            owners=("proof/prove.py:prove_component",),
+            note="v2 (2026-11-22): every part is read from the filing the shown value comes from; a structure of "
+            "another accession leaves the cell UNCHECKED (parts_not_in_the_shown_filing), never a cross-vintage "
+            "mismatch (GOOG G&A FY2017 6,872 own-year vs 6,840 latest print)",
+        ),
         Rule("printed_zero", 1, check_keys=("printed_zero",)),
         Rule("restated_history", 1, check_keys=("restated_history",)),
         Rule("pre_filing", 1, check_keys=("pre_filing",)),

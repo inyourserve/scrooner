@@ -45,9 +45,14 @@ VERDICT_SOURCES = (
 )
 
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
-PINNED_HASH = "7074f353cd445549bc479a5b17ec3b385946c86e77ec4de2c27e55b28157c054"
+# 2026-11-22: re-pinned at the same floor; prove_component moved under rule component_parts (v2), no floor change
+PINNED_HASH = "86de81ae80c7d3cdefd50391c32ad212762a8a3343a628a155c835ffcc1cfa29"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
+    "component_parts": (
+        2,
+        "a60a83efb8b9e2f56736c946147e1751d7a12415370ad1d873dfc1adb491cb7f",
+    ),
     "identity_tie": (
         1,
         "b94e6b59a25fcc2327c812959fa1e8f4711efac36d91e3b7af754131cde88734",
