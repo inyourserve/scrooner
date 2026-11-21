@@ -763,23 +763,80 @@ def _fy_periods(
     today: date,
     annual: dict[int, list[tuple[date, str]]] | None = None,
 ) -> dict[tuple[int, int, str], tuple[date, date]]:
-    """(company, fiscal_year, 'duration'|'instant') -> (start, end) of the FY period ending last (duration >= 300 days)
-    among the periods an annual filing has reached (reached_by_filing)."""
+    """(company, fiscal_year, 'duration'|'instant') -> (start, end) of the company's fiscal year (duration >= 300 days)
+    among the periods an annual filing has reached (reached_by_filing).
+
+    core.period can hold several FY-labelled periods for one fiscal year: PG FY2024 has 2023-07-01..2024-06-30 and a
+    stray 2023-10-01..2024-09-30; MU FY2023 has 2022-09-02..2023-08-31 and a calendar 2023; MU FY2026 has instants
+    2026-09-03 and 2026-09-12. Taking the latest end keyed 78 open cells to a quarter date (Dhairya, 2026-11-21). The
+    period is anchored to the annual filings instead: a candidate must end at an annual filing's period (fsn_end_matches,
+    which allows 52/53-week ends and the SEC's month-end rounding), and the closest one wins (ties: later end). A year
+    with no matching annual filing in the store keeps the latest end (no evidence either way)."""
     cur = conn.execute(
         """select company_id, fiscal_year, period_type, start_date, end_date from core.period
            where company_id = any(%s) and fiscal_period = 'FY' and fiscal_year >= %s and end_date <= %s""",
         (ids, FIRST_FY, today),
     )
-    best: dict[tuple[int, int, str], tuple[date, date]] = {}
+    cands: dict[tuple[int, int, str], list[tuple[date, date]]] = defaultdict(list)
     for cid, fy, ptype, s, e in cur.fetchall():
         if ptype == "duration" and (e - s).days < 300:
             continue
         if annual is not None and not reached_by_filing(e, annual.get(cid), today):
             continue
-        key = (cid, fy, ptype)
-        if key not in best or e > best[key][1]:
-            best[key] = (s, e)
+        cands[(cid, fy, ptype)].append((s, e))
+    # 52/53-week filer or calendar filer, by vote over the years with ONE duration candidate (BLK, BAC, KLAC are
+    # calendar/month-end filers with a stray 364-day duplicate; Deere and MU are 52/53-week filers)
+    votes: dict[int, int] = defaultdict(int)
+    for (cid, _fy, ptype), periods in cands.items():
+        if ptype == "duration" and len(periods) == 1:
+            votes[cid] += 1 if _whole_weeks(periods[0]) else -1
+    best: dict[tuple[int, int, str], tuple[date, date]] = {}
+    for key, periods in cands.items():
+        best[key] = pick_fy_period(
+            periods, (annual or {}).get(key[0]), weekly=votes.get(key[0], 0) > 0
+        )
     return best
+
+
+def _whole_weeks(se: tuple[date, date]) -> bool:
+    return (se[1] - se[0]).days + 1 in (364, 371)
+
+
+def _style_fits(se: tuple[date, date], weekly: bool) -> bool:
+    """An instant fits either style; a duration fits when its length is the company's kind of year."""
+    if se[0] == se[1]:
+        return True
+    return _whole_weeks(se) if weekly else (se[1] - se[0]).days + 1 in (365, 366)
+
+
+def pick_fy_period(
+    periods: list[tuple[date, date]],
+    filings: list[tuple[date, str]] | None,
+    weekly: bool = False,
+) -> tuple[date, date]:
+    """The (start, end) among one fiscal year's candidate periods that ends at an annual filing's period. Order: the
+    company's year length first (`weekly`: 364 or 371 days, a 52/53-week year; else 365 or 366 days), then the closest
+    end in days, then the later end, then the earlier start. The filing period is month-end rounded for 52/53-week
+    filers (Deere's 10-Ks say 10-31 for FY2015, which ended 2015-11-01, and FY2016, which ended 2016-10-30), so the
+    length decides between duplicates. No annual filing matches any candidate: the latest end (the old rule). Pure."""
+    ends = [p for p, _ in filings or []]
+
+    def dist(e: date) -> int | None:
+        near = [abs((e - p).days) for p in ends if fsn_end_matches(p, e, _DAY_TOL)]
+        return min(near) if near else None
+
+    anchored = [(d, se) for se in periods if (d := dist(se[1])) is not None]
+    if anchored:
+        return min(
+            anchored,
+            key=lambda x: (
+                not _style_fits(x[1], weekly),
+                x[0],
+                -x[1][1].toordinal(),
+                x[1][0].toordinal(),
+            ),
+        )[1]
+    return max(periods, key=lambda se: (se[1], -se[0].toordinal()))
 
 
 def load_current_proofs(

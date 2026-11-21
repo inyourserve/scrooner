@@ -718,3 +718,112 @@ def test_resolve_derived_classifies_a_derived_pair_as_derived_with_parts_and_pag
     # no verified parts (cross-filing, missing, wrong sum): never DERIVED
     assert run({})["class"] == "UNCHECKED"
     assert run(None)["class"] == "UNCHECKED"
+
+
+def test_fy_period_is_anchored_to_the_annual_filing_not_the_latest_end():
+    """PG FY2024 -> 2024-06-30, MU FY2023 -> 2023-08-31, MU FY2026 balance sheet -> 2026-09-03 (Dhairya 2026-11-21:
+    78 open cells were keyed to a stray later period). MU is a 52/53-week filer: its filings' period says 08-31."""
+    from datetime import date
+
+    from scrooner_pipeline.mapper.top100_coverage import pick_fy_period
+
+    D = date
+    pg = [(D(2023, 6, 30), "a"), (D(2024, 6, 30), "b"), (D(2025, 6, 30), "c")]
+    mu = [(D(2023, 8, 31), "a"), (D(2024, 8, 31), "b"), (D(2026, 8, 31), "c")]
+    assert pick_fy_period(
+        [(D(2023, 7, 1), D(2024, 6, 30)), (D(2023, 10, 1), D(2024, 9, 30))], pg
+    )[1] == D(2024, 6, 30)
+    assert pick_fy_period(
+        [(D(2022, 9, 2), D(2023, 8, 31)), (D(2023, 1, 1), D(2023, 12, 31))], mu
+    )[1] == D(2023, 8, 31)
+    assert pick_fy_period(
+        [(D(2026, 9, 3), D(2026, 9, 3)), (D(2026, 9, 12), D(2026, 9, 12))], mu
+    )[1] == D(2026, 9, 3)
+    assert pick_fy_period([(D(2023, 9, 1), D(2024, 8, 29))], mu, weekly=True)[1] == D(
+        2024, 8, 29
+    ), "52/53-week end matches 08-31"
+    # Deere (52/53 weeks; its 10-Ks say 10-31): FY2015 ended 2015-11-01, FY2016 ended 2016-10-30 (scrooner-bd, 2026-11-21)
+    de = [(D(2015, 10, 31), "a"), (D(2016, 10, 31), "b"), (D(2017, 10, 31), "c")]
+    assert pick_fy_period(
+        [(D(2014, 11, 1), D(2015, 10, 31)), (D(2014, 11, 3), D(2015, 11, 1))],
+        de,
+        weekly=True,
+    )[1] == D(2015, 11, 1)
+    assert pick_fy_period(
+        [(D(2015, 11, 1), D(2016, 10, 31)), (D(2015, 11, 2), D(2016, 10, 30))],
+        de,
+        weekly=True,
+    )[1] == D(2016, 10, 30)
+    assert pick_fy_period(
+        [(D(2016, 10, 31), D(2017, 10, 29)), (D(2017, 1, 1), D(2017, 12, 31))],
+        de,
+        weekly=True,
+    )[1] == D(2017, 10, 29)
+    # calendar filers keep their 365/366-day year beside a stray 364-day duplicate (BLK 2019, BAC 2018)
+    blk = [(D(2019, 12, 31), "a"), (D(2018, 12, 31), "b")]
+    assert pick_fy_period(
+        [(D(2019, 1, 1), D(2019, 12, 31)), (D(2019, 1, 2), D(2019, 12, 30))], blk
+    )[1] == D(2019, 12, 31)
+    assert pick_fy_period(
+        [(D(2018, 1, 2), D(2018, 12, 31)), (D(2018, 1, 1), D(2018, 12, 31))], blk
+    )[0] == D(2018, 1, 1)
+    # no annual filing matches: the latest end, as before
+    assert pick_fy_period(
+        [(D(2014, 1, 1), D(2014, 12, 31)), (D(2014, 4, 1), D(2015, 3, 31))], pg
+    )[1] == D(2015, 3, 31)
+    assert pick_fy_period([(D(2014, 1, 1), D(2014, 12, 31))], None)[1] == D(
+        2014, 12, 31
+    )
+
+
+def test_fy_instant_is_the_chosen_year_end_mu_fy2026():
+    from datetime import date as D
+
+    from scrooner_pipeline.mapper.top100_coverage import _fy_periods
+
+    class Conn:
+        def execute(self, *_a):
+            return self
+
+        def fetchall(self):
+            return [
+                (1, 2026, "duration", D(2025, 8, 29), D(2026, 9, 3)),
+                (1, 2026, "instant", D(2026, 9, 12), D(2026, 9, 12)),
+                (1, 2026, "instant", D(2026, 9, 3), D(2026, 9, 3)),
+            ]
+
+    got = _fy_periods(Conn(), [1], D(2026, 11, 21), {1: [(D(2026, 8, 31), "acc")]})
+    assert got[(1, 2026, "instant")] == (D(2026, 9, 3), D(2026, 9, 3))
+    assert got[(1, 2026, "duration")][1] == D(2026, 9, 3)
+
+
+def test_fy_periods_votes_the_company_year_style():
+    """A 52/53-week filer (single-candidate years of 364 days) takes Deere's real FY2016 end; a calendar filer keeps 12-31."""
+    from datetime import date as D
+
+    from scrooner_pipeline.mapper.top100_coverage import _fy_periods
+
+    rows = [
+        (1, 2017, "duration", D(2016, 10, 31), D(2017, 10, 29)),
+        (1, 2018, "duration", D(2017, 10, 30), D(2018, 10, 28)),
+        (1, 2016, "duration", D(2015, 11, 1), D(2016, 10, 31)),
+        (1, 2016, "duration", D(2015, 11, 2), D(2016, 10, 30)),
+        (2, 2018, "duration", D(2018, 1, 1), D(2018, 12, 31)),
+        (2, 2019, "duration", D(2019, 1, 1), D(2019, 12, 31)),
+        (2, 2019, "duration", D(2019, 1, 2), D(2019, 12, 30)),
+    ]
+
+    class Conn:
+        def execute(self, *_a):
+            return self
+
+        def fetchall(self):
+            return rows
+
+    ann = {
+        1: [(D(y, 10, 31), "a") for y in (2016, 2017, 2018)],
+        2: [(D(y, 12, 31), "b") for y in (2018, 2019)],
+    }
+    got = _fy_periods(Conn(), [1, 2], D(2026, 11, 21), ann)
+    assert got[(1, 2016, "duration")][1] == D(2016, 10, 30)
+    assert got[(2, 2019, "duration")][1] == D(2019, 12, 31)
