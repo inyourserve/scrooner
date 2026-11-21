@@ -898,6 +898,15 @@ def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
                 out.append(
                     _hide_fail(c, "pre_filing applies to a year, not a whole row")
                 )
+            elif hc == HC_VERIFIED_ABSENT and c.display != HIDDEN_YEAR:
+                # doc 02 rule 1 defines it for a year inside the filing window; a row hidden in
+                # every year is structural_not_presented (JNJ 2026-11-16 passed this misfit)
+                out.append(
+                    _hide_fail(
+                        c,
+                        "verified_absent applies to a year, not a whole row (that is structural_not_presented)",
+                    )
+                )
             elif hc == HC_VERIFIED_ABSENT and c.data_point not in HIDE_YEAR_ALLOWLIST:
                 out.append(
                     _hide_fail(
@@ -1589,8 +1598,8 @@ def certificate(
                 "period_end": c.period_end,
                 "grain": _grain(c.data_point),
                 "display": c.display,
-                "hide_class": c.hide_class,
-                "reason_code": c.reason_code,
+                "hide_class": c.hide_class or None,
+                "reason_code": c.reason_code or None,
                 "shown_value": None if c.value is None else str(c.value),
                 "accession": c.accession or None,
                 "r_page": c.r_page or None,

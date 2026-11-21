@@ -889,3 +889,50 @@ def test_only_after_tax_hidden_year_is_a_doc02_class_judged_by_the_printed_line_
     assert [f.severity for f in dc.check_hidden_years([shown, hid], ye, {})] == ["INFO"]
     printed = dc.check_hidden_years([shown, hid], ye, {"A": {"ShareBasedCompensation"}})
     assert [f.severity for f in printed] == ["FAIL"]
+
+
+def test_verified_absent_is_a_year_class_and_json_writes_null_not_empty():
+    row = dc.Cell(
+        "operating_income",
+        "2022",
+        "2022-12-31",
+        dc.HIDDEN_ROW,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "x",
+        "verified_absent",
+    )
+    year = dc.Cell(
+        "operating_income",
+        "2022",
+        "2022-12-31",
+        dc.HIDDEN_YEAR,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "x",
+        "verified_absent",
+    )
+    assert [f.severity for f in dc.check_hide_reasons([row])] == ["FAIL"]
+    assert dc.check_hide_reasons([year]) == []
+    shown = dc.Cell(
+        "revenue",
+        "2023",
+        "2023-12-31",
+        dc.SHOWN,
+        D(1),
+        ACC,
+        "R4",
+        "Revenues",
+        (),
+        "",
+        "",
+    )
+    run = dc.Run("T", "c", "0" * 64, "s", {}, cells=[shown])
+    c = dc.certificate(run, None, "d", "a")["cells"][0]
+    assert c["hide_class"] is None and c["reason_code"] is None

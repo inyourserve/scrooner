@@ -26,3 +26,13 @@ Approver: Ritwik (cloud), session_01GLmSDz8UUfjBrVex2j8ugb. Asked by the Mac ses
 7. **Recommendation:** not as written. A backfill timestamp must never read as an apply time. Make applied_at nullable, and add a source column (`recorded` or `backfilled`) plus backfilled_at, or take the real time from evidence (a CI run or a session log) where one exists.
 
 Also recommended: have `certify_display.py` write a machine-readable certificate (JSON: drawn cells, census results, hide proofs, versions) for the loader to read, instead of parsing markdown. The approver can add this.
+
+## Addendum, 2026-11-21 (after the 0131/0132 load)
+
+8. **A change between two hide classes makes a cell stale for review, not void.** No shown value is wrong either way. But the certificate proved a specific claim ("hidden because X"), so the company is not display_certified until re-certified on an export with the new class. Re-certification is one certify_display run on a new coverage file and request. A change from hidden to shown, or a changed shown value, accession or display class, is stale_display as before.
+9. **JNJ 674389ae: the certificate's class claim was wrong for 22 cells, and the approver missed it.** operating_income and shares_outstanding (11 years each) were hidden as whole rows with hide_class `verified_absent`. Doc 02 rule 1 defines verified absence only for a year inside the filing window. A row hidden in every year is `structural_not_presented`, which is what live analytics.cell_display_state now says.
+   - The proof the tool ran on these rows (no presented, undimensioned, annual fact of the family at any display-year end) is the structural proof, so the evidence holds under the corrected class.
+   - certify_display now rejects `verified_absent` on a HIDDEN_ROW (main, this commit).
+   - JNJ stays stale until a new export and request are certified.
+10. **GILD e4ed0b0f has no hide_class** because its coverage file predates the column (532fc006). null means "not recorded", not empty. GILD is stale for the same reason as JNJ until it is re-exported with hide_class and re-certified.
+11. **Loader NULLs:** the `""` hide_class values on 462 JNJ shown cells came from the certificate JSON, not the loader. certify_display now writes null for an empty hide_class or reason_code. The committed JNJ certificate still holds `""`, so the loader should read `""` as null until JNJ is re-certified.
