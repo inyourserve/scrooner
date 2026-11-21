@@ -18,9 +18,10 @@ name: Onboard companies, step 2 (filings into core and FSN, plus dimensional not
 # Idempotent and resumable per company: every stage upserts or is insert-only; `load --increment` only adds the
 # accessions fsn.filing lacks; a shard that hits `max_minutes` defers the rest and reports it: rerun the same dispatch.
 # Width: `width` shards (1 to 8), round-robin by CIK. SEC rate: only `fsn nightly` and the bootstrap fetch from SEC.
-# Each runner holds at most 2 req/s (SEC_MAX_REQUESTS_PER_SECOND and SCROONER_EDGAR_MAX_RPS are both 2) and the limiter
-# lock is per machine, so the shard matrix is capped at max-parallel 2 runners: 2 x 2 = 4 req/s, the repo ceiling.
-# The bootstrap job runs before the shards, never beside them. Do not raise max-parallel without lowering the rate.
+# The repo ceiling is 2 SEC req/s in total (founder 2026-11-17; common/sec_rate.py). The limiter lock is per machine, so
+# a single-runner job holds 2 req/s (SEC_MAX_REQUESTS_PER_SECOND and SCROONER_EDGAR_MAX_RPS both 2) and the shard matrix,
+# capped at max-parallel 2 runners, holds 1 req/s per runner: 2 x 1 = 2 req/s. The bootstrap job runs before the shards,
+# never beside them. Do not raise max-parallel or a runner's rate without keeping runners x rate <= 2.
 # Queue: manual-db-jobs. The guard (scripts/ci/heavy_job_guard.sh) lists this workflow as a heavy job and as an FSN
 # write: the top-100 flow, refresh and sanity wait for it, and apply refuses to start beside another heavy job.
 on:
@@ -193,7 +194,7 @@ jobs:
     timeout-minutes: 340
     strategy:
       fail-fast: false
-      # SEC budget: each runner is <= 2 req/s, the limiter is per machine, so two at once is the 4 req/s ceiling
+      # SEC budget: the limiter is per machine, so two runners at 1 req/s each is the 2 req/s ceiling
       max-parallel: 2
       matrix:
         ciks: ${{ fromJSON(needs.plan.outputs.shards) }}
@@ -205,8 +206,8 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
-      SCROONER_EDGAR_MAX_RPS: "2"
-      SEC_MAX_REQUESTS_PER_SECOND: "2"
+      SCROONER_EDGAR_MAX_RPS: "1"
+      SEC_MAX_REQUESTS_PER_SECOND: "1"
       SHARD_CIKS: ${{ matrix.ciks }}
       SINCE: ${{ inputs.since }}
       MAX_MINUTES: ${{ inputs.max_minutes }}

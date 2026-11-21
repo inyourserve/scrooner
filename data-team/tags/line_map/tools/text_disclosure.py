@@ -1,6 +1,6 @@
 """Text-disclosure reader: amounts and explicit zeros a 10-K states only in prose (Dhairya direction 2026-11-16).
 
-    python3 text_disclosure.py fetch CELLS.csv CACHE_DIR          (sec.gov only, <= 2 requests a second, SEC_USER_AGENT)
+    python3 text_disclosure.py fetch CELLS.csv CACHE_DIR          (sec.gov only, the shared machine-wide SEC budget of sec_pace.py, SEC_USER_AGENT)
     python3 text_disclosure.py read  CELLS.csv CACHE_DIR OUT.csv
     python3 text_disclosure.py cells RESOLVER.csv CELLS.csv TICKERS DATA_POINTS [LATER=2]   (open cells: own 10-K + next LATER 10-Ks)
 
@@ -24,20 +24,18 @@ Rules (never infer from silence; ambiguous wording stays open):
 import csv, html, json, os, re, sys, time, urllib.request
 from decimal import Decimal
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sec_pace
+
 UA = os.environ.get('SEC_USER_AGENT', '')
-MIN_INTERVAL = float(os.environ.get('TEXT_MIN_INTERVAL', '0.5'))
-_last = [0.0]
 
 
 def get(url):
     assert url.startswith('https://www.sec.gov/'), url
     assert UA, 'set SEC_USER_AGENT'
-    wait = _last[0] + MIN_INTERVAL - time.time()
-    if wait > 0:
-        time.sleep(wait)
     for i in range(4):
+        sec_pace.wait()   # the shared machine-wide budget
         try:
-            _last[0] = time.time()
             with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Encoding': 'identity'}), timeout=60) as r:
                 return r.read().decode('utf-8', 'replace')
         except Exception:

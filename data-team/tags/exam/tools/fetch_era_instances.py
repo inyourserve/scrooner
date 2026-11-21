@@ -1,13 +1,12 @@
-"""Era instance reads (sec.gov, <=3 req/s, SEC_USER_AGENT from env): finance/capital-lease balance-sheet location and per-series interest."""
+"""Era instance reads (sec.gov, paced by the shared machine-wide SEC budget, SEC_USER_AGENT from env): finance/capital-lease balance-sheet location and per-series interest."""
 import json,subprocess,os,re,time,sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'line_map', 'tools'))
+import sec_pace
 ua=os.environ['SEC_USER_AGENT']; out=open('eras/instances.jsonl','a')
 done={json.loads(l)['acc'] for l in open('eras/instances.jsonl')} if os.path.getsize('eras/instances.jsonl') else set()
-last=[0.0]
 def g(u):
     for i in range(4):
-        w=0.34-(time.time()-last[0])
-        if w>0: time.sleep(w)
-        last[0]=time.time()
+        sec_pace.wait()
         r=subprocess.run(['curl','-sS','--max-time','120','-A',ua,u],capture_output=True,text=True)
         if r.returncode==0 and r.stdout: return r.stdout
         time.sleep(3*(i+1))

@@ -1,4 +1,3 @@
-import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -8,15 +7,14 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from scrooner_pipeline.collector.retry import HTTP_RETRY
 from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.common import sec_rate
 from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 
 logger = structlog.get_logger()
 
-SEC_RATE_CEILING = 4.0  # root CLAUDE.md: at most 4 SEC requests per second
-
-DEFAULT_RATE_LIMITER_LOCK_PATH = (
-    Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock"
-)
+# ONE budget for the machine: 2 requests per second in total (common/sec_rate.py; founder 2026-11-17, root CLAUDE.md)
+SEC_RATE_CEILING = sec_rate.SEC_RATE_CEILING
+DEFAULT_RATE_LIMITER_LOCK_PATH = sec_rate.LOCK_PATH
 
 
 def _RateLimiter(
@@ -26,17 +24,18 @@ def _RateLimiter(
     import `_RateLimiter` from this module). The real implementation moved
     to common/rate_limiter.py 2026-09-06, shared with
     company_master/yfinance_industry.py -- see that module's own docstring
-    for the original 2026-08-29 bug this class fixes."""
-    return CrossProcessRateLimiter(
-        max_per_second, lock_path or DEFAULT_RATE_LIMITER_LOCK_PATH
-    )
+    for the original 2026-08-29 bug this class fixes. Since 2026-11-21 the
+    rate is clamped to common/sec_rate.py's ceiling and the lock file is the
+    machine-wide SEC one, whatever the caller passes."""
+    return sec_rate.limiter(max_per_second, lock_path)
 
 
 class SECClient:
     """Fetches from www.sec.gov / data.sec.gov per doc 07's access rules:
     declared User-Agent on every request, aggregate rate capped at
-    settings.sec_max_requests_per_second (doc 02's buffer under SEC's 10/s
-    ceiling), retry-with-backoff on 429/5xx rather than failing immediately.
+    settings.sec_max_requests_per_second and never above sec_rate.SEC_RATE_CEILING
+    (2/s in total for the machine; SEC's own ceiling is 10/s), retry-with-backoff
+    on 429/5xx rather than failing immediately.
     The retry predicate itself (`HTTP_RETRY`) lives in collector/retry.py --
     doc 06 module 9 -- so this client and storage.py share one definition of
     "transient" instead of each keeping their own copy.

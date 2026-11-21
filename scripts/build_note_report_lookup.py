@@ -89,7 +89,7 @@ def main(covs: list[Path], cache: Path, out: Path, attempted: Path | None) -> in
 
         from scrooner_pipeline.fsn_store.edgar_fetch import EdgarClient
 
-        # 2 requests/s: the SEC's 4/s is one budget for every session on the machine
+        # the SEC budget is 2/s in total for every session on the machine (common/sec_rate.py clamps the client)
         client = EdgarClient(os.environ["SEC_USER_AGENT"], max_per_second=2.0)
         done = (
             set(attempted.read_text().split())

@@ -1,18 +1,18 @@
 """Read-only: for each pre-842 10-K, stream the XBRL instance from sec.gov and keep only the capital/finance lease
-obligation facts with their context date and dimensions (BalanceSheetLocationAxis etc.). <=3 requests/s, declared UA."""
+obligation facts with their context date and dimensions (BalanceSheetLocationAxis etc.). Paced by the shared machine-wide
+SEC budget (sec_pace.py, 2 requests/s in total), declared UA."""
 import json, os, re, sys, time, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sec_pace
 UA = os.environ['SEC_USER_AGENT']
 OUT = sys.argv[2]
 done = set()
 if os.path.exists(OUT):
     for l in open(OUT): done.add(json.loads(l)['acc'])
-last = [0.0]
 def get(url):
-    w = 0.34 - (time.time() - last[0])
-    if w > 0: time.sleep(w)
-    last[0] = time.time()
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Encoding': 'identity'})
     for i in range(4):
+        sec_pace.wait()
         try:
             with urllib.request.urlopen(req, timeout=60) as r: return r.read()
         except Exception as e:

@@ -13,8 +13,8 @@ name: Onboard companies, step 1 (company, CIK, predecessor windows)
 # klass) is refused. After new history rows, rerun this workflow so identity routes the predecessor's filings.
 # SEC rate: this one job is the only SEC fetcher in the run, at most 2 req/s (SEC_MAX_REQUESTS_PER_SECOND and
 # SCROONER_EDGAR_MAX_RPS are both 2). The limiter lock is per machine; steps run one after another, so the run is
-# <= 2 req/s. Nothing else here runs a second SEC fetcher; the whole repo budget is 4 req/s, so never run two
-# onboarding SEC jobs on different runners without max-parallel 2 (the filings workflow caps itself that way).
+# <= 2 req/s, which is the whole repo budget (2 req/s in total, founder 2026-11-17; common/sec_rate.py). Never run a
+# second SEC fetcher on another runner beside this one (the filings workflow splits the budget across its 2 runners).
 # Queue: manual-db-jobs (never beside top100-flow, cells-load, cells-proof). The guard (scripts/ci/heavy_job_guard.sh)
 # treats this workflow as a heavy job: apply refuses to start while any other heavy job runs or is queued.
 on:

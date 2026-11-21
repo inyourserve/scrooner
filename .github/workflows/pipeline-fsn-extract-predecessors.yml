@@ -5,7 +5,7 @@ name: FSN extract for predecessor CIKs (SEC -> fsn-notes/predecessors)
 # zips (sec.gov only, declared User-Agent, one request per set, sets run one after another) and keeps
 # the given CIKs' filings byte for byte. `apply: true` uploads them to fsn-notes/predecessors/<set>/
 # (founder's typed go-ahead in scrooner-87, 2026-11-01); the cohort extracts are not touched.
-# At most 4 jobs at once: never more than 4 SEC requests in flight. No database writes.
+# At most 2 jobs at once: never more than 2 SEC requests in flight (the repo ceiling is 2 req/s in total). No database writes.
 on:
   workflow_dispatch:
     inputs:
@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 330
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         chunk: ${{ fromJSON(needs.sets.outputs.chunks) }}
     env:

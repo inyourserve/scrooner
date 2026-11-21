@@ -23,7 +23,7 @@ The easiest way to screen US companies with complex fundamental logic in plain E
 - **`core.fact.is_authoritative = false` is a hard filter.** "No authoritative fact" is a valid null; never fall back to an arbitrary non-authoritative row.
 - **Schema changes only through a committed migration.** Claim the number in doc 53 first. Numbers must be contiguous (`scripts/check_migrations.py`); permanently skipped numbers are listed in `pipeline/db/migrations/SKIPPED.txt`. Every file ends with a semicolon. Never apply a migration without the founder's typed words.
 - **A commit on `main` is pushed in the same turn.** Do not leave local-only commits. Commit through a temporary worktree of `origin/main` with named paths only, because the working tree is shared and dirty.
-- **SEC access: 4 requests per second at most, sec.gov only**, with a declared User-Agent. There is no request-count budget cap (founder, 2026-11-04). Rules: doc 07.
+- **SEC access: 2 requests per second at most in total across every session, agent and tool on the machine (founder, 2026-11-17), sec.gov only**, with a declared User-Agent. One shared limiter: `pipeline/src/scrooner_pipeline/common/sec_rate.py` (tools: `data-team/tags/line_map/tools/sec_pace.py`); never a private sleep loop. There is no request-count budget cap (founder, 2026-11-04). Rules: doc 07.
 - **New dependencies, FastAPI, Redis, Celery** are deferred until a demonstrated need (doc 02).
 - **Test a script the way CI invokes it, and mutation-check the test** (it must fail without the fix). CI runs the DB-backed tests against Postgres 16 since 2026-11-04; do not mark a failing DB test skipped to get green.
 - Cite the exact source for any historical claim; do not copy facts into new permanent documents.

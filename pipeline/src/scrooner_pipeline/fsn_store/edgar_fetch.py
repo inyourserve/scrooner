@@ -4,15 +4,14 @@ Per filing, about 10-20 requests: the directory index (index.json), the index he
 time, form, period, filer CIKs), FilingSummary.xml, MetaLinks.json, the instance, the filer's
 schema(s) and separate linkbases, and the R pages of the cover and the statements (FSN `pre` mirrors
 what the renderer shows on them). Doc 07 access rules: the declared User-Agent, at most
-MAX_REQUESTS_PER_SECOND across processes (the shared SECClient limiter, held at 4/s here whatever
-the setting), retry with backoff on 429/5xx. Files are kept byte for byte; nothing is parsed beyond
+MAX_REQUESTS_PER_SECOND across processes (the one machine-wide SEC limiter of common/sec_rate.py,
+2 requests/s in total whatever the setting), retry with backoff on 429/5xx. Files are kept byte for byte; nothing is parsed beyond
 what is needed to decide which files to fetch.
 """
 
 from __future__ import annotations
 
 import re
-import tempfile
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -20,11 +19,12 @@ from typing import Any, Protocol
 
 import structlog
 
+from scrooner_pipeline.common import sec_rate
 from scrooner_pipeline.fsn_store.xbrl_fsn import ConversionError, FilingFiles
 
 logger = structlog.get_logger()
 ARCHIVES = "https://www.sec.gov/Archives/edgar/data"
-MAX_REQUESTS_PER_SECOND = 4.0
+MAX_REQUESTS_PER_SECOND = sec_rate.SEC_RATE_CEILING  # 2/s in total for the machine
 LINKBASE = re.compile(r"_(pre|cal|lab|def)\.xml$")
 RENDERED_MENUS = ("Cover", "Statements")
 
@@ -34,9 +34,9 @@ class Getter(Protocol):
 
 
 class EdgarClient:
-    """httpx with the declared User-Agent, the shared cross-process SEC limiter (the same lock file as
-    common.sec_client, so this and any other SEC job on the machine share one budget) at 4 requests/s,
-    and retry with backoff on 429/5xx/transport errors (collector.retry.HTTP_RETRY)."""
+    """httpx with the declared User-Agent, the shared cross-process SEC limiter (common.sec_rate: the same
+    lock file as common.sec_client and the tools, so every SEC job on the machine shares one budget of
+    2 requests/s), and retry with backoff on 429/5xx/transport errors (collector.retry.HTTP_RETRY)."""
 
     def __init__(self, user_agent: str, max_per_second: float | None = None):
         import os
@@ -44,23 +44,17 @@ class EdgarClient:
         import httpx
 
         if max_per_second is None:
-            # SCROONER_EDGAR_MAX_RPS lowers the rate (the filing-loader workflow sets 2); never above 4
+            # SCROONER_EDGAR_MAX_RPS lowers the rate (a multi-runner workflow sets 1); never above the ceiling
             max_per_second = float(
                 os.environ.get("SCROONER_EDGAR_MAX_RPS") or MAX_REQUESTS_PER_SECOND
             )
         if max_per_second <= 0:
             raise ValueError("SCROONER_EDGAR_MAX_RPS must be positive")
 
-        from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
-
         if not user_agent or "@" not in user_agent:
             raise ValueError("SEC_USER_AGENT must declare a contact (doc 07)")
-        # the lock file of common.sec_client (DEFAULT_RATE_LIMITER_LOCK_PATH), without importing the
-        # settings that module needs: one budget for every SEC job on the machine
-        self._limiter = CrossProcessRateLimiter(
-            min(max_per_second, MAX_REQUESTS_PER_SECOND),
-            Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock",
-        )
+        # one budget for every SEC job on the machine (the lock file and ceiling of common.sec_rate)
+        self._limiter = sec_rate.limiter(max_per_second)
         self._client = httpx.Client(
             headers={"User-Agent": user_agent, "Accept-Encoding": "gzip, deflate"},
             timeout=60.0,

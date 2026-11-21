@@ -5,7 +5,7 @@ Design: data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md.
 1. `candidates`: cohort companies' periodic filings (10-K, 10-Q, their transition forms and
    amendments) with a period on or after the 2014-01-01 floor, filed in the last `lookback_days`,
    whose accession the store does not hold yet (fsn.filing). One indexed read, statement_timeout 15s.
-2. `build`: per filing, fetch its XBRL from EDGAR (edgar_fetch, sec.gov, <= 4 req/s) and convert it
+2. `build`: per filing, fetch its XBRL from EDGAR (edgar_fetch, sec.gov, the shared 2 req/s budget) and convert it
    (xbrl_fsn). One filing failing never stops the night: it is reported and the next night's
    lookback picks it up again, because it is still not in fsn.filing.
 3. `write_dirs`: companies/<cik>/ directories in the shard layout (FORMATS-v1 §1), fsn_set

@@ -9,7 +9,8 @@
       reads OUTDIR/{lines,bs,notes,face}.jsonl (one JSON object per result row, the query's column names) and writes
       filings.json, notefacts.json, memberfacts.json, compfacts.json, zlines.json, clines.json, lentity.json into OUTDIR.
   python3 instance_evidence.py fetch OUTDIR/filings.json OUTDIR/instances
-      the instance evidence total_debt needs (finance-lease location list, pre-842 lease locations): sec.gov only, <= 3 req/s,
+      the instance evidence total_debt needs (finance-lease location list, pre-842 lease locations): sec.gov only, paced by
+      the one machine-wide SEC budget (sec_pace.py, 2 req/s in total),
       cached per accession (a second run fetches only new filings).
 Then: cd OUTDIR && python3 resolve_all.py VERSION OUT.csv (tk.csv: ticker,cik10 per line; instances/ is read from OUTDIR, or INSTANCE_CACHE)."""
 import json, os, re, sys

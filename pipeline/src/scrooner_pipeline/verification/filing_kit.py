@@ -3,7 +3,7 @@ sample a manifest by seed, write a verdict skeleton.
 
 Pure functions plus one thin fetch helper. Network access goes through an
 injected client with ``get(url) -> bytes`` (the slot-records ``SecClient``:
-sec.gov only, SEC_USER_AGENT, <= 4 requests/second). No database, no writes
+sec.gov only, SEC_USER_AGENT, the shared machine-wide budget of 2 requests/second). No database, no writes
 other than the verdict file the caller asks for.
 """
 

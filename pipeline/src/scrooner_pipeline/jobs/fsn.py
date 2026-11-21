@@ -947,7 +947,7 @@ def nightly_cmd(
     report: str = typer.Option("nightly-report.json", help="Run report (JSON)."),
 ) -> None:
     """New periodic filings -> EDGAR-built FSN rows -> increment directories (design note 2026-11-09).
-    Reads the database (one indexed query) and sec.gov (<= 4 req/s); writes local files only. Load them
+    Reads the database (one indexed query) and sec.gov (the shared 2 req/s budget); writes local files only. Load them
     with `scrooner-fsn load --increment`, then `pilot` / `done-gate` / the protected cell write."""
     import os
     from datetime import date, timedelta

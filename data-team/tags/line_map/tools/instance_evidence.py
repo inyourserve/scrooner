@@ -1,5 +1,5 @@
-"""Instance evidence for total_debt, a standard step of standard_run.py (read-only; sec.gov only, at most 3 requests a second,
-User-Agent from env SEC_USER_AGENT, cached per accession). FSN drops the facts total_debt needs to locate leases:
+"""Instance evidence for total_debt, a standard step of standard_run.py (read-only; sec.gov only, paced by the one
+machine-wide SEC budget of sec_pace.py (2 requests a second in total), User-Agent from env SEC_USER_AGENT, cached per accession). FSN drops the facts total_debt needs to locate leases:
   - FinanceLeaseLiability(Current|Noncurrent)StatementOfFinancialPositionExtensibleList: where the finance lease sits (fl_loc
     in / out / none, the rule of exam/tools/build_era_notes.loc_of);
   - pre-842 CapitalLeaseObligations(Current|Noncurrent) facts, undimensioned or by one BalanceSheetLocationAxis member, and the
@@ -8,6 +8,9 @@ User-Agent from env SEC_USER_AGENT, cached per accession). FSN drops the facts t
 total_debt.load_evidence(cache_dir=CACHE_DIR) reads the cache beside the committed evidence of the 110."""
 import json, os, re, sys, time, urllib.request
 from datetime import date
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sec_pace
 from decimal import Decimal as D
 
 DEBT = re.compile(r'Debt|Borrowing|NotesPayable|CommercialPaper|LineOfCredit|LinesOfCredit|LoansPayable|SeniorNotes')
@@ -15,15 +18,12 @@ OUTSIDE = re.compile(r'OtherLiabilit|AccruedLiabilit|AccountsPayable|OtherAccrue
 CTX = re.compile(r'<(?:xbrli:)?context\b[^>]*\bid="([^"]+)"[^>]*>(.*?)</(?:xbrli:)?context>', re.S)
 CL = re.compile(r'<us-gaap:(CapitalLeaseObligations(?:Current|Noncurrent)?)\b([^>]*)>([^<]*)<')
 FL = re.compile(r'<us-gaap:FinanceLeaseLiability(?:Current|Noncurrent)?StatementOfFinancialPositionExtensibleList[^>]*>([^<]*)<')
-_last = [0.0]
 
 
 def _get(url):
     assert url.startswith('https://www.sec.gov/'), url
     for i in range(4):
-        w = float(os.environ.get('INSTANCE_MIN_INTERVAL', '0.34')) - (time.time() - _last[0])   # the daily drill sets 0.5 (2 requests a second)
-        if w > 0: time.sleep(w)
-        _last[0] = time.time()
+        sec_pace.wait()   # the shared budget; no per-script interval
         try:
             req = urllib.request.Request(url, headers={'User-Agent': os.environ['SEC_USER_AGENT'], 'Accept-Encoding': 'identity'})
             with urllib.request.urlopen(req, timeout=90) as r: return r.read().decode('utf-8', 'replace')

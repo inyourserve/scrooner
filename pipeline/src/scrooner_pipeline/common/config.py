@@ -52,9 +52,10 @@ class Settings(BaseSettings):
     alpaca_api_key: str | None = None
     alpaca_api_secret: str | None = None
 
-    # Root CLAUDE.md hard rule: SEC access is at most 4 requests per second in total (SEC's own ceiling is
-    # 10/s). SECClient clamps any configured value to SEC_RATE_CEILING, so an env override cannot exceed it.
-    sec_max_requests_per_second: float = 4.0
+    # Root CLAUDE.md hard rule (founder 2026-11-17): SEC access is at most 2 requests per second in total for the
+    # machine (SEC's own ceiling is 10/s). common/sec_rate.py clamps any configured value, so an env override
+    # cannot exceed it; a workflow that fetches on several runners at once lowers this per runner.
+    sec_max_requests_per_second: float = 2.0
 
     # Day 4: local cache dir for bulk zips (companyfacts.zip/submissions.zip),
     # keyed by date since SEC recompiles them nightly (doc 07 §5). Without

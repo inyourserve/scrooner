@@ -5,7 +5,7 @@ name: Balance-sheet FSN port gate
 
 # Manual only, READ ONLY: no database access, no bucket writes. Builds the gate's inputs from the fsn-notes
 # bucket (build_gate_inputs.py: per-period extracts filtered to the 29 cohort companies, plus the
-# fsn_store.shard company directories), fetches the boundary _cal.xml files from sec.gov (4 req/s, cached),
+# fsn_store.shard company directories), fetches the boundary _cal.xml files from sec.gov (the shared 2 req/s budget, cached),
 # and runs pipeline/scripts/slot_records/bs_port_gate.sh with the pinned expected_diffs.json.
 # FAILS CLOSED: the job is red on any difference that is not pinned and on any pinned difference that no
 # longer occurs (bs_port_compare.py exits 1). The outputs are uploaded either way, to re-pin from.

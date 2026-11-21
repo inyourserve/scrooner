@@ -186,19 +186,21 @@ def test_fetcher_refuses_other_hosts_and_an_undeclared_agent():
     client.close()
 
 
-def test_fetcher_rate_is_lowered_by_env_and_capped_at_four(monkeypatch):
+def test_fetcher_rate_is_lowered_by_env_and_capped_at_two(monkeypatch):
     ua = "Scrooner test test@example.com"
-    monkeypatch.setenv("SCROONER_EDGAR_MAX_RPS", "2")
+    monkeypatch.setenv("SCROONER_EDGAR_MAX_RPS", "1")
     c = edgar_fetch.EdgarClient(ua)
-    assert c._limiter._min_interval == 0.5
+    assert c._limiter._min_interval == 1.0
     c.close()
     monkeypatch.setenv("SCROONER_EDGAR_MAX_RPS", "9")
     c = edgar_fetch.EdgarClient(ua)
-    assert c._limiter._min_interval == 0.25
+    assert (
+        c._limiter._min_interval == 0.5
+    )  # the machine-wide ceiling (common/sec_rate.py)
     c.close()
     monkeypatch.delenv("SCROONER_EDGAR_MAX_RPS")
     c = edgar_fetch.EdgarClient(ua)
-    assert c._limiter._min_interval == 0.25
+    assert c._limiter._min_interval == 0.5
     c.close()
 
 
