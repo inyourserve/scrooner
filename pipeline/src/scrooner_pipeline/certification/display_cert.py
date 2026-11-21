@@ -664,9 +664,18 @@ TOTAL_EQUITY_TAGS = (
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
     "StockholdersEquity",
 )
+# Mezzanine (temporary) equity sits between liabilities and stockholders' equity: neither.
+# GILD FY2015 (FY2016 10-K R2): assets 51,716 - total equity 19,113 - temporary equity 2 = 32,601.
+TEMP_EQUITY_TAGS = (
+    "TemporaryEquityCarryingAmountAttributableToParent",
+    "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest",
+    "RedeemableNoncontrollingInterestEquityCarryingAmount",
+)
 SHARES_ISSUED_TAGS = ("CommonStockSharesIssued",)
 TREASURY_SHARES_TAGS = ("TreasuryStockCommonShares", "TreasuryStockShares")
-DERIVED_TAGS = frozenset({*SHARES_ISSUED_TAGS, *TREASURY_SHARES_TAGS}) | frozenset(
+DERIVED_TAGS = frozenset(
+    {*SHARES_ISSUED_TAGS, *TREASURY_SHARES_TAGS, *TEMP_EQUITY_TAGS}
+) | frozenset(
     {
         "Assets",
         "LiabilitiesAndStockholdersEquity",
@@ -704,10 +713,10 @@ def check_derived(c: Cell, cells: list[Cell], facts: list[Fact]) -> CellCheck:
                 None,
                 f"no Assets or total equity fact at {c.period_end} in {c.accession}",
             )
-        ev = f"Assets {assets} - total equity incl. NCI {equity} ({', '.join(f'{k}={v}' for k, v in sorted(at.items()))})"
-        return CellCheck(
-            c, "MATCH" if assets - equity == shown else "MISMATCH", assets - equity, ev
-        )
+        temp = sum((at[t] for t in TEMP_EQUITY_TAGS if t in at), Decimal(0))
+        liab = assets - equity - temp
+        ev = f"Assets {assets} - total equity incl. NCI {equity} - temporary equity {temp} ({', '.join(f'{k}={v}' for k, v in sorted(at.items()))})"
+        return CellCheck(c, "MATCH" if liab == shown else "MISMATCH", liab, ev)
     if c.data_point in ("basic_eps", "diluted_eps"):
         # Founder approvals 2026-11-17 (doc 02, 93c8d6ba): EPS is never derived.
         return CellCheck(
@@ -1117,6 +1126,9 @@ class Run:
     debt: list[DebtCheck] = field(default_factory=list)
     hides: list[Finding] = field(default_factory=list)
     cells: list[Cell] = field(default_factory=list)  # every cell of the coverage file
+    derived: list[CellCheck] = field(
+        default_factory=list
+    )  # census of undrawn derived cells
 
     @property
     def errors(self) -> int:
@@ -1126,11 +1138,16 @@ class Run:
     def verdict(self) -> str:
         if any(f.severity == "FAIL" for f in self.gate + self.hides):
             return "FAIL"
-        if self.errors or any(d.result == "MISMATCH" for d in self.debt):
+        if (
+            self.errors
+            or any(d.result == "MISMATCH" for d in self.debt)
+            or any(d.result == "MISMATCH" for d in self.derived)
+        ):
             return "FAIL"
         if (
             any(s.result in ("LOCATOR", "NOT_FOUND") for s in self.shown)
             or any(d.result == "REVIEW" for d in self.debt)
+            or any(d.result in ("LOCATOR", "NOT_FOUND") for d in self.derived)
             or any(f.severity == "REVIEW" for f in self.hides)
         ):
             return "REVIEW"
@@ -1186,7 +1203,20 @@ def certify(
         | LEASE_TAGS
         | DERIVED_TAGS
     )
-    need_acc = {t.accession for c in p.sample for t in terms(c)} | p.debt_acc
+    sampled = {c.key for c in p.sample}
+    derived_census = [
+        c
+        for c in p.cells
+        if c.display == SHOWN
+        and is_derived(c)
+        and c.key not in sampled
+        and c.data_point != "total_debt"
+    ]
+    need_acc = (
+        {t.accession for c in p.sample for t in terms(c)}
+        | p.debt_acc
+        | {c.accession for c in derived_census}
+    )
     facts = source.facts(need_acc, need_tags)
     if (p.sample or p.debt) and not facts:
         # Positive control: the drawn filings always carry facts. None at all means the source
@@ -1205,6 +1235,9 @@ def certify(
         for c in p.sample
     ]
     run.debt = [check_debt(c, facts) for c in p.debt]
+    # Census, not sample: every derived cell is checked against its identity (founder 2026-11-17
+    # allows derived instants; each one is a computation the filing does not print).
+    run.derived = [check_derived(c, p.cells, facts) for c in derived_census]
     year_ends = source.periodic_year_ends(cik)
     if not year_ends:
         # A wrong CIK would make every hide look evidenced: refuse instead.
@@ -1348,15 +1381,18 @@ def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> 
         f"| Gate (no OPEN; value, accession and R page on every shown cell and part; parts sum) | {sum(1 for f in run.gate if f.severity == 'FAIL')} failing |",
         f"| {n} random shown cells | {sum(1 for s in run.shown if s.result == 'MATCH')} match, {k} wrong, {sum(1 for s in run.shown if s.result == 'LOCATOR')} locator only |",
         f"| total_debt census ({len(run.debt)} years) | {sum(1 for d in run.debt if d.result == 'MATCH')} match, {sum(1 for d in run.debt if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.debt if d.result == 'REVIEW')} for review |",
+        f"| Derived cells census ({len(run.derived)} undrawn) | {sum(1 for d in run.derived if d.result == 'MATCH')} match, {sum(1 for d in run.derived if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.derived if d.result != 'MATCH' and d.result != 'MISMATCH')} for review |",
         f"| Hidden rows and years | {sum(1 for f in run.hides if f.severity == 'FAIL')} failing, {sum(1 for f in run.hides if f.severity == 'REVIEW')} for review, {sum(1 for f in run.hides if f.severity == 'INFO')} evidenced |",
         "",
         f"**Bound:** {k} error(s) in {n} random shown cells: Clopper-Pearson 95% upper bound **{ub:.2%}** for {run.ticker} alone "
         "(per-company screen; the 0.10% target is pooled across certified companies in registry.csv).",
         "",
     ]
-    bad = [s for s in run.shown if s.result != "MATCH"] + [
-        d for d in run.debt if d.result != "MATCH"
-    ]
+    bad = (
+        [s for s in run.shown if s.result != "MATCH"]
+        + [d for d in run.debt if d.result != "MATCH"]
+        + [d for d in run.derived if d.result != "MATCH"]
+    )
     fails = [f for f in run.gate + run.hides if f.severity in ("FAIL", "REVIEW")]
     if bad or fails:
         lines += ["## Findings", ""]
@@ -1402,10 +1438,10 @@ def evidence_rows(run: Run) -> list[list[str]]:
     rows = [
         ["check", "data_point", "fiscal_year", "result", "served", "filing", "evidence"]
     ]
-    for s in run.shown:
+    for s in [*run.shown, *run.derived]:
         rows.append(
             [
-                "shown",
+                "shown" if s in run.shown else "derived",
                 s.cell.data_point,
                 s.cell.fiscal_year,
                 s.result,
@@ -1550,7 +1586,10 @@ def certificate(
     file. evidence: drawn = individually matched to the filing; census = every total_debt year and
     every hidden cell's hide proof; sampled = covered by the bound, not individually checked."""
     drawn = {s.cell.key: s for s in run.shown}
-    debt = {d.cell.key: d for d in run.debt}
+    debt: dict[tuple[str, str], CellCheck | DebtCheck] = {
+        d.cell.key: d for d in run.debt
+    }
+    debt.update({d.cell.key: d for d in run.derived})
     row_hide = {f.data_point: f for f in run.hides if f.check == "hidden_row"}
     year_hide = {
         (f.data_point, f.fiscal_year): f for f in run.hides if f.check == "hidden_year"

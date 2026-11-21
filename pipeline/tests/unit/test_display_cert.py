@@ -947,3 +947,64 @@ def test_cf_inventory_change_hide_has_a_tag_family():
         ].severity
         == "FAIL"
     )
+
+
+def test_derived_total_liabilities_excludes_temporary_equity():
+    # GILD FY2015 per the FY2016 10-K R2: 9,890 + 21,073 + 1,243 + 395 = 32,601 liabilities;
+    # 51,716 assets - 19,113 total equity = 32,603 includes 2 of temporary equity.
+    facts = [
+        fact("Assets", "51716", qtrs=0),
+        fact(
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "19113",
+            qtrs=0,
+        ),
+        fact("TemporaryEquityCarryingAmountAttributableToParent", "2", qtrs=0),
+    ]
+    c = cell(dp="total_liabilities", value="32601", tag="")
+    assert dc.check_derived(c, [c], facts).result == "MATCH"
+    assert (
+        dc.check_derived(
+            cell(dp="total_liabilities", value="32603", tag=""), [c], facts
+        ).result
+        == "MISMATCH"
+    )
+
+
+def test_every_derived_cell_is_checked_not_only_drawn_ones(tmp_path):
+    rows = [
+        [f"d{i}", "2023", "2023-12-31", "100", ACC, "R4", "Revenues", "", dc.SHOWN]
+        for i in range(40)
+    ]
+    rows += [
+        ["shares_outstanding", str(y), f"{y}-12-31", "90", ACC, "R2", "", "", dc.SHOWN]
+        for y in range(2015, 2025)
+    ]
+    cov = write_cov(tmp_path, rows)
+
+    def facts(bad_year=None):
+        out = [fact("Revenues", "100")]
+        for y in range(2015, 2025):
+            out.append(
+                fact("CommonStockSharesIssued", "100", ddate=f"{y}-12-31", qtrs=0)
+            )
+            out.append(
+                fact(
+                    "TreasuryStockCommonShares",
+                    "11" if y == bad_year else "10",
+                    ddate=f"{y}-12-31",
+                    qtrs=0,
+                )
+            )
+        return out
+
+    run = dc.certify("T", "1", cov, Src(facts()), seed="s")
+    assert (
+        run.derived
+        and all(d.result == "MATCH" for d in run.derived)
+        and run.verdict == "PASS"
+    )
+    undrawn = int(
+        run.derived[0].cell.fiscal_year
+    )  # a derived cell the draw did not pick
+    assert dc.certify("T", "1", cov, Src(facts(undrawn)), seed="s").verdict == "FAIL"
