@@ -1,0 +1,2 @@
+ticker,data_point,fiscal_year,outcome,value,element,accession,r_page,quote,rule_proposal,confidence
+PGR,goodwill,2025,HIDE,,,0000080661-26-000086,annual report; full text,"HIDE verified_absent: HIDE absence (goodwill is on the absence allowlist): the FY2025 10-K and annual report print no goodwill line, fact or sentence. Note: FY2024 annual report ""At December 31, 2024 and 2023, we had goodwill of $228 million included in other assets""; no 2025 impairment disclosed, so the balance likely persists undisclosed",,

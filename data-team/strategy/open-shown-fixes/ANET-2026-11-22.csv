@@ -1,0 +1,3 @@
+ticker,data_point,fiscal_year,outcome,value,element,accession,r_page,quote,rule_proposal,confidence
+ANET,goodwill,2015,HIDE,,,0001596532-16-000244,R2.htm,"HIDE verified_absent: HIDE absence (VERIFIED_ABSENT_HIDE goodwill, ruling 2026-11-17): no goodwill line on the Dec. 31, 2015 balance sheet; the FY2018 10-K prints Goodwill = 0 at Dec. 31, 2017 and the first goodwill (53.7M) at Dec. 31, 2018 after the 2018 acquisitions.",,
+ANET,goodwill,2016,HIDE,,,0001596532-17-000019,R2.htm,"HIDE verified_absent: HIDE absence (VERIFIED_ABSENT_HIDE goodwill, ruling 2026-11-17): no goodwill line on the Dec. 31, 2016 balance sheet; the FY2018 10-K prints Goodwill = 0 at Dec. 31, 2017 and the first goodwill (53.7M) at Dec. 31, 2018 after the 2018 acquisitions.",,
