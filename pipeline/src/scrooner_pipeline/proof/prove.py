@@ -965,32 +965,42 @@ def structure_face(structure: FilingStructure, stmt: str) -> set[str]:
 
 def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof:
     """A component sum (total debt): the shown value is the signed sum of the parts the company's
-    map names, each part matched in this filing at the cell's column and on the claimed statement.
-    A part the filing does not carry leaves the cell UNCHECKED (never a guessed zero)."""
+    map names, each part matched in the filing the shown value comes from (same accession), at the cell's column and
+    on the claimed statement. Handed another filing's structure, the parts are read from the shown filing's own
+    structure instead (FilingStructure.filing); only when that filing is not held or prints none of the parts is the
+    cell UNCHECKED (parts_not_in_the_shown_filing). A part the filing does not carry leaves the cell UNCHECKED
+    (never a guessed zero)."""
     claim = shown.claim
     assert claim is not None
     cls = unit_class(shown.data_point_name)
     p.fsn_stmt = claim.stmt
-    p.position_accession = structure.adsh
     p.position_source = "fsn_pre_calc"
     p.position_is_expected_line = True
     ddate, qtrs = _column(shown)
     if qtrs is None:
+        p.position_accession = structure.adsh
         p.reason_text = f"grain {shown.period_grain} has no FSN duration"
         return p
+    handed = structure.adsh
     if shown.accession and structure.adsh != shown.accession:
         # one vintage: every part of the sum is read from the filing the shown value comes from. Another filing's
         # parts (the own-year 10-K's G&A 6,872 + S&M under GOOG FY2017 SG&A, shown from the FY2019 10-K's 6,840)
-        # judge a different print, so the cell cannot be checked in that filing: UNCHECKED, never a mismatch.
+        # judge a different print, so the parts are fetched from the shown accession's own structure
+        own = structure.filing(shown.accession)
+        if own is not None:
+            structure = own
+    p.position_accession = structure.adsh
+    if shown.accession and structure.adsh != shown.accession:
         p.checks["component_parts"] = {
             "status": "n/a",
             "why": "parts_not_in_the_shown_filing",
             "shown_accession": shown.accession,
-            "structure_accession": structure.adsh,
+            "structure_accession": handed,
+            "shown_filing_held": False,
         }
         p.reason_text = (
-            f"component sum not provable: the shown value comes from {shown.accession}, the parts would be read "
-            f"from {structure.adsh}; a tie never mixes filing vintages"
+            f"component sum not provable: the shown value comes from {shown.accession}, whose structure is not "
+            f"held; the parts would be read from {handed}; a tie never mixes filing vintages"
         )
         return p
     notes: list[str] = []
@@ -1053,7 +1063,28 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
             }
         )
     p.checks["claim"] = _claim_check(claim)
+    if handed != structure.adsh and not found and not zeroed:
+        # the shown filing is held but prints none of the parts at this column: nothing in it to judge the sum by
+        p.checks["component_parts"] = {
+            "status": "n/a",
+            "why": "parts_not_in_the_shown_filing",
+            "shown_accession": shown.accession,
+            "structure_accession": handed,
+            "shown_filing_held": True,
+            "missing": missing,
+            "not_on_statement": off_face,
+        }
+        p.reason_text = (
+            f"component sum not provable: the shown filing {shown.accession} prints none of the parts "
+            f"{[t for _s, t in claim.parts]} at {shown.period_end}"
+        )
+        return p
     p.checks["component_parts"] = {
+        **(
+            {"read_from": structure.adsh, "handed": handed}
+            if handed != structure.adsh
+            else {}
+        ),
         "status": "n/a" if (missing or off_face) else "pass",
         "found": found,
         "missing": missing,

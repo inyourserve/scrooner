@@ -173,6 +173,30 @@ def _filing_dates(conn: psycopg.Connection, accessions: list[str]) -> dict[str, 
         return {a: d for a, d in cur.fetchall() if d}
 
 
+def _own_filing_loader(
+    conn: psycopg.Connection,
+    cache: StructureCache,
+    structures: dict[str, FilingStructure],
+    dims: bool,
+):
+    """accession -> its FilingStructure from the same store (FilingStructure.load_filing): a component sum handed
+    another filing's structure reads its parts from the shown value's own filing. None when the store lacks it."""
+
+    def load(adsh: str) -> FilingStructure | None:
+        if adsh in structures:
+            return structures[adsh]
+        filed = _filing_dates(conn, [adsh]).get(adsh)
+        if filed is None:
+            return None
+        got = cache.get_many({quarter_of(filed): {adsh}}, dims=dims).get(adsh)
+        if got is not None:
+            got.load_filing = load
+            structures[adsh] = got
+        return got
+
+    return load
+
+
 def prove_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -227,6 +251,9 @@ def prove_company(
         s.claim is not None and any("[" in t for _sg, t in s.claim.parts) for s in shown
     )
     structures = cache.get_many(by_quarter, dims=wants_dims)
+    load = _own_filing_loader(conn, cache, structures, wants_dims)
+    for st in structures.values():
+        st.load_filing = load
     proofs: list[Proof] = []
     for acc, cells in groups.items():
         structure = structures.get(acc) if acc else None

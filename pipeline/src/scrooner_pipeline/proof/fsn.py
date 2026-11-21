@@ -31,6 +31,7 @@ import os
 import shutil
 import subprocess
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal, InvalidOperation
@@ -127,6 +128,17 @@ class FilingStructure:
     dim_num: dict[tuple[str, date, int, str], list[NumValue]] = field(
         default_factory=lambda: defaultdict(list)
     )
+    # loads ANOTHER filing's structure from the same store (set by the proof runner, None in isolation): a component
+    # sum whose shown value comes from a filing other than this one reads its parts from that filing
+    load_filing: Callable[[str], FilingStructure | None] | None = field(
+        default=None, repr=False, compare=False
+    )
+
+    def filing(self, adsh: str) -> FilingStructure | None:
+        """The structure of filing `adsh`: this one, or the store's copy of that accession (None when not held)."""
+        if adsh == self.adsh:
+            return self
+        return self.load_filing(adsh) if self.load_filing is not None else None
 
     def value_dim(
         self, tag: str, ddate: date, qtrs: int, segments: str, uom_prefix: str = "USD"

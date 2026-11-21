@@ -89,12 +89,15 @@ RULES: dict[str, Rule] = {
         Rule("unit_scale", 1, check_keys=("unit_scale",)),
         Rule(
             "component_parts",
-            2,
+            3,
             check_keys=("component_parts",),
             owners=("proof/prove.py:prove_component",),
             note="v2 (2026-11-22): every part is read from the filing the shown value comes from; a structure of "
             "another accession leaves the cell UNCHECKED (parts_not_in_the_shown_filing), never a cross-vintage "
-            "mismatch (GOOG G&A FY2017 6,872 own-year vs 6,840 latest print)",
+            "mismatch (GOOG G&A FY2017 6,872 own-year vs 6,840 latest print). v3 (2026-11-22): handed another "
+            "accession's structure, the parts are fetched from the shown filing's own structure (same accession) and "
+            "proved there; UNCHECKED parts_not_in_the_shown_filing only when that filing is not held or prints none "
+            "of the parts",
         ),
         Rule("printed_zero", 1, check_keys=("printed_zero",)),
         Rule("restated_history", 1, check_keys=("restated_history",)),

@@ -50,8 +50,8 @@ PINNED_HASH = "86de81ae80c7d3cdefd50391c32ad212762a8a3343a628a155c835ffcc1cfa29"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
     "component_parts": (
-        2,
-        "a60a83efb8b9e2f56736c946147e1751d7a12415370ad1d873dfc1adb491cb7f",
+        3,
+        "8238832bae65593ba5beaf09b8832bc840d6f436be7af1c0e86d419b004bf94c",
     ),
     "identity_tie": (
         1,
