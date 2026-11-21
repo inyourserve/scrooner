@@ -46,6 +46,7 @@ def main() -> int:
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--prove-py", default="pipeline/src/scrooner_pipeline/proof/prove.py")
     ap.add_argument("--resolver", default="")
+    ap.add_argument("--recert-token", default="", help="approver re-cert token path; cited in the request file")
     a = ap.parse_args()
     out = Path(a.out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -128,6 +129,7 @@ def main() -> int:
         f"- resolver: `{a.resolver or 'unknown'}`",
         f"- code: `{os.environ.get('GITHUB_SHA', 'unknown')}`",
         f"- run: {run_url}",
+        *([f"- re-cert token: `{a.recert_token}` (certified-guard passed once under this token)"] if a.recert_token else []),
         "- gate: 0 OPEN; every shown cell and part has an accession and R page; no no_public_filing_for_period or before_first_10k on a shown cell.",
         "",
     ]

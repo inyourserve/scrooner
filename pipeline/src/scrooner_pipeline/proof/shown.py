@@ -70,6 +70,7 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
 PRINTED_ZERO_FAMILY = "company_tag_map:printed_zero"
 STATED_ZERO_FAMILY = "company_tag_map:stated_zero"
 TEXT_STATED_FAMILY = "company_tag_map:text_stated"
+STATED_FAMILIES = (PRINTED_ZERO_FAMILY, STATED_ZERO_FAMILY, TEXT_STATED_FAMILY)
 
 
 def stated_zero_evidence(
@@ -617,6 +618,23 @@ def _base_name(name: str) -> str:
     return name
 
 
+def stated_family_concepts(conn: psycopg.Connection, company_id: int) -> set[str]:
+    """Concept names of the company's served stated_zero / text_stated / printed_zero values. Such a value carries no
+    company_tag_map claim row, so without its concept in the loader's names it is never loaded, never proven, and
+    surfaces as UNCHECKED no_proof_row with a served value (GILD interest_income FY2024, text_stated, outside EXPECTED)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select distinct cc.name
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            where cf.company_id = %s and cf.family = any(%s)
+            """,
+            (company_id, list(STATED_FAMILIES)),
+        )
+        return {n for (n,) in cur.fetchall()}
+
+
 def load_shown(
     conn: psycopg.Connection, company_id: int, *, floor: date = HISTORY_FLOOR
 ) -> list[Shown]:
@@ -629,6 +647,7 @@ def load_shown(
     for r in map_rows:
         names.update(n for n in (r[4], r[5]) if n)
     with conn.cursor() as cur:
+        names.update(stated_family_concepts(conn, company_id))
         cur.execute(
             """
             select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id,

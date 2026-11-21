@@ -45,7 +45,11 @@ from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 from scrooner_pipeline.proof.rules import row_is_current
 
 LABEL = "derived_not_printed"
+ASSETS_TAG = "Assets"
+EQUITY_TAG = "StockholdersEquity"
 OPERAND_TAGS: tuple[str, ...] = (
+    ASSETS_TAG,
+    EQUITY_TAG,
     *LSE_TAGS,
     EQUITY_INCL_NCI_TAG,
     *NCI_EQUITY_TAGS,
@@ -193,12 +197,35 @@ def _total_liabilities(
     se = by_base.get(("stockholders_equity", pid))
     if ta is None or se is None:
         return None, ""
-    acc = ta.get("_accession")
-    if acc is None or acc != se.get("_accession"):
-        return (
-            None,
-            "",
-        )  # one-filing rule: assets, equity and every operand from the same filing
+    # one-filing rule: assets, equity and every operand from the same filing. The cells' recorded accessions are
+    # the filing each value was served from; when they differ (GILD FY2015: assets from the FY2016 10-K, equity from
+    # the FY2015 10-K, the same 18,534M) the inputs still come from one filing if ONE accession prints the assets, the
+    # equity and the L&SE with the proven values. The cell's own accession is tried first, then the other's.
+    def prints(acc: str) -> bool:
+        def at(tag: str) -> Decimal | None:
+            return operand_filings.get((tag, pid), {}).get(acc)
+
+        a, e = at(ASSETS_TAG), at(EQUITY_TAG)
+        if ta.get("_accession") != acc and (
+            a is None or abs(a - ta["value"]) > tolerance([a, ta["value"]])
+        ):
+            return False
+        if se.get("_accession") != acc and (
+            e is None or abs(e - se["value"]) > tolerance([e, se["value"]])
+        ):
+            return False
+        return any(at(t) is not None for t in LSE_TAGS)
+
+    acc = next(
+        (
+            a
+            for a in dict.fromkeys((ta.get("_accession"), se.get("_accession")))
+            if a is not None and prints(a)
+        ),
+        None,
+    )
+    if acc is None:
+        return None, ""
     operands = {
         (t, p): by_acc[acc]
         for (t, p), by_acc in operand_filings.items()

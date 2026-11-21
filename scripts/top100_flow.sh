@@ -73,12 +73,16 @@ mkdir -p $O/coverage; PYTHONPATH=pipeline/src $PY pipeline/scripts/top100_covera
 # Certified-company regression guard: a certified company (approvals/<TICKER>-certificate-*.md on main) must keep every
 # certified cell (PROVEN/REASON/DERIVED, same shown_value). On a regression its rows are restored from the first
 # rewrite's before-image (bi_a), the proof is re-run so verdicts match, and the flow line says HELD_CERTIFIED.
+# Approver re-cert token (CERT-REGISTRY rulings 2026-11-21 item 15): approvals/recert/<TICKER>-<date>.md newer than the latest
+# certificate lets the company through the guard once (scripts/ci/recert_token.py; consumed when a newer certificate exists).
+# The guard is skipped, the new state stays, the gate runs, and the flow line carries RECERT_TOKEN=<path> for the request.
 typeset -A HELD
 for c in ${(s:,:)IDS}; do
   tk=$(q "select primary_ticker from core.company where id = $c"); ck=$(q "select cik from core.company where id = $c")
   # (N) on an array glob: no certificate -> empty array -> skip (a bare `ls` of an empty glob lists the cwd instead)
   certs=(data-team/strategy/approvals/${tk}-certificate-*.md(N)); cert=${certs[-1]:-}
   [ -n "$cert" ] || continue
+  tok=$(python3 -I scripts/ci/recert_token.py --ticker "$tk" 2>/dev/null) && [ -n "$tok" ] && { echo "certified $tk: re-cert token $tok, guard skipped once"; HELD[$c]="RECERT_TOKEN=$tok"; continue; }
   ccsv=$(grep -oE "data-team/strategy/certification/$tk-coverage-[0-9-]+\.csv" $cert | head -1)
   [ -n "$ccsv" ] && [ -f "$ccsv" ] || { echo "certified $tk: certified csv not found in $cert"; HELD[$c]=NOCSV; continue; }
   mkdir -p $S/regressions; rp=$S/regressions/$tk-$(date -u +%Y%m%dT%H%M%SZ).csv

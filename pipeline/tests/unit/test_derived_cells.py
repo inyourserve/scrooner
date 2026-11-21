@@ -219,3 +219,26 @@ def test_c2_assets_equity_and_operands_from_one_filing():
         == []
     )
     assert len(_derive(cells, st, CI, PERIODS, proven_bs(), {}, ops)) == 1
+
+
+def test_c2_gild_fy2015_assets_and_equity_cells_recorded_in_two_filings_one_prints_both():
+    """GILD FY2015 (ruling 2026-11-21 item 14): total_assets 201 is served from the FY2016 10-K (A2), stockholders
+    equity 81 from the FY2015 10-K (A1). The FY2016 10-K also prints the same equity and the L&SE, so every input is
+    printed in ONE filing: derived (not hidden as structural_not_presented)."""
+    cells = [cell(4, 11, 201, "A2"), cell(5, 11, 81, "A1")]
+
+    def st():
+        return stats(blank(6, 11, "I"))
+
+    ops = {
+        ("Assets", 11): {"A2": Decimal(201 * M)},
+        ("StockholdersEquity", 11): {"A1": Decimal(81 * M), "A2": Decimal(81 * M)},
+        (LSE, 11): {"A2": Decimal(201 * M)},
+    }
+    out = _derive(cells, st(), CI, PERIODS, proven_bs(), {}, ops)
+    assert [o["value"] for o in out] == [Decimal(120 * M)]
+    ops_bad = {**ops, ("StockholdersEquity", 11): {"A1": Decimal(81 * M), "A2": Decimal(70 * M)}}
+    assert _derive(cells, st(), CI, PERIODS, proven_bs(), {}, ops_bad) == []
+    # no other filing prints the equity: the two cells' filings stay separate, never combined
+    ops_one = {**ops, ("StockholdersEquity", 11): {"A1": Decimal(81 * M)}}
+    assert _derive(cells, st(), CI, PERIODS, proven_bs(), {}, ops_one) == []

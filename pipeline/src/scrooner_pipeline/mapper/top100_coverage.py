@@ -169,6 +169,7 @@ NO_PERIOD_CODES = {
     "no_10k_presents_period",
     PRE_FILING_CODE,  # no balance sheet of the shown filing presents the date (CRWD cash 2018-01-31)
 }
+NOT_PRESENTED_BUT_SHOWN = "not_presented_but_row_shown"
 WORK_TYPES = ("combined_split", "gap_fill", "proof", "blank", "held")
 
 
@@ -2162,6 +2163,19 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         r["hide_class"] = hc or ""
         by_row[(r["company_id"], r.get("data_point"))].append(r)
     for cells in by_row.values():
+        if any(c["display"] == SHOWN_VALUE for c in cells):
+            # rulings 2026-11-21 item 14 (GILD total_liabilities FY2015): structural_not_presented means the row is
+            # NEVER reported; a row that shows a value in another year contradicts it, so the reason is invalid for
+            # a year left open: the class is rejected (the cell is a gap to fill, never an evidenced reason).
+            for c in cells:
+                if (
+                    c["display"] == OPEN
+                    and c["class"] == "REASON"
+                    and c.get("reason_code") in NOT_PRESENTED_CODES
+                ):
+                    c["class"] = "BLANK"
+                    c["reason_code"] = NOT_PRESENTED_BUT_SHOWN
+                    c["hide_class"] = ""
         rest = [c for c in cells if c["display"] != HIDDEN_YEAR]
         if rest and all(
             c["display"] == HIDDEN_ROW

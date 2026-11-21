@@ -158,8 +158,9 @@ jobs:
           esac
           [ -f "$CV/top100-coverage.csv" ] || { echo "gate not run: no coverage csv"; echo '{"decision":"SKIP","reason":"no coverage csv"}' > "$OUT/gate.json"; exit 0; }
           RES=data-team/tags/line_map/resolver; [ -d "$RES" ] || RES=$(ls data-team/tags/line_map/resolver-all110-*.csv 2>/dev/null | sort | tail -1 || true)
+          TOK=$(printf '%s' "$LINE" | grep -oE 'RECERT_TOKEN=[^ ]+' | head -1 | cut -d= -f2 || true)
           python3 -I scripts/ci/top100_gate.py --coverage-csv "$CV/top100-coverage.csv" --company-id "$CID" \
-            --out-dir "$OUT" --resolver "$RES" || echo "gate exit $? (1 FAIL, 3 SKIP, 2 error): nothing sent"
+            --out-dir "$OUT" --resolver "$RES" ${TOK:+--recert-token "$TOK"} || echo "gate exit $? (1 FAIL, 3 SKIP, 2 error): nothing sent"
       - name: Record a result line if the chain died before its own
         if: always()
         run: |

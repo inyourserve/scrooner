@@ -46,7 +46,8 @@ VERDICT_SOURCES = (
 
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
 # 2026-11-22: re-pinned at the same floor; prove_component moved under rule component_parts (v2), no floor change
-PINNED_HASH = "86de81ae80c7d3cdefd50391c32ad212762a8a3343a628a155c835ffcc1cfa29"
+# 2026-11-22: re-pinned at the same floor; stated_family_concepts added to shown.py (loads cells that had no proof row), no verdict changes; rule resolver_beats_combined v2 (load_shown)
+PINNED_HASH = "757c5b07f3159d4397fb17555131b36c38523a4ae5592b19d0c5234df8f62ebb"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
     "component_parts": (
@@ -70,8 +71,8 @@ RULE_PINS = {
         "33d1e97595eeda814ef895ed873996455c08ff8d4c1e7c5dd05597b26c3a5c81",
     ),
     "resolver_beats_combined": (
-        1,
-        "db8d6afd3efc6dc1347e80380e7935c245663c40e75ea89a43d620068d33864a",
+        2,
+        "e26e3fd04ae5918fb4faa9c5b384b23f34716d8954211b2a26f00dc9879dc06b",
     ),
     "split_parts": (
         2,
