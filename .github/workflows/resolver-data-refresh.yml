@@ -75,7 +75,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -q pytest
+      # the pipeline package's own dependencies: line_map tests import scrooner_pipeline (test_filing_reads checks
+      # top100_coverage.locator_part, 2026-11-22); with pytest alone they fail on httpx and every refresh is refused
+      # (run 45048704709)
+      - run: pip install -q pytest ./pipeline
       - name: Mode and scope
         id: s
         run: |
