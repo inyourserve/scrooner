@@ -1,0 +1,3 @@
+data_point,fiscal_year,verdict,reader,evidence
+interest_income,2024,MATCH,Ritwik (cloud) approver session_01GLmSDz8UUfjBrVex2j8ugb,"FY2025 10-K 0000882095-26-000006 R79 Other (Income) Expense, Net (Details) prints 'Interest income' (349) (281) (376) for 2025, 2024, 2023; tagged InvestmentIncomeNonoperating, undimensioned, dcml -6: 2024-12-31 = 281,000,000"
+interest_income,2025,MATCH,Ritwik (cloud) approver session_01GLmSDz8UUfjBrVex2j8ugb,"FY2025 10-K 0000882095-26-000006 R79 'Interest income' tagged InvestmentIncomeNonoperating, undimensioned, dcml -6: 2025-12-31 = 349,000,000"
