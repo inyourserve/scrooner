@@ -1133,3 +1133,20 @@ def test_every_combined_cell_is_value_checked_not_only_drawn_ones(tmp_path):
     assert run.derived and run.verdict == "PASS", [f.detail for f in run.gate]
     undrawn = int(run.derived[0].cell.fiscal_year)
     assert dc.certify("T", "1", p, Src(facts(undrawn)), seed="s").verdict == "FAIL"
+
+
+def test_sql_compares_the_padded_cik_so_the_index_is_used():
+    """WMT timed out at 15 s with ltrim(f.cik); fsn.filing.cik is always 10 zero-padded digits."""
+    for sql in (dc.COMPANY_FACT_SQL, dc.YEAR_END_SQL, dc.PRESENTED_LINES_SQL):
+        assert "ltrim(f.cik" not in sql and "f.cik = lpad(" in sql
+    cells = [cell()]
+    import tempfile
+    from pathlib import Path
+
+    p = Path(tempfile.mkdtemp()) / "c.csv"
+    p.write_text(
+        "data_point,fiscal_year,period_end,shown_value,accession,r_page,tag,parts,display\nrevenue,2023,2023-12-31,100,%s,R4,Revenues,,SHOWN_VALUE\n"
+        % ACC
+    )
+    sql = dc.bundle_sql("104169", dc.plan("T", p))
+    assert "ltrim(f.cik" not in sql and "'0000104169'" in sql and cells

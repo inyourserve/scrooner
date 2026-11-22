@@ -468,7 +468,7 @@ join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.valu
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
-where ltrim(f.cik, '0') = ltrim(%(cik)s, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
+where f.cik = lpad(ltrim(%(cik)s, '0'), 10, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
 group by 1, 2, 3, 4, 5, 6
 """
 
@@ -477,19 +477,21 @@ select f.accession, array_agg(distinct v.ddate::text || '|' || v.qtrs)
 from fsn.filing f join fsn.value v on v.filing_id = f.id and v.qtrs in (0, 4)
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
-where ltrim(f.cik, '0') = ltrim(%(cik)s, '0') and f.form = any(%(forms)s)
+where f.cik = lpad(ltrim(%(cik)s, '0'), 10, '0') and f.form = any(%(forms)s)
   and t.tag in ('Assets', 'Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax', 'NetIncomeLoss',
                 'NetCashProvidedByUsedInOperatingActivities', 'ProfitLoss')
 group by 1
 """
 
+# fsn.filing.cik is stored as 10 zero-padded digits (45,883 of 45,883 rows, 2026-11-22): compare it
+# exactly so idx_fsn_filing_cik is used; ltrim(f.cik) forced a scan and timed WMT out at 15 s.
 # Statement lines a periodic filing presents, whether or not a column holds a value: a printed
 # dash has a line and no fact, and it still counts as printed.
 PRESENTED_LINES_SQL = """
 select f.accession, array_agg(distinct t.tag)
 from fsn.filing f join fsn.line l on l.filing_id = f.id
 join fsn.tag t on t.id = l.tag_id
-where ltrim(f.cik, '0') = ltrim(%(cik)s, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
+where f.cik = lpad(ltrim(%(cik)s, '0'), 10, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
 group by 1
 """
 
@@ -1358,7 +1360,7 @@ fam as (
     from fsn.filing f join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.value is not null
     join fsn.dim d on d.id = v.dim_id and d.segments = ''
     join fsn.tag t on t.id = v.tag_id and t.tag in ({fam})
-    where ltrim(f.cik, '0') = {_lit(cik.lstrip("0"))} and f.form in ({forms})) x where rn <= {per_tag}
+    where f.cik = {_lit(cik.lstrip("0").zfill(10))} and f.form in ({forms})) x where rn <= {per_tag}
 ),
 ye as (
   select f.accession, array_agg(distinct v.ddate::text) as d
@@ -1366,7 +1368,7 @@ ye as (
   join fsn.dim d on d.id = v.dim_id and d.segments = ''
   join fsn.tag t on t.id = v.tag_id and t.tag in ('Assets', 'Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax',
     'NetIncomeLoss', 'NetCashProvidedByUsedInOperatingActivities', 'ProfitLoss')
-  where ltrim(f.cik, '0') = {_lit(cik.lstrip("0"))} and f.form in ({forms})
+  where f.cik = {_lit(cik.lstrip("0").zfill(10))} and f.form in ({forms})
   group by 1
 )
 select json_build_object(
