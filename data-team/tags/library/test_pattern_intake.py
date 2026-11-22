@@ -37,3 +37,96 @@ def test_fail_rows_open_intake_rows_once(tmp_path):
 def test_malformed_fail_row_is_skipped(tmp_path):
     out, rows = run(tmp_path, REG_HDR + 'bad ticker,2026-11-22,FAIL,xyz,s,32,0,0.08,R\n')
     assert rows == []
+
+
+# ---------------------------------------------------------------- drill source (pattern_intake.py --drills)
+DRILL_HDR = ('date,class,kind,ticker,cik,data_point,period_end,accession,tag,resolver_status,resolver_value,key_source,key_value,'
+             'evidence_label,evidence,detail\n')
+ATT_HDR = 'date,ticker,data_point,gate,evidence_label,compared,agree,rule_gap,data_gap,filer_error\n'
+
+
+def miss(day, cls, kind, tk, dp, pe, tag='', ev=''):
+    return f'{day},{cls},{kind},{tk},1,{dp},{pe},A1,{tag},mapped,5,cell_proof PROVEN,6,DATA-INFERRED,{ev},\n'
+
+
+def run_drills(tmp, intake_text=None):
+    intake = tmp / 'intake.csv'
+    if intake_text is not None:
+        intake.write_text(intake_text)
+    r = subprocess.run([sys.executable, '-I', os.path.join(HERE, 'pattern_intake.py'), '--drills', str(tmp / 'drills'),
+                        '--intake', str(intake), '--accuracy', str(tmp / 'acc.csv'), '--today', '2026-11-23'],
+                       capture_output=True, text=True, check=True)
+    return r.stdout, list(csv.DictReader(open(intake))), list(csv.DictReader(open(tmp / 'acc.csv')))
+
+
+def test_drill_misses_group_dedupe_flag_and_keep_expert_edits(tmp_path):
+    d = tmp_path / 'drills'
+    d.mkdir()
+    (d / '2026-11-21.csv').write_text(
+        DRILL_HDR + miss('2026-11-21', 'rule_gap', 'proof_disagree', 'AA', 'sga_expense', '2024-12-31', 'SellingGeneralAndAdministrativeExpense')
+        + miss('2026-11-21', 'rule_gap', 'proof_disagree', 'BB', 'sga_expense', '2024-12-31', 'SellingGeneralAndAdministrativeExpense')
+        + miss('2026-11-21', 'data_gap', 'proof_disagree', 'AA', 'goodwill', '2019-03-31', '', 'proof 0001-19-1 Goodwill=5; no resolver row')
+        + miss('2026-11-21', 'data_gap', 'proof_disagree', 'BB', 'goodwill', '2019-03-31', '', 'proof 0002-19-1 Goodwill=7; no resolver row')
+        + miss('2026-11-21', 'rule_gap', 'no_role', 'AA', 'net_income', '2024-12-31'))
+    # the same AA sga cell again on a later day (deduped), plus one new CC sga cell
+    (d / '2026-11-22.csv').write_text(
+        DRILL_HDR + miss('2026-11-22', 'rule_gap', 'proof_disagree', 'AA', 'sga_expense', '2024-12-31', 'SellingGeneralAndAdministrativeExpense')
+        + miss('2026-11-22', 'rule_gap', 'proof_disagree', 'CC', 'sga_expense', '2023-12-31', 'SellingGeneralAndAdministrativeExpense'))
+    verifier = (','.join(['PI-WMT-2026-11-22-bbbbbbbb', '2026-11-22', 'tag-expert', 'OPEN', 'WMT', '2026-11-22', f'WMT|2026-11-22|{H2}',
+                          's2', '1', '0.13', 'R', 'e', '', '']) + '\n')
+    old_hdr = 'intake_id,opened,owner,status,ticker,verdict_date,registry_key,seed,errors,upper_bound_95,approver,evidence,pattern_id,resolution\n'
+    out, rows, _ = run_drills(tmp_path, old_hdr + verifier)
+    v = [r for r in rows if r['source'] == 'verifier']
+    assert len(v) == 1 and v[0]['intake_id'] == 'PI-WMT-2026-11-22-bbbbbbbb' and v[0]['errors'] == '1'   # upgraded, values kept
+    dr = {(r['miss_class'], r['data_point']): r for r in rows if r['source'] == 'drill'}
+    assert set(dr) == {('rule_gap|proof_disagree', 'sga_expense'), ('data_gap|proof_disagree', 'goodwill'), ('rule_gap|no_role', 'net_income')}
+    sga = dr[('rule_gap|proof_disagree', 'sga_expense')]
+    assert (sga['companies'], sga['cells'], sga['days'], sga['first_seen'], sga['last_seen']) == ('3', '3', '2', '2026-11-21', '2026-11-22')
+    assert sga['element'] == 'SellingGeneralAndAdministrativeExpense' and sga['flag'] == 'rule_proposal' and sga['ticker'] == 'AA,BB,CC'
+    gw = dr[('data_gap|proof_disagree', 'goodwill')]
+    assert gw['element'] == 'Goodwill' and gw['flag'] == 'recurring'          # element from the proof; a data gap is not a rule
+    assert dr[('rule_gap|no_role', 'net_income')]['flag'] == ''               # one company: not recurring
+    # the tag expert closes the sga row; a rerun keeps that and adds nothing
+    intake = tmp_path / 'intake.csv'
+    rows2 = [dict(r, status='CLOSED', pattern_id='P-SGA') if r['intake_id'] == sga['intake_id'] else r for r in rows]
+    with open(intake, 'w', newline='') as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]), lineterminator='\n')
+        w.writeheader()
+        w.writerows(rows2)
+    out, rows3, _ = run_drills(tmp_path)
+    assert '0 new, 0 updated' in out and len(rows3) == len(rows)
+    s3 = next(r for r in rows3 if r['intake_id'] == sga['intake_id'])
+    assert s3['status'] == 'CLOSED' and s3['pattern_id'] == 'P-SGA'
+    # the verifier source still appends to the upgraded file
+    reg = tmp_path / 'registry.csv'
+    reg.write_text(REG_HDR + f'WMT,2026-11-23,FAIL,{H3},s3,32,0,0.08,R\n')
+    subprocess.run([sys.executable, '-I', os.path.join(HERE, 'pattern_intake.py'), '--registry', str(reg), '--intake', str(intake),
+                    '--approvals', str(tmp_path), '--today', '2026-11-23'], check=True, capture_output=True)
+    rows4 = list(csv.DictReader(open(intake)))
+    assert len(rows4) == len(rows3) + 1 and rows4[-1]['source'] == 'verifier' and rows4[-1]['verdict_date'] == '2026-11-23'
+
+
+def test_class_accuracy_latest_day_wins_and_graduation_bar(tmp_path):
+    d = tmp_path / 'drills'
+    d.mkdir()
+    (d / '2026-11-21.csv').write_text(DRILL_HDR)
+    (d / '2026-11-22.csv').write_text(DRILL_HDR)
+    # revenue: 200 companies, filing-checked, all agree -> graduates; day 1's miss for T0 is superseded by day 2's agree
+    a1 = ATT_HDR + '2026-11-21,T0,revenue,docmap,FILING-CHECKED,1,0,1,0,0\n'
+    a2 = ATT_HDR + ''.join(f'2026-11-22,T{i},revenue,docmap,FILING-CHECKED,1,1,0,0,0\n' for i in range(200))
+    # sga: 300 companies with proof keys only (DATA-INFERRED) -> never graduates; data_gap counted apart
+    a2 += ''.join(f'2026-11-22,T{i},sga_expense,proof,DATA-INFERRED,2,2,0,0,0\n' for i in range(300))
+    a2 += '2026-11-22,T0,sga_expense,proof,DATA-INFERRED,5,0,0,5,0\n'.replace('proof,', 'proof_np,')
+    # cogs: 200 filing-checked companies with 2 errors -> 99.0% but upper bound > 1.5% -> no
+    a2 += ''.join(f'2026-11-22,T{i},cost_of_revenue,docmap,FILING-CHECKED,1,{0 if i < 2 else 1},{1 if i < 2 else 0},0,0\n' for i in range(200))
+    (d / '2026-11-21-attempts.csv').write_text(a1)
+    (d / '2026-11-22-attempts.csv').write_text(a2)
+    out, _, acc = run_drills(tmp_path)
+    by = {r['class']: r for r in acc}
+    rev, sga, cogs = by['revenue'], by['sga_expense'], by['cost_of_revenue']
+    assert (rev['fc_attempts'], rev['fc_correct'], rev['fc_companies'], rev['graduated']) == ('200', '200', '200', 'yes')
+    assert float(rev['fc_cp_upper_error_95']) <= 0.015 and rev['days'] == '1'
+    assert (sga['attempts'], sga['correct'], sga['accuracy'], sga['fc_attempts'], sga['graduated']) == ('600', '600', '1.0000', '0', 'no')
+    assert sga['data_gap_excluded'] == '5'
+    assert cogs['fc_accuracy'] == '0.9900' and float(cogs['fc_cp_upper_error_95']) > 0.015 and cogs['graduated'] == 'no'
+    assert '1 graduated' in out

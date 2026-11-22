@@ -11,7 +11,10 @@ name: Daily blind drill (20 companies outside the certified set; read-only on th
 #   extract  DATABASE_URL, read-only session (default_transaction_read_only=on, statement_timeout 15 min, ONE connection,
 #            pauses while pg_stat_activity > 80), contents: read.  No SEC access.
 #   resolve  SEC_USER_AGENT only (instance evidence for total_debt, <= 2 requests a second, sec.gov only), no DB secret, contents: read.
-#   commit   contents: write, no secrets. Pushes ONLY data-team/tags/drills/ to the data branch `drills`, never main.
+#   commit   contents: write, no secrets. Pushes ONLY data-team/tags/drills/ to the data branch `drills`; then, from all drill
+#            days on that branch, writes ONLY data-team/tags/library/pattern-intake.csv (source=drill rows: one per miss
+#            class, deduped across days, flag rule_proposal at >= 2 companies) and drill-class-accuracy.csv (per-class
+#            accuracy and the 99% graduation bar) to main (data-team/tags/library/pattern_intake.py --drills; SYSTEMS.md #7).
 # Why a branch: main is protected by CI and shared by many sessions; a daily bot commit there would race every session's push and
 # trigger CI each day. The branch costs nothing, keeps main history clean, and the Tag Expert reads `git fetch origin drills`.
 #
@@ -173,7 +176,7 @@ jobs:
           if-no-files-found: error
 
   commit:
-    name: Commit data-team/tags/drills/ to the drills branch (never main)
+    name: Commit data-team/tags/drills/ to the drills branch, then the drill pattern intake and class accuracy to main
     needs: [extract, resolve]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -189,13 +192,13 @@ jobs:
         with:
           name: drill-report-${{ github.run_id }}
           path: dl
-      - name: Push the two files
+      - name: Push the three files (report, misses, attempts)
         run: |
           set -eu
           [ "$GITHUB_REF" = "refs/heads/main" ] || { echo "::error::main only"; exit 1; }
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp "dl/$DAY.md" "dl/$DAY.csv" "$RUNNER_TEMP/"
+          cp "dl/$DAY.md" "dl/$DAY.csv" "dl/$DAY-attempts.csv" "$RUNNER_TEMP/"
           for i in 1 2 3 4 5 6; do
             if git ls-remote --exit-code --heads origin drills >/dev/null 2>&1; then
               git fetch -q origin drills
@@ -204,8 +207,8 @@ jobs:
               git checkout -q -B drills origin/main
             fi
             mkdir -p data-team/tags/drills
-            cp "$RUNNER_TEMP/$DAY.md" "$RUNNER_TEMP/$DAY.csv" data-team/tags/drills/
-            git add "data-team/tags/drills/$DAY.md" "data-team/tags/drills/$DAY.csv"
+            cp "$RUNNER_TEMP/$DAY.md" "$RUNNER_TEMP/$DAY.csv" "$RUNNER_TEMP/$DAY-attempts.csv" data-team/tags/drills/
+            git add "data-team/tags/drills/$DAY.md" "data-team/tags/drills/$DAY.csv" "data-team/tags/drills/$DAY-attempts.csv"
             other=$(git diff --cached --name-only | grep -v '^data-team/tags/drills/' || true)
             [ -z "$other" ] || { echo "::error::staged files outside data-team/tags/drills/: $other"; exit 1; }
             if git diff --cached --quiet; then echo "no change"; exit 0; fi
@@ -214,3 +217,27 @@ jobs:
             sleep $((i * 5))
           done
           echo "::error::could not push to drills"; exit 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Drill misses -> pattern intake + per-class accuracy on main (reset and rerun on every try, 30 tries)
+        run: |
+          set -uo pipefail
+          [ "$GITHUB_REF" = "refs/heads/main" ] || { echo "::error::main only"; exit 1; }
+          L=data-team/tags/library
+          for i in $(seq 1 30); do
+            git fetch -q origin main drills && git checkout -q -B drill-intake origin/main && git reset -q --hard origin/main \
+              || { sleep $((RANDOM % 20 + 3)); continue; }
+            rm -rf "$RUNNER_TEMP/drills-all" && mkdir -p "$RUNNER_TEMP/drills-all"
+            git archive origin/drills data-team/tags/drills | tar -x -C "$RUNNER_TEMP/drills-all"
+            python3 -I "$L/pattern_intake.py" --drills "$RUNNER_TEMP/drills-all/data-team/tags/drills" | tee "$RUNNER_TEMP/intake.txt" \
+              || { echo "::error::pattern_intake --drills failed"; exit 1; }
+            git add "$L/pattern-intake.csv" "$L/drill-class-accuracy.csv"
+            other=$(git diff --cached --name-only | grep -v -e "^$L/pattern-intake.csv$" -e "^$L/drill-class-accuracy.csv$" || true)
+            [ -z "$other" ] || { echo "::error::staged files outside the intake and accuracy files: $other"; exit 1; }
+            if git diff --cached --quiet; then echo "intake and accuracy unchanged"; exit 0; fi
+            git commit -q -m "Drill intake $DAY: $(head -1 "$RUNNER_TEMP/intake.txt" | cut -c1-140) (daily-drill run $GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && { echo pushed; cat "$RUNNER_TEMP/intake.txt" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::push to main failed after 30 tries"; exit 1

@@ -106,3 +106,37 @@ def test_gates_classify_and_count(tmp_path):
 
 def test_no_key_is_not_reported_as_zero():
     assert dd.pct(0, 0) == "n/a (no key)" and dd.pct(1, 2) == "50.00%"
+
+
+def test_attempts_file_counts_each_gate_per_company_and_data_point(tmp_path):
+    rows = [R("AA", "revenue", "2024-12-31", "mapped", "100000000", tags="Revenues"),
+            R("AA", "net_income", "2024-12-31", "no_role", why="no node")]
+    batch = [dict(rank=1, ticker="AA", cik="1", name="x")]
+    proofs = [P("revenue", "2024-12-31", "100000000"), P("net_income", "2024-12-31", "7000000"), P("revenue", "2023-12-31", "9", "A0"),
+              dict(P("gross_profit", "2024-12-31", ""), verdict="NOT_PRESENTED")]
+    roles = tmp_path / "roles.csv"
+    roles.write_text("data_point,stmt,parent,alternatives,combined_if,note_ok,custom_label,ruling,fallback\n")
+    fam = tmp_path / "fam.txt"
+    fam.write_text("")
+    items, st = dd.build(rows, [], proofs, [], str(tmp_path / "none"), str(roles), str(fam), "2026-11-17", batch)
+    out = tmp_path / "drills"
+    dd.write_report(items, st, batch, str(out), "2026-11-17")
+    got = {(r["data_point"], r["gate"]): r for r in csv.DictReader(open(out / "2026-11-17-attempts.csv"))}
+    assert list(next(iter(got.values()))) == dd.ATT_COLS
+    rev = got[("revenue", "proof")]
+    assert (rev["compared"], rev["agree"], rev["data_gap"], rev["rule_gap"], rev["evidence_label"]) == ("2", "1", "1", "0", "DATA-INFERRED")
+    ni = got[("net_income", "proof")]
+    assert (ni["compared"], ni["agree"], ni["rule_gap"]) == ("1", "0", "1")
+    assert (got[("gross_profit", "proof_np")]["compared"], got[("gross_profit", "proof_np")]["agree"]) == ("1", "1")
+    # every compared key is counted exactly once, matching the report's proof totals
+    assert sum(int(r["compared"]) for r in got.values()) == st["proof"]["proof_compared"] + st["proof"]["proof_np_compared"]
+
+
+def test_drill_workflow_feeds_pattern_intake_on_main_with_30_tries():
+    wf = (ROOT / ".github/workflows/pipeline-daily-drill.yml").read_text()
+    assert '"$RUNNER_TEMP/$DAY-attempts.csv" data-team/tags/drills/' in wf
+    step = wf[wf.index("Drill misses -> pattern intake"):]
+    assert "pattern_intake.py\" --drills" in step and "git archive origin/drills data-team/tags/drills" in step
+    assert "seq 1 30" in step and "git push -q origin HEAD:main" in step
+    assert "pattern-intake.csv" in step and "drill-class-accuracy.csv" in step
+    assert "vars.DAILY_DRILL == 'true'" in wf   # the founder's switch is untouched

@@ -9,7 +9,9 @@
         Writes OUT/proofs.csv (analytics.cell_proof, FY and I grains since 2015) and OUT/checks.csv (failed fsn.filing_check).
   daily_drill.py report --out OUT --date D --reads DIR --drills DIR [--roles CSV --families TXT]
         No database. Reads OUT/resolved_all.csv, filings.json, proofs.csv, checks.csv and the docmaps; writes
-        DRILLS/<date>.md and DRILLS/<date>.csv (one row per item, class = rule_gap | data_gap | filer_error).
+        DRILLS/<date>.md, DRILLS/<date>.csv (one row per item, class = rule_gap | data_gap | filer_error) and
+        DRILLS/<date>-attempts.csv (one row per ticker x data point x gate x evidence label: compared, agree and the miss
+        classes; the denominator data-team/tags/library/pattern_intake.py --drills needs for per-class accuracy).
 
 Evidence labels: a docmap row is FILING-CHECKED only when its own evidence_class says so; proof rows are the production proof
 (DATA-INFERRED about the filing); the classification itself is DATA-INFERRED until a Tag Expert reads the filing."""
@@ -22,6 +24,7 @@ WINDOW_START = '2015-01-01'
 VAL = ('mapped', 'component_sum', 'derived')
 REASON = ('not_presented', 'combined')
 MAX_FAMILY_ITEMS = 400
+ATT_COLS = ['date', 'ticker', 'data_point', 'gate', 'evidence_label', 'compared', 'agree', 'rule_gap', 'data_gap', 'filer_error']
 COLS = ['date', 'class', 'kind', 'ticker', 'cik', 'data_point', 'period_end', 'accession', 'tag', 'resolver_status', 'resolver_value',
         'key_source', 'key_value', 'evidence_label', 'evidence', 'detail']
 
@@ -155,7 +158,15 @@ def item(day, cls, kind, rrow, key_source, key_value, label, evidence, ticker=''
             'key_value': key_value, 'evidence_label': label, 'evidence': evidence, 'detail': detail}
 
 
-def gate_proofs(res, proofs, checks, day, cik2tk):
+def tally(att, tk, dp, gate, label, cls=None):
+    """One compared key for the per-class attempt table: cls None = agree, else the miss class."""
+    if att is None: return
+    c = att[(tk, dp, gate, label)]
+    c['compared'] += 1
+    c[cls or 'agree'] += 1
+
+
+def gate_proofs(res, proofs, checks, day, cik2tk, att=None):
     stats = collections.Counter(); items = []
     for p in proofs:
         if p['verdict'] not in ('PROVEN', 'NOT_PRESENTED'): continue
@@ -165,16 +176,18 @@ def gate_proofs(res, proofs, checks, day, cik2tk):
         if p['verdict'] == 'PROVEN':
             stats['proof_compared'] += 1
             ok = r is not None and r['status'] in VAL and same(num(r['value']), num(p['shown_value']))
-            if ok: stats['proof_agree'] += 1; continue
+            if ok: stats['proof_agree'] += 1; tally(att, tk, p['data_point'], 'proof', 'DATA-INFERRED'); continue
             cls, why = classify(r, checks, p['period_end'])
+            tally(att, tk, p['data_point'], 'proof', 'DATA-INFERRED', cls)
             items.append(item(day, cls, 'proof_disagree', r, 'cell_proof PROVEN', p['shown_value'], 'DATA-INFERRED',
                               f"proof {p['shown_accession']} {p['shown_tag']}={p['shown_value']}; {why}", tk, str(int(p['cik'])), p['data_point'], p['period_end']))
         else:
             stats['proof_np_compared'] += 1
             if r is not None and r['status'] in VAL:
+                tally(att, tk, p['data_point'], 'proof_np', 'DATA-INFERRED', 'rule_gap')
                 items.append(item(day, 'rule_gap', 'proof_not_presented_but_valued', r, 'cell_proof NOT_PRESENTED', '', 'DATA-INFERRED',
                                   f"proof says not presented ({p['reason_code']}); the resolver gave {r['value']} from {r.get('tags')}", tk, str(int(p['cik'])), p['data_point'], p['period_end']))
-            else: stats['proof_np_agree'] += 1
+            else: stats['proof_np_agree'] += 1; tally(att, tk, p['data_point'], 'proof_np', 'DATA-INFERRED')
     return stats, items
 
 
@@ -187,7 +200,7 @@ def read_docmap(path):
     return out
 
 
-def gate_docmaps(res, reads_dir, tickers, checks, day, cik_of):
+def gate_docmaps(res, reads_dir, tickers, checks, day, cik_of, att=None):
     stats = collections.Counter(); items = []
     for tk in tickers:
         files = sorted(glob.glob(os.path.join(reads_dir, f'{tk}-docmap-*.csv')))
@@ -202,9 +215,10 @@ def gate_docmaps(res, reads_dir, tickers, checks, day, cik_of):
                 rr = res.find(tk, dp, pe0)
                 stats['docmap_np_compared'] += 1
                 if rr is not None and rr['status'] in VAL:
+                    tally(att, tk, dp, 'docmap_np', 'FILING-CHECKED', 'rule_gap')
                     items.append(item(day, 'rule_gap', 'docmap_not_presented_but_valued', rr, 'docmap not_presented', '', 'FILING-CHECKED',
                                       f"docmap {files[-1]} row {dp}: not presented; resolver gave {rr['value']} from {rr.get('tags')}", tk, cik_of.get(tk, ''), dp, pe0))
-                else: stats['docmap_np_agree'] += 1
+                else: stats['docmap_np_agree'] += 1; tally(att, tk, dp, 'docmap_np', 'FILING-CHECKED')
                 continue
             for col, v, pe in (('fy0', fy0, pe0), ('fy1', fy1, None)):
                 if v is None: continue
@@ -215,13 +229,16 @@ def gate_docmaps(res, reads_dir, tickers, checks, day, cik_of):
                     pe = c[0]['period_end'] if c else None
                     if pe is None:
                         stats['docmap_compared'] += 1
+                        tally(att, tk, dp, 'docmap', 'FILING-CHECKED', 'data_gap')
                         items.append(item(day, 'data_gap', 'docmap_disagree', None, f'docmap {col}', str(v), 'FILING-CHECKED',
                                           f"docmap {files[-1]} {dp} {col} printed {v}; no resolver row one year before {pe0}", tk, cik_of.get(tk, ''), dp, ''))
                         continue
                 rr = res.find(tk, dp, pe)
                 stats['docmap_compared'] += 1
-                if rr is not None and rr['status'] in VAL and same(num(rr['value']), v): stats['docmap_agree'] += 1; continue
+                if rr is not None and rr['status'] in VAL and same(num(rr['value']), v):
+                    stats['docmap_agree'] += 1; tally(att, tk, dp, 'docmap', 'FILING-CHECKED'); continue
                 cls, why = classify(rr, checks, pe)
+                tally(att, tk, dp, 'docmap', 'FILING-CHECKED', cls)
                 items.append(item(day, cls, 'docmap_disagree', rr, f'docmap {col}', str(v), 'FILING-CHECKED',
                                   f"docmap {os.path.basename(files[-1])} {dp} {col} printed {v} ({r.get('r_page')}); {why}", tk, cik_of.get(tk, ''), dp, pe))
     return stats, items
@@ -304,8 +321,9 @@ def build(rows, filings, proofs, checks, reads_dir, roles_csv, families_txt, day
     st = collections.Counter(r['status'] for r in rows)
     tot = len(rows)
     cov = sum(st[k] for k in VAL + REASON)
-    ps, pi = gate_proofs(res, proofs, checks, day, cik2tk)
-    ds, di = gate_docmaps(res, reads_dir, tickers, checks, day, cik_of)
+    att = collections.defaultdict(collections.Counter)
+    ps, pi = gate_proofs(res, proofs, checks, day, cik2tk, att)
+    ds, di = gate_docmaps(res, reads_dir, tickers, checks, day, cik_of, att)
     fi = gate_filer_checks(res, checks, day)
     nr = gate_no_role(res, day)
     known, fam = known_tags(roles_csv, families_txt)
@@ -314,6 +332,8 @@ def build(rows, filings, proofs, checks, reads_dir, roles_csv, families_txt, day
     stats = dict(cells=tot, status=dict(st), coverage=pct(cov, tot), proof=dict(ps), docmap=dict(ds), failed_checks=len(checks), filer_check_items=len(fi), new_families=nfam)
     stats['proof_agreement'] = pct(ps['proof_agree'], ps['proof_compared'])
     stats['docmap_agreement'] = pct(ds['docmap_agree'], ds['docmap_compared'])
+    stats['attempts'] = [dict(date=day, ticker=tk, data_point=dp, gate=g, evidence_label=lb, **{k: c[k] for k in ATT_COLS[5:]})
+                         for (tk, dp, g, lb), c in sorted(att.items())]
     return items, stats
 
 
@@ -321,6 +341,8 @@ def write_report(items, stats, batch, out_dir, day, code_sha=''):
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, f'{day}.csv'), 'w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(items)
+    with open(os.path.join(out_dir, f'{day}-attempts.csv'), 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=ATT_COLS, lineterminator='\n'); w.writeheader(); w.writerows(stats.get('attempts', []))
     by = collections.Counter((i['class'], i['kind']) for i in items)
     L = [f'# Daily blind drill {day}', '',
          f"Batch: {len(batch)} companies, ranks {batch[0]['rank']}..{batch[-1]['rank']}: " + ' '.join(b['ticker'] for b in batch),
@@ -354,7 +376,7 @@ def cmd_report(a):
     for b in batch: b['rank'] = int(b['rank'])
     items, stats = build(rows, filings, rd('proofs.csv'), rd('checks.csv'), a.reads, a.roles, a.families, a.date, batch)
     write_report(items, stats, batch, a.drills, a.date, os.environ.get('GITHUB_SHA', ''))
-    print(json.dumps(stats, indent=1)[:1500])
+    print(json.dumps({k: v for k, v in stats.items() if k != 'attempts'}, indent=1)[:1500])
 
 
 def main(argv=None):
