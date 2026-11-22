@@ -5,7 +5,6 @@ held,76,SCCO,2124,gross_profit,2017,2017-12-31,HELD,proof_disagree,held by the t
 held,76,SCCO,2124,gross_profit,2018,2018-12-31,HELD,proof_disagree,held by the tag-map mapper: proof_disagree,,,,
 held,76,SCCO,2124,gross_profit,2019,2019-12-31,HELD,proof_disagree,held by the tag-map mapper: proof_disagree,,,,
 proof,76,SCCO,2124,income_tax_expense,2017,2017-12-31,UNCHECKED,proof_is_for_another_value,held by the tag-map mapper: components_without_single_calc_parent,951700000.0000,0001047469-18-001211,R55.htm,
-proof,76,SCCO,2124,income_tax_expense,2018,2018-12-31,UNCHECKED,proof_is_for_another_value,held by the tag-map mapper: components_without_single_calc_parent,1105000000.0000,0001047469-19-000845,R54.htm,
 held,76,SCCO,2124,total_debt,2022,2022-12-31,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
 held,76,SCCO,2124,total_debt,2025,2025-12-31,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,,,
 blank,76,SCCO,2124,total_liabilities,2018,2018-12-31,BLANK,not_presented_but_row_shown,"latest print: the FY+1 10-K 0001558370-20-001781 re-presents the year as 7674800000.0000 (own filing 7872000000.0000), recomputed from its own elements; one vintage per year (rulings 2026-11-17); filing checks: calc LiabilitiesAndStockholdersEquity: ok;calc CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect: ok",,0001558370-20-001781,R5.htm,
