@@ -1,0 +1,64 @@
+name: Tag library auto rebuild (resolver change on main -> library + pattern detectors, no database)
+
+# Interconnection map (data-team/SYSTEMS.md, founder 2026-11-22 "everything should be interconnected so well"):
+# every push to main that changes data-team/tags/line_map/resolver/** (a resolver release) rebuilds the tag library
+# from the committed inputs, so library.csv never lags the resolver version (scorecard row 6).
+#   1. data-team/tags/library/pattern_detectors.py (when present on main; no --live, so no database) -> pattern_hits.csv
+#   2. data-team/tags/library/build_library.py (PYTHONHASHSEED=0: set order is part of the output, so it is pinned)
+#   3. the library tests, then commit the generated outputs to main ONLY if library.csv or pattern_hits.csv changed
+#      (a rebuild that changes only dates/CHANGELOG is discarded).
+# Unlike tag-library-learn.yml (learner -> data branch, reviewed by hand), this runs no learner and fetches nothing:
+# it regenerates files that are a pure function of what is already on main, so it commits to main directly.
+# Read-only apart from that commit; no secret but GITHUB_TOKEN. Its own push (GITHUB_TOKEN) starts no workflow, so
+# it cannot loop. Retry pattern: reset to origin/main and rebuild on every try (idempotent), up to 30 tries.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data-team/tags/line_map/resolver/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tag-library-auto-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONHASHSEED: "0"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q pytest
+      - name: Rebuild, test, commit if the library changed
+        run: |
+          set -uo pipefail
+          L=data-team/tags/library
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            if [ -f $L/pattern_detectors.py ]; then python3 $L/pattern_detectors.py | tail -5 || { echo "::error::pattern detectors failed"; exit 1; }; fi
+            python3 $L/build_library.py | tail -1 | tee /tmp/library-summary.json || { echo "::error::build_library failed"; exit 1; }
+            if git diff --quiet -- $L/library.csv $L/pattern_hits.csv; then
+              echo "library and pattern hits unchanged at $(git rev-parse --short HEAD): nothing to commit"; git checkout -q -- .; exit 0
+            fi
+            if [ "$i" -eq 1 ]; then python3 -m pytest -q -p no:cacheprovider $L || { echo "::error::library tests failed: nothing committed"; exit 1; }; fi
+            git add $L/library.csv $L/library.json $L/library.schema.json $L/coverage.json $L/INDEX.md $L/browser.html $L/CHANGELOG.md
+            [ -f $L/pattern_hits.csv ] && git add $L/pattern_hits.csv
+            V=$(python3 -c "import json; print(json.load(open('/tmp/library-summary.json'))['resolver_version'])" 2>/dev/null || echo unknown)
+            git commit -q -m "Tag library rebuilt for $V (tag-library-auto-rebuild run $GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && { echo "pushed"; git log -1 --stat | tail -12 >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::push failed after retries"; exit 1

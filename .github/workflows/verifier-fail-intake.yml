@@ -1,0 +1,51 @@
+name: Verifier FAIL intake (registry.csv FAIL -> tag library pattern-intake row)
+
+# Interconnection map (data-team/SYSTEMS.md, founder 2026-11-22): a verifier FAIL row in
+# data-team/strategy/approvals/registry.csv opens a row in data-team/tags/library/pattern-intake.csv (owned by the tag
+# library, worked by the tag expert: classify into patterns.csv or a company quirk, then close). Script:
+# data-team/tags/library/pattern_intake.py (append-only, idempotent by ticker|date|coverage_sha256; tests in
+# test_pattern_intake.py). The approver commits registry.csv by hand, so a push trigger sees it.
+# Reads files only; the only write is a commit of pattern-intake.csv to main. Retry pattern: reset to origin/main and
+# rerun on every try (idempotent), up to 30 tries. Its own push (GITHUB_TOKEN) starts no workflow.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data-team/strategy/approvals/registry.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verifier-fail-intake
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Open intake rows for new FAIL verdicts, commit if any
+        run: |
+          set -uo pipefail
+          F=data-team/tags/library/pattern-intake.csv
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            python3 -I data-team/tags/library/pattern_intake.py | tee /tmp/intake.txt || { echo "::error::pattern_intake failed"; exit 1; }
+            git add "$F"
+            if git diff --cached --quiet; then echo "no new FAIL verdicts"; exit 0; fi
+            git commit -q -m "Pattern intake: $(head -1 /tmp/intake.txt | cut -c1-120) (verifier-fail-intake run $GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && { echo pushed; cat /tmp/intake.txt >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::push failed after retries"; exit 1

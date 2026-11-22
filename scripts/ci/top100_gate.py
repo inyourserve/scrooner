@@ -15,7 +15,7 @@ PASS needs all of:
   3. no SHOWN_VALUE row has reason_code no_public_filing_for_period or before_first_10k (a shown cell must be a
      value; those reasons are the evidence of a hidden year, so they are allowed only on HIDDEN_* rows).
 On PASS it writes <out>/<TICKER>-coverage-<date>.csv and <out>/<TICKER>-request-<date>.md (hash, counts by display
-class, proof DETECTOR_VERSION, run URL). Exit codes: 0 PASS, 1 FAIL, 3 SKIP (no display column), 2 usage/input error.
+class, proof DETECTOR_VERSION, resolver file + resolver_version, run URL). Exit codes: 0 PASS, 1 FAIL, 3 SKIP (no display column), 2 usage/input error.
 """
 
 import argparse
@@ -37,6 +37,23 @@ PART = re.compile(r"@(\d{10}-\d{2}-\d{6})#(R\d+(?:\.htm)?)$")
 def detector_version(prove_py: Path) -> str:
     m = re.search(r'^DETECTOR_VERSION\s*=\s*"([^"]+)"', prove_py.read_text(), re.M)
     return m.group(1) if m else "unknown"
+
+
+def resolver_versions(resolver: str, ticker: str) -> tuple[str, str]:
+    """(resolver file, its resolver_version values) for this company: <dir>/<TICKER>.csv when --resolver is the
+    per-company directory, else the single file's rows for this ticker. ('', '') when neither can be read."""
+    p = Path(resolver) if resolver else None
+    if p is None:
+        return "", ""
+    f = p / f"{ticker}.csv" if p.is_dir() else p
+    if not f.is_file():
+        return "", ""
+    vs: list[str] = []
+    with open(f, newline="") as fh:
+        for r in csv.DictReader(fh):
+            if r.get("ticker", ticker) == ticker and r.get("resolver_version"):
+                vs.append(r["resolver_version"])
+    return str(f), ";".join(sorted(set(vs)))
 
 
 def main() -> int:
@@ -112,6 +129,7 @@ def main() -> int:
         w.writeheader()
         w.writerows(rows)
     digest = hashlib.sha256(csv_path.read_bytes()).hexdigest()
+    res_file, res_version = resolver_versions(a.resolver, ticker)
     run_url = "{}/{}/actions/runs/{}".format(
         os.environ.get("GITHUB_SERVER_URL", "https://github.com"),
         os.environ.get("GITHUB_REPOSITORY", ""), os.environ.get("GITHUB_RUN_ID", ""))
@@ -127,6 +145,8 @@ def main() -> int:
         "- cells by display class: " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())),
         f"- proof DETECTOR_VERSION: `{detector_version(Path(a.prove_py))}`",
         f"- resolver: `{a.resolver or 'unknown'}`",
+        f"- resolver file: `{res_file or 'unknown'}`",
+        f"- resolver_version: `{res_version or 'unknown'}`",
         f"- code: `{os.environ.get('GITHUB_SHA', 'unknown')}`",
         f"- run: {run_url}",
         *([f"- re-cert token: `{a.recert_token}` (certified-guard passed once under this token)"] if a.recert_token else []),

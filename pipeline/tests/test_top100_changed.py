@@ -88,3 +88,17 @@ def test_requests_only_added_request_files(repo):
     b = commit(repo, {f"{REQ}/OLD-request-2026-11-15.md": "o2", f"{REQ}/NEW-request-2026-11-17.md": "n",
                       f"{REQ}/notes.md": "x"})
     assert run(repo, "requests", a, b).stdout.strip() == f"{REQ}/NEW-request-2026-11-17.md"
+
+
+SPLIT_DIR = "data-team/tags/line_map/resolver"
+
+
+def test_per_company_resolver_files_scope_the_flow(repo):
+    """AUTO_FLOW_ON_RESOLVER link: only companies whose resolver/<TICKER>.csv rows changed are dispatched."""
+    one = HDR + "1,AAA,total_assets,2020-12-31,I,mapped,1,v1\n"
+    two = HDR + "2,BBB,total_assets,2020-12-31,I,mapped,2,v1\n"
+    a = commit(repo, {f"{SPLIT_DIR}/AAA.csv": one, f"{SPLIT_DIR}/BBB.csv": two})
+    b = commit(repo, {f"{SPLIT_DIR}/AAA.csv": one.replace(",v1", ",v2"), f"{SPLIT_DIR}/BBB.csv": two.replace(",2,v1", ",7,v2")})
+    assert run(repo, "companies", a, b, "--summary", "s.csv").stdout.strip() == "22"
+    c = commit(repo, {f"{SPLIT_DIR}/CCC.csv": HDR + "3,CCC,total_assets,2020-12-31,I,mapped,3,v2\n"})
+    assert run(repo, "companies", b, c, "--summary", "s.csv").stdout.strip() == "33"

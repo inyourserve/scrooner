@@ -1,6 +1,12 @@
 name: Top-100 auto trigger (resolver change -> top100-flow for the changed companies)
 
 # Kill switch: does nothing unless the repo variable AUTO_LOOP is exactly "true" (default off).
+# Second switch (2026-11-22, SYSTEMS.md interconnection map, the production link resolver release -> flow): the repo
+# variable AUTO_FLOW_ON_RESOLVER == "true" also enables this job on its own, so this one link can stay on if AUTO_LOOP
+# (which also drives display-certify-auto) is turned off. Default: unset = off. Only the founder turns it on
+# (Settings > Variables > Actions, or `gh variable set AUTO_FLOW_ON_RESOLVER --body true`). The scope is unchanged:
+# only companies whose resolver/<TICKER>.csv rows changed (resolver_version ignored), per scripts/ci/top100_changed.py
+# (test: pipeline/tests/test_top100_changed.py::test_per_company_resolver_files_scope_the_flow).
 # A push to main that changes a resolver CSV (data-team/tags/line_map/resolver-all110-*.csv) or a per-ticker rules file
 # (data-team/tags/line_map/<TICKER>.csv) runs scripts/ci/top100_changed.py, which diffs rows (resolver_version ignored)
 # and maps changed tickers to core.company ids through data-team/strategy/top100-coverage-summary.csv. The ids are
@@ -30,7 +36,7 @@ concurrency:
 
 jobs:
   trigger:
-    if: github.ref == 'refs/heads/main' && vars.AUTO_LOOP == 'true'
+    if: github.ref == 'refs/heads/main' && (vars.AUTO_LOOP == 'true' || vars.AUTO_FLOW_ON_RESOLVER == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 355
     env:

@@ -181,6 +181,38 @@ Daily SEC index, prices, freshness gate, screener snapshot.
 2. Extend the owning system: a rule row, a test, a registry row, a flow step. Never a parallel copy.
 3. A new system, module family, registry, table or file family needs a one-line reason added here first (and a migration claim in doc 53 if it is a table). Update the owning block when a gap closes.
 
+## Interconnection map
+Founder 2026-11-22: "everything should be interconnected so well." Written 2026-11-22 from the workflow `on:` blocks on main. Trigger: **E** event (push/workflow_run), **S** schedule, **M** manual (a person or session dispatches, relays a sha or commits a file). **GAP** = a manual link, with the system that should own its automation. Switches: `AUTO_LOOP` (on since 2026-11-16) gates top100-auto-trigger and display-certify-auto; `AUTO_FLOW_ON_RESOLVER` (unset = off; founder turns it on) gates top100-auto-trigger on its own.
+
+| # | System | Reads | Writes | Trigger | Triggers next | Manual link (GAP → owner) |
+|---|---|---|---|---|---|---|
+| 1 | SEC access | sec.gov | `raw.*`, Storage | S pipeline-refresh 12:23Z; M onboard-* | 3 normalizer (same run) | onboarding dispatch → 2 |
+| 2 | Company master | raw submissions, prices | `core.company`, history source | M onboard-company-identity/filings | 1, 3 | GAP: a new top-N company is dispatched by hand → 2 (rank change event) |
+| 3 | Normalizer | `raw.*` | `core.fact`, filing, period | S nightly reprocess | old map chain (legacy) | GAP: new filers do not go on to 4→8 → 21 |
+| 4 | FSN + standard extract | `fsn.*` | 7 extract JSON (artifact) | M pipeline-fsn-load-filings, pipeline-standard-extract | E tag-library-learn | GAP: new filing → FSN load → extract is dispatched by hand (nightly flag off) → 21 |
+| 5 | Tag knowledge | library, verifier notes | cards, ledger, quirks | M sessions | none | GAP: cards not generated from 6 → 6 |
+| 6 | Tag library | resolver/*.csv, rules, proof_by_tag, certification CSVs, pattern hits | library.*, pattern_hits.csv, `pattern-intake.csv` | E tag-library-auto-rebuild (resolver/** push); E verifier-fail-intake (registry.csv push); E tag-library-learn | commits generated files on main | learned labels: data branch → main by tag expert (review gate, keep); DB copy (0128) M → 6 |
+| 7 | Predictor + drill | exam, rules | branch `drills` | S daily drill 07:41Z | none | GAP: drill misses do not open `rules/inbox/` proposals → 7 |
+| 8 | Resolver | extract JSON, rules, filing reads | resolver/<TICKER>.csv | M a session runs `resolve_all.py` and commits | E top100-auto-trigger → top100-flow; E tag-library-auto-rebuild; E pipeline-tag-library-rebuild (DB dry run) | GAP: extract → resolve → commit is by hand (learn's resolver output goes to a data branch) → 8 |
+| 9 | Filing reads | open-shown/<T>.csv, filings | open-shown-fixes, reads/ | M read sessions | 8 (next resolver release reads them) | GAP: open-shown file → read assignment by hand → 9 |
+| 10 | Structural loader | resolver, docmaps | `canonical_fact`, tag map | E/M top100-flow | 11 (same chain) | none (in chain) |
+| 11 | Proof | canonical_fact, FSN | `cell_proof` | E/M top100-flow | 13 (same chain) | DISAGREE cells have no queue → 11 |
+| 12 | Sector templates | templates md | template table | M `seed-sector-templates` | 13 | GAP: template edit → reseed by hand → 12 |
+| 13 | Coverage/display state | canonical_fact, proof, templates | coverage CSVs, `cell_display_state`, open-shown | E top100-flow publish; S hourly 17 * * * *; E after flow | 9 (open-shown files); 14 (gate) | none |
+| 14 | Certify request + certificate | coverage CSV | requests/<T>-request (coverage path, resolver file + `resolver_version`), certify-out branch | E top100-flow publish on gate PASS (gate = 0 OPEN, incl. the verifier self-check once it lands in the flow); E display-certify-auto | display-certify (judge) → branch certify-out/run-<id> | GAP: approver commits verdict, certificate and registry row by hand (approver ≠ preparer; keep the person, automate the copy) → 14 |
+| 15 | Verifier | certify-out draws, filings | registry.csv rows, draw md | M Ritwik lane; S live-sec-verification Mon | E verifier-fail-intake → 6 | GAP: no scheduled re-check of certified companies → 15 |
+| 16 | Metric registry | canonical_fact | metric tables | S nightly `refresh_valuations`; M recompute | 17 | GAP: a certified company does not trigger recompute → 16 |
+| 17 | Screener | metrics | screening snapshot | S nightly | 19 | follows 16 |
+| 18 | AI query | registry aliases | none | request | 17 | vocabulary not generated from 16 → 18 |
+| 19 | Company pages | backend API | none | request | none | page does not read `cell_display_state` → 19 |
+| 20 | Flow + CI | git, DB | as 10-14 | E push (ci, auto-trigger); M top100-flow | 13, 14, hourly export | GAP: top100-flow beyond resolver changes (new company, rule-only change in `line_map/rules/*`) is dispatched by hand → 20 |
+| 21 | Nightly refresh | SEC, DB | as 1, 3, 16, 17 | S 12:23Z | old path | GAP: does not run 4 → 8 → flow → 13 → 14 → 21 |
+| 22 | Migrations | migration files | live DB | M founder's typed go | none | by design (founder gate) |
+| 23 | Mind | inbox | entries | M curator | none | GAP: curation by hand (last 2026-11-09) → 23 |
+| 24 | Agent roles | role docs | none | M sessions | none | GAP: Dhairya relays shas and briefs by hand → 24 |
+
+New 2026-11-22 (reasons, per "Before you build"): `tag-library-auto-rebuild.yml` (owner 6: pattern detectors when present, then `build_library.py` with `PYTHONHASHSEED=0`, library tests, commit only if `library.csv` or `pattern_hits.csv` changed; it regenerates a pure function of main, unlike tag-library-learn which learns new labels and stays on a data branch), `verifier-fail-intake.yml` + `data-team/tags/library/pattern_intake.py` + `pattern-intake.csv` (owner 6, worked by the tag expert: one append-only row per registry FAIL verdict, keyed ticker|date|coverage_sha256; status/pattern_id/resolution are the tag expert's), `AUTO_FLOW_ON_RESOLVER` (an own switch for the 8 → 20 link inside top100-auto-trigger, no second dispatcher). Tests: `test_pattern_intake.py`, `pipeline/tests/test_top100_gate_request.py`, `test_top100_changed.py::test_per_company_resolver_files_scope_the_flow`.
+
 ## World-class scorecard
 Founder 2026-11-22: "all the systems in SYSTEMS.md should be world class." Score today is the Maturity in each block above; update the row when a block's score or gap changes.
 
