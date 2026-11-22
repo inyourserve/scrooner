@@ -39,6 +39,8 @@ from pathlib import Path
 
 import psycopg
 
+from scrooner_pipeline.metrics.registry import SECTORS, load_data_points, load_sectors
+
 SECTIONS = {
     "sector assignment": ("template", "sic_from", "sic_to"),
     "company assignment": ("cik", "template", "reason"),
@@ -441,94 +443,75 @@ def validate_against_db(conn: psycopg.Connection, rows: list[TemplateRow]) -> No
 # fixed-heading format parse_templates reads, so it cannot be parsed. The catalog route
 # reads the concept list from concepts_catalog.csv and decides each company's group from
 # SIC (+ company assignments), with the sector OUT sets from that proposal's s2/s3
-# (approved categories A and C): the same rules scripts/tag_library/company_notes.py uses.
+# (approved categories A and C), both read from the registry (below).
 
 CATALOG_PATH = Path("data-team/47-fsn-store/company_tag_map/concepts_catalog.csv")
 CATALOG_VERSION = "catalog-2026-11-13"
 CATALOG_EFFECTIVE_FROM = date(2026, 11, 13)
 CATALOG_OUT_REASON = "sector template OUT (SECTOR-TEMPLATES-2026-11-01 s2/s3, approved categories A and C)"
-# The base-name OUT sets; a `<name>_resolved` concept follows its base name.
-GROUP_OUT: dict[str, frozenset[str]] = {
-    "bank": frozenset(
-        {
-            "gross_profit",
-            "cost_of_revenue",
-            "operating_expenses",
-            "research_and_development",
-            "inventory",
-            "accounts_receivable",
-            "accounts_payable",
-            "operating_income",
-            "capex",
-            # unclassified balance sheet: no current subtotal (Dhairya 2026-11-22, narrows s8.3)
-            "current_assets",
-            "current_liabilities",
-        }
-    ),
-    "lender": frozenset({"gross_profit", "inventory"}),
-    "broker_am": frozenset({"gross_profit", "inventory", "research_and_development"}),
-    "insurer": frozenset(
-        {
-            "gross_profit",
-            "cost_of_revenue",
-            "inventory",
-            "research_and_development",
-            "capex",
-            "current_assets",
-            "current_liabilities",
-        }
-    ),
-    "equity_reit": frozenset(
-        {"gross_profit", "inventory", "research_and_development", "capex"}
-    ),
-    "utility": frozenset({"gross_profit", "research_and_development"}),
-    "general": frozenset(),
-    # ASC 946 investment company, OUT by definition (SECTOR-TEMPLATES-2026-11-01 s8.4)
-    "bdc": frozenset(
-        {
-            "gross_profit",
-            "cost_of_revenue",
-            "inventory",
-            "research_and_development",
-            "current_assets",
-            "current_liabilities",
-            "capex",
-        }
-    ),
+# Applicability comes from ONE typed source, the registry (Backbone #12, 2026-11-22):
+#   * metrics/registry/data_points.csv: applies yes/no per data point x sector, with the reason;
+#   * metrics/registry/sectors.csv: company -> sector (SIC codes, CIK assignments) and the sector's
+#     metric family.
+# GROUP_OUT, GROUP_ONLY, COMPANY_GROUP and sic_group() are derived from those files here and nowhere
+# else; metrics/applicability.py and common/sector_applicability.py read them through this module
+# or the registry. tests/unit/test_sector_applicability_one_source.py fails on any other copy.
+
+
+def _derive_sets() -> tuple[dict[str, frozenset[str]], dict[str, frozenset[str]]]:
+    """(GROUP_OUT, GROUP_ONLY) from data_points.csv. A data point OUT for the default sector
+    (general) belongs to the sectors where it applies (GROUP_ONLY); any other OUT row is in that
+    sector's OUT set (GROUP_OUT). Base names; a `<name>_resolved` concept follows its base name."""
+    default = next(s for s, d in load_sectors().items() if d.is_default)
+    applies: dict[str, dict[str, bool]] = {}
+    for (dp, sector), d in load_data_points().items():
+        applies.setdefault(dp, {})[sector] = d.applies
+    out: dict[str, set[str]] = {s: set() for s in SECTORS}
+    only: dict[str, frozenset[str]] = {}
+    for dp, by in sorted(applies.items()):
+        if not by[default]:
+            only[dp] = frozenset(s for s, a in by.items() if a)
+            continue
+        for s, a in by.items():
+            if not a:
+                out[s].add(dp)
+    return {s: frozenset(v) for s, v in out.items()}, only
+
+
+GROUP_OUT, GROUP_ONLY = _derive_sets()
+_SECTOR_DEFS = load_sectors()
+COMPANY_GROUP: dict[str, str] = {
+    cik: s for s, d in _SECTOR_DEFS.items() for cik in d.ciks
 }
-# Concepts that belong to one group only (every other group has them OUT).
-# (net_interest_income matches the existing ranks 1-50 template: bank rows only.)
-GROUP_ONLY: dict[str, frozenset[str]] = {
-    "bdc_total_investment_income": frozenset({"bdc"}),
-    "net_interest_income": frozenset({"bank", "lender"}),
-    # bank concepts (mapper/bank_concepts.py, 2026-11-14): bank rows only
-    "deposits": frozenset({"bank"}),
-    "loans_net": frozenset({"bank"}),
-    "noninterest_expense": frozenset({"bank"}),
-    "noninterest_income": frozenset({"bank"}),
-    "provision_for_credit_losses": frozenset({"bank"}),
-    "total_interest_income": frozenset({"bank"}),
-}
-COMPANY_GROUP = {"0001287750": "bdc", "0001736035": "bdc", "0002065601": "bank"}
+_SIC_SPANS: tuple[tuple[int, int, str], ...] = tuple(
+    sorted((lo, hi, s) for s, d in _SECTOR_DEFS.items() for lo, hi in d.sic_ranges)
+)
+_DEFAULT_GROUP = next(s for s, d in _SECTOR_DEFS.items() if d.is_default)
 
 
 def sic_group(cik: str, sic: int | None) -> str:
+    """The company's sector template group: a CIK assignment first, else its SIC (sectors.csv)."""
     if cik in COMPANY_GROUP:
         return COMPANY_GROUP[cik]
     s = sic or 0
-    if s in (6021, 6022, 6035, 6036):
-        return "bank"
-    if s in (6141, 6162):
-        return "lender"
-    if s in (6200, 6211, 6282):
-        return "broker_am"
-    if 6311 <= s <= 6399 and s not in (6324, 6411):
-        return "insurer"
-    if s == 6798:
-        return "equity_reit"
-    if s in (4911, 4922, 4923, 4924, 4931, 4932, 4941):
-        return "utility"
-    return "general"
+    for lo, hi, group in _SIC_SPANS:
+        if lo <= s <= hi:
+            return group
+    return _DEFAULT_GROUP
+
+
+def groups_in_metric_family(family: str) -> frozenset[str]:
+    """Sectors whose companies take this metric family (sectors.csv `metric_family`)."""
+    return frozenset(s for s, d in _SECTOR_DEFS.items() if d.metric_family == family)
+
+
+def data_point_applies(data_point: str, group: str) -> bool:
+    """True when the data point (or its `_resolved` concept) is in the group's template."""
+    base = data_point.removesuffix("_resolved")
+    only = GROUP_ONLY.get(base)
+    if only is not None:
+        return group in only
+    return base not in GROUP_OUT.get(group, frozenset())
 
 
 @dataclass(frozen=True)

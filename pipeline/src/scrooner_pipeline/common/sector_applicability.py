@@ -36,7 +36,7 @@ accounting verdict.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from scrooner_pipeline.metrics.registry import get_registry
 
 NOT_APPLICABLE_TO_BANKS = "not applicable to banks"
 BANK_REVENUE_PENDING = "bank revenue definition pending"
@@ -101,78 +101,13 @@ BANK_POPULATION_SQL = f"""
 """
 
 
-def _metrics(reason: str, names: Iterable[str]) -> dict[str, str]:
-    return {name: reason for name in names}
-
-
-# metric_name -> reason, exactly the delegated suppress list.
+# metric_name -> reason, exactly the delegated suppress list. The list is the metric registry's
+# `bank_reason` column (metrics/registry/*.csv, one row per metric), never a copy here (Backbone #12):
+# a served metric with a bank_reason is suppressed for a bank with that reason.
 BANK_SUPPRESSED_METRICS: dict[str, str] = {
-    # Banks present no gross profit, no operating-income line, no classified
-    # balance sheet, and fund themselves with deposits (data-team/32 section 5).
-    **_metrics(
-        NOT_APPLICABLE_TO_BANKS,
-        (
-            "gross_margin",
-            "operating_margin",
-            "roic",
-            "interest_coverage_ratio",
-            # EBITDA family
-            "ebitda",
-            "ebitda_margin",
-            "ev_ebitda",
-            "debt_to_ebitda",
-            "net_debt_ebitda",
-            # free cash flow family (name starts with fcf)
-            "fcf",
-            "fcf_yield",
-            "fcf_margin",
-            "fcf_per_share",
-            "fcf_growth_yoy",
-            "fcf_growth_3y_cagr",
-            "fcf_growth_5y_cagr",
-            "fcf_gt_net_income",
-            # deposits are the dominant liability; borrowings-only metrics mislead
-            "net_cash",
-            "net_cash_per_share",
-            "debt_to_equity",
-            "zero_debt",
-            "ev_sales",
-            # unclassified balance sheet, no inventory / receivables / payables
-            "current_ratio",
-            "quick_ratio",
-            "working_capital",
-            "inventory_days",
-            "payables_days",
-            "debtor_days",
-            "cash_conversion_cycle",
-            "piotroski_f_score",
-            # FCF-derived and bank-cash-flow-derived (decision 2026-10-19)
-            "dividends_pct_fcf",
-            "share_repurchases_pct_fcf",
-            "ocf_to_net_income",
-        ),
-    ),
-    # Revenue perimeter has 6 meanings across 30 banks today (data-team/32 s3).
-    **_metrics(
-        BANK_REVENUE_PENDING,
-        (
-            "price_to_sales",
-            "net_margin",
-            "pretax_margin",
-            "revenue_growth_yoy",
-            "revenue_growth_3y_cagr",
-            "revenue_growth_5y_cagr",
-            "revenue_growth_10y_cagr",
-            # derived from the undefined bank revenue (decision 2026-10-19)
-            "sbc_pct_revenue",
-            "capex_pct_revenue",
-            "sga_pct_revenue",
-            "rnd_intensity",
-        ),
-    ),
-    # The current formula uses InvestmentIncomeInterest (three different
-    # meanings across banks) until InterestIncomeExpenseNet is mapped.
-    "net_interest_income": BANK_NII_PENDING,
+    mid: m.bank_reason
+    for mid, m in sorted(get_registry().items())
+    if m.tier != "planned" and m.bank_reason
 }
 
 # Statement-table row labels (analytics.statement_line.display_label, plus the

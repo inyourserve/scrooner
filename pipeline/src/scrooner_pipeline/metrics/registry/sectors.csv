@@ -1,0 +1,9 @@
+sector,metric_family,sic_codes,ciks,source
+general,corporate,default,,"every SIC no other row lists, and a company with no SIC (SECTOR-TEMPLATES-2026-11-01 s1)"
+bank,bank,6021-6022;6035-6036,0002065601,"SIC national/state commercial banks and savings institutions (s1); CIK 0002065601 (CBC) by company assignment (s8 item 5)"
+lender,bank,6141;6162,,"SIC personal credit institutions and mortgage bankers (s1)"
+broker_am,corporate,6200;6211;6282,,"SIC security brokers and investment advice (s1)"
+insurer,insurer,6311-6323;6325-6399,,"SIC 6311-6399 insurance carriers except 6324 hospital and medical service plans (s1)"
+equity_reit,corporate,6798,,"SIC real estate investment trusts (s1)"
+utility,corporate,4911;4922-4924;4931-4932;4941,,"SIC electric, gas and water utilities (s1)"
+bdc,corporate,,0001287750;0001736035,"ASC 946 investment companies by company assignment: ARCC, BXSL (s8 item 4)"

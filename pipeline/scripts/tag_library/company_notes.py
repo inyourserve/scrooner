@@ -33,35 +33,9 @@ LINE_DATA_POINTS = [
 ]
 ALIAS = {"revenue_sanity": "revenue"}
 
-# Sector default OUT lines (SECTOR-TEMPLATES-2026-11-01 s2/s3 matrix; approved categories A and C only, s8 items 1-2).
-SECTOR_OUT = {
-    "bank": {"gross_profit", "cost_of_revenue", "operating_expenses", "research_and_development", "inventory",
-             "accounts_receivable", "accounts_payable", "operating_income", "capex"},
-    "lender": {"gross_profit", "inventory"},
-    "broker_am": {"gross_profit", "inventory", "research_and_development"},
-    "insurer": {"gross_profit", "cost_of_revenue", "inventory", "research_and_development", "capex"},
-    "equity_reit": {"gross_profit", "inventory", "research_and_development", "capex"},
-    "utility": {"gross_profit", "research_and_development"},
-    "general": set(),
-}
-COMPANY_TEMPLATE = {"0001287750": "bdc", "0001736035": "bdc", "0002065601": "bank"}  # ARCC, BXSL, CBC (doc s8 items 4-5)
-
-
-def sic_template(sic):
-    s = int(sic) if str(sic).isdigit() else 0
-    if s in (6021, 6022, 6035, 6036):
-        return "bank"
-    if s in (6141, 6162):
-        return "lender"
-    if s in (6200, 6211, 6282):
-        return "broker_am"
-    if 6311 <= s <= 6399 and s not in (6324, 6411):
-        return "insurer"
-    if s == 6798:
-        return "equity_reit"
-    if s in (4911, 4922, 4923, 4924, 4931, 4932, 4941):
-        return "utility"
-    return "general"
+# Sector default OUT lines and the company -> template group come from the one registry source
+# (metrics/registry/data_points.csv + sectors.csv) through mapper/sector_templates.py, never a copy here.
+from scrooner_pipeline.mapper.sector_templates import GROUP_OUT, sic_group
 
 
 def base(c):
@@ -139,8 +113,9 @@ def template_for(ident, trows):
         out = {t["data_point"]: t["reason"] for t in mine if t["in_template"] in ("f", "false", "False", "0")}
         tv = ",".join(sorted({t["template_version"] for t in mine}))
         return mine[0]["template"], {base(k): v for k, v in out.items()}, "analytics.company_data_point_template", tv
-    name = COMPANY_TEMPLATE.get(ident["cik"]) or sic_template(ident["sic_code"])
-    out = {dp: f"sector default OUT for template '{name}' (SECTOR-TEMPLATES-2026-11-01 s2/s3)" for dp in SECTOR_OUT.get(name, set())}
+    sic = str(ident["sic_code"] or "")
+    name = sic_group(ident["cik"], int(sic) if sic.isdigit() else None)
+    out = {dp: f"sector default OUT for template '{name}' (SECTOR-TEMPLATES-2026-11-01 s2/s3)" for dp in sorted(GROUP_OUT.get(name, ()))}
     src = (f"PROPOSED from SIC {ident['sic_code']} per SECTOR-TEMPLATES-2026-11-01 (analytics.company_data_point_template "
            "has no rows for this company; the template is not yet seeded)")
     return name, out, src, "none (unseeded)"

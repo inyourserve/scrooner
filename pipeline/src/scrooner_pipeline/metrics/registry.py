@@ -8,6 +8,10 @@ data point x sector template: standard definition, fallback order with a badge p
 applicability, filter note; founder decision 2026-11-22). It is not a metric file: load it with
 load_data_points(); DATA_POINTS_VERSION hashes it alone. A metric's own `version` is bumped by hand when its published formula
 changes meaning; `formula_ref` is `metric_id@version`.
+
+registry/sectors.csv is the one company -> sector assignment (SIC codes and CIK assignments per sector
+template group, plus the group's metric family). With data_points.csv it is the single source of sector
+applicability; mapper/sector_templates.py is the API over both (load it with load_sectors()).
 """
 
 from __future__ import annotations
@@ -57,6 +61,8 @@ class RegistryError(ValueError):
 
 
 DATA_POINTS_FILE = "data_points.csv"
+SECTORS_FILE = "sectors.csv"
+NON_METRIC_FILES = {DATA_POINTS_FILE, SECTORS_FILE}
 DATA_POINT_COLUMNS = [
     "data_point",
     "sector",
@@ -71,17 +77,91 @@ DATA_POINT_COLUMNS = [
     "filter_note",
     "rulings",
 ]
-# mapper/sector_templates.py sic_group() values (+ the bdc company assignment).
-SECTORS = (
-    "general",
-    "bank",
-    "lender",
-    "broker_am",
-    "insurer",
-    "equity_reit",
-    "utility",
-    "bdc",
-)
+SECTOR_COLUMNS = ["sector", "metric_family", "sic_codes", "ciks", "source"]
+# Which metric family (registry `applies_to`) a sector's companies take: bank and lender take the bank
+# family (corporate metrics OUT), insurer the insurer family; every other sector the corporate family.
+METRIC_FAMILIES = {"corporate", "bank", "insurer"}
+SECTOR_DEFAULT_SIC = "default"
+
+
+@dataclass(frozen=True)
+class SectorDefinition:
+    sector: str
+    metric_family: str
+    is_default: bool  # the group of every SIC no other row lists (and of no SIC)
+    sic_ranges: tuple[tuple[int, int], ...]
+    ciks: tuple[str, ...]  # company assignments: 10-digit CIKs, ahead of any SIC rule
+    source: str
+
+
+def _sic_ranges(
+    raw: str, where: str, problems: list[str]
+) -> tuple[tuple[int, int], ...]:
+    out = []
+    for tok in (t.strip() for t in raw.split(";") if t.strip()):
+        lo, _, hi = tok.partition("-")
+        if not lo.isdigit() or (hi and not hi.isdigit()):
+            problems.append(f"{where}: SIC {tok!r} is not N or N-M")
+            continue
+        a, b = int(lo), int(hi or lo)
+        if a > b:
+            problems.append(f"{where}: SIC range {tok!r} is reversed")
+        out.append((a, b))
+    return tuple(out)
+
+
+def load_sectors(directory: Path | None = None) -> dict[str, SectorDefinition]:
+    """registry/sectors.csv keyed by sector, in file order; every rule is checked on load."""
+    path = (directory or REGISTRY_DIR) / SECTORS_FILE
+    out: dict[str, SectorDefinition] = {}
+    problems: list[str] = []
+    with path.open(newline="") as fh:
+        reader = csv.DictReader(fh)
+        if reader.fieldnames != SECTOR_COLUMNS:
+            raise RegistryError(
+                f"{path.name}: columns {reader.fieldnames} != {SECTOR_COLUMNS}"
+            )
+        for i, row in enumerate(reader, start=2):
+            w = f"{path.name}:{i}"
+            name = row["sector"].strip()
+            if not name or name in out:
+                problems.append(f"{w}: sector {name!r} empty or duplicate")
+            if row["metric_family"] not in METRIC_FAMILIES:
+                problems.append(f"{w}: metric_family {row['metric_family']!r}")
+            if not row["source"].strip():
+                problems.append(f"{w}: source is empty")
+            default = row["sic_codes"].strip() == SECTOR_DEFAULT_SIC
+            ranges = () if default else _sic_ranges(row["sic_codes"], w, problems)
+            ciks = tuple(c.strip() for c in row["ciks"].split(";") if c.strip())
+            for c in ciks:
+                if not (c.isdigit() and len(c) == 10):
+                    problems.append(f"{w}: cik {c!r} is not 10 digits")
+            out[name] = SectorDefinition(
+                name, row["metric_family"], default, ranges, ciks, row["source"]
+            )
+    if sum(d.is_default for d in out.values()) != 1:
+        problems.append(
+            f"{path.name}: exactly one sector must have sic_codes 'default'"
+        )
+    spans = sorted((lo, hi, s) for s, d in out.items() for lo, hi in d.sic_ranges)
+    for (lo1, hi1, s1), (lo2, hi2, s2) in zip(spans, spans[1:]):
+        if lo2 <= hi1:
+            problems.append(
+                f"{path.name}: SIC {lo1}-{hi1} ({s1}) overlaps {lo2}-{hi2} ({s2})"
+            )
+    seen: dict[str, str] = {}
+    for s, d in out.items():
+        for c in d.ciks:
+            if c in seen:
+                problems.append(f"{path.name}: cik {c} assigned to {seen[c]} and {s}")
+            seen[c] = s
+    if problems:
+        raise RegistryError("; ".join(problems[:30]))
+    return out
+
+
+# The sector template groups, in registry/sectors.csv order.
+SECTORS = tuple(load_sectors())
 DATA_POINT_STATEMENTS = {"income_statement", "balance_sheet", "cash_flow"}
 # Badge vocabulary, one per fallback step. A shown cell carries the badge of the step that
 # produced it: as_printed (face line, undimensioned note fact or quoted text), combined:<what the
@@ -203,11 +283,11 @@ def _seed_inputs(raw: str, where: str) -> tuple[tuple[str, str], ...]:
 
 
 def registry_files(directory: Path | None = None) -> list[Path]:
-    """The metric family files (every registry CSV except the data-point table)."""
+    """The metric family files (every registry CSV except the data-point and sector tables)."""
     return sorted(
         p
         for p in (directory or REGISTRY_DIR).glob("*.csv")
-        if p.name != DATA_POINTS_FILE
+        if p.name not in NON_METRIC_FILES
     )
 
 

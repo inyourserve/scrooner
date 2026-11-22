@@ -257,8 +257,8 @@ def main():
     met = collections.defaultdict(set)
     reg_dir = os.path.join(ROOT, 'pipeline', 'src', 'scrooner_pipeline', 'metrics', 'registry')
     for path in glob.glob(os.path.join(reg_dir, '*.csv')):
-        if os.path.basename(path) == 'data_points.csv':
-            continue   # the data-point definitions table, linked below; not a metric file
+        if os.path.basename(path) in ('data_points.csv', 'sectors.csv'):
+            continue   # the data-point definitions and sector assignment tables; not metric files
         for r in rows_of(path):
             for dp in re.findall(r'[a-z][a-z_]+', (r.get('seed_inputs') or '') + ' ' + (r.get('expression') or '')):
                 met[dp].add(r['metric_id'])
