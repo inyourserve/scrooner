@@ -1,2 +1,0 @@
-work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-blank,61,GILD,1732,total_liabilities,2015,2015-12-31,BLANK,not_presented_but_row_shown,"latest print: the FY+1 10-K 0000882095-17-000006 re-presents the year as 32601000000.0000 (own filing 32724000000.0000), recomputed from its own elements; one vintage per year (rulings 2026-11-17); filing checks: calc LiabilitiesAndStockholdersEquity: ok;calc CashAndCashEquivalentsPeriodIncreaseDecrease: ok",,0000882095-17-000006,R2.htm,
