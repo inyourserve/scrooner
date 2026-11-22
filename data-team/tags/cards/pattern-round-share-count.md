@@ -30,7 +30,7 @@ Resolver resolver-all110-.93. 2 elements named in this card have library knowled
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding
 - **Rules:** none
-- **Evidence:** 32 companies, 305 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 32 companies, 304 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** pattern P04 round_share_count: 17 open hit(s) at 2 companies, e.g. BMY shares_outstanding 2014-12-31 (resolver) (pattern_hits.csv)
 - **Pattern hits:** P04 (17)
 <!-- END GENERATED: tag library rows -->

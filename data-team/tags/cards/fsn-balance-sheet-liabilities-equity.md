@@ -521,7 +521,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding
 - **Rules:** none
-- **Evidence:** 32 companies, 305 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 32 companies, 304 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** pattern P04 round_share_count: 17 open hit(s) at 2 companies, e.g. BMY shares_outstanding 2014-12-31 (resolver) (pattern_hits.csv)
 - **Pattern hits:** P04 (17)
 
@@ -550,7 +550,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding
 - **Rules:** none
-- **Evidence:** 31 companies, 216 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 31 companies, 215 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaced by TreasuryStockCommonShares@2023; TreasuryStockPreferredShares@2023; replaces TreasuryStockNumberOfSharesHeld@2016
