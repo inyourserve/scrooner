@@ -199,7 +199,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#2
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 16 companies, 133 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Evidence:** 16 companies, 132 served, 498 proven, 23 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021

@@ -5,8 +5,8 @@
  "rows_with_usage": 579,
  "rows_full": 116,
  "taxonomy_elements": 22756,
- "served_cells": 56409,
- "served_cells_all_elements_full": 36463,
+ "served_cells": 56418,
+ "served_cells_all_elements_full": 36462,
  "coverage_pct": 64.6,
  "pattern_hits": {
   "P01": {

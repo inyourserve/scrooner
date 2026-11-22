@@ -2012,3 +2012,6 @@
 - ~ StockholdersEquity: certified_cells
 - ~ WeightedAverageNumberOfDilutedSharesOutstanding: certified_cells
 - ~ WeightedAverageNumberOfSharesOutstandingBasic: certified_cells
+
+## 2026-11-22 (resolver-all110-.93): 1 element changes, 28013 rows, coverage 64.6%
+- ~ ReceivablesNetCurrent: served_cells
