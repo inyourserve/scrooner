@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import csv
 from decimal import Decimal as D
 from pathlib import Path
@@ -1093,6 +1094,24 @@ def test_derived_badge_must_use_one_filing():
     parts = dc.parse_parts(f"A=10@{ACC}#R4;-B=3@0000000002-24-000002#R4")
     c = _bcell("ppe_net", "derived:ppe_gross-accumulated_depreciation", "7", "", parts)
     assert [f.severity for f in dc.check_badges([c])] == ["FAIL"]
+
+
+def test_a_formula_locator_badged_as_printed_fails():
+    """BMY gross_profit FY2015-20 (2026-11-22): served as a text-stated value whose locator is
+    'R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold)' with badge as_printed; the
+    filing prints no gross profit line, so the badge must be derived:revenue-cost_of_revenue."""
+    loc = "R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-19-000047"
+    c = dataclasses.replace(_bcell("gross_profit", "as_printed", tag=""), r_page=loc)
+    out = dc.check_badges([c])
+    assert [f.severity for f in out] == ["FAIL"] and "formula" in out[0].detail
+    # a printed note line whose label holds a hyphen is not a formula
+    note = "R89.htm; ma-20251231.htm Debt note (us-gaap:InterestExpenseDebt (filer mis-tag; undimensioned))"
+    assert (
+        dc.check_badges(
+            [dataclasses.replace(_bcell("revenue", "as_printed"), r_page=note)]
+        )
+        == []
+    )
 
 
 def test_export_without_badge_column_skips_badge_checks():

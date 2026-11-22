@@ -2432,6 +2432,11 @@ def _filings(c: Cell) -> set[str]:
     return accs
 
 
+# A locator that is a formula of two tagged lines ("R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold)") names a
+# computation, not a printed line (BMY gross_profit FY2015-20 badged as_printed, 2026-11-22).
+_FORMULA_LOCATOR_RE = re.compile(r"\b[a-z][\w-]*:\w+\s*[-+]\s*[a-z][\w-]*:\w+")
+
+
 def check_badges(cells: list[Cell], defs: dict | None = None) -> list[Finding]:
     """Gate census over every SHOWN cell of an export that carries a badge column: the badge is one
     the registry (metrics/registry/data_points.csv) lists for the data point and sector; a
@@ -2459,6 +2464,13 @@ def check_badges(cells: list[Cell], defs: dict | None = None) -> list[Finding]:
             why = f"{c.data_point} is never derived (founder 2026-11-17), badge {c.badge!r}"
         elif not badge_allowed(c.badge, d.badges):
             why = f"badge {c.badge!r} is not a {c.data_point}/{c.sector} fallback step ({' | '.join(d.badges)})"
+        elif not c.badge.startswith("derived:") and _FORMULA_LOCATOR_RE.search(
+            c.r_page or ""
+        ):
+            why = (
+                f"badge {c.badge!r} on a computation: the locator is a formula ({c.r_page}); "
+                "a value the filing does not print carries its derived: badge"
+            )
         elif c.badge.startswith("derived:") and len(_filings(c)) > 1:
             why = "derivation uses more than one filing (doc 02: one filing per derivation)"
         if why:
