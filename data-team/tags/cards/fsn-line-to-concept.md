@@ -282,7 +282,7 @@ Resolver resolver-all110-.91. 132 elements named in this card have library knowl
 - **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
 - **Data point:** current_liabilities; total_liabilities
 - **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1440 served, 32338 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1439 served, 32338 proven, 114 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
@@ -342,7 +342,7 @@ Resolver resolver-all110-.91. 132 elements named in this card have library knowl
 - **Data point definition:** comprehensive_income: Comprehensive income attributable to the parent as printed.
 - **Data point:** comprehensive_income; role comprehensive_income:primary#1
 - **Rules:** X43; X67; X76; I38; I39; I40; I41; I42; resolver functions COMBINED_YIELDS_TO; comparative_fill; DERIVED_YIELDS_TO; fill_printed_zero_and_comparative; resolve_ci
-- **Evidence:** 108 companies, 1205 served, 4365 proven, 76 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1206 served, 4365 proven, 76 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

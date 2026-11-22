@@ -171,7 +171,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** total_liabilities: Total liabilities as printed.
 - **Data point:** total_liabilities
 - **Rules:** none
-- **Evidence:** 23 companies, 199 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 23 companies, 198 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DueToAffiliateNoncurrent@2023; DueToEmployeesNoncurrent@2023; DueToOfficersOrStockholdersNoncurrent@2023; DueToOtherRelatedPartiesNoncurrent@2023 (+5 more)
@@ -190,7 +190,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#2
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 16 companies, 148 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Evidence:** 16 companies, 133 served, 498 proven, 23 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021
@@ -200,7 +200,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.; total_liabilities: Total liabilities as printed.
 - **Data point:** stockholders_equity; total_liabilities
 - **Rules:** none
-- **Evidence:** 16 companies, 116 served, 2197 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 16 companies, 115 served, 2197 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption@2020; EquityMethodInvestmentSummarizedFinancialInformationEquity@2020; ImpactOfRestatementOnOpeningRetainedEarningsNetOfTax@2020; StockholdersEquityIncludingPortionAttributableToNoncontrollingInterestAdjustedBalance1@2020
@@ -257,7 +257,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
 - **Data point:** stockholders_equity
 - **Rules:** none
-- **Evidence:** 4 companies, 48 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 4 companies, 47 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationMinorityInterest@2020; NoncontrollingInterestBalanceSheetLocation@2016
@@ -267,7 +267,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#3
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 5 companies, 46 served, 159 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 5 companies, 40 served, 159 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -280,15 +280,6 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
-### `AccountsAndOtherReceivablesNetCurrent`
-- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
-- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
-- **Data point:** accounts_receivable; role accounts_receivable:primary#5
-- **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 4 companies, 33 served, 95 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
 ### `AccountsReceivableNet`
 - **Meaning:** Accounts Receivable, after Allowance for Credit Loss (us-gaap, instant, debit). Amount, after allowance for credit loss, of right to consideration from customer for product sold and service rendered in normal course of business.
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
@@ -298,6 +289,15 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsReceivableRelatedParties@2023
+
+### `AccountsAndOtherReceivablesNetCurrent`
+- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#5
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 4 companies, 31 served, 95 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
 
 ### `AccountsPayableCurrentAndNoncurrent`
 - **Meaning:** Accounts Payable (us-gaap, instant, credit). Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business.

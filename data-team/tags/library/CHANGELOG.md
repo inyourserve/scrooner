@@ -1481,3 +1481,26 @@
 - ~ OtherIncomeExpenseNet: served_cells
 - ~ RevenueFromContractWithCustomerExcludingAssessedTax: served_cells
 - ~ Revenues: served_cells
+
+## 2026-11-22 (resolver-all110-.91): 21 element changes, 28011 rows, coverage 65.1%
+- ~ AccountsAndNotesReceivableNet: served_cells
+- ~ AccountsAndOtherReceivablesNetCurrent: served_cells
+- ~ AccountsNotesAndLoansReceivableNetCurrent: served_cells
+- ~ AmortizationAndImpairmentOfIntangibleAssets: served_cells
+- ~ ComprehensiveIncomeNetOfTax: served_cells
+- ~ ContractWithCustomerLiabilityNoncurrent: served_cells
+- ~ ConvertibleDebtNoncurrent: served_cells
+- ~ CurrentAndRoyaltyTaxes: served_cells
+- ~ LiabilitiesCurrent: served_cells
+- ~ MinorityInterest: served_cells
+- ~ NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent: served_cells
+- ~ NonoperatingIncomeExpenseIncludingEliminationOfNetIncomeLossAttributableToNoncontrollingInterests: served_cells
+- ~ OtherIncome: served_cells
+- ~ OtherIncomeAndExpense: served_cells
+- ~ OtherLiabilitiesNoncurrent: served_cells
+- ~ OtherNonoperatingIncomeExpenseNet: served_cells
+- ~ OtherOperatingIncome: served_cells
+- ~ PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization: served_cells
+- ~ ReceivablesAndContractAssets: served_cells
+- ~ ReceivablesNetCurrent: served_cells
+- ~ StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest: served_cells

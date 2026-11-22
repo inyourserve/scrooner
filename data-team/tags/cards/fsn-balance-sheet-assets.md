@@ -278,16 +278,6 @@ Resolver resolver-all110-.91. 24 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaces FiniteLivedIntangibleAssetsFutureAmortizationExpense@2012; FreshStartAdjustmentIncreaseDecreaseAmortizableIntangibleAssets@2021; PostconfirmationAmortizableIntangibleAssets@2021; PreconfirmationAmortizableIntangibleAssetsNet@2021
 
-### `ReceivablesNetCurrent`
-- **Meaning:** Receivables, Net, Current (us-gaap, instant, debit). The total amount due to the entity within one year of the balance sheet date (or one operating cycle, if longer) from outside sources, including trade accounts receivable, notes and loans receivable, as well as any other types of receivable...
-- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
-- **Data point:** accounts_receivable; role accounts_receivable:primary#2
-- **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 16 companies, 148 served, 498 proven, 23 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021
-
 ### `PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization`
 - **Meaning:** Property, Plant, and Equipment and Finance Lease Right-of-Use Asset, after Accumulated Depreciation and Amortization (us-gaap, instant, debit). Amount, after accumulated depreciation and amortization, of property, plant, and equipment and finance lease right-of-use asset.
 - **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
@@ -296,6 +286,16 @@ Resolver resolver-all110-.91. 24 elements named in this card have library knowle
 - **Evidence:** 31 companies, 135 served, 478 proven, 13 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
+
+### `ReceivablesNetCurrent`
+- **Meaning:** Receivables, Net, Current (us-gaap, instant, debit). The total amount due to the entity within one year of the balance sheet date (or one operating cycle, if longer) from outside sources, including trade accounts receivable, notes and loans receivable, as well as any other types of receivable...
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#2
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 16 companies, 133 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021
 
 ### `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents`
 - **Meaning:** Cash, Cash Equivalent, Restricted Cash, and Restricted Cash Equivalent, Continuing Operation (us-gaap, instant, debit). Amount of cash and cash equivalent, and cash and cash equivalent restricted to withdrawal or usage; attributable to continuing operation. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and...
@@ -311,16 +311,7 @@ Resolver resolver-all110-.91. 24 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#3
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 5 companies, 46 served, 159 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `AccountsAndOtherReceivablesNetCurrent`
-- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
-- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
-- **Data point:** accounts_receivable; role accounts_receivable:primary#5
-- **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 4 companies, 33 served, 95 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 5 companies, 40 served, 159 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -333,6 +324,15 @@ Resolver resolver-all110-.91. 24 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsReceivableRelatedParties@2023
+
+### `AccountsAndOtherReceivablesNetCurrent`
+- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#5
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 4 companies, 31 served, 95 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
 
 ### `RealEstateInvestmentPropertyNet`
 - **Meaning:** Real Estate Investment Property, Net (us-gaap, instant, debit). Amount of real estate investment property, net of accumulated depreciation, which may include the following: (1) land available-for-sale; (2) land available-for-development; (3) investments in building and building improvements; (4) tenant ...

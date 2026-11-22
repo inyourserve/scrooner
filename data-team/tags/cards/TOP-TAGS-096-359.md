@@ -312,7 +312,7 @@ Resolver resolver-all110-.91. 95 elements named in this card have library knowle
 - **Data point definition:** comprehensive_income: Comprehensive income attributable to the parent as printed.
 - **Data point:** comprehensive_income; role comprehensive_income:primary#1
 - **Rules:** X43; X67; X76; I38; I39; I40; I41; I42; resolver functions COMBINED_YIELDS_TO; comparative_fill; DERIVED_YIELDS_TO; fill_printed_zero_and_comparative; resolve_ci
-- **Evidence:** 108 companies, 1205 served, 4365 proven, 76 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1206 served, 4365 proven, 76 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
