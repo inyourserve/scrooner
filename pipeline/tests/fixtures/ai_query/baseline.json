@@ -1,0 +1,7 @@
+{
+  "measured": "2026-11-22",
+  "interpreter": "scrooner_pipeline.ai_query.rules.interpret",
+  "hits": 257,
+  "total": 338,
+  "note": "Raise when the deterministic interpreter improves; never lower it to get green. Adding asks changes total: re-measure and update both numbers in the same commit."
+}

@@ -22,7 +22,7 @@ from scrooner_pipeline.ai_query.aliases import (
     SECTOR_ALIASES,
     SECTOR_BUCKET_ALIASES,
 )
-from scrooner_pipeline.ai_query.rules import interpret
+from scrooner_pipeline.ai_query.llm_interpreter import interpret
 from scrooner_pipeline.screener.cache_key import compute_query_hash
 from scrooner_pipeline.screener.query import run_query
 from scrooner_pipeline.screener.schema import ScreenQuery

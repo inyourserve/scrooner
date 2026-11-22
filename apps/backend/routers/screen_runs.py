@@ -18,7 +18,7 @@ from cache import (
 )
 from dataset_version_cache import get_cached_dataset_version, get_cached_metric_catalog
 from scrooner_pipeline.ai_query.edit_templates import interpret_edit
-from scrooner_pipeline.ai_query.rules import interpret
+from scrooner_pipeline.ai_query.llm_interpreter import interpret
 from db_pool import get_pooled_connection
 from scrooner_pipeline.screener.cache_key import compute_query_hash
 from scrooner_pipeline.screener.query import (

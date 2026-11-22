@@ -1,6 +1,7 @@
 """Typer CLI for the AI Query Engine (doc 15). Takes English text, prints
 the interpretation (and, with --run, executes it through the real
-Screener) -- no LLM involved, the rule-based interpreter only (6b);
+Screener) -- through llm_interpreter.interpret, which is the rule-based
+interpreter (6b) unless an LLM client is configured (none ships, doc 15);
 see ai_query/rules.py's module docstring for its documented scope limits.
 """
 
@@ -10,7 +11,7 @@ from decimal import Decimal
 import structlog
 import typer
 
-from scrooner_pipeline.ai_query.rules import interpret
+from scrooner_pipeline.ai_query.llm_interpreter import interpret
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.screener.query import run_query
 

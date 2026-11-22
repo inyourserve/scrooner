@@ -1,13 +1,27 @@
 """Provider-neutral boundary for the optional LLM interpretation fallback.
 
-The deterministic interpreter remains production behavior until a provider is
-selected and this adapter is explicitly enabled. A placeholder key is treated
-as not configured; it can never trigger a network call accidentally.
+This is doc 15's stage 6c: a second implementation of the `NLInterpreter`
+contract (interpreter.py), wired behind it as a fallback. `interpret()` below
+is the one entry point the Ask job and API call. It runs the deterministic
+rule-based interpreter first and only consults an LLM client when that
+interpreter could not produce a confident query, the user's ask was not a
+contradiction, and a concrete client is configured. Doc 02 locks
+"Deterministic results; AI is assistive" and records no LLM vendor decision,
+and doc 15 leaves the vendor to the founder, so no concrete client ships here:
+the default client is `DisabledLLMInterpreter` and `interpret()` returns
+exactly the deterministic result. A placeholder key is treated as not
+configured; it can never trigger a network call accidentally.
+
+The LLM never produces a stock list, a value or a financial claim. A client
+returns a raw payload; `validate_model_interpretation` turns it into a
+schema-validated ScreenQuery restricted to registry metrics, or the fallback
+fails closed to the deterministic result.
 """
 
 import os
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Literal, Mapping, Protocol
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
@@ -18,7 +32,6 @@ from scrooner_pipeline.screener.schema import (
     PredicateGroup,
     ScreenQuery,
 )
-
 
 PLACEHOLDER_API_KEY = "replace_with_ai_provider_api_key"
 
@@ -77,13 +90,17 @@ class ModelInterpretation(BaseModel):
 
 
 class StructuredLLMClient(Protocol):
-    def interpret(
+    """A provider adapter. It returns the provider's raw JSON payload (the
+    ModelInterpretation wire shape), never an executable result: the caller
+    validates it, so an adapter cannot bypass the allow-list."""
+
+    def propose(
         self,
         text: str,
         *,
         candidates: list[MetricCandidate],
         current_query: dict | None = None,
-    ) -> InterpretationResult: ...
+    ) -> object: ...
 
 
 @dataclass(frozen=True)
@@ -130,6 +147,15 @@ class DisabledLLMInterpreter:
         raise LLMNotConfiguredError(
             "LLM interpretation is disabled; deterministic interpretation remains available"
         )
+
+    def propose(
+        self,
+        text: str,
+        *,
+        candidates: list[MetricCandidate],
+        current_query: dict | None = None,
+    ) -> object:
+        return self.interpret(text, candidates=candidates, current_query=current_query)
 
 
 def _metric_predicates(query: ScreenQuery) -> list[MetricPredicate]:
@@ -183,7 +209,14 @@ def _reject_unknown_query_fields(raw_query: object) -> None:
         elif "metric_name" in predicate:
             reject_extra(
                 predicate,
-                {"metric_name", "operator", "value", "value_range", "n"},
+                {
+                    "metric_name",
+                    "operator",
+                    "value",
+                    "value_range",
+                    "n",
+                    "include_missing",
+                },
                 location,
             )
         else:
@@ -297,3 +330,83 @@ def validate_model_interpretation(
         recognized_query=query,
         explanation=model_result.explanation,
     )
+
+
+# Internal reconciliation diagnostics: no investor phrase names them and they
+# are never offered to a model (aliases.py docstring, 2026-08-31).
+DIAGNOSTIC_METRICS = frozenset(
+    {
+        "ap_change_reconciliation_gap",
+        "ar_change_reconciliation_gap",
+        "inventory_change_reconciliation_gap",
+        "effective_tax_rate_gap",
+        "eps_dilution_spread",
+    }
+)
+
+
+def registry_candidates() -> list[MetricCandidate]:
+    """The allow-list a model may use: every metric registry row except the
+    diagnostics, with every operator the Screener schema accepts."""
+    from scrooner_pipeline.metrics.registry import get_registry
+    from scrooner_pipeline.screener.schema import ALL_METRIC_OPERATORS
+
+    operators = frozenset(ALL_METRIC_OPERATORS)
+    return [
+        MetricCandidate(metric_id, operators)
+        for metric_id in sorted(get_registry())
+        if metric_id not in DIAGNOSTIC_METRICS
+    ]
+
+
+class FallbackInterpreter:
+    """Implements `NLInterpreter`: deterministic first, LLM only as a fallback.
+
+    The deterministic answer wins whenever it is confident or found a real
+    contradiction. Any client failure (not configured, invalid payload) returns
+    the deterministic result unchanged, so an LLM can only ever add a
+    validated query, never remove a refusal's safety or replace a good parse.
+    """
+
+    def __init__(
+        self,
+        client: StructuredLLMClient | None = None,
+        *,
+        deterministic: Callable[[str], InterpretationResult] | None = None,
+        candidates: Callable[[], list[MetricCandidate]] = registry_candidates,
+    ) -> None:
+        if deterministic is None:
+            from scrooner_pipeline.ai_query.rules import interpret as rules_interpret
+
+            deterministic = rules_interpret
+        self._deterministic: Callable[[str], InterpretationResult] = deterministic
+        self._client = client or DisabledLLMInterpreter()
+        self._candidates = candidates
+
+    @property
+    def llm_enabled(self) -> bool:
+        return not isinstance(self._client, DisabledLLMInterpreter)
+
+    def interpret(self, text: str) -> InterpretationResult:
+        result = self._deterministic(text)
+        if result.is_confident or result.contradictions or not self.llm_enabled:
+            return result
+        candidates = self._candidates()
+        try:
+            payload = self._client.propose(text, candidates=candidates)
+            llm_result = validate_model_interpretation(payload, candidates=candidates)
+        except (LLMNotConfiguredError, InvalidLLMInterpretationError):
+            return result
+        if llm_result.query is None:
+            return result
+        llm_result.corrections = list(result.corrections)
+        return llm_result
+
+
+_DEFAULT = FallbackInterpreter()
+
+
+def interpret(text: str) -> InterpretationResult:
+    """The production entry point (Ask job, /screen/ask, screen runs). With no
+    concrete client configured this is exactly `rules.interpret`."""
+    return _DEFAULT.interpret(text)

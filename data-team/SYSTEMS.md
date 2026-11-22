@@ -135,10 +135,11 @@ Structured query → deterministic result over a precomputed snapshot.
 
 ## 18. AI query layer
 Plain English → schema-validated structured query only (never a stock list or number).
-- **Entry** `ai_query/` (rules.py rule-based interpreter, templates, aliases, normalizer, `llm_interpreter.py`), `jobs/ask.py`, `apps/app/app/api/ask` · **Tests** 10 `test_*ai_query*` · **Doc** `doc/execution-plans/15_Scrooner_AI_Query_Engine_Execution_Plan.md`
-- **Maturity 3.** Rule-based interpreter with screen/edit templates.
-- **Gaps:** (1) `llm_interpreter.py` is imported nowhere: no fallback for unmatched phrasing. (2) No evaluation set with a measured hit rate. (3) Vocabulary is not generated from the metric registry.
-- **Do not build** a second interpreter; implement the existing `interpreter.py` contract.
+- **Entry** `ai_query/` (rules.py rule-based interpreter, templates, aliases, normalizer, `llm_interpreter.py` = `interpret()` entry point: deterministic first, LLM fallback fail-closed, no client ships), `evaluation.py` (eval scorer), `jobs/ask.py`, `apps/backend/routers/screen.py`, `apps/app/app/api/ask` · **Data** `tests/fixtures/ai_query/eval_set.jsonl` (338 asks: every curated alias, every registry label, comparisons, between, and/or/not, sectors, top/bottom N, growth periods, include_missing; 30 asks whose only correct answer is no query: 18 opinion/pick refusals, 5 diagnostics, 7 vague, ambiguous or contradictory) + `baseline.json` · **Tests** 13 `test_*ai_query*` incl. `test_ai_query_eval_set.py` (baseline gate, refusals never emit a query), `test_ai_query_fallback.py`; live LLM run `test_ai_query_eval_llm_live.py` (`-m live`, `SCROONER_LLM_EVAL=1`, never CI) · **Doc** `doc/execution-plans/15_Scrooner_AI_Query_Engine_Execution_Plan.md`
+- **Maturity 3.** Rule-based interpreter with screen/edit templates; eval hit rate measured and gated in CI.
+- **Measured 2026-11-22:** deterministic exact match 257/338 = 76.0%; no-query asks 30/30 (no list ever emitted). Top misses: registry display labels 0/52 (parentheses and "x / y" forms), 7 curated "percent" aliases unreachable because the normalizer rewrites "percent"/"percentage" to "%", natural ranking ("10 largest", "top 5 tech ... by"), growth phrased with periods ("over 3 years"), include_missing never set.
+- **Gaps:** (1) No LLM vendor chosen (doc 02 has no vendor decision; doc 15 leaves it to the founder), so the wired fallback is inert. (2) Hit rate 76.0% vs target 95%. (3) Vocabulary is not generated from the metric registry (25 registry metrics have no alias).
+- **Do not build** a second interpreter; a provider is one `StructuredLLMClient.propose` adapter behind `llm_interpreter.interpret`.
 
 ## 19. Company pages and display API
 Stock page, screener UI, account pages.
@@ -212,7 +213,7 @@ Founder 2026-11-22: "everything should be interconnected so well." Written 2026-
 | 15 | Verifier | certify-out draws, filings | registry.csv rows, draw md | M Ritwik lane; S live-sec-verification Mon | E verifier-fail-intake → 6 | GAP: no scheduled re-check of certified companies → 15 |
 | 16 | Metric registry | canonical_fact | metric tables | S nightly `refresh_valuations`; M recompute | 17 | GAP: a certified company does not trigger recompute → 16 |
 | 17 | Screener | metrics | screening snapshot | S nightly | 19 | follows 16 |
-| 18 | AI query | registry aliases | none | request | 17 | vocabulary not generated from 16 → 18 |
+| 18 | AI query | 3 | eval set with measured hit rate (done, CI-gated); vocabulary generated from registry; fallback wired (done, inert until a vendor) | eval-set exact match, target >=95% (76.0%, 257/338, 2026-11-22) | generate aliases from registry labels; fix normalizer killing "percent" aliases | 3 |
 | 19 | Company pages | backend API | none | request | none | page does not read `cell_display_state` → 19 |
 | 20 | Flow + CI | git, DB | as 10-14 | E push (ci, auto-trigger); M top100-flow | 13, 14, hourly export | GAP: top100-flow beyond resolver changes (new company, rule-only change in `line_map/rules/*`) is dispatched by hand → 20 |
 | 21 | Nightly refresh | SEC, DB | as 1, 3, 16, 17 | S 12:23Z | old path | GAP: does not run 4 → 8 → flow → 13 → 14 → 21 |
