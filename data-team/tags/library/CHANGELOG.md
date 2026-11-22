@@ -1470,3 +1470,6 @@
 - + NonRecourseBorrowingsOfConsolidatedSecuritizationEntities
 - + NoninterestExpense
 - ... 205 more
+
+## 2026-11-22 (resolver-all110-.91): 1 element changes, 28011 rows, coverage 65.2%
+- ~ SellingGeneralAndAdministrativeExpense: served_cells, known_problems
