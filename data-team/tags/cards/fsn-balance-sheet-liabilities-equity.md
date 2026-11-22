@@ -444,7 +444,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
 - **Data point:** current_liabilities; total_liabilities
 - **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1439 served, 32338 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1439 served, 32338 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
@@ -454,7 +454,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
 - **Data point:** stockholders_equity
 - **Rules:** X78; C06; resolver functions resolve
-- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 115 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
@@ -464,7 +464,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding; role shares_outstanding:primary#1
 - **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
-- **Evidence:** 83 companies, 992 served, 2408 proven, 68 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 992 served, 2408 proven, 80 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P04 (3); P05 (1)
 
@@ -473,7 +473,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
 - **Data point:** accounts_payable; role accounts_payable:primary#1
 - **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
-- **Evidence:** 84 companies, 985 served, 3404 proven, 111 certified cells; last verified 2026-11-15
+- **Evidence:** 84 companies, 985 served, 3404 proven, 123 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsPayableRelatedPartiesCurrent@2023; FreshStartAdjustmentIncreaseDecreaseAccountsPayable@2021; PostconfirmationAccountsPayable@2021; PreconfirmationAccountsPayable@2021
@@ -483,7 +483,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** total_liabilities: Total liabilities as printed.
 - **Data point:** total_liabilities
 - **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
-- **Evidence:** 83 companies, 950 served, 29466 proven, 87 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 950 served, 29466 proven, 99 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)

@@ -282,7 +282,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
 - **Data point:** basic_eps; role basic_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1236 served, 4644 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -292,7 +292,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
 - **Data point:** diluted_eps; role diluted_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1233 served, 39141 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -302,7 +302,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -312,7 +312,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** comprehensive_income: Comprehensive income attributable to the parent as printed.
 - **Data point:** comprehensive_income; role comprehensive_income:primary#1
 - **Rules:** X43; X67; X76; I38; I39; I40; I41; I42; resolver functions COMBINED_YIELDS_TO; comparative_fill; DERIVED_YIELDS_TO; fill_printed_zero_and_comparative; resolve_ci
-- **Evidence:** 108 companies, 1206 served, 4365 proven, 76 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1206 served, 4365 proven, 88 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -321,7 +321,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers). (+1 more)
 - **Data point:** amortization_of_intangibles; depreciation_and_amortization; operating_expenses; polarity amortization_of_intangibles:positive; depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary-part#3; depreciation_and_amortization:primary-part#8 (+1 more)
 - **Rules:** I51; I52; I53; I54; I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[amortization_of_intangibles]
-- **Evidence:** 92 companies, 1180 served, 2150 proven, 91 certified cells; last verified 2026-11-15
+- **Evidence:** 92 companies, 1180 served, 2150 proven, 101 certified cells; last verified 2026-11-15
 - **Known problems:** FSN dropped fact 0001413329-23-000025 (fsn_dropped_facts.csv); FSN dropped fact 0001413329-24-000013 (fsn_dropped_facts.csv); pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ISRG amortization_of_intangibles 2025-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 - **Deprecation:** replaces AmortizationOfAcquiredIntangibleAssets@2013; AmortizationOfIntangiblesNonproductionMember@2013; FiniteLivedIntangibleAssetsAmortizationExpense@2012
@@ -331,7 +331,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
 - **Data point:** ppe_net; role ppe_net:primary#1
 - **Rules:** B22
-- **Evidence:** 106 companies, 1096 served, 32159 proven, 98 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1096 served, 32159 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FlightEquipmentOwnedNet@2016; FreshStartAdjustmentIncreaseDecreasePropertyAndEquipmentNet@2021; PostconfirmationPropertyAndEquipmentNet@2021; PreconfirmationPropertyAndEquipmentNet@2021
@@ -341,7 +341,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
 - **Data point:** research_and_development; operating_expenses; polarity research_and_development:positive; role research_and_development:primary#1
 - **Rules:** I19
-- **Evidence:** 66 companies, 985 served, 2774 proven, 75 certified cells; last verified 2026-11-15
+- **Evidence:** 66 companies, 985 served, 2774 proven, 87 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -350,7 +350,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** total_liabilities: Total liabilities as printed.
 - **Data point:** total_liabilities
 - **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
-- **Evidence:** 83 companies, 950 served, 29466 proven, 87 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 950 served, 29466 proven, 99 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)
@@ -360,7 +360,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** interest_expense; other_income_expense_net; operating_expenses; interest_income; polarity interest_expense:positive; role interest_expense:primary#1
 - **Rules:** X115; I21; I20; I22; I23; I24; resolver functions resolve_band; family resolve_all.NARROW[interest_expense]
-- **Evidence:** 88 companies, 938 served, 24594 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 88 companies, 938 served, 24594 proven, 58 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. META interest_expense 2021-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInterestExpenseNet@2013; CashFlowHedgeGainReclassifiedToInterestExpense@2013; CashFlowHedgeLossReclassifiedToInterestExpense@2013; InterestExpenseRelatedParty@2023
@@ -370,7 +370,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
 - **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
 - **Rules:** K32; K34; K33
-- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 866 served, 1547 proven, 82 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
 - **Pattern hits:** none
 
@@ -379,7 +379,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#1
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 74 companies, 832 served, 3022 proven, 90 certified cells; last verified 2026-11-15
+- **Evidence:** 74 companies, 832 served, 3022 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsReceivableRelatedPartiesCurrent@2023
@@ -389,7 +389,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** dividends_per_share: Dividends declared per common share for the fiscal year.
 - **Data point:** dividends_per_share; polarity dividends_per_share:positive; role dividends_per_share:primary#1
 - **Rules:** none
-- **Evidence:** 81 companies, 767 served, 2489 proven, 96 certified cells; last verified 2026-11-15
+- **Evidence:** 81 companies, 767 served, 2489 proven, 108 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm consolidated statements of shareholders' equity: Dividends to shareholders ($ 2.80 per ordinary share);  the XBRL facts are 10^6; filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm R9 consolidated statements of shareholders' equity, FY2022 column: Dividends to shareholders ($ 2.77 per ordinary share);  the X (+1 more)
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendDeclaredMember@2025
@@ -399,7 +399,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
 - **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
-- **Evidence:** 50 companies, 616 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 616 served, 1444 proven, 60 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
 
@@ -408,7 +408,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** gross_profit; operating_expenses
 - **Rules:** X36; X56; X80; C10; I08; resolver functions apply_absent_in_own_filing; resolve; derive_gross_profit
-- **Evidence:** 44 companies, 499 served, 17157 proven, 71 certified cells; last verified 2026-11-15
+- **Evidence:** 44 companies, 499 served, 17157 proven, 83 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationGrossProfitLoss@2020
@@ -418,7 +418,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
 - **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
 - **Rules:** K17; K18; K19; K20; K21; K22; K23
-- **Evidence:** 50 companies, 455 served, 11139 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 455 served, 11139 proven, 63 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
@@ -447,7 +447,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).
 - **Data point:** income_before_tax; role income_before_tax:primary#2
 - **Rules:** I36; I37
-- **Evidence:** 58 companies, 420 served, 9387 proven, 36 certified cells; last verified 2026-11-15
+- **Evidence:** 58 companies, 420 served, 9387 proven, 41 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -483,7 +483,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
-- **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 36 companies, 352 served, 11930 proven, 23 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -501,7 +501,7 @@ Resolver resolver-all110-.93. 97 elements named in this card have library knowle
 - **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary#5
 - **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[depreciation_and_amortization]
-- **Evidence:** 33 companies, 302 served, 3579 proven, 9 certified cells; last verified 2026-11-15
+- **Evidence:** 33 companies, 302 served, 3579 proven, 21 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

@@ -206,7 +206,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** goodwill: Goodwill at period end as printed.
 - **Data point:** goodwill; role goodwill:primary#1
 - **Rules:** X78; B20
-- **Evidence:** 105 companies, 1206 served, 4387 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1206 served, 4387 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces BusinessCombinationGoodwillRecognizedSegmentAllocation@2013; FreshStartAdjustmentIncreaseDecreaseGoodwill@2021; FreshStartAdjustmentIncreaseDecreaseReorganizationValueInExcessOfAmountsAllocableToIdentifiableAssets@2021; PostconfirmationGoodwill@2021 (+2 more)
@@ -216,7 +216,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
 - **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#1
 - **Rules:** B05; B06; B07; B08; family resolve_all.NARROW[cash_and_equivalents]
-- **Evidence:** 103 companies, 1156 served, 22866 proven, 108 certified cells; last verified 2026-11-15
+- **Evidence:** 103 companies, 1156 served, 22866 proven, 120 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 2 companies, e.g. DELL cash_and_equivalents 2015-01-30 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCashAndCashEquivalents@2021; PostconfirmationCashAndCashEquivalents@2021; PreconfirmationCashAndCashEquivalents@2021
@@ -226,7 +226,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
 - **Data point:** current_assets
 - **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1118 served, 32318 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
@@ -236,7 +236,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
 - **Data point:** ppe_net; role ppe_net:primary#1
 - **Rules:** B22
-- **Evidence:** 106 companies, 1096 served, 32159 proven, 98 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1096 served, 32159 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FlightEquipmentOwnedNet@2016; FreshStartAdjustmentIncreaseDecreasePropertyAndEquipmentNet@2021; PostconfirmationPropertyAndEquipmentNet@2021; PreconfirmationPropertyAndEquipmentNet@2021
@@ -246,7 +246,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
 - **Data point:** inventory; role inventory:primary#1
 - **Rules:** B15; B14; resolver functions inventory_header_sum
-- **Evidence:** 80 companies, 895 served, 3308 proven, 92 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 895 served, 3308 proven, 104 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseInventories@2021; PostconfirmationInventories@2021; PreconfirmationInventories@2021
@@ -264,7 +264,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#1
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 74 companies, 832 served, 3022 proven, 90 certified cells; last verified 2026-11-15
+- **Evidence:** 74 companies, 832 served, 3022 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsReceivableRelatedPartiesCurrent@2023
@@ -283,7 +283,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
 - **Data point:** ppe_net; role ppe_net:primary#2
 - **Rules:** B22
-- **Evidence:** 31 companies, 135 served, 478 proven, 13 certified cells; last verified 2026-11-15
+- **Evidence:** 31 companies, 135 served, 478 proven, 20 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

@@ -139,7 +139,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
 - **Data point:** current_assets
 - **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1118 served, 32318 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
@@ -149,7 +149,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** cost_of_revenue: Cost of goods sold / cost of revenue for the period: the costs the filer matches to revenue above gross profit. [not applicable: bank,insurer,bdc]; gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc] (+1 more)
 - **Data point:** cost_of_revenue; gross_profit; operating_expenses; polarity cost_of_revenue:positive; role cost_of_revenue:primary#2
 - **Rules:** I02; I03; I04
-- **Evidence:** 65 companies, 955 served, 16174 proven, 62 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 955 served, 16174 proven, 74 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AdvertisingRevenueCost@2018; AssetManagementCosts@2018; CasinoExpenses@2018; ConcessionsCosts@2018 (+62 more)
@@ -159,7 +159,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank] (+1 more)
 - **Data point:** operating_income; operating_expenses; other_income_expense_net
 - **Rules:** C13; resolver functions resolve
-- **Evidence:** 80 companies, 949 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 949 served, 34797 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -168,7 +168,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** interest_expense; other_income_expense_net; operating_expenses; interest_income; polarity interest_expense:positive; role interest_expense:primary#1
 - **Rules:** X115; I21; I20; I22; I23; I24; resolver functions resolve_band; family resolve_all.NARROW[interest_expense]
-- **Evidence:** 88 companies, 938 served, 24594 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 88 companies, 938 served, 24594 proven, 58 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. META interest_expense 2021-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInterestExpenseNet@2013; CashFlowHedgeGainReclassifiedToInterestExpense@2013; CashFlowHedgeLossReclassifiedToInterestExpense@2013; InterestExpenseRelatedParty@2023
@@ -188,7 +188,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** revenue; gross_profit
 - **Rules:** none
-- **Evidence:** 64 companies, 650 served, 16994 proven, 75 certified cells; last verified 2026-11-15
+- **Evidence:** 64 companies, 650 served, 16994 proven, 85 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InitialFranchiseFees@2026; PropertyManagementFeeRevenue@2026; RevenueRecognitionMilestoneMethodRevenueRecognized@2026
@@ -198,7 +198,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
 - **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
-- **Evidence:** 50 companies, 616 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 616 served, 1444 proven, 60 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
 
@@ -217,7 +217,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
-- **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 36 companies, 352 served, 11930 proven, 23 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -236,7 +236,7 @@ Resolver resolver-all110-.93. 27 elements named in this card have library knowle
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** revenue; gross_profit
 - **Rules:** X57; X87
-- **Evidence:** 46 companies, 205 served, 3796 proven, 7 certified cells; last verified 2026-11-15
+- **Evidence:** 46 companies, 205 served, 3796 proven, 9 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

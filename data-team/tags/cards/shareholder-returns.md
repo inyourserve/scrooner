@@ -81,7 +81,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -91,7 +91,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
 - **Data point:** cfo; polarity cfo:signed; role cfo:primary#1
 - **Rules:** X84
-- **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1154 served, 40731 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -100,7 +100,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
 - **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#1
 - **Rules:** K10; K11; K12; K13; K14; K15; K16; resolver functions resolve_cf; family resolve_all.NARROW[share_buybacks]
-- **Evidence:** 106 companies, 1118 served, 29887 proven, 108 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1118 served, 29887 proven, 120 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. AXP share_buybacks 2018-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -109,7 +109,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
 - **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#1
 - **Rules:** K35
-- **Evidence:** 98 companies, 883 served, 1627 proven, 69 certified cells; last verified 2026-11-15
+- **Evidence:** 98 companies, 883 served, 1627 proven, 79 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -118,7 +118,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
 - **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
 - **Rules:** K32; K34; K33
-- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 866 served, 1547 proven, 82 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
 - **Pattern hits:** none
 
@@ -127,7 +127,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** dividends_per_share: Dividends declared per common share for the fiscal year.
 - **Data point:** dividends_per_share; polarity dividends_per_share:positive; role dividends_per_share:primary#1
 - **Rules:** none
-- **Evidence:** 81 companies, 767 served, 2489 proven, 96 certified cells; last verified 2026-11-15
+- **Evidence:** 81 companies, 767 served, 2489 proven, 108 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm consolidated statements of shareholders' equity: Dividends to shareholders ($ 2.80 per ordinary share);  the XBRL facts are 10^6; filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm R9 consolidated statements of shareholders' equity, FY2022 column: Dividends to shareholders ($ 2.77 per ordinary share);  the X (+1 more)
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendDeclaredMember@2025
@@ -146,7 +146,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
 - **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
 - **Rules:** K17; K18; K19; K20; K21; K22; K23
-- **Evidence:** 50 companies, 455 served, 11139 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 455 served, 11139 proven, 63 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
@@ -165,7 +165,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
 - **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#2
 - **Rules:** K35
-- **Evidence:** 61 companies, 336 served, 313 proven, 46 certified cells; last verified 2026-11-15
+- **Evidence:** 61 companies, 336 served, 313 proven, 48 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -183,7 +183,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
 - **Data point:** cfo; polarity cfo:signed; role cfo:primary#2
 - **Rules:** none
-- **Evidence:** 40 companies, 156 served, 2874 proven, 2 certified cells; last verified 2026-11-15
+- **Evidence:** 40 companies, 156 served, 2874 proven, 4 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

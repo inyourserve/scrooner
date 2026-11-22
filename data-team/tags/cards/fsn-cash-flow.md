@@ -330,7 +330,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** income_tax_expense: Income tax expense (benefit) for the period, as printed;  a benefit is a real negative.
 - **Data point:** income_tax_expense; polarity income_tax_expense:signed; role income_tax_expense:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1302 served, 44905 proven, 117 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1302 served, 44905 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
@@ -340,7 +340,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cash_flow_financing: Net cash provided by (used in) financing activities as printed.
 - **Data point:** cash_flow_financing; polarity cash_flow_financing:signed; role cash_flow_financing:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1161 served, 42499 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1161 served, 42499 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -349,7 +349,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cash_flow_investing: Net cash provided by (used in) investing activities as printed.
 - **Data point:** cash_flow_investing; polarity cash_flow_investing:signed; role cash_flow_investing:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1161 served, 42135 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1161 served, 42135 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -358,7 +358,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
 - **Data point:** cfo; polarity cfo:signed; role cfo:primary#1
 - **Rules:** X84
-- **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1154 served, 40731 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -367,7 +367,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
 - **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#1
 - **Rules:** K10; K11; K12; K13; K14; K15; K16; resolver functions resolve_cf; family resolve_all.NARROW[share_buybacks]
-- **Evidence:** 106 companies, 1118 served, 29887 proven, 108 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1118 served, 29887 proven, 120 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. AXP share_buybacks 2018-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -376,7 +376,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
 - **Data point:** sbc; polarity sbc:positive; role sbc:primary#1
 - **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts; resolve_cf
-- **Evidence:** 91 companies, 1047 served, 4504 proven, 79 certified cells; last verified 2026-11-15
+- **Evidence:** 91 companies, 1047 served, 4504 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -385,7 +385,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank] (+1 more)
 - **Data point:** operating_income; operating_expenses; other_income_expense_net
 - **Rules:** C13; resolver functions resolve
-- **Evidence:** 80 companies, 949 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 949 served, 34797 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -403,7 +403,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
 - **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#1
 - **Rules:** K35
-- **Evidence:** 98 companies, 883 served, 1627 proven, 69 certified cells; last verified 2026-11-15
+- **Evidence:** 98 companies, 883 served, 1627 proven, 79 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -412,7 +412,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
 - **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
 - **Rules:** K32; K34; K33
-- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 866 served, 1547 proven, 82 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
 - **Pattern hits:** none
 
@@ -421,7 +421,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_inventory_change: Cash-flow change in inventories, raw XBRL sign.
 - **Data point:** cf_inventory_change; polarity cf_inventory_change:raw; role cf_inventory_change:primary#1
 - **Rules:** none; family resolve_cf.WC[cf_inventory_change]
-- **Evidence:** 74 companies, 862 served, 2794 proven, 94 certified cells; last verified 2026-11-15
+- **Evidence:** 74 companies, 862 served, 2794 proven, 106 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -430,7 +430,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ar_change: Cash-flow change in accounts receivable, raw XBRL sign.
 - **Data point:** cf_ar_change; polarity cf_ar_change:raw; role cf_ar_change:primary#1
 - **Rules:** K30; family resolve_cf.WC[cf_ar_change]; resolve_all.NARROW[cf_ar_change]
-- **Evidence:** 65 companies, 734 served, 2643 proven, 79 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 734 served, 2643 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. NEE cf_ar_change 2015-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -466,7 +466,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
 - **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
 - **Rules:** K17; K18; K19; K20; K21; K22; K23
-- **Evidence:** 50 companies, 455 served, 11139 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 455 served, 11139 proven, 63 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
@@ -494,7 +494,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#2
 - **Rules:** K40; K03; K04; K05; K06; K07; K08; K09; family resolve_cf.CAPEX
-- **Evidence:** 26 companies, 207 served, 3309 proven, 7 certified cells; last verified 2026-11-15
+- **Evidence:** 26 companies, 207 served, 3309 proven, 19 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

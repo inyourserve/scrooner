@@ -147,7 +147,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** weighted_basic_shares: Weighted average basic common shares as printed.
 - **Data point:** weighted_basic_shares; role weighted_basic_shares:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1316 served, 4583 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1316 served, 4583 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 727.9;  the XBRL fact is 727.9 shares (scale ; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 718.3;  the XBRL fact is 718.3 shares (scale  (+4 more)
 - **Pattern hits:** P03 (5); P04 (3)
 - **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
@@ -157,7 +157,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
 - **Data point:** basic_eps; role basic_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1236 served, 4644 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -167,7 +167,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
 - **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
 - **Rules:** none
-- **Evidence:** 108 companies, 1234 served, 4539 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1234 served, 4539 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
 - **Pattern hits:** P03 (5); P04 (3)
 - **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
@@ -177,7 +177,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
 - **Data point:** diluted_eps; role diluted_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1233 served, 39141 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -187,7 +187,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -197,7 +197,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding; role shares_outstanding:primary#1
 - **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
-- **Evidence:** 83 companies, 992 served, 2408 proven, 68 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 992 served, 2408 proven, 80 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P04 (3); P05 (1)
 
@@ -215,7 +215,7 @@ Resolver resolver-all110-.93. 19 elements named in this card have library knowle
 - **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
 - **Data point:** cfo; polarity cfo:signed; role cfo:primary#2
 - **Rules:** none
-- **Evidence:** 40 companies, 156 served, 2874 proven, 2 certified cells; last verified 2026-11-15
+- **Evidence:** 40 companies, 156 served, 2874 proven, 4 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

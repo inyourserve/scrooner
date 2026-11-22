@@ -24,7 +24,7 @@ Resolver resolver-all110-.93. 1 elements named in this card have library knowled
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
 - **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
-- **Evidence:** 66 companies, 1140 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Evidence:** 66 companies, 1140 served, 3623 proven, 85 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023

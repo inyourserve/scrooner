@@ -113,7 +113,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
 - **Data point:** current_liabilities; total_liabilities
 - **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1439 served, 32338 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1439 served, 32338 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
@@ -123,7 +123,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** weighted_basic_shares: Weighted average basic common shares as printed.
 - **Data point:** weighted_basic_shares; role weighted_basic_shares:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1316 served, 4583 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1316 served, 4583 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 727.9;  the XBRL fact is 727.9 shares (scale ; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 718.3;  the XBRL fact is 718.3 shares (scale  (+4 more)
 - **Pattern hits:** P03 (5); P04 (3)
 - **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
@@ -133,7 +133,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** income_tax_expense: Income tax expense (benefit) for the period, as printed;  a benefit is a real negative.
 - **Data point:** income_tax_expense; polarity income_tax_expense:signed; role income_tax_expense:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1302 served, 44905 proven, 117 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1302 served, 44905 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
@@ -143,7 +143,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
 - **Data point:** basic_eps; role basic_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1236 served, 4644 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -153,7 +153,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
 - **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
 - **Rules:** none
-- **Evidence:** 108 companies, 1234 served, 4539 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1234 served, 4539 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
 - **Pattern hits:** P03 (5); P04 (3)
 - **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
@@ -163,7 +163,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
 - **Data point:** diluted_eps; role diluted_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1233 served, 39141 proven, 116 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 128 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -173,7 +173,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -183,7 +183,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** goodwill: Goodwill at period end as printed.
 - **Data point:** goodwill; role goodwill:primary#1
 - **Rules:** X78; B20
-- **Evidence:** 105 companies, 1206 served, 4387 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1206 served, 4387 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces BusinessCombinationGoodwillRecognizedSegmentAllocation@2013; FreshStartAdjustmentIncreaseDecreaseGoodwill@2021; FreshStartAdjustmentIncreaseDecreaseReorganizationValueInExcessOfAmountsAllocableToIdentifiableAssets@2021; PostconfirmationGoodwill@2021 (+2 more)
@@ -193,7 +193,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
 - **Data point:** stockholders_equity
 - **Rules:** X78; C06; resolver functions resolve
-- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 115 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
@@ -203,7 +203,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cash_flow_financing: Net cash provided by (used in) financing activities as printed.
 - **Data point:** cash_flow_financing; polarity cash_flow_financing:signed; role cash_flow_financing:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1161 served, 42499 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1161 served, 42499 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -212,7 +212,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cash_flow_investing: Net cash provided by (used in) investing activities as printed.
 - **Data point:** cash_flow_investing; polarity cash_flow_investing:signed; role cash_flow_investing:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1161 served, 42135 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1161 served, 42135 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -221,7 +221,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
 - **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#1
 - **Rules:** B05; B06; B07; B08; family resolve_all.NARROW[cash_and_equivalents]
-- **Evidence:** 103 companies, 1156 served, 22866 proven, 108 certified cells; last verified 2026-11-15
+- **Evidence:** 103 companies, 1156 served, 22866 proven, 120 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 2 companies, e.g. DELL cash_and_equivalents 2015-01-30 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCashAndCashEquivalents@2021; PostconfirmationCashAndCashEquivalents@2021; PreconfirmationCashAndCashEquivalents@2021
@@ -231,7 +231,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
 - **Data point:** cfo; polarity cfo:signed; role cfo:primary#1
 - **Rules:** X84
-- **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1154 served, 40731 proven, 125 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -240,7 +240,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
 - **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
-- **Evidence:** 66 companies, 1140 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Evidence:** 66 companies, 1140 served, 3623 proven, 85 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
@@ -250,7 +250,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
 - **Data point:** current_assets
 - **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1118 served, 32318 proven, 114 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
@@ -260,7 +260,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
 - **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#1
 - **Rules:** K10; K11; K12; K13; K14; K15; K16; resolver functions resolve_cf; family resolve_all.NARROW[share_buybacks]
-- **Evidence:** 106 companies, 1118 served, 29887 proven, 108 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1118 served, 29887 proven, 120 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. AXP share_buybacks 2018-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -269,7 +269,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
 - **Data point:** ppe_net; role ppe_net:primary#1
 - **Rules:** B22
-- **Evidence:** 106 companies, 1096 served, 32159 proven, 98 certified cells; last verified 2026-11-15
+- **Evidence:** 106 companies, 1096 served, 32159 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FlightEquipmentOwnedNet@2016; FreshStartAdjustmentIncreaseDecreasePropertyAndEquipmentNet@2021; PostconfirmationPropertyAndEquipmentNet@2021; PreconfirmationPropertyAndEquipmentNet@2021
@@ -279,7 +279,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
 - **Data point:** sbc; polarity sbc:positive; role sbc:primary#1
 - **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts; resolve_cf
-- **Evidence:** 91 companies, 1047 served, 4504 proven, 79 certified cells; last verified 2026-11-15
+- **Evidence:** 91 companies, 1047 served, 4504 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -288,7 +288,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding; role shares_outstanding:primary#1
 - **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
-- **Evidence:** 83 companies, 992 served, 2408 proven, 68 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 992 served, 2408 proven, 80 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P04 (3); P05 (1)
 
@@ -297,7 +297,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
 - **Data point:** accounts_payable; role accounts_payable:primary#1
 - **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
-- **Evidence:** 84 companies, 985 served, 3404 proven, 111 certified cells; last verified 2026-11-15
+- **Evidence:** 84 companies, 985 served, 3404 proven, 123 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsPayableRelatedPartiesCurrent@2023; FreshStartAdjustmentIncreaseDecreaseAccountsPayable@2021; PostconfirmationAccountsPayable@2021; PreconfirmationAccountsPayable@2021
@@ -307,7 +307,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cost_of_revenue: Cost of goods sold / cost of revenue for the period: the costs the filer matches to revenue above gross profit. [not applicable: bank,insurer,bdc]; gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc] (+1 more)
 - **Data point:** cost_of_revenue; gross_profit; operating_expenses; polarity cost_of_revenue:positive; role cost_of_revenue:primary#2
 - **Rules:** I02; I03; I04
-- **Evidence:** 65 companies, 955 served, 16174 proven, 62 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 955 served, 16174 proven, 74 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AdvertisingRevenueCost@2018; AssetManagementCosts@2018; CasinoExpenses@2018; ConcessionsCosts@2018 (+62 more)
@@ -317,7 +317,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** total_liabilities: Total liabilities as printed.
 - **Data point:** total_liabilities
 - **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
-- **Evidence:** 83 companies, 950 served, 29466 proven, 87 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 950 served, 29466 proven, 99 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)
@@ -327,7 +327,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank] (+1 more)
 - **Data point:** operating_income; operating_expenses; other_income_expense_net
 - **Rules:** C13; resolver functions resolve
-- **Evidence:** 80 companies, 949 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 949 served, 34797 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -336,7 +336,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** interest_expense; other_income_expense_net; operating_expenses; interest_income; polarity interest_expense:positive; role interest_expense:primary#1
 - **Rules:** X115; I21; I20; I22; I23; I24; resolver functions resolve_band; family resolve_all.NARROW[interest_expense]
-- **Evidence:** 88 companies, 938 served, 24594 proven, 51 certified cells; last verified 2026-11-15
+- **Evidence:** 88 companies, 938 served, 24594 proven, 58 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. META interest_expense 2021-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInterestExpenseNet@2013; CashFlowHedgeGainReclassifiedToInterestExpense@2013; CashFlowHedgeLossReclassifiedToInterestExpense@2013; InterestExpenseRelatedParty@2023
@@ -355,7 +355,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
 - **Data point:** inventory; role inventory:primary#1
 - **Rules:** B15; B14; resolver functions inventory_header_sum
-- **Evidence:** 80 companies, 895 served, 3308 proven, 92 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 895 served, 3308 proven, 104 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseInventories@2021; PostconfirmationInventories@2021; PreconfirmationInventories@2021
@@ -365,7 +365,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
 - **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#1
 - **Rules:** K35
-- **Evidence:** 98 companies, 883 served, 1627 proven, 69 certified cells; last verified 2026-11-15
+- **Evidence:** 98 companies, 883 served, 1627 proven, 79 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -374,7 +374,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
 - **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
 - **Rules:** K32; K34; K33
-- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 866 served, 1547 proven, 82 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
 - **Pattern hits:** none
 
@@ -383,7 +383,7 @@ Resolver resolver-all110-.93. 72 elements named in this card have library knowle
 - **Data point definition:** cf_inventory_change: Cash-flow change in inventories, raw XBRL sign.
 - **Data point:** cf_inventory_change; polarity cf_inventory_change:raw; role cf_inventory_change:primary#1
 - **Rules:** none; family resolve_cf.WC[cf_inventory_change]
-- **Evidence:** 74 companies, 862 served, 2794 proven, 94 certified cells; last verified 2026-11-15
+- **Evidence:** 74 companies, 862 served, 2794 proven, 106 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

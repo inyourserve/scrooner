@@ -90,7 +90,7 @@ Resolver resolver-all110-.93. 5 elements named in this card have library knowled
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -100,7 +100,7 @@ Resolver resolver-all110-.93. 5 elements named in this card have library knowled
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
 - **Data point:** stockholders_equity
 - **Rules:** X78; C06; resolver functions resolve
-- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 115 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
@@ -110,7 +110,7 @@ Resolver resolver-all110-.93. 5 elements named in this card have library knowled
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
 - **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
-- **Evidence:** 50 companies, 616 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 616 served, 1444 proven, 60 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
 
