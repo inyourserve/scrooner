@@ -2080,9 +2080,15 @@ def latest_rows(rows: Iterable[dict]) -> list[dict]:
 def _write_rows(path: Path, rows: list[dict]) -> None:
     tmp = Path(path).with_suffix(".tmp")
     with open(tmp, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=REGISTRY_HEADER, extrasaction="ignore")
+        # LF only: the committed registry files are LF, and a CRLF writer mixed with hand-appended LF rows
+        # left a carriage return inside the last field (2026-11-22)
+        w = csv.DictWriter(
+            fh, fieldnames=REGISTRY_HEADER, extrasaction="ignore", lineterminator="\n"
+        )
         w.writeheader()
-        w.writerows(rows)
+        w.writerows(
+            [{k: str(r.get(k) or "").strip() for k in REGISTRY_HEADER} for r in rows]
+        )
     tmp.replace(path)
 
 
@@ -2101,6 +2107,18 @@ def registry_problems(registry: Path) -> list[str]:
     that ticker, and every history row's ticker must be in the registry."""
     reg, hist = _read_rows(registry), _read_rows(history_path(registry))
     out = []
+    for f, rows in ((Path(registry), reg), (history_path(registry), hist)):
+        if f.exists() and b"\r" in f.read_bytes():
+            out.append(
+                f"{f.name}: carriage return (mixed line endings); rewrite it with record_verdict"
+            )
+        for r in rows:
+            if None in r or any(
+                v != v.strip() for v in r.values() if isinstance(v, str)
+            ):
+                out.append(
+                    f"{f.name}: malformed row for {(r.get('ticker') or '').strip()!r}"
+                )
     seen: set[str] = set()
     for r in reg:
         if r["ticker"] in seen:

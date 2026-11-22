@@ -216,6 +216,27 @@ def test_record_verdict_keeps_one_latest_row_per_company_and_the_full_history(tm
     assert "B: more than one registry row" in dc.registry_problems(reg)
 
 
+def test_a_crlf_registry_with_a_hand_appended_row_is_reported_and_record_verdict_heals_it(
+    tmp_path,
+):
+    reg = tmp_path / "registry.csv"
+    hist = dc.history_path(reg)
+    for f in (reg, hist):
+        with open(f, "w", newline="") as fh:  # the csv default: CRLF
+            w = csv.DictWriter(fh, fieldnames=dc.REGISTRY_HEADER)
+            w.writeheader()
+            w.writerow(_reg_row("A", "2026-11-16", "PASS"))
+        f.write_bytes(
+            f.read_bytes()[:-3] + b'"R\r"\n'
+        )  # the damage seen on main: a quoted CR in the last field
+    assert any("carriage return" in p for p in dc.registry_problems(reg))
+    assert any("malformed row for 'A'" in p for p in dc.registry_problems(reg))
+    dc.record_verdict(reg, _reg_row("B", "2026-11-22", "PASS"))
+    assert b"\r" not in reg.read_bytes() and b"\r" not in hist.read_bytes()
+    assert dc.registry_problems(reg) == []
+    assert [r["approver"] for r in csv.DictReader(open(reg))] == ["R", "R"]
+
+
 def test_committed_registry_has_one_row_per_company_matching_its_history():
     reg = REPO / "data-team/strategy/approvals/registry.csv"
     assert dc.history_path(reg).exists()
