@@ -1,0 +1,956 @@
+pattern_id,ticker,data_point,period_end,element,accession,layer,source,detail
+P01,ADI,cf_ap_change,2014-10-31,,0000006281-15-000044,resolver,resolver,"quote states 58373 (x1000) for about FY2014; no served cell carries it; quote: every ADI cash-flow statement prints accounts payable change only combined - ""Accounts payable, deferred income and accrued liabilities | 85,502 | 56,614 | 58,3"
+P01,ADI,cf_ap_change,2025-10-31,,0000006281-23-000203,resolver,resolver,"quote states 657305 (x1000) for about FY2025; no served cell carries it; quote: every ADI cash-flow statement prints accounts payable change only combined - ""Accounts payable and accrued liabilities | (499,316)"". FY2025 10-K 0000006281-25-0"
+P01,AMAT,other_income_expense_net,2018-10-31,,0000006951-19-000046,resolver,resolver,"quote states 139 (x1000000) for about FY2018; no served cell carries it; quote: FY2019 10-K (latest print of FY2017) Consolidated Statements of Operations ($ in Millions; Oct. 27, 2019 | Oct. 28, 2018 | Oct. 29, 2017): ""Income from operatio"
+P01,AMGN,other_income_expense_net,2021-12-31,,0000318154-22-000010,resolver,resolver,"quote states 259 (x1000000) for about FY2021; no served cell carries it; quote: Latest 10-K printing FY2019, Consolidated Statements of Income ($ in Millions; Dec. 31, 2021 | Dec. 31, 2020 | Dec. 31, 2019): ""Operating income | 7,639 | 9,139"
+P01,AMGN,other_income_expense_net,2022-12-31,,0000318154-23-000017,resolver,resolver,"quote states 814 (x1000000) for about FY2022; no served cell carries it; quote: Latest 10-K printing FY2020, Consolidated Statements of Income ($ in Millions; Dec. 31, 2022 | Dec. 31, 2021 | Dec. 31, 2020): ""Operating income | 9,566 | 7,639"
+P01,AMZN,depreciation_and_amortization,2020-12-31,,0001018724-21-000004,resolver,resolver,"quote states 25251 (x1000000) for about FY2020; no served cell carries it; quote: Latest 10-K presenting 2018 (FY2020), Consolidated Statements of Cash Flows: ""Depreciation and amortization of property and equipment and capitalized content co"
+P01,AXP,share_buybacks,2023-12-31,,0000004962-22-000008,resolver,resolver,"quote states 4962 (x1000000000) for about FY2023; no served cell carries it; quote: Equity statement ""Repurchase of common shares"" for 2021 = 7,598M (TreasuryStockValueAcquiredCostMethod in 0000004962-22-000008); the CF line ""Repurchase of Amer"
+P01,CRM,accounts_payable,2022-01-31,,0001108524-22-000013,resolver,resolver,"quote states 5474 (x1000000) for about FY2022; no served cell carries it; quote: Latest 10-K printing this balance date, Consolidated Balance Sheets ($ in Millions; Jan. 31, 2022 | Jan. 31, 2021): ""Accounts payable, accrued expenses and othe"
+P01,CRM,other_income_expense_net,2022-01-31,,0001108524-23-000011,resolver,resolver,quote states 227 (x1000000) for about FY2022; no served cell carries it; quote: Shown accession 0001108524-21-000014 does not exist in EDGAR Archives (index.json 404); companyfacts lists it as a duplicate of the real FY2021 10-K 0001108524-
+P01,CRM,other_income_expense_net,2023-01-31,,0001108524-23-000011,resolver,resolver,quote states 131 (x1000000) for about FY2023; no served cell carries it; quote: Shown accession 0001108524-21-000014 does not exist in EDGAR Archives (index.json 404); companyfacts lists it as a duplicate of the real FY2021 10-K 0001108524-
+P01,CRWD,stockholders_equity,2011-01-31,,0001535527-21-000007,resolver,resolver,"quote states 970 (x1000) for about FY2011; no served cell carries it; quote: Consolidated Statements of Redeemable Convertible Preferred Stock and Stockholders' Equity ($ in Thousands): ""Stockholder's equity, including portion attributab"
+P01,CRWD,stockholders_equity,2013-01-31,,0001535527-21-000007,resolver,resolver,"quote states 378948 (x1000) for about FY2013; no served cell carries it; quote: Consolidated Statements of Redeemable Convertible Preferred Stock and Stockholders' Equity ($ in Thousands): ""Stockholder's equity, including portion attributab"
+P01,CRWD,stockholders_equity,2014-01-31,,0001535527-21-000007,resolver,resolver,"quote states 101 (x1000) for about FY2014; no served cell carries it; quote: Consolidated Statements of Redeemable Convertible Preferred Stock and Stockholders' Equity ($ in Thousands): ""Stockholder's equity, including portion attributab"
+P01,CRWD,stockholders_equity,2015-01-31,,0001535527-21-000007,resolver,resolver,"quote states 8482 (x1000) for about FY2015; no served cell carries it; quote: Consolidated Statements of Redeemable Convertible Preferred Stock and Stockholders' Equity ($ in Thousands): ""Stockholder's equity, including portion attributab"
+P01,CRWD,stockholders_equity,2016-01-31,,0001535527-21-000007,resolver,resolver,"quote states 22 (x1000) for about FY2016; no served cell carries it; quote: Consolidated Statements of Redeemable Convertible Preferred Stock and Stockholders' Equity ($ in Thousands): ""Stockholder's equity, including portion attributab"
+P01,CVX,cost_of_revenue,2013-12-31,,0000093410-18-000010,resolver,resolver,"quote states 134696 (x1000000) for about FY2013; no served cell carries it; quote: FY2017 10-K (latest 10-K presenting 2015) Consolidated Statement of Income ($ in millions, 2017 | 2016 | 2015): ""Purchased crude oil and products | 75,765 | 59,"
+P01,CVX,cost_of_revenue,2014-12-31,,0000093410-18-000010,resolver,resolver,"quote states 119671 (x1000000) for about FY2014; no served cell carries it; quote: FY2017 10-K (latest 10-K presenting 2015) Consolidated Statement of Income ($ in millions, 2017 | 2016 | 2015): ""Purchased crude oil and products | 75,765 | 59,"
+P01,DELL,weighted_basic_shares,2016-01-31,,0001571996-17-000004,resolver,resolver,"quote states 217 (x1000000000) for about FY2016; no served cell carries it; quote: Latest 10-K presenting FY2015 (FY2017) EPS schedule, DHI Group: ""Weighted-average shares outstanding - basic (in shares) | 470 | 405 | 404"" (millions; FY2017 FY"
+P01,DELL,weighted_basic_shares,2017-01-31,,0001571996-17-000004,resolver,resolver,"quote states 470 (x1000000) for about FY2017; no served cell carries it; quote: Latest 10-K presenting FY2015 (FY2017) EPS schedule, DHI Group: ""Weighted-average shares outstanding - basic (in shares) | 470 | 405 | 404"" (millions; FY2017 FY"
+P01,DELL,weighted_basic_shares,2018-01-31,,0001571996-18-000004,resolver,resolver,"quote states 203 (x1000000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting FY2016 (FY2018) EPS schedule: Class V ""Weighted-average shares outstanding - basic (in shares) | 203 | 217 | 0""; DHI Group ""| 567 | 470 |"
+P01,DELL,weighted_basic_shares,2018-01-31,,0001571996-18-000004,resolver,resolver,"quote states 567 (x1000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting FY2016 (FY2018) EPS schedule: Class V ""Weighted-average shares outstanding - basic (in shares) | 203 | 217 | 0""; DHI Group ""| 567 | 470 |"
+P01,DELL,weighted_diluted_shares,2016-01-31,,0001571996-17-000004,resolver,resolver,"quote states 217 (x1000000000) for about FY2016; no served cell carries it; quote: Latest 10-K presenting FY2015 (FY2017) EPS schedule, DHI Group: ""Weighted-average shares outstanding - diluted (in shares) | 470 | 405 | 404"" (millions; FY2017 "
+P01,DELL,weighted_diluted_shares,2017-01-31,,0001571996-17-000004,resolver,resolver,"quote states 470 (x1000000) for about FY2017; no served cell carries it; quote: Latest 10-K presenting FY2015 (FY2017) EPS schedule, DHI Group: ""Weighted-average shares outstanding - diluted (in shares) | 470 | 405 | 404"" (millions; FY2017 "
+P01,DELL,weighted_diluted_shares,2018-01-31,,0001571996-18-000004,resolver,resolver,"quote states 203 (x1000000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting FY2016 (FY2018) EPS schedule: Class V ""Weighted-average shares outstanding - diluted (in shares) | 203 | 217 | 0""; DHI Group ""| 567 | 470"
+P01,DELL,weighted_diluted_shares,2018-01-31,,0001571996-18-000004,resolver,resolver,"quote states 567 (x1000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting FY2016 (FY2018) EPS schedule: Class V ""Weighted-average shares outstanding - diluted (in shares) | 203 | 217 | 0""; DHI Group ""| 567 | 470"
+P01,GE,accounts_payable,2024-12-31,,0000040545-25-000015,resolver,resolver,"quote states 7707 (x1000000) for about FY2024; no served cell carries it; quote: FY2024 10-K (latest print of 2023-12-31, re-presented after the GE Vernova spin) Statement of Financial Position: ""Accounts payable (Note 11) | 7,909 | 7,516""; "
+P01,GE,accounts_payable,2025-12-31,,0000040545-25-000015,resolver,resolver,"quote states 11 (x1000000) for about FY2025; no served cell carries it; quote: FY2024 10-K (latest print of 2023-12-31, re-presented after the GE Vernova spin) Statement of Financial Position: ""Accounts payable (Note 11) | 7,909 | 7,516""; "
+P01,GE,cash_paid_for_income_taxes,2025-12-31,,0000040545-26-000008,resolver,resolver,"quote states 739 (x1000000) for about FY2025; no served cell carries it; quote: FY2025 10-K (latest print) Statement of Cash Flows (Dec. 31, 2025 | 2024 | 2023): ""Cash recovered (paid) during the year for income taxes (Note 15) | (739) | (3"
+P01,GE,cash_paid_for_income_taxes,2026-12-31,,0000040545-26-000008,resolver,resolver,"quote states 15 (x1000000) for about FY2026; no served cell carries it; quote: FY2025 10-K (latest print) Statement of Cash Flows (Dec. 31, 2025 | 2024 | 2023): ""Cash recovered (paid) during the year for income taxes (Note 15) | (739) | (3"
+P01,GE,depreciation_and_amortization,2013-12-31,,0000040545-19-000014,resolver,resolver,"quote states 4997 (x1000000000) for about FY2013; no served cell carries it; quote: FY2018 10-K (latest print of 2016) Statement of Cash Flows (Dec. 31, 2018 | 2017 | 2016): ""Depreciation and amortization of property, plant and equipment (Note "
+P01,GE,depreciation_and_amortization,2014-12-31,,0000040545-19-000014,resolver,resolver,"quote states 5139 (x1000000000) for about FY2014; no served cell carries it; quote: FY2018 10-K (latest print of 2016) Statement of Cash Flows (Dec. 31, 2018 | 2017 | 2016): ""Depreciation and amortization of property, plant and equipment (Note "
+P01,GE,depreciation_and_amortization,2015-12-31,,0000040545-19-000014,resolver,resolver,"quote states 5562 (x1000000000) for about FY2015; no served cell carries it; quote: FY2018 10-K (latest print of 2016) Statement of Cash Flows (Dec. 31, 2018 | 2017 | 2016): ""Depreciation and amortization of property, plant and equipment (Note "
+P01,GE,other_income_expense_net,2017-12-31,,0000040545-19-000014,resolver,resolver,"quote states 2126 (x1000000) for about FY2017; no served cell carries it; quote: FY2018 10-K (latest print of 2016) Statement of Earnings (2018 | 2017 | 2016): ""Other income (Note 18) | 2,259 | 2,126 | 4,140""; note R161 ""Total other income |"
+P01,GE,other_income_expense_net,2019-12-31,,0000040545-19-000014,resolver,resolver,"quote states 18 (x1000000) for about FY2019; no served cell carries it; quote: FY2018 10-K (latest print of 2016) Statement of Earnings (2018 | 2017 | 2016): ""Other income (Note 18) | 2,259 | 2,126 | 4,140""; note R161 ""Total other income |"
+P01,GE,other_income_expense_net,2021-12-31,,0000040545-22-000008,resolver,resolver,"quote states 2823 (x1000000) for about FY2021; no served cell carries it; quote: FY2021 10-K (latest print of 2019) Statement of Earnings (2021 | 2020 | 2019): ""Other income (Note 18) | 2,823 | 11,396 | 2,479"". SHOWN 2,222,000,000 is the old"
+P01,GE,other_income_expense_net,2022-12-31,,0000040545-23-000023,resolver,resolver,"quote states 1231 (x1000000) for about FY2022; no served cell carries it; quote: FY2022 10-K (latest print of 2020) Statement of Earnings (2022 | 2021 | 2020): ""Other income (loss) (Note 19) | 1,231 | 2,823 | 11,396"". The line is GE's single"
+P01,GE,other_income_expense_net,2022-12-31,,0000040545-24-000027,resolver,resolver,"quote states 1172 (x1000000) for about FY2022; no served cell carries it; quote: FY2023 10-K (latest print of 2021) Statement of Earnings (2023 | 2022 | 2021): ""Other income (loss) (Note 19) | 7,129 | 1,172 | 2,696"". The line is GE's single "
+P01,GE,other_income_expense_net,2023-12-31,,0000040545-23-000023,resolver,resolver,"quote states 19 (x1000000) for about FY2023; no served cell carries it; quote: FY2022 10-K (latest print of 2020) Statement of Earnings (2022 | 2021 | 2020): ""Other income (loss) (Note 19) | 1,231 | 2,823 | 11,396"". The line is GE's single"
+P01,GE,other_income_expense_net,2023-12-31,,0000040545-24-000027,resolver,resolver,"quote states 7129 (x1000000) for about FY2023; no served cell carries it; quote: FY2023 10-K (latest print of 2021) Statement of Earnings (2023 | 2022 | 2021): ""Other income (loss) (Note 19) | 7,129 | 1,172 | 2,696"". The line is GE's single "
+P01,GE,research_and_development,2018-12-31,,0000040545-20-000009,resolver,resolver,"quote states 3414 (x1000000) for about FY2018; no served cell carries it; quote: FY2019 10-K (latest print of 2017) MD&A ""RESEARCH AND DEVELOPMENT ... R&D expenses are classified in cost of goods and services sold"": table (In millions) GE fu"
+P01,GE,research_and_development,2019-12-31,,0000040545-20-000009,resolver,resolver,"quote states 3115 (x1000000) for about FY2019; no served cell carries it; quote: FY2019 10-K (latest print of 2017) MD&A ""RESEARCH AND DEVELOPMENT ... R&D expenses are classified in cost of goods and services sold"": table (In millions) GE fu"
+P01,GILD,interest_income,2022-12-31,,0000882095-25-000006,resolver,resolver,quote states 106 (x1000000) for about FY2022; no served cell carries it; quote: Interest income ( 281 ) ( 376 ) ( 106 )
+P01,GILD,interest_income,2023-12-31,,0000882095-25-000006,resolver,resolver,quote states 376 (x1000000) for about FY2023; no served cell carries it; quote: Interest income ( 281 ) ( 376 ) ( 106 )
+P01,GOOG,inventory,2024-12-31,,0001652044-26-000084,resolver,resolver,"quote states 13308 (x1000000) for about FY2024; no served cell carries it; quote: Q3 2026 10-Q (latest print of 2025-12-31) Consolidated Balance Sheets, $ in millions, columns As of December 31, 2025 | As of September 30, 2026: ""Inventory | 2"
+P01,GOOG,weighted_diluted_shares,2022-12-31,,0001652044-23-000016,resolver,resolver,"quote states 1652044 (x1000000000) for about FY2022; no served cell carries it; quote: FY2022 10-K (latest print of 2020, split-adjusted for the July 2022 20-for-1 split) Note 12 diluted block for 2020: ""Number of shares used in per share computat"
+P01,HD,interest_income,2019-01-31,,0000354950-20-000015,resolver,resolver,"quote states 93 (x1000000) for about FY2019; no served cell carries it; quote: Fiscal 2019 10-K (latest print of fiscal 2017, period ended Jan. 28, 2018) Consolidated Statements of Earnings ($ in Millions; Feb. 02, 2020 | Feb. 03, 2019 | J"
+P01,IBM,dividends_per_share,2018-12-31,,0001047469-16-010329,resolver,resolver,"quote states 1.30 (x1) for about FY2018; no served cell carries it; quote: FY2015 Annual Report (Exhibit 13), 2015 quarterly table: ""Dividends per share of common stock $ 1.10 $ 1.30 $ 1.30 $ 1.30 $ 5.00"" (Q1 Q2 Q3 Q4 Full year); 2014 "
+P01,IBM,dividends_per_share,2019-12-31,,0001047469-16-010329,resolver,resolver,"quote states 1.10 (x1) for about FY2019; no served cell carries it; quote: FY2015 Annual Report (Exhibit 13), 2015 quarterly table: ""Dividends per share of common stock $ 1.10 $ 1.30 $ 1.30 $ 1.30 $ 5.00"" (Q1 Q2 Q3 Q4 Full year); 2014 "
+P01,IBM,interest_income,2013-12-31,,0001047469-16-010329,resolver,resolver,"quote states 19 (x1000000) for about FY2013; no served cell carries it; quote: ""Other (income) and expense ... 2015 2014 ... Interest income (72 ) (90 ) (19.8 )%"" and ""Other (income) and expense includes interest income (other than from Gl"
+P01,IBM,interest_income,2014-12-31,,0001047469-16-010329,resolver,resolver,"quote states 90 (x1000000) for about FY2014; no served cell carries it; quote: ""Other (income) and expense ... 2015 2014 ... Interest income (72 ) (90 ) (19.8 )%"" and ""Other (income) and expense includes interest income (other than from Gl"
+P01,IBM,interest_income,2015-12-31,,0001047469-18-001117,resolver,resolver,"quote states 33 (x1000000) for about FY2015; no served cell carries it; quote: ""For the year ended December 31: 2017 2016 ... Interest income (144 ) (108 ) 33.5 %"""
+P01,IBM,interest_income,2016-12-31,,0001047469-19-000712,resolver,resolver,"quote states 83 (x1000000) for about FY2016; no served cell carries it; quote: ""For the year ended December 31: 2018 2017 ... Interest income (264 ) (144 ) 83.7 %""; FY2019 Exhibit 13 repeats 2018 = (264)"
+P01,LIN,comprehensive_income,2016-12-31,,0000884905-18-000014,resolver,resolver,"quote states 1530 (x1000000) for about FY2016; no served cell carries it; quote: FY2017 Praxair 10-K Consolidated Statements of Comprehensive Income, 2017 | 2016 | 2015: ""COMPREHENSIVE INCOME (INCLUDING NONCONTROLLING INTERESTS) | 1,844 | 1,"
+P01,LIN,comprehensive_income,2017-12-31,,0000884905-18-000014,resolver,resolver,"quote states 1844 (x1000000) for about FY2017; no served cell carries it; quote: FY2017 Praxair 10-K Consolidated Statements of Comprehensive Income, 2017 | 2016 | 2015: ""COMPREHENSIVE INCOME (INCLUDING NONCONTROLLING INTERESTS) | 1,844 | 1,"
+P01,LIN,interest_expense,2016-12-31,,0000884905-18-000014,resolver,resolver,"quote states 16 (x1000000) for about FY2016; no served cell carries it; quote: FY2017 Praxair 10-K (latest 10-K presenting FY2015; Linde FY2018 10-K starts at 2016) Consolidated Statements of Income, 2017 | 2016 | 2015 ($M): ""Interest expe"
+P01,LIN,operating_expenses,2015-12-31,,0001707925-20-000015,resolver,resolver,"quote states 6461 (x1000000) for about FY2015; no served cell carries it; quote: Linde FY2019 10-K (latest print for 2017) Consolidated Statements of Income, 2019 | 2018 | 2017: ""Sales | $ 28,228 | $ 14,836 | $ 11,358""; ""Cost of sales, exclu"
+P01,LIN,operating_expenses,2016-12-31,,0001707925-20-000015,resolver,resolver,"quote states 11437 (x1000000) for about FY2016; no served cell carries it; quote: Linde FY2019 10-K (latest print for 2017) Consolidated Statements of Income, 2019 | 2018 | 2017: ""Sales | $ 28,228 | $ 14,836 | $ 11,358""; ""Cost of sales, exclu"
+P01,LLY,dividends_per_share,2014-12-31,,0000059478-16-000321,resolver,resolver,"quote states 1.97 (x1) for about FY2014; no served cell carries it; quote: Item 6 Selected Financial Data: ""Dividends declared per share 2.01 1.97 1.96 1.96 1.96"" (2015 first). Statement of shareholders' equity, 2015 row: ""Cash dividen"
+P01,LLY,dividends_per_share,2014-12-31,,0000059478-16-000321,resolver,resolver,"quote states 2136.0 (x1) for about FY2014; no served cell carries it; quote: Item 6 Selected Financial Data: ""Dividends declared per share 2.01 1.97 1.96 1.96 1.96"" (2015 first). Statement of shareholders' equity, 2015 row: ""Cash dividen"
+P01,MCD,sga_expense,2022-12-31,,0000063908-23-000012,resolver,resolver,"quote states 2862 (x1000000) for about FY2022; no served cell carries it; quote: FY2022 10-K (latest print) IS: under ""Selling, general & administrative expenses"": ""Depreciation and amortization | 300.6""; ""Other | 2,245.0"" = 2,545.6; MD&A ta"
+P01,MO,cost_of_revenue,2023-12-31,,0000764180-24-000018,resolver,resolver,"quote states 6218 (x1000000) for about FY2023; no served cell carries it; quote: Latest 10-K presenting 2021, Consolidated Statements of Earnings, 2021 column: ""Cost of sales | 6,218 | 6,442 | 7,119""; ""Excise taxes on products | 3,981 | 4,40"
+P01,MO,cost_of_revenue,2024-12-31,,0000764180-25-000019,resolver,resolver,"quote states 6077 (x1000000) for about FY2024; no served cell carries it; quote: Latest 10-K presenting 2022, Consolidated Statements of Earnings, 2022 column: ""Cost of sales | 6,077 | 6,218 | 6,442""; ""Excise taxes on products | 3,574 | 3,98"
+P01,MPC,cost_of_revenue,2016-12-31,,0001510295-18-000024,resolver,resolver,"quote states 49170 (x1000000) for about FY2016; no served cell carries it; quote: FY2017 10-K (latest print for 2015) Consolidated Statements of Income: ""Cost of revenues (excludes items below) | 58,760 | 49,170 | 55,583"" tagged RefiningAndMa"
+P01,MPC,cost_of_revenue,2017-12-31,,0001510295-18-000024,resolver,resolver,"quote states 58760 (x1000000) for about FY2017; no served cell carries it; quote: FY2017 10-K (latest print for 2015) Consolidated Statements of Income: ""Cost of revenues (excludes items below) | 58,760 | 49,170 | 55,583"" tagged RefiningAndMa"
+P01,MRK,amortization_of_intangibles,2019-12-31,,0000310158-21-000004,resolver,resolver,"quote states 1973 (x1000000) for about FY2019; no served cell carries it; quote: Latest 10-K printing 2018. FY2020 10-K 0000310158-21-000004 R8 Consolidated Statement of Cash Flows (Dec. 31, 2020 | 2019 | 2018, $M): ""Amortization | 1,899 | 1"
+P01,MRK,amortization_of_intangibles,2020-12-31,,0000310158-21-000004,resolver,resolver,"quote states 1899 (x1000000) for about FY2020; no served cell carries it; quote: Latest 10-K printing 2018. FY2020 10-K 0000310158-21-000004 R8 Consolidated Statement of Cash Flows (Dec. 31, 2020 | 2019 | 2018, $M): ""Amortization | 1,899 | 1"
+P01,MRVL,interest_income,2018-01-31,,0001058057-18-000009,resolver,resolver,"quote states 17381 (x1000) for about FY2018; no served cell carries it; quote: FY2018 10-K 0001058057-18-000009 (latest 10-K printing FY2016; $ in thousands) R68 Supplemental Financial Information - Interest and Other Income, Net (Details)"
+P01,MRVL,sga_expense,2021-01-31,,0001058057-21-000009,resolver,resolver,"quote states 467240 (x1000) for about FY2021; no served cell carries it; quote: FY2021 10-K (latest 10-K printing FY2019; $ in thousands) R4 IS: ""Selling, general and administrative | 467,240 | 464,580 | 424,360"" (2021 | 2020 | 2019); same "
+P01,MRVL,sga_expense,2022-01-31,,0001835632-22-000016,resolver,resolver,"quote states 955245 (x1000) for about FY2022; no served cell carries it; quote: FY2022 10-K 0001835632-22-000016 (latest 10-K printing FY2020; $ in thousands) R5 IS: ""Selling, general and administrative | 955,245 | 467,240 | 464,580"" (2022 "
+P01,MSFT,other_income_expense_net,2016-06-30,,0001193125-15-272806,resolver,resolver,"quote states 431 (x1000000) for about FY2016; no served cell carries it; quote: reported only combined: Other income (expense), net. IS prints one line ""Other income (expense), net"" (NonoperatingIncomeExpense) holding interest. FY2017 10-K "
+P01,MSFT,other_income_expense_net,2017-06-30,,0001193125-15-272806,resolver,resolver,"quote states 823 (x1000000) for about FY2017; no served cell carries it; quote: reported only combined: Other income (expense), net. IS prints one line ""Other income (expense), net"" (NonoperatingIncomeExpense) holding interest. FY2017 10-K "
+P01,MU,cf_ap_change,2024-08-31,,0000723125-25-000028,resolver,resolver,"quote states 1915 (x1000000) for about FY2024; no served cell carries it; quote: FY2025 10-K (latest print of FY2023) CF (2025 | 2024 | 2023): ""Accounts payable and accrued expenses | 862 | 1,915 | (1,302)"". No MU 10-K prints a separate acco"
+P01,MU,cf_ap_change,2025-08-31,,0000723125-25-000028,resolver,resolver,"quote states 862 (x1000000) for about FY2025; no served cell carries it; quote: FY2025 10-K (latest print of FY2023) CF (2025 | 2024 | 2023): ""Accounts payable and accrued expenses | 862 | 1,915 | (1,302)"". No MU 10-K prints a separate acco"
+P01,NEM,cash_flow_financing,2017-12-31,,0001558370-18-000894,resolver,resolver,"quote states 864 (x1000000) for about FY2017; no served cell carries it; quote: FY2017 10-K (latest 10-K presenting 2015) Consolidated Statements of Cash Flows (Dec. 31, 2017 | 2016 | 2015): ""Net cash provided by (used in) financing activit"
+P01,NEM,cost_of_revenue,2016-12-31,,0001558370-18-000894,resolver,resolver,"quote states 3772 (x1000000) for about FY2016; no served cell carries it; quote: FY2017 10-K (latest presenting 2015) Consolidated Statements of Operations (Dec. 31, 2017 | 2016 | 2015): ""Sales | 7,348 | 6,711 | 6,085""; ""Costs applicable to "
+P01,NEM,cost_of_revenue,2017-12-31,,0001558370-18-000894,resolver,resolver,"quote states 4038 (x1000000) for about FY2017; no served cell carries it; quote: FY2017 10-K (latest presenting 2015) Consolidated Statements of Operations (Dec. 31, 2017 | 2016 | 2015): ""Sales | 7,348 | 6,711 | 6,085""; ""Costs applicable to "
+P01,NEM,cost_of_revenue,2018-12-31,,0001558370-18-000894,resolver,resolver,"quote states 1 (x1000000) for about FY2018; no served cell carries it; quote: FY2017 10-K (latest presenting 2015) Consolidated Statements of Operations (Dec. 31, 2017 | 2016 | 2015): ""Sales | 7,348 | 6,711 | 6,085""; ""Costs applicable to "
+P01,NEM,gross_profit,2016-12-31,,0001164727-22-000007,resolver,resolver,"quote states 9740 (x1000000000) for about FY2016; no served cell carries it; quote: FY2021 10-K (latest presenting 2019) Consolidated Statements of Operations (Dec. 31, 2021 | 2020 | 2019): ""Sales (Note 5) | 12,222 | 11,497 | 9,740""; ""Costs app"
+P01,NEM,gross_profit,2017-12-31,,0001164727-22-000007,resolver,resolver,"quote states 11497 (x1000000000) for about FY2017; no served cell carries it; quote: FY2021 10-K (latest presenting 2019) Consolidated Statements of Operations (Dec. 31, 2021 | 2020 | 2019): ""Sales (Note 5) | 12,222 | 11,497 | 9,740""; ""Costs app"
+P01,NEM,gross_profit,2018-12-31,,0001164727-22-000007,resolver,resolver,"quote states 12222 (x1000000000) for about FY2018; no served cell carries it; quote: FY2021 10-K (latest presenting 2019) Consolidated Statements of Operations (Dec. 31, 2021 | 2020 | 2019): ""Sales (Note 5) | 12,222 | 11,497 | 9,740""; ""Costs app"
+P01,NEM,total_debt,2018-12-31,,0001164727-21-000027,resolver,resolver,"quote states 100 (x1000000) for about FY2018; no served cell carries it; quote: FY2020 10-K (latest presenting Dec. 31, 2019) Consolidated Balance Sheets (Dec. 31, 2020 | 2019): ""Current lease and other financing obligations (Note 26) | 106"
+P01,PGR,accounts_payable,2017-12-31,,0000080661-18-000011,resolver,resolver,"quote states 2825.9 (x1000000) for about FY2017; no served cell carries it; quote: FY2017 10-K (latest print of Dec. 31, 2016) Consolidated Balance Sheets ($ in Millions; Dec. 31, 2017 | Dec. 31, 2016): ""Accounts payable, accrued expenses, and"
+P01,PGR,accounts_payable,2019-12-31,,0000080661-20-000006,resolver,resolver,"quote states 5962.7 (x1000000) for about FY2019; no served cell carries it; quote: FY2019 10-K (latest print of Dec. 31, 2018) Consolidated Balance Sheets ($ in Millions; Dec. 31, 2019 | Dec. 31, 2018): ""Accounts payable, accrued expenses, and"
+P01,PGR,accounts_payable,2021-12-31,,0000080661-22-000046,resolver,resolver,"quote states 6010600000 (x1) for about FY2021; no served cell carries it; quote: FY2021 10-K (latest print of Dec. 31, 2020) Consolidated Balance Sheets (USD; Dec. 31, 2021 | Dec. 31, 2020): ""Accounts payable, accrued expenses, and other lia"
+P01,PGR,cash_and_equivalents,2016-12-31,,0000080661-16-000080,resolver,resolver,"quote states 226.4 (x1000000) for about FY2016; no served cell carries it; quote: Own FY2015 10-K balance sheet ""Cash"" 224.4 [us-gaap:Cash, 2015-12-31]; FY2017 10-K R7 ""Cash, cash equivalents, and restricted cash - End of year | 275.3 | 226.4"
+P01,PM,sbc,2013-12-31,,0001413329-18-000007,resolver,resolver,"quote states 149 (x1000000) for about FY2013; no served cell carries it; quote: Ruling 13: PM prints no stock-based compensation add-back on the cash flow statement (FY2017 10-K R9 operating section: ""Depreciation and amortization | 875 | 7"
+P01,PM,sbc,2014-12-31,,0001413329-18-000007,resolver,resolver,"quote states 3 (x1000000) for about FY2014; no served cell carries it; quote: Ruling 13: PM prints no stock-based compensation add-back on the cash flow statement (FY2017 10-K R9 operating section: ""Depreciation and amortization | 875 | 7"
+P01,QCOM,interest_income,2024-09-30,,0000804328-26-000128,resolver,resolver,"quote states 675 (x1000000) for about FY2024; no served cell carries it; quote: reported only combined: Interest and dividend income. FY2026 note ""Investment and Other Income, Net (in millions)"": ""Interest and dividend income $ 424 $ 639 $ "
+P01,QCOM,interest_income,2025-09-30,,0000804328-26-000128,resolver,resolver,"quote states 639 (x1000000) for about FY2025; no served cell carries it; quote: reported only combined: Interest and dividend income. FY2026 note ""Investment and Other Income, Net (in millions)"": ""Interest and dividend income $ 424 $ 639 $ "
+P01,RTX,other_income_expense_net,2018-12-31,,0000101829-19-000007,resolver,resolver,"quote states 1565 (x1000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting 2016 (FY2018): ""Other Income | 1,565 | 1,358 | 782"" (2018|2017|2016); own FY2016 10-K printed 785 before the ASU 2017-07 recast. Line lab"
+P01,RTX,other_income_expense_net,2019-12-31,,0000101829-20-000013,resolver,resolver,"quote states 521 (x1000000) for about FY2019; no served cell carries it; quote: Latest 10-K presenting 2017 (FY2019): ""Other Income | 521 | 1,565 | 1,358"" (2019|2018|2017). Line labelled other income above Operating profit is the data point"
+P01,SCHW,dividends_paid,2020-12-31,,0000316709-25-000010,resolver,resolver,"quote states 505 (x1000000) for about FY2020; no served cell carries it; quote: FY2024 10-K (latest print of 2022) Consolidated Statements of Cash Flows ($ in Millions; Dec. 31, 2024 | 2023 | 2022): ""Dividends paid | [1] | (2,275) | (2,276)"
+P01,SCHW,dividends_paid,2021-12-31,,0000316709-25-000010,resolver,resolver,"quote states 1592 (x1000000) for about FY2021; no served cell carries it; quote: FY2024 10-K (latest print of 2022) Consolidated Statements of Cash Flows ($ in Millions; Dec. 31, 2024 | 2023 | 2022): ""Dividends paid | [1] | (2,275) | (2,276)"
+P01,SCHW,dividends_paid,2023-12-31,,0000316709-25-000010,resolver,resolver,"quote states 2276 (x1000000) for about FY2023; no served cell carries it; quote: FY2024 10-K (latest print of 2022) Consolidated Statements of Cash Flows ($ in Millions; Dec. 31, 2024 | 2023 | 2022): ""Dividends paid | [1] | (2,275) | (2,276)"
+P01,SCHW,dividends_paid,2024-12-31,,0000316709-25-000010,resolver,resolver,"quote states 2275 (x1000000) for about FY2024; no served cell carries it; quote: FY2024 10-K (latest print of 2022) Consolidated Statements of Cash Flows ($ in Millions; Dec. 31, 2024 | 2023 | 2022): ""Dividends paid | [1] | (2,275) | (2,276)"
+P01,SHOP,income_before_tax,2019-12-31,,0001594805-20-000010,resolver,resolver,"quote states 29027 (x1000000000) for about FY2019; no served cell carries it; quote: Latest 40-F presenting 2018 (FY2019) IS: ""Loss before income taxes | (95,815) | (64,553)""; ""Provision for income taxes | 29,027 | 0""; ""Net loss | (124,842) | (6"
+P01,T,inventory,2021-12-31,,0000732717-22-000015,resolver,resolver,"quote states 3464 (x1000000) for about FY2021; no served cell carries it; quote: FY2021 10-K (latest 10-K printing the Dec. 31, 2020 balance sheet; the FY2022 10-K prints 2022 | 2021 only): ""Inventories | 3,464 | 3,695"" (Dec. 31, 2021 | Dec."
+P01,T,other_income_expense_net,2018-12-31,,0001562762-20-000064,resolver,resolver,"quote states 6782 (x1000000) for about FY2018; no served cell carries it; quote: FY2019 10-K (latest print for 2017): ""Other income (expense) - net | (1,071) | 6,782 | 1,597"" (2019 | 2018 | 2017); FY2018 10-K R2 also prints 1,597 (recast for"
+P01,T,other_income_expense_net,2019-12-31,,0001562762-20-000064,resolver,resolver,"quote states 1071 (x1000000) for about FY2019; no served cell carries it; quote: FY2019 10-K (latest print for 2017): ""Other income (expense) - net | (1,071) | 6,782 | 1,597"" (2019 | 2018 | 2017); FY2018 10-K R2 also prints 1,597 (recast for"
+P01,UNP,other_income_expense_net,2017-12-31,,0000100885-19-000060,resolver,resolver,"quote states 245 (x1000000) for about FY2017; no served cell carries it; quote: Latest 10-K presenting 2016 (FY2018 10-K, after the ASU 2017-07 recast) Consolidated Statements Of Income ($ in Millions) 2018 | 2017 | 2016: ""Operating income "
+P01,UNP,other_income_expense_net,2018-12-31,,0000100885-19-000060,resolver,resolver,"quote states 94 (x1000000) for about FY2018; no served cell carries it; quote: Latest 10-K presenting 2016 (FY2018 10-K, after the ASU 2017-07 recast) Consolidated Statements Of Income ($ in Millions) 2018 | 2017 | 2016: ""Operating income "
+P01,VZ,interest_income,2013-12-31,,0001193125-16-473367,resolver,resolver,quote states 64 (x1000000) for about FY2013; no served cell carries it; quote: Interest income $ 115 $ 108 $ 64
+P01,VZ,interest_income,2014-12-31,,0001193125-16-473367,resolver,resolver,quote states 108 (x1000000) for about FY2014; no served cell carries it; quote: Interest income $ 115 $ 108 $ 64
+P01,WELL,accounts_receivable,2017-12-31,,0000766704-18-000012,resolver,resolver,"quote states 560991 (x1000) for about FY2017; no served cell carries it; quote: Latest 10-K printing Dec. 31, 2016, Consolidated Balance Sheets ($ in Thousands; Dec. 31, 2017 | Dec. 31, 2016): ""Receivables and other assets | 560,991 | 826,2"
+P01,WELL,amortization_of_intangibles,2020-12-31,,0000766704-22-000013,resolver,resolver,"quote states 121004 (x1000) for about FY2020; no served cell carries it; quote: Latest 10-K presenting 2019 (FY2021): ""Amortization related to in place lease intangibles and lease commissions | (115,579) | (121,004) | (135,047)"" (2021|2020|"
+P01,WELL,amortization_of_intangibles,2021-12-31,,0000766704-22-000013,resolver,resolver,"quote states 115579 (x1000) for about FY2021; no served cell carries it; quote: Latest 10-K presenting 2019 (FY2021): ""Amortization related to in place lease intangibles and lease commissions | (115,579) | (121,004) | (135,047)"" (2021|2020|"
+P01,WELL,amortization_of_intangibles,2023-12-31,,0000766704-26-000010,resolver,resolver,"quote states 226663 (x1000) for about FY2023; no served cell carries it; quote: FY2025 10-K: ""Amortization related to in-place lease intangibles and lease commissions | ( 447,380 ) | ( 286,666 ) | ( 226,663 )"" (2025|2024|2023, $ thousands);"
+P01,WFC,shares_outstanding,2016-12-31,,0000072971-19-000227,resolver,resolver,"quote states 11259917 (x1) for about FY2016; no served cell carries it; quote: FY2018 10-K (latest 10-K printing Dec. 31, 2015) Consolidated Statement of Changes in Equity: ""Beginning balance, shares at Dec. 31, 2015 | 11,259,917 | 5,092,1"
+P01,XOM,accounts_receivable,2017-12-31,,0000034088-17-000017,resolver,resolver,"quote states 107 (x1000000) for about FY2017; no served cell carries it; quote: FY2016 10-K 0000034088-17-000017 R53.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2016 | Dec. "
+P01,XOM,accounts_receivable,2019-12-31,,0000034088-20-000016,resolver,resolver,"quote states 34088 (x1000000000) for about FY2019; no served cell carries it; quote: FY2019 10-K 0000034088-20-000016 R55.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2019 | Dec. "
+P01,XOM,accounts_receivable,2020-12-31,,0000034088-19-000010,resolver,resolver,"quote states 61 (x1000000) for about FY2020; no served cell carries it; quote: FY2018 10-K 0000034088-19-000010 R54.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2018 | Dec. "
+P01,XOM,accounts_receivable,2021-12-31,,0000034088-20-000016,resolver,resolver,"quote states 34 (x1000000) for about FY2021; no served cell carries it; quote: FY2019 10-K 0000034088-20-000016 R55.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2019 | Dec. "
+P01,XOM,accounts_receivable,2022-12-31,,0000034088-21-000012,resolver,resolver,"quote states 96 (x1000000) for about FY2022; no served cell carries it; quote: FY2020 10-K 0000034088-21-000012 R58.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2020 | Dec. "
+P01,XOM,accounts_receivable,2023-12-31,,0000034088-22-000011,resolver,resolver,"quote states 159 (x1000000) for about FY2023; no served cell carries it; quote: FY2021 10-K 0000034088-22-000011 R57.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2021 | Dec. "
+P01,XOM,accounts_receivable,2024-12-31,,0000034088-23-000020,resolver,resolver,"quote states 168 (x1000000) for about FY2024; no served cell carries it; quote: FY2022 10-K 0000034088-23-000020 R56.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2022 | Dec. "
+P01,XOM,accounts_receivable,2025-12-31,,0000034088-24-000018,resolver,resolver,"quote states 170 (x1000000) for about FY2025; no served cell carries it; quote: FY2023 10-K 0000034088-24-000018 R62.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2023 | Dec. "
+P01,XOM,accounts_receivable,2026-12-31,,0000034088-25-000010,resolver,resolver,"quote states 162 (x1000000) for about FY2026; no served cell carries it; quote: FY2024 10-K 0000034088-25-000010 R66.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2024 | Dec. "
+P01,XOM,accounts_receivable,2027-12-31,,0000034088-26-000045,resolver,resolver,"quote states 270 (x1000000) for about FY2027; no served cell carries it; quote: FY2025 10-K 0000034088-26-000045 R84.htm Additional Working Capital Information, Schedule of Notes and Accounts Receivable ($ in millions, Dec. 31, 2025 | Dec. "
+P01,XOM,sbc,2013-12-31,,0000034088-15-000013,resolver,resolver,"quote states 854 (x1000000) for about FY2013; no served cell carries it; quote: The compensation cost charged against income for the restricted stock and restricted stock units was $831 million, $854 million and $854 million for 2014, 2013 "
+P03,COP,weighted_basic_shares,2015-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0001193125-16-472901,export,export,weighted_basic_shares=1241919 vs net income/basic EPS = 1236871508: off by 10^-3
+P03,COP,weighted_basic_shares,2016-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0001193125-17-050077,export,export,weighted_basic_shares=1245440 vs net income/basic EPS = 1242268041: off by 10^-3
+P03,COP,weighted_basic_shares,2017-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0001193125-18-049729,export,export,weighted_basic_shares=1221038 vs net income/basic EPS = 1221428571: off by 10^-3
+P03,COP,weighted_basic_shares,2018-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0001193125-19-043841,export,export,weighted_basic_shares=1166499 vs net income/basic EPS = 1167350746: off by 10^-3
+P03,COP,weighted_basic_shares,2019-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0001193125-20-039954,export,export,weighted_basic_shares=1117260 vs net income/basic EPS = 1118040435: off by 10^-3
+P03,COP,weighted_diluted_shares,2015-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001193125-16-472901,export,export,weighted_diluted_shares=1241919 vs net income/basic EPS = 1236871508: off by 10^-3
+P03,COP,weighted_diluted_shares,2016-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001193125-17-050077,export,export,weighted_diluted_shares=1245440 vs net income/basic EPS = 1242268041: off by 10^-3
+P03,COP,weighted_diluted_shares,2017-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001193125-18-049729,export,export,weighted_diluted_shares=1221038 vs net income/basic EPS = 1221428571: off by 10^-3
+P03,COP,weighted_diluted_shares,2018-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001193125-19-043841,export,export,weighted_diluted_shares=1175538 vs net income/basic EPS = 1167350746: off by 10^-3
+P03,COP,weighted_diluted_shares,2019-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001193125-20-039954,export,export,weighted_diluted_shares=1123536 vs net income/basic EPS = 1118040435: off by 10^-3
+P03,RTX,shares_outstanding,2015-12-31,,0000101829-16-000050,export,export,shares_outstanding=838344 vs net income/basic EPS = 872477064: off by 10^-3
+P03,RTX,shares_outstanding,2016-12-31,,0000101829-17-000007,export,export,shares_outstanding=808701 vs net income/basic EPS = 817961165: off by 10^-3
+P03,RTX,shares_outstanding,2017-12-31,,0000101829-18-000005,export,export,shares_outstanding=799130 vs net income/basic EPS = 790277778: off by 10^-3
+P03,RTX,shares_outstanding,2018-12-31,,0000101829-19-000007,export,export,shares_outstanding=861482 vs net income/basic EPS = 800759878: off by 10^-3
+P04,AMZN,weighted_diluted_shares,2018-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001018724-19-000004,resolver,resolver,WeightedAverageNumberOfDilutedSharesOutstanding=500000000.0000 at R3.htm:29 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2014-12-31,CommonStockSharesIssued,0000014272-15-000055,resolver,resolver,CommonStockSharesIssued=2200000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2015-12-31,CommonStockSharesIssued,0000014272-16-000288,resolver,resolver,CommonStockSharesIssued=2200000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2016-12-31,CommonStockSharesIssued,0000014272-17-000047,resolver,resolver,CommonStockSharesIssued=2200000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2017-12-31,CommonStockSharesIssued,0000014272-18-000055,resolver,resolver,CommonStockSharesIssued=2200000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2018-12-31,CommonStockSharesIssued,0000014272-19-000047,resolver,resolver,CommonStockSharesIssued=2200000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2019-12-31,CommonStockSharesIssued,0000014272-20-000082,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2020-12-31,CommonStockSharesIssued,0000014272-21-000066,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R5.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2021-12-31,CommonStockSharesIssued,0000014272-22-000051,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R6.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2022-12-31,CommonStockSharesIssued,0000014272-23-000046,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R6.htm:8 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2023-12-31,CommonStockSharesIssued,0000014272-24-000044,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R6.htm:9 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2024-12-31,CommonStockSharesIssued,0000014272-25-000039,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R6.htm:9 is an exact multiple of 100M
+P04,BMY,shares_outstanding,2025-12-31,CommonStockSharesIssued,0000014272-26-000004,resolver,resolver,CommonStockSharesIssued=2900000000.0000 at R6.htm:9 is an exact multiple of 100M
+P04,CVS,shares_outstanding,2022-12-31,CommonStockSharesOutstanding,0000064803-23-000009,resolver,resolver,CommonStockSharesOutstanding=1300000000.0000 at BSP is an exact multiple of 100M
+P04,GLW,shares_outstanding,2021-12-31,CommonStockSharesIssued,0001437749-22-003247,resolver,resolver,CommonStockSharesIssued=1800000000.0000 at R5.htm:12 is an exact multiple of 100M
+P04,GLW,shares_outstanding,2022-12-31,CommonStockSharesIssued,0001437749-23-003123,resolver,resolver,CommonStockSharesIssued=1800000000.0000 at R5.htm:9 is an exact multiple of 100M
+P04,GLW,shares_outstanding,2023-12-31,CommonStockSharesIssued,0001437749-24-003735,resolver,resolver,CommonStockSharesIssued=1800000000.0000 at R5.htm:7 is an exact multiple of 100M
+P04,GLW,shares_outstanding,2024-12-31,CommonStockSharesIssued,0001628280-25-005347,resolver,resolver,CommonStockSharesIssued=1800000000.0000 at R6.htm:5 is an exact multiple of 100M
+P04,GLW,shares_outstanding,2025-12-31,CommonStockSharesIssued,0000024741-26-000124,resolver,resolver,CommonStockSharesIssued=1800000000.0000 at R6.htm:5 is an exact multiple of 100M
+P04,MSFT,weighted_basic_shares,2018-06-30,WeightedAverageNumberOfSharesOutstandingBasic,0001564590-18-019062,resolver,resolver,WeightedAverageNumberOfSharesOutstandingBasic=7700000000.0000 at R2.htm:23 is an exact multiple of 100M
+P04,NEM,shares_outstanding,2020-12-31,CommonStockSharesOutstanding,0001164727-21-000027,resolver,resolver,CommonStockSharesOutstanding=800000000.0000 at BSP is an exact multiple of 100M
+P04,ORCL,weighted_basic_shares,2022-05-31,WeightedAverageNumberOfSharesOutstandingBasic,0001564590-22-023675,resolver,resolver,WeightedAverageNumberOfSharesOutstandingBasic=2700000000.0000 at R4.htm:28 is an exact multiple of 100M
+P04,PEP,shares_outstanding,2025-12-31,TreasuryStockCommonShares,0000077476-26-000007,resolver,resolver,TreasuryStockCommonShares=500000000.0000 at R7.htm:4 is an exact multiple of 100M
+P04,PFE,weighted_diluted_shares,2024-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0000078003-25-000054,resolver,resolver,WeightedAverageNumberOfDilutedSharesOutstanding=5700000000.0000 at R3.htm:34 is an exact multiple of 100M
+P04,TMO,weighted_basic_shares,2019-12-31,WeightedAverageNumberOfSharesOutstandingBasic,0000097745-20-000009,resolver,resolver,WeightedAverageNumberOfSharesOutstandingBasic=400000000.0000 at R4.htm:31 is an exact multiple of 100M
+P04,TSLA,shares_outstanding,2021-12-31,CommonStockSharesOutstanding,0000950170-23-001409,resolver,resolver,CommonStockSharesOutstanding=3100000000.0000 at NOTE is an exact multiple of 100M
+P04,VLO,weighted_diluted_shares,2015-12-31,WeightedAverageNumberOfDilutedSharesOutstanding,0001035002-16-000069,resolver,resolver,WeightedAverageNumberOfDilutedSharesOutstanding=500000000.0000 at R4.htm:35 is an exact multiple of 100M
+P05,AMAT,interest_income,2021-10-31,InvestmentIncomeNet,0000006951-23-000041,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0000006951-23-000041 prints InvestmentIncomeNet at 2021-10-31 as a comparative
+P05,AMAT,interest_income,2022-10-30,InvestmentIncomeNet,0000006951-23-000041,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0000006951-23-000041 prints InvestmentIncomeNet at 2022-10-30 as a comparative
+P05,AMGN,interest_income,2021-12-31,InvestmentIncomeInterest,0000318154-24-000011,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0000318154-24-000011 prints InvestmentIncomeInterest at 2021-12-31 as a comparative
+P05,CRWD,cash_and_equivalents,2018-01-31,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,0001558370-19-006161,export,fsn,HIDDEN_YEAR (pre_filing) but 10-Q 0001558370-19-006161 prints CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents at 2018-01-31 as a comparative
+P05,DELL,cash_and_equivalents,2015-01-30,CashAndCashEquivalentsAtCarryingValue,0001571996-16-000008,export,fsn,HIDDEN_YEAR (pre_filing) but 10-Q 0001571996-16-000008 prints CashAndCashEquivalentsAtCarryingValue at 2015-01-30 as a comparative
+P05,DELL,interest_income,2015-01-30,InvestmentIncomeInterestAndDividend,0001571996-17-000004,export,fsn,HIDDEN_YEAR (structural_not_presented) but 10-K 0001571996-17-000004 prints InvestmentIncomeInterestAndDividend at 2015-01-30 as a comparative
+P05,DELL,interest_income,2016-01-29,InvestmentIncomeInterestAndDividend,0001571996-17-000004,export,fsn,HIDDEN_YEAR (structural_not_presented) but 10-K 0001571996-17-000004 prints InvestmentIncomeInterestAndDividend at 2016-01-29 as a comparative
+P05,DIS,interest_income,2021-10-02,InvestmentIncomeNet,0001744489-23-000216,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001744489-23-000216 prints InvestmentIncomeNet at 2021-10-02 as a comparative
+P05,DIS,interest_income,2022-10-01,InvestmentIncomeNet,0001744489-23-000216,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001744489-23-000216 prints InvestmentIncomeNet at 2022-10-01 as a comparative
+P05,GEV,cash_and_equivalents,2022-12-31,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,0001996810-24-000008,export,fsn,HIDDEN_YEAR (pre_filing) but 10-Q 0001996810-24-000008 prints CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents at 2022-12-31 as a comparative
+P05,GEV,interest_income,2022-12-31,InvestmentIncomeNet,0001996810-25-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001996810-25-000011 prints InvestmentIncomeNet at 2022-12-31 as a comparative
+P05,GEV,interest_income,2023-12-31,InvestmentIncomeNet,0001996810-25-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001996810-25-000011 prints InvestmentIncomeNet at 2023-12-31 as a comparative
+P05,GOOG,depreciation_and_amortization,2021-12-31,Depreciation,0001652044-24-000022,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001652044-24-000022 prints Depreciation at 2021-12-31 as a comparative
+P05,GOOG,depreciation_and_amortization,2022-12-31,Depreciation,0001652044-24-000022,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001652044-24-000022 prints Depreciation at 2022-12-31 as a comparative
+P05,LIN,interest_income,2017-12-31,InterestIncomeOther,0001707925-20-000015,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001707925-20-000015 prints InterestIncomeOther at 2017-12-31 as a comparative
+P05,LIN,interest_income,2018-12-31,InterestIncomeOther,0001707925-20-000015,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001707925-20-000015 prints InterestIncomeOther at 2018-12-31 as a comparative
+P05,META,interest_expense,2021-12-31,InterestExpense,0001326801-24-000012,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001326801-24-000012 prints InterestExpense at 2021-12-31 as a comparative
+P05,META,interest_expense,2022-12-31,InterestExpense,0001326801-24-000012,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001326801-24-000012 prints InterestExpense at 2022-12-31 as a comparative
+P05,META,interest_income,2021-12-31,InvestmentIncomeInterest,0001326801-24-000012,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001326801-24-000012 prints InvestmentIncomeInterest at 2021-12-31 as a comparative
+P05,META,interest_income,2022-12-31,InvestmentIncomeInterest,0001326801-24-000012,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001326801-24-000012 prints InvestmentIncomeInterest at 2022-12-31 as a comparative
+P05,NEM,interest_income,2015-12-31,InvestmentIncomeInterest,0001558370-18-000894,export,fsn,HIDDEN_YEAR (line_presented_combined) but 10-K 0001558370-18-000894 prints InvestmentIncomeInterest at 2015-12-31 as a comparative
+P05,NFLX,interest_income,2022-12-31,InterestIncomeOperating,0001065280-25-000044,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001065280-25-000044 prints InterestIncomeOperating at 2022-12-31 as a comparative
+P05,NFLX,interest_income,2023-12-31,InterestIncomeOperating,0001065280-25-000044,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001065280-25-000044 prints InterestIncomeOperating at 2023-12-31 as a comparative
+P05,PLTR,cash_and_equivalents,2018-12-31,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,0001193125-20-292177,export,fsn,HIDDEN_YEAR (pre_filing) but 10-Q 0001193125-20-292177 prints CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents at 2018-12-31 as a comparative
+P05,PM,sga_expense,2015-12-31,GeneralAndAdministrativeExpense,0001413329-17-000014,export,fsn,HIDDEN_ROW (line_presented_combined) but 10-K 0001413329-17-000014 prints GeneralAndAdministrativeExpense at 2015-12-31 as a comparative
+P05,SNDK,cash_and_equivalents,2023-06-30,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,0002023554-25-000004,export,fsn,HIDDEN_YEAR (pre_filing) but 10-Q 0002023554-25-000004 prints CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents at 2023-06-30 as a comparative
+P05,UBER,cash_and_equivalents,2017-12-31,CashAndCashEquivalentsAtCarryingValue,0001543151-20-000010,export,fsn,HIDDEN_YEAR (pre_filing) but 10-K 0001543151-20-000010 prints CashAndCashEquivalentsAtCarryingValue at 2017-12-31 as a comparative
+P05,WFC,shares_outstanding,2023-12-31,CommonStockSharesOutstanding,0000072971-25-000253,export,fsn,HIDDEN_YEAR (verified_absent) but 10-Q 0000072971-25-000253 prints CommonStockSharesOutstanding at 2023-12-31 as a comparative
+P06,AAPL,interest_income,2015-09-26,InvestmentIncomeInterestAndDividend,0001193125-15-356351,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-15-356351 presents InvestmentIncomeInterestAndDividend at 2015-09-26
+P06,AAPL,interest_income,2016-09-24,InvestmentIncomeInterestAndDividend,0001628280-16-020309,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001628280-16-020309 presents InvestmentIncomeInterestAndDividend at 2016-09-24
+P06,AAPL,interest_income,2017-09-30,InvestmentIncomeInterestAndDividend,0000320193-17-000070,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-17-000070 presents InvestmentIncomeInterestAndDividend at 2017-09-30
+P06,AAPL,interest_income,2018-09-29,InvestmentIncomeInterestAndDividend,0000320193-18-000145,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-18-000145 presents InvestmentIncomeInterestAndDividend at 2018-09-29
+P06,AAPL,interest_income,2019-09-28,InvestmentIncomeInterestAndDividend,0000320193-19-000119,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-19-000119 presents InvestmentIncomeInterestAndDividend at 2019-09-28
+P06,AAPL,interest_income,2020-09-26,InvestmentIncomeInterestAndDividend,0000320193-20-000096,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-20-000096 presents InvestmentIncomeInterestAndDividend at 2020-09-26
+P06,AAPL,interest_income,2021-09-25,InvestmentIncomeInterestAndDividend,0000320193-21-000105,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-21-000105 presents InvestmentIncomeInterestAndDividend at 2021-09-25
+P06,AAPL,interest_income,2022-09-24,InvestmentIncomeInterestAndDividend,0000320193-22-000108,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-22-000108 presents InvestmentIncomeInterestAndDividend at 2022-09-24
+P06,AAPL,interest_income,2023-09-30,InvestmentIncomeInterestAndDividend,0000320193-23-000106,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-23-000106 presents InvestmentIncomeInterestAndDividend at 2023-09-30
+P06,ABBV,interest_income,2015-12-31,InvestmentIncomeInterestAndDividend,0001047469-16-010239,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001047469-16-010239 presents InvestmentIncomeInterestAndDividend at 2015-12-31
+P06,ABBV,interest_income,2016-12-31,InvestmentIncomeInterestAndDividend,0001551152-17-000004,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-17-000004 presents InvestmentIncomeInterestAndDividend at 2016-12-31
+P06,ABBV,interest_income,2017-12-31,InvestmentIncomeInterestAndDividend,0001551152-18-000014,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-18-000014 presents InvestmentIncomeInterestAndDividend at 2017-12-31
+P06,ABBV,interest_income,2018-12-31,InvestmentIncomeInterestAndDividend,0001551152-19-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-19-000008 presents InvestmentIncomeInterestAndDividend at 2018-12-31
+P06,ABBV,interest_income,2019-12-31,InvestmentIncomeInterestAndDividend,0001551152-20-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-20-000007 presents InvestmentIncomeInterestAndDividend at 2019-12-31
+P06,ABBV,interest_income,2020-12-31,InvestmentIncomeInterestAndDividend,0001551152-21-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-21-000008 presents InvestmentIncomeInterestAndDividend at 2020-12-31
+P06,ABBV,interest_income,2021-12-31,InvestmentIncomeInterestAndDividend,0001551152-22-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-22-000007 presents InvestmentIncomeInterestAndDividend at 2021-12-31
+P06,ABBV,interest_income,2022-12-31,InvestmentIncomeInterestAndDividend,0001551152-23-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-23-000011 presents InvestmentIncomeInterestAndDividend at 2022-12-31
+P06,ABBV,interest_income,2023-12-31,InvestmentIncomeInterestAndDividend,0001551152-24-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-24-000011 presents InvestmentIncomeInterestAndDividend at 2023-12-31
+P06,ABBV,interest_income,2024-12-31,InvestmentIncomeInterestAndDividend,0001551152-25-000020,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-25-000020 presents InvestmentIncomeInterestAndDividend at 2024-12-31
+P06,ABBV,interest_income,2025-12-31,InvestmentIncomeInterestAndDividend,0001551152-26-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001551152-26-000008 presents InvestmentIncomeInterestAndDividend at 2025-12-31
+P06,ACN,depreciation_and_amortization,2020-08-31,Depreciation,0001467373-20-000376,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-20-000376 presents Depreciation at 2020-08-31
+P06,ACN,depreciation_and_amortization,2021-08-31,Depreciation,0001467373-21-000229,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-21-000229 presents Depreciation at 2021-08-31
+P06,ACN,depreciation_and_amortization,2022-08-31,Depreciation,0001467373-22-000295,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-22-000295 presents Depreciation at 2022-08-31
+P06,ACN,depreciation_and_amortization,2023-08-31,Depreciation,0001467373-23-000324,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-23-000324 presents Depreciation at 2023-08-31
+P06,ACN,depreciation_and_amortization,2024-08-31,Depreciation,0001467373-24-000278,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-24-000278 presents Depreciation at 2024-08-31
+P06,ACN,depreciation_and_amortization,2025-08-31,Depreciation,0001467373-25-000217,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-25-000217 presents Depreciation at 2025-08-31
+P06,ACN,depreciation_and_amortization,2026-08-31,OtherDepreciationAndAmortization,0001467373-26-000049,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001467373-26-000049 presents OtherDepreciationAndAmortization at 2026-08-31
+P06,AMAT,interest_income,2023-10-29,InvestmentIncomeNet,0000006951-23-000041,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000006951-23-000041 presents InvestmentIncomeNet at 2023-10-29
+P06,AXP,share_buybacks,2018-12-31,PaymentsForRepurchaseOfCommonStock,0000004962-19-000018,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000004962-19-000018 presents PaymentsForRepurchaseOfCommonStock at 2018-12-31
+P06,BAC,dividends_paid,2015-12-31,PaymentsOfOrdinaryDividends,0000070858-16-000137,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-16-000137 presents PaymentsOfOrdinaryDividends at 2015-12-31
+P06,BAC,dividends_paid,2016-12-31,PaymentsOfOrdinaryDividends,0000070858-17-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-17-000013 presents PaymentsOfOrdinaryDividends at 2016-12-31
+P06,BAC,dividends_paid,2017-12-31,PaymentsOfOrdinaryDividends,0000070858-18-000009,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-18-000009 presents PaymentsOfOrdinaryDividends at 2017-12-31
+P06,BAC,dividends_paid,2018-12-31,PaymentsOfOrdinaryDividends,0000070858-19-000012,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-19-000012 presents PaymentsOfOrdinaryDividends at 2018-12-31
+P06,BAC,dividends_paid,2019-12-31,PaymentsOfOrdinaryDividends,0000070858-20-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-20-000011 presents PaymentsOfOrdinaryDividends at 2019-12-31
+P06,BAC,dividends_paid,2020-12-31,PaymentsOfOrdinaryDividends,0000070858-21-000023,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-21-000023 presents PaymentsOfOrdinaryDividends at 2020-12-31
+P06,BAC,dividends_paid,2021-12-31,PaymentsOfOrdinaryDividends,0000070858-22-000062,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-22-000062 presents PaymentsOfOrdinaryDividends at 2021-12-31
+P06,BAC,dividends_paid,2022-12-31,PaymentsOfOrdinaryDividends,0000070858-23-000092,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-23-000092 presents PaymentsOfOrdinaryDividends at 2022-12-31
+P06,BAC,dividends_paid,2023-12-31,PaymentsOfOrdinaryDividends,0000070858-24-000122,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-24-000122 presents PaymentsOfOrdinaryDividends at 2023-12-31
+P06,BAC,dividends_paid,2024-12-31,PaymentsOfOrdinaryDividends,0000070858-25-000139,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-25-000139 presents PaymentsOfOrdinaryDividends at 2024-12-31
+P06,BAC,dividends_paid,2025-12-31,PaymentsOfOrdinaryDividends,0000070858-26-000157,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000070858-26-000157 presents PaymentsOfOrdinaryDividends at 2025-12-31
+P06,C,interest_income,2023-12-31,InterestAndDividendIncomeOperating,0000831001-24-000033,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000831001-24-000033 presents InterestAndDividendIncomeOperating at 2023-12-31
+P06,CAT,interest_income,2015-12-31,InvestmentIncomeNet,0000018230-16-000410,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-16-000410 presents InvestmentIncomeNet at 2015-12-31
+P06,CAT,interest_income,2016-12-31,InvestmentIncomeNet,0000018230-17-000041,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-17-000041 presents InvestmentIncomeNet at 2016-12-31
+P06,CAT,interest_income,2017-12-31,InvestmentIncomeNet,0000018230-18-000042,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-18-000042 presents InvestmentIncomeNet at 2017-12-31
+P06,CAT,interest_income,2018-12-31,InvestmentIncomeNet,0000018230-19-000034,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-19-000034 presents InvestmentIncomeNet at 2018-12-31
+P06,CAT,interest_income,2019-12-31,InvestmentIncomeNet,0000018230-20-000056,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-20-000056 presents InvestmentIncomeNet at 2019-12-31
+P06,CAT,interest_income,2020-12-31,InvestmentIncomeNet,0000018230-21-000063,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-21-000063 presents InvestmentIncomeNet at 2020-12-31
+P06,CAT,interest_income,2021-12-31,InvestmentIncomeNet,0000018230-22-000050,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-22-000050 presents InvestmentIncomeNet at 2021-12-31
+P06,CAT,interest_income,2022-12-31,InvestmentIncomeNet,0000018230-23-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-23-000011 presents InvestmentIncomeNet at 2022-12-31
+P06,CAT,interest_income,2023-12-31,InvestmentIncomeNet,0000018230-24-000009,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-24-000009 presents InvestmentIncomeNet at 2023-12-31
+P06,CAT,interest_income,2024-12-31,InvestmentIncomeNet,0000018230-25-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-25-000008 presents InvestmentIncomeNet at 2024-12-31
+P06,CAT,interest_income,2025-12-31,InvestmentIncomeNet,0000018230-26-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-26-000008 presents InvestmentIncomeNet at 2025-12-31
+P06,CB,interest_income,2015-12-31,InvestmentIncomeNet,0000896159-16-000027,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-16-000027 presents InvestmentIncomeNet at 2015-12-31
+P06,CB,interest_income,2016-12-31,InvestmentIncomeNet,0000896159-17-000004,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-17-000004 presents InvestmentIncomeNet at 2016-12-31
+P06,CB,interest_income,2017-12-31,InvestmentIncomeNet,0000896159-18-000002,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-18-000002 presents InvestmentIncomeNet at 2017-12-31
+P06,CB,interest_income,2018-12-31,InvestmentIncomeNet,0000896159-19-000005,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-19-000005 presents InvestmentIncomeNet at 2018-12-31
+P06,CB,interest_income,2019-12-31,InvestmentIncomeNet,0000896159-20-000003,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-20-000003 presents InvestmentIncomeNet at 2019-12-31
+P06,CB,interest_income,2020-12-31,InvestmentIncomeNet,0000896159-21-000003,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-21-000003 presents InvestmentIncomeNet at 2020-12-31
+P06,CB,interest_income,2021-12-31,InvestmentIncomeNet,0000896159-22-000005,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-22-000005 presents InvestmentIncomeNet at 2021-12-31
+P06,CB,interest_income,2022-12-31,InvestmentIncomeNet,0000896159-23-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000896159-23-000007 presents InvestmentIncomeNet at 2022-12-31
+P06,CRM,interest_income,2015-01-31,InvestmentIncomeInterest,0001108524-15-000008,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001108524-15-000008 presents InvestmentIncomeInterest at 2015-01-31
+P06,CRM,interest_income,2016-01-31,InvestmentIncomeInterest,0001108524-16-000053,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001108524-16-000053 presents InvestmentIncomeInterest at 2016-01-31
+P06,CRM,interest_income,2017-01-31,InvestmentIncomeInterest,0001108524-17-000006,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001108524-17-000006 presents InvestmentIncomeInterest at 2017-01-31
+P06,CRM,interest_income,2018-01-31,InvestmentIncomeInterest,0001108524-18-000011,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001108524-18-000011 presents InvestmentIncomeInterest at 2018-01-31
+P06,CRM,interest_income,2019-01-31,InvestmentIncomeInterest,0001108524-19-000009,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001108524-19-000009 presents InvestmentIncomeInterest at 2019-01-31
+P06,CSCO,depreciation_and_amortization,2015-07-25,DepreciationDepletionAndAmortization,0000858877-15-000070,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-15-000070 presents DepreciationDepletionAndAmortization at 2015-07-25
+P06,CSCO,depreciation_and_amortization,2016-07-30,DepreciationDepletionAndAmortization,0000858877-16-000117,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-16-000117 presents DepreciationDepletionAndAmortization at 2016-07-30
+P06,CSCO,depreciation_and_amortization,2017-07-29,DepreciationDepletionAndAmortization,0000858877-17-000016,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-17-000016 presents DepreciationDepletionAndAmortization at 2017-07-29
+P06,CSCO,depreciation_and_amortization,2018-07-28,DepreciationDepletionAndAmortization,0000858877-18-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-18-000011 presents DepreciationDepletionAndAmortization at 2018-07-28
+P06,CSCO,depreciation_and_amortization,2019-07-27,DepreciationDepletionAndAmortization,0000858877-19-000012,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-19-000012 presents DepreciationDepletionAndAmortization at 2019-07-27
+P06,CSCO,depreciation_and_amortization,2020-07-25,DepreciationDepletionAndAmortization,0000858877-20-000010,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-20-000010 presents DepreciationDepletionAndAmortization at 2020-07-25
+P06,CSCO,depreciation_and_amortization,2021-07-31,DepreciationDepletionAndAmortization,0000858877-21-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-21-000013 presents DepreciationDepletionAndAmortization at 2021-07-31
+P06,CSCO,depreciation_and_amortization,2022-07-30,DepreciationDepletionAndAmortization,0000858877-22-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-22-000013 presents DepreciationDepletionAndAmortization at 2022-07-30
+P06,CSCO,depreciation_and_amortization,2023-07-29,DepreciationDepletionAndAmortization,0000858877-23-000023,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-23-000023 presents DepreciationDepletionAndAmortization at 2023-07-29
+P06,CSCO,depreciation_and_amortization,2024-07-27,DepreciationDepletionAndAmortization,0000858877-24-000017,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-24-000017 presents DepreciationDepletionAndAmortization at 2024-07-27
+P06,CSCO,depreciation_and_amortization,2025-07-26,DepreciationDepletionAndAmortization,0000858877-25-000111,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-25-000111 presents DepreciationDepletionAndAmortization at 2025-07-26
+P06,CSCO,depreciation_and_amortization,2026-07-25,DepreciationDepletionAndAmortization,0000858877-26-000132,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-26-000132 presents DepreciationDepletionAndAmortization at 2026-07-25
+P06,DELL,interest_income,2017-02-03,InvestmentIncomeInterestAndDividend,0001571996-17-000004,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-17-000004 presents InvestmentIncomeInterestAndDividend at 2017-02-03
+P06,DELL,interest_income,2018-02-02,InvestmentIncomeInterestAndDividend,0001571996-18-000004,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-18-000004 presents InvestmentIncomeInterestAndDividend at 2018-02-02
+P06,DELL,interest_income,2019-02-01,InvestmentIncomeInterestAndDividend,0001571996-19-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-19-000008 presents InvestmentIncomeInterestAndDividend at 2019-02-01
+P06,DELL,interest_income,2020-01-31,InvestmentIncomeInterestAndDividend,0001571996-20-000017,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-20-000017 presents InvestmentIncomeInterestAndDividend at 2020-01-31
+P06,DELL,interest_income,2021-01-29,InvestmentIncomeInterestAndDividend,0001571996-21-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-21-000007 presents InvestmentIncomeInterestAndDividend at 2021-01-29
+P06,DELL,interest_income,2022-01-28,InvestmentIncomeInterestAndDividend,0001571996-22-000009,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-22-000009 presents InvestmentIncomeInterestAndDividend at 2022-01-28
+P06,DELL,interest_income,2023-02-03,InvestmentIncomeInterestAndDividend,0001571996-23-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-23-000007 presents InvestmentIncomeInterestAndDividend at 2023-02-03
+P06,DELL,interest_income,2024-02-02,InvestmentIncomeInterestAndDividend,0001571996-24-000036,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-24-000036 presents InvestmentIncomeInterestAndDividend at 2024-02-02
+P06,DELL,interest_income,2025-01-31,InvestmentIncomeInterestAndDividend,0001571996-25-000034,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-25-000034 presents InvestmentIncomeInterestAndDividend at 2025-01-31
+P06,DELL,interest_income,2026-01-30,InvestmentIncomeInterestAndDividend,0001571996-26-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-26-000008 presents InvestmentIncomeInterestAndDividend at 2026-01-30
+P06,DIS,interest_income,2023-09-30,InvestmentIncomeNet,0001744489-23-000216,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001744489-23-000216 presents InvestmentIncomeNet at 2023-09-30
+P06,DIS,interest_income,2024-09-28,InvestmentIncomeNet,0001744489-24-000276,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001744489-24-000276 presents InvestmentIncomeNet at 2024-09-28
+P06,DIS,interest_income,2025-09-27,InvestmentIncomeNet,0001744489-25-000155,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001744489-25-000155 presents InvestmentIncomeNet at 2025-09-27
+P06,GE,dividends_paid,2015-12-31,PaymentsOfOrdinaryDividends,0000040545-16-000145,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-16-000145 presents PaymentsOfOrdinaryDividends at 2015-12-31
+P06,GE,dividends_paid,2016-12-31,PaymentsOfOrdinaryDividends,0000040545-17-000010,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-17-000010 presents PaymentsOfOrdinaryDividends at 2016-12-31
+P06,GE,dividends_paid,2017-12-31,PaymentsOfOrdinaryDividends,0000040545-18-000014,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-18-000014 presents PaymentsOfOrdinaryDividends at 2017-12-31
+P06,GE,dividends_paid,2018-12-31,PaymentsOfOrdinaryDividends,0000040545-19-000014,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-19-000014 presents PaymentsOfOrdinaryDividends at 2018-12-31
+P06,GE,dividends_paid,2019-12-31,PaymentsOfOrdinaryDividends,0000040545-20-000009,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-20-000009 presents PaymentsOfOrdinaryDividends at 2019-12-31
+P06,GE,dividends_paid,2020-12-31,PaymentsOfOrdinaryDividends,0000040545-21-000011,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-21-000011 presents PaymentsOfOrdinaryDividends at 2020-12-31
+P06,GE,dividends_paid,2021-12-31,PaymentsOfOrdinaryDividends,0000040545-22-000008,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-22-000008 presents PaymentsOfOrdinaryDividends at 2021-12-31
+P06,GE,dividends_paid,2022-12-31,PaymentsOfOrdinaryDividends,0000040545-23-000023,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-23-000023 presents PaymentsOfOrdinaryDividends at 2022-12-31
+P06,GE,dividends_paid,2023-12-31,PaymentsOfOrdinaryDividends,0000040545-24-000027,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-24-000027 presents PaymentsOfOrdinaryDividends at 2023-12-31
+P06,GEV,interest_income,2024-12-31,InvestmentIncomeNet,0001996810-25-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001996810-25-000011 presents InvestmentIncomeNet at 2024-12-31
+P06,GEV,interest_income,2025-12-31,InvestmentIncomeNet,0001996810-26-000015,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001996810-26-000015 presents InvestmentIncomeNet at 2025-12-31
+P06,ISRG,amortization_of_intangibles,2025-12-31,AmortizationOfIntangibleAssets,0001035267-26-000010,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001035267-26-000010 presents AmortizationOfIntangibleAssets at 2025-12-31
+P06,MA,interest_income,2015-12-31,InvestmentIncomeNet,0001141391-16-000085,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-16-000085 presents InvestmentIncomeNet at 2015-12-31
+P06,MA,interest_income,2016-12-31,InvestmentIncomeNet,0001141391-17-000014,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-17-000014 presents InvestmentIncomeNet at 2016-12-31
+P06,MA,interest_income,2017-12-31,InvestmentIncomeNet,0001141391-18-000009,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-18-000009 presents InvestmentIncomeNet at 2017-12-31
+P06,MA,interest_income,2018-12-31,InvestmentIncomeNet,0001141391-19-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-19-000013 presents InvestmentIncomeNet at 2018-12-31
+P06,MA,interest_income,2019-12-31,InvestmentIncomeNet,0001141391-20-000032,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-20-000032 presents InvestmentIncomeNet at 2019-12-31
+P06,MA,interest_income,2020-12-31,InvestmentIncomeNet,0001141391-21-000018,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-21-000018 presents InvestmentIncomeNet at 2020-12-31
+P06,MA,interest_income,2021-12-31,InvestmentIncomeNet,0001141391-22-000023,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-22-000023 presents InvestmentIncomeNet at 2021-12-31
+P06,MA,interest_income,2022-12-31,InvestmentIncomeNet,0001141391-23-000020,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-23-000020 presents InvestmentIncomeNet at 2022-12-31
+P06,MA,interest_income,2023-12-31,InvestmentIncomeNet,0001141391-24-000022,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-24-000022 presents InvestmentIncomeNet at 2023-12-31
+P06,MA,interest_income,2024-12-31,InvestmentIncomeNet,0001141391-25-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-25-000011 presents InvestmentIncomeNet at 2024-12-31
+P06,MA,interest_income,2025-12-31,InvestmentIncomeNet,0001141391-26-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001141391-26-000013 presents InvestmentIncomeNet at 2025-12-31
+P06,MSFT,depreciation_and_amortization,2015-06-30,Depreciation,0001193125-15-272806,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-15-272806 presents Depreciation at 2015-06-30
+P06,MSFT,depreciation_and_amortization,2016-06-30,Depreciation,0001193125-16-662209,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-16-662209 presents Depreciation at 2016-06-30
+P06,MSFT,depreciation_and_amortization,2017-06-30,Depreciation,0001564590-17-014900,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-17-014900 presents Depreciation at 2017-06-30
+P06,MSFT,depreciation_and_amortization,2018-06-30,Depreciation,0001564590-18-019062,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-18-019062 presents Depreciation at 2018-06-30
+P06,MSFT,depreciation_and_amortization,2019-06-30,Depreciation,0001564590-19-027952,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-19-027952 presents Depreciation at 2019-06-30
+P06,MSFT,depreciation_and_amortization,2020-06-30,Depreciation,0001564590-20-034944,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-20-034944 presents Depreciation at 2020-06-30
+P06,MSFT,depreciation_and_amortization,2021-06-30,Depreciation,0001564590-21-039151,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-21-039151 presents Depreciation at 2021-06-30
+P06,MSFT,depreciation_and_amortization,2022-06-30,Depreciation,0001564590-22-026876,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-22-026876 presents Depreciation at 2022-06-30
+P06,MSFT,depreciation_and_amortization,2023-06-30,Depreciation,0000950170-23-035122,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-23-035122 presents Depreciation at 2023-06-30
+P06,MSFT,depreciation_and_amortization,2024-06-30,Depreciation,0000950170-24-087843,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-24-087843 presents Depreciation at 2024-06-30
+P06,MSFT,depreciation_and_amortization,2025-06-30,Depreciation,0000950170-25-100235,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-25-100235 presents Depreciation at 2025-06-30
+P06,MSFT,depreciation_and_amortization,2026-06-30,Depreciation,0001193125-26-323660,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-26-323660 presents Depreciation at 2026-06-30
+P06,MSFT,interest_income,2015-06-30,InvestmentIncomeNet,0001193125-15-272806,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-15-272806 presents InvestmentIncomeNet at 2015-06-30
+P06,MSFT,interest_income,2016-06-30,InvestmentIncomeNet,0001193125-16-662209,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-16-662209 presents InvestmentIncomeNet at 2016-06-30
+P06,MSFT,interest_income,2017-06-30,InvestmentIncomeNet,0001564590-17-014900,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-17-014900 presents InvestmentIncomeNet at 2017-06-30
+P06,MSFT,interest_income,2018-06-30,InvestmentIncomeNet,0001564590-18-019062,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-18-019062 presents InvestmentIncomeNet at 2018-06-30
+P06,MSFT,interest_income,2019-06-30,InvestmentIncomeNet,0001564590-19-027952,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-19-027952 presents InvestmentIncomeNet at 2019-06-30
+P06,MSFT,interest_income,2020-06-30,InvestmentIncomeNet,0001564590-20-034944,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-20-034944 presents InvestmentIncomeNet at 2020-06-30
+P06,MSFT,interest_income,2021-06-30,InvestmentIncomeNet,0001564590-21-039151,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-21-039151 presents InvestmentIncomeNet at 2021-06-30
+P06,MSFT,interest_income,2022-06-30,InvestmentIncomeNet,0001564590-22-026876,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-22-026876 presents InvestmentIncomeNet at 2022-06-30
+P06,MSFT,interest_income,2023-06-30,InvestmentIncomeNet,0000950170-23-035122,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-23-035122 presents InvestmentIncomeNet at 2023-06-30
+P06,MSFT,interest_income,2024-06-30,InvestmentIncomeNet,0000950170-24-087843,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-24-087843 presents InvestmentIncomeNet at 2024-06-30
+P06,MSFT,interest_income,2025-06-30,InvestmentIncomeNet,0000950170-25-100235,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000950170-25-100235 presents InvestmentIncomeNet at 2025-06-30
+P06,MSFT,interest_income,2026-06-30,InvestmentIncomeNet,0001193125-26-323660,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001193125-26-323660 presents InvestmentIncomeNet at 2026-06-30
+P06,NEE,cf_ar_change,2015-12-31,IncreaseDecreaseInAccountsReceivable,0000753308-16-000337,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000753308-16-000337 presents IncreaseDecreaseInAccountsReceivable at 2015-12-31
+P06,NFLX,interest_income,2024-12-31,InterestIncomeOperating,0001065280-25-000044,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001065280-25-000044 presents InterestIncomeOperating at 2024-12-31
+P06,ORCL,cost_of_revenue,2015-05-31,CostOfServices,0001193125-15-235239,export,fsn,HIDDEN_ROW (structural_not_presented) but its own 10-K 0001193125-15-235239 presents CostOfServices at 2015-05-31
+P06,ORCL,cost_of_revenue,2016-05-31,CostOfServices,0001193125-16-628942,export,fsn,HIDDEN_ROW (structural_not_presented) but its own 10-K 0001193125-16-628942 presents CostOfServices at 2016-05-31
+P06,ORCL,cost_of_revenue,2017-05-31,CostOfServices,0001193125-17-214833,export,fsn,HIDDEN_ROW (structural_not_presented) but its own 10-K 0001193125-17-214833 presents CostOfServices at 2017-05-31
+P06,ORCL,cost_of_revenue,2018-05-31,CostOfServices,0001193125-18-201034,export,fsn,HIDDEN_ROW (structural_not_presented) but its own 10-K 0001193125-18-201034 presents CostOfServices at 2018-05-31
+P06,PGR,interest_income,2015-12-31,InterestAndDividendIncomeOperating,0000080661-16-000080,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-16-000080 presents InterestAndDividendIncomeOperating at 2015-12-31
+P06,PGR,interest_income,2016-12-31,InterestAndDividendIncomeOperating,0000080661-17-000012,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-17-000012 presents InterestAndDividendIncomeOperating at 2016-12-31
+P06,PGR,interest_income,2017-12-31,InterestAndDividendIncomeOperating,0000080661-18-000011,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-18-000011 presents InterestAndDividendIncomeOperating at 2017-12-31
+P06,PGR,interest_income,2018-12-31,InterestAndDividendIncomeOperating,0000080661-19-000008,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-19-000008 presents InterestAndDividendIncomeOperating at 2018-12-31
+P06,PGR,interest_income,2019-12-31,InterestAndDividendIncomeOperating,0000080661-20-000006,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-20-000006 presents InterestAndDividendIncomeOperating at 2019-12-31
+P06,PGR,interest_income,2020-12-31,InterestAndDividendIncomeOperating,0000080661-21-000014,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-21-000014 presents InterestAndDividendIncomeOperating at 2020-12-31
+P06,PGR,interest_income,2021-12-31,InterestAndDividendIncomeOperating,0000080661-22-000046,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-22-000046 presents InterestAndDividendIncomeOperating at 2021-12-31
+P06,PGR,interest_income,2022-12-31,InterestAndDividendIncomeOperating,0000080661-23-000006,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-23-000006 presents InterestAndDividendIncomeOperating at 2022-12-31
+P06,PGR,interest_income,2023-12-31,InterestAndDividendIncomeOperating,0000080661-24-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-24-000007 presents InterestAndDividendIncomeOperating at 2023-12-31
+P06,PGR,interest_income,2024-12-31,InterestAndDividendIncomeOperating,0000080661-25-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-25-000007 presents InterestAndDividendIncomeOperating at 2024-12-31
+P06,PGR,interest_income,2025-12-31,InterestAndDividendIncomeOperating,0000080661-26-000086,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-26-000086 presents InterestAndDividendIncomeOperating at 2025-12-31
+P06,PM,sga_expense,2016-12-31,GeneralAndAdministrativeExpense,0001413329-17-000014,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001413329-17-000014 presents GeneralAndAdministrativeExpense at 2016-12-31
+P06,PM,sga_expense,2017-12-31,GeneralAndAdministrativeExpense,0001413329-18-000007,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001413329-18-000007 presents GeneralAndAdministrativeExpense at 2017-12-31
+P06,QCOM,interest_income,2015-09-27,InvestmentIncomeInterestAndDividend,0001234452-15-000271,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001234452-15-000271 presents InvestmentIncomeInterestAndDividend at 2015-09-27
+P06,QCOM,interest_income,2016-09-25,InvestmentIncomeInterestAndDividend,0001234452-16-000552,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001234452-16-000552 presents InvestmentIncomeInterestAndDividend at 2016-09-25
+P06,QCOM,interest_income,2017-09-24,InvestmentIncomeInterestAndDividend,0001234452-17-000190,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001234452-17-000190 presents InvestmentIncomeInterestAndDividend at 2017-09-24
+P06,QCOM,interest_income,2018-09-30,InvestmentIncomeInterestAndDividend,0001728949-18-000095,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-18-000095 presents InvestmentIncomeInterestAndDividend at 2018-09-30
+P06,QCOM,interest_income,2019-09-29,InvestmentIncomeInterestAndDividend,0001728949-19-000072,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-19-000072 presents InvestmentIncomeInterestAndDividend at 2019-09-29
+P06,QCOM,interest_income,2020-09-27,InvestmentIncomeInterestAndDividend,0001728949-20-000067,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-20-000067 presents InvestmentIncomeInterestAndDividend at 2020-09-27
+P06,QCOM,interest_income,2021-09-26,InvestmentIncomeInterestAndDividend,0001728949-21-000076,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-21-000076 presents InvestmentIncomeInterestAndDividend at 2021-09-26
+P06,QCOM,interest_income,2022-09-25,InvestmentIncomeInterestAndDividend,0000804328-22-000021,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000804328-22-000021 presents InvestmentIncomeInterestAndDividend at 2022-09-25
+P06,QCOM,interest_income,2023-09-24,InvestmentIncomeInterestAndDividend,0000804328-23-000055,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000804328-23-000055 presents InvestmentIncomeInterestAndDividend at 2023-09-24
+P06,QCOM,interest_income,2024-09-29,InvestmentIncomeInterestAndDividend,0000804328-24-000075,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000804328-24-000075 presents InvestmentIncomeInterestAndDividend at 2024-09-29
+P06,QCOM,interest_income,2025-09-28,InvestmentIncomeInterestAndDividend,0000804328-25-000085,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0000804328-25-000085 presents InvestmentIncomeInterestAndDividend at 2025-09-28
+P06,TSLA,depreciation_and_amortization,2018-12-31,Depreciation,0001564590-19-003165,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001564590-19-003165 presents Depreciation at 2018-12-31
+P06,TSLA,depreciation_and_amortization,2019-12-31,Depreciation,0001564590-20-004475,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001564590-20-004475 presents Depreciation at 2019-12-31
+P06,TSLA,depreciation_and_amortization,2020-12-31,Depreciation,0001564590-21-004599,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001564590-21-004599 presents Depreciation at 2020-12-31
+P06,TSLA,depreciation_and_amortization,2021-12-31,Depreciation,0000950170-22-000796,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000950170-22-000796 presents Depreciation at 2021-12-31
+P06,TSLA,depreciation_and_amortization,2022-12-31,Depreciation,0000950170-23-001409,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000950170-23-001409 presents Depreciation at 2022-12-31
+P06,TSLA,depreciation_and_amortization,2023-12-31,Depreciation,0001628280-24-002390,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001628280-24-002390 presents Depreciation at 2023-12-31
+P06,TSLA,depreciation_and_amortization,2024-12-31,Depreciation,0001628280-25-003063,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001628280-25-003063 presents Depreciation at 2024-12-31
+P06,TSLA,depreciation_and_amortization,2025-12-31,Depreciation,0001628280-26-003952,export,fsn,HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001628280-26-003952 presents Depreciation at 2025-12-31
+P06,V,interest_income,2015-09-30,InvestmentIncomeNet,0001403161-15-000013,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-15-000013 presents InvestmentIncomeNet at 2015-09-30
+P06,V,interest_income,2016-09-30,InvestmentIncomeNet,0001403161-16-000058,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-16-000058 presents InvestmentIncomeNet at 2016-09-30
+P06,V,interest_income,2017-09-30,InvestmentIncomeNet,0001403161-17-000044,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-17-000044 presents InvestmentIncomeNet at 2017-09-30
+P06,V,interest_income,2018-09-30,InvestmentIncomeNet,0001403161-18-000055,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-18-000055 presents InvestmentIncomeNet at 2018-09-30
+P06,V,interest_income,2019-09-30,InvestmentIncomeNet,0001403161-19-000050,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-19-000050 presents InvestmentIncomeNet at 2019-09-30
+P06,V,interest_income,2020-09-30,InvestmentIncomeNet,0001403161-20-000070,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-20-000070 presents InvestmentIncomeNet at 2020-09-30
+P06,V,interest_income,2021-09-30,InvestmentIncomeNet,0001403161-21-000060,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-21-000060 presents InvestmentIncomeNet at 2021-09-30
+P06,V,interest_income,2022-09-30,InvestmentIncomeNet,0001403161-22-000081,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-22-000081 presents InvestmentIncomeNet at 2022-09-30
+P06,V,interest_income,2023-09-30,InvestmentIncomeNet,0001403161-23-000099,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-23-000099 presents InvestmentIncomeNet at 2023-09-30
+P06,V,interest_income,2024-09-30,InvestmentIncomeInterestAndDividend,0001403161-24-000058,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-24-000058 presents InvestmentIncomeInterestAndDividend at 2024-09-30
+P06,V,interest_income,2025-09-30,InvestmentIncomeInterestAndDividend,0001403161-25-000089,export,fsn,HIDDEN_ROW (line_presented_combined) but its own 10-K 0001403161-25-000089 presents InvestmentIncomeInterestAndDividend at 2025-09-30
+P06,V,interest_income,2026-09-30,InvestmentIncomeNet,0001403161-26-000134,export,fsn,HIDDEN_ROW (structural_not_presented) but its own 10-K 0001403161-26-000134 presents InvestmentIncomeNet at 2026-09-30
+P07,ADP,operating_expenses,2016-06-30,SellingGeneralAndAdministrativeExpense,0000008670-16-000053,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:11 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2017-06-30,SellingGeneralAndAdministrativeExpense,0000008670-19-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2018-06-30,SellingGeneralAndAdministrativeExpense,0000008670-20-000032,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2019-06-30,SellingGeneralAndAdministrativeExpense,0000008670-19-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2020-06-30,SellingGeneralAndAdministrativeExpense,0000008670-20-000032,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2021-06-30,SellingGeneralAndAdministrativeExpense,0000008670-21-000027,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:15 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2022-06-30,SellingGeneralAndAdministrativeExpense,0000008670-22-000038,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2023-06-30,SellingGeneralAndAdministrativeExpense,0000008670-23-000030,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2024-06-30,SellingGeneralAndAdministrativeExpense,0000008670-24-000024,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2025-06-30,SellingGeneralAndAdministrativeExpense,0000008670-25-000037,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves sga_expense (mapped)
+P07,ADP,operating_expenses,2026-06-30,SellingGeneralAndAdministrativeExpense,0000008670-26-000030,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves sga_expense (mapped)
+P07,ADP,sga_expense,2016-06-30,SellingGeneralAndAdministrativeExpense,0000008670-16-000053,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:11 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2017-06-30,SellingGeneralAndAdministrativeExpense,0000008670-19-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2018-06-30,SellingGeneralAndAdministrativeExpense,0000008670-20-000032,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2019-06-30,SellingGeneralAndAdministrativeExpense,0000008670-19-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2020-06-30,SellingGeneralAndAdministrativeExpense,0000008670-20-000032,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:17 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2021-06-30,SellingGeneralAndAdministrativeExpense,0000008670-21-000027,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:15 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2022-06-30,SellingGeneralAndAdministrativeExpense,0000008670-22-000038,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2023-06-30,SellingGeneralAndAdministrativeExpense,0000008670-23-000030,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2024-06-30,SellingGeneralAndAdministrativeExpense,0000008670-24-000024,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2025-06-30,SellingGeneralAndAdministrativeExpense,0000008670-25-000037,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves operating_expenses (component_sum)
+P07,ADP,sga_expense,2026-06-30,SellingGeneralAndAdministrativeExpense,0000008670-26-000030,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:16 also serves operating_expenses (component_sum)
+P07,COST,operating_expenses,2022-08-31,SellingGeneralAndAdministrativeExpense,0000909832-22-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves sga_expense (mapped)
+P07,COST,operating_expenses,2023-08-31,SellingGeneralAndAdministrativeExpense,0000909832-23-000042,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves sga_expense (mapped)
+P07,COST,operating_expenses,2024-08-31,SellingGeneralAndAdministrativeExpense,0000909832-24-000049,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves sga_expense (mapped)
+P07,COST,operating_expenses,2025-08-31,SellingGeneralAndAdministrativeExpense,0000909832-25-000101,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves sga_expense (mapped)
+P07,COST,operating_expenses,2026-08-31,SellingGeneralAndAdministrativeExpense,0000909832-26-000093,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves sga_expense (mapped)
+P07,COST,sga_expense,2022-08-31,SellingGeneralAndAdministrativeExpense,0000909832-22-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves operating_expenses (mapped)
+P07,COST,sga_expense,2023-08-31,SellingGeneralAndAdministrativeExpense,0000909832-23-000042,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves operating_expenses (mapped)
+P07,COST,sga_expense,2024-08-31,SellingGeneralAndAdministrativeExpense,0000909832-24-000049,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves operating_expenses (mapped)
+P07,COST,sga_expense,2025-08-31,SellingGeneralAndAdministrativeExpense,0000909832-25-000101,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves operating_expenses (mapped)
+P07,COST,sga_expense,2026-08-31,SellingGeneralAndAdministrativeExpense,0000909832-26-000093,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:11 also serves operating_expenses (mapped)
+P07,PG,operating_expenses,2022-06-30,SellingGeneralAndAdministrativeExpense,0000080424-22-000064,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,PG,operating_expenses,2023-06-30,SellingGeneralAndAdministrativeExpense,0000080424-23-000073,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,PG,sga_expense,2022-06-30,SellingGeneralAndAdministrativeExpense,0000080424-22-000064,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,PG,sga_expense,2023-06-30,SellingGeneralAndAdministrativeExpense,0000080424-23-000073,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,WMT,operating_expenses,2015-01-31,SellingGeneralAndAdministrativeExpense,0000104169-15-000011,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2016-01-31,SellingGeneralAndAdministrativeExpense,0000104169-16-000079,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2017-01-31,SellingGeneralAndAdministrativeExpense,0000104169-17-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2018-01-31,SellingGeneralAndAdministrativeExpense,0000104169-18-000028,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2019-01-31,SellingGeneralAndAdministrativeExpense,0000104169-19-000016,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2020-01-31,SellingGeneralAndAdministrativeExpense,0000104169-20-000011,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2021-01-31,SellingGeneralAndAdministrativeExpense,0000104169-21-000033,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2022-01-31,SellingGeneralAndAdministrativeExpense,0000104169-22-000012,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2023-01-31,SellingGeneralAndAdministrativeExpense,0000104169-23-000020,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2024-01-31,SellingGeneralAndAdministrativeExpense,0000104169-24-000056,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2025-01-31,SellingGeneralAndAdministrativeExpense,0000104169-25-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,WMT,operating_expenses,2026-01-31,SellingGeneralAndAdministrativeExpense,0000104169-26-000055,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves sga_expense (mapped)
+P07,WMT,sga_expense,2015-01-31,SellingGeneralAndAdministrativeExpense,0000104169-15-000011,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2016-01-31,SellingGeneralAndAdministrativeExpense,0000104169-16-000079,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2017-01-31,SellingGeneralAndAdministrativeExpense,0000104169-17-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2018-01-31,SellingGeneralAndAdministrativeExpense,0000104169-18-000028,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2019-01-31,SellingGeneralAndAdministrativeExpense,0000104169-19-000016,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2020-01-31,SellingGeneralAndAdministrativeExpense,0000104169-20-000011,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2021-01-31,SellingGeneralAndAdministrativeExpense,0000104169-21-000033,resolver,resolver,SellingGeneralAndAdministrativeExpense at R2.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2022-01-31,SellingGeneralAndAdministrativeExpense,0000104169-22-000012,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2023-01-31,SellingGeneralAndAdministrativeExpense,0000104169-23-000020,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2024-01-31,SellingGeneralAndAdministrativeExpense,0000104169-24-000056,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2025-01-31,SellingGeneralAndAdministrativeExpense,0000104169-25-000021,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P07,WMT,sga_expense,2026-01-31,SellingGeneralAndAdministrativeExpense,0000104169-26-000055,resolver,resolver,SellingGeneralAndAdministrativeExpense at R3.htm:7 also serves operating_expenses (mapped)
+P08,ABBV,gross_profit,2015-12-31,,0001047469-16-010239,export,export,derived - value 18359000000.0000: no parts
+P08,ABBV,gross_profit,2016-12-31,,0001551152-19-000008,export,export,derived - value 19806000000: no parts
+P08,ABBV,gross_profit,2017-12-31,,0001551152-19-000008,export,export,derived - value 21174000000: no parts
+P08,ABBV,gross_profit,2018-12-31,,0001551152-19-000008,export,export,derived - value 25035000000.0000: no parts
+P08,ABBV,gross_profit,2019-12-31,,0001551152-20-000007,export,export,derived - value 25827000000.0000: no parts
+P08,ABBV,total_liabilities,2015-12-31,,0001047469-16-010239,export,export,derived - value 49105000000: no parts
+P08,ABBV,total_liabilities,2016-12-31,,0001551152-17-000004,export,export,derived - value 61463000000: no parts
+P08,ABBV,total_liabilities,2017-12-31,,0001551152-18-000014,export,export,derived - value 65689000000: no parts
+P08,ABBV,total_liabilities,2018-12-31,,0001551152-19-000008,export,export,derived - value 67798000000: no parts
+P08,ABBV,total_liabilities,2019-12-31,,0001551152-20-000007,export,export,derived - value 97287000000: no parts
+P08,ABBV,total_liabilities,2020-12-31,,0001551152-21-000008,export,export,derived - value 137468000000: no parts
+P08,ABBV,total_liabilities,2021-12-31,,0001551152-22-000007,export,export,derived - value 131093000000: no parts
+P08,ABBV,total_liabilities,2022-12-31,,0001551152-23-000011,export,export,derived - value 121518000000: no parts
+P08,ABBV,total_liabilities,2023-12-31,,0001551152-24-000011,export,export,derived - value 124314000000: no parts
+P08,ABBV,total_liabilities,2024-12-31,,0001551152-25-000020,export,export,derived - value 131797000000: no parts
+P08,ABBV,total_liabilities,2025-12-31,,0001551152-26-000008,export,export,derived - value 137188000000: no parts
+P08,ABT,gross_profit,2015-12-31,,0001047469-16-010246,export,export,derived - value 11658000000.0000: no parts
+P08,ABT,gross_profit,2016-12-31,,0001047469-19-000624,export,export,derived - value 11759000000: no parts
+P08,ABT,gross_profit,2018-12-31,,0001047469-19-000624,export,export,derived - value 17872000000.0000: no parts
+P08,ABT,gross_profit,2019-12-31,,0001104659-20-023904,export,export,derived - value 18673000000.0000: no parts
+P08,ABT,gross_profit,2020-12-31,,0001104659-21-025751,export,export,derived - value 19605000000: no parts
+P08,ABT,gross_profit,2021-12-31,,0001104659-22-025141,export,export,derived - value 24538000000: no parts
+P08,ABT,gross_profit,2022-12-31,,0001628280-23-004026,export,export,derived - value 24511000000: no parts
+P08,ABT,gross_profit,2023-12-31,,0001628280-24-005348,export,export,derived - value 22134000000: no parts
+P08,ABT,gross_profit,2024-12-31,,0001628280-25-007110,export,export,derived - value 23244000000: no parts
+P08,ABT,gross_profit,2025-12-31,,0001628280-26-010185,export,export,derived - value 25009000000: no parts
+P08,ABT,total_liabilities,2015-12-31,,0001047469-16-010246,export,export,derived - value 19921000000: no parts
+P08,ABT,total_liabilities,2016-12-31,,0001047469-17-000744,export,export,derived - value 31949000000: no parts
+P08,ABT,total_liabilities,2017-12-31,,0001047469-18-000856,export,export,derived - value 45152000000: no parts
+P08,ABT,total_liabilities,2018-12-31,,0001047469-19-000624,export,export,derived - value 36451000000: no parts
+P08,ABT,total_liabilities,2019-12-31,,0001104659-20-023904,export,export,derived - value 36586000000: no parts
+P08,ABT,total_liabilities,2020-12-31,,0001104659-21-025751,export,export,derived - value 39545000000: no parts
+P08,ABT,total_liabilities,2021-12-31,,0001104659-22-025141,export,export,derived - value 39172000000: no parts
+P08,ABT,total_liabilities,2022-12-31,,0001628280-23-004026,export,export,derived - value 37533000000: no parts
+P08,ABT,total_liabilities,2023-12-31,,0001628280-24-005348,export,export,derived - value 34387000000: no parts
+P08,ABT,total_liabilities,2024-12-31,,0001628280-25-007110,export,export,derived - value 33513000000: no parts
+P08,ABT,total_liabilities,2025-12-31,,0001628280-26-010185,export,export,derived - value 33942000000: no parts
+P08,ACN,gross_profit,2015-08-31,,0001467373-15-000457,export,export,derived - value 9809239000.0000: no parts
+P08,ACN,gross_profit,2016-08-31,,0001467373-16-001080,export,export,derived - value 10277427000.0000: no parts
+P08,ACN,gross_profit,2017-08-31,,0001467373-19-000339,export,export,derived - value 11071492000: no parts
+P08,ACN,gross_profit,2018-08-31,,0001467373-20-000376,export,export,derived - value 12493364000: no parts
+P08,ACN,gross_profit,2021-08-31,,0001467373-21-000229,export,export,derived - value 16364128000.0000: no parts
+P08,ACN,gross_profit,2022-08-31,,0001467373-22-000295,export,export,derived - value 19701539000.0000: no parts
+P08,ACN,gross_profit,2023-08-31,,0001467373-23-000324,export,export,derived - value 20731607000.0000: no parts
+P08,ACN,gross_profit,2024-08-31,,0001467373-24-000278,export,export,derived - value 21162317000.0000: no parts
+P08,ACN,gross_profit,2025-08-31,,0001467373-25-000217,export,export,derived - value 22235401000.0000: no parts
+P08,ACN,gross_profit,2026-08-31,,0001467373-26-000049,export,export,derived - value 23775598000.0000: no parts
+P08,ACN,total_liabilities,2016-08-31,,0001467373-16-001080,export,export,derived - value 12419628000: no parts
+P08,ACN,total_liabilities,2017-08-31,,0001467373-17-000430,export,export,derived - value 12979690000: no parts
+P08,ACN,total_liabilities,2018-08-31,,0001467373-18-000318,export,export,derived - value 13724495000: no parts
+P08,ACN,total_liabilities,2019-08-31,,0001467373-19-000339,export,export,derived - value 14962189000: no parts
+P08,ACN,total_liabilities,2020-08-31,,0001467373-20-000376,export,export,derived - value 19579420000: no parts
+P08,ACN,total_liabilities,2021-08-31,,0001467373-21-000229,export,export,derived - value 23078729000: no parts
+P08,ACN,total_liabilities,2022-08-31,,0001467373-22-000295,export,export,derived - value 24516302000: no parts
+P08,ACN,total_liabilities,2023-08-31,,0001467373-23-000324,export,export,derived - value 24786712000: no parts
+P08,ACN,total_liabilities,2024-08-31,,0001467373-24-000278,export,export,derived - value 26764115000: no parts
+P08,ACN,total_liabilities,2025-08-31,,0001467373-25-000217,export,export,derived - value 33153930000: no parts
+P08,ACN,total_liabilities,2026-08-31,,0001467373-26-000049,export,export,derived - value 40340676000: no parts
+P08,AMD,total_liabilities,2015-12-26,,0000002488-17-000043,export,export,derived - value 3496000000: no parts
+P08,AMD,total_liabilities,2017-12-30,,0000002488-19-000011,export,export,derived - value 2956000000: no parts
+P08,AMD,total_liabilities,2018-12-29,,0000002488-19-000011,export,export,derived - value 3290000000: no parts
+P08,AMD,total_liabilities,2019-12-28,,0000002488-20-000008,export,export,derived - value 3201000000: no parts
+P08,AMD,total_liabilities,2020-12-26,,0001628280-21-001185,export,export,derived - value 3125000000: no parts
+P08,AMD,total_liabilities,2021-12-25,,0000002488-22-000016,export,export,derived - value 4922000000: no parts
+P08,AMD,total_liabilities,2022-12-31,,0000002488-23-000047,export,export,derived - value 12830000000: no parts
+P08,AMD,total_liabilities,2023-12-30,,0000002488-24-000012,export,export,derived - value 11993000000: no parts
+P08,AMD,total_liabilities,2024-12-28,,0000002488-25-000012,export,export,derived - value 11658000000: no parts
+P08,AMD,total_liabilities,2025-12-27,,0000002488-26-000018,export,export,derived - value 13927000000: no parts
+P08,AMGN,gross_profit,2015-12-31,,0000318154-16-000031,export,export,derived - value 17435000000: no parts
+P08,AMGN,gross_profit,2018-12-31,,0000318154-19-000008,export,export,derived - value 19646000000: no parts
+P08,AMGN,gross_profit,2021-12-31,,0000318154-22-000010,export,export,derived - value 19525000000: no parts
+P08,AMGN,gross_profit,2022-12-31,,0000318154-23-000017,export,export,derived - value 19917000000: no parts
+P08,AMGN,gross_profit,2023-12-31,,0000318154-24-000011,export,export,derived - value 19739000000: no parts
+P08,AMGN,gross_profit,2024-12-31,,0000318154-25-000010,export,export,derived - value 20566000000: no parts
+P08,AMGN,gross_profit,2025-12-31,,0000318154-26-000010,export,export,derived - value 24714000000: no parts
+P08,AMGN,total_liabilities,2016-12-31,,0000318154-17-000004,export,export,derived - value 47751000000: no parts
+P08,AMGN,total_liabilities,2017-12-31,,0000318154-18-000004,export,export,derived - value 54713000000: no parts
+P08,AMGN,total_liabilities,2018-12-31,,0000318154-19-000008,export,export,derived - value 53916000000: no parts
+P08,AMGN,total_liabilities,2019-12-31,,0000318154-20-000017,export,export,derived - value 50034000000: no parts
+P08,AMGN,total_liabilities,2020-12-31,,0000318154-21-000010,export,export,derived - value 53539000000: no parts
+P08,AMGN,total_liabilities,2021-12-31,,0000318154-22-000010,export,export,derived - value 54465000000: no parts
+P08,AMGN,total_liabilities,2022-12-31,,0000318154-23-000017,export,export,derived - value 61460000000: no parts
+P08,AMGN,total_liabilities,2023-12-31,,0000318154-24-000011,export,export,derived - value 90922000000: no parts
+P08,AMGN,total_liabilities,2024-12-31,,0000318154-25-000010,export,export,derived - value 85962000000: no parts
+P08,AMGN,total_liabilities,2025-12-31,,0000318154-26-000010,export,export,derived - value 81928000000: no parts
+P08,AMZN,gross_profit,2015-12-31,,0001018724-16-000172,export,export,derived - value 35355000000.0000: no parts
+P08,AMZN,gross_profit,2016-12-31,,0001018724-19-000004,export,export,derived - value 47722000000: no parts
+P08,AMZN,gross_profit,2017-12-31,,0001018724-19-000004,export,export,derived - value 65932000000: no parts
+P08,AMZN,gross_profit,2018-12-31,,0001018724-19-000004,export,export,derived - value 93731000000.0000: no parts
+P08,AMZN,gross_profit,2019-12-31,,0001018724-20-000004,export,export,derived - value 114986000000.0000: no parts
+P08,AMZN,gross_profit,2020-12-31,,0001018724-21-000004,export,export,derived - value 152757000000.0000: no parts
+P08,AMZN,gross_profit,2021-12-31,,0001018724-22-000005,export,export,derived - value 197478000000: no parts
+P08,AMZN,gross_profit,2022-12-31,,0001018724-23-000004,export,export,derived - value 225152000000: no parts
+P08,AMZN,gross_profit,2023-12-31,,0001018724-24-000008,export,export,derived - value 270046000000: no parts
+P08,AMZN,gross_profit,2024-12-31,,0001018724-25-000004,export,export,derived - value 311671000000: no parts
+P08,AMZN,gross_profit,2025-12-31,,0001018724-26-000004,export,export,derived - value 360510000000: no parts
+P08,AMZN,total_liabilities,2015-12-31,,0001018724-17-000011,export,export,derived - value 51363000000: no parts
+P08,AMZN,total_liabilities,2016-12-31,,0001018724-17-000011,export,export,derived - value 64117000000: no parts
+P08,AMZN,total_liabilities,2017-12-31,,0001018724-18-000005,export,export,derived - value 103601000000: no parts
+P08,AMZN,total_liabilities,2018-12-31,,0001018724-19-000004,export,export,derived - value 119099000000: no parts
+P08,AMZN,total_liabilities,2019-12-31,,0001018724-20-000004,export,export,derived - value 163188000000: no parts
+P08,AMZN,total_liabilities,2020-12-31,,0001018724-21-000004,export,export,derived - value 227791000000: no parts
+P08,AMZN,total_liabilities,2021-12-31,,0001018724-22-000005,export,export,derived - value 282304000000: no parts
+P08,AMZN,total_liabilities,2022-12-31,,0001018724-23-000004,export,export,derived - value 316632000000: no parts
+P08,AMZN,total_liabilities,2023-12-31,,0001018724-24-000008,export,export,derived - value 325979000000: no parts
+P08,AMZN,total_liabilities,2024-12-31,,0001018724-25-000004,export,export,derived - value 338924000000: no parts
+P08,AMZN,total_liabilities,2025-12-31,,0001018724-26-000004,export,export,derived - value 406977000000: no parts
+P08,BA,total_liabilities,2015-12-31,,0000012927-16-000099,export,export,derived - value 88011000000: no parts
+P08,BA,total_liabilities,2016-12-31,,0000012927-17-000006,export,export,derived - value 89120000000: no parts
+P08,BA,total_liabilities,2017-12-31,,0000012927-19-000010,export,export,derived - value 110649000000: no parts
+P08,BA,total_liabilities,2018-12-31,,0000012927-19-000010,export,export,derived - value 116949000000: no parts
+P08,BMY,gross_profit,2016-12-31,,0000014272-19-000047,export,export,derived - value 14458000000: no parts
+P08,BMY,gross_profit,2021-12-31,,0000014272-22-000051,export,export,derived - value 36445000000: no parts
+P08,BMY,gross_profit,2022-12-31,,0000014272-23-000046,export,export,derived - value 36022000000: no parts
+P08,BMY,gross_profit,2023-12-31,,0000014272-24-000044,export,export,derived - value 34313000000: no parts
+P08,BMY,gross_profit,2024-12-31,,0000014272-25-000039,export,export,derived - value 34332000000: no parts
+P08,BMY,gross_profit,2025-12-31,,0000014272-26-000004,export,export,derived - value 34258000000: no parts
+P08,CAT,gross_profit,2018-12-31,,0000018230-19-000034,export,export,derived - value 17725000000.0000: no parts
+P08,CAT,gross_profit,2019-12-31,,0000018230-20-000056,export,export,derived - value 17170000000.0000: no parts
+P08,CAT,gross_profit,2020-12-31,,0000018230-21-000063,export,export,derived - value 12666000000.0000: no parts
+P08,CAT,gross_profit,2021-12-31,,0000018230-22-000050,export,export,derived - value 15458000000: no parts
+P08,CAT,gross_profit,2022-12-31,,0000018230-23-000011,export,export,derived - value 18077000000: no parts
+P08,CAT,gross_profit,2023-12-31,,0000018230-24-000009,export,export,derived - value 24293000000: no parts
+P08,CAT,gross_profit,2024-12-31,,0000018230-25-000008,export,export,derived - value 24610000000: no parts
+P08,CAT,gross_profit,2025-12-31,,0000018230-26-000008,export,export,derived - value 22837000000: no parts
+P08,COP,gross_profit,2016-12-31,,0001193125-19-043841,export,export,derived - value 13699000000: no parts
+P08,COP,gross_profit,2017-12-31,,0001193125-19-043841,export,export,derived - value 16631000000: no parts
+P08,COP,gross_profit,2018-12-31,,0001193125-19-043841,export,export,derived - value 22123000000: no parts
+P08,COP,gross_profit,2019-12-31,,0001193125-20-039954,export,export,derived - value 20725000000: no parts
+P08,COP,gross_profit,2022-12-31,,0001163165-23-000006,export,export,derived - value 44523000000: no parts
+P08,COP,gross_profit,2023-12-31,,0001163165-24-000010,export,export,derived - value 34166000000: no parts
+P08,COP,gross_profit,2024-12-31,,0001163165-25-000012,export,export,derived - value 34733000000: no parts
+P08,COP,gross_profit,2025-12-31,,0001163165-26-000009,export,export,derived - value 36619000000: no parts
+P08,CVX,gross_profit,2018-12-31,,0000093410-19-000008,export,export,derived - value 64324000000: no parts
+P08,CVX,gross_profit,2019-12-31,,0000093410-20-000010,export,export,derived - value 59752000000: no parts
+P08,CVX,gross_profit,2022-12-31,,0000093410-23-000009,export,export,derived - value 90301000000: no parts
+P08,CVX,gross_profit,2023-12-31,,0000093410-24-000013,export,export,derived - value 77717000000: no parts
+P08,CVX,gross_profit,2024-12-31,,0000093410-25-000009,export,export,derived - value 74208000000: no parts
+P08,CVX,gross_profit,2025-12-31,,0000093410-26-000078,export,export,derived - value 76218000000: no parts
+P08,DHR,total_liabilities,2015-12-31,,0000313616-16-000145,export,export,derived - value 24458200000: no parts
+P08,DHR,total_liabilities,2016-12-31,,0000313616-17-000066,export,export,derived - value 22218500000: no parts
+P08,DHR,total_liabilities,2017-12-31,,0000313616-18-000038,export,export,derived - value 20280800000: no parts
+P08,DHR,total_liabilities,2019-12-31,,0000313616-20-000142,export,export,derived - value 31799700000: no parts
+P08,DHR,total_liabilities,2020-12-31,,0000313616-21-000045,export,export,derived - value 36384000000: no parts
+P08,DHR,total_liabilities,2021-12-31,,0000313616-22-000061,export,export,derived - value 38007000000: no parts
+P08,DHR,total_liabilities,2022-12-31,,0000313616-23-000087,export,export,derived - value 34260000000: no parts
+P08,DHR,total_liabilities,2023-12-31,,0000313616-24-000052,export,export,derived - value 30998000000: no parts
+P08,DHR,total_liabilities,2024-12-31,,0000313616-25-000043,export,export,derived - value 27992000000: no parts
+P08,DHR,total_liabilities,2025-12-31,,0000313616-26-000062,export,export,derived - value 30923000000: no parts
+P08,ETN,gross_profit,2016-12-31,,0001551182-19-000045,export,export,derived - value 6351000000: no parts
+P08,ETN,gross_profit,2018-12-31,,0001551182-19-000045,export,export,derived - value 7098000000: no parts
+P08,ETN,gross_profit,2019-12-31,,0001551182-20-000050,export,export,derived - value 7052000000: no parts
+P08,ETN,gross_profit,2020-12-31,,0001551182-21-000022,export,export,derived - value 5450000000: no parts
+P08,ETN,gross_profit,2021-12-31,,0001551182-22-000004,export,export,derived - value 6335000000: no parts
+P08,ETN,gross_profit,2022-12-31,,0001551182-23-000004,export,export,derived - value 6887000000: no parts
+P08,ETN,gross_profit,2023-12-31,,0001551182-24-000006,export,export,derived - value 8434000000: no parts
+P08,ETN,gross_profit,2024-12-31,,0001551182-25-000006,export,export,derived - value 9503000000: no parts
+P08,ETN,gross_profit,2025-12-31,,0001551182-26-000007,export,export,derived - value 10317000000: no parts
+P08,ETN,total_liabilities,2016-12-31,,0001551182-18-000074,export,export,derived - value 15478000000: no parts
+P08,ETN,total_liabilities,2017-12-31,,0001551182-18-000074,export,export,derived - value 15333000000: no parts
+P08,ETN,total_liabilities,2018-12-31,,0001551182-19-000045,export,export,derived - value 14950000000: no parts
+P08,ETN,total_liabilities,2019-12-31,,0001551182-20-000050,export,export,derived - value 16672000000: no parts
+P08,ETN,total_liabilities,2020-12-31,,0001551182-21-000022,export,export,derived - value 16851000000: no parts
+P08,ETN,total_liabilities,2021-12-31,,0001551182-22-000004,export,export,derived - value 17576000000: no parts
+P08,ETN,total_liabilities,2022-12-31,,0001551182-23-000004,export,export,derived - value 17939000000: no parts
+P08,ETN,total_liabilities,2023-12-31,,0001551182-24-000006,export,export,derived - value 19363000000: no parts
+P08,ETN,total_liabilities,2024-12-31,,0001551182-25-000006,export,export,derived - value 19850000000: no parts
+P08,ETN,total_liabilities,2025-12-31,,0001551182-26-000007,export,export,derived - value 21782000000: no parts
+P08,GE,gross_profit,2015-12-31,,0000040545-16-000145,export,export,derived - value 55253000000: no parts
+P08,GE,gross_profit,2016-12-31,,0000040545-17-000010,export,export,derived - value 57247000000: no parts
+P08,GE,gross_profit,2017-12-31,,0000040545-18-000014,export,export,derived - value 56140000000: no parts
+P08,GE,gross_profit,2024-12-31,,0000040545-25-000015,export,export,derived - value 14394000000.0000: no parts
+P08,GE,gross_profit,2025-12-31,,0000040545-26-000008,export,export,derived - value 16887000000.0000: no parts
+P08,GILD,gross_profit,2015-12-31,,0000882095-16-000039,export,export,derived - value 28633000000.0000: no parts
+P08,GILD,gross_profit,2016-12-31,,0000882095-19-000006,export,export,derived - value 26129000000: no parts
+P08,GILD,gross_profit,2017-12-31,,0000882095-19-000006,export,export,derived - value 21736000000: no parts
+P08,GILD,gross_profit,2018-12-31,,0000882095-19-000006,export,export,derived - value 17274000000: no parts
+P08,GILD,gross_profit,2019-12-31,,0000882095-20-000006,export,export,derived - value 17774000000: no parts
+P08,GILD,gross_profit,2020-12-31,,0000882095-21-000008,export,export,derived - value 20117000000: no parts
+P08,GILD,gross_profit,2021-12-31,,0000882095-22-000007,export,export,derived - value 20704000000: no parts
+P08,GILD,gross_profit,2022-12-31,,0000882095-23-000007,export,export,derived - value 21624000000: no parts
+P08,GILD,gross_profit,2023-12-31,,0000882095-24-000007,export,export,derived - value 20618000000: no parts
+P08,GILD,gross_profit,2024-12-31,,0000882095-25-000006,export,export,derived - value 22503000000: no parts
+P08,GILD,gross_profit,2025-12-31,,0000882095-26-000006,export,export,derived - value 23209000000: no parts
+P08,GILD,total_liabilities,2015-12-31,,0000882095-17-000006,export,export,derived - value 32601000000: no parts
+P08,GILD,total_liabilities,2016-12-31,,0000882095-17-000006,export,export,derived - value 37614000000: no parts
+P08,GILD,total_liabilities,2017-12-31,,0000882095-18-000008,export,export,derived - value 49782000000: no parts
+P08,GILD,total_liabilities,2018-12-31,,0000882095-19-000006,export,export,derived - value 42141000000: no parts
+P08,GILD,total_liabilities,2019-12-31,,0000882095-20-000006,export,export,derived - value 38977000000: no parts
+P08,GILD,total_liabilities,2020-12-31,,0000882095-21-000008,export,export,derived - value 50186000000: no parts
+P08,GILD,total_liabilities,2021-12-31,,0000882095-22-000007,export,export,derived - value 46888000000: no parts
+P08,GILD,total_liabilities,2022-12-31,,0000882095-23-000007,export,export,derived - value 41962000000: no parts
+P08,GILD,total_liabilities,2023-12-31,,0000882095-24-000007,export,export,derived - value 39376000000: no parts
+P08,GILD,total_liabilities,2024-12-31,,0000882095-25-000006,export,export,derived - value 39749000000: no parts
+P08,GILD,total_liabilities,2025-12-31,,0000882095-26-000006,export,export,derived - value 36405000000: no parts
+P08,GOOG,gross_profit,2015-12-31,,0001652044-16-000012,export,export,derived - value 46825000000: no parts
+P08,GOOG,gross_profit,2016-12-31,,0001652044-19-000004,export,export,derived - value 55134000000: no parts
+P08,GOOG,gross_profit,2017-12-31,,0001652044-19-000004,export,export,derived - value 65272000000: no parts
+P08,GOOG,gross_profit,2018-12-31,,0001652044-21-000010,export,export,derived - value 77270000000: no parts
+P08,GOOG,gross_profit,2019-12-31,,0001652044-21-000010,export,export,derived - value 89961000000: no parts
+P08,GOOG,gross_profit,2020-12-31,,0001652044-23-000016,export,export,derived - value 97795000000: no parts
+P08,GOOG,gross_profit,2021-12-31,,0001652044-23-000016,export,export,derived - value 146698000000: no parts
+P08,GOOG,gross_profit,2022-12-31,,0001652044-23-000016,export,export,derived - value 156633000000: no parts
+P08,GOOG,gross_profit,2023-12-31,,0001652044-26-000018,export,export,derived - value 174062000000: no parts
+P08,GOOG,gross_profit,2024-12-31,,0001652044-26-000018,export,export,derived - value 203712000000: no parts
+P08,GOOG,gross_profit,2025-12-31,,0001652044-26-000018,export,export,derived - value 240301000000: no parts
+P08,INTC,total_liabilities,2016-12-31,,0000050863-17-000012,export,export,derived - value 46219000000: no parts
+P08,INTC,total_liabilities,2018-12-29,,0000050863-19-000007,export,export,derived - value 52981000000: no parts
+P08,INTC,total_liabilities,2019-12-28,,0000050863-20-000011,export,export,derived - value 58865000000: no parts
+P08,INTC,total_liabilities,2021-12-25,,0000050863-22-000007,export,export,derived - value 73015000000: no parts
+P08,INTC,total_liabilities,2022-12-31,,0000050863-23-000006,export,export,derived - value 78817000000: no parts
+P08,INTC,total_liabilities,2023-12-30,,0000050863-24-000010,export,export,derived - value 81607000000: no parts
+P08,INTC,total_liabilities,2024-12-28,,0000050863-25-000009,export,export,derived - value 91453000000: no parts
+P08,INTC,total_liabilities,2025-12-27,,0000050863-26-000011,export,export,derived - value 85069000000: no parts
+P08,KLAC,gross_profit,2017-06-30,,0000319201-19-000031,export,export,derived - value 2193799000: no parts
+P08,KLAC,gross_profit,2018-06-30,,0000319201-19-000031,export,export,derived - value 2590660000: no parts
+P08,KLAC,gross_profit,2019-06-30,,0000319201-19-000031,export,export,derived - value 2699527000: no parts
+P08,KLAC,gross_profit,2020-06-30,,0000319201-20-000047,export,export,derived - value 3356863000: no parts
+P08,KLAC,gross_profit,2021-06-30,,0000319201-21-000029,export,export,derived - value 4146569000: no parts
+P08,KLAC,gross_profit,2022-06-30,,0000319201-22-000023,export,export,derived - value 5619442000: no parts
+P08,KLAC,gross_profit,2023-06-30,,0000319201-23-000031,export,export,derived - value 6277749000: no parts
+P08,KLAC,gross_profit,2024-06-30,,0000319201-24-000021,export,export,derived - value 5884174000: no parts
+P08,KLAC,gross_profit,2025-06-30,,0000319201-25-000024,export,export,derived - value 7404295000: no parts
+P08,KLAC,gross_profit,2026-06-30,,0000319201-26-000027,export,export,derived - value 8324416000: no parts
+P08,KO,total_liabilities,2016-12-31,,0000021344-17-000009,export,export,derived - value 64050000000: no parts
+P08,KO,total_liabilities,2017-12-31,,0000021344-18-000008,export,export,derived - value 68919000000: no parts
+P08,KO,total_liabilities,2018-12-31,,0000021344-19-000014,export,export,derived - value 64158000000: no parts
+P08,KO,total_liabilities,2019-12-31,,0000021344-20-000006,export,export,derived - value 65283000000: no parts
+P08,KO,total_liabilities,2020-12-31,,0000021344-21-000008,export,export,derived - value 66012000000: no parts
+P08,KO,total_liabilities,2021-12-31,,0000021344-22-000009,export,export,derived - value 69494000000: no parts
+P08,KO,total_liabilities,2022-12-31,,0000021344-23-000011,export,export,derived - value 66937000000: no parts
+P08,KO,total_liabilities,2023-12-31,,0000021344-24-000009,export,export,derived - value 70223000000: no parts
+P08,KO,total_liabilities,2024-12-31,,0000021344-25-000011,export,export,derived - value 74177000000: no parts
+P08,KO,total_liabilities,2025-12-31,,0001628280-26-010047,export,export,derived - value 70541000000: no parts
+P08,LIN,gross_profit,2016-12-31,,0001628280-19-003050,export,export,derived - value 4679000000: no parts
+P08,LIN,gross_profit,2017-12-31,,0001707925-20-000015,export,export,derived - value 4976000000: no parts
+P08,LIN,gross_profit,2018-12-31,,0001628280-21-003574,export,export,derived - value 5816000000: no parts
+P08,LIN,gross_profit,2019-12-31,,0001707925-20-000015,export,export,derived - value 11584000000.0000: no parts
+P08,LIN,gross_profit,2020-12-31,,0001628280-21-003574,export,export,derived - value 11860000000: no parts
+P08,LIN,gross_profit,2021-12-31,,0001628280-22-004180,export,export,derived - value 13250000000: no parts
+P08,LIN,gross_profit,2022-12-31,,0001628280-23-005434,export,export,derived - value 13914000000: no parts
+P08,LIN,gross_profit,2023-12-31,,0001628280-24-007424,export,export,derived - value 15362000000: no parts
+P08,LIN,gross_profit,2024-12-31,,0001628280-25-007990,export,export,derived - value 15862000000: no parts
+P08,LIN,gross_profit,2025-12-31,,0001628280-26-011430,export,export,derived - value 16597000000: no parts
+P08,LLY,gross_profit,2015-12-31,,0000059478-16-000321,export,export,derived - value 14921500000.0000: no parts
+P08,LLY,gross_profit,2016-12-31,,0000059478-19-000082,export,export,derived - value 15512000000: no parts
+P08,LLY,gross_profit,2017-12-31,,0000059478-20-000057,export,export,derived - value 15526100000: no parts
+P08,LLY,gross_profit,2018-12-31,,0000059478-21-000083,export,export,derived - value 16811600000: no parts
+P08,LLY,gross_profit,2019-12-31,,0000059478-20-000057,export,export,derived - value 17598300000.0000: no parts
+P08,LLY,gross_profit,2020-12-31,,0000059478-21-000083,export,export,derived - value 19056500000: no parts
+P08,LLY,gross_profit,2021-12-31,,0000059478-22-000068,export,export,derived - value 21005600000: no parts
+P08,LLY,gross_profit,2022-12-31,,0000059478-23-000082,export,export,derived - value 21911600000: no parts
+P08,LLY,gross_profit,2025-12-31,,0000059478-26-000013,export,export,derived - value 54127000000: no parts
+P08,LLY,total_liabilities,2015-12-31,,0000059478-16-000321,export,export,derived - value 20978600000: no parts
+P08,LLY,total_liabilities,2016-12-31,,0000059478-17-000098,export,export,derived - value 24725400000: no parts
+P08,LLY,total_liabilities,2017-12-31,,0000059478-18-000089,export,export,derived - value 33313100000: no parts
+P08,LLY,total_liabilities,2018-12-31,,0000059478-19-000082,export,export,derived - value 32999300000: no parts
+P08,LLY,total_liabilities,2019-12-31,,0000059478-20-000057,export,export,derived - value 36587000000: no parts
+P08,LLY,total_liabilities,2020-12-31,,0000059478-21-000083,export,export,derived - value 40807900000: no parts
+P08,LLY,total_liabilities,2021-12-31,,0000059478-22-000068,export,export,derived - value 39651200000: no parts
+P08,LLY,total_liabilities,2022-12-31,,0000059478-23-000082,export,export,derived - value 38714400000: no parts
+P08,LLY,total_liabilities,2023-12-31,,0000059478-24-000065,export,export,derived - value 53142600000: no parts
+P08,LLY,total_liabilities,2025-12-31,,0000059478-26-000013,export,export,derived - value 85941000000: no parts
+P08,MCD,total_liabilities,2015-12-31,,0000063908-16-000103,export,export,derived - value 30850800000: no parts
+P08,MCD,total_liabilities,2016-12-31,,0000063908-17-000017,export,export,derived - value 33228200000: no parts
+P08,MCD,total_liabilities,2017-12-31,,0000063908-18-000010,export,export,derived - value 37071700000: no parts
+P08,MCD,total_liabilities,2018-12-31,,0000063908-19-000010,export,export,derived - value 39069600000: no parts
+P08,MCD,total_liabilities,2019-12-31,,0000063908-20-000022,export,export,derived - value 55721100000: no parts
+P08,MCD,total_liabilities,2020-12-31,,0000063908-21-000013,export,export,derived - value 60451700000: no parts
+P08,MCD,total_liabilities,2021-12-31,,0000063908-22-000011,export,export,derived - value 58455300000: no parts
+P08,MCD,total_liabilities,2025-12-31,,0000063908-26-000035,export,export,derived - value 61306000000: no parts
+P08,META,gross_profit,2015-12-31,,0001326801-16-000043,export,export,derived - value 15061000000: no parts
+P08,META,gross_profit,2016-12-31,,0001326801-19-000009,export,export,derived - value 23849000000: no parts
+P08,META,gross_profit,2017-12-31,,0001326801-19-000009,export,export,derived - value 35199000000: no parts
+P08,META,gross_profit,2018-12-31,,0001326801-19-000009,export,export,derived - value 46483000000: no parts
+P08,META,gross_profit,2019-12-31,,0001326801-20-000013,export,export,derived - value 57927000000: no parts
+P08,META,gross_profit,2020-12-31,,0001326801-21-000014,export,export,derived - value 69273000000: no parts
+P08,META,gross_profit,2021-12-31,,0001326801-22-000018,export,export,derived - value 95280000000: no parts
+P08,META,gross_profit,2022-12-31,,0001326801-23-000013,export,export,derived - value 91360000000: no parts
+P08,META,gross_profit,2023-12-31,,0001326801-24-000012,export,export,derived - value 108943000000: no parts
+P08,META,gross_profit,2024-12-31,,0001326801-25-000017,export,export,derived - value 134340000000: no parts
+P08,META,gross_profit,2025-12-31,,0001628280-26-003942,export,export,derived - value 164791000000: no parts
+P08,MPC,gross_profit,2019-12-31,,0001510295-22-000011,export,export,derived - value 11920000000: no parts
+P08,MPC,gross_profit,2020-12-31,,0001510295-21-000027,export,export,derived - value 4046000000.0000: no parts
+P08,MPC,gross_profit,2021-12-31,,0001510295-22-000011,export,export,derived - value 9975000000: no parts
+P08,MPC,gross_profit,2022-12-31,,0001510295-23-000012,export,export,derived - value 25782000000: no parts
+P08,MPC,gross_profit,2023-12-31,,0001510295-24-000015,export,export,derived - value 19813000000: no parts
+P08,MPC,gross_profit,2024-12-31,,0001510295-25-000012,export,export,derived - value 12624000000: no parts
+P08,MPC,gross_profit,2025-12-31,,0001510295-26-000009,export,export,derived - value 13253000000: no parts
+P08,MRK,gross_profit,2015-12-31,,0000310158-16-000063,export,export,derived - value 24564000000: no parts
+P08,MRK,gross_profit,2016-12-31,,0000310158-19-000014,export,export,derived - value 25777000000: no parts
+P08,MRK,gross_profit,2018-12-31,,0000310158-19-000014,export,export,derived - value 28785000000: no parts
+P08,MRK,gross_profit,2019-12-31,,0000310158-22-000003,export,export,derived - value 27105000000: no parts
+P08,MRK,gross_profit,2020-12-31,,0001628280-23-005061,export,export,derived - value 27900000000: no parts
+P08,MRK,gross_profit,2021-12-31,,0000310158-22-000003,export,export,derived - value 35078000000: no parts
+P08,MRK,gross_profit,2022-12-31,,0001628280-23-005061,export,export,derived - value 41872000000: no parts
+P08,MRK,gross_profit,2023-12-31,,0001628280-24-006850,export,export,derived - value 43989000000: no parts
+P08,MRK,gross_profit,2024-12-31,,0001628280-25-007732,export,export,derived - value 48975000000: no parts
+P08,MRK,gross_profit,2025-12-31,,0000310158-26-000063,export,export,derived - value 48629000000: no parts
+P08,MRK,total_liabilities,2016-12-31,,0000310158-17-000010,export,export,derived - value 55069000000: no parts
+P08,MRK,total_liabilities,2017-12-31,,0000310158-18-000005,export,export,derived - value 53303000000: no parts
+P08,MRK,total_liabilities,2018-12-31,,0000310158-19-000014,export,export,derived - value 55755000000: no parts
+P08,MRK,total_liabilities,2019-12-31,,0000310158-20-000005,export,export,derived - value 58396000000: no parts
+P08,MRK,total_liabilities,2020-12-31,,0000310158-21-000004,export,export,derived - value 66184000000: no parts
+P08,MRK,total_liabilities,2021-12-31,,0000310158-22-000003,export,export,derived - value 67437000000: no parts
+P08,MRK,total_liabilities,2022-12-31,,0001628280-23-005061,export,export,derived - value 63102000000: no parts
+P08,MRK,total_liabilities,2023-12-31,,0001628280-24-006850,export,export,derived - value 69040000000: no parts
+P08,MRK,total_liabilities,2024-12-31,,0001628280-25-007732,export,export,derived - value 70734000000: no parts
+P08,MRK,total_liabilities,2025-12-31,,0000310158-26-000063,export,export,derived - value 84204000000: no parts
+P08,MRVL,gross_profit,2015-01-31,,0001628280-17-002968,export,export,derived - value 1837781000: no parts
+P08,NEE,total_liabilities,2015-12-31,,0000753308-16-000337,export,export,derived - value 59367000000: no parts
+P08,NEE,total_liabilities,2017-12-31,,0000753308-19-000039,export,export,derived - value 68432000000: no parts
+P08,NEE,total_liabilities,2018-12-31,,0000753308-19-000039,export,export,derived - value 65821000000: no parts
+P08,NEM,gross_profit,2016-12-31,,0001558370-19-000806,export,export,derived - value 2942000000: no parts
+P08,NEM,gross_profit,2020-12-31,,0001164727-21-000027,export,export,derived - value 6483000000: no parts
+P08,NEM,gross_profit,2021-12-31,,0001164727-22-000007,export,export,derived - value 6787000000: no parts
+P08,NEM,gross_profit,2022-12-31,,0001164727-23-000011,export,export,derived - value 5447000000: no parts
+P08,NEM,gross_profit,2023-12-31,,0001164727-24-000016,export,export,derived - value 5113000000: no parts
+P08,NEM,gross_profit,2024-12-31,,0001164727-25-000011,export,export,derived - value 9719000000: no parts
+P08,NEM,gross_profit,2025-12-31,,0001164727-26-000010,export,export,derived - value 14584000000: no parts
+P08,NFLX,gross_profit,2015-12-31,,0001628280-18-000941,export,export,derived - value 2188035000: no parts
+P08,NFLX,gross_profit,2018-12-31,,0001065280-19-000043,export,export,derived - value 5826803000: no parts
+P08,NFLX,gross_profit,2019-12-31,,0001065280-20-000040,export,export,derived - value 7716234000.0000: no parts
+P08,NFLX,gross_profit,2020-12-31,,0001065280-21-000040,export,export,derived - value 9719737000.0000: no parts
+P08,NFLX,gross_profit,2021-12-31,,0001065280-22-000036,export,export,derived - value 12365161000: no parts
+P08,NFLX,gross_profit,2022-12-31,,0001065280-23-000035,export,export,derived - value 12447265000: no parts
+P08,NFLX,gross_profit,2023-12-31,,0001065280-24-000030,export,export,derived - value 14007929000: no parts
+P08,NFLX,gross_profit,2024-12-31,,0001065280-25-000044,export,export,derived - value 17962502000: no parts
+P08,NFLX,gross_profit,2025-12-31,,0001065280-26-000034,export,export,derived - value 21907707000: no parts
+P08,ORCL,total_liabilities,2015-05-31,,0001193125-15-235239,export,export,derived - value 61805000000: no parts
+P08,ORCL,total_liabilities,2016-05-31,,0001193125-16-628942,export,export,derived - value 64390000000: no parts
+P08,ORCL,total_liabilities,2017-05-31,,0001193125-17-214833,export,export,derived - value 80745000000: no parts
+P08,ORCL,total_liabilities,2018-05-31,,0001564590-19-023119,export,export,derived - value 90978000000: no parts
+P08,ORCL,total_liabilities,2019-05-31,,0001564590-19-023119,export,export,derived - value 86346000000: no parts
+P08,ORCL,total_liabilities,2020-05-31,,0001564590-20-030125,export,export,derived - value 102721000000: no parts
+P08,ORCL,total_liabilities,2021-05-31,,0001564590-21-033616,export,export,derived - value 125155000000: no parts
+P08,ORCL,total_liabilities,2022-05-31,,0001564590-22-023675,export,export,derived - value 115065000000: no parts
+P08,ORCL,total_liabilities,2023-05-31,,0000950170-23-028914,export,export,derived - value 132828000000: no parts
+P08,ORCL,total_liabilities,2024-05-31,,0000950170-24-075605,export,export,derived - value 131737000000: no parts
+P08,ORCL,total_liabilities,2025-05-31,,0000950170-25-087926,export,export,derived - value 147392000000: no parts
+P08,ORCL,total_liabilities,2026-05-31,,0001193125-26-277521,export,export,derived - value 218703000000: no parts
+P08,PANW,total_liabilities,2015-07-31,,0001327567-15-000027,export,export,derived - value 1279578000: no parts
+P08,PANW,total_liabilities,2016-07-31,,0001327567-17-000027,export,export,derived - value 1963300000: no parts
+P08,PANW,total_liabilities,2017-07-31,,0001327567-17-000027,export,export,derived - value 2568900000: no parts
+P08,PANW,total_liabilities,2018-07-31,,0001327567-19-000032,export,export,derived - value 4788600000: no parts
+P08,PANW,total_liabilities,2019-07-31,,0001327567-19-000032,export,export,derived - value 4690900000: no parts
+P08,PANW,total_liabilities,2020-07-31,,0001327567-20-000032,export,export,derived - value 7245600000: no parts
+P08,PFE,gross_profit,2015-12-31,,0000078003-16-000077,export,export,derived - value 39203000000: no parts
+P08,PFE,gross_profit,2016-12-31,,0000078003-19-000015,export,export,derived - value 40502000000: no parts
+P08,PFE,gross_profit,2018-12-31,,0000078003-21-000038,export,export,derived - value 31838000000: no parts
+P08,PFE,gross_profit,2019-12-31,,0000078003-22-000027,export,export,derived - value 32851000000: no parts
+P08,PFE,gross_profit,2020-12-31,,0000078003-23-000024,export,export,derived - value 33167000000: no parts
+P08,PFE,gross_profit,2024-12-31,,0000078003-25-000054,export,export,derived - value 45776000000: no parts
+P08,PFE,gross_profit,2025-12-31,,0000078003-26-000026,export,export,derived - value 46512000000: no parts
+P08,PG,gross_profit,2017-06-30,,0000080424-19-000050,export,export,derived - value 32420000000: no parts
+P08,PG,gross_profit,2018-06-30,,0000080424-20-000059,export,export,derived - value 32400000000: no parts
+P08,PG,gross_profit,2019-06-30,,0000080424-20-000059,export,export,derived - value 32916000000: no parts
+P08,PG,gross_profit,2020-06-30,,0000080424-20-000059,export,export,derived - value 35700000000: no parts
+P08,PG,gross_profit,2021-06-30,,0000080424-21-000100,export,export,derived - value 39010000000: no parts
+P08,PG,gross_profit,2022-06-30,,0000080424-22-000064,export,export,derived - value 38030000000: no parts
+P08,PG,gross_profit,2023-06-30,,0000080424-23-000073,export,export,derived - value 39246000000: no parts
+P08,PG,gross_profit,2025-06-30,,0000080424-25-000076,export,export,derived - value 43120000000: no parts
+P08,PG,gross_profit,2026-06-30,,0000080424-26-000103,export,export,derived - value 43670000000: no parts
+P08,QCOM,gross_profit,2015-09-27,,0001234452-15-000271,export,export,derived - value 14903000000.0000: no parts
+P08,QCOM,gross_profit,2016-09-25,,0001234452-16-000552,export,export,derived - value 13805000000.0000: no parts
+P08,QCOM,gross_profit,2019-09-29,,0001728949-19-000072,export,export,derived - value 15674000000.0000: no parts
+P08,QCOM,gross_profit,2020-09-27,,0001728949-20-000067,export,export,derived - value 14276000000.0000: no parts
+P08,QCOM,gross_profit,2021-09-26,,0001728949-21-000076,export,export,derived - value 19304000000: no parts
+P08,QCOM,gross_profit,2022-09-25,,0000804328-22-000021,export,export,derived - value 25565000000: no parts
+P08,QCOM,gross_profit,2023-09-24,,0000804328-23-000055,export,export,derived - value 19951000000: no parts
+P08,QCOM,gross_profit,2024-09-29,,0000804328-24-000075,export,export,derived - value 21902000000: no parts
+P08,QCOM,gross_profit,2025-09-28,,0000804328-25-000085,export,export,derived - value 24546000000: no parts
+P08,QCOM,gross_profit,2026-09-27,,0000804328-26-000128,export,export,derived - value 22898000000: no parts
+P08,RTX,gross_profit,2021-12-31,,0000101829-22-000005,export,export,derived - value 12491000000.0000: no parts
+P08,RTX,gross_profit,2022-12-31,,0000101829-23-000009,export,export,derived - value 13668000000.0000: no parts
+P08,RTX,gross_profit,2023-12-31,,0000101829-24-000008,export,export,derived - value 12089000000.0000: no parts
+P08,RTX,gross_profit,2024-12-31,,0000101829-25-000005,export,export,derived - value 15410000000.0000: no parts
+P08,RTX,gross_profit,2025-12-31,,0000101829-26-000006,export,export,derived - value 17789000000.0000: no parts
+P08,SCCO,gross_profit,2020-12-31,,0001558370-21-001894,export,export,derived - value 4055100000: no parts
+P08,SCCO,gross_profit,2021-12-31,,0001558370-22-002968,export,export,derived - value 7039700000: no parts
+P08,SCCO,gross_profit,2022-12-31,,0001558370-23-002328,export,export,derived - value 5398800000: no parts
+P08,SCCO,gross_profit,2023-12-31,,0001558370-24-002119,export,export,derived - value 5208100000: no parts
+P08,SCCO,gross_profit,2024-12-31,,0001558370-25-002017,export,export,derived - value 6592000000: no parts
+P08,SCCO,gross_profit,2025-12-31,,0001104659-26-021492,export,export,derived - value 8060800000: no parts
+P08,SCCO,total_liabilities,2015-12-31,,0001104659-16-100568,export,export,derived - value 7294000000: no parts
+P08,SCCO,total_liabilities,2016-12-31,,0001047469-17-001143,export,export,derived - value 7363400000: no parts
+P08,SCCO,total_liabilities,2017-12-31,,0001047469-18-001211,export,export,derived - value 7630700000: no parts
+P08,SCCO,total_liabilities,2019-12-31,,0001558370-20-001781,export,export,derived - value 9549200000: no parts
+P08,SCCO,total_liabilities,2020-12-31,,0001558370-21-001894,export,export,derived - value 9670500000: no parts
+P08,SCCO,total_liabilities,2021-12-31,,0001558370-22-002968,export,export,derived - value 10089800000: no parts
+P08,SCCO,total_liabilities,2022-12-31,,0001558370-23-002328,export,export,derived - value 9130500000: no parts
+P08,SCCO,total_liabilities,2023-12-31,,0001558370-24-002119,export,export,derived - value 9244100000: no parts
+P08,SCCO,total_liabilities,2024-12-31,,0001558370-25-002017,export,export,derived - value 9475400000: no parts
+P08,SCCO,total_liabilities,2025-12-31,,0001104659-26-021492,export,export,derived - value 10276500000: no parts
+P08,SHOP,total_liabilities,2015-12-31,,0001594805-16-000019,export,export,derived - value 48395000: no parts
+P08,SHOP,total_liabilities,2016-12-31,,0001594805-17-000007,export,export,derived - value 80082000: no parts
+P08,SHOP,total_liabilities,2017-12-31,,0001594805-18-000009,export,export,derived - value 112464000: no parts
+P08,SHOP,total_liabilities,2018-12-31,,0001594805-19-000010,export,export,derived - value 164017000: no parts
+P08,SHOP,total_liabilities,2019-12-31,,0001594805-20-000010,export,export,derived - value 473745000: no parts
+P08,SHOP,total_liabilities,2020-12-31,,0001594805-21-000008,export,export,derived - value 1362182000: no parts
+P08,SHOP,total_liabilities,2022-12-31,,0001594805-24-000007,export,export,derived - value 2518000000: no parts
+P08,SHOP,total_liabilities,2023-12-31,,0001594805-24-000007,export,export,derived - value 2233000000: no parts
+P08,SHOP,total_liabilities,2024-12-31,,0001594805-25-000012,export,export,derived - value 2366000000: no parts
+P08,SHOP,total_liabilities,2025-12-31,,0001594805-26-000007,export,export,derived - value 1716000000: no parts
+P08,SPGI,gross_profit,2016-12-31,,0000064040-19-000059,export,export,derived - value 3888000000: no parts
+P08,SPGI,gross_profit,2023-12-31,,0000064040-24-000071,export,export,derived - value 8356000000: no parts
+P08,SPGI,gross_profit,2024-12-31,,0000064040-26-000013,export,export,derived - value 9847000000: no parts
+P08,SPGI,gross_profit,2025-12-31,,0000064040-26-000013,export,export,derived - value 10773000000: no parts
+P08,T,gross_profit,2017-12-31,,0000732717-18-000009,export,export,derived - value 83167000000.0000: no parts
+P08,T,gross_profit,2018-12-31,,0001193125-19-045608,export,export,derived - value 124243000000.0000: no parts
+P08,TMO,gross_profit,2015-12-31,,0000097745-18-000006,export,export,derived - value 7756000000: no parts
+P08,TMO,gross_profit,2018-12-31,,0000097745-19-000007,export,export,derived - value 10857000000.0000: no parts
+P08,TMO,gross_profit,2019-12-31,,0000097745-20-000009,export,export,derived - value 11328000000.0000: no parts
+P08,TMO,gross_profit,2020-12-31,,0000097745-21-000011,export,export,derived - value 16004000000.0000: no parts
+P08,TMO,gross_profit,2021-12-31,,0000097745-22-000011,export,export,derived - value 19638000000.0000: no parts
+P08,TMO,gross_profit,2022-12-31,,0000097745-23-000008,export,export,derived - value 18971000000.0000: no parts
+P08,TMO,gross_profit,2023-12-31,,0000097745-24-000007,export,export,derived - value 17100000000.0000: no parts
+P08,TMO,gross_profit,2024-12-31,,0000097745-25-000010,export,export,derived - value 17702000000.0000: no parts
+P08,TMO,gross_profit,2025-12-31,,0000097745-26-000018,export,export,derived - value 18238000000.0000: no parts
+P08,TMO,total_liabilities,2015-12-31,,0000097745-17-000007,export,export,derived - value 19484100000: no parts
+P08,TMO,total_liabilities,2016-12-31,,0000097745-18-000006,export,export,derived - value 24368000000: no parts
+P08,TMO,total_liabilities,2017-12-31,,0000097745-18-000006,export,export,derived - value 31256000000: no parts
+P08,TMO,total_liabilities,2018-12-31,,0000097745-19-000007,export,export,derived - value 28646000000: no parts
+P08,TMO,total_liabilities,2019-12-31,,0000097745-20-000009,export,export,derived - value 28706000000: no parts
+P08,TMO,total_liabilities,2020-12-31,,0000097745-21-000011,export,export,derived - value 34545000000: no parts
+P08,TMO,total_liabilities,2021-12-31,,0000097745-22-000011,export,export,derived - value 54146000000: no parts
+P08,TMO,total_liabilities,2022-12-31,,0000097745-23-000008,export,export,derived - value 53006000000: no parts
+P08,TMO,total_liabilities,2023-12-31,,0000097745-24-000007,export,export,derived - value 51884000000: no parts
+P08,TMO,total_liabilities,2024-12-31,,0000097745-25-000010,export,export,derived - value 47650000000: no parts
+P08,TMO,total_liabilities,2025-12-31,,0000097745-26-000018,export,export,derived - value 56806000000: no parts
+P08,TMUS,gross_profit,2023-12-31,,0001283699-24-000008,export,export,derived - value 48370000000.0000: no parts
+P08,TMUS,gross_profit,2024-12-31,,0001283699-25-000012,export,export,derived - value 51747000000.0000: no parts
+P08,TMUS,gross_profit,2025-12-31,,0001283699-26-000010,export,export,derived - value 55535000000.0000: no parts
+P08,TMUS,total_liabilities,2016-12-31,,0001283699-17-000010,export,export,derived - value 47655000000: no parts
+P08,TMUS,total_liabilities,2017-12-31,,0001283699-18-000011,export,export,derived - value 48004000000: no parts
+P08,TMUS,total_liabilities,2018-12-31,,0001283699-19-000015,export,export,derived - value 47750000000: no parts
+P08,TMUS,total_liabilities,2019-12-31,,0001283699-20-000026,export,export,derived - value 58132000000: no parts
+P08,TMUS,total_liabilities,2020-12-31,,0001283699-21-000039,export,export,derived - value 134818000000: no parts
+P08,TMUS,total_liabilities,2021-12-31,,0001283699-22-000018,export,export,derived - value 137461000000: no parts
+P08,TMUS,total_liabilities,2022-12-31,,0001283699-23-000016,export,export,derived - value 141682000000: no parts
+P08,TMUS,total_liabilities,2023-12-31,,0001283699-24-000008,export,export,derived - value 142967000000: no parts
+P08,TMUS,total_liabilities,2024-12-31,,0001283699-25-000012,export,export,derived - value 146294000000: no parts
+P08,TMUS,total_liabilities,2025-12-31,,0001283699-26-000010,export,export,derived - value 160034000000: no parts
+P08,UBER,gross_profit,2017-12-31,,0001543151-20-000010,export,export,derived - value 3772000000: no parts
+P08,UBER,gross_profit,2018-12-31,,0001543151-21-000014,export,export,derived - value 5647000000: no parts
+P08,UBER,gross_profit,2019-12-31,,0001543151-22-000008,export,export,derived - value 6939000000: no parts
+P08,UBER,gross_profit,2020-12-31,,0001543151-21-000014,export,export,derived - value 5985000000: no parts
+P08,UBER,gross_profit,2021-12-31,,0001543151-22-000008,export,export,derived - value 8104000000: no parts
+P08,UBER,gross_profit,2022-12-31,,0001543151-23-000010,export,export,derived - value 12218000000: no parts
+P08,UBER,gross_profit,2023-12-31,,0001543151-24-000012,export,export,derived - value 14824000000: no parts
+P08,UBER,gross_profit,2024-12-31,,0001543151-25-000008,export,export,derived - value 17327000000: no parts
+P08,UBER,gross_profit,2025-12-31,,0001543151-26-000015,export,export,derived - value 20679000000: no parts
+P08,UNH,gross_profit,2015-12-31,,0000731766-16-000058,export,export,derived - value 140901000000: no parts
+P08,UNH,gross_profit,2018-12-31,,0000731766-19-000005,export,export,derived - value 199249000000: no parts
+P08,UNH,gross_profit,2019-12-31,,0000731766-20-000006,export,export,derived - value 214038000000: no parts
+P08,UNH,gross_profit,2020-12-31,,0000731766-21-000013,export,export,derived - value 226396000000: no parts
+P08,UNH,gross_profit,2021-12-31,,0000731766-22-000008,export,export,derived - value 256563000000: no parts
+P08,UNH,gross_profit,2022-12-31,,0000731766-23-000008,export,export,derived - value 290459000000: no parts
+P08,UNH,gross_profit,2023-12-31,,0000731766-24-000081,export,export,derived - value 332852000000: no parts
+P08,UNH,gross_profit,2024-12-31,,0000731766-25-000063,export,export,derived - value 353584000000: no parts
+P08,UNH,gross_profit,2025-12-31,,0000731766-26-000062,export,export,derived - value 396912000000: no parts
+P08,VLO,gross_profit,2018-12-31,,0001035002-19-000008,export,export,derived - value 5594000000.0000: no parts
+P08,VLO,gross_profit,2019-12-31,,0001035002-20-000007,export,export,derived - value 4778000000.0000: no parts
+P08,VLO,gross_profit,2020-12-31,,0001035002-21-000051,export,export,derived - value -740000000.0000: no parts
+P08,VLO,gross_profit,2021-12-31,,0001035002-22-000007,export,export,derived - value 3129000000: no parts
+P08,VLO,gross_profit,2022-12-31,,0001035002-23-000027,export,export,derived - value 16796000000: no parts
+P08,VLO,gross_profit,2023-12-31,,0001035002-24-000007,export,export,derived - value 12932000000: no parts
+P08,VLO,gross_profit,2024-12-31,,0001035002-25-000005,export,export,derived - value 4805000000: no parts
+P08,VLO,gross_profit,2025-12-31,,0001628280-26-011499,export,export,derived - value 5432000000: no parts
+P08,VLO,total_liabilities,2016-12-31,,0001035002-17-000009,export,export,derived - value 25319000000: no parts
+P08,VLO,total_liabilities,2017-12-31,,0001035002-18-000010,export,export,derived - value 27258000000: no parts
+P08,VLO,total_liabilities,2018-12-31,,0001035002-19-000008,export,export,derived - value 27424000000: no parts
+P08,VLO,total_liabilities,2019-12-31,,0001035002-20-000007,export,export,derived - value 31328000000: no parts
+P08,VLO,total_liabilities,2020-12-31,,0001035002-21-000051,export,export,derived - value 32132000000: no parts
+P08,VLO,total_liabilities,2021-12-31,,0001035002-22-000007,export,export,derived - value 38071000000: no parts
+P08,VLO,total_liabilities,2022-12-31,,0001035002-23-000027,export,export,derived - value 35514000000: no parts
+P08,VLO,total_liabilities,2023-12-31,,0001035002-24-000007,export,export,derived - value 34532000000: no parts
+P08,VLO,total_liabilities,2024-12-31,,0001035002-25-000005,export,export,derived - value 32622000000: no parts
+P08,VLO,total_liabilities,2025-12-31,,0001628280-26-011499,export,export,derived - value 31383000000: no parts
+P08,VRTX,gross_profit,2015-12-31,,0000875320-16-000067,export,export,derived - value 915185000.0000: no parts
+P08,VRTX,gross_profit,2016-12-31,,0000875320-19-000006,export,export,derived - value 1491717000: no parts
+P08,VRTX,gross_profit,2018-12-31,,0000875320-19-000006,export,export,derived - value 2638058000.0000: no parts
+P08,VRTX,gross_profit,2021-12-31,,0000875320-22-000007,export,export,derived - value 6670200000: no parts
+P08,VRTX,gross_profit,2022-12-31,,0000875320-23-000007,export,export,derived - value 7850400000: no parts
+P08,VRTX,gross_profit,2023-12-31,,0000875320-24-000062,export,export,derived - value 8607000000: no parts
+P08,VRTX,gross_profit,2024-12-31,,0000875320-25-000053,export,export,derived - value 9489600000: no parts
+P08,VRTX,gross_profit,2025-12-31,,0000875320-26-000056,export,export,derived - value 10350000000: no parts
+P08,VZ,gross_profit,2017-12-31,,0000732712-18-000009,export,export,derived - value 74478000000.0000: no parts
+P08,VZ,gross_profit,2021-12-31,,0000732712-22-000008,export,export,derived - value 77312000000.0000: no parts
+P08,WELL,gross_profit,2019-12-31,,0000766704-20-000015,export,export,derived - value 2431264000.0000: no parts
+P08,WELL,gross_profit,2020-12-31,,0000766704-21-000018,export,export,derived - value 2008144000.0000: no parts
+P08,WELL,gross_profit,2021-12-31,,0000766704-22-000013,export,export,derived - value 1967553000: no parts
+P08,WELL,gross_profit,2022-12-31,,0000766704-23-000010,export,export,derived - value 2301845000: no parts
+P08,WELL,gross_profit,2023-12-31,,0000766704-24-000008,export,export,derived - value 2690219000: no parts
+P08,WELL,gross_profit,2024-12-31,,0000766704-25-000009,export,export,derived - value 3160907000: no parts
+P08,WELL,gross_profit,2025-12-31,,0000766704-26-000010,export,export,derived - value 4349953000: no parts
+P08,WMT,gross_profit,2015-01-31,,0000104169-15-000011,export,export,derived - value 120565000000.0000: no parts
+P08,WMT,gross_profit,2016-01-31,,0000104169-16-000079,export,export,derived - value 121146000000.0000: no parts
+P08,WMT,gross_profit,2017-01-31,,0000104169-17-000021,export,export,derived - value 124617000000.0000: no parts
+P08,WMT,gross_profit,2018-01-31,,0000104169-18-000028,export,export,derived - value 126947000000.0000: no parts
+P08,WMT,gross_profit,2019-01-31,,0000104169-19-000016,export,export,derived - value 129104000000.0000: no parts
+P08,WMT,gross_profit,2020-01-31,,0000104169-20-000011,export,export,derived - value 129359000000.0000: no parts
+P08,WMT,gross_profit,2021-01-31,,0000104169-21-000033,export,export,derived - value 138836000000: no parts
+P08,WMT,gross_profit,2022-01-31,,0000104169-22-000012,export,export,derived - value 143754000000: no parts
+P08,WMT,gross_profit,2023-01-31,,0000104169-23-000020,export,export,derived - value 147568000000: no parts
+P08,WMT,gross_profit,2024-01-31,,0000104169-24-000056,export,export,derived - value 157983000000: no parts
+P08,WMT,gross_profit,2025-01-31,,0000104169-25-000021,export,export,derived - value 169232000000: no parts
+P08,WMT,gross_profit,2026-01-31,,0000104169-26-000055,export,export,derived - value 177768000000: no parts
+P08,WMT,total_liabilities,2015-01-31,,0000104169-16-000079,export,export,derived - value 117553000000: no parts
+P08,WMT,total_liabilities,2016-01-31,,0000104169-16-000079,export,export,derived - value 115970000000: no parts
+P08,WMT,total_liabilities,2017-01-31,,0000104169-17-000021,export,export,derived - value 118290000000: no parts
+P08,WMT,total_liabilities,2018-01-31,,0000104169-18-000028,export,export,derived - value 123700000000: no parts
+P08,WMT,total_liabilities,2019-01-31,,0000104169-19-000016,export,export,derived - value 139661000000: no parts
+P08,WMT,total_liabilities,2020-01-31,,0000104169-20-000011,export,export,derived - value 154943000000: no parts
+P08,WMT,total_liabilities,2021-01-31,,0000104169-21-000033,export,export,derived - value 164965000000: no parts
+P08,WMT,total_liabilities,2022-01-31,,0000104169-22-000012,export,export,derived - value 152969000000: no parts
+P08,WMT,total_liabilities,2023-01-31,,0000104169-23-000020,export,export,derived - value 159206000000: no parts
+P08,WMT,total_liabilities,2024-01-31,,0000104169-24-000056,export,export,derived - value 161828000000: no parts
+P08,WMT,total_liabilities,2025-01-31,,0000104169-25-000021,export,export,derived - value 163131000000: no parts
+P08,WMT,total_liabilities,2026-01-31,,0000104169-26-000055,export,export,derived - value 178488000000: no parts

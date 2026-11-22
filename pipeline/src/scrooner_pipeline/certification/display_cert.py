@@ -1839,3 +1839,72 @@ def check_badges(cells: list[Cell], defs: dict | None = None) -> list[Finding]:
         if why:
             out.append(Finding("badge", *c.key, "FAIL", why))
     return out
+
+
+# ---------------------------------------------------------------- flow self-check (founder 2026-11-22)
+# "Why were these gaps not found before?" The verifier ran only after a company reached 0 OPEN, so each gap class surfaced
+# one company per round trip. The top-100 flow now runs these same checks on every company's export and turns each failure
+# into an OPEN cell carrying the check's reason, so gate_ready means "would pass the verifier's mechanical checks".
+SELF_CHECK_WORK = "verifier_check"
+SELF_CHECK_PREFIX = "verifier self-check"
+
+
+def self_check_findings(run: Run) -> list[Finding]:
+    """Every failure of a certify() run except OPEN cells (already open): gate, badge, hide-class, hidden-row and
+    hidden-year FAILs, and MISMATCH on a drawn, debt or derived-census cell. REVIEW items need the approver's eye and
+    are not mechanical failures; they stay in the report only."""
+    out = [
+        f
+        for f in run.gate + run.hides
+        if f.severity == "FAIL" and not (f.check == "gate" and f.detail == "OPEN cell")
+    ]
+    for kind, checks in (("shown", run.shown), ("derived", run.derived)):
+        out += [
+            Finding(kind, *s.cell.key, "FAIL", f"filing differs: {s.evidence}")
+            for s in checks
+            if s.result == "MISMATCH"
+        ]
+    out += [
+        Finding("debt", *d.cell.key, "FAIL", f"perimeter {d.perimeter}: {d.evidence}")
+        for d in run.debt
+        if d.result == "MISMATCH"
+    ]
+    return out
+
+
+def apply_self_check(
+    rows: list[dict], findings: list[Finding]
+) -> tuple[list[dict], list[Finding]]:
+    """Turn findings into OPEN cells, in place, on one company's export rows (dicts with data_point, fiscal_year,
+    display, hide_class, reason). A finding on a cell opens that cell; a hidden_row finding ('*' year) opens every
+    hidden cell of the row; a company-level finding ('*' data point: source broken) opens nothing and is returned, so
+    the caller marks the company not gate-ready. Returns (opened rows, company-level findings)."""
+    by_key: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for r in rows:
+        by_key[(r["data_point"], str(r["fiscal_year"]))].append(r)
+    opened: dict[int, dict] = {}
+    company: list[Finding] = []
+    for f in findings:
+        if f.data_point == "*":
+            company.append(f)
+            continue
+        if f.fiscal_year == "*":
+            targets = [
+                r
+                for (dp, _), rs in by_key.items()
+                if dp == f.data_point
+                for r in rs
+                if r.get("display") in (HIDDEN_ROW, HIDDEN_YEAR)
+            ]
+        else:
+            targets = by_key.get((f.data_point, f.fiscal_year), [])
+        for r in targets:
+            if r.get("display") == OPEN and id(r) not in opened:
+                continue  # already open for its own reason
+            r["display"] = OPEN
+            if "hide_class" in r:
+                r["hide_class"] = ""
+            why = f"{SELF_CHECK_PREFIX} {f.check}: {f.detail}"
+            r["reason"] = why if not r.get("reason") else f"{why} | {r['reason']}"
+            opened[id(r)] = r
+    return list(opened.values()), company

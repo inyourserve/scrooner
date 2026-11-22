@@ -12,6 +12,13 @@ No SEC downloads: every check reads SEC's Financial Statement and Notes data alr
 Writes OUT/<TICKER>-display-cert-<date>.md (verdict), OUT/<TICKER>-display-cert-<date>-evidence.csv,
 and appends one row to --registry (default data-team/strategy/approvals/registry.csv), printing the
 pooled bound over every company whose latest row is PASS. Exit code 0 PASS, 1 FAIL, 2 REVIEW.
+
+  # top-100 flow self-check (founder 2026-11-22): the same checks on one company's flow export, read-only on the DB;
+  # every failure becomes an OPEN cell with the check's reason in DIR's export, open-shown file and summary row
+  python pipeline/scripts/certify_display.py --self-check-dir RUN/coverage --company-id 1134 --cik 104169
+
+Self-check writes DIR/verifier-self-check-<company_id>.csv (every finding, FAIL and REVIEW), never the registry, and
+exits 0 when the checks ran (opened or not), 3 when they could not run (the company is then marked not gate-ready).
 """
 
 from __future__ import annotations
@@ -49,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--seed", help="default: <TICKER>-<first 12 hex of the coverage file's sha256>"
     )
-    src = ap.add_mutually_exclusive_group(required=True)
+    src = ap.add_mutually_exclusive_group()
     src.add_argument("--live", action="store_true", help="read fsn.* over DATABASE_URL")
     src.add_argument(
         "--bundle", type=Path, help="evidence bundle JSON from the --emit-sql query"
@@ -62,7 +69,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-registry", action="store_true")
     ap.add_argument("--approver", default="Ritwik (cloud)")
     ap.add_argument("--date", default=date.today().isoformat())
+    ap.add_argument(
+        "--self-check-dir",
+        type=Path,
+        help="a top100_coverage output dir: run the checks on --company-id's rows and open every failing cell there",
+    )
+    ap.add_argument("--company-id", help="with --self-check-dir")
     a = ap.parse_args(argv)
+    if a.self_check_dir:
+        if not (a.company_id and a.cik):
+            ap.error("--self-check-dir needs --company-id and --cik")
+        return self_check(a.self_check_dir, a.company_id, a.cik)
+    if not (a.live or a.bundle or a.emit_sql):
+        ap.error("one of --live, --bundle, --emit-sql is required")
     company_id = None
     req = None
     if a.request:
@@ -130,6 +149,121 @@ def main(argv: list[str] | None = None) -> int:
     print(dc.to_json(run))
     print(f"wrote {md}")
     return {"PASS": 0, "FAIL": 1}.get(run.verdict, 2)
+
+
+def _read(path: Path) -> tuple[list[str], list[dict]]:
+    with open(path, newline="") as fh:
+        rd = csv.DictReader(fh)
+        return list(rd.fieldnames or []), list(rd)
+
+
+def _write(path: Path, fields: list[str], rows: list[dict]) -> None:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with open(tmp, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    tmp.replace(path)
+
+
+def self_check(cov_dir: Path, company_id: str, cik: str, source=None) -> int:
+    """Run certify() on one company's rows of cov_dir/top100-coverage.csv and write the failures back as OPEN cells:
+    the export, the newest top100-open-shown-cells-*.csv (rows appended with work=verifier_check) and the summary row
+    (display counts recomputed, gate_ready no when anything opened or the checks could not run)."""
+    cov = cov_dir / "top100-coverage.csv"
+    summ = cov_dir / "top100-coverage-summary.csv"
+    fields, rows = _read(cov)
+    mine = [r for r in rows if r.get("company_id") == str(company_id)]
+    if not mine:
+        print(f"self-check {company_id}: no rows in {cov}")
+        return 3
+    ticker = mine[0]["ticker"]
+    one = cov_dir / f".self-check-{company_id}.csv"
+    _write(one, fields, mine)
+    findings, company, err = [], [], ""
+    try:
+        if source is None:
+            from scrooner_pipeline.db.connection import get_connection
+
+            with get_connection() as conn:
+                conn.read_only = True
+                run = dc.certify(ticker, cik, one, dc.SqlFactSource(conn))
+                conn.rollback()
+        else:
+            run = dc.certify(ticker, cik, one, source)
+        findings = dc.self_check_findings(run)
+        review = [f for f in run.gate + run.hides if f.severity == "REVIEW"] + [
+            dc.Finding(k, *s.cell.key, "REVIEW", s.result + ": " + s.evidence)
+            for k, lst in (("shown", run.shown), ("derived", run.derived))
+            for s in lst
+            if s.result in ("LOCATOR", "NOT_FOUND")
+        ]
+    except Exception as e:  # noqa: BLE001 -- the checks could not run: never a pass
+        err, review = f"{type(e).__name__}: {e}"[:300], []
+    finally:
+        one.unlink(missing_ok=True)
+    opened, company = dc.apply_self_check(mine, findings)
+    with open(cov_dir / f"verifier-self-check-{company_id}.csv", "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(
+            ["ticker", "check", "data_point", "fiscal_year", "severity", "detail"]
+        )
+        for f in findings + review:
+            w.writerow(
+                [ticker, f.check, f.data_point, f.fiscal_year, f.severity, f.detail]
+            )
+        if err:
+            w.writerow([ticker, "error", "*", "*", "FAIL", err])
+    _write(
+        cov, fields, rows
+    )  # `mine` are the same dicts: opened cells are OPEN in the export now
+    opens = sorted(cov_dir.glob("top100-open-shown-cells-*.csv"))
+    if opened and opens:
+        ofields, orows = _read(opens[-1])
+        orows += [{**r, "work": dc.SELF_CHECK_WORK} for r in opened]
+        _write(opens[-1], ofields, orows)
+    if summ.exists():
+        sfields, srows = _read(summ)
+        for s in srows:
+            if s.get("company_id") != str(company_id):
+                continue
+            shown = sum(1 for r in mine if r.get("display") in (dc.SHOWN, dc.OPEN))
+            vals = sum(1 for r in mine if r.get("display") == dc.SHOWN)
+            s.update(
+                shown_cells=str(shown),
+                shown_values=str(vals),
+                open_shown=str(sum(1 for r in mine if r.get("display") == dc.OPEN)),
+                hidden_rows=str(
+                    len(
+                        {
+                            r["data_point"]
+                            for r in mine
+                            if r.get("display") == dc.HIDDEN_ROW
+                        }
+                    )
+                ),
+                hidden_years=str(
+                    sum(1 for r in mine if r.get("display") == dc.HIDDEN_YEAR)
+                ),
+                pct_shown_values=f"{100 * vals / shown:.1f}" if shown else "",
+            )
+            if opened or company or err:
+                s["gate_ready"] = "no"
+                why = (
+                    f"{SELF_NOTE}: {len(opened)} opened"
+                    + (f", {company[0].detail}" if company else "")
+                    + (f", error {err}" if err else "")
+                )
+                s["note"] = f"{s.get('note')}; {why}" if s.get("note") else why
+        _write(summ, sfields, srows)
+    print(
+        f"verifier self-check {ticker}: {len(findings)} failure(s), {len(opened)} cell(s) opened, "
+        f"{len(review)} review item(s){', company-level: ' + company[0].detail if company else ''}{', ERROR ' + err if err else ''}"
+    )
+    return 3 if err else 0
+
+
+SELF_NOTE = "verifier self-check"
 
 
 if __name__ == "__main__":

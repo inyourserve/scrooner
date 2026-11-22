@@ -19,3 +19,8 @@ def test_build_writes_the_library_with_the_db_columns(tmp_path):
     # its data point links to the one definition table (metrics/registry/data_points.csv)
     assert r['standard_definition'].startswith('share_buybacks: ') and 'def:registry/data_points.csv#share_buybacks' in r['links']
     assert r['fallback_badges'].startswith('share_buybacks: as_printed')
+    # open pattern hits (pattern_detectors.py, founder 2026-11-22) reach each element's known_problems and the coverage summary
+    hits = [h for h in csv.DictReader(open(os.path.join(HERE, 'pattern_hits.csv'))) if h['element']]
+    assert set(cov['pattern_hits']) == {p['pattern_id'] for p in csv.DictReader(open(os.path.join(HERE, 'patterns.csv')))}
+    for h in hits[:20]:
+        assert f"pattern {h['pattern_id']} " in by[h['element']]['known_problems'], h

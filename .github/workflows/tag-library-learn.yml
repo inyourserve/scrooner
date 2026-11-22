@@ -6,6 +6,7 @@ name: Tag library learn and rebuild (resolver -> learner -> library, no database
 #   2. instance evidence for total_debt (sec.gov only, 2 requests a second, cached per accession)
 #   3. resolve_all.py on it (version resolver-learn-<date>@<sha>)
 #   4. learn_from_filings.py  -> learned_elements.csv, learned_labels.csv (label candidates, reviewed before use)
+#   4b. pattern_detectors.py  -> pattern_hits.csv (every known gap class counted across all companies; founder 2026-11-22)
 #   5. build_library.py       -> library.csv/json, schema, INDEX.md, browser.html, CHANGELOG.md, coverage.json
 #   6. the library tests, then push data-team/tags/library/ + the resolver csv to branch data/library-<date> (never main)
 # The Tag Expert reviews the branch diff and brings it to main by hand: learned labels never reach the resolver unreviewed.
@@ -75,6 +76,8 @@ jobs:
           python3 ../data-team/tags/line_map/tools/split_resolver.py resolver.csv ../data-team/tags/line_map/resolver
       - name: Learn from the filings
         run: python3 data-team/tags/library/learn_from_filings.py out
+      - name: Pattern detectors (resolver + export detectors; FSN patterns keep their last --live hits)
+        run: python3 data-team/tags/library/pattern_detectors.py | tee out/pattern-summary.txt
       - name: Rebuild the library
         run: python3 data-team/tags/library/build_library.py | tee out/library-summary.json
       - name: Library tests

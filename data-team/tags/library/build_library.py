@@ -8,6 +8,7 @@ Inputs (all in the repo):
   data-team/tags/line_map/tools/resolve_cf.py, resolve_all.py, total_debt.py   element lists in code (imported, never copied)
   data-team/tags/line_map/resolver-all110-*.csv            the newest resolver output: usage, served cells, R pages
   data-team/tags/library/proof_by_tag.csv                  analytics.cell_proof aggregated by shown_tag (refresh: proof_by_tag.sql)
+  data-team/tags/library/patterns.csv, pattern_hits.csv    gap-class registry and its detectors' hits (refresh: pattern_detectors.py)
   data-team/strategy/certification/*-coverage-*.csv        certified cells (class PROVEN in a certification coverage file)
   data-team/tags/library/standard-tag-library.csv, company-overrides.csv, fsn-*.csv, needs-detail-answers-r1r2.csv  (folded in)
   data-team/tags/RULEBOOK.md, data-team/tags/cards/*.md, mind/entries/*.md, data-team/22-FILING-LESSONS-LEDGER.md
@@ -197,6 +198,19 @@ def main():
         e = r.get('tag') or (list(r.values())[1] if len(r) > 1 else '')
         add(e, 'known_problems', f"FSN dropped fact {list(r.values())[0]} (fsn_dropped_facts.csv)")
 
+    # 6b. open pattern hits (pattern_detectors.py -> pattern_hits.csv, registry patterns.csv): every element shows the
+    # gap classes it is caught in, so the tag expert hunts all occurrences instead of waiting for a verifier fail
+    pat_name = {r['pattern_id']: r['name'] for r in rows_of(os.path.join(LIB, 'patterns.csv'))}
+    pat_hits = rows_of(os.path.join(LIB, 'pattern_hits.csv'))
+    by_el = collections.defaultdict(list)
+    for h in pat_hits:
+        if h.get('element'):
+            by_el[(h['element'], h['pattern_id'])].append(h)
+    for (e, pid), hs in sorted(by_el.items()):
+        ex = hs[0]
+        add(e, 'known_problems', f"pattern {pid} {pat_name.get(pid, '')}: {len(hs)} open hit(s) at {len({h['ticker'] for h in hs})} companies, "
+                                 f"e.g. {ex['ticker']} {ex['data_point']} {ex['period_end']} ({ex['layer']}) (pattern_hits.csv)")
+
     # 7. rulebook, tests, functions, cards, mind, ledger: element named in the text
     known = set(lib) | set(tax) | set(dp_of)
     word = re.compile(r'\b([A-Z][A-Za-z0-9]{6,})\b')
@@ -304,7 +318,10 @@ def main():
     cov = dict(built=datetime.date.today().isoformat(), resolver_version=version, rows=len(out),
                rows_with_usage=sum(1 for r in out if r['served_cells']), rows_full=sum(1 for r in out if r['full_row'] == 'yes'),
                taxonomy_elements=len(tax), served_cells=served_total, served_cells_all_elements_full=full,
-               coverage_pct=round(100 * full / served_total, 1) if served_total else 0)
+               coverage_pct=round(100 * full / served_total, 1) if served_total else 0,
+               pattern_hits={p: dict(companies=len({h['ticker'] for h in pat_hits if h['pattern_id'] == p}),
+                                     cells=len({(h['ticker'], h['data_point'], h['period_end'], h['layer']) for h in pat_hits if h['pattern_id'] == p}))
+                             for p in sorted(pat_name)})
 
     # changelog: per-element diff against the previous library.csv
     # library.csv lives in Storage once it is out of git (founder rule 2026-11-20, no generated file over 5 MB in git):

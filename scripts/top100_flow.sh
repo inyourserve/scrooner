@@ -98,6 +98,16 @@ for c in ${(s:,:)IDS}; do
   elif [ $g -ne 0 ]; then HELD[$c]=GUARD_ERROR; fi
 done
 CV=$O/coverage; [ -f $O/coverage_held/top100-coverage-summary.csv ] && CV=$O/coverage_held
+# Verifier self-check (founder 2026-11-22: "why were these gaps not found before?"): the verifier's own checks
+# (certify_display: gate, badges, hide classes, hidden rows/years, drawn + derived + debt cells; read-only on fsn.*) run on
+# every company's export here, not only after it reaches 0 OPEN. Each failure becomes an OPEN cell with the check's reason
+# in $CV (export, open-shown file, summary), so gate_ready below means "would pass the verifier's mechanical checks".
+# Checks that cannot run mark the company not gate-ready (exit 3); the chain itself never stops here.
+for c in ${(s:,:)IDS}; do
+  ck=$(q "select cik from core.company where id = $c")
+  PYTHONPATH=pipeline/src $PY pipeline/scripts/certify_display.py --self-check-dir $CV --company-id $c --cik $ck > $O/selfcheck_$c.txt 2>&1 || tail -2 $O/selfcheck_$c.txt
+  grep "verifier self-check" $O/selfcheck_$c.txt | cut -c1-220
+done
 for c in ${(s:,:)IDS}; do
   line=$(python3 -c "
 import csv
