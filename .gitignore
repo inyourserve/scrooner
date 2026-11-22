@@ -49,3 +49,7 @@ doc/design/*.pdf
 
 # top-100 per-company flow run state (scripts/top100_flow.sh)
 .runs/
+
+# Tag library large outputs live in Storage repo-archive (data-team/strategy/storage-manifest.csv), not git (founder rule 2026-11-20)
+data-team/tags/library/library.csv
+data-team/tags/library/library.json

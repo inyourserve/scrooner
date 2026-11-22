@@ -52,6 +52,14 @@ def j(xs, n=None):
     return ';'.join(xs[:n] if n else xs)
 
 
+def previous_library():
+    """The current library.csv: the repo file, or the storage-manifest version (pipeline common/repo_archive.py)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('repo_archive', os.path.join(ROOT, 'pipeline', 'src', 'scrooner_pipeline', 'common', 'repo_archive.py'))
+    ra = importlib.util.module_from_spec(spec); spec.loader.exec_module(ra)
+    return ra.resolve('data-team/tags/library/library.csv')
+
+
 def main():
     import resolve_all, resolve_cf, total_debt   # the resolver's own lists: imported, never copied
     lib = collections.defaultdict(lambda: collections.defaultdict(list))
@@ -299,7 +307,9 @@ def main():
                coverage_pct=round(100 * full / served_total, 1) if served_total else 0)
 
     # changelog: per-element diff against the previous library.csv
-    prev = {r['element']: r for r in rows_of(os.path.join(LIB, 'library.csv'))}
+    # library.csv lives in Storage once it is out of git (founder rule 2026-11-20, no generated file over 5 MB in git):
+    # the previous version is the manifest's current one (data-team/strategy/storage-manifest.csv)
+    prev = {r['element']: r for r in rows_of(str(previous_library() or os.path.join(LIB, 'library.csv')))}
     changes = []
     for e, r in known_rows.items():
         p = prev.get(e)

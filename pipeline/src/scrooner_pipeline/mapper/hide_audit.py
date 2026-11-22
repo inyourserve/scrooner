@@ -192,6 +192,12 @@ def build_vocab(
     """The vocabulary from HIDE_FAMILY, the tag library (library.csv primary roles, learned_labels.csv) and the
     current resolver output. A missing file contributes nothing."""
     lib = library_dir / "library.csv"
+    if (
+        library_dir == LIBRARY_DIR
+    ):  # the repo library: library.csv lives in Storage (storage-manifest.csv), not git
+        from scrooner_pipeline.common import repo_archive
+
+        lib = repo_archive.resolve("data-team/tags/library/library.csv") or lib
     primary: dict[str, set[str]] = defaultdict(set)
     known: dict[str, set[str]] = {}
     if lib.exists():
