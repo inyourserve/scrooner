@@ -1,0 +1,102 @@
+{
+ "run_id": "45055461949",
+ "code_sha": "d502cb85db42146d8cf7b373872d5dfb66bc963e",
+ "ciks": "200406,1001838",
+ "n_ciks": 2,
+ "files": {
+  "bs.jsonl": {
+   "rows": 24,
+   "sha256": "8b080fbbcfc9679f7049f0d9f492c83112659799b633fe95ec9722594b44b287",
+   "bytes": 170491
+  },
+  "clines.json": {
+   "rows": 24,
+   "sha256": "2ef42233352936d650efdbb91304c408c516899c7f45a16abb54aac1bf8efce6",
+   "bytes": 6487
+  },
+  "compfacts.json": {
+   "rows": 24,
+   "sha256": "806cfb789086eacec0009b4256a45fee652b1ed5fea1e6d61b538167a4ba694c",
+   "bytes": 371736
+  },
+  "face.jsonl": {
+   "rows": 24,
+   "sha256": "4eb3e37dadd9a1c936061ade6a1392e2b999e85a298675914eb3cc4e1967aef8",
+   "bytes": 252738
+  },
+  "filings.json": {
+   "rows": 24,
+   "sha256": "3b047e4014f7d6020160c9826b2fee581cdcedcdd3d5a6faa21112dd6a6dd7f5",
+   "bytes": 507880
+  },
+  "lentity.json": {
+   "rows": 0,
+   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+   "bytes": 2
+  },
+  "lines.jsonl": {
+   "rows": 24,
+   "sha256": "fa50ecff9bae29cca2a99b6fa221c3711ee2069f34b00c2ed32d89708e515dba",
+   "bytes": 499878
+  },
+  "memberfacts.json": {
+   "rows": 24,
+   "sha256": "97080fc783bbd71377079ba9328a947b9cb264148a0f99fafd41264e9823e8e8",
+   "bytes": 31559
+  },
+  "notefacts.json": {
+   "rows": 24,
+   "sha256": "2b20dcfc8b2c772bc7d24b42eb30a08a87d441b82ad01814f4a654328b405045",
+   "bytes": 186855
+  },
+  "notes.jsonl": {
+   "rows": 24,
+   "sha256": "aa98e2ccc1a855b2fcade3beccafc3efc014a237e3d945f2ae89697c427b1196",
+   "bytes": 345751
+  },
+  "retries.json": {
+   "rows": 2,
+   "sha256": "90abf54ad6d92aff5020f728a12b14dcf80f6d553e77bf3750c00252fe8d5d71",
+   "bytes": 323
+  },
+  "zlines.json": {
+   "rows": 9,
+   "sha256": "df19f3095f52f9889130264f88166d3a002800bbfcdba31573cdc6ceba24f2b8",
+   "bytes": 1570
+  }
+ },
+ "retries": [
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "200406",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 0
+  },
+  {
+   "file": "face-00.sql",
+   "kind": "face",
+   "cik": "1001838",
+   "batch_timeout_s": 55,
+   "retry_timeout_s": 600,
+   "outcome": "ok_doubled",
+   "shard": 1
+  }
+ ],
+ "shards": {
+  "0": {
+   "lines": 12,
+   "bs": 12,
+   "notes": 12,
+   "face": 12
+  },
+  "1": {
+   "lines": 12,
+   "bs": 12,
+   "notes": 12,
+   "face": 12
+  }
+ }
+}
