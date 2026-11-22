@@ -347,3 +347,18 @@ def test_default_is_flag_off_in_the_stage_entry_point(monkeypatch):
     stats = dedupe.resolve_authoritative_for_company(Conn(), 1)
     assert stats["conflict_groups"] == 0 and stats["non_periodic_demoted"] == 0
     assert stats["shrunk_group_promoted"] == 1
+
+
+@pytest.mark.unit
+def test_sign_only_copies_are_one_figure_when_the_rule_is_on():
+    # ruling 6, UNP IncomeTaxesPaidNet FY2022: -2,060 in the FY2022/23 10-Ks, +2,060 under the other sign convention in the
+    # FY2024 10-K -> flag off: a conflict (no authoritative copy, the cell blank); on: the latest filed copy is authoritative
+    rows = [row(1, "-2060000000", "10-K", date(2023, 2, 10)), row(2, "2060000000", "10-K", date(2025, 2, 7))]
+    off = plan_authority(rows)
+    assert final_state(rows, off) == {1: False, 2: False}
+    on = plan_authority(rows, sign_only_copies=True)
+    assert final_state(rows, on) == {1: False, 2: True} and on.stats["conflict_groups"] == 0
+    # different magnitudes stay a conflict
+    rows2 = [row(1, "-2060000000", "10-K", date(2023, 2, 10)), row(2, "2061000000", "10-K", date(2025, 2, 7))]
+    assert final_state(rows2, plan_authority(rows2, sign_only_copies=True)) == {1: False, 2: False}
+    assert rule_flags.rule_enabled(rule_flags.RULE_SIGN_ONLY_COPIES, {rule_flags.ENV_VAR: "dedupe.sign_only_copies@1"})

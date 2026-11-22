@@ -591,6 +591,98 @@ def rounding_equal(
     return abs(a - b) <= unit / 2
 
 
+def _print_unit(v: Decimal) -> Decimal:
+    """The rounding unit a figure is printed at: the largest power of ten (up to 10^9) that divides it. Pure."""
+    v = abs(v)
+    if v == 0 or v != v.to_integral_value():
+        return Decimal(1)
+    u = Decimal(1)
+    while u < Decimal(10) ** 9 and v % (u * 10) == 0:
+        u *= 10
+    return u
+
+
+def authority_skips(
+    disagreeing: list[tuple[str, str]],
+    shown_value: Decimal,
+    name: str,
+    cell_triples: list[tuple[str, Decimal, str]],
+    parents: dict[str, set[str]],
+) -> tuple[list[tuple[str, str]], tuple[tuple[str, str, str], ...]]:
+    """Rule authority_copy_role (close-out 2026-11-23): the disagreeing copies that are no authority for the cell, split off
+    with the reason. Pure. A copy is skipped when it is
+      coarser_print  a coarser rounding of the shown figure (its print unit at least 100x coarser, within half that unit):
+                     ruling 15, the finer figure wins (LRCX goodwill FY2024 1,626,528K vs the FY2025 10-K's 1.6B, MRK
+                     amortization FY2021-22 1,636 / 2,085 vs the FY2023 10-K's narrative 1.6B / 2.1B);
+      filer_scale    a per-share copy exactly 10^3 or 10^6 times the shown value (the filer's monetary scale, STX DPS);
+      sub_line       a copy whose tag, in its own filing, sits under another copy of the cell as a calc child: the copy is
+                     a part line, not the cell's line (PFE revenue FY2021: the FY2023 10-K tags 'Product revenues' 73,636
+                     with the element FY2021's 'Total revenues' used; that filing's Revenues line holds the cell)."""
+    from scrooner_pipeline.common.per_share_guard import is_per_share
+
+    tags_at: dict[str, set[str]] = defaultdict(set)
+    for a, _v, t in cell_triples:
+        tags_at[a].add(t)
+    tag_of: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for a, v, t in cell_triples:
+        tag_of[(a, str(v))].add(t)
+    kept: list[tuple[str, str]] = []
+    skipped: list[tuple[str, str, str]] = []
+    for a, vs in disagreeing:
+        v = Decimal(vs)
+        why = None
+        unit = _print_unit(v)
+        if unit >= 100 * _print_unit(shown_value) and abs(v - shown_value) <= unit / 2:
+            why = "coarser_print"
+        elif (
+            is_per_share(name)
+            and shown_value != 0
+            and abs(v / shown_value) in (Decimal(1000), Decimal(10) ** 6)
+        ):
+            why = "filer_scale"
+        else:
+            ts = tag_of.get((a, vs)) or set()
+            if ts and all(
+                any(o != t and o in parents.get(t, set()) for o in tags_at[a])
+                for t in ts
+            ):
+                why = "sub_line"
+        if why:
+            skipped.append((a, vs, why))
+        else:
+            kept.append((a, vs))
+    return kept, tuple(skipped)
+
+
+def tag_sum_parts(
+    srcs: list[tuple[str, str | None, Any, bool, Decimal]], shown_value: Decimal
+) -> tuple[tuple[int, str], ...] | None:
+    """Rule authority_tag_sum (close-out 2026-11-23, TMO total_debt FY2018/2020, IBM FY2019-21): a cell served from facts
+    of SEVERAL tags without a component claim is a sum, judged as a sum, never one tag's copy against the total. The
+    signed parts are recovered from the cell's own source facts: the one sign per tag (+1 or -1) under which the source
+    values add to the shown value. None when no single sign assignment does (the cell then has no tag-sum authority). Pure."""
+    by: dict[str, Decimal] = {}
+    for t, _a, _d, _der, v in srcs:
+        if not t:
+            continue
+        if t in by and by[t] != v:
+            return None
+        by[t] = v
+    tags = sorted(by)
+    if len(tags) < 2 or len(tags) > 8:
+        return None
+    from itertools import product
+
+    hits = [
+        signs
+        for signs in product((1, -1), repeat=len(tags))
+        if sum((s * by[t] for s, t in zip(signs, tags)), Decimal(0)) == shown_value
+    ]
+    if len(hits) != 1:
+        return None
+    return tuple(zip(hits[0], tags))
+
+
 def disagreeing_copies(
     copies: list[tuple[str, Decimal]],
     shown_value: Decimal,
@@ -708,6 +800,10 @@ def load_shown(
         part_parents[t] |= ps
     copies_by, auth_by, filed_by, por_by, scale_by = _periodic_copies(
         conn, company_id, floor, face
+    )
+    # calc parents of every copy's tag (rule authority_copy_role: a copy under a part line is no copy of the cell)
+    copy_parents = load_calc_parents(
+        conn, company_id, sorted({t for cs in copies_by.values() for _a, _v, t in cs})
     )
     for name, ptype, fp, start, end, value, src, period_id, src_vals, family in rows:
         if name not in names:
@@ -860,6 +956,37 @@ def load_shown(
                     scale_by.get(accession or ""),
                 ):
                     disagreeing = [(acc_w, str(total_w))]
+        elif len(tags) > 1:
+            # rule authority_tag_sum: several source tags and no component claim: judged as a sum of the cell's own
+            # signed source tags, never one tag's copy against the total (TMO total_debt Dec-2018: DebtCurrent 1,271)
+            parts = tag_sum_parts(srcs, shown_value)
+            disagreeing = []
+            auth_accs = set()
+            if parts is not None:
+                win = component_sum_authority(
+                    authority_pool(
+                        [c for c in all_copies if c[2] in tags], check_failed
+                    ),
+                    parts,
+                    filed_by,
+                    sf,
+                )
+                if win is not None:
+                    acc_w, total_w = win
+                    auth_accs = {acc_w}
+                    if not _same_number(
+                        total_w, shown_value, scale
+                    ) and not rounding_equal(
+                        total_w,
+                        shown_value,
+                        scale_by.get(acc_w),
+                        scale_by.get(accession or ""),
+                    ):
+                        disagreeing = [(acc_w, str(total_w))]
+        # rule authority_copy_role: a coarser print, a filer-scale per-share copy or a part line is no authority
+        disagreeing, skips = authority_skips(
+            disagreeing, shown_value, name, all_copies, copy_parents
+        )
         # the authoritative (latest accepted periodic filing) copy is what the cell must show; an
         # earlier copy that differs is restated history (audit R13)
         # a differing fact of the SAME filing the value was taken from is no other vintage: the
@@ -896,6 +1023,7 @@ def load_shown(
                 stated_zero_evidence=sz_ev,
                 text_stated=ts,
                 text_stated_evidence=ts_ev,
+                authority_skips=skips,
             )
         )
     return out

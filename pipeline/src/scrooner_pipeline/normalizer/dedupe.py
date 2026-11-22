@@ -75,6 +75,7 @@ from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL
 from scrooner_pipeline.common.rule_flags import (
     RULE_MATCHING_COPIES,
     RULE_PERIODIC_FORM_ONLY,
+    RULE_SIGN_ONLY_COPIES,
     rule_dry_run,
     rule_enabled,
 )
@@ -152,6 +153,7 @@ def plan_authority(
     periodic_only: bool = False,
     matching_copies: bool = False,
     collect_changes: bool = False,
+    sign_only_copies: bool = False,
 ) -> AuthorityPlan:
     """Pure: decide is_authoritative for every group of one company's facts.
     Flags off reproduces the pre-W3 behavior exactly (see module docstring)."""
@@ -202,7 +204,22 @@ def plan_authority(
             if not exact and matching_copies and all_consistent(values):
                 agree = True
                 matching_used = True
-            if agree:
+            sign_only = (
+                not agree
+                and sign_only_copies
+                and len({abs(v) for v in values}) == 1
+                and values[0] != 0
+            )
+            if sign_only:
+                # ruling 6 (rule dedupe.sign_only_copies@1): equal magnitudes with opposite signs are one figure
+                # stored under the element's two sign conventions; the latest filed copy is authoritative
+                winner = periodic_members[-1]
+                desired[winner.fact_id] = True
+                for m in periodic_members:
+                    if m is not winner:
+                        desired[m.fact_id] = False
+                agreed += 1
+            elif agree:
                 if exact:
                     winner = periodic_members[0]  # earliest filed, by query order
                 else:
@@ -281,9 +298,13 @@ def resolve_authoritative_for_company(
         periodic_only = rule_enabled(RULE_PERIODIC_FORM_ONLY)
     if matching_copies is None:
         matching_copies = rule_enabled(RULE_MATCHING_COPIES)
+    sign_only = rule_enabled(RULE_SIGN_ONLY_COPIES)
     rows = _load_fact_rows(conn, company_id)
     plan = plan_authority(
-        rows, periodic_only=periodic_only, matching_copies=matching_copies
+        rows,
+        periodic_only=periodic_only,
+        matching_copies=matching_copies,
+        sign_only_copies=sign_only,
     )
     if rule_dry_run(RULE_PERIODIC_FORM_ONLY) or rule_dry_run(RULE_MATCHING_COPIES):
         # dry_run mode: log what the rules WOULD change, write the legacy plan

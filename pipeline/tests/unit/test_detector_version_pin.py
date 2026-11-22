@@ -47,13 +47,12 @@ VERDICT_SOURCES = (
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
 # 2026-11-22: re-pinned at the same floor; prove_component moved under rule component_parts (v2), no floor change
 # 2026-11-22: re-pinned at the same floor; stated_family_concepts added to shown.py (loads cells that had no proof row), no verdict changes; rule resolver_beats_combined v2 (load_shown)
-PINNED_HASH = "757c5b07f3159d4397fb17555131b36c38523a4ae5592b19d0c5234df8f62ebb"
+# 2026-11-23 (resolver .90): re-pinned at the same floor; the verdict changes live in the new rules authority_tag_sum,
+# authority_copy_role, printed_zero_note and element_family (their call sites in locate/prove_note/load_shown and the
+# Shown.authority_skips field change no verdict a rule does not select); resolver_beats_combined v3 (load_shown)
+PINNED_HASH = "d12c3f03a47cac052b4c2d598f084b818aa255b3c045776d731cee204ffbe5a5"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
-    "component_parts": (
-        3,
-        "8238832bae65593ba5beaf09b8832bc840d6f436be7af1c0e86d419b004bf94c",
-    ),
     "identity_tie": (
         1,
         "b94e6b59a25fcc2327c812959fa1e8f4711efac36d91e3b7af754131cde88734",
@@ -61,6 +60,10 @@ RULE_PINS = {
     "components_sum": (
         1,
         "80c19adb6ce597f70cc7d8e1eab8ab4f35fcce2a4da2c1ea6adf43a35ed69587",
+    ),
+    "component_parts": (
+        3,
+        "8238832bae65593ba5beaf09b8832bc840d6f436be7af1c0e86d419b004bf94c",
     ),
     "non_interest_band": (
         1,
@@ -71,20 +74,36 @@ RULE_PINS = {
         "33d1e97595eeda814ef895ed873996455c08ff8d4c1e7c5dd05597b26c3a5c81",
     ),
     "resolver_beats_combined": (
-        2,
-        "e26e3fd04ae5918fb4faa9c5b384b23f34716d8954211b2a26f00dc9879dc06b",
+        3,
+        "60d03bf529ee3fb2903eec425c0758f7e0228816af96d9eaf06b8a957ebd1777",
+    ),
+    "authority_tag_sum": (
+        1,
+        "ef75b7c7fa50f6417eca3ad6d71c4a319188d1e8caaeb91b26a9e0c5ded4a1ba",
+    ),
+    "authority_copy_role": (
+        1,
+        "ca3ac64963767553da2ebd76f35e3e43c582d3f97506756467156d62babbd991",
+    ),
+    "printed_zero_note": (
+        1,
+        "80221d028b398be5c526669337babeb7394dc7bf2e9b15c52b5c01364314d47c",
+    ),
+    "element_family": (
+        1,
+        "33c822dfcc25cd85d35d8a0673f4648f39e433ed0c7de5b3855407d4a613393b",
     ),
     "split_parts": (
         2,
         "a0680a9dd345c1e43f261f5a685ac97466d047564527d875e30ff4e55918d364",
     ),
-    "text_stated": (
-        1,
-        "4c0d6c12693cd5225b11b41d775bc64af17234db1efd2e27390d14320abd2059",
-    ),
     "stated_zero": (
         1,
         "c69cb33c7d31bdd099334c657ac49296a6c3a9150c0e69466be406db9fdc6b5f",
+    ),
+    "text_stated": (
+        1,
+        "4c0d6c12693cd5225b11b41d775bc64af17234db1efd2e27390d14320abd2059",
     ),
 }
 
@@ -113,7 +132,11 @@ RULE_VERSIONS = {
     "perimeter": 1,
     "identities": 1,
     "component_sum_authority": 2,
-    "resolver_beats_combined": 2,
+    "resolver_beats_combined": 3,
+    "authority_tag_sum": 1,
+    "authority_copy_role": 1,
+    "printed_zero_note": 1,
+    "element_family": 1,
     "split_parts": 2,
     "stated_zero": 1,
     "text_stated": 1,

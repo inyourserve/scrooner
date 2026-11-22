@@ -92,14 +92,24 @@ def test_another_companys_token_does_not_pass(tmp_path):
     assert _run(a)[0] == 1
 
 
-def test_the_real_jnj_token_on_main_passes():
+def test_the_real_jnj_token_on_main_is_spent_by_the_newer_pass():
+    """The real state on main: JNJ's re-cert token (recert/JNJ-2026-11-21.md) was consumed by the 2026-11-22 PASS
+    (JNJ-certificate-2026-11-22.md, a certificate made from a coverage export dated after the token), so no token is
+    pending and the guard applies again. Asserts the files that make it so, then the script's answer."""
+    approvals = REPO / "data-team/strategy/approvals"
+    assert (approvals / "recert" / "JNJ-2026-11-21.md").exists()
+    covs = []
+    for p in (approvals / "certificates").glob("JNJ-*.json"):
+        d = json.loads(p.read_text())
+        covs.append((str(d.get("certified_at", "")), str(d.get("coverage_path", ""))))
+    assert max(covs)[0] >= "2026-11-21"  # a certificate at or after the token date exists
     r = subprocess.run(
-        [sys.executable, "-I", str(SCRIPT), "--approvals", str(REPO / "data-team/strategy/approvals"), "--ticker", "JNJ"],
+        [sys.executable, "-I", str(SCRIPT), "--approvals", str(approvals), "--ticker", "JNJ"],
         capture_output=True,
         text=True,
         cwd=REPO,
     )
-    assert r.returncode == 0 and "recert/JNJ-2026-11-21.md" in r.stdout
+    assert r.returncode == 1 and r.stdout == ""
 
 
 def test_flow_wires_the_token_and_the_request_cites_it():

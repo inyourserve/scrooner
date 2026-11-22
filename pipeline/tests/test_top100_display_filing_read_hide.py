@@ -170,3 +170,39 @@ def test_a_row_class_read_for_one_year_is_a_year_class_or_open_never_a_row_class
         "HIDDEN_ROW",
         "structural_not_presented",
     )
+
+
+def test_a_year_hide_with_a_full_text_search_quote_is_verified_absent_for_any_data_point(
+    tmp_path,
+):
+    """Dhairya ruling (founder standard 2026-11-22, hide only when the figure is in no filing): a reader's year hide whose
+    quote records a full-text search of every 10-K and 10-Q finding no amount is a verified absence for ANY data point
+    (GILD interest_income FY2014-21, GILD-2026-11-23.csv), exported as the year class verified_absent with the search
+    quote as evidence. Without the search quote an off-allowlist year stays OPEN. Mutation: drop full_search_evidenced
+    from apply_display and the first cell is OPEN."""
+    d = tmp_path / "resolver"
+    d.mkdir()
+    q = (
+        "HIDE never_reported for FY2014: no 10-K or 10-Q states a FY2014 interest-income amount. EDGAR full-text "
+        "search ciks=0000882095 forms=10-K q=interest and dividend income 0 hits"
+    )
+    (d / "T.csv").write_text(
+        HEADER
+        + f'1,T,interest_income,2014-12-31,FY,not_presented,,,0000000001-15-000001,own,,filing_read_hide;never_reported,"{q}",R4.htm,,r.90\n'
+        + '1,T,other_income_expense_net,2014-12-31,FY,not_presented,,,0000000001-15-000001,own,,filing_read_hide;never_reported,"no line on R4",R4.htm,,r.90\n'
+    )
+    h = t100.load_filing_read_hides(tmp_path)
+    rows = [
+        _cell("interest_income", 2014, "REASON", "filing_read_hide"),
+        _cell("interest_income", 2024, "PROVEN", accession="Z", r_page="R5"),
+        _cell("other_income_expense_net", 2014, "REASON", "filing_read_hide"),
+        _cell("other_income_expense_net", 2024, "PROVEN", accession="Z", r_page="R5"),
+    ]
+    t100.attach_filing_read_hides(rows, h)
+    t100.apply_display(rows)
+    by = {(r["data_point"], r["fiscal_year"]): r for r in rows}
+    ii = by[("interest_income", 2014)]
+    assert (ii["display"], ii["hide_class"]) == ("HIDDEN_YEAR", "verified_absent")
+    assert "full-text search" in ii["evidence"]
+    oie = by[("other_income_expense_net", 2014)]
+    assert (oie["display"], oie["hide_class"]) == ("OPEN", "")

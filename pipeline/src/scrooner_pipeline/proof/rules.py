@@ -71,6 +71,27 @@ def _always(_shown: Any) -> bool:
     return True
 
 
+def _authority_skips(shown: Any) -> bool:
+    return bool(getattr(shown, "authority_skips", ()))
+
+
+def _tag_sum(shown: Any) -> bool:
+    return len(getattr(shown, "tags", ()) or ()) > 1 and not _component_sum(shown)
+
+
+def _printed_zero_cell(shown: Any) -> bool:
+    return (
+        bool(getattr(shown, "printed_zero", False))
+        and getattr(shown, "value", None) == 0
+    )
+
+
+def _element_family_dp(shown: Any) -> bool:
+    from scrooner_pipeline.proof.prove import ELEMENT_FAMILY
+
+    return getattr(shown, "data_point_name", "") in ELEMENT_FAMILY
+
+
 RULES: dict[str, Rule] = {
     r.id: r
     for r in (
@@ -133,7 +154,7 @@ RULES: dict[str, Rule] = {
         ),
         Rule(
             "resolver_beats_combined",
-            2,
+            3,
             legacy_version=0,
             applies=_has_splits,
             owners=(
@@ -144,7 +165,50 @@ RULES: dict[str, Rule] = {
             "older company_tag_map combined row; the combined veto no longer fires. Selects the cells a combined row "
             "spans (the cells whose verdict can change). v2 (2026-11-22): load_shown also loads the concepts of served "
             "stated_zero/text_stated/printed_zero values (no map claim row), so such a cell gets a proof row instead of "
-            "surfacing as UNCHECKED no_proof_row (GILD interest_income FY2024); existing verdicts do not change",
+            "surfacing as UNCHECKED no_proof_row (GILD interest_income FY2024); existing verdicts do not change. v3 "
+            "(2026-11-23, resolver .90): load_shown calls the authority_tag_sum and authority_copy_role helpers; the cells "
+            "whose verdict can change are selected by those two rules",
+        ),
+        # close-out 2026-11-23 (resolver .90): cells decided by a filing read but left open by the proof
+        Rule(
+            "authority_tag_sum",
+            1,
+            legacy_version=0,
+            applies=_tag_sum,
+            owners=("proof/shown.py:tag_sum_parts",),
+            note="v1: a cell served from several tags without a component claim is judged as the signed sum of its own "
+            "source tags in the latest filing printing every part, never one tag's copy against the total (TMO total_debt "
+            "FY2018/2020 judged against DebtCurrent alone, IBM FY2019-21 against ShortTermBorrowings)",
+        ),
+        Rule(
+            "authority_copy_role",
+            1,
+            legacy_version=0,
+            applies=_authority_skips,
+            owners=("proof/shown.py:authority_skips", "proof/shown.py:_print_unit"),
+            note="v1: a disagreeing copy is no authority when it is a coarser print of the shown figure (ruling 15: LRCX "
+            "goodwill FY2024, MRK amortization FY2021-22), a per-share copy at the filer's monetary scale (STX DPS), or a "
+            "part line of its filing (its tag a calc child of another copy of the cell there: PFE 'Product revenues' FY2021)",
+        ),
+        Rule(
+            "printed_zero_note",
+            1,
+            legacy_version=0,
+            check_keys=("printed_zero_note",),
+            applies=_printed_zero_cell,
+            owners=("proof/prove.py:printed_zero_note",),
+            note="v1: a printed_zero cell on the note path is proven when the filing presents the claim's tag with no value "
+            "for the column (a printed dash; BA DPS FY2020-21)",
+        ),
+        Rule(
+            "element_family",
+            1,
+            legacy_version=0,
+            applies=_element_family_dp,
+            owners=("proof/prove.py:element_family_claim",),
+            note="v1: where the company's claim locates no line, the data point's element family (prove.ELEMENT_FAMILY: "
+            "interest_income incl. InvestmentIncomeInterest and InterestIncomeOperating) is searched on the statement "
+            "(CRWD FY2023-24)",
         ),
         Rule(
             "split_parts",

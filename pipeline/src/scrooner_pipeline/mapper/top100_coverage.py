@@ -2073,9 +2073,28 @@ READER_HIDE_CLASSES: dict[str, str] = {
     "verified_absent": HC_VERIFIED_ABSENT,
     "pre_filing": HC_PRE_FILING,
     HC_AFTER_TAX: HC_AFTER_TAX,
+    # founder/Dhairya 2026-11-22 discontinued-disclosure ruling: a year the company stopped disclosing (NVDA
+    # cash_paid_for_interest FY2026, LLY interest_income FY2025) is a verified-absent YEAR; it hides only with a
+    # full-text search quote (full_search_evidenced) or on the allowlist
+    "disclosure_discontinued": HC_VERIFIED_ABSENT,
 }
 # (reader class, display hide class, evidence text, accession, locator)
 ReaderHide = tuple[str, str, str, str, str]
+# Dhairya ruling (founder standard 2026-11-22: hide only when the figure is in no filing): a year hide whose quote records
+# a full-text search of the company's 10-Ks and 10-Qs that finds no amount is a valid verified absence for ANY data
+# point (year class verified_absent, the search quote as evidence, GILD interest_income FY2014-21). The allowlist
+# (VERIFIED_ABSENT_HIDE) stays only for an absence WITHOUT such a search quote.
+_FULL_SEARCH_RE = re.compile(r"full[- ](?:text|document) search", re.I)
+_NO_AMOUNT_RE = re.compile(
+    r"\b0 (?:hits|matches)\b|returns 0\b|finds? no\b|no 10-K or 10-Q (?:states|prints)|finds only",
+    re.I,
+)
+
+
+def full_search_evidenced(evidence: str | None) -> bool:
+    """True when a reader's hide quote records a full-text search of the filings that found no amount. Pure."""
+    ev = evidence or ""
+    return bool(_FULL_SEARCH_RE.search(ev) and _NO_AMOUNT_RE.search(ev))
 
 
 def load_filing_read_hides(
@@ -2340,6 +2359,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         elif r.get("_reader_hide") and (
             r["_reader_hide"] != HC_VERIFIED_ABSENT
             or r.get("data_point") in VERIFIED_ABSENT_HIDE
+            or full_search_evidenced(r.get("evidence"))
         ):
             # a full 10-K read's hide (filing_reads.py): the reader's class is the ruling; the year is hidden with that
             # class and the read's quote (a row whose every year is such a hide collapses below). Still subject to the
@@ -2353,6 +2373,7 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
                 yc == HC_VERIFIED_ABSENT
                 and r["_reader_hide"] != HC_VERIFIED_ABSENT
                 and r.get("data_point") not in VERIFIED_ABSENT_HIDE
+                and not full_search_evidenced(r.get("evidence"))
             )
         elif r.get("_only_combined") == "years":
             r["display"], hc = HIDDEN_YEAR, HC_COMBINED

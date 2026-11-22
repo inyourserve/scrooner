@@ -411,6 +411,10 @@ class Shown:
     # era: the data point is split from a note, and the split parts must sum to that printed combined line
     # (founder decision 2026-11-16; proof/identities._check_splits)
     combined_splits: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    # copies of the cell that are no authority for it (rule authority_copy_role, shown.py:authority_skips): (accession,
+    # value, why) with why coarser_print (ruling 15: the finer figure wins), filer_scale (a per-share copy 10^3/10^6 too
+    # large) or sub_line (the copy's tag is a calc child of another copy of the cell in that filing: PFE 'Product revenues')
+    authority_skips: tuple[tuple[str, str, str], ...] = ()
 
 
 @dataclass
@@ -723,6 +727,38 @@ def _check_components_sum(
     return {"status": "fail", "printed": str(nv.value), "groups": complete}
 
 
+# the element family of a data point outside EXPECTED (rules/roles.csv: interest_income lists InvestmentIncomeInterest and
+# InterestIncomeOperating beside the other interest-income elements; CRWD FY2023-24 prints 'Interest income' as
+# InterestIncomeOperating while the map row names InvestmentIncomeInterest)
+ELEMENT_FAMILY: dict[str, tuple[str, tuple[str, ...]]] = {
+    "interest_income": (
+        "IS",
+        (
+            "InvestmentIncomeInterest",
+            "InterestIncomeOperating",
+            "InterestIncomeOther",
+            "InvestmentIncomeInterestAndDividend",
+            "InterestAndDividendIncomeOperating",
+            "InterestIncomeOperatingAndNonoperating",
+        ),
+    ),
+}
+
+
+def element_family_claim(dp: str, claim: Claim | None) -> Claim | None:
+    """Rule element_family (close-out 2026-11-23): where the company's claim locates no line, the data point's element
+    family is searched on its statement (the claim's statement when it has one), same sign. None for a data point
+    without a family. Pure."""
+    fam = ELEMENT_FAMILY.get(dp)
+    if fam is None:
+        return None
+    stmt = claim.stmt if claim is not None and claim.stmt not in NOTE_STMTS else fam[0]
+    tags = tuple(dict.fromkeys((claim.tags if claim is not None else ()) + fam[1]))
+    return Claim(
+        "concept", stmt, tags=tags, sign=claim.sign if claim is not None else 1
+    )
+
+
 def locate(
     structure: FilingStructure, shown: Shown
 ) -> tuple[PreLine | None, str | None, str, Claim | None]:
@@ -732,11 +768,16 @@ def locate(
     claim = shown.claim
     if claim is not None and claim.kind == "concept" and claim.stmt not in NOTE_STMTS:
         line, why = select_position(structure, dp, claim)
-        if line is not None or dp not in EXPECTED:
+        if line is not None or (dp not in EXPECTED and dp not in ELEMENT_FAMILY):
             return line, why, claim.stmt, claim
     if dp in EXPECTED:
         line, why = select_position(structure, dp)
         return line, why, EXPECTED[dp][0], None
+    fam = element_family_claim(dp, claim)
+    if fam is not None:
+        line, why = select_position(structure, dp, fam)
+        if line is not None:
+            return line, why, fam.stmt, fam
     return None, "not_presented", claim.stmt if claim else "", claim
 
 
@@ -896,6 +937,15 @@ def _column(shown: Shown) -> tuple[date, int | None]:
     return fsn_ddate(shown.period_end), GRAIN_QTRS.get(shown.period_grain)
 
 
+def printed_zero_note(
+    shown: Shown, structure: FilingStructure, tags: tuple[str, ...]
+) -> bool:
+    """Rule printed_zero_note (close-out 2026-11-23, BA DPS FY2020-21): a printed_zero cell (value 0) read on the note path
+    is proven when the filing presents one of the claim's tags on any statement or note (a presentation line) and stores
+    no value for the column: the printed dash. Never for a nonzero value. Pure."""
+    return printed_zero_proven(shown) and any(pl.tag in tags for pl in structure.pre)
+
+
 def prove_note(shown: Shown, structure: FilingStructure, p: Proof) -> Proof:
     """A line printed only in a note or the cover (interest paid, taxes paid, the parenthetical
     share count): there is no face statement; the claim's tag is read as the filing's own fact at
@@ -939,6 +989,15 @@ def prove_note(shown: Shown, structure: FilingStructure, p: Proof) -> Proof:
                 f"the note fact {claim.tags} at {shown.period_end} covers {alt} "
                 f"quarter(s), the cell needs {qtrs}"
             )
+        elif printed_zero_note(shown, structure, claim.tags):
+            p.verdict, p.reason_code = PROVEN, None
+            p.position_value = Decimal(0)
+            p.checks["printed_zero_note"] = {
+                "status": "pass",
+                "why": f"{structure.adsh} presents {','.join(claim.tags)} with no stored value for the column: a printed "
+                "dash or 0",
+            }
+            p.reason_text = f"{','.join(claim.tags)} is presented with no value for the column; served as 0 (printed_zero)"
         else:
             p.verdict, p.reason_code = NOT_PRESENTED, "no_value_for_this_column"
             p.reason_text = (

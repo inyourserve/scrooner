@@ -81,6 +81,14 @@ RULES: dict[str, Rule] = {
             dry_run=True,
         ),
         _r(
+            "dedupe.sign_only_copies@1",
+            "-",
+            "lane1",
+            "copies that differ only in sign are not a conflict (ruling 6; UNP IncomeTaxesPaidNet FY2022-23): the latest "
+            "filed copy is authoritative, polarity is applied downstream",
+            dry_run=True,
+        ),
+        _r(
             "entity.shared_accession_primary_filer@1",
             "RF-21",
             "lane1",
@@ -491,6 +499,7 @@ RULES: dict[str, Rule] = {
 # Names earlier lane-1 code imports.
 RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
+RULE_SIGN_ONLY_COPIES = "dedupe.sign_only_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
 RULE_SHARED_ACCESSION_DEMOTE_COREGISTRANT = (
     "entity.shared_accession_demote_coregistrant_facts@1"
