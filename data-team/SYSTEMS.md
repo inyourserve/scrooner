@@ -180,3 +180,44 @@ Daily SEC index, prices, freshness gate, screener snapshot.
 1. Search this file (`rg -n "<term>" data-team/SYSTEMS.md`) and the owning system's doc.
 2. Extend the owning system: a rule row, a test, a registry row, a flow step. Never a parallel copy.
 3. A new system, module family, registry, table or file family needs a one-line reason added here first (and a migration claim in doc 53 if it is a table). Update the owning block when a gap closes.
+
+## World-class scorecard
+Founder 2026-11-22: "all the systems in SYSTEMS.md should be world class." Score today is the Maturity in each block above; update the row when a block's score or gap changes.
+
+**The 5/5 bar (every system):**
+1. One owner and one source: no parallel copy of its data, rules or code (the "Do not build" line is empty of merge candidates).
+2. Rules and knowledge are tested data or code, not prose.
+3. Every rule has a CI test that fails without it (mutation-checked).
+4. A live metric with a target, published daily.
+5. Failures become rules or patterns automatically (a miss opens a rule proposal, not a note).
+6. Runs on data change, not by hand.
+
+Waves: **1** in flight 2026-11-22 (verifier/tag-expert pattern loop + flow self-check, filing reads, proof stale fix, screener exclusion reasons, metric registry definitions, display path steps 1-4) · **2** systems at score 2 (display certificate, company pages / display path steps 5-6 needing migrations 0133+0135 with founder approval, nightly refresh) · **3** the remaining 3s and the "Do not build" merges · **4** all at 5, then scale to 1,000.
+
+| # | System | Today | 5/5 test (measurable) | Metric, target | Next step | Wave |
+|---|---|---|---|---|---|---|
+| 1 | SEC access | 4 | 0 SEC fetch paths outside `sec_rate` (grep test in CI); cross-runner total enforced, not hand-split | max observed req/s across all runners, <=2.0 | route `eps_face_read.py` and `slot_records/common.py` through `sec_rate`; drop `secfetch` | 3 |
+| 2 | Company master | 3 | every top-1,000 predecessor/new-CIK window has a 10-K in FSN (XOM case); sector from filing, tested | companies with a history break, 0 | predecessor check in onboarding fails on a window with no FSN 10-K | 3 |
+| 3 | Normalizer | 3 | nightly new filers go FSN→resolver, not old normalize+map; authority rule in one module | old-path reprocess runs, 0 | authority rules into `common/cell_rules.py` (shared with 11) | 3 |
+| 4 | FSN store | 4 | new filing in FSN extract within 24 h, flag on; 10-Q in extract; missing filings a query, not a CSV | filings filed but not extracted, 0 after 24 h | turn on FSN nightly incremental in pipeline-refresh.yml | 3 |
+| 5 | Tag knowledge | 3 | cards generated from `library.csv` + RULEBOOK, one key per element; every verifier miss lands as a card/pattern row | cards older than the resolver version, 0 | verifier/tag-expert pattern loop: miss → pattern row → card | 1 |
+| 6 | Tag library | 3 | rebuilt on every resolver version; the two DB builds load `library.csv` | library resolver version = main (.85 vs .87 today); rows with usage 581/27,999 → all served | rebuild in tag-library-learn.yml on resolver change; merge `tag_library*.py` | 3 |
+| 7 | Predictor | 3 | one rule store shared with the resolver; drill misses auto-open rule proposals | blind accuracy per class, >=99% on 200 companies (89.1% today) | drill misses from branch `drills` → `rules/inbox/` proposals | 3 |
+| 8 | Resolver | 4 | every RULEBOOK rule has a test (~50 untested in §7); quirks as data rows | untested rules 0; oracle BAD 0 (13 today) | tests for C06-C31, F01-F03, X02-X33, I03-I25 | 3 |
+| 9 | Filing reads | 3 | read rows schema-validated at commit; RULE rows become resolver rules | skipped reads 0 (745 at .87); open shown top 100, 0 (1,684) | schema + validator in `filing_reads.py`; migrate the 361 HIDE rows | 1 |
+| 10 | Structural loader | 3 | resolver is the only writer (ONE-PATH step 3); sign fixed in one place | served != resolver, 0 (339 in census); held cells 0 (83) | retire docmap/tagmap/era writer layers behind the resolver | 3 |
+| 11 | Proof | 4 | proof checks the resolver decision, never re-decides; no stale proof rows; `common/cell_rules.py` exists | DISAGREE+UNCHECKED top 100, 0 (553); stale proofs 0 | proof stale fix; then `common/cell_rules.py` | 1 |
+| 12 | Sector templates | 3 | templates a typed data file; one applicability module; every group measured | groups with measured template coverage, all (insurer 1 rule; REIT/utility/energy unmeasured) | templates markdown → CSV with a loader test | 3 |
+| 13 | Coverage/display state | 3 | every shown cell one class; app reads `cell_display_state`; any rank set, not 1-100 | shown cells not value-or-evidenced-hide, 0 (1,684 OPEN) | display path steps 1-4; move 0130 out of pending/ | 1 |
+| 14 | Display certificate | 2 | certificates in the DB (0131/0132/0134); one registry row per company; draw size gives <=1.5% upper error at 95% | certified of top 100, 100 (2 today); 95% upper error <=1.5% (8.9% at 32 cells) | dedupe `registry.csv`; raise draw size; certificate reads verifier table | 2 |
+| 15 | Verifier | 3 | 0 certified-company regressions; error bound <=1% at 95% via sample size; re-check all certified weekly, scheduled | certified regressions 0; sampled error <=1% at 95% | verdicts into `analytics.verifier_check` only; weekly scheduled re-check | 1 |
+| 16 | Metric registry | 3 | all 84 metrics engine-wired; inputs only proven/shown cells; golden value per metric per company | described/planned metrics 0 (21+2); golden mismatches 0 | write definitions for the 21 `described`; calculators read cell_proof | 1 |
+| 17 | Screener | 3 | snapshot built from proven/shown cells only; every excluded company has a reason | screen-result accuracy measured on a golden set, 100%; unexplained exclusions 0 | exclusion reasons on snapshot rows | 1 |
+| 18 | AI query | 3 | eval set with measured hit rate; vocabulary generated from registry; fallback wired | eval-set hit rate, target >=95% (none today) | build the eval set from registry aliases | 3 |
+| 19 | Company pages | 2 | page cell = certified cell, end-to-end CI test; hides, badges and R-page links shown | page cells != certified cell, 0 | display path steps 5-6 (migrations 0133+0135, founder approval) | 2 |
+| 20 | Flow + CI | 4 | flow self-checks each step; one commit per run, not per company; every workflow has an owner/retire date | flow steps without a post-check 0; unowned dispatch-only workflows 0 | flow self-check; batch coverage commits | 1 |
+| 21 | Nightly refresh | 2 | new filings flow FSN→resolver→flow→proof→coverage nightly with no hand step; legacy rebuilds removed | filings served within 24 h of acceptance, 100% | move reprocess onto the new path; drop coverage-matrix/tag-candidate steps | 2 |
+| 22 | Migrations | 4 | live state is a query (`ops.migration_ledger`, 0131), CI diffs it with main | live-vs-main drift 0; applied files in pending/ 0 (0130) | apply 0131 with founder approval | 3 |
+| 23 | Mind | 3 | every entry links the rule id it produced; inbox curated daily | inbox age max <=2 days (last curation 2026-11-09) | rule-id field + lint in `mind.py` | 3 |
+| 24 | Agent roles | 3 | every live lane a committed role file; agent files clean on main | uncommitted agent files 0 (12 today); roles without agent 0 | commit the 12 files; role for `18-REPORTED-NUMBERS-CHECKER` | 3 |
+| 25 | Legacy | n/a | nothing in the chain imports or gates on a legacy module (CI import test) | legacy imports from live paths, 0 | retire after each wave-3 merge lands | 3 |
