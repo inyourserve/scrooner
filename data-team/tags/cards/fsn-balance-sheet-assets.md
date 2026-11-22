@@ -411,7 +411,7 @@ Resolver resolver-all110-.93. 24 elements named in this card have library knowle
 - **Meaning:** Intangible Asset, Including Goodwill, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite- and indefinite-lived intangible assets, goodwill, and capitalized cost for software to be sold, leased, or marketed.
 - **Data point definition:** goodwill: Goodwill at period end as printed.
 - **Data point:** goodwill; intangible_assets; role goodwill:combined#1; intangible_assets:combined#1
-- **Rules:** B20; B21
+- **Rules:** B21; B20
 - **Evidence:** 2 companies, 0 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none

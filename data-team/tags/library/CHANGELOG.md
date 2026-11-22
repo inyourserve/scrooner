@@ -1938,3 +1938,15 @@
 - + NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent
 - + NonRecourseBorrowingsOfConsolidatedSecuritizationEntities
 - ... 208 more
+
+## 2026-11-22 (resolver-all110-.93): 10 element changes, 28011 rows, coverage 64.6%
+- ~ GainsLossesOnExtinguishmentOfDebt: served_cells
+- ~ IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest: data_point, served_cells
+- ~ InterestAndDebtExpense: served_cells
+- ~ NetIncomeLossAttributableToNoncontrollingInterest: data_point, served_cells
+- ~ NetIncomeLossAvailableToCommonStockholdersBasic: served_cells
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ OperatingIncomeLoss: data_point, served_cells
+- ~ ProfitLoss: served_cells
+- ~ RestrictedCash: data_point, served_cells
+- ~ RestrictedCashAndCashEquivalents: data_point, served_cells
