@@ -1,0 +1,206 @@
+name: Resolver data refresh (new fix files or new extract -> resolver with current rules -> gate -> commit)
+
+# Interconnection map (data-team/SYSTEMS.md, links 9 -> 8 and 4 -> 8; founder 2026-11-22 "close these manual links"): the
+# resolver lane no longer has to be handed fix-file shas or extract run ids. This re-runs the resolver with the CURRENT rules
+# and code (no rule, tool or test changes) the way the local lane does (line_map/CHANGELOG.md .86-.89), for the companies in
+# scope, and commits only if the gate passes:
+#   scope   push of data-team/strategy/open-shown-fixes/**: the tickers of the changed files + every ticker whose imported read
+#           cells differ from the committed rules/filing_read_cells.csv (so a run GitHub replaced while pending loses nothing);
+#           a successful standard extract on main: the extract's companies; dispatch: the given tickers (empty = all)
+#   extract the triggering / given run's artifact standard-extract-<id>, else the newest successful run on main whose manifest
+#           holds every scope CIK; if none does, it dispatches pipeline-standard-extract for the scope and stops (that run's
+#           completion starts this workflow again)
+#   steps   filing_reads.py import (cells file changes only for the scope) -> instance evidence for filings the resolver has
+#           not seen (sec.gov only, paced by sec_pace) -> resolve_all.py "resolver-all110-<V>" -> split -> copy the scope's files
+#           -> line_map tests -> oracle (VALUE reads vs resolver, 0.06%, over the current fix files, before vs after)
+#   gate    tests pass AND oracle BAD(after) <= BAD(before) -> commit resolver/<TICKER>.csv + rules/filing_read_cells.csv + a
+#           CHANGELOG row "<V>" = the latest release + .dN (.89 -> .89.d1); otherwise NO data commit, a file
+#           data-team/tags/line_map/refresh-failures/<date>-run<id>.md with the diff summary, and the run fails (red).
+#   no-op   nothing changed for the scope -> nothing committed.
+# Push: reset to origin/main and recompute on every try (idempotent; a rule release that lands meanwhile is never overwritten),
+# up to 30 tries. A push made with GITHUB_TOKEN starts no workflow, so after the push this dispatches top100-auto-trigger
+# (its own switches AUTO_LOOP / AUTO_FLOW_ON_RESOLVER still decide) and tag-library-auto-rebuild explicitly.
+# Logic and tests: data-team/tags/line_map/tools/data_refresh.py, test_data_refresh.py. No database secret.
+# Kill switch: repo variable AUTO_RESOLVER_REFRESH = "false" stops the automatic runs (unset = on); dispatch still works.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data-team/strategy/open-shown-fixes/**"
+  workflow_run:
+    workflows: ["Standard extract for the resolver (FSN -> 7 JSON files, read-only)"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: "Tickers, comma separated (empty = every resolver company)"
+        default: ""
+      extract_run_id:
+        description: "Run id of a successful standard-extract run (empty = the newest that covers the scope)"
+        default: ""
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: resolver-data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' || vars.AUTO_RESOLVER_REFRESH != 'false') &&
+      (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      PYTHONHASHSEED: "0"
+      T: data-team/tags/line_map/tools/data_refresh.py
+      W: /tmp/refresh-work
+      EV: ${{ github.event_name }}
+      BEFORE_SHA: ${{ github.event.before }}
+      HEAD_SHA: ${{ github.sha }}
+      IN_TICKERS: ${{ inputs.tickers }}
+      IN_EXTRACT: ${{ inputs.extract_run_id || github.event.workflow_run.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q pytest
+      - name: Mode and scope
+        id: s
+        run: |
+          set -eu
+          mkdir -p "$W"
+          case "$EV" in push) MODE=push;; workflow_run) MODE=extract;; *) MODE=dispatch;; esac
+          CHANGED=""
+          if [ "$MODE" = push ] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            CHANGED=$(git diff --name-only "$BEFORE_SHA" "$HEAD_SHA" -- data-team/strategy/open-shown-fixes | tr '\n' ',')
+          fi
+          XCIKS=""
+          if [ "$MODE" = extract ]; then
+            gh run download "$IN_EXTRACT" --repo "$REPO" -n "standard-extract-$IN_EXTRACT" -D "$W/ext-$IN_EXTRACT"
+            XCIKS=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['ciks'])" "$W/ext-$IN_EXTRACT/manifest.json")
+          fi
+          python3 "$T" prepare --work "$W/plan" --mode "$MODE" --changed "$CHANGED" --extract-ciks "$XCIKS" --tickers "$IN_TICKERS" | tee "$W/plan.txt"
+          git checkout -q -- data-team/tags/line_map
+          SCOPE=$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(','.join(d['tickers']))" "$W/plan/scope.json")
+          SCIKS=$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(','.join(c.lstrip('0') for c in d['ciks']))" "$W/plan/scope.json")
+          echo "mode $MODE; scope: ${SCOPE:-none}"
+          { echo "mode=$MODE"; echo "changed=$CHANGED"; echo "xciks=$XCIKS"; echo "scope=$SCOPE"; echo "sciks=$SCIKS"; } >> "$GITHUB_OUTPUT"
+          echo "mode $MODE; scope: ${SCOPE:-none}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Extract covering the scope
+        id: x
+        if: steps.s.outputs.scope != ''
+        env:
+          SCIKS: ${{ steps.s.outputs.sciks }}
+        run: |
+          set -eu
+          RUN=""
+          if [ -n "$IN_EXTRACT" ]; then
+            [ -d "$W/ext-$IN_EXTRACT" ] || gh run download "$IN_EXTRACT" --repo "$REPO" -n "standard-extract-$IN_EXTRACT" -D "$W/ext-$IN_EXTRACT"
+            python3 "$T" covers "$W/ext-$IN_EXTRACT/manifest.json" "$SCIKS" && RUN=$IN_EXTRACT
+          else
+            for id in $(gh run list --repo "$REPO" --workflow pipeline-standard-extract.yml --branch main --status success --limit 8 --json databaseId --jq '.[].databaseId'); do
+              gh run download "$id" --repo "$REPO" -n "standard-extract-$id" -D "$W/ext-$id" 2>/dev/null || { echo "run $id: artifact gone"; continue; }
+              if python3 "$T" covers "$W/ext-$id/manifest.json" "$SCIKS"; then RUN=$id; break; fi
+              echo "run $id does not hold every scope CIK"; rm -rf "$W/ext-$id"
+            done
+          fi
+          if [ -z "$RUN" ]; then
+            if [ -n "$IN_EXTRACT" ]; then echo "::error::extract run $IN_EXTRACT does not hold every scope CIK ($SCIKS)"; exit 1; fi
+            N=$(echo "$SCIKS" | tr ',' '\n' | wc -l); SHARDS=$(( N < 4 ? N : 4 ))
+            gh workflow run pipeline-standard-extract.yml --repo "$REPO" --ref main -f ciks="$SCIKS" -f shards="$SHARDS"
+            echo "no extract covers the scope: dispatched pipeline-standard-extract for $SCIKS; its completion runs this refresh again" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "run=" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "extract run $RUN" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+      - name: Refresh, test, gate, commit (recomputed on every push try, up to 30)
+        id: r
+        if: steps.x.outputs.run != ''
+        env:
+          MODE: ${{ steps.s.outputs.mode }}
+          CHANGED: ${{ steps.s.outputs.changed }}
+          XCIKS: ${{ steps.s.outputs.xciks }}
+          XRUN: ${{ steps.x.outputs.run }}
+          INSTANCE_CACHE: /tmp/refresh-work/instances
+          INSTANCE_MIN_INTERVAL: "1.0"
+        run: |
+          set -uo pipefail
+          L=data-team/tags/line_map
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            V=$(python3 "$T" next-version) || { echo "::error::no version in $L/CHANGELOG.md"; exit 1; }
+            A=(--work "$W/a" --mode "$MODE" --changed "$CHANGED" --extract-ciks "$XCIKS" --tickers "$IN_TICKERS" --extract "$W/ext-$XRUN"
+               --version "$V" --run-id "$GITHUB_RUN_ID" --extract-run "$XRUN")
+            python3 "$T" prepare "${A[@]}" || { echo "::error::prepare failed"; exit 1; }
+            if [ "$(python3 -c "import json; print(len(json.load(open('$W/a/filings-new.json'))))")" != 0 ]; then
+              test -n "$SEC_USER_AGENT" || { echo "::error::SEC_USER_AGENT missing for new filings' instance evidence"; exit 1; }
+              python3 $L/tools/instance_evidence.py fetch "$W/a/filings-new.json" "$INSTANCE_CACHE" || { echo "::error::instance evidence failed"; exit 1; }
+            fi
+            python3 "$T" resolve "${A[@]}" 2>&1 | tail -4 || { echo "::error::resolver failed"; exit 1; }
+            [ -f "$W/a/changed.json" ] || { echo "::error::resolver produced no changed.json"; exit 1; }
+            if git diff --quiet -- $L/resolver $L/rules/filing_read_cells.csv; then
+              echo "nothing changed for the scope at $(git rev-parse --short HEAD): no commit" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0
+            fi
+            if python3 -m pytest -q -p no:cacheprovider $L/tools > "$W/tests.log" 2>&1; then TESTS=pass; else TESTS=fail; fi
+            tail -3 "$W/tests.log"
+            python3 "$T" oracle "${A[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+            FAIL="$L/refresh-failures/$(date -u +%F)-run$GITHUB_RUN_ID.md"
+            if ! python3 "$T" gate "${A[@]}" --tests "$TESTS" --tests-log "$W/tests.log" --failure "$W/failure.md"; then
+              # refused: no data commit; record why on main (only the failure file), then fail the run
+              [ -f "$W/failure.md" ] || { echo "::error::the gate step itself failed (no failure summary)"; exit 1; }
+              cp "$W/failure.md" "$W/failure.keep"
+              for j in $(seq 1 30); do
+                git fetch -q origin main && git reset -q --hard origin/main || { sleep 5; continue; }
+                mkdir -p $L/refresh-failures && cp "$W/failure.keep" "$FAIL"
+                git add "$FAIL" && git commit -q -m "Resolver data refresh refused (resolver-data-refresh run $GITHUB_RUN_ID): see $FAIL" \
+                  && git push -q origin HEAD:main && break
+                sleep $((RANDOM % 20 + 3))
+              done
+              cat "$W/failure.keep" >> "$GITHUB_STEP_SUMMARY"
+              echo "::error::gate refused the refresh; nothing committed but $FAIL"; exit 1
+            fi
+            python3 "$T" changelog "${A[@]}"
+            git add $L/resolver/*.csv $L/rules/filing_read_cells.csv $L/CHANGELOG.md
+            git commit -q -m "Resolver data refresh $V (current rules; resolver-data-refresh run $GITHUB_RUN_ID, extract run $XRUN)"
+            if git push -q origin HEAD:main; then
+              echo "pushed $V: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              git show --stat HEAD | tail -20 >> "$GITHUB_STEP_SUMMARY"
+              echo "pushed=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::push failed after 30 tries"; exit 1
+      - name: Start the downstream workflows (a GITHUB_TOKEN push starts none)
+        if: steps.r.outputs.pushed == 'true'
+        run: |
+          set -eu
+          # top100-auto-trigger keeps its own switches (AUTO_LOOP / AUTO_FLOW_ON_RESOLVER) and scope (changed resolver rows)
+          gh workflow run top100-auto-trigger.yml --repo "$REPO" --ref main
+          gh workflow run tag-library-auto-rebuild.yml --repo "$REPO" --ref main
+          echo "dispatched top100-auto-trigger and tag-library-auto-rebuild" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resolver-data-refresh-${{ github.run_id }}
+          path: |
+            /tmp/refresh-work/a/scope.json
+            /tmp/refresh-work/a/changed.json
+            /tmp/refresh-work/a/oracle.json
+            /tmp/refresh-work/a/skipped.csv
+            /tmp/refresh-work/tests.log
+          if-no-files-found: ignore
+          retention-days: 30

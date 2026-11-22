@@ -1,0 +1,88 @@
+name: Filings -> standard extract chain (new FSN annual filing -> scoped extract -> resolver data refresh)
+
+# Interconnection map (data-team/SYSTEMS.md, link 4 -> 8; founder 2026-11-22 "close these manual links"):
+# after the nightly refresh (and after an FSN load of missing filings, and on a schedule as a fallback because GitHub starts
+# schedules late), find the companies of the resolver set (data-team/tags/line_map/resolver/<TICKER>.csv) with an annual
+# filing in fsn.filing that the resolver has not resolved yet, and dispatch pipeline-standard-extract.yml scoped to them.
+# Its successful completion starts resolver-data-refresh.yml (workflow_run), which re-runs the resolver with the CURRENT
+# rules for those companies, gates it (line_map tests + oracle BAD not increasing) and commits; that commit dispatches
+# top100-auto-trigger (switch AUTO_LOOP / AUTO_FLOW_ON_RESOLVER) -> top100-flow for the changed companies.
+#
+# "New filing" (data-team/tags/line_map/tools/data_refresh.py new_filing_ciks, tested in test_data_refresh.py): a 10-K/20-F/
+# 40-F of the company's own CIK, period >= 2014-06-01, whose accession is not in the company's resolver file AND whose period
+# is after the latest period the resolver serves. Stateless: once the resolver serves the year, the company is not selected
+# again. 10-Qs and 10-K/As are not annual forms of the extract and are not selected.
+#
+# What fills fsn.filing: pipeline-fsn-load-filings (dispatch) and, once the founder sets FSN_NIGHTLY_STAGE=load|write, the
+# nightly incremental inside pipeline-refresh.yml. With that flag OFF (today) this chain still runs every night; it only finds
+# what an FSN load already put in fsn.filing.
+#
+# Database: ONE read-only connection (default_transaction_read_only=on, statement_timeout 60 s), one indexed query on
+# fsn.filing. No writes anywhere; the only side effect is the workflow dispatch. Kill switch: repo variable
+# AUTO_FILINGS_CHAIN = "false" stops the automatic runs (unset = on); a manual dispatch with dry_run=true only reports.
+on:
+  workflow_run:
+    workflows: ["Pipeline freshness refresh", "FSN load missing filings (EDGAR increment, CIK list)"]
+    types: [completed]
+  schedule:
+    - cron: "41 19 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true = report the companies, dispatch nothing"
+        default: "false"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: filings-extract-chain
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.AUTO_FILINGS_CHAIN != 'false') && (github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=60000"
+      DRY_RUN: ${{ inputs.dry_run || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Annual filings in fsn.filing of the resolver companies (one read-only query)
+        run: |
+          set -eu
+          T=data-team/tags/line_map/tools/data_refresh.py
+          CIKS=$(python3 -c "import sys; sys.path.insert(0, 'data-team/tags/line_map/tools'); import data_refresh as d; print(','.join(\"'\" + c + \"'\" for c in sorted(set(d.ticker_ciks(d.resolver_dir()).values()))))")
+          [ -n "$CIKS" ] || { echo "::error::no resolver companies"; exit 1; }
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select cik, accession, form, period from fsn.filing where cik in ($CIKS) and form in ('10-K','20-F','40-F') and period >= '2014-06-01') to 'fsn.csv' csv header"
+          echo "$(($(wc -l < fsn.csv) - 1)) annual filings in fsn.filing for the resolver companies"
+      - name: Companies with a filing the resolver has not resolved; dispatch the scoped standard extract
+        run: |
+          set -eu
+          NEW=$(python3 data-team/tags/line_map/tools/data_refresh.py fsn-new-ciks fsn.csv)
+          echo "new-filing companies: ${NEW:-none}"
+          echo "new-filing companies (CIK): ${NEW:-none}" >> "$GITHUB_STEP_SUMMARY"
+          [ -n "$NEW" ] || exit 0
+          [ "$DRY_RUN" = "true" ] && { echo "dry run: nothing dispatched"; exit 0; }
+          ACTIVE=0
+          for s in queued in_progress waiting pending; do
+            K=$(gh run list --repo "$REPO" --workflow pipeline-standard-extract.yml --status "$s" --json databaseId --jq 'length')
+            ACTIVE=$((ACTIVE + K))
+          done
+          # a second dispatch would replace a pending extract run in its group and drop its CIK list; the scan is stateless,
+          # so the next scan (next night or the next refresh) selects these companies again
+          [ "$ACTIVE" -eq 0 ] || { echo "a standard extract is active ($ACTIVE); the next scan picks these companies up"; exit 0; }
+          N=$(echo "$NEW" | tr ',' '\n' | wc -l)
+          SHARDS=$(( N < 4 ? N : 4 ))
+          gh workflow run pipeline-standard-extract.yml --repo "$REPO" --ref main -f ciks="$NEW" -f shards="$SHARDS"
+          echo "dispatched pipeline-standard-extract for $N companies ($SHARDS shards)" | tee -a "$GITHUB_STEP_SUMMARY"

@@ -25,6 +25,9 @@ on:
       - "data-team/tags/line_map/resolver-all110-*.csv"
       - "data-team/tags/line_map/resolver/*.csv"
       - "data-team/tags/line_map/*.csv"
+  # 2026-11-22: resolver-data-refresh.yml commits with GITHUB_TOKEN, whose push starts no workflow, so it dispatches this
+  # one after its push. Same switches and scope; the diff base is the last successful run's head (else HEAD~1).
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -55,6 +58,7 @@ jobs:
           set -eu
           BASE=$(gh run list --repo "$REPO" --workflow top100-auto-trigger.yml --status success --limit 1 --json headSha --jq '.[0].headSha // ""' || true)
           if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE="$BEFORE_SHA"; fi
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE=$(git rev-parse "$HEAD_SHA~1"); fi
           echo "diff $BASE..$HEAD_SHA"
           IDS=$(python3 -I scripts/ci/top100_changed.py companies "$BASE" "$HEAD_SHA")
           echo "company_ids=$IDS"
