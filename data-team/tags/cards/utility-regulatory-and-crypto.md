@@ -55,10 +55,10 @@ Population (any filer with both): `CryptoAssetFairValue` vs Current + Noncurrent
 - `sr.crypto.digital_asset_gains_losses`: a SET, not one tag: realized, unrealized, combined, and the separate unrealized gain / unrealized loss tags (MSTR uses the loss tag), operating and nonoperating. The Sector Analyst's 3-tag set misses `CryptoAssetUnrealizedLossOperating` / `...GainOperating` and the nonoperating tag. Sign follows the tag (credit: gain positive), and the row label can be negated (MSTR prints a loss as positive 5,403,476).
 - Verified by: Tag Expert (me), 2026-10-22.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.90. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.91. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 No element named in this card has a data point, ruling, served cell or known problem in the library.
 <!-- END GENERATED: tag library rows -->

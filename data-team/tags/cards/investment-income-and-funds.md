@@ -80,10 +80,10 @@ Population checks (core.fact, same company and period, both authoritative, since
 - BDC net assets: `StockholdersEquity` first (face at ARCC, BXSL), `AssetsNet` as a per-company alternate after an equality check (86% equal; DATA-INFERRED, no AssetsNet filing opened). The Sector Analyst's "AssetsNet is on 0/2" holds for the face of those two filers only; 31 of 42 BDCs file AssetsNet somewhere.
 - Evidence classes: as stated per line. Verified by: Tag Expert (me), 2026-10-22.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.90. 5 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.91. 5 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `NetIncomeLoss`
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.

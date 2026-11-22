@@ -103,10 +103,10 @@ Worklist: data-team/tags/TAG-PRIORITY-2026-11-11.csv on main (Dhairya; ranked by
 
 Covered: 95 of 95 ranks.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.90. 71 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.91. 71 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
@@ -198,16 +198,6 @@ Resolver resolver-all110-.90. 71 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
 
-### `SellingGeneralAndAdministrativeExpense`
-- **Meaning:** Selling, General and Administrative Expense (us-gaap, duration, debit). The aggregate total costs related to selling a firm's product and services, as well as all other general and administrative expenses. Direct selling expenses (for example, credit, warranty, and advertising) are expenses that can be directly...
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
-- **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
-- **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
-- **Evidence:** 66 companies, 1170 served, 3623 proven, 73 certified cells; last verified 2026-11-15
-- **Known problems:** pattern P07 line_double_count: 60 open hit(s) at 4 companies, e.g. ADP operating_expenses 2016-06-30 (resolver) (pattern_hits.csv)
-- **Pattern hits:** P07 (60)
-- **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
-
 ### `NetCashProvidedByUsedInFinancingActivities`
 - **Meaning:** Cash Provided by (Used in) Financing Activity, Including Discontinued Operation (us-gaap, duration, debit). Amount of cash inflow (outflow) from financing activity, including, but not limited to, discontinued operation. Financing activity includes, but is not limited to, obtaining resource from owner and providing return on, and return of, their ...
 - **Data point definition:** cash_flow_financing: Net cash provided by (used in) financing activities as printed.
@@ -244,6 +234,16 @@ Resolver resolver-all110-.90. 71 elements named in this card have library knowle
 - **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
+
+### `SellingGeneralAndAdministrativeExpense`
+- **Meaning:** Selling, General and Administrative Expense (us-gaap, duration, debit). The aggregate total costs related to selling a firm's product and services, as well as all other general and administrative expenses. Direct selling expenses (for example, credit, warranty, and advertising) are expenses that can be directly...
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
+- **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
+- **Evidence:** 66 companies, 1140 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
 
 ### `AssetsCurrent`
 - **Meaning:** Assets, Current (us-gaap, instant, debit). Amount of asset recognized for present right to economic benefit, classified as current.

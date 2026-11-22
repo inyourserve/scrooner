@@ -435,7 +435,7 @@ def test_a_tag_era_cell_from_a_strictly_later_filing_is_kept(
         assert sd.apply_direct(conn, cells, stats, [d]) == 1
         assert cells[0]["value"] == Decimal(100) and stats["blanks"] == []
         # enforce_resolver (2026-11-21): the later copy 90 is a restatement (authority v2) and stays, listed; a later
-        # copy off by 10^3 is no restatement and is held
+        # copy off by 10^3 is no restatement: the resolver cell replaces it (resolver .91, STX DPS FY2022), nothing held
         _, st = w.cells()
         for v, kept in ((Decimal(90), True), (Decimal(100000), False)):
             cells, stats = [{**later, "value": v}], {"held": [], "blanks": []}
@@ -449,9 +449,9 @@ def test_a_tag_era_cell_from_a_strictly_later_filing_is_kept(
                 "r@1",
                 stats.pop("_filed_by_accession"),
             )
-            assert (cells != []) is kept
+            assert [c["value"] for c in cells] == [v if kept else Decimal(100)]
             assert (len(stats["resolver_kept_restated"]) == 1) is kept
-            assert (stats["held"] != []) is (not kept)
+            assert stats["held"] == []
 
 
 @pytest.mark.integration
@@ -918,3 +918,42 @@ def test_text_stated_serves_the_nonzero_value_with_quote_and_rejects_zero_silenc
             write(bad)
             cells, st = w.cells()
             assert cells == []
+
+
+class _FiledConn:
+    """A connection stand-in for apply_direct's one filing-date read (no DB)."""
+
+    def __init__(self, filed: dict[str, date]):
+        self.filed = filed
+
+    def cursor(self):
+        conn = self
+
+        class _Cur:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def execute(self, _sql, params):
+                self.rows = [(a, conn.filed[a]) for a in params[0] if a in conn.filed]
+
+            def fetchall(self):
+                return self.rows
+
+        return _Cur()
+
+
+def test_stx_shape_a_later_scale_copy_loses_to_the_resolver_cell():
+    """Resolver .91 (STX dividends_per_share FY2022): the FY2024 10-K stores the FY2022 column as 2,770,000 (a filer
+    scale error); the own FY2022 10-K prints $2.77. The later copy is no restatement (shape 'scale'), so the resolver
+    cell is served; a later copy that differs by an ordinary amount (a restatement) still stays."""
+    old_acc, own_acc = "0001137789-24-000068", "0001137789-22-000055"
+    conn = _FiledConn({old_acc: date(2024, 8, 2)})
+    key = {"canonical_concept_id": 7, "period_id": 11}
+    direct = {**key, "value": Decimal("2.77"), "_accession": own_acc, "_filed": date(2022, 8, 5)}
+    for later, served in ((Decimal(2770000), Decimal("2.77")), (Decimal("-2.77"), Decimal("2.77")), (Decimal("2.70"), Decimal("2.70"))):
+        cells, stats = [{**key, "value": later, "_accession": old_acc}], {"held": [], "blanks": []}
+        sd.apply_direct(conn, cells, stats, [direct])
+        assert [c["value"] for c in cells] == [served]

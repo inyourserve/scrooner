@@ -11,10 +11,10 @@ Found 2026-11-22 by the verifier. Registry: `patterns.csv` P08. Hits: `pattern_h
 
 **Examples.** GILD gross_profit FY2015-25 (certified company, so the certificate's derived census checks the identity but the export carries no parts).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.90. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.91. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 No element named in this card has a data point, ruling, served cell or known problem in the library.
 <!-- END GENERATED: tag library rows -->

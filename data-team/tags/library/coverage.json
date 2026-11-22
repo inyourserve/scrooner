@@ -1,17 +1,17 @@
 {
  "built": "2026-11-22",
- "resolver_version": "resolver-all110-.90",
+ "resolver_version": "resolver-all110-.91",
  "rows": 28011,
  "rows_with_usage": 576,
  "rows_full": 116,
  "taxonomy_elements": 22756,
- "served_cells": 56016,
- "served_cells_all_elements_full": 36525,
+ "served_cells": 55996,
+ "served_cells_all_elements_full": 36495,
  "coverage_pct": 65.2,
  "pattern_hits": {
   "P01": {
-   "companies": 35,
-   "cells": 109
+   "companies": 32,
+   "cells": 99
   },
   "P02": {
    "companies": 0,
@@ -34,8 +34,8 @@
    "cells": 187
   },
   "P07": {
-   "companies": 4,
-   "cells": 60
+   "companies": 0,
+   "cells": 0
   },
   "P08": {
    "companies": 48,

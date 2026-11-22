@@ -1,6 +1,6 @@
-# Tag library index (generated 2026-11-22, resolver-all110-.90)
+# Tag library index (generated 2026-11-22, resolver-all110-.91)
 
-28011 rows (576 with resolver usage, 22756 taxonomy elements); coverage 65.2% of 56016 resolver-served cells have a full row for every element they use.
+28011 rows (576 with resolver usage, 22756 taxonomy elements); coverage 65.2% of 55996 resolver-served cells have a full row for every element they use.
 
 Search and follow links in [browser.html](browser.html). Columns: [library.schema.json](library.schema.json).
 
@@ -103,4 +103,3 @@ Search and follow links in [browser.html](browser.html). Columns: [library.schem
 - **pattern P04** (5): `CommonStockSharesIssued`, `CommonStockSharesOutstanding`, `TreasuryStockCommonShares`, `WeightedAverageNumberOfDilutedSharesOutstanding`, `WeightedAverageNumberOfSharesOutstandingBasic`
 - **pattern P05** (11): `CashAndCashEquivalentsAtCarryingValue`, `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents`, `CommonStockSharesOutstanding`, `Depreciation`, `GeneralAndAdministrativeExpense`, `InterestExpense`, `InterestIncomeOperating`, `InterestIncomeOther`, `InvestmentIncomeInterest`, `InvestmentIncomeInterestAndDividend`, `InvestmentIncomeNet`
 - **pattern P06** (14): `AmortizationOfIntangibleAssets`, `CostOfServices`, `Depreciation`, `DepreciationDepletionAndAmortization`, `GeneralAndAdministrativeExpense`, `IncreaseDecreaseInAccountsReceivable`, `InterestAndDividendIncomeOperating`, `InterestIncomeOperating`, `InvestmentIncomeInterest`, `InvestmentIncomeInterestAndDividend`, `InvestmentIncomeNet`, `OtherDepreciationAndAmortization`, `PaymentsForRepurchaseOfCommonStock`, `PaymentsOfOrdinaryDividends`
-- **pattern P07** (1): `SellingGeneralAndAdministrativeExpense`

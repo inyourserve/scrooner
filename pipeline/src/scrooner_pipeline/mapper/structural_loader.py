@@ -45,6 +45,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -198,6 +199,68 @@ DERIVED_DIRECT: dict[str, tuple[str, frozenset[str], frozenset[str]]] = {
     ),
 }
 SKIP_ACTIONS = {"review_missing_column_value", "no_structural_node"}
+# Quarterly-sum DPS (registry data_points.csv dividends_per_share step 4, badge derived:sum(quarterly_dps); Dhairya
+# 2026-11-16 C/SYK, the 2026-11-04 Q4 decision of doc 02): a 10-K with no annual per-share fact whose own XBRL reports the
+# four quarterly amounts of its fiscal year. The resolver row (status component_sum, flag quarterly_sum) carries the four
+# parts as `Tag[quarter ending YYYY-MM-DD]=value [NOTE]` in its node notes. Like DERIVED_DIRECT, the loader keeps the
+# map's not_presented statement (no annual line is printed) and the parts ride on the claim (quarter_parts) for
+# mapper/structural_direct, which reads the four quarterly facts of exactly that filing and serves their sum.
+QUARTERLY_SUM = "quarterly_sum"
+QUARTERLY_SUM_DPS = frozenset({"dividends_per_share"})
+QUARTERLY_SUM_BADGE = "derived:sum(quarterly_dps)"
+
+
+@lru_cache(maxsize=None)
+def registry_has_quarterly_step(dp: str) -> bool:
+    """The step is data: registry data_points.csv must list QUARTERLY_SUM_BADGE among the data point's badges (every
+    sector row that applies), else a quarterly-sum row is refused."""
+    from scrooner_pipeline.metrics import (
+        registry,
+    )  # lazy: the registry module is heavy and the loader is imported widely
+
+    rows = [
+        d for (n, _s), d in registry.load_data_points().items() if n == dp and d.applies
+    ]
+    return bool(rows) and all(QUARTERLY_SUM_BADGE in d.badges for d in rows)
+
+
+QUARTER_NODE_RE = re.compile(
+    r"(?P<tag>CommonStockDividendsPerShare\w+)\[quarter ending (?P<end>\d{4}-\d{2}-\d{2})\]=(?P<val>-?\d+(?:\.\d+)?) \[NOTE\]"
+)
+
+
+def quarter_parts(
+    text: str, period_end: date | None, value: str
+) -> tuple[tuple[str, date, str], ...] | str:
+    """The four (tag, quarter end, value) parts of a quarterly-sum DPS row, or why the row is refused. One tag, four
+    distinct quarter ends inside the fiscal year that ends at period_end (the last quarter ends with it, within a week:
+    52/53-week years), and the parts sum to the row's value. Pure."""
+    ms = list(QUARTER_NODE_RE.finditer(text or ""))
+    if len(ms) != 4:
+        return (
+            f"quarterly_sum row with {len(ms)} quarter parts (exactly 4 are the step)"
+        )
+    tags = {m.group("tag") for m in ms}
+    if len(tags) != 1:
+        return f"quarterly_sum parts name {len(tags)} tags (one element for the four quarters)"
+    parts = tuple(
+        (m.group("tag"), date.fromisoformat(m.group("end")), m.group("val")) for m in ms
+    )
+    ends = [e for _t, e, _v in parts]
+    if period_end is None or len(set(ends)) != 4 or ends != sorted(ends):
+        return "quarterly_sum quarter ends are not four distinct ascending dates"
+    if abs((ends[-1] - period_end).days) > 7 or (period_end - ends[0]).days >= 360:
+        return f"quarterly_sum quarters {ends[0]}..{ends[-1]} are not the fiscal year ending {period_end}"
+    try:
+        total = sum(Decimal(v) for _t, _e, v in parts)
+        want = Decimal(value)
+    except ArithmeticError:
+        return "quarterly_sum value is not a number"
+    if total != want:
+        return f"quarterly_sum parts sum to {total}, the row says {want}"
+    return parts
+
+
 ACCN_RE = dl.ACCN_RE
 STMT_WORDS = {"BS", "IS", "CF", "CI", "EQ", "CP", "UN", "NOTE"}
 LOC_RE = re.compile(
@@ -247,6 +310,9 @@ class Claim:
         ""  # stated_zero: the period the quote speaks for (must equal period_end)
     )
     no_filing: bool = False  # a year before the company's first 10-K; accession is that first 10-K (FIRST_10K_RE)
+    # a quarterly-sum DPS row (QUARTERLY_SUM): the claim stays a tagless not_presented statement for load(); the four
+    # (tag, quarter end, node value) parts ride here for mapper/structural_direct
+    quarter_parts: tuple[tuple[str, date, str], ...] = ()
 
 
 def _split(s: str) -> list[str]:
@@ -527,6 +593,28 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                     decision = "not_presented"
                     derived_direct = dp in DERIVED_DIRECT
                     counts["derived_loaded_as_not_presented"] += 1
+                qparts: tuple[tuple[str, date, str], ...] = ()
+                if (
+                    decision == "component_sum"
+                    and dp in QUARTERLY_SUM_DPS
+                    and QUARTERLY_SUM
+                    in {f.strip() for f in r.get("flags", "").split(";")}
+                ):
+                    got = quarter_parts(
+                        r.get("nodes") or r.get("path", ""),
+                        _date(r.get("period_end", "")),
+                        r.get("value", ""),
+                    )
+                    if isinstance(got, str):
+                        reject(got)
+                        continue
+                    if not registry_has_quarterly_step(dp):
+                        reject(
+                            f"registry data_points.csv names no {QUARTERLY_SUM_BADGE} step for {dp}"
+                        )
+                        continue
+                    qparts, decision = got, "not_presented"
+                    counts["quarterly_sum_loaded_as_not_presented"] += 1
                 if decision in NOT_A_DECISION:
                     counts[f"skipped_{decision}"] += 1
                     continue
@@ -634,6 +722,7 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                         grain=r.get("grain", ""),
                         flags=r.get("flags", ""),
                         no_filing=no_filing,
+                        quarter_parts=qparts,
                         quote=r.get("quote", "") if stated else "",
                         locator=r.get("locator", "") if stated else "",
                         quote_period=r.get("quote_period", "") if stated else "",

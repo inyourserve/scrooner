@@ -18,6 +18,7 @@ import collections
 import csv
 import hashlib
 import subprocess
+import sys
 from pathlib import Path
 
 # Statement-line data points the library maps (base names; *_resolved is folded into the base name).
@@ -35,7 +36,10 @@ ALIAS = {"revenue_sanity": "revenue"}
 
 # Sector default OUT lines and the company -> template group come from the one registry source
 # (metrics/registry/data_points.csv + sectors.csv) through mapper/sector_templates.py, never a copy here.
-from scrooner_pipeline.mapper.sector_templates import GROUP_OUT, sic_group
+# The checkout's own pipeline/src first: run as `python -I` (the test, the flow) the installed package may be another
+# checkout's older copy (a worktree's venv points at the shared checkout), which lacks GROUP_OUT.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from scrooner_pipeline.mapper.sector_templates import GROUP_OUT, sic_group  # noqa: E402
 
 
 def base(c):

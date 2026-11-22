@@ -61,6 +61,10 @@ ENV_OFF = "SCROONER_STRUCTURAL_DIRECT"  # "off" disables the path
 LINE_MAP_DIR = Path(__file__).resolve().parents[4] / "data-team" / "tags" / "line_map"
 SERVED = ("mapped", "component_sum")
 DERIVED = "derived_not_printed"
+QUARTERLY = "quarterly_sum"  # resolver .91: annual DPS = the sum of the filing's four quarterly facts (sl.QUARTERLY_SUM)
+QUARTERLY_BADGE = (
+    "derived:sum(quarterly_dps)"  # registry data_points.csv dividends_per_share step 4
+)
 CASH = "cash_and_equivalents"  # ruling 2026-11-14 (Dhairya): the BS face 'cash and cash equivalents' total line only
 
 
@@ -82,7 +86,11 @@ def _claims_by_cik(path: str) -> dict[str, tuple[sl.Claim, ...]]:
             c
         ):  # the loader's not_presented statement, with the parts the derivation needs
             c = replace(c, decision=DERIVED, parts=c.derived_parts, locs=c.derived_locs)
-        if c.decision in (*SERVED, DERIVED) and c.cik:
+        elif c.quarter_parts and c.decision == "not_presented":
+            c = replace(
+                c, decision=QUARTERLY
+            )  # the loader's not_presented statement, with the four quarter parts
+        if c.decision in (*SERVED, DERIVED, QUARTERLY) and c.cik:
             out[c.cik].append(c)
     return {k: tuple(v) for k, v in out.items()}
 
@@ -136,6 +144,62 @@ def derived_value(c: sl.Claim, vals: list[Decimal]) -> tuple[Decimal | None, str
         for i, (g, p, v) in enumerate(zip((1, -1), c.parts, vals))
     )
     return vals[0] - vals[1], ev
+
+
+def quarterly_value(
+    c: sl.Claim, stored: dict[tuple[str, date], dict[Decimal, set[int]]]
+) -> tuple[Decimal, list[int], str] | str:
+    """(annual value, fsn.value ids, evidence) of a quarterly-sum DPS claim from the four quarterly facts (qtrs 1) the
+    claim's own filing stores, or why it is not servable. `stored` maps (tag, quarter end) -> {value: ids} of exactly
+    that filing. Each quarter must hold the resolver's node value; the four sum to the row's value. Pure."""
+    if len(c.quarter_parts) != 4:
+        return f"quarterly_sum claim with {len(c.quarter_parts)} parts"
+    total, ids, ev = Decimal(0), [], []
+    for tag, end, nv in c.quarter_parts:
+        got = stored.get((tag, end), {})
+        want = Decimal(nv)
+        if want not in got:
+            return f"{tag} quarter ending {end}: the filing stores {sorted(got) or 'no value'}, the resolver node {nv}"
+        total += want
+        ids.extend(sorted(got[want]))
+        ev.append(f"{tag}[quarter ending {end.isoformat()}]={want}@{c.accession}")
+    if c.value and Decimal(c.value) != total:
+        return f"quarterly parts sum to {total}, the resolver value is {c.value}"
+    return total, ids, ";".join(ev)
+
+
+def _quarter_values(
+    conn: psycopg.Connection, company_id: int, claims: list[sl.Claim]
+) -> dict[str, dict[tuple[str, date], dict[Decimal, set[int]]]]:
+    """accession -> (tag, quarter end) -> {value: fsn.value ids}: the undimensioned one-quarter facts (qtrs 1) of the
+    quarterly-sum claims' own filings, one indexed read."""
+    out: dict[str, dict[tuple[str, date], dict[Decimal, set[int]]]] = defaultdict(
+        lambda: defaultdict(lambda: defaultdict(set))
+    )
+    accs = sorted({c.accession for c in claims})
+    tags = sorted({t for c in claims for t, _e, _v in c.quarter_parts})
+    if not accs or not tags:
+        return out
+    ends = {
+        (c.accession, t): [e for t2, e, _v in c.quarter_parts if t2 == t]
+        for c in claims
+        for t, _e, _v in c.quarter_parts
+    }
+    with conn.cursor() as cur:
+        cur.execute(
+            """select f.accession, t.tag, v.ddate, v.value, v.id
+               from fsn.value v
+               join fsn.tag t on t.id = v.tag_id
+               join fsn.filing f on f.id = v.filing_id
+               where v.company_id = %s and f.accession = any(%s) and t.tag = any(%s) and v.qtrs = 1
+                 and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.value is not null""",
+            (company_id, accs, tags),
+        )
+        for acc, tag, ddate, value, vid in cur.fetchall():
+            for end in ends.get((acc, tag), ()):
+                if fsn_end_matches(ddate, end):
+                    out[acc][(tag, end)][Decimal(value)].add(vid)
+    return out
 
 
 def enabled() -> bool:
@@ -848,6 +912,11 @@ def direct_cells(
         conn,
         {c.accession for k, cs in groups.items() if k[0] == CASH for c in cs},
     )
+    quarter = _quarter_values(
+        conn,
+        company_id,
+        [c for cs in groups.values() for c in cs if c.decision == QUARTERLY],
+    )
     cells: list[dict] = []
     fixes = fxe.load()
     dropped_facts = fsn_dropped.load()
@@ -894,6 +963,41 @@ def direct_cells(
             if why:
                 reject(why)
                 continue
+        if c.decision == QUARTERLY:
+            qgot = quarterly_value(c, quarter.get(c.accession, {}))
+            if isinstance(qgot, str):
+                reject(qgot)
+                continue
+            qv, qids, qev = qgot
+            stats["resolver_values"].append(
+                {
+                    "canonical_concept_id": cid,
+                    "period_id": pid,
+                    "value": qv,
+                    "accession": c.accession,
+                    "filed": meta[c.accession][1],
+                    "concept": name,
+                }
+            )
+            cells.append(
+                {
+                    "canonical_concept_id": cid,
+                    "period_id": pid,
+                    "value": qv,
+                    "value_source": "fsn_xbrl",
+                    "source_fact_ids": [],
+                    "source_value_ids": qids,
+                    "serve_note": f"structural resolver direct: {c.accession} column {end.isoformat()}; {QUARTERLY_BADGE}: "
+                    f"the filing reports no annual per-share fact, the sum of its four quarterly facts {qev}",
+                    "_scaled": False,
+                    "_filing_id": meta[c.accession][0],
+                    "_accession": c.accession,
+                    "_filed": meta[c.accession][1],
+                    "_dcml_keys": [],
+                    "_structural_direct": True,
+                }
+            )
+            continue
         if name == CASH and any(
             (c.accession, tag) in cash_parts for _s, _t, tag in c.parts
         ):
@@ -1145,7 +1249,8 @@ def apply_direct(
 ) -> int:
     """Splice direct cells into the tag-era cells, and drop the held/blank entries of a replaced key (the resolver
     found the value). Authority v2 still rules between the two paths: a resolver row speaks for its own filing, so a
-    tag-era cell read from a STRICTLY LATER eligible filing (the restated column: ABT 2016 operating income) stays;
+    tag-era cell read from a STRICTLY LATER eligible filing (the restated column: ABT 2016 operating income) stays,
+    unless it differs from the resolver cell by scale (10^3 / 10^6), sign or zero, which no restatement explains (shape);
     from the same or an earlier filing, or no cell at all, the resolver cell wins. Kept cells that differ are listed
     in stats['structural_direct_kept_later_filing']. Returns how many cells were replaced or added."""
     have = {(c["canonical_concept_id"], c["period_id"]): c for c in cells}
@@ -1166,7 +1271,9 @@ def apply_direct(
         old = have.get(k)
         if old is not None and old.get("_accession"):
             of, nf = filed.get(old["_accession"]), d.get("_filed")
-            if of and nf and of > nf:
+            # a later copy off by scale, sign or zero is no restatement (restated_later): the resolver cell wins (STX
+            # dividends_per_share FY2022: the FY2024 10-K's 2,770,000 copy lost to the own 10-K's 2.77, resolver .91)
+            if of and nf and of > nf and shape(old["value"], d["value"]) == "other":
                 if old["value"] != d["value"]:
                     kept.append(
                         {

@@ -10,22 +10,22 @@ Found 2026-11-22 by the verifier. Registry: `patterns.csv` P07. Hits: `pattern_h
 - basic and diluted EPS or shares on a `BasicAndDiluted` line.
 - a `CONTAINS` total and its part, such as operating_expenses and sga_expense, when the total is a sum.
 
-**Rule (open, resolver .90).** One printed line serves one data point outside those pairs. Where the face prints only one operating line (WMT "Operating, selling, general and administrative expenses"), the line is a combined value with a badge (X113) for one data point, and the other data point is combined.
+**Rule (X130, resolver .91).** One printed line serves one data point outside those pairs. Where the face prints only one operating line (WMT "Operating, selling, general and administrative expenses"), the line is a combined value with a badge (X113) for one data point, and the other data point is combined.
 
 **Examples.** WMT, ADP and COST operating_expenses + sga_expense; DE interest_expense + operating_expenses.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.90. 1 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.91. 1 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `SellingGeneralAndAdministrativeExpense`
 - **Meaning:** Selling, General and Administrative Expense (us-gaap, duration, debit). The aggregate total costs related to selling a firm's product and services, as well as all other general and administrative expenses. Direct selling expenses (for example, credit, warranty, and advertising) are expenses that can be directly...
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
 - **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
-- **Evidence:** 66 companies, 1170 served, 3623 proven, 73 certified cells; last verified 2026-11-15
-- **Known problems:** pattern P07 line_double_count: 60 open hit(s) at 4 companies, e.g. ADP operating_expenses 2016-06-30 (resolver) (pattern_hits.csv)
-- **Pattern hits:** P07 (60)
+- **Evidence:** 66 companies, 1140 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
 - **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
 <!-- END GENERATED: tag library rows -->

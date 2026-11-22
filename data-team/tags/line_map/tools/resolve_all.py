@@ -2034,6 +2034,45 @@ def role(f, L, arcs, notes, R):
 PER_SHARE_DPS = ('dividends_per_share', 'basic_eps', 'diluted_eps')
 
 
+P07_NODE = re.compile(r'(?:^|; )(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[(R\d+\.htm:\d+)[^\]]*\]')
+SGA_ONLY_LABEL = re.compile(r'^\s*selling,? general,? and administrative( expenses?)?\s*$', re.I)
+
+
+def apply_one_line_one_data_point(rows, filings=()):
+    """X130 (.91; tag-expert pattern P07, card pattern-line-double-count): one printed line serves one data point. A face whose only
+    operating line between cost of revenue and operating income is the SG&A line (WMT 'Operating, selling, general and administrative
+    expenses', COST, PG, ADP 'Selling, general and administrative expenses') served that one line twice, as sga_expense and as
+    operating_expenses (the same printed number counted in two data points that are neither the same figure nor a sum and its part).
+    The line serves sga_expense (its own role); operating_expenses becomes `combined`, state included_in:sga_expense (registry: a cell
+    in state included_in:<dp> is excluded from the data point's filters with that reason, never blank or zero). A label naming more than
+    SG&A (WMT 'Operating, ...') gives sga_expense the badge combined:<label> (registry sga_expense fallback 2)."""
+    lab = {}
+    for f in filings:
+        for x in (f.get('lines') or '').split('~'):
+            q = x.split('|')
+            if len(q) >= 9 and q[0] == 'IS': lab[(f['a'], q[3], f"R{q[1]}.htm:{q[2]}")] = q[7]
+    def one(r):
+        ns = P07_NODE.findall((r.get('nodes') or '').split(' | why')[0])
+        return (ns[0][1], ns[0][2], ns[0][4]) if len(ns) == 1 and not ns[0][0] else None
+    col = lambda r: r.get('column') or 'own'
+    sga = {(r['accession'], r['period_end'], col(r)): r for r in rows if r['data_point'] == 'sga_expense' and r['status'] in ('mapped', 'component_sum')}
+    for r in rows:
+        if r['data_point'] != 'operating_expenses' or r['status'] not in ('mapped', 'component_sum'): continue
+        s_ = sga.get((r['accession'], r['period_end'], col(r)))
+        n = one(r)
+        if s_ is None or n is None or one(s_) != n or D(r['value']) != D(s_['value']): continue
+        tag, dims, loc = n
+        label = lab.get((r['accession'], tag, loc), '')
+        r.update(status='combined', value=None,
+                 why=f"the only printed operating line is the SG&A line{(' ' + repr(label)) if label else ''} ({tag} at {loc}), served as sga_expense; "
+                     "operating_expenses is included_in:sga_expense: one printed line serves one data point (X130, pattern P07)")
+        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x and not x.startswith('derived:')] + ['included_in:sga_expense'])
+        if label and not SGA_ONLY_LABEL.match(label):
+            badge = 'combined:' + label.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+            s_['flags'] = ';'.join([x for x in (s_.get('flags') or '').split(';') if x and x != badge] + [badge])
+    return rows
+
+
 def apply_per_share_scale_guard(rows):
     """X128 (.90; Ritwik draw 2026-11-16, close-out 2026-11-23 STX DPS FY2022 2,770,000 -> 2.77): the last guard on every per-share
     cell, whatever route set it (latest print, comparative fill, member fact). A per-share value |v| >= 1000 whose company's other
@@ -2089,6 +2128,75 @@ def apply_rounded_share_count(rows, memberfacts):
         r.update(value=tot, status='component_sum' if tr else 'mapped', nodes=nodes,
                  why=f"X111: the undimensioned CommonStockSharesOutstanding {was} is a 100M-rounded figure; the equity statement of the same filing counts {tot}")
         r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'rounded_count_replaced') if x)
+    return rows
+
+
+READ_HEADER = re.compile(r'\(([^()]*?(?:FY)?(?:19|20)\d\d(?:\s*\|\s*(?:[A-Za-z.]+\s*\d{1,2},\s*)?(?:FY)?(?:19|20)\d\d)+)\)')
+READ_ROW = re.compile(r'"([^"|]+?)((?:\s*\|\s*[^|"]*)+)"')
+READ_CELL = re.compile(r'^\(?\s*\$?\s*(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?\s*\)?$')
+
+
+def _read_columns(quote):
+    """(years, [(label, [signed printed figure or None per column])]) of a read quote: the FIRST parenthesised column header of
+    2-3 years ('(2024 | 2023 | 2022)', '($ in millions, Dec. 31, 2024 | 2023 | 2022)', '(FY2016 | FY2015 | FY2014)') and every quoted
+    table row with exactly that many figure cells (footnote markers '[1]' dropped). Anything else: ([], [])."""
+    h = READ_HEADER.search(quote or '')
+    if not h: return [], []
+    years = [int(y) for y in re.findall(r'(?:FY)?((?:19|20)\d\d)', h.group(1))]
+    if not 2 <= len(years) <= 3 or len(set(years)) != len(years): return [], []
+    out = []
+    for m in READ_ROW.finditer(quote):
+        cells = [c.strip() for c in m.group(2).split('|')[1:] if c.strip() and not re.fullmatch(r'\[\d+\]', c.strip())]
+        vals = []
+        for c in cells:
+            if c in ('—', '-', '–'): vals.append(D(0)); continue
+            x = READ_CELL.match(c)
+            if not x: vals = None; break
+            v = D(x.group(1).replace(',', '') + ('.' + x.group(2) if x.group(2) else ''))
+            vals.append(-v if c.startswith('(') else v)
+        if vals and len(vals) == len(years): out.append((m.group(1).strip(), vals))
+    return years, out
+
+
+def apply_read_stated_years(rows):
+    """X132 (.91; tag-expert pattern P01, card pattern-text-stated-years): a filing read's text_stated quote that prints a multi-year
+    table row ('Other income (loss) | 2,264 | 6,718 | 811' under '(2024 | 2023 | 2022)') serves every year it prints, as a comparative
+    statement of the quoting filing, under the X109 read contract (quote and locator reused, quote_period per year). Only a cell the
+    resolver left without a value (not_presented, no_role, or combined when the read itself served the combined line with its badge)
+    and that no read decided (filing_read / filing_read_hide) is filled; the quote's row must hold the read's own value in its own
+    year's column (that fixes the unit and the sign convention). A stated figure never replaces a served value (X121, ruling c)."""
+    by = collections.defaultdict(list)
+    for r in rows: by[(r['ticker'], r['data_point'], str(r['period_end'])[:4])].append(r)
+    for r in [x for x in rows if 'filing_read' in (x.get('flags') or '').split(';') and 'text_stated' in (x.get('flags') or '').split(';')]:
+        if r.get('value') in (None, '') or not r.get('quote'): continue
+        years, trows = _read_columns(r['quote'])
+        y0 = int(str(r['period_end'])[:4])
+        if y0 not in years: continue
+        v = D(r['value']); i0 = years.index(y0)
+        hit = None
+        for _lab, vals in trows:
+            a = vals[i0]
+            if not a: continue
+            for unit in (D(1), D(1000), D(10) ** 6, D(10) ** 9):
+                if abs(a) * unit == abs(v): hit = (vals, unit, 1 if (a > 0) == (v > 0) else -1); break
+            if hit: break
+        if not hit: continue
+        vals, unit, k = hit
+        badge = [f for f in r['flags'].split(';') if f.startswith('combined:')]
+        for j, y in enumerate(years):
+            if j == i0: continue
+            cand = [t for t in by.get((r['ticker'], r['data_point'], str(y)), []) if (t.get('column') or 'own') == 'own']
+            if len(cand) != 1: continue
+            t = cand[0]
+            fl = (t.get('flags') or '').split(';')
+            if 'filing_read' in fl or 'filing_read_hide' in fl: continue   # a read decided the cell
+            if not ((t['status'] in ('not_presented', 'no_role') and t.get('value') in (None, '')) or (t['status'] == 'combined' and badge)): continue
+            t.update(status='mapped', value=k * vals[j] * unit, tags='', r_page='', nodes='', accession=r['accession'],
+                     column='own' if r['accession'] == t.get('accession') else 'comparative',
+                     quote=r['quote'], locator=r.get('locator', ''), quote_period=str(t['period_end']),
+                     why=f"X132: the filing read of FY{y0} ({r['accession']}) quotes a table row that prints FY{y} as {vals[j]} (x{unit}); a stated "
+                         f"year of a read serves every year it prints (was {t['status']})")
+            t['flags'] = ';'.join(['read_stated_year', 'text_stated', 'stated_in_later_filing' if t['column'] == 'comparative' else ''] + badge).replace(';;', ';').strip(';')
     return rows
 
 
@@ -2374,10 +2482,12 @@ if __name__ == '__main__':
     rows = apply_amort_finer_print(rows, compfacts)   # X116
     rows = apply_rounded_share_count(rows, memberfacts)   # X111
     rows = apply_per_share_scale_guard(rows)   # X128
+    rows = apply_one_line_one_data_point(rows, filings)   # X130 (P07)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
     rows = filing_reads.apply(rows, log=_frl)
     print('filing reads:', collections.Counter(x[0] for x in _frl), file=sys.stderr)
+    rows = apply_read_stated_years(rows)   # X132 (P01): after the reads, before the sbc note step
     rows = apply_sbc_note_expense(rows)   # X127: after the reads (a read replacing an award sum names another row source)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
