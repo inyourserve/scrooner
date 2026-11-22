@@ -60,7 +60,7 @@ with company_filings as (
    )
 ),
 fl as (select id, cik, accession, period, filed from company_filings where form in ('10-K','20-F','40-F') and period>='2014-06-01'),
-ln as (select l.filing_id, l.stmt, l.report, l.line, l.inpth, t.tag, t.custom, l.negating, l.prole, replace(replace(left(coalesce(l.plabel,''),60),'|',' '),'~',' ') lb, l.tag_id
+ln as (select l.filing_id, l.stmt, l.report, l.line, l.inpth, t.tag, t.custom, l.negating, l.prole, replace(replace(coalesce(l.plabel,''),'|',' '),'~',' ') lb, l.tag_id
  from fsn.line l join fl on fl.id=l.filing_id join fsn.tag t on t.id=l.tag_id where l.stmt in ('BS','CP')),
 lv as (select ln.*, (select v.value from fsn.value v join fl f2 on f2.id=ln.filing_id where v.filing_id=ln.filing_id and v.tag_id=ln.tag_id and v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=f2.period and v.qtrs=0 limit 1) val from ln where ln.stmt='BS' and not ln.inpth),
 cp as (select ln.filing_id, ln.report, ln.line, ln.tag, ln.lb, d.segments seg, v.value

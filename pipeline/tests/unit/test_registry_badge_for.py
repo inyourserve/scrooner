@@ -212,7 +212,13 @@ def test_every_badge_from_the_live_resolver_output_is_a_step_of_its_data_point()
             try:
                 b = reg.badge_for(r["data_point"], "general", r)
             except reg.BadgeUndecided:
-                assert r["decision"] != "mapped" or "as_printed" not in DPS[key].badges
+                # a mapped row is undecided only when it reads a formula no single registry step names (it is opened with
+                # the reason, never shown as_printed: Dhairya ruling 2026-11-22)
+                assert (
+                    r["decision"] != "mapped"
+                    or "as_printed" not in DPS[key].badges
+                    or reg.locator_formula_op(r)
+                )
                 undecided += 1
                 continue
             assert reg._badge_ok(b), b
@@ -337,3 +343,30 @@ def test_mapped_row_serving_a_combined_line_takes_its_combined_badge_jnj_cf_ap_c
     assert reg.badge_for("cf_ap_change", "general", row2) == "combined:Accounts payable, accrued and other"
     # a label the data point's combined steps do not name is never invented as a badge
     assert reg.badge_for("revenue", "general", dict(row, flags="combined:Revenues and other income")) == "as_printed"
+
+
+def test_a_formula_locator_is_never_as_printed_bmy_gross_profit():
+    """Dhairya ruling 2026-11-22 (verifier draw a723185f, judge 2b78da15): BMY gross_profit FY2015-20 are filing reads located
+    as 'R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold)': a computation, badged as_printed. A formula
+    locator takes the registry derived step; an ambiguous one is undecided (the export opens it), never as_printed."""
+    loc = "R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-19-000047, read FY2016 10-K"
+    row = {"decision": "mapped", "flags": "core;filing_read;text_stated;replaces:derived", "nodes": "", "locator": loc}
+    assert reg.badge_for("gross_profit", "general", row) == "derived:revenue-cost_of_revenue"
+    plus = dict(row, locator="R4.htm (us-gaap:SellingAndMarketingExpense + us-gaap:GeneralAndAdministrativeExpense) of X")
+    assert reg.badge_for("sga_expense", "general", plus) == "derived:selling_and_marketing+general_and_administrative"
+    # BMY opex FY2017: costs - COGS - other: two non-sum steps fit; undecided unless the read names its step
+    opex = dict(row, locator="R2.htm (us-gaap:CostsAndExpenses - us-gaap:CostOfGoodsAndServicesSold - us-gaap:OtherNonoperatingIncomeExpense) of X")
+    with pytest.raises(reg.BadgeUndecided):
+        reg.badge_for("operating_expenses", "general", opex)
+    named = dict(opex, flags=opex["flags"] + ";derived:sum(printed operating lines)")
+    assert reg.badge_for("operating_expenses", "general", named) == "derived:sum(printed operating lines)"
+    # one element stays as_printed
+    one = dict(row, locator="R5.htm (us-gaap:AccountsReceivableNetCurrent (Receivables note)) of X")
+    assert reg.badge_for("accounts_receivable", "general", one) == "as_printed"
+
+
+def test_shares_outstanding_has_the_employee_benefit_trust_step_lly():
+    """Dhairya ruling 2026-11-22: LLY shares outstanding = issued - treasury - employee-benefit-trust shares, one filing."""
+    row = {"decision": "mapped", "flags": "bs_family;filing_read;text_stated;derived:issued-treasury-employee_benefit_trust",
+           "nodes": "", "locator": "R7.htm (us-gaap:CommonStockSharesIssued - us-gaap:TreasuryStockCommonShares - us-gaap:CommonStockSharesHeldInEmployeeTrustShares) of X"}
+    assert reg.badge_for("shares_outstanding", "general", row) == "derived:issued-treasury-employee_benefit_trust"

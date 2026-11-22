@@ -567,6 +567,28 @@ def printed_label(row: dict) -> str:
     return m.group(1).strip() if m else ""
 
 
+# a locator naming a computation of two or more elements: 'R2.htm (us-gaap:A - us-gaap:B) of ...' (top100_coverage._LOCATOR_FORMULA)
+_FORMULA_LOCATOR = re.compile(
+    r"^\s*R\d+\.htm\b[^(]*\((?:[a-z][\w-]*):[A-Za-z0-9_]+(?:\s*\[[^\]]+\])?(?P<rest>.*)$"
+)
+_FORMULA_TERM = re.compile(r"\s([-+])\s*\(?\s*[a-z][\w-]*:[A-Za-z]")
+
+
+def locator_formula_op(row: dict) -> str:
+    """'-' when the row's locator is a computation with a subtraction, '+' for a pure sum, '' for one element. Pure."""
+    m = _FORMULA_LOCATOR.match(str(row.get("locator") or ""))
+    if not m:
+        return ""
+    ops = {o for o in _FORMULA_TERM.findall(m.group("rest"))}
+    return "-" if "-" in ops else ("+" if ops else "")
+
+
+def locator_formula_operands(row: dict) -> int:
+    """How many elements the row's locator formula names (1 for a single element). Pure."""
+    m = _FORMULA_LOCATOR.match(str(row.get("locator") or ""))
+    return 1 + len(_FORMULA_TERM.findall(m.group("rest"))) if m else 0
+
+
 def badge_matches(badge: str, allowed: tuple[str, ...] | list[str]) -> bool:
     """A badge equals one of the allowed steps, or fills an allowed step's <placeholder> after its fixed prefix."""
     for b in allowed:
@@ -663,6 +685,31 @@ def badge_for(
             if "-" not in _derived_formula(b)
             and not _derived_formula(b).startswith("zero_balance:")
         ]
+    elif decision == "mapped" and (op := locator_formula_op(resolver_row)):
+        # a value read as a computation of printed lines (locator 'R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsSold)')
+        # is that derivation, never as_printed (Dhairya ruling 2026-11-22; BMY gross_profit FY2015-20). A difference takes
+        # the data point's only non-sum derived step, a pure sum its only additive one; anything else is undecided (the
+        # export opens the cell with the reason) until the read names its step with badge=derived:<formula>.
+        if op == "-":
+            cands = [
+                b
+                for b in derived
+                if not _derived_formula(b).startswith(("sum(", "zero_balance:"))
+            ]
+        else:
+            cands = [
+                b
+                for b in derived
+                if "-" not in _derived_formula(b)
+                and not _derived_formula(b).startswith("zero_balance:")
+            ]
+        if len(cands) > 1:
+            # several steps fit the sign: the one with as many operands as the locator names (LLY shares: issued -
+            # treasury - trust shares is 3 operands, the plain issued - treasury step 2)
+            n = locator_formula_operands(resolver_row)
+            cands = [
+                b for b in cands if len(re.split(r"[-+]", _derived_formula(b))) == n
+            ]
     elif decision == "mapped":
         cands = ["as_printed"] if "as_printed" in d.badges else []
     elif decision == "combined":

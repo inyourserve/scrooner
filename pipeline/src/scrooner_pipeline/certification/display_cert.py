@@ -859,8 +859,10 @@ TEMP_EQUITY_TAGS = (
 )
 SHARES_ISSUED_TAGS = ("CommonStockSharesIssued",)
 TREASURY_SHARES_TAGS = ("TreasuryStockCommonShares", "TreasuryStockShares")
+# shares held by an employee benefit trust: issued, not outstanding (Dhairya ruling 2026-11-22, LLY; registry step 4)
+TRUST_SHARES_TAG = "CommonStockSharesHeldInEmployeeTrustShares"
 DERIVED_TAGS = frozenset(
-    {*SHARES_ISSUED_TAGS, *TREASURY_SHARES_TAGS, *TEMP_EQUITY_TAGS}
+    {*SHARES_ISSUED_TAGS, *TREASURY_SHARES_TAGS, *TEMP_EQUITY_TAGS, TRUST_SHARES_TAG}
 ) | frozenset(
     {
         "Assets",
@@ -937,6 +939,21 @@ def check_derived(c: Cell, cells: list[Cell], facts: list[Fact]) -> CellCheck:
                 "NOT_FOUND",
                 None,
                 f"no shares issued or treasury shares fact at {c.period_end} in {c.accession}",
+            )
+        if "employee_benefit_trust" in str(c.badge or ""):
+            trust = at.get(TRUST_SHARES_TAG)
+            if trust is None:
+                return CellCheck(
+                    c,
+                    "NOT_FOUND",
+                    None,
+                    f"no employee-trust shares fact at {c.period_end} in {c.accession}",
+                )
+            return CellCheck(
+                c,
+                "MATCH" if issued - treasury - trust == shown else "MISMATCH",
+                issued - treasury - trust,
+                f"shares issued {issued} - treasury shares {treasury} - employee trust shares {trust} in {c.accession}",
             )
         return CellCheck(
             c,

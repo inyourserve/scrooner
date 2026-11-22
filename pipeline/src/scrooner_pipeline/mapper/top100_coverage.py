@@ -2239,7 +2239,7 @@ _BADGE_DECISIONS = {"mapped", "component_sum", "derived_not_printed", "combined"
 def load_resolver_steps(
     resolver_dir: Path = RESOLVER_DIR,
 ) -> dict[tuple[str, str], list[tuple[date, dict[str, str]]]]:
-    """(ticker, data_point) -> [(resolver period_end, {decision, flags, nodes})] for the rows whose decision names a
+    """(ticker, data_point) -> [(resolver period_end, {decision, flags, nodes, locator})] for the rows whose decision names a
     fallback step (the CURRENT resolver output, read through resolver_files). Missing file: empty."""
     out: dict[tuple[str, str], list[tuple[date, dict[str, str]]]] = defaultdict(list)
     if not rf.resolver_files(resolver_dir):
@@ -2251,7 +2251,10 @@ def load_resolver_steps(
             out[(r["ticker"], r["data_point"])].append(
                 (
                     date.fromisoformat(r["period_end"]),
-                    {k: r.get(k) or "" for k in ("decision", "flags", "nodes")},
+                    {
+                        k: r.get(k) or ""
+                        for k in ("decision", "flags", "nodes", "locator")
+                    },
                 )
             )
     return out
