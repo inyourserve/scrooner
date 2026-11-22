@@ -2342,6 +2342,22 @@ ROW_CLASS_OF_YEAR_CLASS: dict[str, str] = {HC_VERIFIED_ABSENT: HC_STRUCTURAL}
 YEAR_CLASS_OF_ROW_CLASS: dict[str, str] = {HC_STRUCTURAL: HC_VERIFIED_ABSENT}
 
 
+_INCLUDED_IN_RE = re.compile(r"\bincluded_in:([a-z_]+)")
+
+
+def included_in_shown_row(
+    c: dict[str, Any], shown_keys: set[tuple[Any, Any, Any]]
+) -> bool:
+    """A cell hidden as reported only combined whose evidence names included_in:<dp> (resolver .92 X130) and whose company
+    shows <dp> in the same fiscal year: its amount is printed inside that shown cell. Pure."""
+    if c.get("_only_combined") not in ("row", "years"):
+        return False
+    m = _INCLUDED_IN_RE.search(str(c.get("evidence") or ""))
+    if m is None:
+        return False
+    return (c["company_id"], m.group(1), c.get("fiscal_year")) in shown_keys
+
+
 def whole_row_hide_class(hc: str) -> str:
     """The hide class a cell carries when its whole row is hidden: a year-only class becomes its row class. Pure."""
     return ROW_CLASS_OF_YEAR_CLASS.get(hc, hc)
@@ -2460,6 +2476,11 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
                     r["evidence"] = ha.no_10k_evidence(r)
         r["hide_class"] = hc or ""
         by_row[(r["company_id"], r.get("data_point"))].append(r)
+    shown_keys = {
+        (r["company_id"], r.get("data_point"), r.get("fiscal_year"))
+        for r in rows
+        if r.get("display") == SHOWN_VALUE
+    }
     for cells in by_row.values():
         if any(c["display"] == SHOWN_VALUE for c in cells):
             # rulings 2026-11-21 item 14 (GILD total_liabilities FY2015): structural_not_presented means the row is
@@ -2510,9 +2531,13 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
                     )
         if any(c.get("_family_hit") for c in cells):
             # a row hidden as never reported must have no year whose own filing prints the line (MO other income FY2015):
-            # a row with any printed year is not a hidden row; its cells are judged per year (open until filled)
+            # a row with any printed year is not a hidden row; its cells are judged per year (open until filled).
+            # Resolver .92 X130: a cell hidden as included_in:<first> IS printed, inside <first>'s shown cell of the same
+            # year (WMT sga_expense in 'Operating, selling, general and administrative expenses'): it stays hidden.
             for c in cells:
-                if c["display"] == HIDDEN_ROW:
+                if c["display"] == HIDDEN_ROW and not included_in_shown_row(
+                    c, shown_keys
+                ):
                     c["display"] = OPEN
                     c["hide_class"] = ""
         # a reader's never-reported class read for one year of a data point off the year-hide allowlist: valid only

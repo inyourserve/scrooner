@@ -461,8 +461,12 @@ def test_note_fact_part_missing_from_the_note_lookup_takes_its_face_line_of_the_
 
     A, Z = "0000310158-22-000003", "0000000000-00-000001"
     i = LocatorIndex()
-    i.add(A, 3, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net")
-    i.add(Z, 9, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net")
+    i.add(
+        A, 3, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net"
+    )
+    i.add(
+        Z, 9, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net"
+    )
     ch = _checks(
         ["OtherNonoperatingIncomeExpense", "InterestExpense"],
         note=["OtherNonoperatingIncomeExpense", "InterestExpense"],
@@ -475,7 +479,11 @@ def test_note_fact_part_missing_from_the_note_lookup_takes_its_face_line_of_the_
     assert blank == 0
     # the note lookup still wins when it has the pair
     got, _ = parts_locator(
-        ch, A, i, {(A, "OtherNonoperatingIncomeExpense"): 95, (A, "InterestExpense"): 120}, None
+        ch,
+        A,
+        i,
+        {(A, "OtherNonoperatingIncomeExpense"): 95, (A, "InterestExpense"): 120},
+        None,
     )
     assert got.startswith(f"OtherNonoperatingIncomeExpense=1000000@{A}#R95;")
     # a filing that prints neither: blank, Z's face page is never borrowed
@@ -487,7 +495,10 @@ def test_untagged_text_stated_proof_cites_its_reads_page_of_the_same_filing():
     """A PROVEN cell with no shown tag (a filing read, checks.text_stated) cited no page. MRK FY2019 amortization:
     the read's element on THAT filing's lines first, then the R page its locator starts with; another filing's
     read gives nothing."""
-    from scrooner_pipeline.mapper.top100_coverage import LocatorIndex, text_stated_locator
+    from scrooner_pipeline.mapper.top100_coverage import (
+        LocatorIndex,
+        text_stated_locator,
+    )
 
     A = "0000310158-22-000003"
     i = LocatorIndex()
@@ -499,7 +510,9 @@ def test_untagged_text_stated_proof_cites_its_reads_page_of_the_same_filing():
     }
     assert text_stated_locator(ts, A, None, i) == ("R9.htm", "text_stated_locator")
     # the element is on a note report of the same filing: that page (the value's own page)
-    assert text_stated_locator(ts, A, None, i, {(A, "AdjustmentForAmortization"): 73}) == (
+    assert text_stated_locator(
+        ts, A, None, i, {(A, "AdjustmentForAmortization"): 73}
+    ) == (
         "R73.htm",
         "text_stated_note_report_from_pre",
     )
@@ -960,3 +973,27 @@ def test_export_carries_badge_and_sector_columns():
     )
     assert (rows[0]["badge"], rows[0]["sector"]) == ("as_printed", "bank")
     assert (rows[1]["badge"], rows[1]["sector"]) == ("", "general")
+
+
+def test_included_in_hidden_cell_counts_as_printed_inside_its_shown_target():
+    # resolver .92 X130: WMT sga_expense is included_in:operating_expenses (one printed line, its label names opex first);
+    # the row's line is printed, but inside the shown opex cell of the same year, so the family-hit reopen must not open it
+    from scrooner_pipeline.mapper import top100_coverage as tc
+
+    c = {
+        "company_id": 1134,
+        "fiscal_year": "2020",
+        "_only_combined": "row",
+        "evidence": "reported only combined: SellingGeneralAndAdministrativeExpense included_in:operating_expenses",
+    }
+    assert tc.included_in_shown_row(c, {(1134, "operating_expenses", "2020")})
+    assert not tc.included_in_shown_row(
+        c, {(1134, "operating_expenses", "2019")}
+    )  # target not shown that year
+    assert not tc.included_in_shown_row(
+        {**c, "_only_combined": None}, {(1134, "operating_expenses", "2020")}
+    )
+    assert not tc.included_in_shown_row(
+        {**c, "evidence": "reported only combined: X"},
+        {(1134, "operating_expenses", "2020")},
+    )
