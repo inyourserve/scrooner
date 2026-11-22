@@ -7,11 +7,11 @@ Approver: Ritwik (cloud), session_01GLmSDz8UUfjBrVex2j8ugb. Coverage sha256 0e27
 - The 5 cf_ap_change cells left for a read are the values I checked one by one for the token.
 - total_debt matches 11 of 11 years and the derived census 6 of 6.
 
-**FAIL: all 12 cf_ap_change cells (FY2015-FY2025) carry badge `as_printed`.** The token accepted them only as `combined:Increase in accounts payable and accrued liabilities`.
+**FAIL: all 11 cf_ap_change cells (FY2015-FY2025; the token's FY2014 is outside the display window) carry badge `as_printed`.** The token accepted them only as `combined:Increase in accounts payable and accrued liabilities`.
 - JNJ prints accounts payable only combined with accrued liabilities (us-gaap IncreaseDecreaseInAccountsPayableAndAccruedLiabilities), and the founder decision of 2026-11-22 (doc 02) requires a combined line to be shown with the `combined:<what it includes>` badge.
 - Shown as `as_printed`, the screener would present JNJ's payables-plus-accruals change as a pure accounts-payable change.
 - The automated checker agrees: the element is outside its cf_ap_change family.
-- Fix: badge the 12 cells `combined:Increase in accounts payable and accrued liabilities` and re-request. No value changes.
+- Fix: badge the 11 cells `combined:Increase in accounts payable and accrued liabilities` and re-request. No value changes.
 
 **Token correction.** The token's FY2015 value (-3,000,000) came from the FY2015 10-K. The FY2016 and FY2017 10-Ks re-present FY2015 as 287,000,000, so the export's 287,000,000 (FY2017 10-K, R8) is the correct latest print.
 
