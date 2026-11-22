@@ -1,2 +1,0 @@
-work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-verifier_check,100,BMY,215,accounts_receivable,2015,2015-12-31,PROVEN,,"verifier self-check draw_check: AUTO_MISMATCH (family) filing 2948000000.0000: value differs: tier 1 AccountsReceivableNetCurrent=2948000000.0000 (dcml -6, 2015-12-31, qtrs 0), shown 4299000000",4299000000,0000014272-16-000288,R4.htm,
