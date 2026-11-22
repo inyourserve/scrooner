@@ -1,4 +1,5 @@
 # Card family: Balance-sheet asset tags, learned from FSN (written 2026-11-11 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Founder order 2026-11-11: "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." This card teaches what each asset tag is, per company, for the seed of `analytics.company_tag_map`. Machine-readable twin: `data-team/tags/library/fsn-balance-sheet-assets.csv`. Extends `cash.md` (not contradicted, one refinement in sec. 3 and 18) and `utility-regulatory-and-crypto.md`.
 
@@ -194,3 +195,234 @@ R pages: AAPL 0000320193-25-000079 R5; PNC 0000713676-26-000020 R5; TRV 00000863
 ## 20. Not tested
 
 Insurer and bank use of AR/inventory beyond counts; STE/SUI "(including goodwill)" labels; MRK inventory split; the "#REF!" filers other than PINS; GE/MU/WMT/COST/RTX receivable perimeters; quarterly vs annual differences; whether companyfacts carries the same facts as FSN for the label-shift filers (it should, the facts are the same instance; ASSUMED); the 270 latest 10-Ks with no line_map rows (cause not investigated).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 24 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `Goodwill`
+- **Meaning:** Goodwill (us-gaap, instant, debit). Amount, after accumulated impairment loss, of asset representing future economic benefit arising from other asset acquired in business combination or from joint venture formation or both, that is not individually identified and separately r...
+- **Data point definition:** goodwill: Goodwill at period end as printed.
+- **Data point:** goodwill; role goodwill:primary#1
+- **Rules:** X78; B20
+- **Evidence:** 105 companies, 1206 served, 4387 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces BusinessCombinationGoodwillRecognizedSegmentAllocation@2013; FreshStartAdjustmentIncreaseDecreaseGoodwill@2021; FreshStartAdjustmentIncreaseDecreaseReorganizationValueInExcessOfAmountsAllocableToIdentifiableAssets@2021; PostconfirmationGoodwill@2021 (+2 more)
+
+### `CashAndCashEquivalentsAtCarryingValue`
+- **Meaning:** Cash and Cash Equivalent (us-gaap, instant, debit). Amount of cash and cash equivalent. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and account with general characteristic of demand deposit. Cash equivalent includes, but is not limited t...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#1
+- **Rules:** B05; B06; B07; B08; family resolve_all.NARROW[cash_and_equivalents]
+- **Evidence:** 103 companies, 1156 served, 22866 proven, 108 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 2 companies, e.g. DELL cash_and_equivalents 2015-01-30 (export) (pattern_hits.csv)
+- **Pattern hits:** P05 (2)
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCashAndCashEquivalents@2021; PostconfirmationCashAndCashEquivalents@2021; PreconfirmationCashAndCashEquivalents@2021
+
+### `AssetsCurrent`
+- **Meaning:** Assets, Current (us-gaap, instant, debit). Amount of asset recognized for present right to economic benefit, classified as current.
+- **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
+- **Data point:** current_assets
+- **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
+
+### `PropertyPlantAndEquipmentNet`
+- **Meaning:** Property, Plant, and Equipment, after Accumulated Depreciation, Depletion, and Amortization (us-gaap, instant, debit). Amount, after accumulated depreciation, depletion, and amortization, of property, plant, and equipment. Includes, but is not limited to, land and land improvement; building; machinery and equipment; furniture and fixture; and work of art, h...
+- **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
+- **Data point:** ppe_net; role ppe_net:primary#1
+- **Rules:** B22
+- **Evidence:** 106 companies, 1096 served, 32159 proven, 98 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FlightEquipmentOwnedNet@2016; FreshStartAdjustmentIncreaseDecreasePropertyAndEquipmentNet@2021; PostconfirmationPropertyAndEquipmentNet@2021; PreconfirmationPropertyAndEquipmentNet@2021
+
+### `InventoryNet`
+- **Meaning:** Inventory, Net (us-gaap, instant, debit). Amount after valuation and LIFO reserves of inventory expected to be sold, or consumed within one year or operating cycle, if longer.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory; role inventory:primary#1
+- **Rules:** B15; B14; resolver functions inventory_header_sum
+- **Evidence:** 80 companies, 895 served, 3308 proven, 92 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseInventories@2021; PostconfirmationInventories@2021; PreconfirmationInventories@2021
+
+### `IntangibleAssetsNetExcludingGoodwill`
+- **Meaning:** Intangible Asset, Excluding Goodwill, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite- and indefinite-lived intangible assets and capitalized cost for software to be sold, leased, or marketed. Excludes goodwill.
+- **Data point:** intangible_assets; role intangible_assets:primary#1
+- **Rules:** B21
+- **Evidence:** 83 companies, 848 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsReceivableNetCurrent`
+- **Meaning:** Accounts Receivable, after Allowance for Credit Loss, Current (us-gaap, instant, debit). Amount, after allowance for credit loss, of right to consideration from customer for product sold and service rendered in normal course of business, classified as current.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#1
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 74 companies, 832 served, 3022 proven, 90 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsReceivableRelatedPartiesCurrent@2023
+
+### `FiniteLivedIntangibleAssetsNet`
+- **Meaning:** Intangible Asset, Finite-Lived, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.
+- **Data point:** intangible_assets; role intangible_assets:primary#2
+- **Rules:** B21
+- **Evidence:** 33 companies, 245 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FiniteLivedIntangibleAssetsFutureAmortizationExpense@2012; FreshStartAdjustmentIncreaseDecreaseAmortizableIntangibleAssets@2021; PostconfirmationAmortizableIntangibleAssets@2021; PreconfirmationAmortizableIntangibleAssetsNet@2021
+
+### `ReceivablesNetCurrent`
+- **Meaning:** Receivables, Net, Current (us-gaap, instant, debit). The total amount due to the entity within one year of the balance sheet date (or one operating cycle, if longer) from outside sources, including trade accounts receivable, notes and loans receivable, as well as any other types of receivable...
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#2
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 16 companies, 148 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021
+
+### `PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization`
+- **Meaning:** Property, Plant, and Equipment and Finance Lease Right-of-Use Asset, after Accumulated Depreciation and Amortization (us-gaap, instant, debit). Amount, after accumulated depreciation and amortization, of property, plant, and equipment and finance lease right-of-use asset.
+- **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
+- **Data point:** ppe_net; role ppe_net:primary#2
+- **Rules:** B22
+- **Evidence:** 31 companies, 135 served, 478 proven, 13 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents`
+- **Meaning:** Cash, Cash Equivalent, Restricted Cash, and Restricted Cash Equivalent, Continuing Operation (us-gaap, instant, debit). Amount of cash and cash equivalent, and cash and cash equivalent restricted to withdrawal or usage; attributable to continuing operation. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#6
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 17 companies, 85 served, 666 proven, 6 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 4 companies, e.g. CRWD cash_and_equivalents 2018-01-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P05 (4)
+
+### `AccountsNotesAndLoansReceivableNetCurrent`
+- **Meaning:** Accounts and Financing Receivable, after Allowance for Credit Loss, Current (us-gaap, instant, debit). Amount, after allowance for credit loss, of accounts and financing receivables, classified as current. Includes, but is not limited to, notes and loan receivable.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#3
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 5 companies, 46 served, 159 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsAndOtherReceivablesNetCurrent`
+- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#5
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 4 companies, 33 served, 95 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsReceivableNet`
+- **Meaning:** Accounts Receivable, after Allowance for Credit Loss (us-gaap, instant, debit). Amount, after allowance for credit loss, of right to consideration from customer for product sold and service rendered in normal course of business.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#4
+- **Rules:** X100; B09; B10; B11; B12; B13; B30
+- **Evidence:** 3 companies, 31 served, 141 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsReceivableRelatedParties@2023
+
+### `RealEstateInvestmentPropertyNet`
+- **Meaning:** Real Estate Investment Property, Net (us-gaap, instant, debit). Amount of real estate investment property, net of accumulated depreciation, which may include the following: (1) land available-for-sale; (2) land available-for-development; (3) investments in building and building improvements; (4) tenant ...
+- **Data point definition:** ppe_net: Property, plant and equipment net of accumulated depreciation at period end (incl. finance-lease ROU only where the filer prints them together).
+- **Data point:** ppe_net; role ppe_net:primary#4
+- **Rules:** B22
+- **Evidence:** 2 companies, 24 served, 47 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashAndDueFromBanks`
+- **Meaning:** Cash and Due from Banks (us-gaap, instant, debit). For banks and other depository institutions: Includes cash on hand (currency and coin), cash items in process of collection, noninterest bearing deposits due from other financial institutions (including corporate credit unions), and noninte...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#4
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 4 companies, 21 served, 91 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InventoryPartsAndComponentsNetOfReserves`
+- **Meaning:** Inventory, Parts and Components, Net of Reserves (us-gaap, instant, debit). Carrying amount, net of valuation reserves and adjustments, as of the balance sheet date for elements of machinery or equipment held for the purpose of replacing similar parts in the course of repair or maintenance.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory
+- **Rules:** none
+- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LiabilitiesAndStockholdersEquity`
+- **Meaning:** Liabilities and Equity (us-gaap, instant, credit). Amount of liabilities and equity items, including the portion of equity attributable to noncontrolling interests, if any.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** C02; resolver functions resolve
+- **Evidence:** 4 companies, 12 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilitiesAndEquity@2020; FreshStartAdjustmentIncreaseDecreaseLiabilitiesAndStockholdersEquity@2021; PostconfirmationLiabilitiesAndStockholdersEquity@2021; PreconfirmationLiabilitiesAndStockholdersEquity@2021
+
+### `EnergyRelatedInventory`
+- **Meaning:** Energy Related Inventory (us-gaap, instant, debit). Carrying amount as of the balance sheet date of merchandise, goods, commodities, or supplies relating to a source of usable power held for future sale or future use in manufacturing or production process.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory
+- **Rules:** none
+- **Evidence:** 1 companies, 10 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PrepaidExpenseCurrent`
+- **Meaning:** Prepaid Expense, Current (us-gaap, instant, debit). Amount of asset related to consideration paid in advance for costs that provide economic benefits within a future period of one year or the normal operating cycle, if longer.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory
+- **Rules:** X50; resolver functions apply_face_label_overrides; apply_absent_in_own_filing
+- **Evidence:** 1 companies, 5 served, 11 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsReceivableGrossCurrent`
+- **Meaning:** Accounts Receivable, before Allowance for Credit Loss, Current (us-gaap, instant, debit). Amount, before allowance for credit loss, of right to consideration from customer for product sold and service rendered in normal course of business, classified as current.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#7
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 0 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashCashEquivalentsAndShortTermInvestments`
+- **Meaning:** Cash, Cash Equivalents, and Short-Term Investments (us-gaap, instant, debit). Cash includes currency on hand as well as demand deposits with banks or financial institutions. It also includes other kinds of accounts that have the general characteristics of demand deposits in that the customer may deposit additional fu...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:combined#1
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 1 companies, 0 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IntangibleAssetsNetIncludingGoodwill`
+- **Meaning:** Intangible Asset, Including Goodwill, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite- and indefinite-lived intangible assets, goodwill, and capitalized cost for software to be sold, leased, or marketed.
+- **Data point definition:** goodwill: Goodwill at period end as printed.
+- **Data point:** goodwill; intangible_assets; role goodwill:combined#1; intangible_assets:combined#1
+- **Rules:** B21; B20
+- **Evidence:** 2 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OtherAssets`
+- **Meaning:** Other Assets (us-gaap, instant, debit). Amount of assets classified as other.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable
+- **Rules:** X100
+- **Evidence:** 1 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseOtherAssets@2021; PledgedAssetsNotSeparatelyReportedOtherFinancialInstruments@2022; PostconfirmationOtherAssets@2021; PreconfirmationOtherAssets@2021
+<!-- END GENERATED: tag library rows -->

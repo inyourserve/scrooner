@@ -8,9 +8,12 @@ The repo files stay the reviewed source; the database is the queryable copy. Thi
                                 data-team/tags/line_map/resolver-all110-*.csv, with the tags its nodes name.
 
 from analytics.company_tag_map (rules docmap@1, docmap_fix@1, structural@1, era_extend, predictor, ...), the resolver
-output, analytics.cell_proof, the certificates in data-team/strategy/approvals/, and the Tag Expert's files
-(data-team/tags/rules/*.csv, data-team/tags/library/standard-tag-library.csv, rules/polarity.csv). The view
-analytics.company_tag_metric (same migration) joins company_tag_map -> resolver decision -> metric inputs.
+output, analytics.cell_proof, the certificates in data-team/strategy/approvals/, the predictor rules
+(data-team/tags/rules/*.csv) and the one tag library, data-team/tags/library/library.csv (built by build_library.py).
+Element knowledge (polarity, deprecations, caveats, known problems) is READ from library.csv through
+mapper/library_csv.py, never re-derived here from polarity.csv, deprecations.csv or standard-tag-library.csv
+(SYSTEMS.md #6, one tag library, 2026-11-22). The view analytics.company_tag_metric (same migration) joins
+company_tag_map -> resolver decision -> metric inputs.
 
 The old library (analytics.sec_tag_library, company_sec_tag, built on the retired concept_mapping) is left as it is:
 build-tag-library deletes and refills sec_tag_library weekly, so columns added there would be wiped.
@@ -34,17 +37,13 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.mapper import library_csv
 from scrooner_pipeline.mapper import resolver_files as rf
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 LINE_MAP_DIR = REPO_ROOT / "data-team" / "tags" / "line_map"
 RULES_DIR = REPO_ROOT / "data-team" / "tags" / "rules"
-LIBRARY_DIR = REPO_ROOT / "data-team" / "tags" / "library"
-POLARITY_CSV = LINE_MAP_DIR / "rules" / "polarity.csv"
 APPROVALS_DIR = REPO_ROOT / "data-team" / "strategy" / "approvals"
-# Optional FASB taxonomy ingest (RULEBOOK.md: "goes to data-team/tags/taxonomy/"). Not on main on 2026-11-16, so
-# deprecated_by / replaces stay NULL until the file exists. Columns: tag, deprecated_by, replaces.
-DEPRECATIONS_CSV = REPO_ROOT / "data-team" / "tags" / "taxonomy" / "deprecations.csv"
 
 BATCH = 2000
 READ_TIMEOUT = "10min"
@@ -252,66 +251,16 @@ def parse_rules(directory: Path = RULES_DIR) -> dict[tuple[str, str], dict[str, 
     return best
 
 
-def parse_standard_library(
-    path: Path = LIBRARY_DIR / "standard-tag-library.csv",
-) -> dict[tuple[str, str], str]:
-    """(stmt, tag) -> the library's known-misuse caveat (empty rows dropped)."""
-    out: dict[tuple[str, str], str] = {}
-    if path.exists():
-        with path.open(newline="", encoding="utf-8") as fh:
-            for r in csv.DictReader(fh):
-                if (r.get("caveat") or "").strip():
-                    out[(r["stmt"], r["tag"])] = r["caveat"].strip()
-    return out
-
-
-def parse_polarity(path: Path = POLARITY_CSV) -> dict[str, str]:
-    """data point -> 'positive' (sign + and normalised), 'signed' (+/-), or 'raw' (common/polarity.py semantics)."""
-    out: dict[str, str] = {}
-    with path.open(newline="", encoding="utf-8") as fh:
-        for r in csv.DictReader(fh):
-            sign, norm = r["sign"].strip(), r["normalise"].strip().upper()
-            if sign == "+" and norm == "Y":
-                out[r["data_point"].strip()] = "positive"
-            elif sign == "raw":
-                out[r["data_point"].strip()] = "raw"
-            else:
-                out[r["data_point"].strip()] = "signed"
-    return out
-
-
-def parse_deprecations(
-    path: Path = DEPRECATIONS_CSV,
-) -> dict[str, tuple[str | None, str | None]]:
-    """tag -> (deprecated_by, replaces). Reads the FASB taxonomy file (data-team/tags/taxonomy/deprecations.csv, columns
-    element, replacement_element, ...: 97c22b59); `replaces` is the reverse of replacement_element. A file in the older
-    tag/deprecated_by/replaces layout is still read. The rebuild failed 9 runs on 2026-11-16 with KeyError 'tag'."""
-    out: dict[str, tuple[str | None, str | None]] = {}
-    if not path.exists():
-        return out
-    with path.open(newline="", encoding="utf-8") as fh:
-        rows = list(csv.DictReader(fh))
-    if rows and "tag" in rows[0]:
-        for r in rows:
-            out[r["tag"]] = (
-                (r.get("deprecated_by") or None),
-                (r.get("replaces") or None),
-            )
-        return out
-    by: dict[str, str | None] = {}
-    replaced: dict[str, list[str]] = {}
-    for r in rows:
-        el = (r.get("element") or "").strip()
-        if not el:
-            continue
-        rep = (r.get("replacement_element") or "").strip() or None
-        by[el] = rep
-        if rep:
-            replaced.setdefault(rep, []).append(el)
-    for tag in set(by) | set(replaced):
-        olds = sorted(replaced.get(tag, []))
-        out[tag] = (by.get(tag), ";".join(olds) or None)
-    return out
+def library_sources(path: Path | None = None) -> "Sources":
+    """Rules from data-team/tags/rules/*.csv; every element fact from the one tag library (library.csv)."""
+    k = library_csv.knowledge(library_csv.load(path))
+    return Sources(
+        rules=parse_rules(),
+        caveats=k.caveats,
+        polarity=k.polarity,
+        deprecations=k.deprecations,
+        problems=k.problems,
+    )
 
 
 def certified_company_ids(directory: Path = APPROVALS_DIR) -> set[int]:
@@ -330,9 +279,11 @@ def certified_company_ids(directory: Path = APPROVALS_DIR) -> set[int]:
 @dataclass
 class Sources:
     rules: dict[tuple[str, str], dict[str, Any]] = field(default_factory=dict)
-    caveats: dict[tuple[str, str], str] = field(default_factory=dict)
+    # the rest comes from library.csv (library_csv.knowledge), keyed by element / data point
+    caveats: dict[str, str] = field(default_factory=dict)
     polarity: dict[str, str] = field(default_factory=dict)
     deprecations: dict[str, tuple[str | None, str | None]] = field(default_factory=dict)
+    problems: dict[str, list[str]] = field(default_factory=dict)
 
 
 def build_entries(
@@ -426,9 +377,10 @@ def build_entries(
         rule = src.rules.get((e["stmt"], e["tag"]))
         c = counts[k]
         problems: list[str] = []
-        caveat = src.caveats.get((e["stmt"], e["tag"]))
+        caveat = src.caveats.get(e["tag"])
         if caveat:
             problems.append(f"library caveat: {caveat}")
+        problems += [f"library: {p}" for p in src.problems.get(e["tag"], [])]
         if rule and rule["note"]:
             problems.append(f"rule note ({rule['rule_id']}): {rule['note']}")
         if (
@@ -636,9 +588,7 @@ def rebuild(conn: Any, *, apply: bool, github_ref: str | None = None) -> dict[st
         )
     resolver_path = newest_resolver_file()
     cells, rejects = parse_resolver(resolver_path)
-    src = Sources(
-        parse_rules(), parse_standard_library(), parse_polarity(), parse_deprecations()
-    )
+    src = library_sources()
     certified = certified_company_ids()
     with conn.cursor() as cur:
         cur.execute("set transaction read only") if not apply else None
@@ -653,7 +603,7 @@ def rebuild(conn: Any, *, apply: bool, github_ref: str | None = None) -> dict[st
             "resolver_rejects": rejects,
             "cik_stats": cik_stats,
             "certified_companies": len(certified),
-            "deprecation_file": DEPRECATIONS_CSV.exists(),
+            "library_built_for": library_csv.built_for(),
             "tag_library_entry": plan(
                 ex_e,
                 {tuple(e[k] for k in _ENTRY_KEY): e["content_hash"] for e in entries},

@@ -7,5 +7,39 @@
  "taxonomy_elements": 22756,
  "served_cells": 55912,
  "served_cells_all_elements_full": 36426,
- "coverage_pct": 65.1
+ "coverage_pct": 65.1,
+ "pattern_hits": {
+  "P01": {
+   "companies": 36,
+   "cells": 114
+  },
+  "P02": {
+   "companies": 0,
+   "cells": 0
+  },
+  "P03": {
+   "companies": 2,
+   "cells": 14
+  },
+  "P04": {
+   "companies": 12,
+   "cells": 27
+  },
+  "P05": {
+   "companies": 16,
+   "cells": 28
+  },
+  "P06": {
+   "companies": 26,
+   "cells": 187
+  },
+  "P07": {
+   "companies": 4,
+   "cells": 60
+  },
+  "P08": {
+   "companies": 48,
+   "cells": 520
+  }
+ }
 }

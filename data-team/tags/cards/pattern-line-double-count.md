@@ -1,4 +1,5 @@
 # Pattern P07: one printed line serving two data points
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Found 2026-11-22 by the verifier. Registry: `patterns.csv` P07. Hits: `pattern_hits.csv` P07.
 
@@ -12,3 +13,19 @@ Found 2026-11-22 by the verifier. Registry: `patterns.csv` P07. Hits: `pattern_h
 **Rule (open, resolver .90).** One printed line serves one data point outside those pairs. Where the face prints only one operating line (WMT "Operating, selling, general and administrative expenses"), the line is a combined value with a badge (X113) for one data point, and the other data point is combined.
 
 **Examples.** WMT, ADP and COST operating_expenses + sga_expense; DE interest_expense + operating_expenses.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 1 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `SellingGeneralAndAdministrativeExpense`
+- **Meaning:** Selling, General and Administrative Expense (us-gaap, duration, debit). The aggregate total costs related to selling a firm's product and services, as well as all other general and administrative expenses. Direct selling expenses (for example, credit, warranty, and advertising) are expenses that can be directly...
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
+- **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
+- **Evidence:** 66 companies, 1170 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P07 line_double_count: 60 open hit(s) at 4 companies, e.g. ADP operating_expenses 2016-06-30 (resolver) (pattern_hits.csv)
+- **Pattern hits:** P07 (60)
+- **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
+<!-- END GENERATED: tag library rows -->

@@ -9,6 +9,11 @@
 
 The tag only ranks nodes that already hold the role.
 
+## Releasing a resolver version
+1. Regenerate `resolver/<TICKER>.csv` with the new version string (`resolve_all.py <version>`), take the next number in `CHANGELOG.md` and add its row.
+2. Rebuild the one tag library from that output: `python3 data-team/tags/library/build_library.py`. It rewrites `data-team/tags/library/` (library.csv, coverage.json with the resolver version, INDEX, browser, CHANGELOG) and the generated block at the end of every `data-team/tags/cards/*.md`.
+3. Commit all three (resolver output, library, cards) together. CI fails while the library's recorded version (`library/coverage.json`) is older than the newest `resolver_version` in `resolver/*.csv` (`build_library.py --check-version`).
+
 ## Files
 - `<TICKER>.csv`: one row per filing and data point. Columns: `status` (mapped, component_sum, derived, combined, no_role), `tags`, `value`, `lines` (R report:line), `path` (the structural evidence), `flag` (`hint_ranked`, `hint_only` or `DERIVED`) and `filing_checks` (the filer's own calc arithmetic on its own numbers).
 - `tools/extract.sql`: the FSN query, read-only, five CIK batches.

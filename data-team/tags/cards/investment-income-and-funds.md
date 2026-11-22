@@ -1,4 +1,5 @@
 # Card family: Investment income (insurers, BDCs, funds) and fund net assets (written 2026-10-22 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:NetInvestmentIncome`, `GrossInvestmentIncomeOperating`, `InvestmentIncomeInvestmentExpense`, `InvestmentIncomeNet`, `InvestmentIncomeOperatingAfterExpenseAndTax`, `InvestmentIncomeOperatingTaxExpenseBenefit`, `AssetsNet`, `StockholdersEquity` (as BDC net assets), `NetAssetValuePerShare`, `InvestmentOwnedAtFairValue`.
 Asked by: Sector Analyst, SECTOR-ROWS-REVIEW section 8 items 2-3 (branch work/sector-analyst/groups) and inbox line 2026-10-22 "concept bdc_total_investment_income".
@@ -78,3 +79,57 @@ Population checks (core.fact, same company and period, both authoritative, since
 - `InvestmentIncomeNet`: **not a synonym** of insurer NII (252 of 778 differ; includes gains at PGR). Do not map it as NII.
 - BDC net assets: `StockholdersEquity` first (face at ARCC, BXSL), `AssetsNet` as a per-company alternate after an equality check (86% equal; DATA-INFERRED, no AssetsNet filing opened). The Sector Analyst's "AssetsNet is on 0/2" holds for the face of those two filers only; 31 of 42 BDCs file AssetsNet somewhere.
 - Evidence classes: as stated per line. Verified by: Tag Expert (me), 2026-10-22.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 5 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `NetIncomeLoss`
+- **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#1
+- **Rules:** X77; C29; resolver functions resolve
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
+
+### `StockholdersEquity`
+- **Meaning:** Equity, Attributable to Parent (us-gaap, instant, credit). Amount of equity (deficit) attributable to parent. Excludes temporary equity and equity attributable to noncontrolling interest.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** X78; C06; resolver functions resolve
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
+
+### `InvestmentIncomeInterest`
+- **Meaning:** Investment Income, Interest (us-gaap, duration, credit). Amount before accretion (amortization) of purchase discount (premium) of interest income on nonoperating securities.
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
+- **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
+- **Evidence:** 50 companies, 617 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (5); P05 (4)
+
+### `InterestAndDividendIncomeOperating`
+- **Meaning:** Interest and Dividend Income, Operating (us-gaap, duration, credit). Represents the total of interest and dividend income, including any amortization and accretion (as applicable) of discounts and premiums, earned from (1) loans and leases whether held-for-sale or held-in-portfolio; (2) investment securities...
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; total_interest_income: Total interest income as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** interest_income; total_interest_income; polarity interest_income:signed; role interest_income:primary#1; total_interest_income:primary#1
+- **Rules:** I26; I27
+- **Evidence:** 8 companies, 167 served, 985 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 12 open hit(s) at 2 companies, e.g. C interest_income 2023-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (12)
+
+### `InvestmentIncomeNet`
+- **Meaning:** Investment Income, Net (us-gaap, duration, credit). Amount after accretion (amortization) of discount (premium), and investment expense, of interest income and dividend income on nonoperating securities.
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).
+- **Data point:** interest_income; polarity interest_income:signed; role interest_income:primary#6
+- **Rules:** X93; I27; I26; resolver functions apply_label_beyond
+- **Evidence:** 9 companies, 26 served, 119 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 6 open hit(s) at 3 companies, e.g. AMAT interest_income 2021-10-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 58 open hit(s) at 8 companies, e.g. AMAT interest_income 2023-10-29 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (58); P05 (6)
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInvestmentIncomeNet@2013; CashFlowHedgeGainReclassifiedToInvestmentIncome@2013; CashFlowHedgeLossReclassifiedToInvestmentIncome@2013
+<!-- END GENERATED: tag library rows -->

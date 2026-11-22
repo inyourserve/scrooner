@@ -1,4 +1,5 @@
 # Card family: Net income, EPS and share counts (written 2026-10-19 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:NetIncomeLoss`, `ProfitLoss`, `NetIncomeLossAttributableToNoncontrollingInterest`, `NetIncomeLossAvailableToCommonStockholdersBasic`, `IncomeLossFromContinuingOperations`, `IncomeLossAttributableToParent`, `EarningsPerShareBasic`, `EarningsPerShareDiluted`, `EarningsPerShareBasicAndDiluted`, `IncomeLossFromContinuingOperationsPerBasicShare` / `PerDilutedShare`, `WeightedAverageNumberOfSharesOutstandingBasic`, `WeightedAverageNumberOfDilutedSharesOutstanding`, `WeightedAverageNumberOfShareOutstandingBasicAndDiluted`, `CommonStockSharesOutstanding`, and the cover tags `dei:EntityCommonStockSharesOutstanding`, `dei:EntityPublicFloat`.
 Method and limits: as in `revenue.md` (Frames = all SEC filers; DB reads skipped, connections 14-18 > 12). dei definitions come from the definition block inside the BRK 10-K R1 (the dei documentation URL returned 404).
@@ -135,3 +136,182 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - Shares outstanding printed only per class (GOOGL A/B/C on the cover; per-class BS parentheticals): not_presented, never summed (Dhairya 2026-11-12).
 
 - EPS printed per class only (Visa, SHOP): serve Class A EPS as printed (Dhairya ruling 2026-11-12); never average or derive across classes.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 18 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `WeightedAverageNumberOfSharesOutstandingBasic`
+- **Meaning:** Weighted Average Number of Shares Outstanding, Basic (us-gaap, duration). Number of [basic] shares or units, after adjustment for contingently issuable shares or units and other shares or units not deemed outstanding, determined by relating the portion of time within a reporting period that common shares or units...
+- **Data point definition:** weighted_basic_shares: Weighted average basic common shares as printed.
+- **Data point:** weighted_basic_shares; role weighted_basic_shares:primary#1
+- **Rules:** none
+- **Evidence:** 110 companies, 1316 served, 4583 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 727.9;  the XBRL fact is 727.9 shares (scale ; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average basic shares 718.3;  the XBRL fact is 718.3 shares (scale  (+4 more)
+- **Pattern hits:** P03 (5); P04 (3)
+- **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
+
+### `EarningsPerShareBasic`
+- **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.
+- **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
+- **Data point:** basic_eps; role basic_eps:primary#1
+- **Rules:** none
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
+
+### `WeightedAverageNumberOfDilutedSharesOutstanding`
+- **Meaning:** Weighted Average Number of Shares Outstanding, Diluted (us-gaap, duration). The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.
+- **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
+- **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
+- **Rules:** none
+- **Evidence:** 108 companies, 1234 served, 4539 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
+- **Pattern hits:** P03 (5); P04 (3)
+- **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
+
+### `EarningsPerShareDiluted`
+- **Meaning:** Earnings Per Share, Diluted (us-gaap, duration). The amount of net income (loss) for the period available to each share of common stock or common unit outstanding during the reporting period and to each share or unit that would have been outstanding assuming the issuance of common shares ...
+- **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
+- **Data point:** diluted_eps; role diluted_eps:primary#1
+- **Rules:** none
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
+
+### `NetIncomeLoss`
+- **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#1
+- **Rules:** X77; C29; resolver functions resolve
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
+
+### `CommonStockSharesOutstanding`
+- **Meaning:** Common Stock, Shares, Outstanding (us-gaap, instant). Number of shares of common stock outstanding. Common stock represent the ownership interest in a corporation.
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding; role shares_outstanding:primary#1
+- **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
+- **Evidence:** 83 companies, 992 served, 2408 proven, 68 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P04 (3); P05 (1)
+
+### `CommonStockSharesIssued`
+- **Meaning:** Common Stock, Shares, Issued (us-gaap, instant). Total number of common shares of an entity that have been sold or granted to shareholders (includes common shares that were issued, repurchased and remain in the treasury). These shares represent capital invested by the firm's shareholders ...
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding
+- **Rules:** none
+- **Evidence:** 32 companies, 305 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** pattern P04 round_share_count: 17 open hit(s) at 2 companies, e.g. BMY shares_outstanding 2014-12-31 (resolver) (pattern_hits.csv)
+- **Pattern hits:** P04 (17)
+
+### `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations`
+- **Meaning:** Cash Provided by (Used in) Operating Activity, Continuing Operation (us-gaap, duration). Amount of cash inflow (outflow) from operating activity attributable to continuing operation. Operating activity includes, but is not limited to, transaction, adjustment, and change in value not defined as investing or financing activity.
+- **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
+- **Data point:** cfo; polarity cfo:signed; role cfo:primary#2
+- **Rules:** none
+- **Evidence:** 40 companies, 156 served, 2874 proven, 2 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestIncomeExpenseNet`
+- **Meaning:** Interest Income (Expense), Operating (us-gaap, duration, credit). Amount of interest income (expense) classified as operating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+4 more)
+- **Data point:** interest_expense; net_interest_income; other_income_expense_net; revenue; interest_income; polarity interest_expense:positive; net_interest_income:signed; role interest_expense:combined#2; net_interest_income:primary#1
+- **Rules:** X90; I20; I21; I22; I23; I24
+- **Evidence:** 14 companies, 145 served, 686 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InterestRevenueExpense@2012
+
+### `WeightedAverageNumberOfShareOutstandingBasicAndDiluted`
+- **Meaning:** Weighted Average Number of Shares Outstanding, Basic and Diluted (Deprecated 2022) (us-gaap, duration). Average number of shares or units issued and outstanding that are used in calculating basic and diluted earnings per share (EPS).
+- **Data point definition:** weighted_basic_shares: Weighted average basic common shares as printed.; weighted_diluted_shares: Weighted average diluted common shares as printed.
+- **Data point:** weighted_basic_shares; weighted_diluted_shares; role weighted_basic_shares:primary#2; weighted_diluted_shares:primary#2
+- **Rules:** none
+- **Evidence:** 8 companies, 78 served, 170 proven, 2 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaced by WeightedAverageNumberOfDilutedSharesOutstanding@2022; WeightedAverageNumberOfSharesOutstandingBasic@2022; replaces WeightedAverageNumberOfSharesOutstandingBasicAndDiluted@2012
+
+### `NetIncomeLossAvailableToCommonStockholdersBasic`
+- **Meaning:** Net Income (Loss) Available to Common Stockholders, Basic (us-gaap, duration, credit). Amount, after deduction of tax, noncontrolling interests, dividends on preferred stock and participating securities; of income (loss) available to common shareholders.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#2
+- **Rules:** none
+- **Evidence:** 11 companies, 76 served, 383 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `EarningsPerShareBasicAndDiluted`
+- **Meaning:** Earnings Per Share, Basic and Diluted (Deprecated 2022) (us-gaap, duration). The amount of net income or loss for the period per each share in instances when basic and diluted earnings per share are the same amount and reported as a single line item on the face of the financial statements. Basic earnings per share i...
+- **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).; diluted_eps: Diluted EPS per common share as printed (latest print, X92).
+- **Data point:** basic_eps; diluted_eps; role basic_eps:primary#2; diluted_eps:primary#2
+- **Rules:** none
+- **Evidence:** 7 companies, 70 served, 1243 proven, 2 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaced by EarningsPerShareBasic@2022; EarningsPerShareDiluted@2022
+
+### `IncomeLossFromContinuingOperationsPerBasicShare`
+- **Meaning:** Income (Loss) from Continuing Operations, Per Basic Share (us-gaap, duration). The amount of net income (loss) from continuing operations per each share of common stock or unit outstanding during the reporting period.
+- **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
+- **Data point:** basic_eps; role basic_eps:primary#3
+- **Rules:** none
+- **Evidence:** 5 companies, 20 served, 23 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeLossFromContinuingOperationsPerBasicAndDilutedShare@2022; NewAccountingPronouncementOrChangeInAccountingPrincipleEffectOfChangeOnBasicEarningsPerShare@2020
+
+### `ProfitLoss`
+- **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income
+- **Rules:** X77; F03; F04; resolver functions run
+- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
+
+### `IncomeLossIncludingPortionAttributableToNoncontrollingInterest`
+- **Meaning:** Income (Loss), Including Portion Attributable to Noncontrolling Interest, before Tax (us-gaap, duration, credit). Amount, before tax, of income (loss) including portion attributable to noncontrolling interest. Includes, but is not limited to, income (loss) from continuing operations, discontinued operations and equity method investments.
+- **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).
+- **Data point:** income_before_tax
+- **Rules:** none
+- **Evidence:** 4 companies, 15 served, 85 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces RestatementOfPriorYearIncomeGross@2020
+
+### `IncomeLossAttributableToParent`
+- **Meaning:** Income (Loss) Attributable to Parent, before Tax (us-gaap, duration, credit). Amount, before tax, of income (loss) attributable to parent. Includes, but is not limited to, income (loss) from continuing operations, discontinued operations and equity method investments.
+- **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).
+- **Data point:** income_before_tax
+- **Rules:** none
+- **Evidence:** 3 companies, 11 served, 39 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest`
+- **Meaning:** Income (Loss) from Continuing Operations, Net of Tax, Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). Amount after tax of income (loss) from continuing operations including portion attributable to the noncontrolling interest.
+- **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).
+- **Data point:** income_before_tax
+- **Rules:** none
+- **Evidence:** 1 companies, 2 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationIncomeLossFromContinuingOperationsBeforeExtraordinaryItems@2020; NewAccountingPronouncementOrChangeInAccountingPrincipleEffectOfChangeOnIncomeFromContinuingOperations@2016; NewAccountingPronouncementOrChangeInAccountingPrincipleEffectOfChangeOnOperatingResults@2020
+
+### `EntityCommonStockSharesOutstanding`
+- **Meaning:** (no taxonomy label) (unknown)
+- **Data point:** none (the resolver never serves it)
+- **Rules:** none
+- **Evidence:** 0 companies, 0 served, 0 proven, 0 certified cells; last verified 2026-11-13
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

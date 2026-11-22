@@ -1,4 +1,5 @@
 # Card family: Debt and borrowings (written 2026-10-19 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:LongTermDebt`, `LongTermDebtNoncurrent`, `LongTermDebtCurrent`, `DebtCurrent`, `NotesPayable`, `NotesPayableCurrent`, `LongTermNotesPayable`, `SeniorNotes`, `SubordinatedDebt`, `LongTermLineOfCredit`, `ConvertibleNotesPayable`, `FinanceLeaseLiability` (+ Current/Noncurrent), `AdvancesFromFederalHomeLoanBanks`; related: `ShortTermBorrowings`, `CommercialPaper`, `DebtAndCapitalLeaseObligations`, `LongTermDebtAndCapitalLeaseObligations`, `LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities`, `DebtLongtermAndShorttermCombinedAmount`, `DebtInstrumentCarryingAmount`, `SecuredDebt`, `UnsecuredDebt`, `ConvertibleDebt`, `OperatingLeaseLiability`.
 Method and limits: as in `revenue.md`. All balances are instants: Frames periods CY2013Q4I and CY2023Q4I (calendar year-end filers only, so fiscal-year filers drop out; counts are lower bounds of reporters). "bank-like" = also files `NoninterestExpense` in CY2023 (443 filers). File 31 gives library counts as read earlier today (companies per tag, DATA-INFERRED, whole population): NotesPayable 996, NotesPayableCurrent 1,202, LongTermNotesPayable 756, LongTermLineOfCredit 421, SeniorNotes 328, SubordinatedDebt 254, AdvancesFromFederalHomeLoanBanks 240, DebtInstrumentCarryingAmount 2,021.
@@ -139,3 +140,292 @@ The FSN-era total-debt rule is the release-prep lane (era_detect → assemble_fs
 - AMZN face "Long-term lease liabilities" combines operating and finance leases; finance part from the note (Verifier).
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `LiabilitiesCurrent`
+- **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
+- **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
+- **Data point:** current_liabilities; total_liabilities
+- **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
+- **Evidence:** 95 companies, 1440 served, 32338 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
+
+### `Liabilities`
+- **Meaning:** Liabilities (us-gaap, instant, credit). Amount of liability recognized for present obligation requiring transfer or otherwise providing economic benefit to others.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
+- **Evidence:** 83 companies, 950 served, 29466 proven, 87 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)
+
+### `LongTermDebtNoncurrent`
+- **Meaning:** Long-Term Debt, Excluding Current Maturities (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt classified as noncurrent. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** D14; resolver functions run
+- **Evidence:** 61 companies, 750 served, 203 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces NonRecourseDebt@2022
+
+### `LongTermDebtAndCapitalLeaseObligations`
+- **Meaning:** Long-Term Debt and Lease Obligation (us-gaap, instant, credit). Amount of long-term debt and lease obligation, classified as noncurrent.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** none
+- **Evidence:** 34 companies, 401 served, 40 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DebtCurrent`
+- **Meaning:** Debt, Current (us-gaap, instant, credit). Amount of debt and lease obligation, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 39 companies, 353 served, 4 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LongTermDebtCurrent`
+- **Meaning:** Long-Term Debt, Current Maturities (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt classified as current. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** D14; resolver functions run
+- **Evidence:** 39 companies, 292 served, 5 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCurrentMaturitiesOfLongTermDebt@2021; NonRecourseDebt@2022; PostconfirmationCurrentMaturitiesOfLongTermDebt@2021; PreconfirmationCurrentMaturitiesOfLongTermDebt@2021
+
+### `ShortTermBorrowings`
+- **Meaning:** Short-Term Debt (us-gaap, instant, credit). Reflects the total carrying amount as of the balance sheet date of debt having initial terms less than one year or the normal operating cycle, if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 36 companies, 261 served, 13 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseShortTermBorrowings@2021; PostconfirmationShortTermBorrowings@2021; PreconfirmationShortTermBorrowings@2021
+
+### `NoninterestExpense`
+- **Meaning:** Noninterest Expense (us-gaap, duration, debit). Total aggregate amount of all noninterest expense.
+- **Data point definition:** noninterest_expense: Total noninterest expense as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** noninterest_expense; operating_expenses; polarity noninterest_expense:positive; operating_expenses:positive; role noninterest_expense:primary#1; operating_expenses:primary#3
+- **Rules:** C28; I14; I09; I10; I11; I12; I13; resolver functions resolve
+- **Evidence:** 9 companies, 215 served, 919 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces NoninterestExpenseMember@2013
+
+### `OtherLiabilitiesNoncurrent`
+- **Meaning:** Other Liabilities, Noncurrent (us-gaap, instant, credit). Amount of liabilities classified as other, due after one year or the normal operating cycle, if longer.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 23 companies, 199 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DueToAffiliateNoncurrent@2023; DueToEmployeesNoncurrent@2023; DueToOfficersOrStockholdersNoncurrent@2023; DueToOtherRelatedPartiesNoncurrent@2023 (+5 more)
+
+### `LongTermDebt`
+- **Meaning:** Long-Term Debt (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** D11; resolver functions run
+- **Evidence:** 15 companies, 119 served, 68 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseLongTermDebt@2021; NonRecourseDebt@2022; PostconfirmationLongTermDebt@2021; PreconfirmationLongTermDebt@2021
+
+### `FinanceLeaseLiability`
+- **Meaning:** Finance Lease, Liability (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** X57
+- **Evidence:** 19 companies, 90 served, 22 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CommercialPaper`
+- **Meaning:** Commercial Paper (us-gaap, instant, credit). Carrying value as of the balance sheet date of short-term borrowings using unsecured obligations issued by banks, corporations and other borrowers to investors. The maturities of these money market securities generally do not exceed 270 day...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 8 companies, 49 served, 2 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `SecuredDebt`
+- **Meaning:** Secured Debt (us-gaap, instant, credit). Carrying value as of the balance sheet date, including the current and noncurrent portions, of collateralized debt obligations (with maturities initially due after one year or beyond the operating cycle, if longer). Such obligations include...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 3 companies, 35 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `FinanceLeaseLiabilityNoncurrent`
+- **Meaning:** Finance Lease, Liability, Noncurrent (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease, classified as noncurrent.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** none
+- **Evidence:** 7 companies, 32 served, 4 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CapitalLeaseObligationsCurrent`
+- **Meaning:** Capital Lease Obligations, Current (Deprecated 2026) (us-gaap, instant, credit). Amount of capital lease obligation due within one year or the normal operating cycle, if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 8 companies, 27 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCurrentMaturitiesOfCapitalLeaseObligations@2021; PostconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021; PreconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021
+
+### `FinanceLeaseLiabilityCurrent`
+- **Meaning:** Finance Lease, Liability, Current (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 7 companies, 24 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OtherShortTermBorrowings`
+- **Meaning:** Other Short-Term Borrowings (us-gaap, instant, credit). Amount of borrowings classified as other, maturing within one year or the normal operating cycle, if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 4 companies, 24 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `UnsecuredDebt`
+- **Meaning:** Unsecured Debt (us-gaap, instant, credit). Including the current and noncurrent portions, carrying value as of the balance sheet date of uncollateralized debt obligations (with maturities initially due after one year or beyond the operating cycle if longer).
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 24 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DebtLongtermAndShorttermCombinedAmount`
+- **Meaning:** Debt, Long-Term and Short-Term, Combined Amount (us-gaap, instant, credit). Represents the aggregate of total long-term debt, including current maturities and short-term debt.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 20 served, 83 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities`
+- **Meaning:** Long-Term Debt and Lease Obligation, Including Current Maturities (us-gaap, instant, credit). Amount of long-term debt and lease obligation, including portion classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 20 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LineOfCredit`
+- **Meaning:** Long-Term Line of Credit (us-gaap, instant, credit). The carrying value as of the balance sheet date of the current and noncurrent portions of long-term obligations drawn from a line of credit, which is a bank's commitment to make loans up to a specific amount. Examples of items that might be...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreasePostconfirmationCreditFacility@2021; LineOfCreditFacilityAmountOutstanding@2014; PostconfirmationPostconfirmationCreditFacility@2021; PreconfirmationPostconfirmationCreditFacility@2021
+
+### `CapitalLeaseObligations`
+- **Meaning:** Capital Lease Obligations (Deprecated 2026) (us-gaap, instant, credit). Amount equal to the present value (the principal) at the beginning of the lease term of minimum lease payments during the lease term (excluding that portion of the payments representing executory costs such as insurance, maintenance, and ta...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** X57; D13; resolver functions run
+- **Evidence:** 4 companies, 11 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LongTermNotesAndLoans`
+- **Meaning:** Notes and Loans, Noncurrent (us-gaap, instant, credit). Carrying value as of the balance sheet date of all notes and loans payable (with maturities initially due after one year or beyond the operating cycle if longer), excluding current portion.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 1 companies, 10 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NotesPayableCurrent`
+- **Meaning:** Notes Payable, Current (us-gaap, instant, credit). Sum of the carrying values as of the balance sheet date of the portions of long-term notes payable due within one year or the operating cycle if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 10 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces NotesPayableRelatedPartiesClassifiedCurrent@2023
+
+### `DueToRelatedPartiesCurrent`
+- **Meaning:** Due to Related Parties, Current (Deprecated 2023) (us-gaap, instant, credit). Carrying amount as of the balance sheet date of obligations due all related parties. For classified balance sheets, represents the current portion of such liabilities (due within one year or within the normal operating cycle if longer).
+- **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
+- **Data point:** accounts_payable
+- **Rules:** none
+- **Evidence:** 1 companies, 9 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaced by OtherLiabilitiesCurrent@2023; OtherLiabilityCurrentRelatedPartyTypeExtensibleEnumeration@2023; [RelatedPartyMember@2023; RelatedPartyTransactionsByRelatedPartyAxis]@2023
+
+### `LinesOfCreditCurrent`
+- **Meaning:** Line of Credit, Current (us-gaap, instant, credit). The carrying value as of the balance sheet date of the current portion of long-term obligations drawn from a line of credit, which is a bank's commitment to make loans up to a specific amount. Examples of items that might be included in the...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 6 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OtherLongTermDebtNoncurrent`
+- **Meaning:** Other Long-Term Debt, Noncurrent (us-gaap, instant, credit). Amount of long-term debt classified as other, payable after one year or the operating cycle, if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 6 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ConvertibleNotesPayableCurrent`
+- **Meaning:** Convertible Notes Payable, Current (us-gaap, instant, credit). Carrying value as of the balance sheet date of the portion of long-term debt due within one year or the operating cycle if longer identified as Convertible Notes Payable. Convertible Notes Payable is a written promise to pay a note which ca...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 4 companies, 5 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AdvancesFromFederalHomeLoanBanks`
+- **Meaning:** Advance from Federal Home Loan Bank (us-gaap, instant, credit). Amount of borrowings as of the balance sheet date from the Federal Home Loan Bank, which are primarily used to cover shortages in the required reserve balance and liquidity shortages.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 1 companies, 3 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FederalHomeLoanBankAdvancesMaturitiesSummary@2013; FederalHomeLoanBankAdvancesMaturitiesSummaryByInterestRateType@2012; FederalHomeLoanBankAdvancesMaturitiesSummaryByInterestRateTypeInterestRateRange@2016
+
+### `LongTermLineOfCredit`
+- **Meaning:** Long-Term Line of Credit, Noncurrent (us-gaap, instant, credit). The carrying value as of the balance sheet date of the noncurrent portion of long-term obligations drawn from a line of credit, which is a bank's commitment to make loans up to a specific amount. Examples of items that might be included in ...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 1 companies, 3 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

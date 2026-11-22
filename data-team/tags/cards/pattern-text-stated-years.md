@@ -1,4 +1,5 @@
 # Pattern P01: a stated sentence covers several years, the resolver serves fewer
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Found 2026-11-22 by the verifier (GILD). Registry row: `data-team/tags/library/patterns.csv` P01. Live hits: `data-team/tags/library/pattern_hits.csv` (pattern_id P01).
 
@@ -9,3 +10,11 @@ Found 2026-11-22 by the verifier (GILD). Registry row: `data-team/tags/library/p
 **Rule (open, resolver .90).** A read whose quote prints a multi-year row serves every year it prints, as a comparative of the quoting filing, under the X109 read contract. The quote, locator and accession are reused, and `quote_period` is set per year. A stated figure never replaces a finer XBRL value (X121, ruling c).
 
 **Examples.** GILD interest_income FY2022-23; GE other_income_expense_net FY2017 and FY2022 (`Other income (Note 18) | 2,259 | 2,126 | 4,140`). Hits on unrelated figures in a quoted row are possible (DELL "DHI Group" counts), so review each hit against the quote before writing a read.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+No element named in this card has a data point, ruling, served cell or known problem in the library.
+<!-- END GENERATED: tag library rows -->

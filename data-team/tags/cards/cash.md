@@ -1,4 +1,5 @@
 # Card family: Cash and restricted cash (written 2026-10-19 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:Cash`, `CashAndCashEquivalentsAtCarryingValue`, `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents` (CCRC), `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations` (CCRC-incl-DO), `RestrictedCash`, `RestrictedCashCurrent`, `RestrictedCashNoncurrent`, `RestrictedCashAndCashEquivalents`, `RestrictedCashAndCashEquivalentsAtCarryingValue`, `CashAndDueFromBanks`, `CashCashEquivalentsAndShortTermInvestments`.
 Method and limits: as in `revenue.md`. Instants; Frames CY2013Q4I / CY2023Q4I, calendar year-end filers only. DB reads skipped (connections 14-18 > 12).
@@ -85,3 +86,63 @@ Findings:
 - Bank cash split across BS lines (JPM 343,338M): serve the CF statement's printed ending-cash line, labelled; never sum the BS lines (Dhairya 2026-11-12).
 
 - Bank cash (refined, Dhairya 2026-11-12): the BS total cash line when printed (COF 57,434M), else the CF statement's printed ending cash; never a sum of BS lines. PGR cash on `Cash` (125M). CB perimeter change 2018+ (incl. restricted).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `CashAndCashEquivalentsAtCarryingValue`
+- **Meaning:** Cash and Cash Equivalent (us-gaap, instant, debit). Amount of cash and cash equivalent. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and account with general characteristic of demand deposit. Cash equivalent includes, but is not limited t...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#1
+- **Rules:** B05; B06; B07; B08; family resolve_all.NARROW[cash_and_equivalents]
+- **Evidence:** 103 companies, 1156 served, 22866 proven, 108 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 2 companies, e.g. DELL cash_and_equivalents 2015-01-30 (export) (pattern_hits.csv)
+- **Pattern hits:** P05 (2)
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCashAndCashEquivalents@2021; PostconfirmationCashAndCashEquivalents@2021; PreconfirmationCashAndCashEquivalents@2021
+
+### `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents`
+- **Meaning:** Cash, Cash Equivalent, Restricted Cash, and Restricted Cash Equivalent, Continuing Operation (us-gaap, instant, debit). Amount of cash and cash equivalent, and cash and cash equivalent restricted to withdrawal or usage; attributable to continuing operation. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#6
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 17 companies, 85 served, 666 proven, 6 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 4 companies, e.g. CRWD cash_and_equivalents 2018-01-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P05 (4)
+
+### `CashAndDueFromBanks`
+- **Meaning:** Cash and Due from Banks (us-gaap, instant, debit). For banks and other depository institutions: Includes cash on hand (currency and coin), cash items in process of collection, noninterest bearing deposits due from other financial institutions (including corporate credit unions), and noninte...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#4
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 4 companies, 21 served, 91 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashAndEquivalentsExcludingAssetsHeldForSale`
+- **Meaning:** (no taxonomy label) (custom)
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents
+- **Rules:** none
+- **Evidence:** 1 companies, 4 served, 7 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashAndCashEquivalentsFairValueDisclosure`
+- **Meaning:** Cash and Cash Equivalents, Fair Value Disclosure (us-gaap, instant, debit). Fair value portion of currency on hand as well as demand deposits with banks or financial institutions. Includes other kinds of accounts that have the general characteristics of demand deposits. Also includes short-term, highly liquid inves...
+- **Data point:** none (the resolver never serves it)
+- **Rules:** none
+- **Evidence:** 0 companies, 0 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CashCashEquivalentsAndShortTermInvestments`
+- **Meaning:** Cash, Cash Equivalents, and Short-Term Investments (us-gaap, instant, debit). Cash includes currency on hand as well as demand deposits with banks or financial institutions. It also includes other kinds of accounts that have the general characteristics of demand deposits in that the customer may deposit additional fu...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents; role cash_and_equivalents:combined#1
+- **Rules:** B05; B06; B07; B08
+- **Evidence:** 1 companies, 0 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

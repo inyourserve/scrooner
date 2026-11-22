@@ -1,4 +1,5 @@
 # Card family: Cash flow statement tags, FSN learning pass (Tag Expert, 2026-11-11)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Scope: the 28 us-gaap cash-flow tags in the top 140 by number of top-1,000 companies. Machine-readable twin: `data-team/tags/library/fsn-cash-flow.csv` (one row per tag; that file is the seed input, this card is the reasoning). Method: "FSN for learning, SEC for mapping." Extends `cash.md`, `debt.md`, `interest.md`. Where this card and those cards meet, they agree. No earlier claim is contradicted.
 
@@ -318,3 +319,285 @@ Libraries read: the Mac library `origin/work/tag-library/ranks-1-50` at aea0cf4 
 - No filing was opened for these: bank capex at more than one bank; utility inventory wording; the FIVE FY2016-2019 split of buybacks from withholding; the 92 widened business-acquisition labels; insurer CFO.
 - Calc-parent counts cover two sampled 10-Ks per company, not every filing.
 - The FSN store's 2015-2016 coverage (about 517 companies) limits era statements before 2018.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `IncomeTaxExpenseBenefit`
+- **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
+- **Data point definition:** income_tax_expense: Income tax expense (benefit) for the period, as printed;  a benefit is a real negative.
+- **Data point:** income_tax_expense; polarity income_tax_expense:signed; role income_tax_expense:primary#1
+- **Rules:** none
+- **Evidence:** 110 companies, 1302 served, 44905 proven, 117 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
+
+### `NetCashProvidedByUsedInFinancingActivities`
+- **Meaning:** Cash Provided by (Used in) Financing Activity, Including Discontinued Operation (us-gaap, duration, debit). Amount of cash inflow (outflow) from financing activity, including, but not limited to, discontinued operation. Financing activity includes, but is not limited to, obtaining resource from owner and providing return on, and return of, their ...
+- **Data point definition:** cash_flow_financing: Net cash provided by (used in) financing activities as printed.
+- **Data point:** cash_flow_financing; polarity cash_flow_financing:signed; role cash_flow_financing:primary#1
+- **Rules:** none
+- **Evidence:** 110 companies, 1161 served, 42499 proven, 115 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NetCashProvidedByUsedInInvestingActivities`
+- **Meaning:** Cash Provided by (Used in) Investing Activity, Including Discontinued Operation (us-gaap, duration, debit). Amount of cash inflow (outflow) from investing activity, including, but not limited to, discontinued operation. Investing activity includes, but is not limited to, making and collecting loan, acquiring and disposing of debt and equity instr...
+- **Data point definition:** cash_flow_investing: Net cash provided by (used in) investing activities as printed.
+- **Data point:** cash_flow_investing; polarity cash_flow_investing:signed; role cash_flow_investing:primary#1
+- **Rules:** none
+- **Evidence:** 110 companies, 1161 served, 42135 proven, 115 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NetCashProvidedByUsedInOperatingActivities`
+- **Meaning:** Cash Provided by (Used in) Operating Activity, Including Discontinued Operation (us-gaap, duration). Amount of cash inflow (outflow) from operating activity, including, but not limited to, discontinued operation. Operating activity includes, but is not limited to, transaction, adjustment, and change in value not defined as investing or fin...
+- **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
+- **Data point:** cfo; polarity cfo:signed; role cfo:primary#1
+- **Rules:** X84
+- **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsForRepurchaseOfCommonStock`
+- **Meaning:** Payments for Repurchase of Common Stock (us-gaap, duration, credit). The cash outflow to reacquire common stock during the period.
+- **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
+- **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#1
+- **Rules:** K10; K11; K12; K13; K14; K15; K16; resolver functions resolve_cf; family resolve_all.NARROW[share_buybacks]
+- **Evidence:** 106 companies, 1118 served, 29887 proven, 108 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. AXP share_buybacks 2018-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (1)
+
+### `ShareBasedCompensation`
+- **Meaning:** Share-Based Payment Arrangement, Noncash Expense (us-gaap, duration, debit). Amount of noncash expense for share-based payment arrangement.
+- **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
+- **Data point:** sbc; polarity sbc:positive; role sbc:primary#1
+- **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts; resolve_cf
+- **Evidence:** 91 companies, 1047 served, 4504 proven, 79 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OperatingIncomeLoss`
+- **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank]
+- **Data point:** operating_income; operating_expenses
+- **Rules:** C13; resolver functions resolve
+- **Evidence:** 80 companies, 948 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsToAcquirePropertyPlantAndEquipment`
+- **Meaning:** Payments to Acquire Property, Plant, and Equipment (us-gaap, duration, credit). The cash outflow associated with the acquisition of long-lived, physical assets that are used in the normal conduct of business to produce goods and services and not intended for resale; includes cash outflows to pay for construction of sel...
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point:** capex; polarity capex:positive; role capex:primary#1
+- **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX; resolve_all.NARROW[capex]
+- **Evidence:** 82 companies, 914 served, 17784 proven, 99 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestPaidNet`
+- **Meaning:** Interest Paid, Excluding Capitalized Interest, Operating Activity (us-gaap, duration, credit). Amount of cash paid for interest, excluding capitalized interest, classified as operating activity. Includes, but is not limited to, payment to settle zero-coupon bond for accreted interest of debt discount and debt instrument with insignif...
+- **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
+- **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#1
+- **Rules:** K35
+- **Evidence:** 98 companies, 883 served, 1627 proven, 69 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncomeTaxesPaidNet`
+- **Meaning:** Income Tax Paid, after Refund Received (us-gaap, duration, credit). Amount, after refund, of cash paid to foreign, federal, state, and local jurisdictions as income tax.
+- **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
+- **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
+- **Rules:** K32; K34; K33
+- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
+- **Pattern hits:** none
+
+### `IncreaseDecreaseInInventories`
+- **Meaning:** Increase (Decrease) in Inventories (us-gaap, duration, credit). The increase (decrease) during the reporting period in the aggregate value of all inventory held by the reporting entity, associated with underlying transactions that are classified as operating activities.
+- **Data point definition:** cf_inventory_change: Cash-flow change in inventories, raw XBRL sign.
+- **Data point:** cf_inventory_change; polarity cf_inventory_change:raw; role cf_inventory_change:primary#1
+- **Rules:** none; family resolve_cf.WC[cf_inventory_change]
+- **Evidence:** 74 companies, 862 served, 2794 proven, 94 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncreaseDecreaseInAccountsReceivable`
+- **Meaning:** Increase (Decrease) in Accounts Receivable (us-gaap, duration, credit). The increase (decrease) during the reporting period in amount due within one year (or one business cycle) from customers for the credit sale of goods and services.
+- **Data point definition:** cf_ar_change: Cash-flow change in accounts receivable, raw XBRL sign.
+- **Data point:** cf_ar_change; polarity cf_ar_change:raw; role cf_ar_change:primary#1
+- **Rules:** K30; family resolve_cf.WC[cf_ar_change]; resolve_all.NARROW[cf_ar_change]
+- **Evidence:** 65 companies, 734 served, 2643 proven, 79 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. NEE cf_ar_change 2015-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (1)
+
+### `DepreciationDepletionAndAmortization`
+- **Meaning:** Depreciation, Depletion and Amortization (us-gaap, duration, debit). The aggregate expense recognized in the current period that allocates the cost of tangible assets, intangible assets, or depleting assets to periods that benefit from use of the assets.
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary#4
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[depreciation_and_amortization]
+- **Evidence:** 62 companies, 660 served, 10498 proven, 49 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 12 open hit(s) at 1 companies, e.g. CSCO depreciation_and_amortization 2015-07-25 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (12)
+
+### `IncreaseDecreaseInAccountsPayable`
+- **Meaning:** Increase (Decrease) in Accounts Payable (us-gaap, duration, debit). The increase (decrease) during the reporting period in the aggregate amount of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's bu...
+- **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
+- **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:primary#1
+- **Rules:** none; family resolve_cf.WC[cf_ap_change]; resolve_all.NARROW[cf_ap_change]
+- **Evidence:** 58 companies, 607 served, 2226 proven, 91 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsOfDividendsCommonStock`
+- **Meaning:** Payments of Ordinary Dividends, Common Stock (us-gaap, duration, credit). Amount of cash outflow in the form of ordinary dividends to common shareholders of the parent entity.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#1
+- **Rules:** K23; K17; K18; K19; K20; K21; K22; resolver functions apply_note_split; family resolve_all.NARROW[dividends_paid]
+- **Evidence:** 49 companies, 519 served, 18541 proven, 49 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsOfDividends`
+- **Meaning:** Payments of Dividends (us-gaap, duration, credit). Cash outflow in the form of capital distributions and dividends to common shareholders, preferred shareholders and noncontrolling interests.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
+- **Rules:** K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 50 companies, 455 served, 11139 proven, 51 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
+
+### `Depreciation`
+- **Meaning:** Depreciation (us-gaap, duration, debit). The amount of expense recognized in the current period that reflects the allocation of the cost of tangible assets over the assets' useful lives. Includes production and non-production related depreciation.
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#7; depreciation_and_amortization:primary-part#8; depreciation_and_amortization:primary#10
+- **Rules:** X86; I44; I49; I43; I45; I46; I47; I48; I50; resolver functions resolve_da; apply_label_beyond
+- **Evidence:** 22 companies, 243 served, 449 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. GOOG depreciation_and_amortization 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 26 open hit(s) at 3 companies, e.g. ACN depreciation_and_amortization 2020-08-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (26); P05 (2)
+
+### `PaymentsToAcquireProductiveAssets`
+- **Meaning:** Payments to Acquire Productive Assets (us-gaap, duration, credit). The cash outflow for purchases of and capital improvements on property, plant and equipment (capital expenditures), software, and other intangible assets.
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point:** capex; polarity capex:positive; role capex:primary#2
+- **Rules:** K40; K03; K04; K05; K06; K07; K08; K09; family resolve_cf.CAPEX
+- **Evidence:** 26 companies, 207 served, 3309 proven, 7 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NonoperatingIncomeExpense`
+- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
+- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
+- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DepreciationAmortizationAndAccretionNet`
+- **Meaning:** Depreciation, Amortization and Accretion, Net (us-gaap, duration, debit). The aggregate net amount of depreciation, amortization, and accretion recognized during an accounting period. As a noncash item, the net amount is added back to net income when calculating cash provided by or used in operations using the in...
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:combined#1
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50
+- **Evidence:** 13 companies, 104 served, 943 proven, 20 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AdjustmentForAmortization`
+- **Meaning:** Amortization (us-gaap, duration, debit). The aggregate amount of recurring noncash expense charged against earnings in the period to allocate the cost of assets over their estimated remaining economic lives.
+- **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).
+- **Data point:** depreciation_and_amortization; amortization_of_intangibles; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#7; depreciation_and_amortization:primary-part#9
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50
+- **Evidence:** 8 companies, 100 served, 137 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CostsAndExpenses`
+- **Meaning:** Costs and Expenses (us-gaap, duration, debit). Total costs of sales and operating expenses for the period.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses
+- **Rules:** X117; I09; resolver functions apply_cost_and_opex
+- **Evidence:** 21 companies, 95 served, 190 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DevelopmentStageEnterpriseCumulativeExpense@2012
+
+### `GainsLossesOnExtinguishmentOfDebt`
+- **Meaning:** Gain (Loss) on Extinguishment of Debt (us-gaap, duration, credit). Difference between the fair value of payments made and the carrying amount of debt which is extinguished prior to maturity.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** other_income_expense_net; operating_expenses
+- **Rules:** none
+- **Evidence:** 17 companies, 74 served, 8 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces GainLossOnNonRecourseDebt@2022; GainsLossesOnRecourseDebt@2022
+
+### `PaymentsOfOrdinaryDividends`
+- **Meaning:** Payments of Ordinary Dividends (us-gaap, duration, credit). Cash outflow in the form of ordinary dividends to common shareholders, preferred shareholders and noncontrolling interests, generally out of earnings.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#3
+- **Rules:** K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 7 companies, 55 served, 268 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 20 open hit(s) at 2 companies, e.g. BAC dividends_paid 2015-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (20)
+- **Deprecation:** replaces DividendPaidMember@2025
+
+### `PaymentsForCapitalImprovements`
+- **Meaning:** Payments for Capital Improvements (us-gaap, duration, credit). The cash outflow for acquisition of or capital improvements to properties held for investment (operating, managed, leased) or for use.
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point:** capex; polarity capex:positive; role capex:primary#4
+- **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX
+- **Evidence:** 4 companies, 29 served, 32 proven, 0 certified cells; last verified 2026-11-14
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsForProceedsFromProductiveAssets`
+- **Meaning:** Payments for (Proceeds from) Productive Assets (us-gaap, duration, credit). The net cash outflow or inflow from purchases, sales and disposals of property, plant and equipment and other productive assets, including intangibles.
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point:** capex; polarity capex:positive
+- **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX
+- **Evidence:** 4 companies, 21 served, 61 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ProfitLoss`
+- **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income
+- **Rules:** X77; F03; F04; resolver functions run
+- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
+
+### `OtherDepreciationAndAmortization`
+- **Meaning:** Other Depreciation and Amortization (us-gaap, duration, debit). Amount of expense charged against earnings to allocate the cost of tangible and intangible assets over their remaining economic lives, classified as other.
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).
+- **Data point:** depreciation_and_amortization; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#9; depreciation_and_amortization:primary#11
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50
+- **Evidence:** 3 companies, 15 served, 56 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ACN depreciation_and_amortization 2026-08-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (1)
+
+### `PaymentsForRepurchaseOfEquity`
+- **Meaning:** Payments for Repurchase of Equity (us-gaap, duration, credit). The cash outflow to reacquire common and preferred stock.
+- **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
+- **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#2
+- **Rules:** K10; K11; K12; K13; K14; K15; K16
+- **Evidence:** 4 companies, 12 served, 6 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `StockOptionPlanExpense`
+- **Meaning:** Stock or Unit Option Plan Expense (us-gaap, duration, debit). Amount of noncash expense for option under share-based payment arrangement.
+- **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
+- **Data point:** sbc
+- **Rules:** X52; resolver functions apply_face_label_overrides
+- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

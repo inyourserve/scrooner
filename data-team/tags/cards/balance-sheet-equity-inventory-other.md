@@ -1,4 +1,5 @@
 # Card family: equity, mezzanine, inventory, splits, sector lines and other (written 2026-11-09 by the Tag Expert; first version from relays)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 Not FSN-write data points today; balance-sheet families are held. FSN `stockholders_equity_resolved` rules: StockholdersEquity p10, PartnersCapital p11, MembersEquity p12, PartnersCapitalAttributableToParent p13, LLC members' equity p14 (bs.jsonl). All rows below: FILING-CHECKED by the named role, not re-opened by me, unless marked.
 
 ## 1. Equity and mezzanine
@@ -54,3 +55,293 @@ Not FSN-write data points today; balance-sheet families are held. FSN `stockhold
 
 ## 9. Instants are never summed (Dhairya 2026-11-12, doc 02)
 - Inventory printed only as components (SO, XOM) and shares printed only per class: not_presented. Total liabilities with no printed line: not_presented. The only summed instant is total_debt (founder definition).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 41 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `Goodwill`
+- **Meaning:** Goodwill (us-gaap, instant, debit). Amount, after accumulated impairment loss, of asset representing future economic benefit arising from other asset acquired in business combination or from joint venture formation or both, that is not individually identified and separately r...
+- **Data point definition:** goodwill: Goodwill at period end as printed.
+- **Data point:** goodwill; role goodwill:primary#1
+- **Rules:** X78; B20
+- **Evidence:** 105 companies, 1206 served, 4387 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces BusinessCombinationGoodwillRecognizedSegmentAllocation@2013; FreshStartAdjustmentIncreaseDecreaseGoodwill@2021; FreshStartAdjustmentIncreaseDecreaseReorganizationValueInExcessOfAmountsAllocableToIdentifiableAssets@2021; PostconfirmationGoodwill@2021 (+2 more)
+
+### `StockholdersEquity`
+- **Meaning:** Equity, Attributable to Parent (us-gaap, instant, credit). Amount of equity (deficit) attributable to parent. Excludes temporary equity and equity attributable to noncontrolling interest.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** X78; C06; resolver functions resolve
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
+
+### `AssetsCurrent`
+- **Meaning:** Assets, Current (us-gaap, instant, debit). Amount of asset recognized for present right to economic benefit, classified as current.
+- **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
+- **Data point:** current_assets
+- **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
+
+### `ShareBasedCompensation`
+- **Meaning:** Share-Based Payment Arrangement, Noncash Expense (us-gaap, duration, debit). Amount of noncash expense for share-based payment arrangement.
+- **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
+- **Data point:** sbc; polarity sbc:positive; role sbc:primary#1
+- **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts; resolve_cf
+- **Evidence:** 91 companies, 1047 served, 4504 proven, 79 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsPayableCurrent`
+- **Meaning:** Accounts Payable, Current (us-gaap, instant, credit). Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business. Used to reflect the curr...
+- **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
+- **Data point:** accounts_payable; role accounts_payable:primary#1
+- **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
+- **Evidence:** 84 companies, 985 served, 3404 proven, 111 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsPayableRelatedPartiesCurrent@2023; FreshStartAdjustmentIncreaseDecreaseAccountsPayable@2021; PostconfirmationAccountsPayable@2021; PreconfirmationAccountsPayable@2021
+
+### `ResearchAndDevelopmentExpense`
+- **Meaning:** Research and Development Expense (us-gaap, duration, debit). Amount of expense for research and development. Includes, but is not limited to, cost for computer software product to be sold, leased, or otherwise marketed and writeoff of research and development assets acquired in transaction other than...
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** research_and_development; operating_expenses; polarity research_and_development:positive; role research_and_development:primary#1
+- **Rules:** I19
+- **Evidence:** 66 companies, 985 served, 2774 proven, 75 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InventoryNet`
+- **Meaning:** Inventory, Net (us-gaap, instant, debit). Amount after valuation and LIFO reserves of inventory expected to be sold, or consumed within one year or operating cycle, if longer.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory; role inventory:primary#1
+- **Rules:** B15; B14; resolver functions inventory_header_sum
+- **Evidence:** 80 companies, 895 served, 3308 proven, 92 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseInventories@2021; PostconfirmationInventories@2021; PreconfirmationInventories@2021
+
+### `DebtCurrent`
+- **Meaning:** Debt, Current (us-gaap, instant, credit). Amount of debt and lease obligation, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 39 companies, 353 served, 4 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OperatingExpenses`
+- **Meaning:** Operating Expenses (us-gaap, duration, debit). Generally recurring costs associated with normal operations except for the portion of these expenses which can be clearly related to production and included in cost of sales or services. Includes selling, general and administrative expense.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
+- **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
+- **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AllocatedShareBasedCompensationExpense`
+- **Meaning:** Share-Based Payment Arrangement, Expense (us-gaap, duration, debit). Amount of expense for award under share-based payment arrangement. Excludes amount capitalized.
+- **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
+- **Data point:** sbc; polarity sbc:positive; role sbc:primary#2
+- **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts
+- **Evidence:** 24 companies, 248 served, 183 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces ShareBasedCompensationArrangementByShareBasedPaymentAwardCompensationCost@2012
+
+### `FiniteLivedIntangibleAssetsNet`
+- **Meaning:** Intangible Asset, Finite-Lived, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.
+- **Data point:** intangible_assets; role intangible_assets:primary#2
+- **Rules:** B21
+- **Evidence:** 33 companies, 245 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FiniteLivedIntangibleAssetsFutureAmortizationExpense@2012; FreshStartAdjustmentIncreaseDecreaseAmortizableIntangibleAssets@2021; PostconfirmationAmortizableIntangibleAssets@2021; PreconfirmationAmortizableIntangibleAssetsNet@2021
+
+### `OtherLiabilitiesNoncurrent`
+- **Meaning:** Other Liabilities, Noncurrent (us-gaap, instant, credit). Amount of liabilities classified as other, due after one year or the normal operating cycle, if longer.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 23 companies, 199 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DueToAffiliateNoncurrent@2023; DueToEmployeesNoncurrent@2023; DueToOfficersOrStockholdersNoncurrent@2023; DueToOtherRelatedPartiesNoncurrent@2023 (+5 more)
+
+### `NonoperatingIncomeExpense`
+- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
+- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
+- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ReceivablesNetCurrent`
+- **Meaning:** Receivables, Net, Current (us-gaap, instant, debit). The total amount due to the entity within one year of the balance sheet date (or one operating cycle, if longer) from outside sources, including trade accounts receivable, notes and loans receivable, as well as any other types of receivable...
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#2
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 16 companies, 148 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021
+
+### `StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest`
+- **Meaning:** Equity, Including Portion Attributable to Noncontrolling Interest (us-gaap, instant, credit). Amount of equity (deficit) attributable to parent and noncontrolling interest. Excludes temporary equity.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.; total_liabilities: Total liabilities as printed.
+- **Data point:** stockholders_equity; total_liabilities
+- **Rules:** none
+- **Evidence:** 16 companies, 116 served, 2197 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption@2020; EquityMethodInvestmentSummarizedFinancialInformationEquity@2020; ImpactOfRestatementOnOpeningRetainedEarningsNetOfTax@2020; StockholdersEquityIncludingPortionAttributableToNoncontrollingInterestAdjustedBalance1@2020
+
+### `AccountsPayableTradeCurrent`
+- **Meaning:** Accounts Payable, Trade, Current (us-gaap, instant, credit). Carrying value as of the balance sheet date of obligations incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business. Used to reflect the curr...
+- **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
+- **Data point:** accounts_payable; role accounts_payable:primary#2
+- **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
+- **Evidence:** 12 companies, 112 served, 301 proven, 1 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DeferredIncomeTaxLiabilitiesNet`
+- **Meaning:** Deferred Income Tax Liabilities, Net (us-gaap, instant, credit). Amount, after deferred tax asset, of deferred tax liability attributable to taxable differences with jurisdictional netting.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 12 companies, 78 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseDeferredIncomeTaxLiabilitiesCurrent@2021; FreshStartAdjustmentIncreaseDecreaseDeferredIncomeTaxLiabilitiesNoncurrent@2021; PostconfirmationDeferredIncomeTaxLiabilitiesCurrent@2021; PostconfirmationDeferredIncomeTaxLiabilitiesNoncurrent@2021 (+2 more)
+
+### `DeferredTaxLiabilitiesNoncurrent`
+- **Meaning:** Deferred Tax Liabilities, Net, Noncurrent (Deprecated 2022) (us-gaap, instant, credit). Amount, after deferred tax asset, of deferred tax liability attributable to taxable differences, with jurisdictional netting and classified as noncurrent.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 15 companies, 61 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ProvisionForLoanLeaseAndOtherLosses`
+- **Meaning:** Provision for Loan, Lease, and Other Losses (us-gaap, duration, debit). Amount of expense related loan transactions, lease transactions, credit loss from transactions other than loan and lease transactions, and other loss based on assessment of uncollectability from the counterparty to reduce the account to the...
+- **Data point definition:** provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed;  a release is a real negative. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** provision_for_credit_losses; polarity provision_for_credit_losses:signed; role provision_for_credit_losses:primary#1
+- **Rules:** none
+- **Evidence:** 8 companies, 58 served, 287 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FinancingReceivableAllowanceForCreditLossesProvisions@2012
+
+### `IncreaseDecreaseInAccountsAndNotesReceivable`
+- **Meaning:** Increase (Decrease) in Accounts and Notes Receivable (us-gaap, duration, credit). The increase (decrease) during the reporting period of the sum of amounts due within one year (or one business cycle) from customers for the credit sale of goods and services; and from note holders for outstanding loans.
+- **Data point definition:** cf_ar_change: Cash-flow change in accounts receivable, raw XBRL sign.
+- **Data point:** cf_ar_change; polarity cf_ar_change:raw; role cf_ar_change:primary#4
+- **Rules:** K30; family resolve_cf.WC[cf_ar_change]
+- **Evidence:** 5 companies, 50 served, 103 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `MinorityInterest`
+- **Meaning:** Equity, Attributable to Noncontrolling Interest (us-gaap, instant, credit). Amount of equity (deficit) attributable to noncontrolling interest. Excludes temporary equity.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** none
+- **Evidence:** 4 companies, 48 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationMinorityInterest@2020; NoncontrollingInterestBalanceSheetLocation@2016
+
+### `AccountsNotesAndLoansReceivableNetCurrent`
+- **Meaning:** Accounts and Financing Receivable, after Allowance for Credit Loss, Current (us-gaap, instant, debit). Amount, after allowance for credit loss, of accounts and financing receivables, classified as current. Includes, but is not limited to, notes and loan receivable.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#3
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 5 companies, 46 served, 159 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OperatingLeaseLiabilityNoncurrent`
+- **Meaning:** Operating Lease, Liability, Noncurrent (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from operating lease, classified as noncurrent.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 6 companies, 34 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsAndOtherReceivablesNetCurrent`
+- **Meaning:** Accounts and Other Receivables, Net, Current (us-gaap, instant, debit). Amount, after allowance, receivable from customers, clients, or other third-parties, and receivables classified as other due within one year or the normal operating cycle, if longer.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#5
+- **Rules:** B09; B10; B11; B12; B13; B30
+- **Evidence:** 4 companies, 33 served, 95 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `AccountsReceivableNet`
+- **Meaning:** Accounts Receivable, after Allowance for Credit Loss (us-gaap, instant, debit). Amount, after allowance for credit loss, of right to consideration from customer for product sold and service rendered in normal course of business.
+- **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
+- **Data point:** accounts_receivable; role accounts_receivable:primary#4
+- **Rules:** X100; B09; B10; B11; B12; B13; B30
+- **Evidence:** 3 companies, 31 served, 141 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsReceivableRelatedParties@2023
+
+### `AccountsPayableCurrentAndNoncurrent`
+- **Meaning:** Accounts Payable (us-gaap, instant, credit). Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business.
+- **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
+- **Data point:** accounts_payable; role accounts_payable:primary#3
+- **Rules:** B16; B17; B18; B19
+- **Evidence:** 3 companies, 30 served, 98 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsPayableRelatedPartiesCurrentAndNoncurrent@2023
+
+### `InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings`
+- **Meaning:** Inventory, Net of Allowances, Customer Advances and Progress Billings (us-gaap, instant, debit). Amount, after deduction of valuation reserves, other allowances, and customer advances received on long-term contracts or programs, of inventory expected to be converted to cash, sold or exchanged within the normal operating cycle.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory; role inventory:primary#5
+- **Rules:** B14; B15
+- **Evidence:** 2 companies, 23 served, 87 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss`
+- **Meaning:** Financing Receivable, Excluding Accrued Interest, after Allowance for Credit Loss (us-gaap, instant, debit). Amortized cost excluding accrued interest, after allowance for credit loss, of financing receivable. Excludes net investment in lease.
+- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** loans_net; role loans_net:primary#2
+- **Rules:** B28
+- **Evidence:** 5 companies, 21 served, 89 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `MaterialsSuppliesAndOther`
+- **Meaning:** Materials, Supplies, and Other (us-gaap, instant, debit). The carrying amount of capitalized costs of materials, supplies, and other assets, which are not included in inventory but used in production.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory; role inventory:primary#6
+- **Rules:** B14; B15
+- **Evidence:** 1 companies, 12 served, 47 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InventoryPartsAndComponentsNetOfReserves`
+- **Meaning:** Inventory, Parts and Components, Net of Reserves (us-gaap, instant, debit). Carrying amount, net of valuation reserves and adjustments, as of the balance sheet date for elements of machinery or equipment held for the purpose of replacing similar parts in the course of repair or maintenance.
+- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
+- **Data point:** inventory
+- **Rules:** none
+- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

@@ -1,4 +1,5 @@
 # Card family: Bank net loans and allowance for credit losses (written 2026-10-22 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss` (FRAfter), `FinancingReceivableExcludingAccruedInterestBeforeAllowanceForCreditLoss` (FRBefore), `LoansAndLeasesReceivableNetReportedAmount` (LLNet), `NotesReceivableNet`, `LoansAndLeasesReceivableNetOfDeferredIncome`, `FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest` (ACLExcl), `FinancingReceivableAllowanceForCreditLosses` (ACL), `LoansAndLeasesReceivableAllowance` (ALLL).
 Asked by: Sector Analyst, SECTOR-ROWS-REVIEW rows B10 and B12 and section 8 item 1.
@@ -59,3 +60,38 @@ The tags rarely share a period (they replace each other). Where they do, they ag
 - Bank allowance (`sr.fin.allowance`): **period-scoped set** ACLExcl (CECL era) -> ACL -> ALLL (pre-CECL), each the face contra line; reject a zero when another allowance tag is non-zero (UNB). The draft name `AllowanceForLoanAndLeaseLosses...` is not a taxonomy element; the pre-CECL element is `LoansAndLeasesReceivableAllowance`. FILING-CHECKED (EFSC, OSBC); counts DATA-INFERRED.
 - Keep `LoansReceivableNet` in the set for 2015-2020 periods only (removed element; 143 companies until 2020-03-31, DATA-INFERRED). CORRECTED before publishing: my first draft said to remove it because it is absent from the 2025/2026 schemas; the tag library shows it is historical. Never use an `AllowanceForLoanAndLeaseLosses*` roll-forward component as the allowance balance.
 - Verified by: Tag Expert (me), 2026-10-22. Not an approval; route to the Tag Mapper (coexistence already run above) and the Standardization Lead (era rule and the face guard).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 3 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `LoansAndLeasesReceivableNetReportedAmount`
+- **Meaning:** Loans and Leases Receivable, Net Amount (us-gaap, instant, debit). Amount after allowance and deduction of deferred interest and fees, unamortized costs and premiums and discounts from face amounts, of loans and leases held in portfolio, including but not limited to, commercial and consumer loans. Excludes...
+- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** loans_net; role loans_net:primary#1
+- **Rules:** B28
+- **Evidence:** 8 companies, 48 served, 170 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces LoansAndLeasesReceivableNetReportedAmountCommercial@2016; LoansAndLeasesReceivableNetReportedAmountConsumer@2016; LoansAndLeasesReceivableNetReportedAmountForeign@2016; LoansAndLeasesReceivableNetReportedAmountOther@2016
+
+### `NotesReceivableNet`
+- **Meaning:** Financing Receivable, after Allowance for Credit Loss (us-gaap, instant, debit). Amortized cost, after allowance for credit loss, of financing receivable. Excludes financing receivable covered under loss sharing agreement and net investment in lease.
+- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** loans_net; role loans_net:primary#3
+- **Rules:** B27; B28; resolver functions role; apply_member_loans
+- **Evidence:** 8 companies, 33 served, 106 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FinancingReceivable@2012; FinancingReceivableAcquiredWithDeterioratedCreditQuality@2015; LoansAndLeasesReceivableCollateralForSecuredBorrowings@2022; LoansPledgedAsCollateral@2022 (+8 more)
+
+### `FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss`
+- **Meaning:** Financing Receivable, Excluding Accrued Interest, after Allowance for Credit Loss (us-gaap, instant, debit). Amortized cost excluding accrued interest, after allowance for credit loss, of financing receivable. Excludes net investment in lease.
+- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point:** loans_net; role loans_net:primary#2
+- **Rules:** B28
+- **Evidence:** 5 companies, 21 served, 89 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

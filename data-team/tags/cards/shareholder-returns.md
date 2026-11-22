@@ -1,4 +1,5 @@
 # Card family: share buybacks, dividends paid, dividends per share, CFO basis (written 2026-11-09 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:PaymentsForRepurchaseOfCommonStock`, `PaymentsForRepurchaseOfEquity`, `PaymentsRelatedToTaxWithholdingForShareBasedCompensation`, `PaymentsForRepurchaseOfRedeemablePreferredStock`, `StockRepurchasedDuringPeriodValue`; `PaymentsOfDividends`, `PaymentsOfDividendsCommonStock`, `PaymentsOfOrdinaryDividends`, `PaymentsOfCapitalDistribution`, `PaymentsOfDividendsMinorityInterest`; `CommonStockDividendsPerShareDeclared`, `CommonStockDividendsPerShareCashPaid`; `NetCashProvidedByUsedInOperatingActivities(ContinuingOperations)`.
 Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks/share_buybacks.md), [`../playbooks/dividends_paid.md`](../playbooks/dividends_paid.md), [`../playbooks/dividends_per_share.md`](../playbooks/dividends_per_share.md). This first version is assembled from relays (FILING-CHECKED by the named role, not re-opened by me: sec.gov refuses this cloud session) plus my FSN measurements (DATA-INFERRED). Official-definition section: to be added from the FASB schema next run.
@@ -69,3 +70,222 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 
 ## 11. Annual DPS from printed quarters (Dhairya ruling 2026-11-12)
 - When a 10-K prints only quarterly DPS, annual DPS = the sum of the FOUR quarterly facts printed in that same filing (declared, or paid if only paid is printed), served with the note "sum of printed quarterly dividends". Conditions: all four quarters in the one filing; one basis; each fact on its own 3-month or dated-payment context (a quarterly rate on a 12-month context, as at CFG, V, NVDA, is not a quarterly fact); no special dividend unless printed as such. Otherwise not_presented. Cases: C 2.32 (0.56 + 0.56 + 0.60 + 0.60), COF, CRM 1.664 (4 × 0.416), DIS (dated payments in the fiscal year). DPS is additive; EPS is never derived.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `NetIncomeLoss`
+- **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#1
+- **Rules:** X77; C29; resolver functions resolve
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
+
+### `NetCashProvidedByUsedInOperatingActivities`
+- **Meaning:** Cash Provided by (Used in) Operating Activity, Including Discontinued Operation (us-gaap, duration). Amount of cash inflow (outflow) from operating activity, including, but not limited to, discontinued operation. Operating activity includes, but is not limited to, transaction, adjustment, and change in value not defined as investing or fin...
+- **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
+- **Data point:** cfo; polarity cfo:signed; role cfo:primary#1
+- **Rules:** X84
+- **Evidence:** 110 companies, 1154 served, 40731 proven, 115 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsForRepurchaseOfCommonStock`
+- **Meaning:** Payments for Repurchase of Common Stock (us-gaap, duration, credit). The cash outflow to reacquire common stock during the period.
+- **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
+- **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#1
+- **Rules:** K10; K11; K12; K13; K14; K15; K16; resolver functions resolve_cf; family resolve_all.NARROW[share_buybacks]
+- **Evidence:** 106 companies, 1118 served, 29887 proven, 108 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. AXP share_buybacks 2018-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (1)
+
+### `InterestPaidNet`
+- **Meaning:** Interest Paid, Excluding Capitalized Interest, Operating Activity (us-gaap, duration, credit). Amount of cash paid for interest, excluding capitalized interest, classified as operating activity. Includes, but is not limited to, payment to settle zero-coupon bond for accreted interest of debt discount and debt instrument with insignif...
+- **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
+- **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#1
+- **Rules:** K35
+- **Evidence:** 98 companies, 883 served, 1627 proven, 69 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncomeTaxesPaidNet`
+- **Meaning:** Income Tax Paid, after Refund Received (us-gaap, duration, credit). Amount, after refund, of cash paid to foreign, federal, state, and local jurisdictions as income tax.
+- **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
+- **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#1
+- **Rules:** K32; K34; K33
+- **Evidence:** 105 companies, 866 served, 1547 proven, 70 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000040545-17-000010: GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid;  IncomeTaxesPaidNet is positive for ta; filer XBRL error 0000040545-16-000145: GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid;  the FY2015 10 (+2 more)
+- **Pattern hits:** none
+
+### `CommonStockDividendsPerShareDeclared`
+- **Meaning:** Common Stock, Dividends, Per Share, Declared (us-gaap, duration). Aggregate dividends declared during the period for each share of common stock outstanding.
+- **Data point definition:** dividends_per_share: Dividends declared per common share for the fiscal year.
+- **Data point:** dividends_per_share; polarity dividends_per_share:positive; role dividends_per_share:primary#1
+- **Rules:** none
+- **Evidence:** 81 companies, 767 served, 2489 proven, 96 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm consolidated statements of shareholders' equity: Dividends to shareholders ($ 2.80 per ordinary share);  the XBRL facts are 10^6; filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm R9 consolidated statements of shareholders' equity, FY2022 column: Dividends to shareholders ($ 2.77 per ordinary share);  the X (+1 more)
+- **Pattern hits:** none
+- **Deprecation:** replaces DividendDeclaredMember@2025
+
+### `PaymentsOfDividendsCommonStock`
+- **Meaning:** Payments of Ordinary Dividends, Common Stock (us-gaap, duration, credit). Amount of cash outflow in the form of ordinary dividends to common shareholders of the parent entity.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#1
+- **Rules:** K23; K17; K18; K19; K20; K21; K22; resolver functions apply_note_split; family resolve_all.NARROW[dividends_paid]
+- **Evidence:** 49 companies, 519 served, 18541 proven, 49 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsOfDividends`
+- **Meaning:** Payments of Dividends (us-gaap, duration, credit). Cash outflow in the form of capital distributions and dividends to common shareholders, preferred shareholders and noncontrolling interests.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
+- **Rules:** K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 50 companies, 455 served, 11139 proven, 51 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
+
+### `IncomeTaxesPaid`
+- **Meaning:** Income Tax Paid, before Refund Received (us-gaap, duration, credit). Amount, before refund, of cash paid to foreign, federal, state, and local jurisdictions as income tax.
+- **Data point definition:** cash_paid_for_income_taxes: Cash paid for income taxes, net of refunds, as printed.
+- **Data point:** cash_paid_for_income_taxes; polarity cash_paid_for_income_taxes:signed; role cash_paid_for_income_taxes:primary#2
+- **Rules:** K32; K33; K34
+- **Evidence:** 47 companies, 429 served, 497 proven, 46 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestPaid`
+- **Meaning:** Interest Paid, Including Capitalized Interest, Operating and Investing Activities (us-gaap, duration, credit). Amount of cash paid for interest, including, but not limited to, capitalized interest and payment to settle zero-coupon bond attributable to accreted interest of debt discount and debt instrument with insignificant coupon interest rate in r...
+- **Data point definition:** cash_paid_for_interest: Cash paid for interest, net of amounts capitalized (InterestPaidNet).
+- **Data point:** cash_paid_for_interest; polarity cash_paid_for_interest:positive; role cash_paid_for_interest:primary#2
+- **Rules:** K35
+- **Evidence:** 61 companies, 336 served, 313 proven, 46 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CommonStockDividendsPerShareCashPaid`
+- **Meaning:** Common Stock, Dividends, Per Share, Cash Paid (us-gaap, duration). Aggregate dividends paid during the period for each share of common stock outstanding.
+- **Data point definition:** dividends_per_share: Dividends declared per common share for the fiscal year.
+- **Data point:** dividends_per_share; polarity dividends_per_share:positive; role dividends_per_share:primary#2
+- **Rules:** none
+- **Evidence:** 28 companies, 238 served, 787 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations`
+- **Meaning:** Cash Provided by (Used in) Operating Activity, Continuing Operation (us-gaap, duration). Amount of cash inflow (outflow) from operating activity attributable to continuing operation. Operating activity includes, but is not limited to, transaction, adjustment, and change in value not defined as investing or financing activity.
+- **Data point definition:** cfo: Net cash provided by (used in) operating activities as printed.
+- **Data point:** cfo; polarity cfo:signed; role cfo:primary#2
+- **Rules:** none
+- **Evidence:** 40 companies, 156 served, 2874 proven, 2 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LongTermDebt`
+- **Meaning:** Long-Term Debt (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** D11; resolver functions run
+- **Evidence:** 15 companies, 119 served, 68 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseLongTermDebt@2021; NonRecourseDebt@2022; PostconfirmationLongTermDebt@2021; PreconfirmationLongTermDebt@2021
+
+### `InterestExpenseDebt`
+- **Meaning:** Interest Expense, Debt (us-gaap, duration, debit). Amount of the cost of borrowed funds accounted for as interest expense for debt.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** interest_expense; other_income_expense_net; polarity interest_expense:positive; role interest_expense:primary#3
+- **Rules:** I20; I21; I22; I23; I24; family resolve_all.NARROW[interest_expense]
+- **Evidence:** 10 companies, 113 served, 1434 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DebtInstrumentConvertibleInterestExpense@2013
+
+### `IncomeLossFromEquityMethodInvestments`
+- **Meaning:** Income (Loss) from Equity Method Investments (us-gaap, duration, credit). Amount of income (loss) for proportionate share of equity method investee's income (loss).
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** operating_expenses; other_income_expense_net
+- **Rules:** none
+- **Evidence:** 13 companies, 87 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** filer XBRL error 0001562762-20-000064: T FY2019 10-K t-20191231.htm consolidated statements of income: Equity in net income (loss) of affiliates 6 (2018: (48));  the XBRL fact is -6 and the printed to
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeLossFromEquityMethodInvestmentsMember@2013; MinorityInterestAndEarningsLossesEquityInvestmentsMember@2013
+
+### `PaymentsOfOrdinaryDividends`
+- **Meaning:** Payments of Ordinary Dividends (us-gaap, duration, credit). Cash outflow in the form of ordinary dividends to common shareholders, preferred shareholders and noncontrolling interests, generally out of earnings.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#3
+- **Rules:** K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 7 companies, 55 served, 268 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P06 own_10k_year_hidden: 20 open hit(s) at 2 companies, e.g. BAC dividends_paid 2015-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (20)
+- **Deprecation:** replaces DividendPaidMember@2025
+
+### `CommercialPaper`
+- **Meaning:** Commercial Paper (us-gaap, instant, credit). Carrying value as of the balance sheet date of short-term borrowings using unsecured obligations issued by banks, corporations and other borrowers to investors. The maturities of these money market securities generally do not exceed 270 day...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 8 companies, 49 served, 2 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ProfitLoss`
+- **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income
+- **Rules:** X77; F03; F04; resolver functions run
+- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
+
+### `PaymentsForRepurchaseOfEquity`
+- **Meaning:** Payments for Repurchase of Equity (us-gaap, duration, credit). The cash outflow to reacquire common and preferred stock.
+- **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
+- **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#2
+- **Rules:** K10; K11; K12; K13; K14; K15; K16
+- **Evidence:** 4 companies, 12 served, 6 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `StockRepurchasedDuringPeriodValue`
+- **Meaning:** Stock Repurchased During Period, Value (us-gaap, duration, debit). Equity impact of the value of stock that has been repurchased during the period and has not been retired and is not held in treasury. Some state laws may mandate the circumstances under which an entity may acquire its own stock and prescrib...
+- **Data point:** none (the resolver never serves it)
+- **Rules:** none
+- **Evidence:** 0 companies, 0 served, 47 proven, 0 certified cells; last verified 2026-11-13
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `Dividends`
+- **Meaning:** Dividends (us-gaap, duration, debit). Amount of paid and unpaid cash, stock, and paid-in-kind (PIK) dividends declared, for example, but not limited to, common and preferred stock.
+- **Data point:** none (the resolver never serves it)
+- **Rules:** X93; I35; K21; resolver functions PURE_II
+- **Evidence:** 0 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PaymentsOfCapitalDistribution`
+- **Meaning:** Payments of Capital Distribution (us-gaap, duration, credit). Cash outflow to owners or shareholders, excluding ordinary dividends. Includes special dividends.
+- **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
+- **Data point:** dividends_paid; polarity dividends_paid:positive
+- **Rules:** K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 0 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ProceedsFromRepurchaseOfEquity`
+- **Meaning:** Proceeds from (Repurchase of) Equity (us-gaap, duration, debit). The net cash inflow or outflow resulting from the entity's share transaction.
+- **Data point definition:** share_buybacks: Cash repurchases of the company's own common stock;  excludes tax-withholding shares, excise tax, employee-plan purchases, subsidiary buybacks and swaps (founder 2026-11-04).
+- **Data point:** share_buybacks
+- **Rules:** none
+- **Evidence:** 1 companies, 0 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+<!-- END GENERATED: tag library rows -->

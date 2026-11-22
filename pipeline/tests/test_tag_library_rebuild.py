@@ -63,16 +63,29 @@ def test_parse_rules_prefers_lowest_order_and_skips_other_kinds(tmp_path):
     assert rules[("IS", "Revenues")]["rule_id"] == "lib.is.B"
 
 
-def test_polarity_classes(tmp_path):
+def test_library_sources_read_element_knowledge_from_library_csv(tmp_path):
+    """Polarity, deprecations, caveats and problems come from library.csv (the one tag library), not raw rule files."""
     p = write(
-        tmp_path / "p.csv",
-        "data_point,sign,normalise,why\ncapex,+,Y,x\ncfo,±,N,x\ncf_ar_change,raw,N,x\n",
+        tmp_path / "library.csv",
+        "element,taxonomy,polarity,deprecated_by,replaces,legacy_caveat,known_problems\n"
+        "PaymentsToAcquirePropertyPlantAndEquipment,us-gaap,capex:positive,,,,filer XBRL error 0001: sign\n"
+        "SalesRevenueNet,us-gaap,revenue:signed,RevenueFromContract@2018,,subset for banks,\n"
+        "RevenueFromContract,us-gaap,,,SalesRevenueNet@2018;SalesRevenueGoodsNet@2018,,\n",
     )
-    assert t.parse_polarity(p) == {
-        "capex": "positive",
-        "cfo": "signed",
-        "cf_ar_change": "raw",
-    }
+    src = t.library_sources(p)
+    assert src.polarity == {"capex": "positive", "revenue": "signed"}
+    assert src.deprecations["SalesRevenueNet"] == ("RevenueFromContract", None)
+    assert src.deprecations["RevenueFromContract"] == (
+        None,
+        "SalesRevenueGoodsNet;SalesRevenueNet",
+    )
+    assert src.caveats == {"SalesRevenueNet": "subset for banks"}
+    assert src.problems["PaymentsToAcquirePropertyPlantAndEquipment"] == [
+        "filer XBRL error 0001: sign"
+    ]
+    assert (
+        src.rules
+    )  # the predictor rule store is still read from data-team/tags/rules/
 
 
 def test_certified_company_ids(tmp_path):
@@ -150,9 +163,10 @@ def src():
                 "order": 1,
             },
         },
-        caveats={("IS", "Revenues"): "subset for banks"},
+        caveats={"Revenues": "subset for banks"},
         polarity={"revenue": "signed", "interest_expense": "positive"},
         deprecations={"Revenues": ("RevenueFromContract", None)},
+        problems={"Revenues": ["filer XBRL error 0002: duplicate"]},
     )
 
 
@@ -199,6 +213,7 @@ def test_build_entries_counts_each_cell_once_and_carries_library_fields():
         and rev["deprecated_by"] == "RevenueFromContract"
     )
     assert any("subset for banks" in p for p in rev["known_problems"])
+    assert "library: filer XBRL error 0002: duplicate" in rev["known_problems"]
     assert any("2 cell_proof DISAGREE" in p for p in rev["known_problems"])
     assert by[("us-gaap", "Dup")]["data_point"] == ""
     assert by[("us-gaap", "Dup")]["family"] == "cf"
@@ -280,10 +295,17 @@ def test_apply_refused_off_main():
 
 
 def test_repo_files_parse_and_cover_every_resolver_decision():
-    """The committed sources load: newest resolver file, rules, polarity (catches a format change)."""
+    """The committed sources load: newest resolver file, rules, and the library's polarity (catches a format change)."""
     rows, rejects = t.parse_resolver(t.newest_resolver_file())
     assert rows and not rejects
-    assert t.parse_rules() and t.parse_polarity()
+    if (
+        t.library_csv.library_path() is None
+    ):  # out of git and no storage credentials here (repo_archive)
+        pytest.skip(
+            "library.csv is not in the repo and the storage manifest version is not fetchable"
+        )
+    src = t.library_sources()
+    assert src.rules and src.polarity and src.deprecations
 
 
 def test_not_in_template_is_stored_and_an_unknown_decision_is_rejected(tmp_path):
@@ -295,7 +317,15 @@ def test_not_in_template_is_stored_and_an_unknown_decision_is_rejected(tmp_path)
         + "0000000001,AAA,total_assets,2020-12-31,I,brand_new_value,,5,,,,,v\n"
     )
     rows, rejects = t.parse_resolver(f)
-    assert [(r["data_point"], r["decision"], r["value"]) for r in rows] == [("net_interest_income", "not_in_template", None)]
+    assert [(r["data_point"], r["decision"], r["value"]) for r in rows] == [
+        ("net_interest_income", "not_in_template", None)
+    ]
     assert len(rejects) == 1 and "brand_new_value" in rejects[0]
-    mig = (Path(__file__).resolve().parents[1] / "db/migrations/0128_company_tag_metric_library.sql").read_text()
-    assert "'not_in_template'" in mig.split("analytics.resolver_decision (")[1].split("node_tags")[0]
+    mig = (
+        Path(__file__).resolve().parents[1]
+        / "db/migrations/0128_company_tag_metric_library.sql"
+    ).read_text()
+    assert (
+        "'not_in_template'"
+        in mig.split("analytics.resolver_decision (")[1].split("node_tags")[0]
+    )

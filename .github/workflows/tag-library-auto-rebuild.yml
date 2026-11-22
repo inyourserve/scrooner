@@ -13,7 +13,9 @@ name: Tag library auto rebuild (resolver change on main -> library + pattern det
 #      git). The first run also removes them from git (they are in .gitignore); readers (build_library.py's changelog
 #      diff, mapper/hide_audit.py) fetch the manifest version when the file is not in git.
 #   5. commit only the small outputs (pattern_hits.csv, INDEX.md, CHANGELOG.md, coverage.json, library.schema.json,
-#      browser.html, the manifest), each checked under 5 MB.
+#      browser.html, the manifest, and the generated block of every data-team/tags/cards/*.md), each checked under 5 MB.
+#      A committed coverage.json older than the newest resolver version (`build_library.py --check-version`, the ci.yml
+#      gate) always commits, even when library.csv is unchanged.
 # Unlike tag-library-learn.yml (learner -> data branch, reviewed by hand), this runs no learner and fetches nothing
 # from SEC: it regenerates files that are a pure function of what is already on main, so it commits to main directly.
 # Secrets: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY for Storage only (no database). Its own push (GITHUB_TOKEN) starts
@@ -57,17 +59,19 @@ jobs:
           L=data-team/tags/library
           RA=pipeline/src/scrooner_pipeline/common/repo_archive.py
           MAN=data-team/strategy/storage-manifest.csv
-          SMALL="$L/pattern_hits.csv $L/INDEX.md $L/CHANGELOG.md $L/coverage.json $L/library.schema.json $L/browser.html $MAN"
+          SMALL="$L/pattern_hits.csv $L/INDEX.md $L/CHANGELOG.md $L/coverage.json $L/library.schema.json $L/browser.html $MAN $(ls data-team/tags/cards/*.md)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for i in $(seq 1 30); do
             git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            # the committed coverage.json names an older resolver than resolver/*.csv: always commit (the ci.yml gate)
+            stale=0; python3 $L/build_library.py --check-version >/dev/null || stale=1
             if [ -f $L/pattern_detectors.py ]; then python3 $L/pattern_detectors.py | tail -5 || { echo "::error::pattern detectors failed"; exit 1; }; fi
             python3 $L/build_library.py | tail -1 | tee /tmp/library-summary.json || { echo "::error::build_library failed"; exit 1; }
             NEW=$(sha256sum $L/library.csv | cut -d' ' -f1)
             CUR=$(python3 -c "import importlib.util as u,sys; s=u.spec_from_file_location('ra',sys.argv[1]); m=u.module_from_spec(s); s.loader.exec_module(m); r=m.latest('data-team/tags/library/library.csv'); print(r['sha256'] if r else '')" $RA)
             TRACKED=0; git ls-files --error-unmatch $L/library.csv >/dev/null 2>&1 && TRACKED=1
-            if [ "$NEW" = "$CUR" ] && [ "$TRACKED" = 0 ] && git diff --quiet -- $L/pattern_hits.csv; then
+            if [ "$stale" = 0 ] && [ "$NEW" = "$CUR" ] && [ "$TRACKED" = 0 ] && git diff --quiet -- $L/pattern_hits.csv; then
               echo "library ($NEW) and pattern hits unchanged at $(git rev-parse --short HEAD): nothing to commit"; git checkout -q -- .; exit 0
             fi
             if [ "$i" -eq 1 ]; then python3 -m pytest -q -p no:cacheprovider $L || { echo "::error::library tests failed: nothing uploaded or committed"; exit 1; }; fi

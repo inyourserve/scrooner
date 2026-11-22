@@ -4,6 +4,9 @@ name: SEC Tag Library rebuild
 # period after period, so the library is built once and rebuilt only after
 # WE change a concept_mapping or resolver -- that is what changes which tag
 # backs our values. Full rebuild aggregates all of core.fact (~1h).
+# Since 2026-11-22 (one tag library, data-team/SYSTEMS.md #6) the `library` stage loads analytics.sec_tag_library's
+# mapping status, data points and metrics from the committed data-team/tags/library/library.csv (built by
+# build_library.py on every resolver release); only the usage counts still aggregate company_sec_tag.
 on:
   workflow_dispatch:
   # Weekly, Sunday 23:00Z, inside the quiet window. Added 2026-10-23 as daily, changed to weekly

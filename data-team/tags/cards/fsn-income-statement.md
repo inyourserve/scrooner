@@ -1,4 +1,5 @@
 # Card family: FSN income statement, per-share and tax tags (Tag Expert, 2026-11-11)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Founder order 2026-11-11: "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." This card says what each of 22 tags is on the top-1,000 faces. It is the seed for `analytics.company_tag_map`. Machine-readable rows: `data-team/tags/library/fsn-income-statement.csv`. It extends `revenue.md`, `operating-income.md`, `net-income-and-shares.md` and `interest.md`. Nothing in those cards is contradicted unless a section says CORRECTS.
 
@@ -282,3 +283,296 @@ Sources: Mac Ritwik `origin/work/tag-library/ranks-1-50` @ aea0cf4 (`data-team/4
 - Pre-2018 filings: only DOC 2020 was opened.
 - Labels named only from FSN (BALL, TFX, BIO, FE, AFL, EQT, RTX, LIN, WFC, CBOE, SNEX, AES, SRE, WELL) are DATA-INFERRED.
 - Values were not compared with companyfacts. That is the mapping step ("SEC FOR MAPPING").
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `IncomeTaxExpenseBenefit`
+- **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
+- **Data point definition:** income_tax_expense: Income tax expense (benefit) for the period, as printed;  a benefit is a real negative.
+- **Data point:** income_tax_expense; polarity income_tax_expense:signed; role income_tax_expense:primary#1
+- **Rules:** none
+- **Evidence:** 110 companies, 1302 served, 44905 proven, 117 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
+
+### `EarningsPerShareBasic`
+- **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.
+- **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
+- **Data point:** basic_eps; role basic_eps:primary#1
+- **Rules:** none
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
+
+### `WeightedAverageNumberOfDilutedSharesOutstanding`
+- **Meaning:** Weighted Average Number of Shares Outstanding, Diluted (us-gaap, duration). The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.
+- **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
+- **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
+- **Rules:** none
+- **Evidence:** 108 companies, 1234 served, 4539 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
+- **Pattern hits:** P03 (5); P04 (3)
+- **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
+
+### `EarningsPerShareDiluted`
+- **Meaning:** Earnings Per Share, Diluted (us-gaap, duration). The amount of net income (loss) for the period available to each share of common stock or common unit outstanding during the reporting period and to each share or unit that would have been outstanding assuming the issuance of common shares ...
+- **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
+- **Data point:** diluted_eps; role diluted_eps:primary#1
+- **Rules:** none
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 116 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
+
+### `NetIncomeLoss`
+- **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#1
+- **Rules:** X77; C29; resolver functions resolve
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
+
+### `ComprehensiveIncomeNetOfTax`
+- **Meaning:** Comprehensive Income (Loss), Net of Tax, Attributable to Parent (us-gaap, duration, credit). Amount after tax of increase (decrease) in equity from transactions and other events and circumstances from net income and other comprehensive income, attributable to parent entity. Excludes changes in equity resulting from investments by o...
+- **Data point definition:** comprehensive_income: Comprehensive income attributable to the parent as printed.
+- **Data point:** comprehensive_income; role comprehensive_income:primary#1
+- **Rules:** X43; X67; X76; I38; I39; I40; I41; I42; resolver functions COMBINED_YIELDS_TO; comparative_fill; DERIVED_YIELDS_TO; fill_printed_zero_and_comparative; resolve_ci
+- **Evidence:** 108 companies, 1205 served, 4365 proven, 76 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `SellingGeneralAndAdministrativeExpense`
+- **Meaning:** Selling, General and Administrative Expense (us-gaap, duration, debit). The aggregate total costs related to selling a firm's product and services, as well as all other general and administrative expenses. Direct selling expenses (for example, credit, warranty, and advertising) are expenses that can be directly...
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
+- **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
+- **Evidence:** 66 companies, 1170 served, 3623 proven, 73 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P07 line_double_count: 60 open hit(s) at 4 companies, e.g. ADP operating_expenses 2016-06-30 (resolver) (pattern_hits.csv)
+- **Pattern hits:** P07 (60)
+- **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
+
+### `CostOfGoodsAndServicesSold`
+- **Meaning:** Cost of Product and Service Sold (us-gaap, duration, debit). The aggregate costs related to goods produced and sold and services rendered by an entity during the reporting period. This excludes costs incurred during the reporting period related to financial services rendered and other revenue generat...
+- **Data point definition:** cost_of_revenue: Cost of goods sold / cost of revenue for the period: the costs the filer matches to revenue above gross profit. [not applicable: bank,insurer,bdc]; gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc] (+1 more)
+- **Data point:** cost_of_revenue; gross_profit; operating_expenses; polarity cost_of_revenue:positive; role cost_of_revenue:primary#2
+- **Rules:** I02; I03; I04
+- **Evidence:** 65 companies, 959 served, 16174 proven, 62 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AdvertisingRevenueCost@2018; AssetManagementCosts@2018; CasinoExpenses@2018; ConcessionsCosts@2018 (+62 more)
+
+### `OperatingIncomeLoss`
+- **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank]
+- **Data point:** operating_income; operating_expenses
+- **Rules:** C13; resolver functions resolve
+- **Evidence:** 80 companies, 948 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestExpense`
+- **Meaning:** Interest Expense, Operating and Nonoperating (us-gaap, duration, debit). Amount of interest expense classified as operating and nonoperating. Includes, but is not limited to, cost of borrowing accounted for as interest expense.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** interest_expense; other_income_expense_net; operating_expenses; interest_income; polarity interest_expense:positive; role interest_expense:primary#1
+- **Rules:** X115; I21; I20; I22; I23; I24; resolver functions resolve_band; family resolve_all.NARROW[interest_expense]
+- **Evidence:** 88 companies, 939 served, 24594 proven, 51 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. META interest_expense 2021-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P05 (2)
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInterestExpenseNet@2013; CashFlowHedgeGainReclassifiedToInterestExpense@2013; CashFlowHedgeLossReclassifiedToInterestExpense@2013; InterestExpenseRelatedParty@2023
+
+### `IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest`
+- **Meaning:** Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest (us-gaap, duration, credit). Amount of income (loss) from continuing operations, including income (loss) from equity method investments, before deduction of income tax expense (benefit), and income (loss) attributable to noncontrolling interest.
+- **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).
+- **Data point:** income_before_tax; role income_before_tax:primary#1
+- **Rules:** I36; I37
+- **Evidence:** 95 companies, 815 served, 32500 proven, 81 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; RetrospectiveEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAmountAfterApplication@2012 (+2 more)
+
+### `Revenues`
+- **Meaning:** Revenues (us-gaap, duration, credit). Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities that constitute an earning process. Includes, but is not limited to, investment and interest income before deduction of interest expens...
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point:** revenue; gross_profit
+- **Rules:** X123
+- **Evidence:** 69 companies, 710 served, 12391 proven, 34 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToRevenueNet@2013; CashFlowHedgeGainReclassifiedToRevenue@2013; CashFlowHedgeLossReclassifiedToRevenue@2013; DevelopmentStageEnterpriseCumulativeRevenue@2012 (+10 more)
+
+### `RevenueFromContractWithCustomerExcludingAssessedTax`
+- **Meaning:** Revenue from Contract with Customer, Excluding Assessed Tax (us-gaap, duration, credit). Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both i...
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point:** revenue; gross_profit
+- **Rules:** none
+- **Evidence:** 64 companies, 652 served, 16994 proven, 75 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InitialFranchiseFees@2026; PropertyManagementFeeRevenue@2026; RevenueRecognitionMilestoneMethodRevenueRecognized@2026
+
+### `InvestmentIncomeInterest`
+- **Meaning:** Investment Income, Interest (us-gaap, duration, credit). Amount before accretion (amortization) of purchase discount (premium) of interest income on nonoperating securities.
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
+- **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
+- **Evidence:** 50 companies, 617 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (5); P05 (4)
+
+### `OtherNonoperatingIncomeExpense`
+- **Meaning:** Other Nonoperating Income (Expense) (us-gaap, duration, credit). Amount of income (expense) related to nonoperating activities, classified as other.
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank] (+1 more)
+- **Data point:** other_income_expense_net; interest_income; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#2
+- **Rules:** X59; I28; I29; I30; I31; I32; I33; I34; I35; resolver functions COMBINED_YIELDS_TO
+- **Evidence:** 67 companies, 613 served, 1993 proven, 46 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `GrossProfit`
+- **Meaning:** Gross Profit (us-gaap, duration, credit). Aggregate revenue less cost of goods and services sold or operating expenses directly attributable to the revenue generation activity.
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** gross_profit; operating_expenses
+- **Rules:** X36; X56; X80; C10; I08; resolver functions apply_absent_in_own_filing; resolve; derive_gross_profit
+- **Evidence:** 44 companies, 499 served, 17157 proven, 71 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationGrossProfitLoss@2020
+
+### `CostOfRevenue`
+- **Meaning:** Cost of Revenue (us-gaap, duration, debit). The aggregate cost of goods produced and sold and services rendered during the reporting period.
+- **Data point definition:** cost_of_revenue: Cost of goods sold / cost of revenue for the period: the costs the filer matches to revenue above gross profit. [not applicable: bank,insurer,bdc]; gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc] (+1 more)
+- **Data point:** cost_of_revenue; gross_profit; operating_expenses; polarity cost_of_revenue:positive; role cost_of_revenue:primary#1
+- **Rules:** I02; I03; I04
+- **Evidence:** 32 companies, 429 served, 7811 proven, 27 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCostOfSales@2020; RelatedPartyCosts@2023
+
+### `GeneralAndAdministrativeExpense`
+- **Meaning:** General and Administrative Expense (us-gaap, duration, debit). The aggregate total of expenses of managing and administering the affairs of an entity, including affiliates of the reporting entity, which are not directly or indirectly associated with the manufacture, sale or creation of a product or pro...
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary-part#2; sga_expense:primary-part#4; sga_expense:primary-part#5; sga_expense:primary-part#6 (+1 more)
+- **Rules:** I17; I15; I16; I18; resolver functions role
+- **Evidence:** 26 companies, 419 served, 394 proven, 13 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. PM sga_expense 2015-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 2 open hit(s) at 1 companies, e.g. PM sga_expense 2016-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P06 (2); P05 (1)
+
+### `OperatingExpenses`
+- **Meaning:** Operating Expenses (us-gaap, duration, debit). Generally recurring costs associated with normal operations except for the portion of these expenses which can be clearly related to production and included in cost of sales or services. Includes selling, general and administrative expense.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
+- **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
+- **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NonoperatingIncomeExpense`
+- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
+- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
+- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestExpenseNonoperating`
+- **Meaning:** Interest Expense, Nonoperating (us-gaap, duration, debit). Amount of interest expense classified as nonoperating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
+- **Data point:** interest_expense; other_income_expense_net; interest_income; polarity interest_expense:positive; role interest_expense:primary#2
+- **Rules:** I20; I21; I22; I23; I24; family resolve_all.NARROW[interest_expense]
+- **Evidence:** 55 companies, 132 served, 744 proven, 28 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NoninterestIncome`
+- **Meaning:** Noninterest Income (us-gaap, duration, credit). The total amount of noninterest income which may be derived from: (1) fees and commissions; (2) premiums earned; (3) insurance policy charges; (4) the sale or disposal of assets; and (5) other sources not otherwise specified.
+- **Data point definition:** noninterest_income: Total noninterest income as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point:** noninterest_income; revenue; role noninterest_income:primary#1
+- **Rules:** none
+- **Evidence:** 8 companies, 114 served, 375 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CostsAndExpenses`
+- **Meaning:** Costs and Expenses (us-gaap, duration, debit). Total costs of sales and operating expenses for the period.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses
+- **Rules:** X117; I09; resolver functions apply_cost_and_opex
+- **Evidence:** 21 companies, 95 served, 190 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DevelopmentStageEnterpriseCumulativeExpense@2012
+
+### `IncomeLossFromEquityMethodInvestments`
+- **Meaning:** Income (Loss) from Equity Method Investments (us-gaap, duration, credit). Amount of income (loss) for proportionate share of equity method investee's income (loss).
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point:** operating_expenses; other_income_expense_net
+- **Rules:** none
+- **Evidence:** 13 companies, 87 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** filer XBRL error 0001562762-20-000064: T FY2019 10-K t-20191231.htm consolidated statements of income: Equity in net income (loss) of affiliates 6 (2018: (48));  the XBRL fact is -6 and the printed to
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeLossFromEquityMethodInvestmentsMember@2013; MinorityInterestAndEarningsLossesEquityInvestmentsMember@2013
+
+### `NetIncomeLossAvailableToCommonStockholdersBasic`
+- **Meaning:** Net Income (Loss) Available to Common Stockholders, Basic (us-gaap, duration, credit). Amount, after deduction of tax, noncontrolling interests, dividends on preferred stock and participating securities; of income (loss) available to common shareholders.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#2
+- **Rules:** none
+- **Evidence:** 11 companies, 76 served, 383 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `RevenuesNetOfInterestExpense`
+- **Meaning:** Revenues, Net of Interest Expense (us-gaap, duration, credit). Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities that constitute an earning process. Includes, but is not limited to, investment and interest income after deduction of interest expense...
+- **Data point definition:** revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances;  excise follows the filer's own presentation (X56).
+- **Data point:** revenue
+- **Rules:** none
+- **Evidence:** 5 companies, 49 served, 245 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `MinorityInterest`
+- **Meaning:** Equity, Attributable to Noncontrolling Interest (us-gaap, instant, credit). Amount of equity (deficit) attributable to noncontrolling interest. Excludes temporary equity.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** none
+- **Evidence:** 4 companies, 48 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationMinorityInterest@2020; NoncontrollingInterestBalanceSheetLocation@2016
+
+### `BenefitsLossesAndExpenses`
+- **Meaning:** Benefits, Losses and Expenses (us-gaap, duration, debit). The total amount of expense recognized during the period for future policy benefits, claims and claims adjustment costs, and for selling, general and administrative costs.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#2
+- **Rules:** I14; I09; I10; I11; I12; I13
+- **Evidence:** 2 companies, 24 served, 101 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `InterestExpenseOperating`
+- **Meaning:** Interest Expense, Operating (us-gaap, duration, debit). Amount of interest expense classified as operating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).
+- **Data point:** interest_expense; polarity interest_expense:positive; role interest_expense:primary#5
+- **Rules:** I20; I21; I22; I23; I24
+- **Evidence:** 11 companies, 20 served, 142 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncomeLossFromContinuingOperationsPerBasicShare`
+- **Meaning:** Income (Loss) from Continuing Operations, Per Basic Share (us-gaap, duration). The amount of net income (loss) from continuing operations per each share of common stock or unit outstanding during the reporting period.
+- **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
+- **Data point:** basic_eps; role basic_eps:primary#3
+- **Rules:** none
+- **Evidence:** 5 companies, 20 served, 23 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces IncomeLossFromContinuingOperationsPerBasicAndDilutedShare@2022; NewAccountingPronouncementOrChangeInAccountingPrincipleEffectOfChangeOnBasicEarningsPerShare@2020
+<!-- END GENERATED: tag library rows -->

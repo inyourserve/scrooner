@@ -1572,11 +1572,13 @@ def build_tag_library_cmd(
     ),
 ) -> None:
     """2026-09-27: the SEC Tag Library (migration 0077) -- every tag x every
-    company (analytics.company_sec_tag), tag -> concepts/metrics
-    (analytics.sec_tag_library), and company x concept -> the source tag
-    behind our value (analytics.company_concept_lineage). See
-    mapper/tag_library.py. Run after resolve-facts/build-coverage-matrix/
-    build-tag-candidates so lineage reflects the current values."""
+    company (analytics.company_sec_tag), tag -> data points/metrics
+    (analytics.sec_tag_library, loaded from the one tag library
+    data-team/tags/library/library.csv since 2026-11-22; never re-derived),
+    and company x concept -> the source tag behind our value
+    (analytics.company_concept_lineage). See mapper/tag_library.py. Run
+    after resolve-facts/build-coverage-matrix/build-tag-candidates so
+    lineage reflects the current values."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
     target_stages = {s.strip() for s in stages.split(",")} if stages else None
     with get_connection() as conn:

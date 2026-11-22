@@ -1,6 +1,6 @@
 # Resolver changelog
 
-One line per resolver version pushed to `main` (the resolver output is `resolver/<TICKER>.csv`; a push fires the top-100 flow). Two lanes release: the cloud "SEC/FSN Tag Expert" and the local resolver lane (scrooner-cf). Before every push: fetch, rebase onto the latest version here, take the next number, name the evidence files consumed so the other lane skips them. Older versions (.1 to .85): `git log --oneline origin/main -- data-team/tags/line_map`.
+One line per resolver version pushed to `main` (the resolver output is `resolver/<TICKER>.csv`; a push fires the top-100 flow). Two lanes release: the cloud "SEC/FSN Tag Expert" and the local resolver lane (scrooner-cf). Before every push: fetch, rebase onto the latest version here, take the next number, name the evidence files consumed so the other lane skips them. **Every release also rebuilds the tag library** in the same commit: after `resolver/*.csv` is regenerated, run `python3 data-team/tags/library/build_library.py` (repo root, ~5 s, no DB) and commit `data-team/tags/library/` plus the regenerated blocks in `data-team/tags/cards/*.md`. CI (`build_library.py --check-version`, and `test_committed_library_is_built_for_the_newest_resolver_version`) fails on main while `library/coverage.json` names an older resolver version than the newest `resolver_version` in `resolver/*.csv`. Older versions (.1 to .85): `git log --oneline origin/main -- data-team/tags/line_map`.
 
 | version | date | sha | lane | inputs | consumed | summary |
 |---|---|---|---|---|---|---|

@@ -1,4 +1,5 @@
 # Pattern P08: derived values without one-filing parts
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Found 2026-11-22 by the verifier. Registry: `patterns.csv` P08. Hits: `pattern_hits.csv` P08.
 
@@ -9,3 +10,11 @@ Found 2026-11-22 by the verifier. Registry: `patterns.csv` P08. Hits: `pattern_h
 **Rule.** `display_cert.check_badges` already fails a multi-filing derived badge, and the gate fails a part with no page. Open: the export of `derived_cells` cells (gross profit = revenue - cost of revenue; total liabilities = assets - total equity incl. NCI - temporary equity) must write their parts as `Tag=value@accession#R` from one filing, as `structural_direct.derived_value` does.
 
 **Examples.** GILD gross_profit FY2015-25 (certified company, so the certificate's derived census checks the identity but the export carries no parts).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+No element named in this card has a data point, ruling, served cell or known problem in the library.
+<!-- END GENERATED: tag library rows -->

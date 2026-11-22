@@ -7,7 +7,8 @@ name: Tag library learn and rebuild (resolver -> learner -> library, no database
 #   3. resolve_all.py on it (version resolver-learn-<date>@<sha>)
 #   4. learn_from_filings.py  -> learned_elements.csv, learned_labels.csv (label candidates, reviewed before use)
 #   4b. pattern_detectors.py  -> pattern_hits.csv (every known gap class counted across all companies; founder 2026-11-22)
-#   5. build_library.py       -> library.csv/json, schema, INDEX.md, browser.html, CHANGELOG.md, coverage.json
+#   5. build_library.py       -> library.csv/json, schema, INDEX.md, browser.html, CHANGELOG.md, coverage.json,
+#                                and the generated block of every data-team/tags/cards/*.md
 #   6. the library tests, then push data-team/tags/library/ + the resolver csv to branch data/library-<date> (never main)
 # The Tag Expert reviews the branch diff and brings it to main by hand: learned labels never reach the resolver unreviewed.
 # No database secret, no writes anywhere but the data branch.
@@ -125,7 +126,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -q -b "$branch"
-          git add data-team/tags/library data-team/tags/line_map/resolver
+          git add data-team/tags/library data-team/tags/cards data-team/tags/line_map/resolver
           if git diff --cached --quiet; then echo "library unchanged"; exit 0; fi
           git commit -q -m "Tag library rebuilt (run $GITHUB_RUN_ID, code $GITHUB_SHA)"
           git push -q origin "$branch"

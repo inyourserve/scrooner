@@ -1,4 +1,5 @@
 # Pattern P03: share counts off by 10^3 or 10^6
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Found 2026-11-22 by the verifier (COP, RTX, SYK). Registry: `patterns.csv` P03. Hits: `pattern_hits.csv` P03, layer `resolver` or `export`.
 
@@ -9,3 +10,11 @@ Found 2026-11-22 by the verifier (COP, RTX, SYK). Registry: `patterns.csv` P03. 
 **Rule.** RULEBOOK X114 (resolver .88): the count is scaled by the 10^k that agrees with NI/EPS and flagged `filer_scale_error;share_scale_x<k>`. A remaining export hit needs the flow (structural-load) rerun for the company.
 
 **Examples.** COP weighted_basic/diluted FY2015-19 (export); RTX shares_outstanding (export).
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+No element named in this card has a data point, ruling, served cell or known problem in the library.
+<!-- END GENERATED: tag library rows -->

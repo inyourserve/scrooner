@@ -1,4 +1,5 @@
 # Card family: Utility regulatory assets/liabilities and crypto (digital) assets (written 2026-10-22 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:RegulatoryAssets`, `RegulatoryAssetsCurrent`, `RegulatoryAssetsNoncurrent`, `RegulatoryLiabilities`, `RegulatoryLiabilityCurrent`, `RegulatoryLiabilityNoncurrent`; `CryptoAssetFairValue`, `CryptoAssetFairValueCurrent`, `CryptoAssetFairValueNoncurrent`, `CryptoAssetCost`, `CryptoAssetRealizedGainLossOperating`, `CryptoAssetUnrealizedGainLossOperating`, `CryptoAssetUnrealizedGainOperating`, `CryptoAssetUnrealizedLossOperating`, `CryptoAssetRealizedAndUnrealizedGainLossOperating`, `CryptoAssetRealizedAndUnrealizedGainLossNonoperating`.
 Asked by: Sector Analyst, SECTOR-ROWS-REVIEW row U2, section 4 (crypto) and section 8 items 4-5.
@@ -53,3 +54,11 @@ Population (any filer with both): `CryptoAssetFairValue` vs Current + Noncurrent
 - `sr.crypto.digital_assets`: **Current + Noncurrent where the face is classified; plain `CryptoAssetFairValue` only where it is the face line (MSTR) or equals the sum.** Never add the plain tag to the classified pair (CLSK double count). FILING-CHECKED (MSTR, CLSK); counts DATA-INFERRED. Only from 2022 on (no earlier facts exist under these tags in our data; that earlier crypto sat in intangible assets at cost, often custom-tagged, is ASSUMED, as is the era cause).
 - `sr.crypto.digital_asset_gains_losses`: a SET, not one tag: realized, unrealized, combined, and the separate unrealized gain / unrealized loss tags (MSTR uses the loss tag), operating and nonoperating. The Sector Analyst's 3-tag set misses `CryptoAssetUnrealizedLossOperating` / `...GainOperating` and the nonoperating tag. Sign follows the tag (credit: gain positive), and the row label can be negated (MSTR prints a loss as positive 5,403,476).
 - Verified by: Tag Expert (me), 2026-10-22.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+No element named in this card has a data point, ruling, served cell or known problem in the library.
+<!-- END GENERATED: tag library rows -->

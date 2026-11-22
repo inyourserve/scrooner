@@ -16,12 +16,20 @@ Inputs (all in the repo):
   pipeline/src/scrooner_pipeline/metrics/registry/data_points.csv   the data-point definitions (linked per element's data_point, never copied by hand)
 Outputs (data-team/tags/library/):
   library.csv, library.json, library.schema.json, INDEX.md, browser.html, CHANGELOG.md (appended per build), coverage.json
+  data-team/tags/cards/*.md: the generated block at the end of each card (meaning, data point, rules, evidence, known
+  problems, pattern hits per element the card names); the hand-written prose above it is never rewritten
+Readers (thin, never re-derive): mapper/tag_library_rebuild.py (analytics.tag_library_entry) and the library stage of
+  mapper/tag_library.py (analytics.sec_tag_library), both through pipeline/src/scrooner_pipeline/mapper/library_csv.py.
+
+    python3 data-team/tags/library/build_library.py --check-version   CI gate: fails when coverage.json's resolver
+                                                                         version is older than the newest resolver output
 """
 import csv, glob, html, json, os, re, sys, collections, datetime
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
 LIB = os.path.join(ROOT, 'data-team', 'tags', 'library')
 OUT = os.environ.get('LIBRARY_OUT') or LIB   # tests write to a temp dir; inputs always come from LIB
+CARDS = os.environ.get('CARDS_DIR') or os.path.join(ROOT, 'data-team', 'tags', 'cards')   # tests point this at a copy
 LM = os.path.join(ROOT, 'data-team', 'tags', 'line_map')
 TAX = os.path.join(ROOT, 'data-team', 'tags', 'taxonomy')
 sys.path.insert(0, os.path.join(LM, 'tools'))
@@ -59,6 +67,42 @@ def previous_library():
     spec = importlib.util.spec_from_file_location('repo_archive', os.path.join(ROOT, 'pipeline', 'src', 'scrooner_pipeline', 'common', 'repo_archive.py'))
     ra = importlib.util.module_from_spec(spec); spec.loader.exec_module(ra)
     return ra.resolve('data-team/tags/library/library.csv')
+
+
+def polarity_class(row):
+    """rules/polarity.csv row -> 'positive' (sign + and normalised), 'raw', or 'signed' (common/polarity.py semantics).
+    The DB rebuild (mapper/tag_library_rebuild.py) reads this class from library.csv instead of re-reading polarity.csv."""
+    sign, norm = (row.get('sign') or '').strip(), (row.get('normalise') or '').strip().upper()
+    if sign == '+' and norm == 'Y':
+        return 'positive'
+    return 'raw' if sign == 'raw' else 'signed'
+
+
+def version_number(v):
+    """'resolver-all110-.89' or '.89' -> 89; anything without a trailing .N -> None (a dev or local build)."""
+    m = re.search(r'\.(\d+)\s*$', v or '')
+    return int(m.group(1)) if m else None
+
+
+def newest_resolver_version(resolver_dir=None):
+    """The newest resolver version in the committed resolver output (line_map/resolver/<TICKER>.csv), as a number."""
+    nums = []
+    for p in sorted(glob.glob(os.path.join(resolver_dir or os.path.join(LM, 'resolver'), '*.csv'))):
+        with open(p, newline='', errors='ignore') as fh:
+            nums += [n for n in {version_number(r.get('resolver_version')) for r in csv.DictReader(fh)} if n is not None]
+    return max(nums) if nums else None
+
+
+def check_version(coverage_path=None, resolver_dir=None):
+    """CI gate: the library must be rebuilt for the newest resolver version on main. Returns an error string or ''."""
+    cov = json.load(open(coverage_path or os.path.join(LIB, 'coverage.json')))
+    built, newest = version_number(cov.get('resolver_version')), newest_resolver_version(resolver_dir)
+    if newest is None:
+        return ''
+    if built is None or built < newest:
+        return (f"tag library was built for {cov.get('resolver_version') or '(none)'} but the newest resolver output is .{newest}: "
+                f"run `python3 data-team/tags/library/build_library.py` and commit its outputs with the resolver release")
+    return ''
 
 
 def main():
@@ -118,7 +162,7 @@ def main():
         for dp in sorted(dps):
             add(t, 'data_point', dp)
             if dp in pol:
-                add(t, 'polarity', f"{dp}:{pol[dp].get('sign') or pol[dp].get('polarity') or list(pol[dp].values())[1]}")
+                add(t, 'polarity', f"{dp}:{polarity_class(pol[dp])}")
 
     # 3. resolver output: usage and served cells
     outs = sorted(glob.glob(os.path.join(LM, 'resolver', '*.csv')))  # per-company files; else the newest single file
@@ -128,9 +172,9 @@ def main():
     served_els = []
     node_rx = re.compile(r'(?:^|; )-?(\w+)(?:\[[^\]]*\])?=-?[\d.]+ \[(R\d+\.htm:\d+|NOTE|SE|BSP)[^\]]*\]')
     use = collections.defaultdict(lambda: dict(c=set(), f=set(), y=set(), n=0, ex=[], pos=collections.Counter()))
-    version = ''
+    versions = set()
     for r in (row for p in outs for row in rows_of(p)):
-        version = r.get('resolver_version') or version
+        versions.add(r.get('resolver_version') or '')
         nodes = (r.get('nodes') or '').split(' | why')[0]
         els = node_rx.findall(nodes)
         served = r.get('decision') in ('mapped', 'component_sum', 'derived', 'derived_not_printed')
@@ -146,6 +190,8 @@ def main():
                 if len(u['ex']) < 3:
                     u['ex'].append(f"{r['ticker']} {r['period_end'][:4]} {r['data_point']} {r['accession']} {loc}")
             add(e, 'data_point', r['data_point'])
+    # the newest version present (a partial rerun can leave older rows for some tickers); CI compares it with main
+    version = max(versions, key=lambda v: (version_number(v) or -1, v)) if versions else ''
     for e, u in use.items():
         lib[e]['companies'] = [str(len(u['c']))]; lib[e]['filings_seen'] = [str(len(u['f']))]
         lib[e]['years_seen'] = [f"{min(u['y'])}-{max(u['y'])}" if u['y'] else '']
@@ -237,9 +283,9 @@ def main():
         for dp in dps:
             for rid in sorted(rule_dp.get(dp, ())):
                 add(t, 'rule_id', rid)
-    for path in sorted(glob.glob(os.path.join(ROOT, 'data-team', 'tags', 'cards', '**', '*.md'), recursive=True)):
-        rel = os.path.relpath(path, ROOT)
-        for t in set(word.findall(open(path, errors='ignore').read())) & known:
+    for path in sorted(glob.glob(os.path.join(CARDS, '**', '*.md'), recursive=True)):
+        rel = 'data-team/tags/cards/' + os.path.relpath(path, CARDS)
+        for t in set(word.findall(hand_written(open(path, errors='ignore').read()))) & known:   # never the generated section
             add(t, 'cards', rel)
     for path in sorted(glob.glob(os.path.join(ROOT, 'mind', 'entries', '*.md'))):
         txt = open(path, errors='ignore').read()
@@ -272,7 +318,7 @@ def main():
         if r['applies'] == 'no':
             e['na'].append(r['sector'])
     for t in list(lib):
-        dps = set(lib[t].get('data_point', []))
+        dps = sorted(set(lib[t].get('data_point', [])))   # sorted: a set's order changes per run (hash seed)
         for dp in dps:
             for m in sorted(met.get(dp, ())):
                 add(t, 'metrics', m)
@@ -355,7 +401,99 @@ def main():
             fh.write(f"- ... {len(changes) - 400} more\n")
     write_index(used, cov)
     write_browser(used, cov)
+    write_cards(known_rows, cov)
     print(json.dumps(cov))
+
+
+GEN_BEGIN = '<!-- BEGIN GENERATED: tag library rows'
+GEN_END = '<!-- END GENERATED: tag library rows -->'
+HAND = ('<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. '
+        'The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->')
+CARD_ELEMENTS = 30   # most-served elements per card section; the rest are one search away in browser.html
+
+
+def hand_written(text):
+    """A card without its generated block (the hand-written part). A BEGIN without an END keeps the whole text."""
+    i = text.find(GEN_BEGIN)
+    j = text.find(GEN_END, i) if i >= 0 else -1
+    if i < 0 or j < 0:
+        return text
+    return text[:i].rstrip('\n') + '\n' + text[j + len(GEN_END):].lstrip('\n')
+
+
+def _items(v, n=None):
+    xs = [x for x in (v or '').split(';') if x]
+    return '; '.join(xs[:n] if n else xs) + (f' (+{len(xs) - n} more)' if n and len(xs) > n else '')
+
+
+def pattern_hits(path=None):
+    """element -> ['<pattern> (n)', ...] from the pattern detectors' pattern_hits.csv (when present): rows keyed by an
+    `element` or `tag` column, labelled by `pattern_id`, `pattern`, `detector` or `rule_id`."""
+    hits = collections.defaultdict(collections.Counter)
+    for r in rows_of(path or os.path.join(LIB, 'pattern_hits.csv')):
+        el = (r.get('element') or r.get('tag') or '').split(':')[-1]
+        label = next((r[k] for k in ('pattern_id', 'pattern', 'detector', 'rule_id') if r.get(k)), '')
+        if el and label:
+            hits[el][label] += 1
+    return {e: [f'{k} ({n})' for k, n in c.most_common()] for e, c in hits.items()}
+
+
+def card_section(rel, text, rows, cov, hits=None):
+    """The generated block for one card: every element the hand-written card names that the library knows."""
+    named = dict.fromkeys(re.findall(r'\b([A-Z][A-Za-z0-9]{6,})\b', text))
+    els = [e for e in named if e in rows and any(rows[e][k] for k in ('data_point', 'rule_id', 'served_cells', 'known_problems', 'proven_cells'))]
+    els.sort(key=lambda e: (-int(rows[e]['served_cells'] or 0), -int(rows[e]['proven_cells'] or 0), e))
+    pattern_cols = [k for k in (next(iter(rows.values()), {}) or {}) if k.startswith('pattern')]
+    hits = hits or {}
+    L = [f"{GEN_BEGIN} (build_library.py from library.csv, {cov['resolver_version']}). Do not edit by hand: the next build rewrites this block. -->",
+         '## From the tag library (generated)', '',
+         f"Resolver {cov['resolver_version']}. {len(els)} elements named in this card have library knowledge"
+         + (f"; the {CARD_ELEMENTS} most served are below" if len(els) > CARD_ELEMENTS else '')
+         + '. Every element: `data-team/tags/library/library.csv` or `browser.html`.', '']
+    if not els:
+        L += ['No element named in this card has a data point, ruling, served cell or known problem in the library.', '']
+    for e in els[:CARD_ELEMENTS]:
+        r = rows[e]
+        meaning = r['standard_label'] or '(no taxonomy label)'
+        kind = ', '.join(x for x in (r['taxonomy'], r['period_type'], r['balance']) if x)
+        defn = (r['definition'] or '').replace('\n', ' ')
+        L.append(f"### `{e}`")
+        L.append(f"- **Meaning:** {meaning} ({kind})" + (f". {defn[:240]}{'...' if len(defn) > 240 else ''}" if defn else ''))
+        if r['standard_definition']:
+            L.append(f"- **Data point definition:** {_items(r['standard_definition'], 2)}")
+        L.append(f"- **Data point:** {_items(r['data_point']) or 'none (the resolver never serves it)'}"
+                 + (f"; polarity {_items(r['polarity'])}" if r['polarity'] else '') + (f"; role {_items(r['role_kind'], 4)}" if r['role_kind'] else ''))
+        L.append(f"- **Rules:** {_items(r['rule_id'], 12) or 'none'}" + (f"; resolver functions {_items(r['resolver_functions'], 6)}" if r['resolver_functions'] else '')
+                 + (f"; family {_items(r['family'])}" if r['family'] else ''))
+        L.append(f"- **Evidence:** {r['companies'] or 0} companies, {r['served_cells'] or 0} served, {r['proven_cells'] or 0} proven, "
+                 f"{r['certified_cells'] or 0} certified cells; last verified {r['last_verified'] or '-'}")
+        L.append(f"- **Known problems:** {_items(r['known_problems'], 4) or 'none recorded'}")
+        ph = [_items(r[k], 6) for k in pattern_cols if r[k]] + ['; '.join(hits.get(e, [])[:6])]
+        L.append(f"- **Pattern hits:** {'; '.join(x for x in ph if x) or 'none'}")
+        if r['deprecated_by'] or r['replaces']:
+            L.append(f"- **Deprecation:** " + '; '.join(x for x in (f"replaced by {_items(r['deprecated_by'])}" if r['deprecated_by'] else '',
+                                                                    f"replaces {_items(r['replaces'], 4)}" if r['replaces'] else '') if x))
+        L.append('')
+    return '\n'.join(L).rstrip('\n') + '\n' + GEN_END + '\n'
+
+
+def write_cards(rows, cov):
+    """Refresh the generated block of every hand-written card (data-team/tags/cards/*.md; generated/ is another tool's).
+    The hand-written prose is kept byte for byte; a HAND-WRITTEN marker is added under the title once."""
+    hits = pattern_hits()
+    for path in sorted(glob.glob(os.path.join(CARDS, '*.md'))):
+        text = open(path, encoding='utf-8').read()
+        if text.find(GEN_BEGIN) >= 0 and text.find(GEN_END) < 0:
+            print(f"skip {path}: generated block has no END marker", file=sys.stderr)
+            continue
+        hand = hand_written(text)
+        if HAND not in hand:
+            first, _, rest = hand.partition('\n')
+            hand = f"{first}\n{HAND}\n{rest}"
+        new = hand.rstrip('\n') + '\n\n' + card_section(os.path.basename(path), hand, rows, cov, hits)
+        if new != text:
+            with open(path, 'w', encoding='utf-8') as fh:
+                fh.write(new)
 
 
 def write_index(rows, cov):
@@ -412,4 +550,8 @@ out.addEventListener('click',e=>{const a=e.target.closest('a[data-q]');if(a){q.v
 
 
 if __name__ == '__main__':
+    if sys.argv[1:] == ['--check-version']:
+        err = check_version()
+        print(err or 'tag library is built for the newest resolver version')
+        sys.exit(1 if err else 0)
     main()

@@ -1,4 +1,5 @@
 # Card family: Balance-sheet liabilities and equity, read from FSN (written 2026-11-11 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 This card follows the founder order of 2026-11-11: "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." It covers 33 us-gaap tags, all among the top 140 tags in the top-1,000 cohort. The machine-readable verdicts are in `data-team/tags/library/fsn-balance-sheet-liabilities-equity.csv`. This card extends `cards/debt.md` and does not contradict it.
 
@@ -432,3 +433,296 @@ No disagreement found on: Liabilities and LiabilitiesCurrent as the total keys; 
 - Value checks for the label-disagreeing `LiabilitiesCurrent` periods (NFG, PINS 2019, HQY 2015, BMNR 2022, FOX 2020-21). The LH and MUR cases show the label can be the thing that is wrong.
 - `PreferredStockSharesOutstanding`: open one filing.
 - Catalogue: `noncontrolling_interest`, `preferred_equity`, `accounts_payable_resolved` and `deferred_tax_liabilities` are proposals only.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 35 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `LiabilitiesCurrent`
+- **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
+- **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
+- **Data point:** current_liabilities; total_liabilities
+- **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
+- **Evidence:** 95 companies, 1440 served, 32338 proven, 114 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
+
+### `StockholdersEquity`
+- **Meaning:** Equity, Attributable to Parent (us-gaap, instant, credit). Amount of equity (deficit) attributable to parent. Excludes temporary equity and equity attributable to noncontrolling interest.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** X78; C06; resolver functions resolve
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 103 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
+
+### `CommonStockSharesOutstanding`
+- **Meaning:** Common Stock, Shares, Outstanding (us-gaap, instant). Number of shares of common stock outstanding. Common stock represent the ownership interest in a corporation.
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding; role shares_outstanding:primary#1
+- **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
+- **Evidence:** 83 companies, 992 served, 2408 proven, 68 certified cells; last verified 2026-11-15
+- **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
+- **Pattern hits:** P04 (3); P05 (1)
+
+### `AccountsPayableCurrent`
+- **Meaning:** Accounts Payable, Current (us-gaap, instant, credit). Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business. Used to reflect the curr...
+- **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
+- **Data point:** accounts_payable; role accounts_payable:primary#1
+- **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
+- **Evidence:** 84 companies, 985 served, 3404 proven, 111 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces AccountsPayableRelatedPartiesCurrent@2023; FreshStartAdjustmentIncreaseDecreaseAccountsPayable@2021; PostconfirmationAccountsPayable@2021; PreconfirmationAccountsPayable@2021
+
+### `Liabilities`
+- **Meaning:** Liabilities (us-gaap, instant, credit). Amount of liability recognized for present obligation requiring transfer or otherwise providing economic benefit to others.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
+- **Evidence:** 83 companies, 950 served, 29466 proven, 87 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)
+
+### `LongTermDebtNoncurrent`
+- **Meaning:** Long-Term Debt, Excluding Current Maturities (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt classified as noncurrent. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** D14; resolver functions run
+- **Evidence:** 61 companies, 750 served, 203 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces NonRecourseDebt@2022
+
+### `LongTermDebtAndCapitalLeaseObligations`
+- **Meaning:** Long-Term Debt and Lease Obligation (us-gaap, instant, credit). Amount of long-term debt and lease obligation, classified as noncurrent.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** none
+- **Evidence:** 34 companies, 401 served, 40 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DebtCurrent`
+- **Meaning:** Debt, Current (us-gaap, instant, credit). Amount of debt and lease obligation, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 39 companies, 353 served, 4 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CommonStockSharesIssued`
+- **Meaning:** Common Stock, Shares, Issued (us-gaap, instant). Total number of common shares of an entity that have been sold or granted to shareholders (includes common shares that were issued, repurchased and remain in the treasury). These shares represent capital invested by the firm's shareholders ...
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding
+- **Rules:** none
+- **Evidence:** 32 companies, 305 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** pattern P04 round_share_count: 17 open hit(s) at 2 companies, e.g. BMY shares_outstanding 2014-12-31 (resolver) (pattern_hits.csv)
+- **Pattern hits:** P04 (17)
+
+### `LongTermDebtCurrent`
+- **Meaning:** Long-Term Debt, Current Maturities (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt classified as current. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** D14; resolver functions run
+- **Evidence:** 39 companies, 292 served, 5 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCurrentMaturitiesOfLongTermDebt@2021; NonRecourseDebt@2022; PostconfirmationCurrentMaturitiesOfLongTermDebt@2021; PreconfirmationCurrentMaturitiesOfLongTermDebt@2021
+
+### `ShortTermBorrowings`
+- **Meaning:** Short-Term Debt (us-gaap, instant, credit). Reflects the total carrying amount as of the balance sheet date of debt having initial terms less than one year or the normal operating cycle, if longer.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 36 companies, 261 served, 13 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseShortTermBorrowings@2021; PostconfirmationShortTermBorrowings@2021; PreconfirmationShortTermBorrowings@2021
+
+### `TreasuryStockShares`
+- **Meaning:** Treasury Stock, Shares (Deprecated 2023) (us-gaap, instant). Number of common and preferred shares that were previously issued and that were repurchased by the issuing entity and held in treasury on the financial statement date. This stock has no voting rights and receives no dividends.
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding
+- **Rules:** none
+- **Evidence:** 31 companies, 216 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaced by TreasuryStockCommonShares@2023; TreasuryStockPreferredShares@2023; replaces TreasuryStockNumberOfSharesHeld@2016
+
+### `OtherLiabilitiesNoncurrent`
+- **Meaning:** Other Liabilities, Noncurrent (us-gaap, instant, credit). Amount of liabilities classified as other, due after one year or the normal operating cycle, if longer.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 23 companies, 199 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces DueToAffiliateNoncurrent@2023; DueToEmployeesNoncurrent@2023; DueToOfficersOrStockholdersNoncurrent@2023; DueToOtherRelatedPartiesNoncurrent@2023 (+5 more)
+
+### `LongTermDebtAndCapitalLeaseObligationsCurrent`
+- **Meaning:** Long-Term Debt and Lease Obligation, Current (us-gaap, instant, credit). Amount of long-term debt and lease obligation, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 19 companies, 149 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LongTermDebt`
+- **Meaning:** Long-Term Debt (us-gaap, instant, credit). Amount, after deduction of unamortized premium (discount) and debt issuance cost, of long-term debt. Excludes lease obligation.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** D11; resolver functions run
+- **Evidence:** 15 companies, 119 served, 68 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseLongTermDebt@2021; NonRecourseDebt@2022; PostconfirmationLongTermDebt@2021; PreconfirmationLongTermDebt@2021
+
+### `StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest`
+- **Meaning:** Equity, Including Portion Attributable to Noncontrolling Interest (us-gaap, instant, credit). Amount of equity (deficit) attributable to parent and noncontrolling interest. Excludes temporary equity.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.; total_liabilities: Total liabilities as printed.
+- **Data point:** stockholders_equity; total_liabilities
+- **Rules:** none
+- **Evidence:** 16 companies, 116 served, 2197 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption@2020; EquityMethodInvestmentSummarizedFinancialInformationEquity@2020; ImpactOfRestatementOnOpeningRetainedEarningsNetOfTax@2020; StockholdersEquityIncludingPortionAttributableToNoncontrollingInterestAdjustedBalance1@2020
+
+### `LiabilitiesNoncurrent`
+- **Meaning:** Liabilities, Noncurrent (us-gaap, instant, credit). Amount of obligation due after one year or beyond the normal operating cycle, if longer.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 9 companies, 101 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationNoncurrentLiabilities@2020; VariableInterestEntityConsolidatedLiabilitiesNoncurrent@2020; VariableInterestEntityConsolidatedLiabilitiesNoncurrentNoRecourse@2020; VariableInterestEntityConsolidatedLiabilitiesNoncurrentRecourse@2020
+
+### `FinanceLeaseLiability`
+- **Meaning:** Finance Lease, Liability (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** X57
+- **Evidence:** 19 companies, 90 served, 22 proven, 3 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `TreasuryStockCommonShares`
+- **Meaning:** Treasury Stock, Common, Shares (us-gaap, instant). Number of previously issued common shares repurchased by the issuing entity and held in treasury.
+- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
+- **Data point:** shares_outstanding
+- **Rules:** none
+- **Evidence:** 24 companies, 89 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** pattern P04 round_share_count: 1 open hit(s) at 1 companies, e.g. PEP shares_outstanding 2025-12-31 (resolver) (pattern_hits.csv)
+- **Pattern hits:** P04 (1)
+- **Deprecation:** replaces TreasuryStockShares@2023
+
+### `DeferredIncomeTaxLiabilitiesNet`
+- **Meaning:** Deferred Income Tax Liabilities, Net (us-gaap, instant, credit). Amount, after deferred tax asset, of deferred tax liability attributable to taxable differences with jurisdictional netting.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 12 companies, 78 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseDeferredIncomeTaxLiabilitiesCurrent@2021; FreshStartAdjustmentIncreaseDecreaseDeferredIncomeTaxLiabilitiesNoncurrent@2021; PostconfirmationDeferredIncomeTaxLiabilitiesCurrent@2021; PostconfirmationDeferredIncomeTaxLiabilitiesNoncurrent@2021 (+2 more)
+
+### `DeferredTaxLiabilitiesNoncurrent`
+- **Meaning:** Deferred Tax Liabilities, Net, Noncurrent (Deprecated 2022) (us-gaap, instant, credit). Amount, after deferred tax asset, of deferred tax liability attributable to taxable differences, with jurisdictional netting and classified as noncurrent.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 15 companies, 61 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CommercialPaper`
+- **Meaning:** Commercial Paper (us-gaap, instant, credit). Carrying value as of the balance sheet date of short-term borrowings using unsecured obligations issued by banks, corporations and other borrowers to investors. The maturities of these money market securities generally do not exceed 270 day...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 8 companies, 49 served, 2 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `MinorityInterest`
+- **Meaning:** Equity, Attributable to Noncontrolling Interest (us-gaap, instant, credit). Amount of equity (deficit) attributable to noncontrolling interest. Excludes temporary equity.
+- **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
+- **Data point:** stockholders_equity
+- **Rules:** none
+- **Evidence:** 4 companies, 48 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationMinorityInterest@2020; NoncontrollingInterestBalanceSheetLocation@2016
+
+### `SecuredDebt`
+- **Meaning:** Secured Debt (us-gaap, instant, credit). Carrying value as of the balance sheet date, including the current and noncurrent portions, of collateralized debt obligations (with maturities initially due after one year or beyond the operating cycle, if longer). Such obligations include...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 3 companies, 35 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `OperatingLeaseLiabilityNoncurrent`
+- **Meaning:** Operating Lease, Liability, Noncurrent (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from operating lease, classified as noncurrent.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** none
+- **Evidence:** 6 companies, 34 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `FinanceLeaseLiabilityNoncurrent`
+- **Meaning:** Finance Lease, Liability, Noncurrent (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease, classified as noncurrent.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
+- **Data point:** total_debt; total_liabilities
+- **Rules:** none
+- **Evidence:** 7 companies, 32 served, 4 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `FinanceLeaseLiabilityCurrent`
+- **Meaning:** Finance Lease, Liability, Current (us-gaap, instant, credit). Present value of lessee's discounted obligation for lease payments from finance lease, classified as current.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 7 companies, 24 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `DebtLongtermAndShorttermCombinedAmount`
+- **Meaning:** Debt, Long-Term and Short-Term, Combined Amount (us-gaap, instant, credit). Represents the aggregate of total long-term debt, including current maturities and short-term debt.
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 2 companies, 20 served, 83 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `LiabilitiesAndStockholdersEquity`
+- **Meaning:** Liabilities and Equity (us-gaap, instant, credit). Amount of liabilities and equity items, including the portion of equity attributable to noncontrolling interests, if any.
+- **Data point definition:** total_liabilities: Total liabilities as printed.
+- **Data point:** total_liabilities
+- **Rules:** C02; resolver functions resolve
+- **Evidence:** 4 companies, 12 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilitiesAndEquity@2020; FreshStartAdjustmentIncreaseDecreaseLiabilitiesAndStockholdersEquity@2021; PostconfirmationLiabilitiesAndStockholdersEquity@2021; PreconfirmationLiabilitiesAndStockholdersEquity@2021
+
+### `LineOfCredit`
+- **Meaning:** Long-Term Line of Credit (us-gaap, instant, credit). The carrying value as of the balance sheet date of the current and noncurrent portions of long-term obligations drawn from a line of credit, which is a bank's commitment to make loans up to a specific amount. Examples of items that might be...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** none
+- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreasePostconfirmationCreditFacility@2021; LineOfCreditFacilityAmountOutstanding@2014; PostconfirmationPostconfirmationCreditFacility@2021; PreconfirmationPostconfirmationCreditFacility@2021
+<!-- END GENERATED: tag library rows -->

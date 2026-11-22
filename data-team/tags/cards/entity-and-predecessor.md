@@ -1,4 +1,5 @@
 # Card family: entity and predecessor traps (which company a filing's numbers belong to) — Tag Expert, 2026-11-11, from the Engineering relay (FILING-CHECKED by Engineering and the Verifier 2026-11-10)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 These are not tag meanings but they decide whether ANY tag's value belongs to the company. Check them before trusting a series' early periods.
 1. **Pre-merger shells under the successor's own CIK** report Assets ≈ 0 and revenue 0: MDT 0001613103-15-000008 (assets $46K), BKR, AMCR ($130), VICI, FTI (74,100), SW, PRMB, AMRX, GLXY, TW; FRHC's 2013-2017 BMB Munai shell filings. Rule: a filing whose Assets is under a de-minimis floor before the successor's first real 10-K is a shell; its values are not the company's history.
@@ -24,3 +25,11 @@ These are not tag meanings but they decide whether ANY tag's value belongs to th
 - `iprx` 0 = highest decimals, then end date closest to the month end, then the closest duration (take iprx = 0).
 - `dcml`: INF = 32767, absent = −32768. Values are rounded to 4 decimals (per-share and tiny values: use the API or the instance, §AA).
 - SEC's cal group/arc numbering is NOT reproducible across builders: compare calc trees by (parent, child, weight), never by grp/arc numbers.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+No element named in this card has a data point, ruling, served cell or known problem in the library.
+<!-- END GENERATED: tag library rows -->

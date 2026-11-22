@@ -5,9 +5,13 @@ tag -> metric, then company ... same as metric to company to tag mapping
 ... cover all the tag, and all the companies."
 
 Three layers, all rebuilt from source tables, never hand-edited:
-  analytics.company_sec_tag          company x tag   (~2.0M rows)
-  analytics.sec_tag_library          tag -> companies/concepts/metrics
-  analytics.company_concept_lineage  company x concept -> source tag(s)
+  analytics.company_sec_tag          company x tag   (~2.0M rows; fact usage from core.fact)
+  analytics.sec_tag_library          tag -> companies/data points/metrics: a THIN READER of the one tag library,
+                                     data-team/tags/library/library.csv (build_library.py), since 2026-11-22.
+                                     Usage counts come from company_sec_tag; mapping status, data points and metrics
+                                     come from library.csv (mapper/library_csv.py), no longer re-derived from the
+                                     retired concept_mapping / concept_tag_candidate (SYSTEMS.md #6: one library).
+  analytics.company_concept_lineage  company x concept -> source tag(s) (legacy gap tool on the old mapping)
 plus the view analytics.metric_company_tag_lineage (metric -> company ->
 concept -> tag).
 
@@ -24,12 +28,14 @@ based SQL -- no per-row Python loop over core.fact (76M rows)."""
 import contextlib
 import time
 from collections.abc import Callable
+from pathlib import Path
 
 import psycopg
 import structlog
 from psycopg.types.json import Jsonb
 
 from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.mapper import library_csv
 
 logger = structlog.get_logger()
 
@@ -121,6 +127,20 @@ left join analytics.company_data_point_coverage cov
        on cov.company_id = cos.company_id and cov.data_point_name = cc.name
 """
 
+# The library stage reads library.csv into this temp table (one row per element with knowledge), then one
+# set-based insert joins it to core.concept: a us-gaap row by (taxonomy, tag), a company-extension row ('*') by tag
+# name to every non-us-gaap concept. Concepts the library does not know stay 'unmapped'.
+_LIBRARY_STAGE_SQL = """
+create temp table _library (
+    taxonomy text not null, tag text not null, mapping_status text not null,
+    mapped_concepts text[] not null, candidate_for_concepts text[] not null, feeds_metrics text[] not null
+) on commit drop
+"""
+_LIBRARY_STAGE_INSERT = (
+    "insert into _library (taxonomy, tag, mapping_status, mapped_concepts, candidate_for_concepts, feeds_metrics)"
+    " values (%s, %s, %s, %s, %s, %s)"
+)
+LIBRARY_STAGE_BATCH = 2000
 _LIBRARY_SQL = """
 with usage as (
     select t.concept_id,
@@ -132,43 +152,6 @@ with usage as (
     from analytics.company_sec_tag t
     join core.company co on co.id = t.company_id
     group by 1
-),
-mapping as (
-    select m.concept_id,
-           array_agg(distinct cc.name order by cc.name) filter (where m.confidence in ('approved', 'provisional')) as concepts,
-           bool_or(m.confidence = 'approved') as any_approved,
-           bool_or(m.confidence = 'provisional') as any_provisional,
-           bool_or(m.confidence = 'rejected') as any_rejected
-    from analytics.concept_mapping m
-    join analytics.canonical_concept cc on cc.id = m.canonical_concept_id
-    group by 1
-),
-pref as (
-    -- tags is jsonb: [{"tag": ..., "taxonomy": ...}]; older rows only have tag/taxonomy
-    select distinct c.id as concept_id
-    from analytics.company_tag_preference p
-    cross join lateral (
-        select e ->> 'taxonomy' as taxonomy, e ->> 'tag' as tag
-        from jsonb_array_elements(coalesce(p.tags, '[]'::jsonb)) as e
-        union
-        select p.taxonomy, p.tag
-    ) as t
-    join core.concept c on c.taxonomy = t.taxonomy and c.tag = t.tag
-),
-cand as (
-    select c.id as concept_id, array_agg(distinct cc.name order by cc.name) as concepts
-    from analytics.concept_tag_candidate k
-    join core.concept c on c.taxonomy = k.taxonomy and c.tag = k.tag
-    join analytics.canonical_concept cc on cc.id = k.canonical_concept_id
-    group by 1
-),
-metrics as (
-    select m.concept_id, array_agg(distinct md.metric_name order by md.metric_name) as metrics
-    from analytics.concept_mapping m
-    join analytics.metric_definition_input i on i.canonical_concept_id = m.canonical_concept_id
-    join analytics.metric_definition md on md.id = i.metric_definition_id
-    where m.confidence in ('approved', 'provisional')
-    group by 1
 )
 insert into analytics.sec_tag_library
     (concept_id, taxonomy, tag, company_count, active_company_count, fact_count,
@@ -177,20 +160,23 @@ insert into analytics.sec_tag_library
 select c.id, c.taxonomy, c.tag,
        coalesce(u.company_count, 0), coalesce(u.active_company_count, 0), coalesce(u.fact_count, 0),
        u.first_period_end, u.last_period_end,
-       case when mp.any_approved then 'approved'
-            when mp.any_provisional then 'provisional'
-            when pref.concept_id is not null then 'company_preference'
-            when cand.concept_id is not null then 'candidate'
-            when mp.any_rejected then 'rejected'
-            else 'unmapped' end,
-       coalesce(mp.concepts, '{}'), coalesce(cand.concepts, '{}'), coalesce(metrics.metrics, '{}')
+       coalesce(l.mapping_status, 'unmapped'),
+       coalesce(l.mapped_concepts, '{}'), coalesce(l.candidate_for_concepts, '{}'), coalesce(l.feeds_metrics, '{}')
 from core.concept c
 left join usage u on u.concept_id = c.id
-left join mapping mp on mp.concept_id = c.id
-left join pref on pref.concept_id = c.id
-left join cand on cand.concept_id = c.id
-left join metrics on metrics.concept_id = c.id
+left join _library l
+  on l.tag = c.tag
+ and (l.taxonomy = c.taxonomy or (l.taxonomy = '*' and c.taxonomy <> 'us-gaap'))
 """
+
+
+def stage_library(cur, path: Path | None = None) -> int:
+    """Load library.csv's rows into the _library temp table (batched). Returns the row count."""
+    rows = library_csv.sec_tag_library_rows(library_csv.load(path))
+    cur.execute(_LIBRARY_STAGE_SQL)
+    for i in range(0, len(rows), LIBRARY_STAGE_BATCH):
+        cur.executemany(_LIBRARY_STAGE_INSERT, rows[i : i + LIBRARY_STAGE_BATCH])
+    return len(rows)
 
 
 # Verdicts mirrored from concept_mapping; an 'investigation' verdict for the
@@ -505,6 +491,7 @@ def build_tag_library(
     ciks: set[str] | None = None,
     stages: set[str] | None = None,
     leads_budget_seconds: float = LEAD_BUDGET_SECONDS,
+    library_path: Path | None = None,
 ) -> dict:
     """stages: subset of {"company_tags", "library", "lineage", "leads"};
     default all, in that order (library and lineage read company_sec_tag;
@@ -518,12 +505,19 @@ def build_tag_library(
         conn = _run_chunked(
             conn, ids, "analytics.company_sec_tag", _COMPANY_SEC_TAG_SQL, "company_tags"
         )
+    library_rows = None
     if "library" in stages:
-        logger.info("tag_library.stage_start", stage="library")
+        logger.info(
+            "tag_library.stage_start",
+            stage="library",
+            library=str(library_path or "library.csv (repo or storage manifest)"),
+            built_for=library_csv.built_for(),
+        )
         with conn.cursor() as cur:
             _set_timeouts(cur, LIBRARY_STATEMENT_TIMEOUT)
             cur.execute(_SYNC_VERDICTS_SQL)
             cur.execute(_PRUNE_VERDICTS_SQL)
+            library_rows = stage_library(cur, library_path)
             cur.execute("delete from analytics.sec_tag_library")
             cur.execute(_LIBRARY_SQL)
         conn.commit()
@@ -548,6 +542,8 @@ def build_tag_library(
         "sec_tag_library_rows": tags,
         "lineage_rows": lineage,
     }
+    if library_rows is not None:
+        stats["library_csv_rows"] = library_rows
     if lead_stats is not None:
         stats["leads"] = lead_stats
     logger.info("tag_library.done", **stats)

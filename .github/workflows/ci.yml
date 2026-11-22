@@ -99,6 +99,10 @@ jobs:
       # (Ritwik measurement 2026-11-17: 184 resolver tests ran only in tag-library-learn, which had never run)
       - name: Resolver and tag-library tests
         run: uv run --project pipeline pytest data-team/tags/line_map/tools data-team/tags/library -rs -p no:cacheprovider
+      # One tag library (2026-11-22): every resolver release rebuilds it (line_map/CHANGELOG.md, README "Releasing").
+      # Fails while library/coverage.json names an older resolver version than the newest in line_map/resolver/*.csv.
+      - name: Tag library built for the newest resolver version
+        run: python3 data-team/tags/library/build_library.py --check-version
       - name: Backend tests
         working-directory: apps/backend
         run: uv run pytest tests

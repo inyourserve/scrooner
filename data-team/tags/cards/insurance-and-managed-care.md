@@ -1,4 +1,5 @@
 # Card family: Premiums and claims (insurers and managed care) (written 2026-10-22 by the Tag Expert)
+<!-- HAND-WRITTEN card: all prose outside the generated block at the end is written by hand and never rewritten. The block between the BEGIN/END GENERATED markers is rebuilt from library.csv by data-team/tags/library/build_library.py. -->
 
 Tags: `us-gaap:PremiumsEarnedNet`, `PolicyholderBenefitsAndClaimsIncurredNet`, `PolicyholderBenefitsAndClaimsIncurredHealthCare` (deprecated), `HealthCareOrganizationPremiumRevenue` (not in the 2025/2026 taxonomy), `BenefitsLossesAndExpenses`, `Revenues` at insurers. Investment income is in `investment-income-and-funds.md`.
 Asked by: Sector Analyst, SECTOR-ROWS-REVIEW rows I1, I4, M1, M2 and section 8 item 2.
@@ -41,3 +42,68 @@ Sector Analyst face counts (Reader 1, latest 10-K, FC by them): PremiumsEarnedNe
 - `PolicyholderBenefitsAndClaimsIncurredNet` -> `sr.ins.benefits_claims_incurred`: **safe single tag where filed** (UNH "Medical costs", PGR "Losses and LAE" FILING-CHECKED). Before 2024, `PolicyholderBenefitsAndClaimsIncurredHealthCare` is the managed-care alternate (5 of 8 filers, DATA-INFERRED). Never `BenefitsLossesAndExpenses`.
 - The draft leads M1/M2 (`HealthCarePremium...`, `...IncurredHealthCare`) are correct only for history: one is not an element, the other was deprecated in 2024. Confirms the Sector Analyst's merge of M1/M2 into I1/I4 for current periods.
 - Verified by: Tag Expert (me), 2026-10-22.
+
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+## From the tag library (generated)
+
+Resolver resolver-all110-.89. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+
+### `Revenues`
+- **Meaning:** Revenues (us-gaap, duration, credit). Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities that constitute an earning process. Includes, but is not limited to, investment and interest income before deduction of interest expens...
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point:** revenue; gross_profit
+- **Rules:** X123
+- **Evidence:** 69 companies, 710 served, 12391 proven, 34 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToRevenueNet@2013; CashFlowHedgeGainReclassifiedToRevenue@2013; CashFlowHedgeLossReclassifiedToRevenue@2013; DevelopmentStageEnterpriseCumulativeRevenue@2012 (+10 more)
+
+### `RevenueFromContractWithCustomerExcludingAssessedTax`
+- **Meaning:** Revenue from Contract with Customer, Excluding Assessed Tax (us-gaap, duration, credit). Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both i...
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point:** revenue; gross_profit
+- **Rules:** none
+- **Evidence:** 64 companies, 652 served, 16994 proven, 75 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces InitialFranchiseFees@2026; PropertyManagementFeeRevenue@2026; RevenueRecognitionMilestoneMethodRevenueRecognized@2026
+
+### `BenefitsLossesAndExpenses`
+- **Meaning:** Benefits, Losses and Expenses (us-gaap, duration, debit). The total amount of expense recognized during the period for future policy benefits, claims and claims adjustment costs, and for selling, general and administrative costs.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#2
+- **Rules:** I14; I09; I10; I11; I12; I13
+- **Evidence:** 2 companies, 24 served, 101 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `PolicyholderBenefitsAndClaimsIncurredHealthCare`
+- **Meaning:** Policyholder Benefits and Claims Incurred, Net, Health (Deprecated 2024) (us-gaap, duration, debit). Amount, after effect of policies assumed or ceded, of expense related to provision for policy benefits and costs incurred for health insurance contracts.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses
+- **Rules:** none
+- **Evidence:** 2 companies, 15 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaced by PolicyholderBenefitsAndClaimsIncurredNet@2024; [HealthInsuranceProductLineMember@2024; srt:ProductOrServiceAxis@2024; srt:ProductsAndServicesDomain]@2024
+
+### `PolicyholderBenefitsAndClaimsIncurredNet`
+- **Meaning:** Policyholder Benefits and Claims Incurred, Net (us-gaap, duration, debit). Amount, after effects of policies assumed or ceded, of expense related to the provision for policy benefits and costs incurred.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point:** operating_expenses
+- **Rules:** none
+- **Evidence:** 2 companies, 5 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces IncurredClaimsFinancialGuaranteeInsuranceContracts@2024; IncurredClaimsPropertyCasualtyAndLiability@2024; PolicyholderBenefitsAndClaimsIncurredHealthCare@2024; PolicyholderBenefitsAndClaimsIncurredLifeAndAnnuity@2024 (+2 more)
+
+### `PremiumsWrittenNet`
+- **Meaning:** Premiums Written, Net (us-gaap, duration, credit). Amount, after premiums ceded to other entities and premiums assumed by the entity, of premiums written.
+- **Data point definition:** revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances;  excise follows the filer's own presentation (X56).
+- **Data point:** revenue
+- **Rules:** none
+- **Evidence:** 1 companies, 1 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces PremiumsWrittenNetAccidentAndHealth@2013; PremiumsWrittenNetFinancialGuaranteeInsuranceContracts@2013; PremiumsWrittenNetLife@2013; PremiumsWrittenNetOtherInsurance@2013 (+1 more)
+<!-- END GENERATED: tag library rows -->

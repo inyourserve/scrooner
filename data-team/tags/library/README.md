@@ -2,9 +2,25 @@
 
 The single place that says what every element is, which data point it serves, under which rule, how often it is proven, and what has gone wrong with it. One row per element: the us-gaap taxonomy, plus every custom element the resolver has served.
 
-**Generated, never edited by hand.** Rebuild it on every resolver version and every daily drill:
+**Generated, never edited by hand.** Rebuild it on every resolver version (part of the release procedure in `line_map/README.md` and `line_map/CHANGELOG.md`) and every daily drill:
 
-    python3 data-team/tags/library/build_library.py      # repo root; read-only, no DB, no network, ~1 s
+    python3 data-team/tags/library/build_library.py                  # repo root; read-only, no DB, no network, ~5 s
+    python3 data-team/tags/library/build_library.py --check-version  # the CI gate (below)
+
+## One library (2026-11-22)
+
+This is the only tag library. `build_library.py` is the only builder; everything else reads its output:
+
+| Reader | What it takes from `library.csv` |
+|---|---|
+| `pipeline/src/scrooner_pipeline/mapper/library_csv.py` | the shared reader the two DB loaders use (`load`, `knowledge`, `sec_tag_library_rows`) |
+| `mapper/tag_library_rebuild.py` → analytics.tag_library_entry (0128) | polarity class per data point, deprecated_by / replaces, caveats, known problems (no longer re-read from polarity.csv, deprecations.csv, standard-tag-library.csv) |
+| `mapper/tag_library.py`, `library` stage → analytics.sec_tag_library (0077) | mapping status, data points (`mapped_concepts` / `candidate_for_concepts`), metrics (no longer re-derived from the retired concept_mapping / concept_tag_candidate); usage counts still come from analytics.company_sec_tag |
+| `data-team/tags/cards/*.md` | the generated block at the end of each card (below) |
+
+**Version gate.** `coverage.json` records the resolver version the library was built from. CI (`ci.yml`, step "Tag library built for the newest resolver version", plus `test_committed_library_is_built_for_the_newest_resolver_version`) fails while it is older than the newest `resolver_version` in `line_map/resolver/*.csv`.
+
+**Card blocks.** Each hand-written card in `data-team/tags/cards/` (not `generated/`, which the rules tooling owns) ends with a block between `<!-- BEGIN GENERATED: tag library rows ... -->` and `<!-- END GENERATED: tag library rows -->`. For every element the card's prose names that the library knows (most served first, 30 at most), it lists the meaning, data point, rules, evidence counts, known problems, pattern hits (any `pattern*` column) and deprecations. The build rewrites only that block; the prose above it is marked `HAND-WRITTEN` and never rewritten, and element names inside the block never count as card mentions.
 
 ## Learning loop (from the filings, FSN and SEC)
 
@@ -17,7 +33,7 @@ The single place that says what every element is, which data point it serves, un
 
 | File | What it is |
 |---|---|
-| `library.csv` | One row per element. This is the input the resolver, proof, the daily drill and the DB rebuild (analytics.sec_tag_library) read. |
+| `library.csv` | One row per element. This is the input the resolver, proof, the daily drill and both DB loaders (analytics.tag_library_entry, analytics.sec_tag_library) read. `polarity` holds `data_point:positive|signed|raw` (rules/polarity.csv sign and normalise, common/polarity.py semantics). |
 | `library.json` | The same rows, limited to elements with any knowledge (usage, a rule or a proof). |
 | `library.schema.json` | Column schema. Lists inside a cell are `;`-separated. |
 | `INDEX.md` | Elements by data point, statement, family and problem type. |
