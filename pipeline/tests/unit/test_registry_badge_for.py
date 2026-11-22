@@ -161,7 +161,7 @@ def test_two_combined_steps_are_told_apart_by_the_label():
     "dp,row",
     [
         # a sum where the data point has no additive derived step (its only derived step subtracts)
-        ("other_income_expense_net", _row("component_sum")),
+        ("gross_profit", _row("component_sum")),
         # a sum of a data point with no derived step at all
         ("accounts_payable", _row("component_sum")),
         # two non-sum derived steps and no flag naming one
@@ -252,4 +252,50 @@ def test_a_derived_flag_on_the_resolver_row_names_the_step():
     assert (
         reg.badge_for("operating_expenses", "general", row)
         == "derived:sum(printed operating lines)"
+    )
+
+
+@pytest.mark.parametrize(
+    "dp,flags,badge",
+    [
+        # MA and WMT certifications 2026-11-22: shown sums of printed lines had no registry step, so no badge
+        (
+            "interest_expense",
+            "roles;band",
+            "derived:sum(printed interest expense lines)",
+        ),
+        (
+            "other_income_expense_net",
+            "roles;band",
+            "derived:sum(printed nonoperating lines)",
+        ),
+        (
+            "shares_outstanding",
+            "bs_family;class_sum",
+            "derived:sum(class shares outstanding)",
+        ),
+    ],
+)
+def test_printed_line_sums_have_their_own_registry_step(dp, flags, badge):
+    for sector in reg.SECTORS:
+        assert reg.badge_for(dp, sector, _row("component_sum", flags)) == badge
+        assert (
+            DPS[(dp, sector)].badges[1] == badge
+        )  # step 2, right after the printed line
+
+
+def test_a_filing_read_value_carrying_a_derived_badge_gets_that_step_not_as_printed():
+    """A filing read VALUE row is `mapped`; its reader badge (filing_reads.badge_flag) names the derivation (WMT other
+    income FY2015 = 0 by the pretax identity)."""
+    f = "filing_read;stated_zero;replaces:not_presented;derived:income_before_tax-operating_income+interest_expense-interest_income"
+    assert (
+        reg.badge_for("other_income_expense_net", "general", _row("mapped", f))
+        == "derived:income_before_tax-operating_income+interest_expense-interest_income"
+    )
+    # a derived flag the data point does not list never overrides the printed step
+    assert (
+        reg.badge_for(
+            "revenue", "general", _row("mapped", "filing_read;derived:nonsense")
+        )
+        == "as_printed"
     )

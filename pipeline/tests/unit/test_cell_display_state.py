@@ -193,21 +193,110 @@ def test_attach_badges_reads_the_resolver_step_and_records_undecided_cells():
         ),
         _cell(1, "gross_profit", "2023-12-31", t100.OPEN, _sector="general"),
     ]
-    before = [r["display"] for r in rows]
     t100.attach_badges(rows, steps)
-    assert [
-        r["display"] for r in rows
-    ] == before  # records, never changes what is shown
     assert [r["_badge"] for r in rows] == [
         "derived:revenue-cost_of_revenue",
         "as_printed",
-        None,
+        # a sum of printed non-operating lines has its own step (MA/WMT 2026-11-22)
+        "derived:sum(printed nonoperating lines)",
         None,
         None,
     ]
-    assert rows[2]["_badge_issue"].startswith("badge_undecided")
+    # a shown cell with no resolver row and no located printed fact fits no step: OPEN with the reason, never shown
+    # with a blank badge
     assert rows[3]["_badge_issue"] == "no_resolver_row"
-    assert rows[4]["_badge_issue"] == ""
+    assert (rows[3]["display"], rows[3]["reason_code"]) == (
+        t100.OPEN,
+        t100.NO_REGISTRY_STEP,
+    )
+    assert [r["display"] for r in rows[:3]] == [t100.SHOWN_VALUE] * 3
+    assert rows[4]["_badge_issue"] == "" and rows[4]["display"] == t100.OPEN
+
+
+def test_attach_badges_reads_the_cells_own_evidence_when_the_resolver_names_no_step():
+    """MA net_income FY2024-25 (approver 2026-11-22): the resolver says no_role, the cell proof shows ProfitLoss on R3.
+    One printed fact -> as_printed; printed parts of one filing that add up -> the additive step; a resolver row that
+    names an unplaceable step is never second-guessed; anything else is OPEN no_registry_step. Mutation: drop the
+    proof_step fallback and the first two cells lose their badge."""
+    from datetime import date
+
+    acc = "0001141391-25-000011"
+    rows = [
+        _cell(
+            1,
+            "net_income",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            _sector="general",
+            accession=acc,
+            r_page="R3.htm",
+            tag="ProfitLoss",
+            shown_value="12874000000",
+            parts="",
+        ),
+        _cell(
+            1,
+            "shares_outstanding",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            _sector="general",
+            accession=acc,
+            r_page="R6.htm",
+            tag="CommonStockSharesOutstanding",
+            shown_value="894000000",
+            parts=f"CommonStockSharesOutstanding[ClassOfStock=CommonClassA]=887000000@{acc}#R6;"
+            f"CommonStockSharesOutstanding[ClassOfStock=CommonClassB]=7000000@{acc}#R6",
+        ),
+        # parts that do not add up to the shown value: no step
+        _cell(
+            1,
+            "interest_expense",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            _sector="general",
+            accession=acc,
+            r_page="R3.htm",
+            tag="A,B",
+            shown_value="10",
+            parts=f"A=4@{acc}#R3;B=5@{acc}#R3",
+        ),
+        # the resolver names a step the registry cannot place: stays undecided (no evidence override)
+        _cell(
+            1,
+            "accounts_payable",
+            "2024-12-31",
+            t100.SHOWN_VALUE,
+            _sector="general",
+            accession=acc,
+            r_page="R2.htm",
+            tag="AccountsPayableCurrent",
+            shown_value="5",
+            parts="",
+        ),
+    ]
+    steps = {
+        ("T", "accounts_payable"): [
+            (
+                date(2024, 12, 31),
+                {"decision": "component_sum", "flags": "", "nodes": ""},
+            )
+        ]
+    }
+    t100.attach_badges(rows, steps)
+    assert [r["badge"] for r in rows] == [
+        "as_printed",
+        "derived:sum(class shares outstanding)",
+        "",
+        "",
+    ]
+    assert [r["display"] for r in rows] == [
+        t100.SHOWN_VALUE,
+        t100.SHOWN_VALUE,
+        t100.OPEN,
+        t100.OPEN,
+    ]
+    assert rows[3]["_badge_issue"].startswith("badge_undecided")
+    assert all(r["reason_code"] == t100.NO_REGISTRY_STEP for r in rows[2:])
 
 
 def test_writer_writes_the_0130_columns_until_0135():

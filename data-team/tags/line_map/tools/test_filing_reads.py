@@ -113,9 +113,11 @@ def test_import_keys_fiscal_years_to_resolver_periods_skips_rule_rows_and_listed
                               dict(base, fiscal_year='2019', outcome='HIDE', quote='HIDE line_presented_combined - the band is one line'),
                               dict(base, fiscal_year='2019', outcome='HIDE', quote='no class here')])
     kept, skipped = filing_reads.import_files(str(rd), [ev], str(skips))
-    assert [(k['fiscal_year'], k['outcome'], k['period_end'], k['hide_class']) for k in kept] == [('2019', 'VALUE', '2019-01-31', ''), ('2019', 'HIDE', '2019-01-31', 'line_presented_combined')]
+    # within one file the LAST applicable row of a cell decides: the 2019 HIDE supersedes the 2019 VALUE before it
+    assert [(k['fiscal_year'], k['outcome'], k['period_end'], k['hide_class']) for k in kept] == [('2019', 'HIDE', '2019-01-31', 'line_presented_combined')]
     reasons = [s['reason'] for s in skipped]
-    assert len(skipped) == 4 and reasons[0] == 'conflicts with ruling X' and reasons[1].startswith('RULE row') and 'no single resolver period' in reasons[2] and 'without a hide class' in reasons[3]
+    assert len(skipped) == 5 and reasons[0] == 'conflicts with ruling X' and reasons[1].startswith('RULE row') and 'no single resolver period' in reasons[2] and 'without a hide class' in reasons[3]
+    assert skipped[4]['outcome'] == 'VALUE' and reasons[4] == 'superseded by a later row of MRVL-2026-11-21.csv for the same cell'
     assert kept[0]['cik'] == '0001835632' and kept[0]['source_file'] == 'MRVL-2026-11-21.csv'
 
 

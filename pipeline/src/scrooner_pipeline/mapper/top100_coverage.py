@@ -1957,6 +1957,28 @@ def attach_stated_zero(
         r[kind] = "Y"
         r["accession"], r["r_page"], r["evidence"] = rec[0], rec[1], rec[2]
         r["locator_source"] = kind
+        part = locator_part(rec[1], rec[0], rec[4])
+        if part and not r.get("tag") and not r.get("parts"):
+            # a tagged statement is a printed value (badge as_printed), never a derivation: certify_display reads a cell
+            # with neither tag nor parts as derived (MA cash_paid_for_interest FY2025, DPS FY2020-21, 2026-11-22)
+            r["parts"] = part
+
+
+# the tagged fact a text_stated / stated_zero locator names: 'R89.htm; ... (us-gaap:InterestExpenseDebt (note)) of ...',
+# 'R94.htm (us-gaap:CommonStockDividendsPerShareDeclared [StatementEquityComponentsAxis=CommonStockMember]) of ...'
+_LOCATOR_TAG = re.compile(
+    r"^\s*R(?P<r>\d+)\.htm\b[^(]*\((?:[a-z][\w-]*):(?P<tag>[A-Za-z0-9_]+)(?:\s*\[(?P<dims>[^\]]+)\])?"
+)
+
+
+def locator_part(locator: str, accession: str, value: Decimal) -> str:
+    """The one-filing part `Tag[dims]=value@accession#R<n>` of a stated value whose locator names the R page and the
+    element that tags the statement, or '' (an untagged sentence keeps its quote locator only). Pure."""
+    m = _LOCATOR_TAG.match(locator or "")
+    if not m or not accession:
+        return ""
+    dims = f"[{m['dims'].strip()}]" if m["dims"] else ""
+    return f"{m['tag']}{dims}={format(value.normalize(), 'f')}@{accession}#R{m['r']}"
 
 
 # LINE-level presence (Dhairya 2026-11-16): a cell is never hidden when ANY periodic filing of the company (10-K, 10-Q,
@@ -2165,9 +2187,11 @@ def attach_badges(
 ) -> None:
     """Set row['_badge'] on every SHOWN_VALUE cell: metrics/registry.badge_for of the resolver row of the same
     (ticker, data point, period end) (an exact end first, else the FSN month-end rounding of the cell's end). A shown
-    cell with no resolver row, or whose row names no single fallback step, gets _badge None and the reason in
-    row['_badge_issue'] (one-display-path plan step 2). Pure, in place. It changes no display: until the shown_cell
-    switch (plan steps 5-6, migration 0135) the badge is recorded, never enforced."""
+    cell with no resolver row takes the step its own located evidence shows (proof_step: one printed fact ->
+    as_printed, printed parts of one filing that add up -> the additive step). A shown cell that still fits no step
+    (no row and no evidence step, or a row naming no single fallback step) becomes OPEN with reason_code
+    no_registry_step and the reason in row['_badge_issue'] (founder 2026-11-22: every shown cell carries a registry
+    step; MA and WMT certifications 2026-11-22 failed on 37 shown cells with a blank badge). Pure, in place."""
     from scrooner_pipeline.metrics import registry as reg
 
     for r in rows:
@@ -2182,15 +2206,64 @@ def attach_badges(
         hit = next((v for d, v in cands if d == end), None) or next(
             (v for d, v in cands if fsn_end_matches(d, end)), None
         )
+        sector = r.get("_sector") or "general"
         if hit is None:
             r["_badge_issue"] = "no_resolver_row"
-            continue
-        try:
-            r["_badge"] = r["badge"] = reg.badge_for(
-                r["data_point"], r.get("_sector") or "general", hit
-            )
-        except reg.BadgeUndecided as exc:
-            r["_badge_issue"] = f"badge_undecided: {exc}"
+        else:
+            try:
+                r["_badge"] = r["badge"] = reg.badge_for(r["data_point"], sector, hit)
+            except reg.BadgeUndecided as exc:
+                r["_badge_issue"] = f"badge_undecided: {exc}"
+        if not r["_badge"] and hit is None:
+            # the resolver names no step (no row, or no_role / not_presented while the cell proof shows a value: MA
+            # net_income FY2024-25, ProfitLoss on R3): the cell's OWN located evidence names it. One printed fact on its
+            # R page is as_printed; printed parts of one filing that add up are the data point's additive step. A resolver
+            # row that names a step the registry cannot place (BadgeUndecided) is never second-guessed here.
+            step = proof_step(r)
+            if step:
+                try:
+                    r["_badge"] = r["badge"] = reg.badge_for(
+                        r["data_point"], sector, {"decision": step, "flags": "proof"}
+                    )
+                    r["_badge_issue"] = ""
+                except reg.BadgeUndecided as exc:
+                    r["_badge_issue"] += f"; proof step: {exc}"
+        if not r["_badge"]:
+            # founder 2026-11-22 (badges): a shown cell carries the registry step that produced it. A value that fits no
+            # step is open work with the reason, never a shown cell with a blank badge.
+            r["display"] = OPEN
+            r["hide_class"] = ""
+            r["reason_code"] = NO_REGISTRY_STEP
+            r["reason"] = f"shown value fits no registry step: {r['_badge_issue']}"
+
+
+NO_REGISTRY_STEP = "no_registry_step"
+_ACC_RX = re.compile(r"^\d{10}-\d{2}-\d{6}$")
+
+
+def proof_step(r: dict[str, Any]) -> str:
+    """The resolver-decision name of the step a shown cell's own evidence shows, or '': `mapped` for ONE printed fact
+    (a single tag, no parts, an accession and an R page; or a single unsigned part), `component_sum` for two or more
+    printed parts of one filing, all added, that sum to the shown value. Pure."""
+    if r.get("shown_value") in ("", None) or not _ACC_RX.match(
+        str(r.get("accession") or "")
+    ):
+        return ""
+    parts = [p.strip() for p in str(r.get("parts") or "").split(";") if p.strip()]
+    if not parts:
+        tags = [t for t in str(r.get("tag") or "").split(",") if t.strip()]
+        page = re.match(r"^R?\d+", str(r.get("r_page") or ""))
+        return "mapped" if len(tags) == 1 and page else ""
+    rx = re.compile(
+        r"^([A-Za-z0-9_]+(?:\[[^\]]*\])?)=(-?[0-9.]+)@(\d{10}-\d{2}-\d{6})#R?\d+$"
+    )
+    got = [rx.match(p) for p in parts]
+    if not all(got) or len({m.group(3) for m in got if m}) != 1:
+        return ""
+    if len(got) == 1:
+        return "mapped"
+    total = sum((Decimal(m.group(2)) for m in got if m), Decimal(0))
+    return "component_sum" if total == Decimal(str(r["shown_value"])) else ""
 
 
 # doc 02 display rule 1 defines verified_absent for a YEAR inside the filing window; a row hidden in every year is
@@ -2198,6 +2271,8 @@ def attach_badges(
 # line-level proof behind a verified-absent year (no presented fact of the family at any display-year end) is the
 # structural proof, so the evidence carries over unchanged.
 ROW_CLASS_OF_YEAR_CLASS: dict[str, str] = {HC_VERIFIED_ABSENT: HC_STRUCTURAL}
+# the other way: a reader's row class applied to a single year (filing_reads HIDE structural_not_presented / never_reported)
+YEAR_CLASS_OF_ROW_CLASS: dict[str, str] = {HC_STRUCTURAL: HC_VERIFIED_ABSENT}
 
 
 def whole_row_hide_class(hc: str) -> str:
@@ -2268,8 +2343,17 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
         ):
             # a full 10-K read's hide (filing_reads.py): the reader's class is the ruling; the year is hidden with that
             # class and the read's quote (a row whose every year is such a hide collapses below). Still subject to the
-            # line-level presence test.
-            r["display"], hc = HIDDEN_YEAR, r["_reader_hide"]
+            # line-level presence test. A row class (structural_not_presented: the line is never reported) read for ONE
+            # year is that year's verified absence (doc 02 rule 1, a year class): an allowlisted data point hides the
+            # year; any other is hidden only if every year of the row is hidden (then one structural row, collapse
+            # below), else the year is open (WMT other_income_expense_net FY2015, 2026-11-22: a row class on a year).
+            yc = YEAR_CLASS_OF_ROW_CLASS.get(r["_reader_hide"], r["_reader_hide"])
+            r["display"], hc = HIDDEN_YEAR, yc
+            r["_row_only_hide"] = (
+                yc == HC_VERIFIED_ABSENT
+                and r["_reader_hide"] != HC_VERIFIED_ABSENT
+                and r.get("data_point") not in VERIFIED_ABSENT_HIDE
+            )
         elif r.get("_only_combined") == "years":
             r["display"], hc = HIDDEN_YEAR, HC_COMBINED
         elif r.get("_only_combined") == "row":
@@ -2362,6 +2446,24 @@ def apply_display(rows: list[dict[str, Any]]) -> None:
                 if c["display"] == HIDDEN_ROW:
                     c["display"] = OPEN
                     c["hide_class"] = ""
+        # a reader's never-reported class read for one year of a data point off the year-hide allowlist: valid only
+        # as part of a hidden row (every other year hidden: one structural row); otherwise the year has no year class
+        # and is open work, never a row class on a year (WMT other_income_expense_net FY2015, 2026-11-22)
+        row_hidden = all(
+            c["display"] in (HIDDEN_ROW, HIDDEN_YEAR)
+            for c in cells
+            if not (c["display"] == HIDDEN_YEAR and c.get("_row_only_hide"))
+        )
+        for c in cells:
+            if c["display"] == HIDDEN_YEAR and c.get("_row_only_hide"):
+                if row_hidden:
+                    c["display"], c["hide_class"] = HIDDEN_ROW, HC_STRUCTURAL
+                else:
+                    c["display"], c["hide_class"] = OPEN, ""
+                    c["reason"] = (
+                        f"reader class {c.get('_reader_class') or HC_STRUCTURAL} is a row class; "
+                        f"{c.get('data_point')} is not on the year-hide allowlist and the row is not hidden"
+                    )
 
 
 def work_type(r: dict[str, Any]) -> str:
@@ -2672,13 +2774,13 @@ def _display_state(
     )
     shown = [r for r in rows if r.get("display") == SHOWN_VALUE]
     issues: dict[str, int] = {}
-    for r in shown:
-        if not r.get("_badge"):
+    for r in rows:
+        if r.get("reason_code") == NO_REGISTRY_STEP:
             k = (r.get("_badge_issue") or "none").split(":", 1)[0]
             issues[k] = issues.get(k, 0) + 1
     print(
-        f"badges (recorded, not enforced before 0135): {sum(1 for r in shown if r.get('_badge'))} of "
-        f"{len(shown)} shown cells badged; without a badge {issues}"
+        f"badges: {sum(1 for r in shown if r.get('_badge'))} of {len(shown)} shown cells badged; "
+        f"{sum(issues.values())} value cell(s) fit no registry step and are OPEN ({NO_REGISTRY_STEP}) {issues}"
     )
     if not write:
         return

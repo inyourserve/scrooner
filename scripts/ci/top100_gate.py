@@ -147,6 +147,7 @@ def main() -> int:
         f"- resolver: `{a.resolver or 'unknown'}`",
         f"- resolver file: `{res_file or 'unknown'}`",
         f"- resolver_version: `{res_version or 'unknown'}`",
+        f"- resolver sha256: `{hashlib.sha256(Path(res_file).read_bytes()).hexdigest() if res_file else 'unknown'}`",
         f"- code: `{os.environ.get('GITHUB_SHA', 'unknown')}`",
         f"- run: {run_url}",
         *([f"- re-cert token: `{a.recert_token}` (certified-guard passed once under this token)"] if a.recert_token else []),

@@ -219,7 +219,17 @@ def import_files(resolver_dir, files, skips_path=None):
             elif e['outcome'] not in ('VALUE',): why = f"unknown outcome {e['outcome']}"
             if why: skipped.append(dict(row, reason=why))
             else: kept.append(row)
-    return kept, skipped
+    # Within ONE file the last applicable row of a cell decides; an earlier VALUE/HIDE row of the same cell is superseded
+    # (apply would otherwise take whichever came first: a correction appended to a pass never landed, WMT
+    # other_income_expense_net FY2015 2026-11-22, the HIDE's row class on a year replaced by the identity value).
+    last = {(k['source_file'], k['ticker'], k['data_point'], str(k['fiscal_year'])): i for i, k in enumerate(kept)}
+    out = []
+    for i, k in enumerate(kept):
+        if last[(k['source_file'], k['ticker'], k['data_point'], str(k['fiscal_year']))] != i:
+            skipped.append(dict(k, reason=f"superseded by a later row of {k['source_file']} for the same cell"))
+        else:
+            out.append(k)
+    return out, skipped
 
 
 if __name__ == '__main__':

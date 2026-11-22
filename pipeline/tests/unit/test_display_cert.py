@@ -1200,3 +1200,67 @@ def test_the_most_precise_fact_wins_over_a_rounded_duplicate():
     for order in ([lt, l_r, l_p], [lt, l_p, l_r]):
         assert dc.check_debt(debt_cell("1511"), order).result == "MATCH"
     assert dc._fact([ACC, "T", "2023-12-31", 0, "", "1", []]).dcml == 32767
+
+
+def test_a_printed_badge_is_never_a_derived_cell():
+    """MA 2026-11-22: text-stated cash_paid_for_interest FY2025 and DPS FY2020-21 (badge as_printed, no tag column) were
+    censused as 'derived cell with no tag, parts or known identity'. Mutation: is_derived ignoring the badge fails."""
+    stated = _bcell("cash_paid_for_interest", "as_printed", value="680000000", tag="")
+    assert not dc.is_derived(stated)
+    got = dc.check_cell(stated, [])
+    assert got.result == "LOCATOR" and "quote" in got.evidence
+    # with the statement's tag as its one part it matches the fact as filed (fsn shows the text-block fact on no page)
+    tagged = _bcell(
+        "dividends_per_share",
+        "as_printed",
+        value="1.64",
+        tag="",
+        parts=dc.parse_parts(
+            f"CommonStockDividendsPerShareDeclared[StatementEquityComponentsAxis=CommonStockMember]=1.64@{ACC}#R94"
+        ),
+    )
+    f = fact(
+        "CommonStockDividendsPerShareDeclared",
+        "1.64",
+        dims="StatementEquityComponents=CommonStock",
+        reports=(),
+    )
+    assert dc.check_cell(tagged, [f]).result == "MATCH"
+    # a derived badge, or no badge at all, still is a derivation
+    assert dc.is_derived(
+        _bcell("shares_outstanding", "derived:shares_issued-treasury_shares", tag="")
+    )
+    assert dc.is_derived(cell(tag=""))
+
+
+def test_other_income_identity_is_checked_from_one_filing():
+    """WMT FY2015: 24,799 - 27,147 + 2,461 - 113 = 0, all in 0000104169-15-000011 R2 (registry step 3)."""
+
+    def c(dp, v, acc=ACC, badge="as_printed"):
+        return _bcell(
+            dp,
+            badge,
+            value=v,
+            tag="" if dp == "other_income_expense_net" else "X",
+            acc=acc,
+        )
+
+    oie = c(
+        "other_income_expense_net",
+        "0",
+        badge="derived:income_before_tax-operating_income+interest_expense-interest_income",
+    )
+    cells = [
+        oie,
+        c("income_before_tax", "24799"),
+        c("operating_income", "27147"),
+        c("interest_expense", "2461"),
+        c("interest_income", "113"),
+    ]
+    assert dc.is_derived(oie)
+    assert dc.check_derived(oie, cells, []).result == "MATCH"
+    wrong = [*cells[:-1], c("interest_income", "112")]
+    assert dc.check_derived(oie, wrong, []).result == "MISMATCH"
+    other = [*cells[:-1], c("interest_income", "113", acc="0000000000-99-000001")]
+    r = dc.check_derived(oie, other, [])
+    assert r.result == "NOT_FOUND" and "one filing" in r.evidence

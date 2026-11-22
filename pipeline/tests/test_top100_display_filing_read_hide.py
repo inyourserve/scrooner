@@ -131,3 +131,42 @@ def test_a_proven_or_derived_value_is_never_hidden_by_a_read(tmp_path):
     t100.attach_filing_read_hides(rows, h)
     t100.apply_display(rows)
     assert rows[0]["display"] == "SHOWN_VALUE" and rows[0]["accession"] == "Q"
+
+
+def test_a_row_class_read_for_one_year_is_a_year_class_or_open_never_a_row_class_on_a_year(
+    tmp_path,
+):
+    """WMT other_income_expense_net FY2015 (approver 2026-11-22): the reader's structural_not_presented (a row class)
+    hid ONE year of a row shown in every other year. A year hide needs a year class: verified_absent, allowlisted data
+    points only; otherwise the year is open. Mutation: hide with the reader's class as before and this fails."""
+    d = tmp_path / "resolver"
+    d.mkdir()
+    (d / "T.csv").write_text(
+        HEADER
+        + '1,T,other_income_expense_net,2019-12-31,FY,not_presented,,,0000000001-20-000001,own,,filing_read_hide;structural_not_presented,"band",R2.htm,,r.89\n'
+        + '1,T,operating_income,2019-12-31,FY,not_presented,,,0000000001-20-000001,own,,filing_read_hide;structural_not_presented,"no line",R2.htm,,r.89\n'
+    )
+    h = t100.load_filing_read_hides(tmp_path)
+    rows = [
+        _cell("other_income_expense_net", 2019, "REASON", "filing_read_hide"),
+        _cell("other_income_expense_net", 2020, "PROVEN", accession="Z", r_page="R5"),
+        _cell("operating_income", 2019, "REASON", "filing_read_hide"),
+        _cell("operating_income", 2020, "PROVEN", accession="Z", r_page="R5"),
+    ]
+    t100.attach_filing_read_hides(rows, h)
+    t100.apply_display(rows)
+    by = {(r["data_point"], r["fiscal_year"]): r for r in rows}
+    oie = by[("other_income_expense_net", 2019)]
+    assert (oie["display"], oie["hide_class"]) == ("OPEN", "")
+    assert "row class" in oie["reason"]
+    # an allowlisted data point hides the year with the YEAR class
+    oi = by[("operating_income", 2019)]
+    assert (oi["display"], oi["hide_class"]) == ("HIDDEN_YEAR", "verified_absent")
+    # every year read as never reported (no shown year): one structural row, as before
+    rows = [_cell("other_income_expense_net", 2019, "REASON", "filing_read_hide")]
+    t100.attach_filing_read_hides(rows, h)
+    t100.apply_display(rows)
+    assert (rows[0]["display"], rows[0]["hide_class"]) == (
+        "HIDDEN_ROW",
+        "structural_not_presented",
+    )

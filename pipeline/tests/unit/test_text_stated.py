@@ -79,3 +79,49 @@ def test_coverage_shows_a_text_stated_cell_with_the_same_value_only(tmp_path):
         assert not other.get("_stated_zero")
     rec = sz[("TST", "research_and_development")]["2022-12-31"]
     assert rec[4] == Decimal("74000000")
+
+
+def test_a_tagged_statement_carries_its_tag_as_one_part_so_it_is_not_read_as_derived():
+    """MA cash_paid_for_interest FY2025 / DPS FY2020-21 (2026-11-22): the locator names the R page and the element
+    tagging the sentence; the export writes it as the cell's one-filing part. Mutation: drop the part and the cell has
+    neither tag nor parts again (certify_display: 'derived cell with no tag')."""
+    acc = "0001141391-26-000013"
+    loc = (
+        "R89.htm; ma-20251231.htm Debt note (us-gaap:InterestExpenseDebt (filer mis-tag of a sentence labelled "
+        "interest paid; undimensioned)) of 0001141391-26-000013, read FY2025 10-K"
+    )
+    assert (
+        tc.locator_part(loc, acc, Decimal("680000000"))
+        == f"InterestExpenseDebt=680000000@{acc}#R89"
+    )
+    dps = "R94.htm (us-gaap:CommonStockDividendsPerShareDeclared [StatementEquityComponentsAxis=CommonStockMember]) of X"
+    assert (
+        tc.locator_part(dps, acc, Decimal("1.6400"))
+        == f"CommonStockDividendsPerShareDeclared[StatementEquityComponentsAxis=CommonStockMember]=1.64@{acc}#R94"
+    )
+    # an untagged sentence keeps its quote locator only
+    assert tc.locator_part("Item 1, Research and development", acc, Decimal(5)) == ""
+    sz = {
+        ("TST", "cash_paid_for_interest"): {
+            "2025-12-31": (
+                acc,
+                loc,
+                "interest paid was $ 680 million",
+                "text_stated",
+                Decimal("680000000"),
+            )
+        }
+    }
+    row = _cell(
+        data_point="cash_paid_for_interest",
+        period_end="2025-12-31",
+        shown_value="680000000",
+        _family=tc.TEXT_STATED_FAMILY,
+        tag="",
+        parts="",
+    )
+    tc.attach_stated_zero([row], sz)
+    assert (
+        row["text_stated"] == "Y"
+        and row["parts"] == f"InterestExpenseDebt=680000000@{acc}#R89"
+    )

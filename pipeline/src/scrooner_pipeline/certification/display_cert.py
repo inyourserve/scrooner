@@ -642,6 +642,15 @@ class CellCheck:
 def check_cell(c: Cell, facts: list[Fact]) -> CellCheck:
     """A single-tag cell matches on magnitude (display sign conventions differ by row); a summed
     cell must match part by part, as filed, and its signed sum must equal the shown value."""
+    if not c.tag and not c.parts:
+        # printed (badge) but untagged: a sentence located by its quote; no fact to match, the approver reads it
+        return CellCheck(
+            c,
+            "LOCATOR",
+            None,
+            f"text-stated value located by its quote ({c.r_page or 'no locator'} of {c.accession}), no tag: "
+            "approver reads the quote",
+        )
     ts = terms(c)
     total = Decimal(0)
     ev, locator_ok, part_ok = [], True, True
@@ -704,6 +713,11 @@ DERIVED_TAGS = frozenset(
 
 
 def is_derived(c: Cell) -> bool:
+    """A computation the filing does not print: no tag and no parts. A cell whose registry badge says it is printed
+    (as_printed, combined:<label>) is never derived, whatever columns it lacks: a text-stated value located by its quote
+    is a printed value (MA cash_paid_for_interest FY2025 and DPS FY2020-21, 2026-11-22)."""
+    if c.badge and not str(c.badge).startswith("derived:"):
+        return False
     return not c.tag and not c.parts
 
 
@@ -790,6 +804,46 @@ def check_derived(c: Cell, cells: list[Cell], facts: list[Fact]) -> CellCheck:
             "MATCH" if rev - abs(cor) == shown else "MISMATCH",
             rev - abs(cor),
             f"shown revenue {rev} - shown cost_of_revenue {cor}",
+        )
+    if c.data_point == "other_income_expense_net":
+        # registry step: income_before_tax - operating_income + interest_expense - interest_income, all printed in ONE
+        # filing (data_points.csv; WMT FY2015 = 24,799 - 27,147 + 2,461 - 113 = 0 in 0000104169-15-000011 R2)
+        shown_cells: dict[str, Cell] = {
+            x.data_point: x
+            for x in cells
+            if x.fiscal_year == c.fiscal_year and x.display == SHOWN
+        }
+        need = (
+            "income_before_tax",
+            "operating_income",
+            "interest_expense",
+            "interest_income",
+        )
+        inputs = [shown_cells.get(k) for k in need]
+        got = [x for x in inputs if x is not None and x.value is not None]
+        if len(got) != len(need):
+            return CellCheck(
+                c, "NOT_FOUND", None, f"identity inputs not all shown this year: {need}"
+            )
+        if any(x.accession != c.accession for x in got):
+            return CellCheck(
+                c,
+                "NOT_FOUND",
+                None,
+                "identity inputs come from other filings ("
+                + ", ".join(
+                    f"{k} {x.accession}" for k, x in zip(need, got, strict=True)
+                )
+                + f"); a derivation uses one filing ({c.accession})",
+            )
+        pt, oi, ie, ii = (x.value or Decimal(0) for x in got)
+        v = pt - oi + abs(ie) - abs(ii)
+        return CellCheck(
+            c,
+            "MATCH" if v == shown else "MISMATCH",
+            v,
+            f"shown income_before_tax {pt} - operating_income {oi} + interest_expense {abs(ie)} - interest_income "
+            f"{abs(ii)}, all in {c.accession}",
         )
     return CellCheck(
         c,
