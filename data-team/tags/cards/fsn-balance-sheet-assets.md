@@ -196,10 +196,10 @@ R pages: AAPL 0000320193-25-000079 R5; PNC 0000713676-26-000020 R5; TRV 00000863
 
 Insurer and bank use of AR/inventory beyond counts; STE/SUI "(including goodwill)" labels; MRK inventory split; the "#REF!" filers other than PINS; GE/MU/WMT/COST/RTX receivable perimeters; quarterly vs annual differences; whether companyfacts carries the same facts as FSN for the label-shift filers (it should, the facts are the same instance; ASSUMED); the 270 latest 10-Ks with no line_map rows (cause not investigated).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 24 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 24 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `Goodwill`
 - **Meaning:** Goodwill (us-gaap, instant, debit). Amount, after accumulated impairment loss, of asset representing future economic benefit arising from other asset acquired in business combination or from joint venture formation or both, that is not individually identified and separately r...
@@ -411,7 +411,7 @@ Resolver resolver-all110-.92. 24 elements named in this card have library knowle
 - **Meaning:** Intangible Asset, Including Goodwill, after Accumulated Amortization (us-gaap, instant, debit). Amount, after accumulated amortization, of finite- and indefinite-lived intangible assets, goodwill, and capitalized cost for software to be sold, leased, or marketed.
 - **Data point definition:** goodwill: Goodwill at period end as printed.
 - **Data point:** goodwill; intangible_assets; role goodwill:combined#1; intangible_assets:combined#1
-- **Rules:** B21; B20
+- **Rules:** B20; B21
 - **Evidence:** 2 companies, 0 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none

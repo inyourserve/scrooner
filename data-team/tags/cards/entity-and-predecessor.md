@@ -26,10 +26,10 @@ These are not tag meanings but they decide whether ANY tag's value belongs to th
 - `dcml`: INF = 32767, absent = −32768. Values are rounded to 4 decimals (per-share and tiny values: use the API or the instance, §AA).
 - SEC's cal group/arc numbering is NOT reproducible across builders: compare calc trees by (parent, child, weight), never by grp/arc numbers.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 No element named in this card has a data point, ruling, served cell or known problem in the library.
 <!-- END GENERATED: tag library rows -->

@@ -145,11 +145,15 @@ def derive(
         return g is not None and cell["value"] in proven.get((base, g, start, end), ())
 
     out: list[dict] = []
+    derived: set[tuple[int, int]] = set()
     for b in stats["blanks"]:
         if b.get("state") != "not_presented" or b["period_id"] not in periods:
             continue
         key = (b["canonical_concept_id"], b["period_id"])
-        if key in served or key in held:
+        # two not_presented blanks of one key (overlapping era rows: ADI total_liabilities 2018-11-03) derive ONE
+        # cell; a second copy made the plan's canonical_fact insert fail (UniqueViolation) and rolled the whole
+        # company back (ADI, DE, DIS unserved since 2026-11-16)
+        if key in served or key in held or key in derived:
             continue
         base = _base(b["concept_name"])
         pid = b["period_id"]
@@ -174,6 +178,7 @@ def derive(
             )
         if value is None:
             continue
+        derived.add(key)
         out.append(
             {
                 "canonical_concept_id": b["canonical_concept_id"],

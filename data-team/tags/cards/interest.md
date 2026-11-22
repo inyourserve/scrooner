@@ -143,17 +143,17 @@ Relayed lessons processed this run (FILING-CHECKED by the named role unless mark
 - **Cash interest paid**: XBRL US DQC_0065 "Interest Paid Net (Operating) Not on Cash Flow" (final, released 2017-10-04, rule v5; github.com/DataQualityCommittee/dqc_us_rules docs/DQC_US_0065/DQC_0065.md) — the codification requires indirect-method filers to report interest paid net of capitalized interest; `InterestPaidNet` is that element; `InterestPaid` includes the capitalized component. So `InterestPaidNet` wins; `InterestPaid` only when the net element is not reported. This CORRECTS my earlier "InterestPaid wins" rule (shareholder-returns.md §9 and the library), which the readers' keys (41 of 43 on the net tag) had already contradicted.
 - **2024 interest elements**: XBRL US DQC_0181 "Interest Expense Operating and Nonoperating" (final, released 2024-06-27, effective 2024-08-31; docs/DQC_US_0181/DQC_0181.md) — the 2024 US-GAAP taxonomy added `InterestExpenseNonoperating` and `InterestExpenseOperating`, and `InterestExpense` now means both together; filers are asked to replace `InterestExpense` with the specific element. Component 10180: InterestExpense/InterestExpenseOperating must not be calc descendants of `NonoperatingIncomeExpense`; 10181: InterestExpense/InterestExpenseNonoperating must not be descendants of `InterestIncomeExpenseNet` (operating net interest, the bank NII line); 10182: InterestExpense/InterestExpenseNonoperating must not sit under `OperatingExpenses`. Use: a 2024+ switch from InterestExpense to InterestExpenseNonoperating on the same face line is an era change, not a meaning change; an `InterestExpenseOperating` line is operating (bank or opex block).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `OperatingIncomeLoss`
 - **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank]
-- **Data point:** operating_income; operating_expenses
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank] (+1 more)
+- **Data point:** operating_income; operating_expenses; other_income_expense_net
 - **Rules:** C13; resolver functions resolve
-- **Evidence:** 80 companies, 948 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 949 served, 34797 proven, 106 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -187,7 +187,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `OperatingExpenses`
 - **Meaning:** Operating Expenses (us-gaap, duration, debit). Generally recurring costs associated with normal operations except for the portion of these expenses which can be clearly related to production and included in cost of sales or services. Includes selling, general and administrative expense.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
 - **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
@@ -205,7 +205,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `NoninterestExpense`
 - **Meaning:** Noninterest Expense (us-gaap, duration, debit). Total aggregate amount of all noninterest expense.
-- **Data point definition:** noninterest_expense: Total noninterest expense as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** noninterest_expense: Total noninterest expense as printed. [not applicable: general,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** noninterest_expense; operating_expenses; polarity noninterest_expense:positive; operating_expenses:positive; role noninterest_expense:primary#1; operating_expenses:primary#3
 - **Rules:** C28; I14; I09; I10; I11; I12; I13; resolver functions resolve
 - **Evidence:** 9 companies, 215 served, 919 proven, 0 certified cells; last verified 2026-11-15
@@ -218,13 +218,13 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
 - **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
 ### `InterestAndDividendIncomeOperating`
 - **Meaning:** Interest and Dividend Income, Operating (us-gaap, duration, credit). Represents the total of interest and dividend income, including any amortization and accretion (as applicable) of discounts and premiums, earned from (1) loans and leases whether held-for-sale or held-in-portfolio; (2) investment securities...
-- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; total_interest_income: Total interest income as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; total_interest_income: Total interest income as printed. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** interest_income; total_interest_income; polarity interest_income:signed; role interest_income:primary#1; total_interest_income:primary#1
 - **Rules:** I26; I27
 - **Evidence:** 8 companies, 167 served, 985 proven, 0 certified cells; last verified 2026-11-15
@@ -252,7 +252,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `NoninterestIncome`
 - **Meaning:** Noninterest Income (us-gaap, duration, credit). The total amount of noninterest income which may be derived from: (1) fees and commissions; (2) premiums earned; (3) insurance policy charges; (4) the sale or disposal of assets; and (5) other sources not otherwise specified.
-- **Data point definition:** noninterest_income: Total noninterest income as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
+- **Data point definition:** noninterest_income: Total noninterest income as printed. [not applicable: general,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** noninterest_income; revenue; role noninterest_income:primary#1
 - **Rules:** none
 - **Evidence:** 8 companies, 114 served, 375 proven, 0 certified cells; last verified 2026-11-15
@@ -271,7 +271,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `Deposits`
 - **Meaning:** Deposits (us-gaap, instant, credit). The aggregate of all deposit liabilities held by the entity, including foreign and domestic, interest and noninterest bearing; may include demand deposits, saving deposits, Negotiable Order of Withdrawal (NOW) and time deposits among others...
-- **Data point definition:** deposits: Total deposits at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** deposits: Total deposits at period end. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** deposits; role deposits:primary#1
 - **Rules:** none
 - **Evidence:** 9 companies, 108 served, 355 proven, 0 certified cells; last verified 2026-11-15
@@ -280,7 +280,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `CostsAndExpenses`
 - **Meaning:** Costs and Expenses (us-gaap, duration, debit). Total costs of sales and operating expenses for the period.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses
 - **Rules:** X117; I09; resolver functions apply_cost_and_opex
 - **Evidence:** 21 companies, 95 served, 190 proven, 0 certified cells; last verified 2026-11-15
@@ -293,13 +293,13 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
 - **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:primary#4
 - **Rules:** I21; I20; I22; I23; I24; resolver functions resolve_band
-- **Evidence:** 8 companies, 75 served, 228 proven, 22 certified cells; last verified 2026-11-15
+- **Evidence:** 8 companies, 76 served, 228 proven, 22 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
 ### `ProvisionForLoanLeaseAndOtherLosses`
 - **Meaning:** Provision for Loan, Lease, and Other Losses (us-gaap, duration, debit). Amount of expense related loan transactions, lease transactions, credit loss from transactions other than loan and lease transactions, and other loss based on assessment of uncollectability from the counterparty to reduce the account to the...
-- **Data point definition:** provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed;  a release is a real negative. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed;  a release is a real negative. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** provision_for_credit_losses; polarity provision_for_credit_losses:signed; role provision_for_credit_losses:primary#1
 - **Rules:** none
 - **Evidence:** 8 companies, 58 served, 287 proven, 0 certified cells; last verified 2026-11-15
@@ -319,7 +319,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `ProvisionForLoanLossesExpensed`
 - **Meaning:** Financing Receivable, Credit Loss, Expense (Reversal) (us-gaap, duration, debit). Amount of credit loss expense (reversal of expense) for financing receivable.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed (+1 more)
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed (+1 more)
 - **Data point:** provision_for_credit_losses; operating_expenses; polarity provision_for_credit_losses:signed; role provision_for_credit_losses:primary#4
 - **Rules:** none
 - **Evidence:** 5 companies, 25 served, 132 proven, 0 certified cells; last verified 2026-11-15
@@ -328,7 +328,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `BenefitsLossesAndExpenses`
 - **Meaning:** Benefits, Losses and Expenses (us-gaap, duration, debit). The total amount of expense recognized during the period for future policy benefits, claims and claims adjustment costs, and for selling, general and administrative costs.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#2
 - **Rules:** I14; I09; I10; I11; I12; I13
 - **Evidence:** 2 companies, 24 served, 101 proven, 0 certified cells; last verified 2026-11-15
@@ -393,7 +393,7 @@ Resolver resolver-all110-.92. 31 elements named in this card have library knowle
 
 ### `ProvisionForLoanAndLeaseLosses`
 - **Meaning:** Provision for Loan and Lease Losses (us-gaap, duration, debit). Amount of expense related to estimated loss from loan and lease transactions.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed (+1 more)
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed (+1 more)
 - **Data point:** provision_for_credit_losses; operating_expenses; polarity provision_for_credit_losses:signed; role provision_for_credit_losses:primary#2
 - **Rules:** none
 - **Evidence:** 5 companies, 7 served, 45 proven, 0 certified cells; last verified 2026-11-15

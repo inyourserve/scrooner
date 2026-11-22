@@ -87,10 +87,10 @@ Findings:
 
 - Bank cash (refined, Dhairya 2026-11-12): the BS total cash line when printed (COF 57,434M), else the CF statement's printed ending cash; never a sum of BS lines. PGR cash on `Cash` (125M). CB perimeter change 2018+ (incl. restricted).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 8 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `CashAndCashEquivalentsAtCarryingValue`
 - **Meaning:** Cash and Cash Equivalent (us-gaap, instant, debit). Amount of cash and cash equivalent. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and account with general characteristic of demand deposit. Cash equivalent includes, but is not limited t...
@@ -120,12 +120,30 @@ Resolver resolver-all110-.92. 6 elements named in this card have library knowled
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `RestrictedCashAndCashEquivalents`
+- **Meaning:** Restricted Cash and Cash Equivalent (us-gaap, instant, debit). Amount of cash and cash equivalent restricted as to withdrawal or usage. Cash includes, but is not limited to, currency on hand, demand deposit with financial institution, and account with general characteristic of demand deposit. Cash equi...
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents
+- **Rules:** none
+- **Evidence:** 1 companies, 6 served, 0 proven, 0 certified cells; last verified -
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `CashAndEquivalentsExcludingAssetsHeldForSale`
 - **Meaning:** (no taxonomy label) (custom)
 - **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
 - **Data point:** cash_and_equivalents
 - **Rules:** none
 - **Evidence:** 1 companies, 4 served, 7 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `RestrictedCash`
+- **Meaning:** Restricted Cash (us-gaap, instant, debit). Amount of cash restricted as to withdrawal or usage. Cash includes, but is not limited to, currency on hand, demand deposits with banks or financial institutions, and other accounts with general characteristics of demand deposits.
+- **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
+- **Data point:** cash_and_equivalents
+- **Rules:** none
+- **Evidence:** 2 companies, 4 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

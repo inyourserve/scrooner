@@ -56,10 +56,10 @@ Not FSN-write data points today; balance-sheet families are held. FSN `stockhold
 ## 9. Instants are never summed (Dhairya 2026-11-12, doc 02)
 - Inventory printed only as components (SO, XOM) and shares printed only per class: not_presented. Total liabilities with no printed line: not_presented. The only summed instant is total_debt (founder definition).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 41 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 41 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `Goodwill`
 - **Meaning:** Goodwill (us-gaap, instant, debit). Amount, after accumulated impairment loss, of asset representing future economic benefit arising from other asset acquired in business combination or from joint venture formation or both, that is not individually identified and separately r...
@@ -112,7 +112,7 @@ Resolver resolver-all110-.92. 41 elements named in this card have library knowle
 
 ### `ResearchAndDevelopmentExpense`
 - **Meaning:** Research and Development Expense (us-gaap, duration, debit). Amount of expense for research and development. Includes, but is not limited to, cost for computer software product to be sold, leased, or otherwise marketed and writeoff of research and development assets acquired in transaction other than...
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
 - **Data point:** research_and_development; operating_expenses; polarity research_and_development:positive; role research_and_development:primary#1
 - **Rules:** I19
 - **Evidence:** 66 companies, 985 served, 2774 proven, 75 certified cells; last verified 2026-11-15
@@ -140,7 +140,7 @@ Resolver resolver-all110-.92. 41 elements named in this card have library knowle
 
 ### `OperatingExpenses`
 - **Meaning:** Operating Expenses (us-gaap, duration, debit). Generally recurring costs associated with normal operations except for the portion of these expenses which can be clearly related to production and included in cost of sales or services. Includes selling, general and administrative expense.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
 - **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
@@ -190,7 +190,7 @@ Resolver resolver-all110-.92. 41 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
 - **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -244,7 +244,7 @@ Resolver resolver-all110-.92. 41 elements named in this card have library knowle
 
 ### `ProvisionForLoanLeaseAndOtherLosses`
 - **Meaning:** Provision for Loan, Lease, and Other Losses (us-gaap, duration, debit). Amount of expense related loan transactions, lease transactions, credit loss from transactions other than loan and lease transactions, and other loss based on assessment of uncollectability from the counterparty to reduce the account to the...
-- **Data point definition:** provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed;  a release is a real negative. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** provision_for_credit_losses: Provision for credit losses (loan losses pre-CECL) as printed;  a release is a real negative. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** provision_for_credit_losses; polarity provision_for_credit_losses:signed; role provision_for_credit_losses:primary#1
 - **Rules:** none
 - **Evidence:** 8 companies, 58 served, 287 proven, 0 certified cells; last verified 2026-11-15
@@ -329,7 +329,7 @@ Resolver resolver-all110-.92. 41 elements named in this card have library knowle
 
 ### `FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss`
 - **Meaning:** Financing Receivable, Excluding Accrued Interest, after Allowance for Credit Loss (us-gaap, instant, debit). Amortized cost excluding accrued interest, after allowance for credit loss, of financing receivable. Excludes net investment in lease.
-- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** loans_net: Loans net of the allowance for credit losses at period end. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** loans_net; role loans_net:primary#2
 - **Rules:** B28
 - **Evidence:** 5 companies, 21 served, 89 proven, 0 certified cells; last verified 2026-11-15

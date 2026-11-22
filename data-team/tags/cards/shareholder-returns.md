@@ -71,10 +71,10 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 ## 11. Annual DPS from printed quarters (Dhairya ruling 2026-11-12)
 - When a 10-K prints only quarterly DPS, annual DPS = the sum of the FOUR quarterly facts printed in that same filing (declared, or paid if only paid is printed), served with the note "sum of printed quarterly dividends". Conditions: all four quarters in the one filing; one basis; each fact on its own 3-month or dated-payment context (a quarterly rate on a 12-month context, as at CFG, V, NVDA, is not a quarterly fact); no special dividend unless printed as such. Otherwise not_presented. Cases: C 2.32 (0.56 + 0.56 + 0.60 + 0.60), COF, CRM 1.664 (4 × 0.416), DIS (dated payments in the fiscal year). DPS is additive; EPS is never derived.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `NetIncomeLoss`
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
@@ -209,7 +209,7 @@ Resolver resolver-all110-.92. 23 elements named in this card have library knowle
 
 ### `IncomeLossFromEquityMethodInvestments`
 - **Meaning:** Income (Loss) from Equity Method Investments (us-gaap, duration, credit). Amount of income (loss) for proportionate share of equity method investee's income (loss).
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** operating_expenses; other_income_expense_net
 - **Rules:** none
 - **Evidence:** 13 companies, 82 served, 0 proven, 0 certified cells; last verified -
@@ -241,7 +241,7 @@ Resolver resolver-all110-.92. 23 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income
 - **Rules:** X77; F03; F04; resolver functions run
-- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)

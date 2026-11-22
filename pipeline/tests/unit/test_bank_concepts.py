@@ -39,8 +39,11 @@ def test_definitions_are_wellformed():
 
 def test_catalog_has_them_and_templates_are_bank_only():
     assert NAMES <= set(st.load_catalog(CATALOG))
+    # RULEBOOK X55 (2026-11-16): a bank data point belongs to every company whose 10-Ks print a bank income statement,
+    # whatever its SIC group: banks, the bank-like lender AXP (sectors.csv CIK assignment) and the bank-face brokers GS,
+    # MS, SCHW (broker_am, IN COND: the resolver serves them only from a bank face). Never a general company.
     for n in NAMES:
-        assert st.GROUP_ONLY[n] == frozenset({"bank"})
+        assert st.GROUP_ONLY[n] == frozenset({"bank", "lender", "broker_am"})
 
 
 @pytest.mark.integration

@@ -80,10 +80,10 @@ Population checks (core.fact, same company and period, both authoritative, since
 - BDC net assets: `StockholdersEquity` first (face at ARCC, BXSL), `AssetsNet` as a per-company alternate after an equality check (86% equal; DATA-INFERRED, no AssetsNet filing opened). The Sector Analyst's "AssetsNet is on 0/2" holds for the face of those two filers only; 31 of 42 BDCs file AssetsNet somewhere.
 - Evidence classes: as stated per line. Verified by: Tag Expert (me), 2026-10-22.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 5 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 5 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `NetIncomeLoss`
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
@@ -116,7 +116,7 @@ Resolver resolver-all110-.92. 5 elements named in this card have library knowled
 
 ### `InterestAndDividendIncomeOperating`
 - **Meaning:** Interest and Dividend Income, Operating (us-gaap, duration, credit). Represents the total of interest and dividend income, including any amortization and accretion (as applicable) of discounts and premiums, earned from (1) loans and leases whether held-for-sale or held-in-portfolio; (2) investment securities...
-- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; total_interest_income: Total interest income as printed. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; total_interest_income: Total interest income as printed. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** interest_income; total_interest_income; polarity interest_income:signed; role interest_income:primary#1; total_interest_income:primary#1
 - **Rules:** I26; I27
 - **Evidence:** 8 companies, 167 served, 985 proven, 0 certified cells; last verified 2026-11-15

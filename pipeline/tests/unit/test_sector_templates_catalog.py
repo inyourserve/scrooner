@@ -59,7 +59,10 @@ def test_catalog_plan_groups_outs_and_excluded_rows(tmp_path: Path):
     assert by[(11, "gross_profit")].in_template
     assert not by[(12, "gross_profit")].in_template  # bank
     assert not by[(12, "gross_profit_resolved")].in_template  # _resolved follows base
-    assert not by[(12, "capex")].in_template
+    assert not by[(12, "inventory")].in_template
+    # SECTOR-TEMPLATES s8.2 company override as IN COND (2026-11-22): a bank that prints a capex line shows it (C);
+    # FCF stays OUT for banks by metric family
+    assert by[(12, "capex")].in_template
     assert by[(12, "comprehensive_income")].in_template  # founder ruling
     assert by[(11, "revenue_sanity_resolved")].in_template
     assert not by[(11, "bdc_total_investment_income")].in_template  # BDC-only
@@ -68,7 +71,7 @@ def test_catalog_plan_groups_outs_and_excluded_rows(tmp_path: Path):
     assert all(r.reason for r in rows if not r.in_template)
     assert {r.template for r in rows if r.company_id == 12} == {"bank"}
     summ = st.rows_per_company_group(rows)
-    assert summ["bank"] == {"companies": 1, "in_rows": 5, "out_rows": 5, "rows": 10}
+    assert summ["bank"] == {"companies": 1, "in_rows": 6, "out_rows": 4, "rows": 10}
 
 
 def test_unknown_group_and_duplicate_catalog_are_errors(tmp_path: Path, monkeypatch):

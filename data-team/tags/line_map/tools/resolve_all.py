@@ -2119,6 +2119,106 @@ def apply_combined_ap_change(rows):
     return rows
 
 
+# X134 (.93, Dhairya ruling 2026-11-21 (d), confirmed by the draw-check reads cbe7a9da1): other_income_expense_net = every printed
+# income-statement line between operating income and pretax that is not interest income or interest expense (equity-method income,
+# debt extinguishment, pension, FX, gains included). Computed as pretax - operating income - the effect of the printed interest lines
+# of the band (registry other_income_expense_net fallback 4, all printed in one filing). Interest income the band does not print
+# is never guessed out of an 'Other income' line (CVS investment income sits in revenue). A band line that combines interest with other items ('Interest and other
+# income, net') cannot be split: the cell is left as the earlier steps decided. Never on a split (interest_split) or filing-read row.
+OI_BADGE_IDENTITY = registry_badge('other_income_expense_net', 'income_before_tax-operating_income')
+_BAND_INT_LB = re.compile(r'interest|investment (and other )?income')
+_NET_INT_LB = re.compile(r'^(net interest|total interest|interest( expense| income)?( income| expense)? net)')
+# a band line counts as an interest line only when its ELEMENT is interest (a label alone misleads: NEE 'differential membership
+# interests'); its effect comes from the label, and a label naming neither income nor expense ('Capitalized interest', SCCO) must
+# be a net element, else the band is not split
+_BAND_INT_EL = re.compile(r'^(InterestExpense\w*|InterestAndDebtExpense|InterestIncomeExpense\w*Net|InterestRevenueExpenseNet|InvestmentIncomeInterest|InterestIncomeOther|InterestIncome|InvestmentIncomeInterestAndDividend|InterestIncomeNonoperating|InterestExpenseNonoperating)$')
+# ... or when its label is only interest ('Interest expense' on InterestCostsIncurred, 'Interest income' on InvestmentIncomeNet); a header
+# (an Abstract element) is no line
+_PURE_INT_LB = re.compile(r'^(net )?interest (income|expense)( net)?$')
+_ONE_NODE = re.compile(r'^(\w+)=(-?[\d.]+) \[R(\d+)\.htm:(\d+)\]$')
+
+
+def _band_label(s):
+    s = re.sub(r'[^a-z0-9 ]+', ' ', (s or '').lower())
+    return re.sub(r'\s+', ' ', s).strip().removeprefix('total ').strip()
+
+
+def _band_interest_effect(label, v):
+    """The effect on pretax of a printed interest line of the band, from its label; None when the line also holds other items."""
+    lab = _band_label(label)
+    if re.search(r'\b(other|investment|gains?|losses?)\b', lab): return None
+    exp, inc = 'expense' in lab, 'income' in lab
+    if exp and not inc: return -abs(v)
+    if inc and not exp: return abs(v)
+    return v if exp and inc else None
+
+
+def apply_other_income_band(rows, filings):
+    F = {f['a']: f for f in filings}
+    by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    for r in rows:
+        if r['data_point'] != 'other_income_expense_net' or (r.get('column') or 'own') != 'own' or r['accession'] not in F: continue
+        if r.get('status') not in ('mapped', 'component_sum', 'not_presented'): continue
+        if re.search(r'(^|;)(interest_split|filing_read)', r.get('flags') or ''): continue
+        pt, oi = by.get((r['accession'], 'income_before_tax')), by.get((r['accession'], 'operating_income'))
+        if not pt or not oi or pt.get('status') != 'mapped' or oi.get('status') != 'mapped': continue
+        mp, mo = (_ONE_NODE.match((x.get('nodes') or '').split(' | ')[0]) for x in (pt, oi))
+        if not mp or not mo or mp.group(3) != mo.group(3) or not int(mo.group(4)) < int(mp.group(4)): continue
+        rep, lo, hi = int(mo.group(3)), int(mo.group(4)), int(mp.group(4))
+        L, _ = parse(F[r['accession']])
+        band = sorted((l for l in L if l['st'] == 'IS' and l['rep'] == rep and lo < l['ln'] < hi and not l['tag'].endswith('Abstract') and (_BAND_INT_LB.search(_band_label(l['lb'])) or _BAND_INT_EL.match(l['tag']))), key=lambda l: l['ln'])
+        nets = [l for i, l in enumerate(band) if i > 0 and _NET_INT_LB.search(_band_label(l['lb']))]
+        if nets: band = [l for l in band if l['ln'] >= nets[0]['ln']]
+        val = D(mp.group(2)) - D(mo.group(2))
+        parts, ok = [], True
+        for l in band:
+            eff = None if l['val'] is None or not (_BAND_INT_EL.match(l['tag']) or _PURE_INT_LB.match(_band_label(l['lb']))) else _band_interest_effect(l['lb'], l['val'])
+            if eff is None: ok = False; break
+            val -= eff
+            parts.append(f"{'' if eff < 0 else '-'}{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]")
+        if not ok: continue
+        cur = D(r['value']) if r.get('value') not in (None, '') else None
+        if cur == val: continue
+        # the filer's own rounding: a band that misses the printed lines by less than their rounding keeps the printed figure
+        # (GILD FY2024 691 vs pretax 690, MCD FY2025)
+        if cur is not None and abs(cur - val) <= tol(D(mp.group(2)), D(mo.group(2)), cur, *[l['val'] for l in band]): continue
+        if val == 0 and cur != 0: continue   # a band of interest lines only: the line the earlier steps placed (MDT 'presented within expenses') or the reason stands
+        nodes = '; '.join([f"{mp.group(1)}={mp.group(2)} [R{rep}.htm:{hi}]", f"-{mo.group(1)}={mo.group(2)} [R{rep}.htm:{lo}]"] + parts)
+        was = (r.get('why') or '')[:100]
+        r.update(status='component_sum', value=val, tags='printed band', nodes=nodes, r_page=f"R{rep}.htm",
+                 why=f"X134: other income = pretax - operating income - the printed interest lines of the band (ruling 2026-11-21 d), all from one filing; was {r['status']} {cur} ({was})")
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'band_identity', OI_BADGE_IDENTITY) if y)
+    return rows
+
+
+# X135 (.93, Dhairya 2026-11-22, draw-check reads cbe7a9da1): cash_and_equivalents excludes restricted cash. A cash cell served from a
+# face line that is the cash-and-restricted-cash total (CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents) of a filing that
+# states its current (or unqualified) restricted cash = that total - the same filing's restricted cash (registry fallback 3). Noncurrent
+# restricted cash is never inside a current cash line, so it is never taken out; a filing without a restricted-cash fact keeps the line.
+CASH_BADGE_LESS_RC = registry_badge('cash_and_equivalents', 'cash_restricted_total-restricted_cash')
+RC_CURRENT = (('RestrictedCashAndCashEquivalents',), ('RestrictedCash',), ('RestrictedCashAndCashEquivalentsAtCarryingValue',), ('RestrictedCashCurrent',), ('RestrictedCashAndCashEquivalentsCurrent',))
+
+
+def apply_cash_less_restricted(rows, notefacts, filings):
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'cash_and_equivalents' or (r.get('column') or 'own') != 'own' or r.get('status') != 'mapped': continue
+        m = re.match(r'^(CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents)=(-?[\d.]+) \[(R\d+\.htm:\d+|NOTE)\]$', (r.get('nodes') or '').split(' | ')[0])
+        if not m or r.get('value') in (None, '') or D(r['value']) != D(m.group(2)) or r['accession'] not in F: continue
+        nf = note_facts(notefacts.get(r['accession']))
+        L, _ = parse(F[r['accession']])
+        bs = {l['tag']: l for l in L if l['st'] == 'BS' and l['val'] is not None}
+        rc = next(((t[0], nf[(t[0], 0)]) for t in RC_CURRENT if (t[0], 0) in nf and nf[(t[0], 0)] > 0), None)
+        if rc is None: continue
+        loc = f"[R{bs[rc[0]]['rep']}.htm:{bs[rc[0]]['ln']}]" if rc[0] in bs else '[NOTE]'
+        tot = D(m.group(2)); v = tot - rc[1]
+        if v <= 0: continue
+        r.update(value=v, status='component_sum', tags=f"{m.group(1)}-{rc[0]}", nodes=f"{m.group(1)}={m.group(2)} [{m.group(3)}]; -{rc[0]}={rc[1]} {loc}",
+                 why=f"X135: cash excludes restricted cash: the printed cash-and-restricted-cash total {tot} less the same filing's restricted cash {rc[1]} ({rc[0]})")
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'less_restricted_cash', CASH_BADGE_LESS_RC) if y)
+    return rows
+
+
 def apply_per_share_scale_guard(rows):
     """X128 (.90; Ritwik draw 2026-11-16, close-out 2026-11-23 STX DPS FY2022 2,770,000 -> 2.77): the last guard on every per-share
     cell, whatever route set it (latest print, comparative fill, member fact). A per-share value |v| >= 1000 whose company's other
@@ -2281,6 +2381,10 @@ def apply_share_scale(rows):
     return rows
 
 
+NI_BADGE_LESS_NCI = registry_badge('net_income', 'net_income_incl_nci-nci_net_income')
+PREF_LINE = re.compile(r'^(PreferredStockDividends\w*|DividendsPreferredStock\w*|PreferredStockRedemptionPremium\w*)$')
+
+
 def run(filings, notefacts, tick, td_rows):
     out = []
     for f in filings:
@@ -2349,15 +2453,20 @@ def run(filings, notefacts, tick, td_rows):
                 ni.update(status='mapped', tags='ProfitLoss', value=l['val'], r_page=f"R{l['rep']}.htm", nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]", why='FALLBACK: the IS ends at ProfitLoss and prints no NCI line, so ProfitLoss is the parent net income', source='core_fallback')
         if ni is not None and ni.get('tags') == 'NetIncomeLossAvailableToCommonStockholdersBasic':
             isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
-            pref = [t for t in isf if t.startswith('PreferredStockDividends')]
+            # X136 (.93, Dhairya 2026-11-22: net income = net income less NCI, never available-to-common): any printed preferred line
+            # (PreferredStockDividends*, DividendsPreferredStock, PreferredStockRedemptionPremium: WELL FY2014-18)
+            pref = [t for t in isf if PREF_LINE.match(t)]
             if 'ProfitLoss' in isf and pref:
                 # AVGO FY2019-22: 'Net income' (ProfitLoss) - NCI is net income; the line after preferred dividends is income to common
                 l = isf['ProfitLoss']; nci = isf.get('NetIncomeLossAttributableToNoncontrollingInterest')
                 if nci is not None and not nci['val']: nci = None   # a printed zero NCI is no part (machine-parseable node: one tag)
                 v = l['val'] - (nci['val'] if nci else 0)
-                ni.update(status='derived' if nci and nci['val'] else 'mapped', tags='ProfitLoss' + ('-NetIncomeLossAttributableToNoncontrollingInterest' if nci and nci['val'] else ''), value=v, r_page=f"R{l['rep']}.htm",
-                          nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]" + (f"; -NetIncomeLossAttributableToNoncontrollingInterest={nci['val']} [R{nci['rep']}:{nci['ln']}]" if nci else ''),
+                # X136: with an NCI line the cell is the two printed lines of one filing (component_sum: the loader serves it; a
+                # derived_not_printed row is never loaded), badge derived:net_income_incl_nci-nci_net_income (registry step 2)
+                ni.update(status='component_sum' if nci else 'mapped', tags='ProfitLoss' + ('-NetIncomeLossAttributableToNoncontrollingInterest' if nci else ''), value=v, r_page=f"R{l['rep']}.htm",
+                          nodes=f"ProfitLoss={l['val']} [R{l['rep']}.htm:{l['ln']}]" + (f"; -NetIncomeLossAttributableToNoncontrollingInterest={nci['val']} [R{nci['rep']}.htm:{nci['ln']}]" if nci else ''),
                           why=f"FALLBACK: net income is the line before preferred dividends ({pref[0]}); the bottom line is income available to common stock", source='core_fallback')
+                if nci: ni['flags'] = ';'.join(y for y in (ni.get('flags', ''), NI_BADGE_LESS_NCI) if y)
         # rule (C1/S12 generalised): a statement role with no node on a filing whose statement was read is a reason,
         # not a gap: gross profit, opex, operating income, cost of revenue not printed -> not_presented
         isread = any(o['data_point'] == 'revenue' and o['status'] in ('mapped', 'component_sum') for o in out if o['accession'] == f['a'])
@@ -2530,6 +2639,8 @@ if __name__ == '__main__':
     rows = apply_per_share_scale_guard(rows)   # X128
     rows = apply_one_line_one_data_point(rows, filings)   # X130 (P07)
     rows = apply_combined_ap_change(rows)   # X133 (.92)
+    rows = apply_other_income_band(rows, filings)   # X134 (.93)
+    rows = apply_cash_less_restricted(rows, notefacts, filings)   # X135 (.93)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
     rows = filing_reads.apply(rows, log=_frl)

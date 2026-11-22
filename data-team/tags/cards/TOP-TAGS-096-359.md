@@ -272,10 +272,10 @@ Same columns as TOP-TAGS-001-095.md. Ranks 1-359 together = 80% of top-1,000 com
 
 Explicit: 105; family: 159.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 95 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 97 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `EarningsPerShareBasic`
 - **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.
@@ -320,7 +320,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 - **Meaning:** Intangible Asset, Finite-Lived, Amortization Expense (us-gaap, duration, debit). Amount of amortization expense for finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.
 - **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers). (+1 more)
 - **Data point:** amortization_of_intangibles; depreciation_and_amortization; operating_expenses; polarity amortization_of_intangibles:positive; depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary-part#3; depreciation_and_amortization:primary-part#8 (+1 more)
-- **Rules:** I51; I52; I53; I54; I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[amortization_of_intangibles]
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; I51; I52; I53; I54; family resolve_all.NARROW[amortization_of_intangibles]
 - **Evidence:** 92 companies, 1180 served, 2150 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** FSN dropped fact 0001413329-23-000025 (fsn_dropped_facts.csv); FSN dropped fact 0001413329-24-000013 (fsn_dropped_facts.csv); pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ISRG amortization_of_intangibles 2025-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
@@ -338,7 +338,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `ResearchAndDevelopmentExpense`
 - **Meaning:** Research and Development Expense (us-gaap, duration, debit). Amount of expense for research and development. Includes, but is not limited to, cost for computer software product to be sold, leased, or otherwise marketed and writeoff of research and development assets acquired in transaction other than...
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
 - **Data point:** research_and_development; operating_expenses; polarity research_and_development:positive; role research_and_development:primary#1
 - **Rules:** I19
 - **Evidence:** 66 companies, 985 served, 2774 proven, 75 certified cells; last verified 2026-11-15
@@ -405,7 +405,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `GrossProfit`
 - **Meaning:** Gross Profit (us-gaap, duration, credit). Aggregate revenue less cost of goods and services sold or operating expenses directly attributable to the revenue generation activity.
-- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** gross_profit; operating_expenses
 - **Rules:** X36; X56; X80; C10; I08; resolver functions apply_absent_in_own_filing; resolve; derive_gross_profit
 - **Evidence:** 44 companies, 499 served, 17157 proven, 71 certified cells; last verified 2026-11-15
@@ -453,7 +453,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `GeneralAndAdministrativeExpense`
 - **Meaning:** General and Administrative Expense (us-gaap, duration, debit). The aggregate total of expenses of managing and administering the affairs of an entity, including affiliates of the reporting entity, which are not directly or indirectly associated with the manufacture, sale or creation of a product or pro...
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary-part#2; sga_expense:primary-part#4; sga_expense:primary-part#5; sga_expense:primary-part#6 (+1 more)
 - **Rules:** I17; I15; I16; I18; resolver functions role
 - **Evidence:** 26 companies, 419 served, 394 proven, 13 certified cells; last verified 2026-11-15
@@ -480,7 +480,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `OperatingExpenses`
 - **Meaning:** Operating Expenses (us-gaap, duration, debit). Generally recurring costs associated with normal operations except for the portion of these expenses which can be clearly related to production and included in cost of sales or services. Includes selling, general and administrative expense.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
 - **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
@@ -498,7 +498,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `DepreciationAndAmortization`
 - **Meaning:** Depreciation, Depletion and Amortization, Nonproduction (us-gaap, duration, debit). The current period expense charged against earnings on long-lived, physical assets not used in production, and which are not intended for resale, to allocate or recognize the cost of such assets over their useful lives; or to record the red...
-- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary#5
 - **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[depreciation_and_amortization]
 - **Evidence:** 33 companies, 302 served, 3579 proven, 9 certified cells; last verified 2026-11-15
@@ -527,7 +527,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `SellingAndMarketingExpense`
 - **Meaning:** Selling and Marketing Expense (us-gaap, duration, debit). The aggregate total amount of expenses directly related to the marketing or selling of products or services.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; sga_expense: Selling, general and administrative expense for the period.
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary-part#2
 - **Rules:** I15; I16; I17; I18
 - **Evidence:** 18 companies, 255 served, 2 proven, 0 certified cells; last verified 2026-11-15
@@ -554,7 +554,7 @@ Resolver resolver-all110-.92. 95 elements named in this card have library knowle
 
 ### `Depreciation`
 - **Meaning:** Depreciation (us-gaap, duration, debit). The amount of expense recognized in the current period that reflects the allocation of the cost of tangible assets over the assets' useful lives. Includes production and non-production related depreciation.
-- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#7; depreciation_and_amortization:primary-part#8; depreciation_and_amortization:primary#10
 - **Rules:** X86; I44; I49; I43; I45; I46; I47; I48; I50; resolver functions resolve_da; apply_label_beyond
 - **Evidence:** 22 companies, 243 served, 449 proven, 0 certified cells; last verified 2026-11-15

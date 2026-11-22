@@ -137,10 +137,10 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 
 - EPS printed per class only (Visa, SHOP): serve Class A EPS as printed (Dhairya ruling 2026-11-12); never average or derive across classes.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 18 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 19 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `WeightedAverageNumberOfSharesOutstandingBasic`
 - **Meaning:** Weighted Average Number of Shares Outstanding, Basic (us-gaap, duration). Number of [basic] shares or units, after adjustment for contingently issuable shares or units and other shares or units not deemed outstanding, determined by relating the portion of time within a reporting period that common shares or units...
@@ -239,15 +239,6 @@ Resolver resolver-all110-.92. 18 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaced by WeightedAverageNumberOfDilutedSharesOutstanding@2022; WeightedAverageNumberOfSharesOutstandingBasic@2022; replaces WeightedAverageNumberOfSharesOutstandingBasicAndDiluted@2012
 
-### `NetIncomeLossAvailableToCommonStockholdersBasic`
-- **Meaning:** Net Income (Loss) Available to Common Stockholders, Basic (us-gaap, duration, credit). Amount, after deduction of tax, noncontrolling interests, dividends on preferred stock and participating securities; of income (loss) available to common shareholders.
-- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
-- **Data point:** net_income; role net_income:primary#2
-- **Rules:** none
-- **Evidence:** 11 companies, 75 served, 383 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
 ### `EarningsPerShareBasicAndDiluted`
 - **Meaning:** Earnings Per Share, Basic and Diluted (Deprecated 2022) (us-gaap, duration). The amount of net income or loss for the period per each share in instances when basic and diluted earnings per share are the same amount and reported as a single line item on the face of the financial statements. Basic earnings per share i...
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).; diluted_eps: Diluted EPS per common share as printed (latest print, X92).
@@ -258,6 +249,25 @@ Resolver resolver-all110-.92. 18 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaced by EarningsPerShareBasic@2022; EarningsPerShareDiluted@2022
 
+### `NetIncomeLossAvailableToCommonStockholdersBasic`
+- **Meaning:** Net Income (Loss) Available to Common Stockholders, Basic (us-gaap, duration, credit). Amount, after deduction of tax, noncontrolling interests, dividends on preferred stock and participating securities; of income (loss) available to common shareholders.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income; role net_income:primary#2
+- **Rules:** none
+- **Evidence:** 11 companies, 69 served, 383 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `ProfitLoss`
+- **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income
+- **Rules:** X77; F03; F04; resolver functions run
+- **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
+
 ### `IncomeLossFromContinuingOperationsPerBasicShare`
 - **Meaning:** Income (Loss) from Continuing Operations, Per Basic Share (us-gaap, duration). The amount of net income (loss) from continuing operations per each share of common stock or unit outstanding during the reporting period.
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
@@ -267,16 +277,6 @@ Resolver resolver-all110-.92. 18 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeLossFromContinuingOperationsPerBasicAndDilutedShare@2022; NewAccountingPronouncementOrChangeInAccountingPrincipleEffectOfChangeOnBasicEarningsPerShare@2020
-
-### `ProfitLoss`
-- **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
-- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
-- **Data point:** net_income
-- **Rules:** X77; F03; F04; resolver functions run
-- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-- **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
 
 ### `IncomeLossIncludingPortionAttributableToNoncontrollingInterest`
 - **Meaning:** Income (Loss), Including Portion Attributable to Noncontrolling Interest, before Tax (us-gaap, duration, credit). Amount, before tax, of income (loss) including portion attributable to noncontrolling interest. Includes, but is not limited to, income (loss) from continuing operations, discontinued operations and equity method investments.
@@ -294,6 +294,15 @@ Resolver resolver-all110-.92. 18 elements named in this card have library knowle
 - **Data point:** income_before_tax
 - **Rules:** none
 - **Evidence:** 3 companies, 11 served, 39 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `NetIncomeLossAttributableToNoncontrollingInterest`
+- **Meaning:** Net Income (Loss) Attributable to Noncontrolling Interest (us-gaap, duration, debit). Amount of Net Income (Loss) attributable to noncontrolling interest.
+- **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
+- **Data point:** net_income
+- **Rules:** none
+- **Evidence:** 1 companies, 7 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

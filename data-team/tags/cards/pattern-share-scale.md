@@ -11,10 +11,10 @@ Found 2026-11-22 by the verifier (COP, RTX, SYK). Registry: `patterns.csv` P03. 
 
 **Examples.** COP weighted_basic/diluted FY2015-19 (export); RTX shares_outstanding (export).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 0 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 No element named in this card has a data point, ruling, served cell or known problem in the library.
 <!-- END GENERATED: tag library rows -->

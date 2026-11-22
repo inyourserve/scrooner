@@ -320,10 +320,10 @@ Libraries read: the Mac library `origin/work/tag-library/ranks-1-50` at aea0cf4 
 - Calc-parent counts cover two sampled 10-Ks per company, not every filing.
 - The FSN store's 2015-2016 coverage (about 517 companies) limits era statements before 2018.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
@@ -382,16 +382,16 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `OperatingIncomeLoss`
 - **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank]
-- **Data point:** operating_income; operating_expenses
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; operating_income: Operating income: revenue minus all operating costs (COR, opex, restructuring and impairment), before interest, other non-operating items, equity-method income and tax. [not applicable: bank] (+1 more)
+- **Data point:** operating_income; operating_expenses; other_income_expense_net
 - **Rules:** C13; resolver functions resolve
-- **Evidence:** 80 companies, 948 served, 34797 proven, 106 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 949 served, 34797 proven, 106 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
 ### `PaymentsToAcquirePropertyPlantAndEquipment`
 - **Meaning:** Payments to Acquire Property, Plant, and Equipment (us-gaap, duration, credit). The cash outflow associated with the acquisition of long-lived, physical assets that are used in the normal conduct of business to produce goods and services and not intended for resale; includes cash outflows to pay for construction of sel...
-- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#1
 - **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX; resolve_all.NARROW[capex]
 - **Evidence:** 82 companies, 914 served, 17784 proven, 99 certified cells; last verified 2026-11-15
@@ -436,7 +436,7 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `DepreciationDepletionAndAmortization`
 - **Meaning:** Depreciation, Depletion and Amortization (us-gaap, duration, debit). The aggregate expense recognized in the current period that allocates the cost of tangible assets, intangible assets, or depleting assets to periods that benefit from use of the assets.
-- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary#4
 - **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[depreciation_and_amortization]
 - **Evidence:** 62 companies, 660 served, 10498 proven, 49 certified cells; last verified 2026-11-15
@@ -482,7 +482,7 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `Depreciation`
 - **Meaning:** Depreciation (us-gaap, duration, debit). The amount of expense recognized in the current period that reflects the allocation of the cost of tangible assets over the assets' useful lives. Includes production and non-production related depreciation.
-- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#7; depreciation_and_amortization:primary-part#8; depreciation_and_amortization:primary#10
 - **Rules:** X86; I44; I49; I43; I45; I46; I47; I48; I50; resolver functions resolve_da; apply_label_beyond
 - **Evidence:** 22 companies, 243 served, 449 proven, 0 certified cells; last verified 2026-11-15
@@ -491,7 +491,7 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `PaymentsToAcquireProductiveAssets`
 - **Meaning:** Payments to Acquire Productive Assets (us-gaap, duration, credit). The cash outflow for purchases of and capital improvements on property, plant and equipment (capital expenditures), software, and other intangible assets.
-- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#2
 - **Rules:** K40; K03; K04; K05; K06; K07; K08; K09; family resolve_cf.CAPEX
 - **Evidence:** 26 companies, 207 served, 3309 proven, 7 certified cells; last verified 2026-11-15
@@ -503,13 +503,13 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
 - **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 184 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
 ### `DepreciationAmortizationAndAccretionNet`
 - **Meaning:** Depreciation, Amortization and Accretion, Net (us-gaap, duration, debit). The aggregate net amount of depreciation, amortization, and accretion recognized during an accounting period. As a noncash item, the net amount is added back to net income when calculating cash provided by or used in operations using the in...
-- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:combined#1
 - **Rules:** I43; I44; I45; I46; I47; I48; I49; I50
 - **Evidence:** 13 companies, 104 served, 943 proven, 20 certified cells; last verified 2026-11-15
@@ -527,7 +527,7 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `CostsAndExpenses`
 - **Meaning:** Costs and Expenses (us-gaap, duration, debit). Total costs of sales and operating expenses for the period.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses
 - **Rules:** X117; I09; resolver functions apply_cost_and_opex
 - **Evidence:** 21 companies, 95 served, 190 proven, 0 certified cells; last verified 2026-11-15
@@ -537,10 +537,10 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `GainsLossesOnExtinguishmentOfDebt`
 - **Meaning:** Gain (Loss) on Extinguishment of Debt (us-gaap, duration, credit). Difference between the fair value of payments made and the carrying amount of debt which is extinguished prior to maturity.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** other_income_expense_net; operating_expenses
 - **Rules:** none
-- **Evidence:** 17 companies, 73 served, 8 proven, 3 certified cells; last verified 2026-11-15
+- **Evidence:** 17 companies, 72 served, 8 proven, 3 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces GainLossOnNonRecourseDebt@2022; GainsLossesOnRecourseDebt@2022
@@ -557,19 +557,10 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 
 ### `PaymentsForCapitalImprovements`
 - **Meaning:** Payments for Capital Improvements (us-gaap, duration, credit). The cash outflow for acquisition of or capital improvements to properties held for investment (operating, managed, leased) or for use.
-- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#4
 - **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX
 - **Evidence:** 4 companies, 29 served, 32 proven, 0 certified cells; last verified 2026-11-14
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `PaymentsForProceedsFromProductiveAssets`
-- **Meaning:** Payments for (Proceeds from) Productive Assets (us-gaap, duration, credit). The net cash outflow or inflow from purchases, sales and disposals of property, plant and equipment and other productive assets, including intangibles.
-- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: bank,insurer,equity_reit,bdc]
-- **Data point:** capex; polarity capex:positive
-- **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX
-- **Evidence:** 4 companies, 21 served, 61 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -578,10 +569,19 @@ Resolver resolver-all110-.92. 33 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income
 - **Rules:** X77; F03; F04; resolver functions run
-- **Evidence:** 2 companies, 16 served, 1314 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToEarningsNet@2013; CashFlowHedgeGainReclassifiedToEarnings@2013; CashFlowHedgeLossReclassifiedToEarnings@2013; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012 (+8 more)
+
+### `PaymentsForProceedsFromProductiveAssets`
+- **Meaning:** Payments for (Proceeds from) Productive Assets (us-gaap, duration, credit). The net cash outflow or inflow from purchases, sales and disposals of property, plant and equipment and other productive assets, including intangibles.
+- **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
+- **Data point:** capex; polarity capex:positive
+- **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX
+- **Evidence:** 4 companies, 21 served, 61 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
 
 ### `OtherDepreciationAndAmortization`
 - **Meaning:** Other Depreciation and Amortization (us-gaap, duration, debit). Amount of expense charged against earnings to allocate the cost of tangible and intangible assets over their remaining economic lives, classified as other.

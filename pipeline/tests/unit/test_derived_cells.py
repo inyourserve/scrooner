@@ -242,3 +242,14 @@ def test_c2_gild_fy2015_assets_and_equity_cells_recorded_in_two_filings_one_prin
     # no other filing prints the equity: the two cells' filings stay separate, never combined
     ops_one = {**ops, ("StockholdersEquity", 11): {"A1": Decimal(81 * M)}}
     assert _derive(cells, st(), CI, PERIODS, proven_bs(), {}, ops_one) == []
+
+
+def test_c2_two_blanks_of_one_key_derive_one_cell_adi_2018():
+    """Two overlapping not_presented era rows give two blanks of one (concept, period): ONE derived cell, never two
+    (two made canonical_fact's unique key fail and rolled ADI/DE/DIS back, flow run 45028936103)."""
+    cells = [cell(4, 11, 201), cell(5, 11, 81)]
+    ops = {(LSE, 11): Decimal(201 * M)}
+    out = derive(
+        cells, stats(blank(6, 11, "I"), blank(6, 11, "I")), CI, PERIODS, proven_bs(), ops
+    )
+    assert len(out) == 1 and out[0]["value"] == Decimal(120 * M)

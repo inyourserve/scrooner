@@ -25,10 +25,10 @@ Relay from the certification lead (scrooner-9a), with the Verifier's filing read
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `InterestExpense`
 - **Meaning:** Interest Expense, Operating and Nonoperating (us-gaap, duration, debit). Amount of interest expense classified as operating and nonoperating. Includes, but is not limited to, cost of borrowing accounted for as interest expense.
@@ -62,7 +62,7 @@ Resolver resolver-all110-.92. 6 elements named in this card have library knowled
 
 ### `Deposits`
 - **Meaning:** Deposits (us-gaap, instant, credit). The aggregate of all deposit liabilities held by the entity, including foreign and domestic, interest and noninterest bearing; may include demand deposits, saving deposits, Negotiable Order of Withdrawal (NOW) and time deposits among others...
-- **Data point definition:** deposits: Total deposits at period end. [not applicable: general,lender,broker_am,insurer,equity_reit,utility,bdc]
+- **Data point definition:** deposits: Total deposits at period end. [not applicable: general,insurer,equity_reit,utility,bdc]
 - **Data point:** deposits; role deposits:primary#1
 - **Rules:** none
 - **Evidence:** 9 companies, 108 served, 355 proven, 0 certified cells; last verified 2026-11-15

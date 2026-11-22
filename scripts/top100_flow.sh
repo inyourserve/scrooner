@@ -57,7 +57,7 @@ if [ -n "$RES" ]; then
   PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map structural-load $RES --company-ids $IDS --conflicts-out $O/s_conflicts.csv --exceptions-out $O/s_exceptions.csv --rejects-out $O/s_rejects.csv --apply > $O/1s.txt 2>&1 || { tail -3 $O/1s.txt; exit 12; }
   grep -iE "structural-load|written|exceptions" $O/1s.txt | head -2 | cut -c1-220
 fi
-plan() { mkdir -p $O/bi_$1; PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map tagmap-plan --company-ids $IDS --apply --coverage-gate --coverage-gate-scope concept --docmap-reads $R --before-image-dir $O/bi_$1 > $O/plan_$1.txt 2> $O/plan_$1.err || { tail -3 $O/plan_$1.err; exit 21; }; }
+plan() { mkdir -p $O/bi_$1; PGOPTIONS=$PG $PY -m scrooner_pipeline.jobs.map tagmap-plan --company-ids $IDS --statement-timeout 900s --apply --coverage-gate --coverage-gate-scope concept --docmap-reads $R --before-image-dir $O/bi_$1 > $O/plan_$1.txt 2> $O/plan_$1.err || { tail -3 $O/plan_$1.err; exit 21; }; grep -h ": ERROR" $O/plan_$1.txt | cut -c1-220 || true; }
 # proof --write is rule-scoped by default (ONE-PATH step 1, proof/rules.py): it writes only cells with no current row or
 # whose recorded rules changed, and stamps untouched legacy rows with their rule record. `--full` rewrites every cell.
 # So after a rule bump the cells the export would report as proof_stale are re-proved here, before the export below.

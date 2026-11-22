@@ -43,10 +43,10 @@ Sector Analyst face counts (Reader 1, latest 10-K, FC by them): PremiumsEarnedNe
 - The draft leads M1/M2 (`HealthCarePremium...`, `...IncurredHealthCare`) are correct only for history: one is not an element, the other was deprecated in 2024. Confirms the Sector Analyst's merge of M1/M2 into I1/I4 for current periods.
 - Verified by: Tag Expert (me), 2026-10-22.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.92. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.93. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `Revenues`
 - **Meaning:** Revenues (us-gaap, duration, credit). Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities that constitute an earning process. Includes, but is not limited to, investment and interest income before deduction of interest expens...
@@ -70,7 +70,7 @@ Resolver resolver-all110-.92. 6 elements named in this card have library knowled
 
 ### `BenefitsLossesAndExpenses`
 - **Meaning:** Benefits, Losses and Expenses (us-gaap, duration, debit). The total amount of expense recognized during the period for future policy benefits, claims and claims adjustment costs, and for selling, general and administrative costs.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#2
 - **Rules:** I14; I09; I10; I11; I12; I13
 - **Evidence:** 2 companies, 24 served, 101 proven, 0 certified cells; last verified 2026-11-15
@@ -79,7 +79,7 @@ Resolver resolver-all110-.92. 6 elements named in this card have library knowled
 
 ### `PolicyholderBenefitsAndClaimsIncurredHealthCare`
 - **Meaning:** Policyholder Benefits and Claims Incurred, Net, Health (Deprecated 2024) (us-gaap, duration, debit). Amount, after effect of policies assumed or ceded, of expense related to provision for policy benefits and costs incurred for health insurance contracts.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses
 - **Rules:** none
 - **Evidence:** 2 companies, 15 served, 0 proven, 0 certified cells; last verified -
@@ -89,7 +89,7 @@ Resolver resolver-all110-.92. 6 elements named in this card have library knowled
 
 ### `PolicyholderBenefitsAndClaimsIncurredNet`
 - **Meaning:** Policyholder Benefits and Claims Incurred, Net (us-gaap, duration, debit). Amount, after effects of policies assumed or ceded, of expense related to the provision for policy benefits and costs incurred.
-- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
+- **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** operating_expenses
 - **Rules:** none
 - **Evidence:** 2 companies, 5 served, 0 proven, 0 certified cells; last verified -

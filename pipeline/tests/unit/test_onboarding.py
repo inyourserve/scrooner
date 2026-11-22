@@ -151,3 +151,14 @@ def test_onboarding_workflows_are_guarded(name):
     assert 'SCROONER_EDGAR_MAX_RPS: "2"' in text and 'SEC_MAX_REQUESTS_PER_SECOND: "2"' in text
     assert "golden" not in text  # --ciks always set, never the golden fallback
     assert name in (ROOT / "scripts/ci/heavy_job_guard.sh").read_text()  # registered with the guard
+
+
+@pytest.mark.unit
+def test_top100_flow_plan_uses_the_flow_statement_timeout_and_shows_errors():
+    """tagmap-plan sets its own statement_timeout (default 300s), which overrides PGOPTIONS: JPM and MS timed out in
+    every plan of flow run 45028936103 and stayed on their 2026-11-20 serving. The flow passes its 900s cap and
+    prints a company's plan ERROR line (the plan rolls that company back and exits 0)."""
+    text = (ROOT / "scripts/top100_flow.sh").read_text()
+    plan = next(line for line in text.splitlines() if line.startswith("plan() {"))
+    assert "tagmap-plan" in plan and "--statement-timeout 900s" in plan
+    assert 'grep -h ": ERROR" $O/plan_$1.txt' in plan
