@@ -152,7 +152,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
 - **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
 - **Rules:** none; family resolve_cf.WC[cf_ap_change]
-- **Evidence:** 34 companies, 348 served, 1 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 34 companies, 348 served, 1 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -199,7 +199,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#2
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 16 companies, 132 served, 498 proven, 23 certified cells; last verified 2026-11-15
+- **Evidence:** 16 companies, 127 served, 498 proven, 23 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseReceivablesNet@2021; PostconfirmationReceivablesNet@2021; PreconfirmationReceivablesNet@2021

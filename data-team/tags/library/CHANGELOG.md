@@ -2015,3 +2015,7 @@
 
 ## 2026-11-22 (resolver-all110-.93): 1 element changes, 28013 rows, coverage 64.6%
 - ~ ReceivablesNetCurrent: served_cells
+
+## 2026-11-22 (resolver-all110-.93): 2 element changes, 28013 rows, coverage 64.6%
+- ~ IncreaseDecreaseInAccountsPayableAndAccruedLiabilities: certified_cells
+- ~ ReceivablesNetCurrent: served_cells
