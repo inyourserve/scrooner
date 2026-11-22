@@ -1150,3 +1150,53 @@ def test_sql_compares_the_padded_cik_so_the_index_is_used():
     )
     sql = dc.bundle_sql("104169", dc.plan("T", p))
     assert "ltrim(f.cik" not in sql and "'0000104169'" in sql and cells
+
+
+def test_the_most_precise_fact_wins_over_a_rounded_duplicate():
+    """WMT FY2023: ShortTermBorrowings 372M (dcml -6, face) and 400M (dcml -8, rounded note copy)."""
+    rounded = dc.Fact(
+        ACC, "ShortTermBorrowings", "2023-12-31", 0, "", D(400), ("R4",), -8
+    )
+    precise = dc.Fact(
+        ACC, "ShortTermBorrowings", "2023-12-31", 0, "", D(372), ("R4",), -6
+    )
+    lt = fact("LongTermDebtNoncurrent", "1000", qtrs=0)
+    for order in ([rounded, precise, lt], [precise, rounded, lt]):
+        assert dc.check_debt(debt_cell("1372"), order).result == "MATCH"
+    da_r = dc.Fact(
+        ACC,
+        "DepreciationAmortizationAndAccretionNet",
+        "2023-12-31",
+        4,
+        "",
+        D(14200),
+        ("R4",),
+        -8,
+    )
+    da_p = dc.Fact(
+        ACC,
+        "DepreciationAmortizationAndAccretionNet",
+        "2023-12-31",
+        4,
+        "",
+        D(14203),
+        ("R4",),
+        -6,
+    )
+    c = cell(
+        dp="depreciation_and_amortization",
+        value="14203",
+        tag="DepreciationAmortizationAndAccretionNet",
+    )
+    for order in ([da_r, da_p], [da_p, da_r]):
+        assert dc.check_cell(c, order).result == "MATCH"
+    # a note lease component tagged twice (precise and rounded) is counted once, at full precision
+    l_r = dc.Fact(
+        ACC, "FinanceLeaseLiabilityCurrent", "2023-12-31", 0, "", D(500), ("R40",), -8
+    )
+    l_p = dc.Fact(
+        ACC, "FinanceLeaseLiabilityCurrent", "2023-12-31", 0, "", D(511), ("R40",), -6
+    )
+    for order in ([lt, l_r, l_p], [lt, l_p, l_r]):
+        assert dc.check_debt(debt_cell("1511"), order).result == "MATCH"
+    assert dc._fact([ACC, "T", "2023-12-31", 0, "", "1", []]).dcml == 32767

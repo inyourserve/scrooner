@@ -436,6 +436,10 @@ class Fact:
     reports: tuple[
         str, ...
     ]  # R pages where the tag is presented in that filing ("R5", ...)
+    # XBRL decimals; higher is more precise. A filer can tag the same figure twice, once as printed
+    # on the face and once rounded in a note (WMT FY2023 ShortTermBorrowings 372M dcml -6 and 400M
+    # dcml -8). The most precise fact is the printed figure. Unknown precision counts as exact.
+    dcml: int = 32767
 
 
 class FactSource(Protocol):
@@ -450,26 +454,28 @@ class FactSource(Protocol):
 
 FACT_SQL = """
 select f.accession, t.tag, v.ddate::text, v.qtrs, coalesce(d.segments, '') as segments, v.value,
-       coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports
+       coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports,
+       v.dcml
 from fsn.filing f
 join fsn.value v on v.filing_id = f.id
 join fsn.tag t on t.id = v.tag_id
 join fsn.dim d on d.id = v.dim_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
 where f.accession = any(%(acc)s) and t.tag = any(%(tags)s) and coalesce(v.coreg, '') = '' and v.value is not null
-group by 1, 2, 3, 4, 5, 6
+group by 1, 2, 3, 4, 5, 6, 8
 """
 
 COMPANY_FACT_SQL = """
 select f.accession, t.tag, v.ddate::text, v.qtrs, '' as segments, v.value,
-       coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports
+       coalesce(array_agg(distinct 'R' || l.report) filter (where l.report is not null), '{}') as reports,
+       v.dcml
 from fsn.filing f
 join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.value is not null
 join fsn.dim d on d.id = v.dim_id and d.segments = ''
 join fsn.tag t on t.id = v.tag_id
 left join fsn.line l on l.filing_id = f.id and l.tag_id = v.tag_id
 where f.cik = lpad(ltrim(%(cik)s, '0'), 10, '0') and f.form = any(%(forms)s) and t.tag = any(%(tags)s)
-group by 1, 2, 3, 4, 5, 6
+group by 1, 2, 3, 4, 5, 6, 8
 """
 
 YEAR_END_SQL = """
@@ -497,7 +503,8 @@ group by 1
 
 
 def _fact(row) -> Fact:
-    acc, tag, ddate, qtrs, seg, val, reports = row
+    acc, tag, ddate, qtrs, seg, val, reports = row[:7]
+    dcml = row[7] if len(row) > 7 and row[7] is not None else 32767
     return Fact(
         acc,
         tag,
@@ -506,6 +513,7 @@ def _fact(row) -> Fact:
         norm_dims(seg),
         Decimal(str(val)),
         tuple(sorted(reports or ())),
+        int(dcml),
     )
 
 
@@ -619,7 +627,7 @@ def _pick(facts: list[Fact], term: Term, period_end: str, qtrs: int) -> Fact | N
         and period_end
         and _days(f.ddate, period_end) <= 7
     ]
-    cand.sort(key=lambda f: _days(f.ddate, period_end))
+    cand.sort(key=lambda f: (_days(f.ddate, period_end), -f.dcml))
     return cand[0] if cand else None
 
 
@@ -817,7 +825,7 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
     bs = {p.r_page for p in c.parts if p.r_page} or ({c.r_page} if c.r_page else set())
     face = {
         f.tag: f.value
-        for f in at
+        for f in sorted(at, key=lambda f: f.dcml)  # the most precise fact per tag wins
         if f.tag in DEBT_FACE_TAGS and f.dims == "" and (not bs or bs & set(f.reports))
     }
     # Prefer totals over their components when the filing prints both.
@@ -839,18 +847,24 @@ def check_debt(c: Cell, facts: list[Fact]) -> DebtCheck:
         else "no lease facts"
     )
     if not set(face) & (LEASE_INCLUSIVE_FACE | LEASE_TAGS):
-        tot = [
-            f
-            for f in at
-            if f.tag in ("FinanceLeaseLiability", "CapitalLeaseObligations")
-            and f.dims == ""
-        ]
-        parts = [
-            f
-            for f in at
-            if f.tag
-            in LEASE_TAGS - {"FinanceLeaseLiability", "CapitalLeaseObligations"}
-        ]
+        tot = sorted(
+            (
+                f
+                for f in at
+                if f.tag in ("FinanceLeaseLiability", "CapitalLeaseObligations")
+                and f.dims == ""
+            ),
+            key=lambda f: -f.dcml,
+        )
+        # one fact per (tag, dims), the most precise: a rounded duplicate must not be added twice
+        best: dict[tuple[str, str], Fact] = {}
+        for f in sorted(at, key=lambda f: f.dcml):
+            if f.tag in LEASE_TAGS - {
+                "FinanceLeaseLiability",
+                "CapitalLeaseObligations",
+            }:
+                best[(f.tag, f.dims)] = f
+        parts = list(best.values())
         if tot:
             lease, lease_ev = (
                 tot[0].value,
@@ -1347,7 +1361,7 @@ def bundle_sql(cik: str, p: Plan, per_tag: int = 3) -> str:
     return f"""set statement_timeout = '30s';
 with want(acc, tag, pe) as (values {vals}),
 fact as (
-  select f.accession, t.tag, v.ddate, v.qtrs, d.segments, v.value, v.filing_id, v.tag_id
+  select f.accession, t.tag, v.ddate, v.qtrs, d.segments, v.value, v.filing_id, v.tag_id, v.dcml
   from want w join fsn.filing f on f.accession = w.acc
   join fsn.value v on v.filing_id = f.id and v.ddate between w.pe - 7 and w.pe + 7 and coalesce(v.coreg, '') = '' and v.value is not null
   join fsn.tag t on t.id = v.tag_id and (t.tag = w.tag or (w.tag = '' and t.tag in ({debt_tags})))
@@ -1355,7 +1369,7 @@ fact as (
 ),
 fam as (
   select * from (
-    select f.accession, t.tag, v.ddate, v.qtrs, '' as segments, v.value, v.filing_id, v.tag_id,
+    select f.accession, t.tag, v.ddate, v.qtrs, '' as segments, v.value, v.filing_id, v.tag_id, v.dcml,
            row_number() over (partition by t.tag order by v.ddate desc) as rn
     from fsn.filing f join fsn.value v on v.filing_id = f.id and coalesce(v.coreg, '') = '' and v.value is not null
     join fsn.dim d on d.id = v.dim_id and d.segments = ''
@@ -1373,9 +1387,9 @@ ye as (
 )
 select json_build_object(
   'facts', (select coalesce(json_agg(json_build_array(x.accession, x.tag, x.ddate::text, x.qtrs, x.segments, x.value::text,
-             (select coalesce(array_agg(distinct 'R' || l.report), '{{}}') from fsn.line l where l.filing_id = x.filing_id and l.tag_id = x.tag_id))), '[]') from fact x),
+             (select coalesce(array_agg(distinct 'R' || l.report), '{{}}') from fsn.line l where l.filing_id = x.filing_id and l.tag_id = x.tag_id), x.dcml)), '[]') from fact x),
   'company_facts', (select coalesce(json_agg(json_build_array(x.accession, x.tag, x.ddate::text, x.qtrs, x.segments, x.value::text,
-             (select coalesce(array_agg(distinct 'R' || l.report), '{{}}') from fsn.line l where l.filing_id = x.filing_id and l.tag_id = x.tag_id))), '[]') from fam x),
+             (select coalesce(array_agg(distinct 'R' || l.report), '{{}}') from fsn.line l where l.filing_id = x.filing_id and l.tag_id = x.tag_id), x.dcml)), '[]') from fam x),
   'year_ends', (select coalesce(json_object_agg(accession, d), '{{}}') from ye)) as bundle"""
 
 
