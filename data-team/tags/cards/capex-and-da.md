@@ -51,7 +51,7 @@ Resolver resolver-all110-.93. 17 elements named in this card have library knowle
 - **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers). (+1 more)
 - **Data point:** amortization_of_intangibles; depreciation_and_amortization; operating_expenses; polarity amortization_of_intangibles:positive; depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary-part#3; depreciation_and_amortization:primary-part#8 (+1 more)
 - **Rules:** I51; I52; I53; I54; I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[amortization_of_intangibles]
-- **Evidence:** 92 companies, 1180 served, 2150 proven, 101 certified cells; last verified 2026-11-15
+- **Evidence:** 92 companies, 1180 served, 2150 proven, 103 certified cells; last verified 2026-11-15
 - **Known problems:** FSN dropped fact 0001413329-23-000025 (fsn_dropped_facts.csv); FSN dropped fact 0001413329-24-000013 (fsn_dropped_facts.csv); pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ISRG amortization_of_intangibles 2025-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 - **Deprecation:** replaces AmortizationOfAcquiredIntangibleAssets@2013; AmortizationOfIntangiblesNonproductionMember@2013; FiniteLivedIntangibleAssetsAmortizationExpense@2012
@@ -61,7 +61,7 @@ Resolver resolver-all110-.93. 17 elements named in this card have library knowle
 - **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#1
 - **Rules:** K03; K04; K05; K06; K07; K08; K09; K40; family resolve_cf.CAPEX; resolve_all.NARROW[capex]
-- **Evidence:** 82 companies, 914 served, 17784 proven, 99 certified cells; last verified 2026-11-15
+- **Evidence:** 82 companies, 914 served, 17784 proven, 110 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -70,7 +70,7 @@ Resolver resolver-all110-.93. 17 elements named in this card have library knowle
 - **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
 - **Data point:** depreciation_and_amortization; operating_expenses; polarity depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary#4
 - **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[depreciation_and_amortization]
-- **Evidence:** 62 companies, 660 served, 10498 proven, 49 certified cells; last verified 2026-11-15
+- **Evidence:** 62 companies, 660 served, 10498 proven, 60 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 12 open hit(s) at 1 companies, e.g. CSCO depreciation_and_amortization 2015-07-25 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (12)
 

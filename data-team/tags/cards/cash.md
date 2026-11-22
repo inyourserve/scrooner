@@ -97,7 +97,7 @@ Resolver resolver-all110-.93. 8 elements named in this card have library knowled
 - **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
 - **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#1
 - **Rules:** B05; B06; B07; B08; family resolve_all.NARROW[cash_and_equivalents]
-- **Evidence:** 103 companies, 1156 served, 22866 proven, 120 certified cells; last verified 2026-11-15
+- **Evidence:** 103 companies, 1156 served, 22866 proven, 131 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 2 companies, e.g. DELL cash_and_equivalents 2015-01-30 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCashAndCashEquivalents@2021; PostconfirmationCashAndCashEquivalents@2021; PreconfirmationCashAndCashEquivalents@2021

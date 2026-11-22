@@ -151,7 +151,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** current_liabilities: Total current liabilities as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]; total_liabilities: Total liabilities as printed.
 - **Data point:** current_liabilities; total_liabilities
 - **Rules:** X39; C03; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1439 served, 32338 proven, 126 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1439 served, 32338 proven, 137 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseCurrentLiabilities@2021; PostconfirmationCurrentLiabilities@2021; PreconfirmationCurrentLiabilities@2021 (+3 more)
@@ -161,7 +161,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** total_liabilities: Total liabilities as printed.
 - **Data point:** total_liabilities
 - **Rules:** C03; F02; B25; resolver functions resolve; run; apply_tl_corroboration
-- **Evidence:** 83 companies, 950 served, 29466 proven, 99 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 950 served, 29466 proven, 110 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000101829-20-000013: RTX (UTX) FY2019 10-K utx-20191231.htm consolidated balance sheet prints Total Liabilities 95,390 (2018: 93,492);  the XBRL tags only the 2018 value (R4.htm show
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationLiabilities@2020; FreshStartAdjustmentIncreaseDecreaseLiabilities@2021; PostconfirmationLiabilities@2021; PreconfirmationLiabilities@2021 (+4 more)

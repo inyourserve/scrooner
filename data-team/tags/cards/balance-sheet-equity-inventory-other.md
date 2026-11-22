@@ -66,7 +66,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** goodwill: Goodwill at period end as printed.
 - **Data point:** goodwill; role goodwill:primary#1
 - **Rules:** X78; B20
-- **Evidence:** 105 companies, 1206 served, 4387 proven, 126 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1206 served, 4387 proven, 137 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces BusinessCombinationGoodwillRecognizedSegmentAllocation@2013; FreshStartAdjustmentIncreaseDecreaseGoodwill@2021; FreshStartAdjustmentIncreaseDecreaseReorganizationValueInExcessOfAmountsAllocableToIdentifiableAssets@2021; PostconfirmationGoodwill@2021 (+2 more)
@@ -76,7 +76,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** stockholders_equity: Equity attributable to the parent at period end.
 - **Data point:** stockholders_equity
 - **Rules:** X78; C06; resolver functions resolve
-- **Evidence:** 104 companies, 1190 served, 22897 proven, 115 certified cells; last verified 2026-11-15
+- **Evidence:** 104 companies, 1190 served, 22897 proven, 126 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CommonStockholdersEquity@2013; EquityMethodInvestmentSummarizedFinancialInformationEquityOrCapital@2020; FreshStartAdjustmentIncreaseDecreaseStockholdersEquity@2021; PostconfirmationStockholdersEquity@2021 (+1 more)
@@ -86,7 +86,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** current_assets: Total current assets as printed on a classified balance sheet. [not applicable: bank,insurer,bdc]
 - **Data point:** current_assets
 - **Rules:** X39; C09; B01; B04; resolver functions resolve; regions; resolve_family
-- **Evidence:** 95 companies, 1118 served, 32318 proven, 126 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 1118 served, 32318 proven, 137 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces EquityMethodInvestmentSummarizedFinancialInformationCurrentAssets@2020; FreshStartAdjustmentIncreaseDecreaseCurrentAssets@2021; PostconfirmationCurrentAssets@2021; PreconfirmationCurrentAssets@2021 (+3 more)
@@ -96,7 +96,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
 - **Data point:** sbc; polarity sbc:positive; role sbc:primary#1
 - **Rules:** X66; K24; K25; resolver functions apply_sbc_award_members; member_facts; resolve_cf
-- **Evidence:** 91 companies, 1047 served, 4504 proven, 91 certified cells; last verified 2026-11-15
+- **Evidence:** 91 companies, 1047 served, 4504 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -105,7 +105,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_payable: Trade accounts payable at period end. [not applicable: bank]
 - **Data point:** accounts_payable; role accounts_payable:primary#1
 - **Rules:** B16; B17; B18; B19; family resolve_all.NARROW[accounts_payable]
-- **Evidence:** 84 companies, 985 served, 3404 proven, 123 certified cells; last verified 2026-11-15
+- **Evidence:** 84 companies, 985 served, 3404 proven, 134 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AccountsPayableRelatedPartiesCurrent@2023; FreshStartAdjustmentIncreaseDecreaseAccountsPayable@2021; PostconfirmationAccountsPayable@2021; PreconfirmationAccountsPayable@2021
@@ -115,7 +115,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; research_and_development: Research and development expense for the period (incl. acquired IPR&D only when the filer prints it inside the R&D line). [not applicable: bank,broker_am,insurer,equity_reit,utility,bdc]
 - **Data point:** research_and_development; operating_expenses; polarity research_and_development:positive; role research_and_development:primary#1
 - **Rules:** I19
-- **Evidence:** 66 companies, 985 served, 2774 proven, 87 certified cells; last verified 2026-11-15
+- **Evidence:** 66 companies, 985 served, 2774 proven, 98 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -124,7 +124,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
 - **Data point:** inventory; role inventory:primary#1
 - **Rules:** B15; B14; resolver functions inventory_header_sum
-- **Evidence:** 80 companies, 895 served, 3308 proven, 104 certified cells; last verified 2026-11-15
+- **Evidence:** 80 companies, 895 served, 3308 proven, 115 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseInventories@2021; PostconfirmationInventories@2021; PreconfirmationInventories@2021

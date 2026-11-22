@@ -294,7 +294,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** income_tax_expense: Income tax expense (benefit) for the period, as printed;  a benefit is a real negative.
 - **Data point:** income_tax_expense; polarity income_tax_expense:signed; role income_tax_expense:primary#1
 - **Rules:** none
-- **Evidence:** 110 companies, 1302 served, 44905 proven, 129 certified cells; last verified 2026-11-15
+- **Evidence:** 110 companies, 1302 served, 44905 proven, 140 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
@@ -304,7 +304,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
 - **Data point:** basic_eps; role basic_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1236 served, 4644 proven, 128 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1236 served, 4644 proven, 139 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -314,7 +314,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
 - **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
 - **Rules:** none
-- **Evidence:** 108 companies, 1234 served, 4539 proven, 128 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1234 served, 4539 proven, 139 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
 - **Pattern hits:** P03 (5); P04 (3)
 - **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
@@ -324,7 +324,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** diluted_eps: Diluted EPS per common share as printed (latest print, X92).
 - **Data point:** diluted_eps; role diluted_eps:primary#1
 - **Rules:** none
-- **Evidence:** 109 companies, 1233 served, 39141 proven, 128 certified cells; last verified 2026-11-15
+- **Evidence:** 109 companies, 1233 served, 39141 proven, 139 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
@@ -334,7 +334,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
 - **Rules:** X77; C29; resolver functions resolve
-- **Evidence:** 105 companies, 1212 served, 28185 proven, 118 certified cells; last verified 2026-11-15
+- **Evidence:** 105 companies, 1212 served, 28185 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InvestmentCompanyNetAssetsFromOperationsIncreaseDecrease@2023; RestatementOfPriorYearIncomeNetOfTax@2020
@@ -344,7 +344,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** comprehensive_income: Comprehensive income attributable to the parent as printed.
 - **Data point:** comprehensive_income; role comprehensive_income:primary#1
 - **Rules:** X43; X67; X76; I38; I39; I40; I41; I42; resolver functions COMBINED_YIELDS_TO; comparative_fill; DERIVED_YIELDS_TO; fill_printed_zero_and_comparative; resolve_ci
-- **Evidence:** 108 companies, 1206 served, 4365 proven, 88 certified cells; last verified 2026-11-15
+- **Evidence:** 108 companies, 1206 served, 4365 proven, 99 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -353,7 +353,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.; sga_expense: Selling, general and administrative expense for the period.
 - **Data point:** sga_expense; operating_expenses; polarity sga_expense:positive; role sga_expense:primary#1
 - **Rules:** I15; I16; I17; I18; family resolve_all.NARROW[sga_expense]
-- **Evidence:** 66 companies, 1140 served, 3623 proven, 85 certified cells; last verified 2026-11-15
+- **Evidence:** 66 companies, 1140 served, 3623 proven, 96 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces RelatedPartyTransactionSellingGeneralAndAdministrativeExpensesFromTransactionsWithRelatedParty@2023
@@ -363,7 +363,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cost_of_revenue: Cost of goods sold / cost of revenue for the period: the costs the filer matches to revenue above gross profit. [not applicable: bank,insurer,bdc]; gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc] (+1 more)
 - **Data point:** cost_of_revenue; gross_profit; operating_expenses; polarity cost_of_revenue:positive; role cost_of_revenue:primary#2
 - **Rules:** I02; I03; I04
-- **Evidence:** 65 companies, 955 served, 16174 proven, 74 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 955 served, 16174 proven, 84 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces AdvertisingRevenueCost@2018; AssetManagementCosts@2018; CasinoExpenses@2018; ConcessionsCosts@2018 (+62 more)
@@ -382,7 +382,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** interest_expense; other_income_expense_net; operating_expenses; interest_income; polarity interest_expense:positive; role interest_expense:primary#1
 - **Rules:** X115; I21; I20; I22; I23; I24; resolver functions resolve_band; family resolve_all.NARROW[interest_expense]
-- **Evidence:** 88 companies, 938 served, 24594 proven, 58 certified cells; last verified 2026-11-15
+- **Evidence:** 88 companies, 938 served, 24594 proven, 65 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. META interest_expense 2021-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (2)
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToInterestExpenseNet@2013; CashFlowHedgeGainReclassifiedToInterestExpense@2013; CashFlowHedgeLossReclassifiedToInterestExpense@2013; InterestExpenseRelatedParty@2023
@@ -392,7 +392,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** income_before_tax: Income from continuing operations before income taxes, as printed (incl. equity-method income where the filer places it above tax).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** income_before_tax; other_income_expense_net; role income_before_tax:primary#1
 - **Rules:** I36; I37
-- **Evidence:** 95 companies, 816 served, 32500 proven, 88 certified cells; last verified 2026-11-15
+- **Evidence:** 95 companies, 816 served, 32500 proven, 95 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; RetrospectiveEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAmountAfterApplication@2012 (+2 more)
@@ -402,7 +402,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** revenue; gross_profit
 - **Rules:** X123
-- **Evidence:** 69 companies, 708 served, 12391 proven, 34 certified cells; last verified 2026-11-15
+- **Evidence:** 69 companies, 708 served, 12391 proven, 44 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToRevenueNet@2013; CashFlowHedgeGainReclassifiedToRevenue@2013; CashFlowHedgeLossReclassifiedToRevenue@2013; DevelopmentStageEnterpriseCumulativeRevenue@2012 (+10 more)
@@ -422,7 +422,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
 - **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
-- **Evidence:** 50 companies, 616 served, 1444 proven, 60 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 616 served, 1444 proven, 71 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
 
@@ -487,7 +487,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
 - **Data point:** interest_expense; other_income_expense_net; interest_income; polarity interest_expense:positive; role interest_expense:primary#2
 - **Rules:** I20; I21; I22; I23; I24; family resolve_all.NARROW[interest_expense]
-- **Evidence:** 55 companies, 132 served, 744 proven, 33 certified cells; last verified 2026-11-15
+- **Evidence:** 55 companies, 132 served, 744 proven, 37 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
