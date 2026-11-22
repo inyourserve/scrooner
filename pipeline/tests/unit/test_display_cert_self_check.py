@@ -279,3 +279,58 @@ def test_flow_runs_the_self_check_before_the_flow_line():
     assert "certify_display.py --self-check-dir $CV" in flow
     assert flow.index("--self-check-dir") > flow.index("CV=$O/coverage;")
     assert flow.index("--self-check-dir") < flow.index("GATE_READY")
+
+
+class _Printed(Src):
+    """A presenting filing that prints the interest-income line; records which tags the lines query asked for."""
+
+    def __init__(self, printed: set[str]):
+        super().__init__()
+        self.printed, self.asked = printed, set()
+
+    def presented_lines(self, cik, tags):
+        self.asked |= set(tags)
+        return {ACC: {"Assets"} | (self.printed & set(tags))}
+
+
+def _va_dir(tmp_path, evidence):
+    cols = COLS + ["evidence"]
+    rows = [
+        dict(_row("7", "T", "revenue", dc.SHOWN, value="100", tag="Revenues", acc=ACC, r="R4.htm"), evidence=""),
+        dict(_row("7", "T", "interest_income", dc.HIDDEN_YEAR, hide_class="verified_absent"), evidence=evidence),
+    ]
+    _write(tmp_path / "top100-coverage.csv", cols, rows)
+    _write(tmp_path / "top100-coverage-summary.csv", SUMMARY, [dict(
+        rank="1", ticker="T", company_id="7", shown_cells="1", shown_values="1", open_shown="0", hidden_rows="0",
+        hidden_years="1", pct_shown_values="100.0", gate_ready="yes", verifier_certified="no", note="")])
+    _write(tmp_path / "top100-open-shown-cells-20261122T0000Z.csv", OPEN_COLS, [])
+    return tmp_path
+
+
+SEARCH = 'EDGAR full-text search forms=10-K,10-Q q="interest income" (FY2023): 0 hits'
+
+
+def test_self_check_keeps_a_search_evidenced_verified_absent_year_and_tests_its_line(tmp_path):
+    """Ruling 2026-11-22: the year stays hidden, and certify() still asks the filings for the row's line (mutation:
+    leave it out of the presented-lines allow set -> the printed case below would wrongly pass)."""
+    d = _va_dir(tmp_path, SEARCH)
+    src = _Printed(set())
+    assert _spec().self_check(d, "7", "1", source=src) == 0
+    cov = {r["data_point"]: r for r in _read(d / "top100-coverage.csv")}
+    assert cov["interest_income"]["display"] == dc.HIDDEN_YEAR
+    assert "InvestmentIncomeInterest" in src.asked
+
+
+def test_self_check_opens_a_search_evidenced_year_whose_line_is_printed(tmp_path):
+    d = _va_dir(tmp_path, SEARCH)
+    assert _spec().self_check(d, "7", "1", source=_Printed({"InvestmentIncomeInterest"})) == 0
+    cov = {r["data_point"]: r for r in _read(d / "top100-coverage.csv")}
+    assert cov["interest_income"]["display"] == dc.OPEN
+    assert "prints the line" in cov["interest_income"]["reason"]
+
+
+def test_self_check_opens_an_unevidenced_verified_absent_year(tmp_path):
+    d = _va_dir(tmp_path, "absent in own filing")
+    assert _spec().self_check(d, "7", "1", source=_Printed(set())) == 0
+    cov = {r["data_point"]: r for r in _read(d / "top100-coverage.csv")}
+    assert cov["interest_income"]["display"] == dc.OPEN

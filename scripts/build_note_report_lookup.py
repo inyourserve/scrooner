@@ -33,7 +33,10 @@ def wanted_pairs(covs: list[Path]) -> set[tuple[str, str]]:
             for part in (r.get("parts") or "").split(";"):
                 m = PART.match(part.strip())
                 if m and not m.group(3):  # a part with no R page
-                    wanted.add((m.group(2), m.group(1)))
+                    # a member part (Tag[Axis=Member]) is placed on the report of its BASE tag (the export's
+                    # member path looks the base up), and an R page links the base element's defref only
+                    tag = m.group(1).lstrip("-").split("[", 1)[0]
+                    wanted.add((m.group(2), tag))
     return wanted
 
 
@@ -89,8 +92,9 @@ def main(covs: list[Path], cache: Path, out: Path, attempted: Path | None) -> in
 
         from scrooner_pipeline.fsn_store.edgar_fetch import EdgarClient
 
-        # the SEC budget is 2/s in total for every session on the machine (common/sec_rate.py clamps the client)
-        client = EdgarClient(os.environ["SEC_USER_AGENT"], max_per_second=2.0)
+        # the SEC budget is 2/s in total for every session on the machine (common/sec_rate.py clamps the client);
+        # SCROONER_EDGAR_MAX_RPS lowers this job's share (EdgarClient reads it when no rate is passed)
+        client = EdgarClient(os.environ["SEC_USER_AGENT"])
         done = (
             set(attempted.read_text().split())
             if attempted and attempted.exists()

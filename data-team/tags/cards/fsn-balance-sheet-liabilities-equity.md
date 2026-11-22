@@ -434,10 +434,10 @@ No disagreement found on: Liabilities and LiabilitiesCurrent as the total keys; 
 - `PreferredStockSharesOutstanding`: open one filing.
 - Catalogue: `noncontrolling_interest`, `preferred_equity`, `accounts_payable_resolved` and `deferred_tax_liabilities` are proposals only.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 35 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 35 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.

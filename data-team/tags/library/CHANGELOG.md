@@ -1512,3 +1512,15 @@
 - ~ IncomeLossFromEquityMethodInvestments: served_cells
 - ~ NetIncomeLossAvailableToCommonStockholdersBasic: served_cells
 - ~ OtherNonoperatingIncomeExpense: served_cells
+
+## 2026-11-22 (resolver-all110-.92): 10 element changes, 28011 rows, coverage 64.7%
+- ~ AccountsNotesAndLoansReceivableNetCurrent: served_cells
+- ~ AmortizationOfIntangibleAssets: rule_id
+- ~ DecreaseIncreaseInAccountsPayableDeferredIncomeAndAccruedLiabilities: served_cells
+- ~ IncreaseDecreaseInAccountsPayable: served_cells
+- ~ IncreaseDecreaseInAccountsPayableAndAccruedLiabilities: served_cells
+- ~ IncreaseDecreaseInAccountsPayableAndOtherLiabilities: served_cells
+- ~ IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities: served_cells
+- ~ IncreaseDecreaseInOperatingLiabilities: served_cells
+- ~ IncreaseDecreaseInOtherAccountsPayableAndAccruedLiabilities: served_cells
+- ~ IncreaseDecreaseinAccountsPayableandAccruedLiabilitiesIncludingRestructuringReserveCurrent: served_cells

@@ -56,10 +56,10 @@ Not FSN-write data points today; balance-sheet families are held. FSN `stockhold
 ## 9. Instants are never summed (Dhairya 2026-11-12, doc 02)
 - Inventory printed only as components (SO, XOM) and shares printed only per class: not_presented. Total liabilities with no printed line: not_presented. The only summed instant is total_debt (founder definition).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 41 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 41 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `Goodwill`
 - **Meaning:** Goodwill (us-gaap, instant, debit). Amount, after accumulated impairment loss, of asset representing future economic benefit arising from other asset acquired in business combination or from joint venture formation or both, that is not individually identified and separately r...
@@ -144,6 +144,15 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point:** operating_expenses; polarity operating_expenses:positive; role operating_expenses:primary#1
 - **Rules:** I14; I09; I10; I11; I12; I13; family resolve_all.NARROW[operating_expenses]
 - **Evidence:** 36 companies, 352 served, 11930 proven, 11 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `IncreaseDecreaseInAccountsPayableAndAccruedLiabilities`
+- **Meaning:** Increase (Decrease) in Accounts Payable and Accrued Liabilities (us-gaap, duration, debit). The increase (decrease) during the reporting period in the amounts payable to vendors for goods and services received and the amount of obligations and expenses incurred but not paid.
+- **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
+- **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
+- **Rules:** none; family resolve_cf.WC[cf_ap_change]
+- **Evidence:** 34 companies, 348 served, 1 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -267,7 +276,7 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point definition:** accounts_receivable: Trade accounts receivable, net of allowance, at period end. [not applicable: bank]
 - **Data point:** accounts_receivable; role accounts_receivable:primary#3
 - **Rules:** B09; B10; B11; B12; B13; B30
-- **Evidence:** 5 companies, 40 served, 159 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 5 companies, 43 served, 159 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -333,15 +342,6 @@ Resolver resolver-all110-.91. 41 elements named in this card have library knowle
 - **Data point:** inventory; role inventory:primary#6
 - **Rules:** B14; B15
 - **Evidence:** 1 companies, 12 served, 47 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `InventoryPartsAndComponentsNetOfReserves`
-- **Meaning:** Inventory, Parts and Components, Net of Reserves (us-gaap, instant, debit). Carrying amount, net of valuation reserves and adjustments, as of the balance sheet date for elements of machinery or equipment held for the purpose of replacing similar parts in the course of repair or maintenance.
-- **Data point definition:** inventory: Inventories at period end as printed. [not applicable: bank,lender,broker_am,insurer,equity_reit,bdc]
-- **Data point:** inventory
-- **Rules:** none
-- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 <!-- END GENERATED: tag library rows -->

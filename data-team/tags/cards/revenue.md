@@ -129,10 +129,10 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - Revenue = the face top line as printed (Dhairya 2026-11-11): the total wins over components (IBM KLAC VZ GILD DIS BMY FTNT ISRG NOW LMT VRTX PFE SCHW WELL TMUS), except a "total" that adds non-revenue items: COP "Total Revenues and Other Income" → revenue is the line above (0001193125-20-039954 IS l2). MPC prints excluding-excise first (l2): take l2. ACN to FY2018 includes reimbursements.
 - COF: no total net revenue line: bank revenue = NII + noninterest income (bank template; ruling (a)).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 27 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 27 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `AssetsCurrent`
 - **Meaning:** Assets, Current (us-gaap, instant, debit). Amount of asset recognized for present right to economic benefit, classified as current.

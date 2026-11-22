@@ -266,6 +266,7 @@ class Cell:
     sector: str = (
         "general"  # data_points.csv sector; the export's sector column when present
     )
+    evidence: str = ""  # the export's evidence column (a hide's quote); "" when absent
 
     @property
     def hide_basis(self) -> str | None:
@@ -369,6 +370,7 @@ def read_coverage(path: Path) -> list[Cell]:
                 else None,
                 badge=(r["badge"] or "").strip() if "badge" in r else None,
                 sector=(r.get("sector") or "general").strip() or "general",
+                evidence=(r.get("evidence") or "").strip(),
             )
         )
     return cells
@@ -1084,6 +1086,38 @@ HIDE_CLASSES = frozenset(
 # hide classes whose hidden year inside the filing window is judged by the printed-line test, not the allowlist
 LINE_NOT_PURE = frozenset({ONLY_COMBINED, HC_AFTER_TAX})
 
+# Dhairya ruling 2026-11-22 (resolver .90 X129, the export's verified_absent hide class): a year hidden because a
+# full-text search of every 10-K and 10-Q found no amount is verified_absent for ANY data point, evidenced by the
+# search quote in the cell's evidence. Same test as mapper.top100_coverage.full_search_evidenced (that module imports
+# this one, so the test lives here too; test_display_cert keeps the two in step).
+_FULL_SEARCH_RE = re.compile(r"full[- ](?:text|document) search", re.I)
+_NO_AMOUNT_RE = re.compile(
+    r"\b0 (?:hits|matches)\b|returns 0\b|finds? no\b|no 10-K or 10-Q (?:states|prints)|finds only",
+    re.I,
+)
+
+
+def full_search_evidenced(evidence: str | None) -> bool:
+    """True when a hide quote records a full-text search of the filings that found no amount. Pure."""
+    ev = evidence or ""
+    return bool(_FULL_SEARCH_RE.search(ev) and _NO_AMOUNT_RE.search(ev))
+
+
+def search_evidenced_absent(c: Cell) -> bool:
+    """A verified_absent year evidenced by a full-text search quote: valid for any data point (still subject to the
+    printed-line test in check_hidden_years)."""
+    return c.hide_class == HC_VERIFIED_ABSENT and full_search_evidenced(c.evidence)
+
+
+def line_tested_hide(c: Cell) -> bool:
+    """A hidden year inside the filing window that is judged by the printed-line test: an allowlisted data point,
+    a not-pure line (only combined, only after tax) or a search-evidenced verified absence."""
+    return (
+        c.data_point in HIDE_YEAR_ALLOWLIST
+        or c.hide_basis in LINE_NOT_PURE
+        or search_evidenced_absent(c)
+    )
+
 
 def _hide_fail(c: Cell, why: str) -> Finding:
     return Finding("hide_reason", *c.key, "FAIL", why)
@@ -1120,11 +1154,16 @@ def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
                         "verified_absent applies to a year, not a whole row (that is structural_not_presented)",
                     )
                 )
-            elif hc == HC_VERIFIED_ABSENT and c.data_point not in HIDE_YEAR_ALLOWLIST:
+            elif (
+                hc == HC_VERIFIED_ABSENT
+                and c.data_point not in HIDE_YEAR_ALLOWLIST
+                and not full_search_evidenced(c.evidence)
+            ):
                 out.append(
                     _hide_fail(
                         c,
-                        f"verified_absent, but {c.data_point} is not on the VERIFIED_ABSENT_HIDE allowlist",
+                        f"verified_absent, but {c.data_point} is not on the VERIFIED_ABSENT_HIDE allowlist "
+                        "and the cell carries no full-text search evidence",
                     )
                 )
             continue
@@ -1147,6 +1186,33 @@ def check_hide_reasons(cells: list[Cell]) -> list[Finding]:
     return out
 
 
+_INCLUDED_IN_RE = re.compile(r"\bincluded_in:([a-z_]+)")
+
+
+def included_in_shown(c: Cell, cells: list[Cell]) -> str:
+    """The data point whose SHOWN cell of the same fiscal year holds this hidden cell's amount, or ''. Resolver .92 X130 (Dhairya
+    2026-11-22): one printed line serves the data point its label names first; the other cell is hidden as reported only combined
+    with the evidence 'reported only combined: <tag> included_in:<first>'. Its line IS printed (inside the shown cell), so the
+    printed-line and reported-fact tests do not apply; the cell is valid only while <first> is shown for that year."""
+    if c.hide_basis != "line_presented_combined":
+        return ""
+    m = _INCLUDED_IN_RE.search(c.evidence or "")
+    if not m:
+        return ""
+    dp = m.group(1)
+    return (
+        dp
+        if any(
+            x.data_point == dp
+            and x.fiscal_year == c.fiscal_year
+            and x.display == SHOWN
+            and x.value is not None
+            for x in cells
+        )
+        else ""
+    )
+
+
 def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Finding]:
     """A hidden row fails when the company presents a fact of the row's family for one of the
     display years: undimensioned, on a rendered page (a fact no page shows is not reported to a
@@ -1155,6 +1221,19 @@ def check_hidden_rows(cells: list[Cell], company_facts: list[Fact]) -> list[Find
     year_ends = sorted({c.period_end for c in cells if c.period_end})
     hidden = sorted({c.data_point for c in cells if c.display == HIDDEN_ROW})
     for dp in hidden:
+        rowc = [c for c in cells if c.data_point == dp and c.display == HIDDEN_ROW]
+        inc = {included_in_shown(c, cells) for c in rowc}
+        if rowc and "" not in inc:
+            out.append(
+                Finding(
+                    "hidden_row",
+                    dp,
+                    "*",
+                    "INFO",
+                    f"every year is included in the shown {', '.join(sorted(inc))} line (X130, included_in)",
+                )
+            )
+            continue
         fam = set(HIDE_FAMILY.get(dp, ()))
         if not fam:
             out.append(
@@ -1264,17 +1343,26 @@ def check_hidden_years(
         )
         if not presenting:
             continue  # a pre-filing year: no periodic filing presents it
-        if (
-            c.data_point not in HIDE_YEAR_ALLOWLIST
-            and c.hide_basis not in LINE_NOT_PURE
-        ):
+        inc = included_in_shown(c, cells)
+        if inc:
+            out.append(
+                Finding(
+                    "hidden_year",
+                    *c.key,
+                    "INFO",
+                    f"included in the shown {inc} cell of the year (X130, included_in)",
+                )
+            )
+            continue
+        if not line_tested_hide(c):
             out.append(
                 Finding(
                     "hidden_year",
                     *c.key,
                     "FAIL",
                     f"periodic filing {presenting[0]} presents {c.period_end} (own or comparative column): not a pre-filing year, "
-                    f"and {c.data_point} is neither on the hide allowlist nor hidden as reported only combined",
+                    f"and {c.data_point} is neither on the hide allowlist nor hidden as reported only combined "
+                    "nor a verified absence evidenced by a full-text search",
                 )
             )
             continue
@@ -1296,7 +1384,7 @@ def check_hidden_years(
                     "hidden_year",
                     *c.key,
                     "INFO",
-                    f"{'only combined' if c.hide_basis == ONLY_COMBINED else 'only after tax' if c.hide_basis == HC_AFTER_TAX else 'allowlisted'}: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
+                    f"{'only combined' if c.hide_basis == ONLY_COMBINED else 'only after tax' if c.hide_basis == HC_AFTER_TAX else 'allowlisted' if c.data_point in HIDE_YEAR_ALLOWLIST else 'search-evidenced verified absence'}: {len(presenting)} periodic filing(s) present {c.period_end}, none prints a {c.data_point} line",
                 )
             )
     return out
@@ -1551,8 +1639,7 @@ def certify(
         allow = {
             c.data_point
             for c in p.cells
-            if c.display == HIDDEN_YEAR
-            and (c.data_point in HIDE_YEAR_ALLOWLIST or c.hide_basis in LINE_NOT_PURE)
+            if c.display == HIDDEN_YEAR and line_tested_hide(c)
         }
         lines: dict[str, set[str]] = {}
         if allow:

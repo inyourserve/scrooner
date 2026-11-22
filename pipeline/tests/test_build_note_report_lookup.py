@@ -54,3 +54,21 @@ def test_main_scans_edgar_with_the_company_cik(tmp_path, monkeypatch):
     assert [(r["accession"], r["tag"], r["report"]) for r in rows] == [
         (ACC, "InterestExpenseNonoperating", "105")
     ]
+
+
+def test_wanted_parts_ask_for_the_base_tag_of_member_and_negative_parts(tmp_path, monkeypatch):
+    """scan_edgar matches defref_<prefix>_<Tag>: a 'Tag[Axis=Member]' or '-Tag' pair can never be found, and the
+    export's member path looks up the BASE tag (PM sbc AllocatedShareBasedCompensationExpense[AwardType=...])."""
+    b = load_script()
+    cov = tmp_path / "cov.csv"
+    cov.write_text(
+        "locator_source,accession,tag,parts\n"
+        "component,A-1,X,"
+        '"AllocatedShareBasedCompensationExpense[ShareBasedCompensationArrangementByShareBasedPaymentAwardAxis='
+        'RestrictedStockUnitsRSUMember]=1@A-1#;-InvestmentIncomeInterest=2@A-1#;Paged=3@A-1#R4"\n'
+    )
+    monkeypatch.setattr(sys, "argv", ["x", "--parts-only"])
+    assert b.wanted_pairs([cov]) == {
+        ("A-1", "AllocatedShareBasedCompensationExpense"),
+        ("A-1", "InvestmentIncomeInterest"),
+    }

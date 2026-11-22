@@ -35,10 +35,15 @@ def test_x130_one_printed_line_serves_one_data_point():
     files = [_filing('0000104169-20-000011', 'Operating, selling, general and administrative expenses'),
              dict(a='0000909832-22-000021', lines='IS|3|11|SellingGeneralAndAdministrativeExpense|0|0|terseLabel|Selling, general and administrative|19779000000.0000')]
     out = resolve_all.apply_one_line_one_data_point(rows, files)
-    assert (out[0]['status'], out[0]['value']) == ('combined', None) and 'included_in:sga_expense' in out[0]['flags']
-    assert (out[1]['status'], out[1]['value']) == ('mapped', D(108791000000))
-    assert 'combined:Operating%2C selling%2C general and administrative expenses' in out[1]['flags'].split(';')
-    assert out[2]['status'] == 'combined' and not any(f.startswith('combined:') for f in out[3]['flags'].split(';'))
+    # .92: WMT's label names operating expenses first -> opex keeps the line (badge combined:<label>), sga is included_in:opex
+    assert (out[0]['status'], out[0]['value']) == ('mapped', D(108791000000))
+    assert 'combined:Operating%2C selling%2C general and administrative expenses' in out[0]['flags'].split(';')
+    assert (out[1]['status'], out[1]['value']) == ('combined', None) and 'included_in:operating_expenses' in out[1]['flags'].split(';')
+    assert {'only_combined', 'only_combined_years'} <= set(out[1]['flags'].split(';'))   # sga has a valued year (2014 row)
+    assert 'reported only combined: SellingGeneralAndAdministrativeExpense included_in:operating_expenses' in out[1]['why']
+    # a pure SG&A label (COST) -> sga keeps it, opex included_in:sga_expense, no badge
+    assert out[2]['status'] == 'combined' and 'included_in:sga_expense' in out[2]['flags'].split(';')
+    assert 'only_combined' in out[2]['flags'].split(';') and not any(f.startswith('combined:') for f in out[3]['flags'].split(';'))
     assert (out[4]['status'], out[4]['value']) == ('component_sum', D(10962000000))
 
 

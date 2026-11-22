@@ -2035,6 +2035,7 @@ PER_SHARE_DPS = ('dividends_per_share', 'basic_eps', 'diluted_eps')
 
 
 P07_NODE = re.compile(r'(?:^|; )(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[(R\d+\.htm:\d+)[^\]]*\]')
+OPEX_FIRST_LABEL = re.compile(r'^\s*operating\b', re.I)   # 'Operating, selling, general and administrative expenses' (WMT)
 SGA_ONLY_LABEL = re.compile(r'^\s*selling,? general,? and administrative( expenses?)?\s*$', re.I)
 
 
@@ -2045,7 +2046,13 @@ def apply_one_line_one_data_point(rows, filings=()):
     operating_expenses (the same printed number counted in two data points that are neither the same figure nor a sum and its part).
     The line serves sga_expense (its own role); operating_expenses becomes `combined`, state included_in:sga_expense (registry: a cell
     in state included_in:<dp> is excluded from the data point's filters with that reason, never blank or zero). A label naming more than
-    SG&A (WMT 'Operating, ...') gives sga_expense the badge combined:<label> (registry sga_expense fallback 2)."""
+    SG&A (WMT 'Operating, ...') gives sga_expense the badge combined:<label> (registry sga_expense fallback 2).
+    .92 (Dhairya ruling 2026-11-22, founder standard: data in the filing is SHOWN with a badge): the line serves the data point its
+    label names FIRST, as a value with badge combined:<label> when the label names more; the other cell is included_in:<first>.
+    WMT 'Operating, selling, general and administrative expenses' -> operating_expenses (combined:<label>), sga_expense
+    included_in:operating_expenses; a pure SG&A label (ADP, COST, PG) -> sga_expense, operating_expenses included_in:sga_expense.
+    The included_in cell is never an open combined-reason cell: it carries the X17 only_combined flags (whole row when the company
+    reports the data point in no other year) and the evidence 'reported only combined: <tag> included_in:<first>'."""
     lab = {}
     for f in filings:
         for x in (f.get('lines') or '').split('~'):
@@ -2055,7 +2062,9 @@ def apply_one_line_one_data_point(rows, filings=()):
         ns = P07_NODE.findall((r.get('nodes') or '').split(' | why')[0])
         return (ns[0][1], ns[0][2], ns[0][4]) if len(ns) == 1 and not ns[0][0] else None
     col = lambda r: r.get('column') or 'own'
+    enc = lambda t: t.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
     sga = {(r['accession'], r['period_end'], col(r)): r for r in rows if r['data_point'] == 'sga_expense' and r['status'] in ('mapped', 'component_sum')}
+    moved = []
     for r in rows:
         if r['data_point'] != 'operating_expenses' or r['status'] not in ('mapped', 'component_sum'): continue
         s_ = sga.get((r['accession'], r['period_end'], col(r)))
@@ -2063,13 +2072,50 @@ def apply_one_line_one_data_point(rows, filings=()):
         if s_ is None or n is None or one(s_) != n or D(r['value']) != D(s_['value']): continue
         tag, dims, loc = n
         label = lab.get((r['accession'], tag, loc), '')
-        r.update(status='combined', value=None,
-                 why=f"the only printed operating line is the SG&A line{(' ' + repr(label)) if label else ''} ({tag} at {loc}), served as sga_expense; "
-                     "operating_expenses is included_in:sga_expense: one printed line serves one data point (X130, pattern P07)")
-        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x and not x.startswith('derived:')] + ['included_in:sga_expense'])
+        # .92 (Dhairya 2026-11-22): the line serves the data point its label names FIRST; the other is included_in:<first>
+        first, other = (r, s_) if OPEX_FIRST_LABEL.match(label) else (s_, r)
+        fdp = first['data_point']
+        other.update(status='combined', value=None,
+                     why=f"the only printed operating line is {(repr(label) + ' ') if label else ''}({tag} at {loc}), served as {fdp} "
+                         f"(its label names {fdp} first); {other['data_point']} is included_in:{fdp}: one printed line serves one data point "
+                         f"(X130, pattern P07) | reported only combined: {tag} included_in:{fdp}")
+        other['flags'] = ';'.join([x for x in (other.get('flags') or '').split(';') if x and not x.startswith(('derived:', 'combined:', 'included_in:'))]
+                                  + [f'included_in:{fdp}'])
         if label and not SGA_ONLY_LABEL.match(label):
-            badge = 'combined:' + label.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
-            s_['flags'] = ';'.join([x for x in (s_.get('flags') or '').split(';') if x and x != badge] + [badge])
+            badge = 'combined:' + enc(label)
+            first['flags'] = ';'.join([x for x in (first.get('flags') or '').split(';') if x and x != badge and not x.startswith('derived:')] + [badge])
+        moved.append(other)
+    # an included_in cell is never an open 'combined reason' cell: hidden as reported only combined (X17 form), the whole row when the
+    # company reports the data point in no other year, else those years
+    valued = {(r.get('cik'), r['data_point']) for r in rows if r['status'] in ('mapped', 'component_sum', 'derived')}
+    for o in moved:
+        kind = 'only_combined_years' if (o.get('cik'), o['data_point']) in valued else 'only_combined_row'
+        o['flags'] = ';'.join([x for x in o['flags'].split(';') if x and x not in ('only_combined', 'only_combined_years', 'only_combined_row')]
+                              + ['only_combined', kind])
+    return rows
+
+
+AP_COMBINED_LABEL = re.compile(r'(?i)\b(?:accounts?|trade accounts|customer and other)?\s*payables?\b.*\b(?:accru\w*|other|deferred)\b|\bpayables and accruals\b')
+
+
+def apply_combined_ap_change(rows):
+    """X133 (.92; registry data_points.csv cf_ap_change fallback 2 'printed change line also holding accrued or other liabilities',
+    badge combined:<items named in the label>; Dhairya ruling 2026-11-22: a cell whose data is printed is never a combined-reason open
+    cell, MU named): a cf_ap_change cell whose only printed CF line is an accounts-payable change line that also holds accrued or other
+    liabilities ('Accounts payable and accrued expenses', MU FY2014-22/FY2026) is served as that line (mapped, the stored fact's raw
+    sign, rules/polarity.csv), flag combined:<printed label>; reverses the X17 only_combined hide for this data point. A label that
+    does not name payables first-hand ('Current liabilities and other current assets') stays combined."""
+    for r in rows:
+        if r['data_point'] != 'cf_ap_change' or r['status'] != 'combined': continue
+        m = re.match(r'^(-?)(\w+)(?:\[[^\]]*\])?=(-?[\d.]+) \[(R\d+\.htm(?::\d+)?)', r.get('nodes') or '')
+        label = _combined_line_label(r)
+        if not m or m.group(1) or not label or not AP_COMBINED_LABEL.search(label) or re.match(r'(?i)\s*current liabilities', label): continue
+        tag, v = m.group(2), D(m.group(3))
+        badge = 'combined:' + label.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+        r.update(status='mapped', value=v, tags=tag, nodes=f"{tag}={standard_inputs._plain(v)} [{m.group(4)}]",
+                 why=f"the only printed line holding cf_ap_change is the combined line '{label}' ({tag}); served as that line with the badge "
+                     f"{badge} (registry cf_ap_change fallback 2, founder standard 2026-11-22, X133)")
+        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')] + [badge])
     return rows
 
 
@@ -2483,6 +2529,7 @@ if __name__ == '__main__':
     rows = apply_rounded_share_count(rows, memberfacts)   # X111
     rows = apply_per_share_scale_guard(rows)   # X128
     rows = apply_one_line_one_data_point(rows, filings)   # X130 (P07)
+    rows = apply_combined_ap_change(rows)   # X133 (.92)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
     rows = filing_reads.apply(rows, log=_frl)

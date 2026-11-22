@@ -272,10 +272,10 @@ Same columns as TOP-TAGS-001-095.md. Ranks 1-359 together = 80% of top-1,000 com
 
 Explicit: 105; family: 159.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 95 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 95 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `EarningsPerShareBasic`
 - **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.
@@ -320,7 +320,7 @@ Resolver resolver-all110-.91. 95 elements named in this card have library knowle
 - **Meaning:** Intangible Asset, Finite-Lived, Amortization Expense (us-gaap, duration, debit). Amount of amortization expense for finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.
 - **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers). (+1 more)
 - **Data point:** amortization_of_intangibles; depreciation_and_amortization; operating_expenses; polarity amortization_of_intangibles:positive; depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary-part#3; depreciation_and_amortization:primary-part#8 (+1 more)
-- **Rules:** I51; I52; I53; I54; I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[amortization_of_intangibles]
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; I51; I52; I53; I54; family resolve_all.NARROW[amortization_of_intangibles]
 - **Evidence:** 92 companies, 1180 served, 2150 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** FSN dropped fact 0001413329-23-000025 (fsn_dropped_facts.csv); FSN dropped fact 0001413329-24-000013 (fsn_dropped_facts.csv); pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ISRG amortization_of_intangibles 2025-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
@@ -487,6 +487,15 @@ Resolver resolver-all110-.91. 95 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `IncreaseDecreaseInAccountsPayableAndAccruedLiabilities`
+- **Meaning:** Increase (Decrease) in Accounts Payable and Accrued Liabilities (us-gaap, duration, debit). The increase (decrease) during the reporting period in the amounts payable to vendors for goods and services received and the amount of obligations and expenses incurred but not paid.
+- **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
+- **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
+- **Rules:** none; family resolve_cf.WC[cf_ap_change]
+- **Evidence:** 34 companies, 348 served, 1 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `DepreciationAndAmortization`
 - **Meaning:** Depreciation, Depletion and Amortization, Nonproduction (us-gaap, duration, debit). The current period expense charged against earnings on long-lived, physical assets not used in production, and which are not intended for resale, to allocate or recognize the cost of such assets over their useful lives; or to record the red...
 - **Data point definition:** depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]
@@ -551,14 +560,4 @@ Resolver resolver-all110-.91. 95 elements named in this card have library knowle
 - **Evidence:** 22 companies, 243 served, 449 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. GOOG depreciation_and_amortization 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 26 open hit(s) at 3 companies, e.g. ACN depreciation_and_amortization 2020-08-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (26); P05 (2)
-
-### `TreasuryStockShares`
-- **Meaning:** Treasury Stock, Shares (Deprecated 2023) (us-gaap, instant). Number of common and preferred shares that were previously issued and that were repurchased by the issuing entity and held in treasury on the financial statement date. This stock has no voting rights and receives no dividends.
-- **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
-- **Data point:** shares_outstanding
-- **Rules:** none
-- **Evidence:** 31 companies, 216 served, 0 proven, 0 certified cells; last verified -
-- **Known problems:** none recorded
-- **Pattern hits:** none
-- **Deprecation:** replaced by TreasuryStockCommonShares@2023; TreasuryStockPreferredShares@2023; replaces TreasuryStockNumberOfSharesHeld@2016
 <!-- END GENERATED: tag library rows -->

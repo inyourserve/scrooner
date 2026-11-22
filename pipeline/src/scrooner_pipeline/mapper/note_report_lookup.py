@@ -116,19 +116,75 @@ PASSES = (
 )
 
 
+def report_roles(summary: bytes) -> tuple[dict[str, int], str | None]:
+    """FilingSummary.xml -> ({role URI: report number}, the presentation linkbase file name or None)."""
+    import xml.etree.ElementTree as ET
+
+    root = ET.fromstring(summary)
+    roles: dict[str, int] = {}
+    for r in root.iter("Report"):
+        m = re.match(r"R(\d+)\.htm$", (r.findtext("HtmlFileName") or "").strip())
+        role = (r.findtext("Role") or "").strip()
+        if m and role:
+            roles[role] = int(m.group(1))
+    pre = next(
+        (
+            (f.text or "").strip()
+            for f in root.iter("File")
+            if (f.text or "").strip().endswith("_pre.xml")
+        ),
+        None,
+    )
+    return roles, pre
+
+
+# an empty link is self-closing (`<link:presentationLink xlink:role="..._1" .../>`, PM FY2022): it opens no body,
+# else its role would take the next link's elements
+PRE_LINK = re.compile(
+    r"<(?:\w+:)?presentationLink\b[^>]*?role=\"([^\"]+)\"[^>]*(?<!/)>(.*?)</(?:\w+:)?presentationLink>",
+    re.S,
+)
+PRE_HREF = re.compile(r"href=\"[^\"#]*#([A-Za-z0-9\-]+)_([A-Za-z0-9]+)\"")
+
+
+def pre_candidates(pre: str, roles: dict[str, int]) -> dict[str, list[int]]:
+    """The filing's presentation linkbase -> {tag: [report numbers whose role presents it]} ascending."""
+    out: dict[str, set[int]] = defaultdict(set)
+    for role, body in PRE_LINK.findall(pre):
+        n = roles.get(role)
+        if n is None:
+            continue
+        for _prefix, tag in PRE_HREF.findall(body):
+            out[tag].add(n)
+    return {t: sorted(v) for t, v in out.items()}
+
+
 def scan_edgar(
     client: object, cik: str | int, adsh: str, tags: set[str]
 ) -> dict[str, tuple[int, int]]:
     """Option B, for a filing newer than the published SEC FSN data sets: sec.gov FilingSummary.xml read once,
-    then the R pages that can hold a note tag (FilingSummary MenuCategory Details first, then the other note
-    categories; Cover and Statements skipped), ascending, stopping as soon as every wanted tag has a page.
+    then the R pages that can hold a note tag (FilingSummary MenuCategory Statements first, then Details, then the
+    other note categories; Cover skipped), ascending, stopping as soon as every wanted tag has a page.
     A tag is on a page when the page links its definition (defref_<prefix>_<Tag>).
+    When FilingSummary names the filing's presentation linkbase (InputFiles *_pre.xml) and the role of each report,
+    that one file says which reports present each tag: only those candidate pages are opened (in the same pass
+    order) and a tag the linkbase presents nowhere is not searched page by page. The page is still confirmed by its
+    own defref, so the evidence is the same. Any linkbase problem falls back to the page-by-page scan.
     Returns tag -> (lowest report number, 1): the count of reports is not scanned past the first hit.
     `client` is fsn_store.edgar_fetch.EdgarClient."""
     from scrooner_pipeline.fsn_store.edgar_fetch import filing_base
 
     base = filing_base(cik, adsh)
-    pages = report_pages(client.get(f"{base}/FilingSummary.xml").content)  # type: ignore[attr-defined]
+    summary = client.get(f"{base}/FilingSummary.xml").content  # type: ignore[attr-defined]
+    pages = report_pages(summary)
+    cands: dict[str, list[int]] | None = None
+    try:
+        roles, pre_name = report_roles(summary)
+        if pre_name and roles:
+            pre = client.get(f"{base}/{pre_name}").text  # type: ignore[attr-defined]
+            cands = pre_candidates(pre, roles) or None
+    except Exception:  # noqa: BLE001 -- no usable linkbase: the page-by-page scan
+        cands = None
     found: dict[str, tuple[int, int]] = {}
     for cats in PASSES:
         for n, cat in pages:
@@ -137,6 +193,8 @@ def scan_edgar(
             left = tags - set(found)
             if not left:
                 return found
+            if cands is not None and not any(n in cands.get(t, ()) for t in left):
+                continue
             html = client.get(f"{base}/R{n}.htm").text  # type: ignore[attr-defined]
             for t in set(DEFREF.findall(html)) & left:
                 found[t] = (n, 1)

@@ -1305,3 +1305,120 @@ def test_norm_dims_drops_the_statement_prefix_like_fsn():
         dc.norm_dims("StatementOfIncomeLocationBalance=Y")
         == "StatementOfIncomeLocationBalance=Y"
     )
+
+
+# Dhairya ruling 2026-11-22 (resolver .90 X129): a year hidden because a full-text search of every 10-K and 10-Q
+# found no amount is verified_absent for ANY data point (GILD interest_income FY2015-21, CRWD FY2018-20).
+GILD_SEARCH = (
+    "HIDE never_reported for FY2019: no 10-K or 10-Q states a FY2019 interest-income amount. EDGAR full-text search "
+    'ciks=0000882095 forms=10-K q="interest income": 6 hits = FY2015, FY2021 10-Ks; '
+    'q="interest and dividend income" (10-K,10-Q) 0 hits'
+)
+
+
+def _va(evidence, dp="interest_income"):
+    return dc.Cell(
+        dp,
+        "2019",
+        "2019-12-31",
+        dc.HIDDEN_YEAR,
+        None,
+        "",
+        "",
+        "",
+        (),
+        "structural_not_presented",
+        "verified_absent",
+        evidence=evidence,
+    )
+
+
+def test_search_evidenced_verified_absent_year_passes_for_any_data_point():
+    """Mutation: drop search_evidenced_absent from line_tested_hide (or the check_hide_reasons exemption) -> FAIL."""
+    hid = _va(GILD_SEARCH)
+    assert dc.check_hide_reasons([hid]) == []
+    ye = {"A": ["2019-12-31|4"]}
+    (f,) = dc.check_hidden_years([hid], ye, {"A": {"Assets"}})
+    assert f.severity == "INFO" and "search-evidenced" in f.detail
+
+
+def test_unevidenced_verified_absent_year_off_the_allowlist_still_fails():
+    ye = {"A": ["2019-12-31|4"]}
+    for ev in ("", "absent in own filing", "EDGAR full-text search q=interest income: 6 hits"):
+        hid = _va(ev)
+        assert [f.severity for f in dc.check_hide_reasons([hid])] == ["FAIL"]
+        assert [f.severity for f in dc.check_hidden_years([hid], ye, {})] == ["FAIL"]
+    # the search quote never rescues another hide class
+    other = dc.Cell(
+        "interest_income", "2019", "2019-12-31", dc.HIDDEN_YEAR, None, "", "", "", (),
+        "structural_not_presented", "structural_not_presented", evidence=GILD_SEARCH,
+    )
+    assert [f.severity for f in dc.check_hidden_years([other], ye, {})] == ["FAIL"]
+
+
+def test_search_evidenced_verified_absent_year_fails_when_a_presenting_filing_prints_the_line():
+    hid = _va(GILD_SEARCH)
+    ye = {"A": ["2019-12-31|4"], "B": ["2020-12-31|4", "2019-12-31|4"]}
+    (f,) = dc.check_hidden_years([hid], ye, {"B": {"InvestmentIncomeInterest"}})
+    assert f.severity == "FAIL" and "prints the line" in f.detail
+
+
+def test_read_coverage_carries_the_evidence_column(tmp_path):
+    p = tmp_path / "c.csv"
+    with open(p, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["data_point", "fiscal_year", "period_end", "display", "hide_class", "evidence"])
+        w.writerow(["interest_income", "2019", "2019-12-31", dc.HIDDEN_YEAR, "verified_absent", GILD_SEARCH])
+    (c,) = dc.read_coverage(p)
+    assert c.evidence == GILD_SEARCH and dc.search_evidenced_absent(c)
+
+
+def test_full_search_test_matches_the_export_s():
+    """The export (mapper.top100_coverage, which imports this module) hides with the same test; keep them in step."""
+    src = (
+        Path(__file__).resolve().parents[2]
+        / "src/scrooner_pipeline/mapper/top100_coverage.py"
+    ).read_text()
+    assert f'r"{dc._FULL_SEARCH_RE.pattern}"' in src
+    assert f'r"{dc._NO_AMOUNT_RE.pattern}"' in src
+
+
+# ---------------------------------------------------------------- resolver .92 X130 included_in hides
+def _inc(dp, other, display, hc="line_presented_combined"):
+    from dataclasses import replace
+
+    return replace(
+        cell(dp=dp, value=None, tag="SellingGeneralAndAdministrativeExpense", display=display),
+        hide_class=hc,
+        evidence=f"reported only combined: SellingGeneralAndAdministrativeExpense included_in:{other}",
+    )
+
+
+def test_included_in_hidden_row_passes_only_while_its_line_is_shown():
+    # WMT .92: 'Operating, selling, general and administrative expenses' serves operating_expenses; sga_expense is included_in it.
+    # The SG&A fact is reported (it IS the shown opex line), so the reported-fact test would FAIL the row; included_in passes it.
+    shown = cell(dp="operating_expenses", value="108791", tag="SellingGeneralAndAdministrativeExpense")
+    row = _inc("sga_expense", "operating_expenses", dc.HIDDEN_ROW)
+    sga_fact = [fact("SellingGeneralAndAdministrativeExpense", "108791")]
+    got = dc.check_hidden_rows([shown, row], sga_fact)
+    assert [f.severity for f in got] == ["INFO"]
+    # the target is not shown that year -> the normal reported-fact test, which FAILs
+    assert dc.check_hidden_rows([row], sga_fact)[0].severity == "FAIL"
+    # another hide class carrying the same text is not an included_in hide
+    other = _inc("sga_expense", "operating_expenses", dc.HIDDEN_ROW, hc="structural_not_presented")
+    assert dc.check_hidden_rows([shown, other], sga_fact)[0].severity == "FAIL"
+
+
+def test_included_in_hidden_year_is_info_and_unevidenced_still_fails():
+    from dataclasses import replace
+
+    # COST .92: opex FY2023 is included_in the shown sga line; an earlier opex year is a component sum citing the SG&A tag, so
+    # the row's own line test sees the SG&A line printed in the presenting filing (FAIL without included_in)
+    shown = cell(dp="sga_expense", value="19779", tag="SellingGeneralAndAdministrativeExpense")
+    old_opex = replace(cell(dp="operating_expenses", value="10962", tag="SellingGeneralAndAdministrativeExpense"), fiscal_year="2014", period_end="2014-08-31")
+    yr = _inc("operating_expenses", "sga_expense", dc.HIDDEN_YEAR)
+    ye = {ACC: ["2023-12-31|4"]}
+    lines = {ACC: {"SellingGeneralAndAdministrativeExpense"}}
+    assert [f.severity for f in dc.check_hidden_years([shown, old_opex, yr], ye, lines)] == ["INFO"]
+    # the target is not shown that year: the printed-line test applies and FAILs
+    assert dc.check_hidden_years([old_opex, yr], ye, lines)[0].severity == "FAIL"

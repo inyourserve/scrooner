@@ -125,10 +125,10 @@ Relayed lessons (FILING-CHECKED by the named role; not re-opened by me):
 5. (REFINED by Dhairya 2026-11-12) A corporate IS that prints NO cost-of-revenue-type line anywhere, and whose printed total contains no cost-of-sales-type component (cost of products/services, fuel, purchased power, food and paper, cost of operations, production/operating costs, direct or distribution/servicing costs), maps that total as opex: no COGS, so GP = revenue and the total = GP − OI (BKNG `OperatingExpenses`; Visa `CostsAndExpenses` 17,793M). If the total contains any cost-of-sales-type line → combined (NEE fuel and purchased power; UNP fuel; MCD food and paper; BLK distribution/servicing and direct fund costs; the sector template decides display). Banks/insurers → sector template.
 6. Applied (Dhairya 2026-11-12): COP production and operating costs and VLO `CostOfGoodsAndServicesSoldOverhead` are cost of sales, so never opex; DHR, MDT, LMT, BA = rule-3 component sums where the R page shows the tie; DE, IBM, KLAC, DIS, VZ blank only where the R page confirms no OI line or no exact tie (cite the R page, else a dispute).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 30 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 30 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.

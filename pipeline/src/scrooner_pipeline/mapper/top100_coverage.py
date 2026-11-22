@@ -439,6 +439,36 @@ def proven_locator(
     return acc, "", "note_fact_report_not_stored"
 
 
+TEXT_STATED_ELEMENT = re.compile(r"\((?:[a-z][a-z0-9-]*:)?([A-Z][A-Za-z0-9]+) \(")
+TEXT_STATED_PAGE = re.compile(r"^R(\d+)\.htm\b")
+
+
+def text_stated_locator(
+    checks: Any,
+    acc: str | None,
+    stmt: str | None,
+    idx: LocatorIndex,
+    note_lookup: dict[tuple[str, str], int] | None = None,
+) -> tuple[str, str]:
+    """(r_page, source) of a proof with no shown tag whose value a filing read states (checks.text_stated), from THAT
+    read's filing only (its accession must be the shown one): the element the read names (`(us-gaap:Tag (...`) on a
+    line or note report of the filing, else the R page the read's locator starts with (MRK FY2019 amortization:
+    'R9.htm (us-gaap:AdjustmentForAmortization (CF face line ...)) of 0000310158-22-000003'). ('', '') otherwise."""
+    ts = (checks or {}).get("text_stated") if isinstance(checks, dict) else None
+    if not acc or not isinstance(ts, dict) or ts.get("accession") != acc:
+        return "", ""
+    loc = str(ts.get("locator") or "")
+    m = TEXT_STATED_ELEMENT.search(loc)
+    if m:
+        _a, page, src = proven_locator(acc, stmt, None, m.group(1), idx, note_lookup)
+        if page:
+            return page, "text_stated_" + src
+    m = TEXT_STATED_PAGE.match(loc)
+    if m:
+        return f"R{m.group(1)}.htm", "text_stated_locator"
+    return "", ""
+
+
 def _num(v: Any) -> str:
     d = Decimal(str(v))
     return format(d.quantize(Decimal(1)) if d == d.to_integral_value() else d, "f")
@@ -576,6 +606,14 @@ def parts_locator(
         rep: int | None = None
         if tag in notes:
             rep = (note_lookup or {}).get((acc, tag))
+            if rep is None:
+                # a note fact that THIS filing also prints on a statement line (MRK FY2019
+                # OtherNonoperatingIncomeExpense, IS face R3 line 7 of 0000310158-22-000003): that face report
+                hits = idx.tag.get((acc, tag), [])
+                same = [r for s_, r in hits if s_ == stmt] or [
+                    r for s_, r in hits if s_ in STATEMENT_STMTS
+                ]
+                rep = min(same) if same else None
         else:
             hits = idx.tag.get((acc, tag), [])
             same = [r for s_, r in hits if s_ == stmt] or [
@@ -1211,6 +1249,16 @@ def build_rows(
                     acc, page, lsrc = proven_locator(
                         pacc, pstmt, pline, ptag, idx, note_lookup
                     )
+                    if (
+                        lsrc == "note_fact_report_not_stored"
+                        and not (ptag or "").strip()
+                    ):
+                        # no shown tag: the page the proof's own filing read cites (same accession only)
+                        page_, lsrc_ = text_stated_locator(
+                            pchecks, acc, pstmt, idx, note_lookup
+                        )
+                        if page_:
+                            page, lsrc = page_, lsrc_
                 if (
                     lsrc
                     in (

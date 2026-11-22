@@ -320,10 +320,10 @@ Libraries read: the Mac library `origin/work/tag-library/ranks-1-50` at aea0cf4 
 - Calc-parent counts cover two sampled 10-Ks per company, not every filing.
 - The FSN store's 2015-2016 coverage (about 517 companies) limits era statements before 2018.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.91). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.92). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.91. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.92. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
@@ -448,7 +448,7 @@ Resolver resolver-all110-.91. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
 - **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:primary#1
 - **Rules:** none; family resolve_cf.WC[cf_ap_change]; resolve_all.NARROW[cf_ap_change]
-- **Evidence:** 58 companies, 607 served, 2226 proven, 91 certified cells; last verified 2026-11-15
+- **Evidence:** 58 companies, 617 served, 2226 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -470,6 +470,15 @@ Resolver resolver-all110-.91. 33 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
+
+### `IncreaseDecreaseInAccountsPayableAndAccruedLiabilities`
+- **Meaning:** Increase (Decrease) in Accounts Payable and Accrued Liabilities (us-gaap, duration, debit). The increase (decrease) during the reporting period in the amounts payable to vendors for goods and services received and the amount of obligations and expenses incurred but not paid.
+- **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
+- **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
+- **Rules:** none; family resolve_cf.WC[cf_ap_change]
+- **Evidence:** 34 companies, 348 served, 1 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
 
 ### `Depreciation`
 - **Meaning:** Depreciation (us-gaap, duration, debit). The amount of expense recognized in the current period that reflects the allocation of the cost of tangible assets over the assets' useful lives. Includes production and non-production related depreciation.
@@ -589,15 +598,6 @@ Resolver resolver-all110-.91. 33 elements named in this card have library knowle
 - **Data point:** share_buybacks; polarity share_buybacks:positive; role share_buybacks:primary#2
 - **Rules:** K10; K11; K12; K13; K14; K15; K16
 - **Evidence:** 4 companies, 12 served, 6 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `StockOptionPlanExpense`
-- **Meaning:** Stock or Unit Option Plan Expense (us-gaap, duration, debit). Amount of noncash expense for option under share-based payment arrangement.
-- **Data point definition:** sbc: Stock-based compensation add-back on the cash-flow statement (pre-tax).
-- **Data point:** sbc
-- **Rules:** X52; resolver functions apply_face_label_overrides
-- **Evidence:** 1 companies, 12 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 <!-- END GENERATED: tag library rows -->

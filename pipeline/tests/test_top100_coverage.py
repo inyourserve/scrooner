@@ -454,6 +454,65 @@ def test_parts_list_every_part_with_its_own_page_of_the_same_filing_only():
     )
 
 
+def test_note_fact_part_missing_from_the_note_lookup_takes_its_face_line_of_the_same_filing():
+    """MRK FY2019 OtherNonoperatingIncomeExpense is a checks.note_facts part, yet 0000310158-22-000003 prints it on
+    the IS face (R3 line 7): with no note-lookup row the part gets that face report, never another filing's."""
+    from scrooner_pipeline.mapper.top100_coverage import LocatorIndex, parts_locator
+
+    A, Z = "0000310158-22-000003", "0000000000-00-000001"
+    i = LocatorIndex()
+    i.add(A, 3, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net")
+    i.add(Z, 9, 7, "IS", "OtherNonoperatingIncomeExpense", "Other (income) expense, net")
+    ch = _checks(
+        ["OtherNonoperatingIncomeExpense", "InterestExpense"],
+        note=["OtherNonoperatingIncomeExpense", "InterestExpense"],
+    )
+    ch["claim"]["stmt"] = "IS"
+    got, blank = parts_locator(ch, A, i, {(A, "InterestExpense"): 120}, None)
+    assert got == (
+        f"OtherNonoperatingIncomeExpense=1000000@{A}#R3;InterestExpense=2000000@{A}#R120"
+    )
+    assert blank == 0
+    # the note lookup still wins when it has the pair
+    got, _ = parts_locator(
+        ch, A, i, {(A, "OtherNonoperatingIncomeExpense"): 95, (A, "InterestExpense"): 120}, None
+    )
+    assert got.startswith(f"OtherNonoperatingIncomeExpense=1000000@{A}#R95;")
+    # a filing that prints neither: blank, Z's face page is never borrowed
+    got, blank = parts_locator(ch, "0000000000-00-000002", i, None, None)
+    assert got.endswith("#") and blank == 2
+
+
+def test_untagged_text_stated_proof_cites_its_reads_page_of_the_same_filing():
+    """A PROVEN cell with no shown tag (a filing read, checks.text_stated) cited no page. MRK FY2019 amortization:
+    the read's element on THAT filing's lines first, then the R page its locator starts with; another filing's
+    read gives nothing."""
+    from scrooner_pipeline.mapper.top100_coverage import LocatorIndex, text_stated_locator
+
+    A = "0000310158-22-000003"
+    i = LocatorIndex()
+    ts = {
+        "text_stated": {
+            "accession": A,
+            "locator": f'R9.htm (us-gaap:AdjustmentForAmortization (CF face line "Amortization")) of {A}',
+        }
+    }
+    assert text_stated_locator(ts, A, None, i) == ("R9.htm", "text_stated_locator")
+    # the element is on a note report of the same filing: that page (the value's own page)
+    assert text_stated_locator(ts, A, None, i, {(A, "AdjustmentForAmortization"): 73}) == (
+        "R73.htm",
+        "text_stated_note_report_from_pre",
+    )
+    i.add(A, 8, 4, "CF", "AdjustmentForAmortization", "Amortization")
+    assert text_stated_locator(ts, A, "CF", i)[0] == "R8.htm"
+    # a read of another filing, or no read: nothing
+    assert text_stated_locator(ts, "0000000000-00-000001", None, i) == ("", "")
+    assert text_stated_locator({"rules": {}}, A, None, i) == ("", "")
+    # a locator without a page or element (a narrative note) gives nothing
+    nar = {"text_stated": {"accession": A, "locator": f"Intangibles note of {A}"}}
+    assert text_stated_locator(nar, A, None, i) == ("", "")
+
+
 def test_reason_is_evidence_only_from_the_cells_own_period_filing():
     from datetime import date
 
