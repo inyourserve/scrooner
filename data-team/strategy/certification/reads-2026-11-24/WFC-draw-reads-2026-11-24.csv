@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+depreciation_and_amortization,2019,MATCH,agent:draw-reads-2026-11-24/B,"0000072971-20-000217 R9 CF ""Depreciation, amortization and accretion"" 7,075 (DepreciationAmortizationAndAccretionNet); only D&A line, badge should be combined:accretion (prior read WFC-2026-11-22)"
+depreciation_and_amortization,2021,MATCH,agent:draw-reads-2026-11-24/B,"0000072971-22-000096 R8 CF ""Depreciation, amortization and accretion"" 7,890; only D&A line, badge combined:accretion (prior read WFC-2026-11-22)"
+depreciation_and_amortization,2023,MATCH,agent:draw-reads-2026-11-24/B,"0000072971-24-000064 R8 CF ""Depreciation, amortization and accretion"" 6,271; only D&A line, badge combined:accretion (prior read WFC-2026-11-22)"

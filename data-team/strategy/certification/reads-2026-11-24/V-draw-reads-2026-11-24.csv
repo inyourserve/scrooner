@@ -1,0 +1,9 @@
+data_point,fiscal_year,verdict,reader,evidence
+interest_expense,2015,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-16-000058 R4 IS ""Interest expense"" (3) (tagged InterestIncomeExpenseNet, but the printed label is interest expense; Visa had no debt before Dec 2015)"
+stockholders_equity,2015,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-15-000013 R2 BS ""Total equity"" 29,842 (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest); no noncontrolling interest line printed, so parent equity"
+stockholders_equity,2016,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-16-000058 R2 BS ""Total equity"" 32,912; no NCI line printed (preferred stock is parent equity)"
+stockholders_equity,2018,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-18-000055 R2 BS ""Total equity"" 34,006; no NCI line printed"
+stockholders_equity,2021,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-21-000060 R2 BS ""Total equity"" 37,589; no NCI line printed"
+stockholders_equity,2022,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-22-000081 R3 BS ""Total equity"" 35,581; no NCI line printed"
+stockholders_equity,2023,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-23-000099 R3 BS ""Total equity"" 38,733; no NCI line printed"
+stockholders_equity,2025,MATCH,agent:draw-reads-2026-11-24/B,"0001403161-25-000089 R3 BS ""Total equity"" 37,909; no NCI line printed"

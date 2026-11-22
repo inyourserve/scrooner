@@ -1,0 +1,18 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_payable,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-17-047588 R5 BS 'Accounts payable' 11,190 (AccountsPayableCurrentAndNoncurrent), face line"
+accounts_payable,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-18-000032 R5 BS 'Accounts payable' 14,657 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-20-000030 R5 BS 'Accounts payable' 12,738 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-21-000013 R5 BS 'Accounts payable' 9,444 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-24-000013 R6 BS 'Accounts payable' 13,109 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-25-000016 R6 BS 'Accounts payable' 13,884 (AccountsPayableCurrentAndNoncurrent)"
+basic_eps,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-19-000018 R2 IS (2016 col) 'Earnings per Common Share - Basic' 5.63 (IncomeLossFromContinuingOperationsPerBasicShare); no discontinued operations (Net income 5,375 is the only bottom line), so it is net EPS"
+basic_eps,2017,MATCH,agent:draw-reads-2026-11-24/C,0000004962-20-000030 R2 IS (2017 col) 'Basic' 3.00 (IncomeLossFromContinuingOperationsPerBasicShare); no discontinued operations
+diluted_eps,2017,MATCH,agent:draw-reads-2026-11-24/C,0000004962-20-000030 R2 IS (2017 col) 'Diluted' 2.99 (IncomeLossFromContinuingOperationsPerDilutedShare); no discontinued operations
+operating_expenses,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-19-000018 R2 IS 'Total Expenses' 25,369 (NoninterestExpense; marketing, rewards, services, salaries, other), provisions for losses sit above in revenues net"
+operating_expenses,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-20-000030 R2 IS 'Total Expenses' 31,554 (NoninterestExpense)"
+operating_expenses,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-22-000008 R3 IS 'Total expenses' 33,110 (NoninterestExpense)"
+operating_expenses,2022,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-23-000006 R3 IS 'Total expenses' 41,095 (NoninterestExpense)"
+operating_expenses,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-24-000013 R3 IS 'Total expenses' 45,079 (NoninterestExpense)"
+share_buybacks,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-20-000030 R9 EQ 'Repurchase of common shares' (4,585) (TreasuryStockValueAcquiredCostMethod); CF R7 'Repurchase of American Express common shares and other' 4,685 is wider; prior AXP-2026-11-17 buyback_from_equity_statement"
+share_buybacks,2023,MATCH,agent:draw-reads-2026-11-24/A,"0000004962-24-000013 R10 EQ 'Repurchase of common shares' (3,519) (TreasuryStockValueAcquiredCostMethod); CF R8 'Repurchase of American Express common shares and other' 3,650 is the wider line. Follows AXP-2026-11-17 ruling (3,519)."
+share_buybacks,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000004962-26-000080 R10 EQ 'Repurchase of common shares' (5,311) (TreasuryStockValueAcquiredCostMethod); CF R8 '... common shares and other' 5,814 wider; prior AXP-2026-11-17"

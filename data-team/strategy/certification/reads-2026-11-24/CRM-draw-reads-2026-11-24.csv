@@ -1,0 +1,3 @@
+data_point,fiscal_year,verdict,reader,evidence
+amortization_of_intangibles,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001108524-19-000009 R63/R64 intangibles note 'Amortization of intangible assets $ 447 | 287 | $ 226' (FY2019|2018|2017) tagged AmortizationOfAboveAndBelowMarketLeases 226 (misused tag, not printed in FSN); prior CRM-2026-11-21 ruling same"
+dividends_paid,2022,MATCH,agent:draw-reads-2026-11-24/C,0001108524-22-000013 crm-20220131.htm Item 5 Dividend Policy: 'We have never paid any cash dividends on our common stock.'; no dividend fact/line in the filing (probe --like Dividend empty): stated zero. Note prior CRM-2026-11-21 ruled FY2019/FY2020 HIDE structural_not_presented for the same text; current coverage proves FY2021/FY2022 as stated_zero

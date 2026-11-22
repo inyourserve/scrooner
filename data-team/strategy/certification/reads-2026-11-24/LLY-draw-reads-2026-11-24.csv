@@ -1,0 +1,10 @@
+data_point,fiscal_year,verdict,reader,evidence
+capex,2018,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-19-000082 R9 CF ""Purchases of property and equipment"" (1,210.6) (PaymentsToAcquireOtherPropertyPlantAndEquipment)"
+capex,2023,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-25-000067 R9 CF ""Purchases of property and equipment"" (3,447.6) (PaymentsToAcquireOtherPropertyPlantAndEquipment)"
+capex,2025,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-26-000013 R9 CF ""Purchases of property and equipment"" (7,841) (PaymentsToAcquireOtherPropertyPlantAndEquipment)"
+cf_ar_change,2018,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-19-000082 R9 CF ""Receivables-(increase) decrease"" printed (996.7); raw IncreaseDecreaseInAccountsAndOtherReceivables +996.7 (raw sign rule); line holds all receivables, badge combined:other receivables"
+cf_ar_change,2019,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-20-000057 R8 CF ""Receivables-(increase) decrease"" raw IncreaseDecreaseInAccountsAndOtherReceivables +127.2 (printed (127.2)); badge combined:other receivables"
+cf_ar_change,2021,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-22-000068 R9 CF ""Receivables-(increase) decrease"" raw +1,278.3; badge combined:other receivables"
+cf_ar_change,2024,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-25-000067 R9 CF ""Receivables-(increase) decrease"" raw +2,155.2; badge combined:other receivables"
+cf_ar_change,2025,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-26-000013 R9 CF ""Receivables-(increase) decrease"" raw +7,000; badge combined:other receivables"
+total_liabilities,2024,MATCH,agent:draw-reads-2026-11-24/B,"0000059478-25-000067 R5 BS ""Total current liabilities"" 28,376.6 + ""Total noncurrent liabilities"" 36,066.7 = 64,443.3 (prior read LLY-2026-11-17, founder approval 2026-11-17 item 5)"

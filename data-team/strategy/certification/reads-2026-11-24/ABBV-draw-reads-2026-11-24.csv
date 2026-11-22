@@ -1,0 +1,5 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_receivable,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001047469-16-010239 R6 BS 'Accounts and other receivables, net' 4,730 (AccountsAndOtherReceivablesNetCurrent); no narrower trade AR fact; FY2016 10-K 0001551152-17-000004 R5 reprints the same 4,730 as 'Accounts receivable, net'"
+gross_profit,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001551152-23-000011 R3 IS 2020 col 'Net revenues' 45,804 - 'Cost of products sold' 15,387 = 30,417; no gross profit line; derived C1 (prior ABBV-2026-11-17)"
+gross_profit,2023,MATCH,agent:draw-reads-2026-11-24/C,"0001551152-26-000008 R3 IS 2023 col 'Net revenues' 54,318 - 'Cost of products sold' 20,415 = 33,903; derived C1"
+gross_profit,2024,MATCH,agent:draw-reads-2026-11-24/C,"0001551152-26-000008 R3 IS 2024 col 'Net revenues' 56,334 - 'Cost of products sold' 16,904 = 39,430; derived C1"

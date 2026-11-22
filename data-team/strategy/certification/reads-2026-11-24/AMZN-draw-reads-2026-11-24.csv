@@ -1,0 +1,8 @@
+data_point,fiscal_year,verdict,reader,evidence
+cash_paid_for_interest,2018,MATCH,agent:draw-reads-2026-11-24/B,"0001018724-19-000004 R2 CF ""Cash paid for interest on long-term debt"" 854 (InterestPaidOnLongTermDebt); FY2020 10-K R34 reprints ""Cash paid for interest on debt | $ 916 | $ 875 | $ 854"""
+cash_paid_for_interest,2019,MATCH,agent:draw-reads-2026-11-24/B,"0001018724-20-000004 R2 CF ""Cash paid for interest on long-term debt"" 875; FY2021 10-K R33 reprints 875"
+cash_paid_for_interest,2024,MATCH,agent:draw-reads-2026-11-24/B,"0001018724-25-000004 InterestPaidOnLongTermDebt 1,858; FY2025 10-K R36 Supplemental cash flow information ""Cash paid for interest on debt, net of capitalized interest | $ 1,458 | $ 1,858 | $ 2,608"" (prior read AMZN-2026-11-17)"
+cash_paid_for_interest,2025,MATCH,agent:draw-reads-2026-11-24/B,"0001018724-26-000004 R36 ""Cash paid for interest on debt, net of capitalized interest | $ 1,458"" (InterestPaidOnLongTermDebt 1,458)"
+share_buybacks,2017,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0001018724-20-000004 R16 Stockholders' Equity, Stock Repurchase Activity ""There were no repurchases of common stock in 2017, 2018, or 2019."" (StockRepurchasedDuringPeriodValue 0)"
+share_buybacks,2018,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0001018724-20-000004 R16 ""There were no repurchases of common stock in 2017, 2018, or 2019."""
+share_buybacks,2019,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0001018724-20-000004 R16 ""There were no repurchases of common stock in 2017, 2018, or 2019."" (StockRepurchasedDuringPeriodValue 0 @2019)"

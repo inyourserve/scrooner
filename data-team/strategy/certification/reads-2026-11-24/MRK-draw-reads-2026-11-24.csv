@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+amortization_of_intangibles,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000310158-26-000063 R9 CF 'Amortization' 2,793 (AdjustmentForAmortization); note AmortizationOfIntangibleAssets 2.8bn (dcml -8, not printed) is the rounded copy; ruling 15 / prior MRK rows keep CF face line"

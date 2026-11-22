@@ -1,0 +1,18 @@
+data_point,fiscal_year,verdict,reader,evidence
+cash_paid_for_income_taxes,2021,MATCH,agent:draw-reads-2026-11-24/A,"0001437749-22-002494 R7 CF 'Income taxes, net of refunds' (1,658) (IncomeTaxesPaidNet stored -1,658, filer's opposite polarity); cash paid = 1,658."
+cf_inventory_change,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-18-000048 R7 CF 'Materials and supplies' printed negated, IncreaseDecreaseInMaterialsAndSupplies +32 (raw element sign); UNP's only inventory change line"
+cf_inventory_change,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-21-000068 R7 CF 'Materials and supplies', IncreaseDecreaseInMaterialsAndSupplies -113 (raw element sign)"
+cf_inventory_change,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001437749-22-002494 R7 CF 'Materials and supplies', IncreaseDecreaseInMaterialsAndSupplies -17 (raw element sign)"
+cf_inventory_change,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001437749-23-002959 R7 CF 'Materials and supplies', IncreaseDecreaseInMaterialsAndSupplies +120 (raw element sign)"
+cf_inventory_change,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-26-000037 R8 CF 'Materials and supplies', IncreaseDecreaseInMaterialsAndSupplies +18 (raw element sign)"
+depreciation_and_amortization,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-16-000260 R7 CF 'Depreciation' 2,012 (us-gaap:Depreciation; same on IS R2); only D&A add-back printed"
+depreciation_and_amortization,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-17-000056 R7 CF 'Depreciation' 2,038 (Depreciation), only D&A add-back"
+depreciation_and_amortization,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-18-000048 R7 CF 'Depreciation' 2,105 (Depreciation)"
+depreciation_and_amortization,2018,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-19-000060 R7 CF 'Depreciation' 2,191 (Depreciation)"
+depreciation_and_amortization,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-21-000068 R7 CF 'Depreciation' 2,210 (Depreciation)"
+depreciation_and_amortization,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001437749-23-002959 R7 CF 'Depreciation' 2,246 (Depreciation)"
+depreciation_and_amortization,2023,MATCH,agent:draw-reads-2026-11-24/C,"0001437749-24-003599 R7 CF 'Depreciation' 2,318 (Depreciation)"
+depreciation_and_amortization,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000100885-26-000037 R8 CF 'Depreciation' 2,465 (Depreciation); finance-lease ROU amortization 28 is note-only, not an add-back line"
+inventory,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001437749-22-002494 R5 BS 'Materials and supplies' 621 (MaterialsSuppliesAndOther), UNP's only inventory line (registry step 2: line holding supplies)"
+inventory,2023,MATCH,agent:draw-reads-2026-11-24/C,0001437749-24-003599 R5 BS 'Materials and supplies' 743 (MaterialsSuppliesAndOther)
+inventory,2024,MATCH,agent:draw-reads-2026-11-24/C,0000100885-25-000042 R6 BS 'Materials and supplies' 769 (MaterialsSuppliesAndOther)

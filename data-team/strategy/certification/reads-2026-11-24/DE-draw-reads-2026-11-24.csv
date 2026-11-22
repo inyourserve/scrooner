@@ -1,0 +1,9 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_receivable,2023,MATCH,agent:draw-reads-2026-11-24/C,"0001558370-23-019812 R4 BS 'Trade accounts and notes receivable - net' 7,739 (AccountsReceivableNet), single face receivable line (financing receivables separate); prior DE-2026-11-21 accepted the same line for 2016/2021"
+accounts_receivable,2025,MATCH,agent:draw-reads-2026-11-24/C,"0001104659-25-122321 R4 BS 'Trade accounts and notes receivable - net' 5,317 (AccountsReceivableNet); 'Other receivables' 2,403 separate line"
+other_income_expense_net,2015,MISMATCH,agent:draw-reads-2026-11-24/C,"0001047469-17-007719 R2 IS: 'Other income' 706.5 (OtherIncome) is a component of 'Net Sales and Revenues' Total 28,862.8; costs Total 26,082.7 include interest expense; 'Income of Consolidated Group before Income Taxes' 2,780.1 = 28,862.8 - 26,082.7: no non-operating section; prior DE-2026-11-21 HIDE structural_not_presented for 2018-2020 (same structure)"
+other_income_expense_net,2016,MISMATCH,agent:draw-reads-2026-11-24/C,"0001047469-17-007719 R2 IS 2016 col: 'Other income' 745.5 inside revenues Total 26,644.0; costs Total 24,420.0; pretax 2,224.0 = revenue total - costs total; no non-operating line; HIDE structural_not_presented (prior DE rulings)"
+ppe_net,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001558370-22-018703 R4 BS 'Property and equipment - net' 5,820 (PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetExcludingLessorAsset...): PP&E incl. finance-lease ROU as printed together (definition allows)"
+ppe_net,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001558370-23-019812 R4 BS 'Property and equipment - net' 6,056 (same element), face line"
+ppe_net,2024,MATCH,agent:draw-reads-2026-11-24/C,"0001104659-25-122321 R4 BS (2024 col) 'Property and equipment - net' 7,580 (same element), face line"
+ppe_net,2025,MATCH,agent:draw-reads-2026-11-24/C,"0001104659-25-122321 R4 BS 'Property and equipment - net' 8,079 (same element), face line"

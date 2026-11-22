@@ -1,0 +1,22 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_receivable,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-17-000012 R3 BS 'Premiums receivable, net of allowance for doubtful accounts of $186.8 and $164.8' 4,509.2 (PremiumsReceivableAtCarryingValue); insurer trade receivable"
+accounts_receivable,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-18-000011 R3 BS 'Premiums receivable, net of allowance ... $210.9 and $186.8' 5,422.5 (PremiumsReceivableAtCarryingValue)"
+accounts_receivable,2018,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-19-000008 R3 BS 'Premiums receivable, net of allowance ... $252.1 and $210.9' 6,497.1"
+accounts_receivable,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-20-000006 R3 BS 'Premiums receivable, net of allowance ... $283.2 and $252.1' 7,507.3"
+accounts_receivable,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-21-000014 R3 BS 'Premiums receivable, net of allowance for credit losses of $356.2 and $283.2' 8,160.1"
+accounts_receivable,2022,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-23-000006 R4 BS 'Premiums receivable, net of allowance for credit losses of $343.3 and $280.4' 10,416.9"
+accounts_receivable,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-26-000086 R4 BS 'Premiums receivable, net of allowance for credit losses of $552 and $460' 15,362"
+cash_and_equivalents,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-16-000080 R3 BS 'Cash' 224.4 (us-gaap:Cash; CF R7 'Cash, End of year' 224.4); prior PGR-2026-11-17 VALUE (FY2016 10-K reprints 224.1 after restricted cash reclass; cited own 10-K print is 224.4)"
+depreciation_and_amortization,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-25-000007 R7 CF 'Depreciation' 284 (Depreciation), the only D&A add-back line (no intangible amortization line printed)"
+depreciation_and_amortization,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000080661-26-000086 R7 CF 'Depreciation' 313 (Depreciation), only D&A add-back"
+sbc,2015,MATCH,agent:draw-reads-2026-11-24/C,0000080661-16-000080 R7 CF 'Amortization of equity-based compensation' 66.2 (RestrictedStockExpense)
+sbc,2017,MATCH,agent:draw-reads-2026-11-24/C,0000080661-18-000011 R7 CF 'Amortization of equity-based compensation' 95.4 (RestrictedStockExpense)
+sbc,2018,MATCH,agent:draw-reads-2026-11-24/C,0000080661-19-000008 R7 CF 'Amortization of equity-based compensation' 77.2 (RestrictedStockExpense)
+sbc,2022,MATCH,agent:draw-reads-2026-11-24/C,0000080661-24-000007 R7 CF (2022 col) 'Amortization of equity-based compensation' 122.7 (RestrictedStockExpense)
+share_buybacks,2015,MATCH,agent:draw-reads-2026-11-24/C,0000080661-18-000011 R7 CF 2015 col 'Acquisition of treasury shares acquired in open market' (177.9) (pgr:PaymentsforRepurchaseofCommonStockintheOpenMarket); tax-withholding line 30.6 excluded per buyback perimeter (prior PGR-2026-11-17)
+share_buybacks,2018,MATCH,agent:draw-reads-2026-11-24/C,0000080661-21-000014 R6 CF 2018 col 'Acquisition of treasury shares acquired in open market' (0.4)
+share_buybacks,2020,MATCH,agent:draw-reads-2026-11-24/C,0000080661-23-000006 R7 CF 2020 col 'Acquisition of treasury shares acquired in open market' (42.9)
+share_buybacks,2021,MATCH,agent:draw-reads-2026-11-24/C,0000080661-24-000007 R7 CF 2021 col 'Acquisition of treasury shares acquired in open market' (155.8)
+share_buybacks,2022,MATCH,agent:draw-reads-2026-11-24/C,0000080661-25-000007 R7 CF 2022 col 'Acquisition of treasury shares acquired in open market' (22)
+share_buybacks,2023,MATCH,agent:draw-reads-2026-11-24/C,0000080661-26-000086 R7 CF 2023 col 'Acquisition of treasury shares acquired in open market' (46)
+share_buybacks,2024,MATCH,agent:draw-reads-2026-11-24/C,0000080661-26-000086 R7 CF 2024 col 'Acquisition of treasury shares acquired in open market' (13)

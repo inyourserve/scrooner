@@ -1,0 +1,23 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_payable,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-16-000337 R5 BS (NEE consolidated, undimensioned) 'Accounts payable' 2,529 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-18-000013 R5 BS 'Accounts payable' 3,235 (AccountsPayableCurrentAndNoncurrent, NEE undimensioned)"
+accounts_payable,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-21-000014 R5 BS 'Accounts payable' 4,615 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-22-000014 R6 BS 'Accounts payable' 6,935 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2022,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-23-000019 R6 BS 'Accounts payable' 8,312 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-25-000011 R6 BS 'Accounts payable' 6,982 (AccountsPayableCurrentAndNoncurrent)"
+accounts_payable,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-26-000015 R6 BS 'Accounts payable' 7,583 (AccountsPayableCurrentAndNoncurrent)"
+cf_ap_change,2017,MATCH,agent:draw-reads-2026-11-24/C,0000753308-20-000021 R7 CF NEE block 'Current liabilities' 758 (IncreaseDecreaseInOtherCurrentLiabilities); NEE prints working-capital changes only by current/noncurrent; prior NEE-2026-11-22 VALUE badge combined:Current liabilities (supersedes 11-17 HIDE)
+cf_ap_change,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-24-000008 R8 CF 'Current liabilities' 1,053 (IncreaseDecreaseInOtherCurrentLiabilities); combined per prior NEE-2026-11-22"
+cf_ap_change,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-26-000015 R8 CF 'Current liabilities' (1,109) (IncreaseDecreaseInOtherCurrentLiabilities); combined per prior NEE-2026-11-22"
+cf_ap_change,2024,MATCH,agent:draw-reads-2026-11-24/C,0000753308-26-000015 R8 CF 'Current liabilities' 767; combined per prior NEE-2026-11-22
+cf_ar_change,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-23-000019 R8 CF 'Current assets' printed (364), IncreaseDecreaseInOtherCurrentAssets +364 (raw element sign); combined per prior NEE-2026-11-22 (badge combined:Current assets)"
+cf_ar_change,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-23-000019 R8 CF 'Current assets' printed (1,267), IncreaseDecreaseInOtherCurrentAssets +1,267; combined per prior"
+cf_ar_change,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-26-000015 R8 CF 'Current assets' printed 58, IncreaseDecreaseInOtherCurrentAssets -58 (raw element sign); combined per prior"
+cf_ar_change,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-26-000015 R8 CF 'Current assets' printed (382), IncreaseDecreaseInOtherCurrentAssets +382; combined per prior"
+interest_expense,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-18-000013 R2 IS (NEE, 2015 col) 'Interest expense' (1,211) (InterestExpenseAggregateExpenses); separate 'Interest income' 86"
+interest_expense,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-19-000039 R2 IS (2016 col) 'Interest expense' (1,098) (InterestExpenseAggregateExpenses)"
+interest_expense,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-22-000014 R3 IS (2019 col) 'Interest Expense' (2,249) (InterestExpenseAggregateExpenses)"
+interest_expense,2022,MATCH,agent:draw-reads-2026-11-24/C,0000753308-25-000011 R3 IS (2022 col) 'Interest Expense' (585) (InterestExpenseAggregateExpenses; low year from interest-rate derivative gains in the line)
+interest_expense,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000753308-26-000015 R3 IS (2023 col) 'Interest Expense' (3,324) (InterestExpenseAggregateExpenses)"
+interest_income,2016,MATCH,agent:draw-reads-2026-11-24/C,0000753308-19-000039 R2 IS (2016 col) 'Interest income' 82 (InterestIncome)
+interest_income,2017,MATCH,agent:draw-reads-2026-11-24/C,0000753308-20-000021 R2 IS (2017 col) 'Interest income' 81 (InterestIncome)

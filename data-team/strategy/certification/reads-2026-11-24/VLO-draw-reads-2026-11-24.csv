@@ -1,0 +1,5 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_receivable,2022,MISMATCH,agent:draw-reads-2026-11-24/A,"0001035002-23-000027 R3 BS 'Receivables, net' 11,919 (ReceivablesNetCurrent) = accounts receivable net 10,761 (AccountsReceivableNetCurrent, note) + income taxes 142 + other 1,016 (ties). Step 2 note split -> 10,761."
+accounts_receivable,2024,MISMATCH,agent:draw-reads-2026-11-24/A,"0001035002-25-000005 R3 BS 'Receivables, net' 10,708 (ReceivablesNetCurrent) = accounts receivable net 9,731 (AccountsReceivableNetCurrent, note) + income taxes 272 + other 705 (ties). Step 2 note split -> 9,731."
+accounts_receivable,2025,MISMATCH,agent:draw-reads-2026-11-24/A,"0001628280-26-011499 R3 BS 'Receivables, net' 9,877 (ReceivablesNetCurrent) = accounts receivable net 9,207 (AccountsReceivableNetCurrent, note) + income taxes 236 + other 434 (ties). Step 2 note split -> 9,207."
+revenue,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001035002-17-000009 R4 IS 'Operating revenues (a)' 75,659 (RefiningAndMarketingRevenue) = total revenues (prior VLO rows use Revenues 75,659 in FY2018 10-K)"

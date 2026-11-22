@@ -1,0 +1,3 @@
+data_point,fiscal_year,verdict,reader,evidence
+depreciation_and_amortization,2015,MATCH,agent:draw-reads-2026-11-24/A,"0000936468-18-000013 R7 CF 'Depreciation and amortization' 1,026 (DepreciationAndAmortizationIncludingDiscontinuedOperations, custom) is the CF add-back (CF starts from net earnings incl. discontinued IS&GS); checker's 945 is the unprinted segment-note continuing-ops total (945 + IS&GS 81 = 1,026)."
+inventory,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-17-036192 R5 BS (2015 col) 'Inventories, net' 4,819 (InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings) = the face inventory line"

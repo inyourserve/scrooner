@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+sbc,2015,MATCH,agent:draw-reads-2026-11-24/C,0000764180-18-000028 R75 Stock Plans note: RSU 'Pre-tax compensation expense $ 49 $ 44 $ 51' (2017|2016|2015); PSU expense only in 2017 (granted 0 in 2015/2016); no CF add-back; registry sbc step 3 note pre-tax expense = 51 (prior MO-2026-11-23 ruling)

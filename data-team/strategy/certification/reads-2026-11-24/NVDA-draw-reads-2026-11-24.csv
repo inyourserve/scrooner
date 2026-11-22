@@ -1,0 +1,5 @@
+data_point,fiscal_year,verdict,reader,evidence
+capex,2015,MATCH,agent:draw-reads-2026-11-24/B,"0001045810-17-000027 R7 CF ""Purchases of property and equipment and intangible assets"" (122) (PurchasesOfPropertyAndEquipmentAndIntangibleAssets); K40 step 2, badge should be combined:intangible assets"
+capex,2016,MATCH,agent:draw-reads-2026-11-24/B,"0001045810-18-000010 R7 CF ""Purchases of property and equipment and intangible assets"" (86); K40, badge combined:intangible assets"
+capex,2017,MATCH,agent:draw-reads-2026-11-24/B,"0001045810-19-000023 R8 CF ""Purchases of property and equipment and intangible assets"" (176); K40, badge combined:intangible assets"
+capex,2019,MATCH,agent:draw-reads-2026-11-24/B,"0001045810-21-000010 R8 CF ""Purchases related to property and equipment and intangible assets"" (600); K40, badge combined:intangible assets"

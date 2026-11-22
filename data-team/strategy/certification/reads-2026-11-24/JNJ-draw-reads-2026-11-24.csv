@@ -1,0 +1,10 @@
+data_point,fiscal_year,verdict,reader,evidence
+dividends_paid,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-21-000008 R9 CF 'Dividends to shareholders' (10,481) PaymentsOfOrdinaryDividends 10481000000; magnitude shown; also EQ R7 'Cash dividends paid' DividendsCommonStockCash 10,481"
+dividends_paid,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-22-000022 R10 CF 'Dividends to shareholders' (11,032) PaymentsOfOrdinaryDividends 11032000000; magnitude shown"
+dividends_paid,2022,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-23-000016 R10 CF 'Dividends to shareholders' (11,682) PaymentsOfOrdinaryDividends 11682000000; magnitude shown"
+dividends_paid,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-24-000013 R10 CF 'Dividends to shareholders' (11,770) PaymentsOfOrdinaryDividends 11770000000; magnitude shown"
+revenue,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-16-000071 R4 IS L1 'Sales to customers' 70,074 SalesRevenueGoodsNet 70074000000 = total revenue line (top line of IS)"
+stockholders_equity,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-16-000071 R2 BS 'Total shareholders equity' 71,150 (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest); filing has no noncontrolling-interest fact, so total = parent equity"
+stockholders_equity,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-18-000005 R2 BS 'Total shareholders equity' 60,160 (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest); no NCI in filing, total = parent equity"
+stockholders_equity,2018,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-19-000009 R2 BS 'Total shareholders equity' 59,752 (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest); no NCI in filing, total = parent equity"
+stockholders_equity,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000200406-21-000008 R2 BS 'Total shareholders equity' 63,278 (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest); probe --like Noncontrolling finds no NCI fact, total = parent equity"

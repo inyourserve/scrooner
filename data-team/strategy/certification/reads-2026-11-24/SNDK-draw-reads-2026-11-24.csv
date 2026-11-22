@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_payable,2024,MATCH,agent:draw-reads-2026-11-24/B,"0002023554-25-000034 R3 BS ""Accounts payable"" Nonrelated Party 357 + Related Party 313 = 670 (AccountsPayableCurrent by RelatedPartyTransactionsByRelatedParty members; prior read SNDK-2026-11-17)"
+amortization_of_intangibles,2023,MATCH,agent:draw-reads-2026-11-24/B,"0002023554-25-000034 note text ""During 2023, the Company recognized intangible amortization charges of $ 133 million"" (AmortizationOfIntangibleAssets 133, not on a statement line); prior read SNDK-2026-11-17"
+amortization_of_intangibles,2024,MATCH,agent:draw-reads-2026-11-24/B,"0 from printed zero: 0002023554-25-000034 segment reconciliation ""Amortization of acquired intangible assets — — ( 133 )"" (AmortizationOfIntangibleAssets[segment]=0 for 2024) and ""As of June 27, 2025 and June 28, 2024, all finite-lived intangible assets were fully amortized"""

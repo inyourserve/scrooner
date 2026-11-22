@@ -1,0 +1,8 @@
+data_point,fiscal_year,verdict,reader,evidence
+depreciation_and_amortization,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001628280-21-001185 R7 CF 'Depreciation and amortization' 312 (OtherDepreciationAndAmortization), face line"
+interest_income,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000002488-19-000011 InterestIncomeExpenseNet 2 at FY2016 (note-only fact); prior AMD-2026-11-22 read of the same filing's Other Income (Expense), Net (Details): 'Interest income | $ 18 | $ 6 | $ 2'"
+interest_income,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000002488-20-000008 InterestIncomeExpenseNet 6 at FY2017 (note-only); prior AMD-2026-11-22 read of Other Expense, Net (Details): 'Interest income | $ 15 | $ 18 | $ 6'"
+interest_income,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000002488-23-000047 InterestIncomeExpenseNet 8 at FY2020 (note-only); prior AMD-2026-11-22 read of Other Expense, Net (Details): 'Interest income | $ 65 | $ 8 | $ 8'"
+interest_income,2023,MATCH,agent:draw-reads-2026-11-24/C,0000002488-26-000018 InterestIncomeExpenseNet 206 at FY2023 (note-only); prior AMD-2026-11-22 read of Note 18 (R95): 'Interest income | $ 215 | $ 182 | $ 206'
+interest_income,2024,MATCH,agent:draw-reads-2026-11-24/C,0000002488-26-000018 InterestIncomeExpenseNet 182 at FY2024; Note 18 (R95) 'Interest income | $ 215 | $ 182 | $ 206' (prior AMD-2026-11-22)
+interest_income,2025,MATCH,agent:draw-reads-2026-11-24/C,0000002488-26-000018 InterestIncomeExpenseNet 215 at FY2025; Note 18 (R95) 'Interest income | $ 215 | $ 182 | $ 206' (prior AMD-2026-11-22)

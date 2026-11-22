@@ -1,0 +1,11 @@
+data_point,fiscal_year,verdict,reader,evidence
+cost_of_revenue,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-18-201034 R4 IS FY2016 col: cost lines 'Cloud services and license support' 2,664 + 'Hardware' 2,064 + 'Services' 2,751 = 7,479 (paired with revenue lines; prior ORCL-2026-11-22 derived badge)"
+cost_of_revenue,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001564590-19-023119 R4 IS FY2017 col: 3,011 + 1,648 + 2,793 = 7,452 (orcl cost extension lines)"
+cost_of_revenue,2018,MATCH,agent:draw-reads-2026-11-24/C,"0001564590-20-030125 R4 IS FY2018 col: 3,606 + 1,576 + 2,878 = 8,060"
+cost_of_revenue,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001564590-21-033616 R4 IS FY2019 col: 3,782 + 1,360 + 2,853 = 7,995"
+cost_of_revenue,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000950170-25-087926 R4 IS FY2023 col: 7,763 + 1,040 + 4,761 = 13,564"
+income_before_tax,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001564590-19-023119 R4 IS FY2017 col 'Income before provision for income taxes' 11,680 (orcl:IncomeLossFromContinuingOperationsIncludingNoncontrollingInterestBeforeIncomeTaxesExtraordinaryItems); prior ORCL-2026-11-21"
+income_before_tax,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000950170-25-087926 R4 IS 'Income before income taxes' 9,126 (custom); 13,093-3,505-462 = 9,126"
+income_before_tax,2024,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-26-277521 R4 IS FY2024 col 'Income before income taxes' 11,741 (custom)"
+other_income_expense_net,2018,MISMATCH,agent:draw-reads-2026-11-24/A,"0001564590-20-030125 R4 IS 'Non-operating income, net' 1,185 holds interest income 1,203 (InvestmentIncomeInterest), FX (74), NCI (135), other 191. Same method as ORCL-2026-11-21 FY2017 ruling: 1,185 - 1,203 = -18 (= -74 - 135 + 191). Shown 1,185 includes interest income."
+other_income_expense_net,2024,MISMATCH,agent:draw-reads-2026-11-24/A,"0001193125-26-277521 R4 IS 'Non-operating income (expenses), net' (98) holds interest income 451, FX (228), equity/investment losses (303), NCI (186), other 168 (ties: 451-228-303-186+168 = -98). Correct = -98 - 451 = -549."

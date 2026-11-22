@@ -1,0 +1,5 @@
+data_point,fiscal_year,verdict,reader,evidence
+basic_eps,2017,MATCH,agent:draw-reads-2026-11-24/B,"0000006281-19-000144 R2 IS ""Basic earnings per common share (in dollars per share)"" 2.32 (tagged IncomeLossFromContinuingOperationsPerBasicShare; no discontinued operations, net income 805,379 = continuing)"
+basic_eps,2018,MATCH,agent:draw-reads-2026-11-24/B,"0000006281-20-000156 R2 IS ""Basic earnings per common share (in dollars per share)"" 4.05 (tagged IncomeLossFromContinuingOperationsPerBasicShare; no discontinued operations, net income 1,506,980)"
+diluted_eps,2015,MATCH,agent:draw-reads-2026-11-24/B,"0000006281-15-000044 R2 IS ""Earnings per share - Diluted / Income from continuing operations, net of tax"" 2.20; ""Net income"" 696,878 = ""Income from continuing operations, net of tax"" 696,878 (no discontinued ops), so it is the total diluted EPS"
+diluted_eps,2017,MATCH,agent:draw-reads-2026-11-24/B,"0000006281-19-000144 R2 IS ""Diluted earnings per common share (in dollars per share)"" 2.29 (IncomeLossFromContinuingOperationsPerDilutedShare; no discontinued operations)"

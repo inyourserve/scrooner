@@ -1,0 +1,2 @@
+ticker,data_point,fiscal_year,outcome,value,element,accession,r_page,quote,rule_proposal,confidence
+LIN,comprehensive_income,2015,VALUE,136000000,"us-gaap:ComprehensiveIncomeNetOfTax (""COMPREHENSIVE INCOME - PRAXAIR, INC."")",0000884905-18-000014,R3.htm,"""COMPREHENSIVE INCOME (INCLUDING NONCONTROLLING INTERESTS) | 1,844 | 1,530 | 133""; ""COMPREHENSIVE INCOME - PRAXAIR, INC. | $ 1,749 | $ 1,496 | $ 136""",supersedes LIN-2026-11-21 comprehensive_income 2015 row (parent line exists on the face; step 1),high

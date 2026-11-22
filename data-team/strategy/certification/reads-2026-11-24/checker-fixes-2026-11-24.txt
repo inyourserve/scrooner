@@ -1,0 +1,149 @@
+# draw_check.py fixes from the 2026-11-24 filing reads (A: the 77 AUTO_MISMATCH cells; B, C: the NEEDS_READ cells). One line per fix: data point | change | cells.
+# Also certify_display claim check: MA dividends_per_share 2020/2021 NOT_FOUND because FACT_SQL looks for dims StatementEquityComponents=CommonStock while fsn holds EquityComponents=CommonStock (read MATCH; keeps MA at REVIEW).
+
+## reader A
+GENERAL (printed-line precedence) | a family fact with NO fsn.line (NOT PRINTED) must not override a printed face/CF line of the same data point under another (often custom) tag; when the cited fact is printed and the family fact is unprinted, return NEEDS_READ, not AUTO_MISMATCH | BMY amort 2017/2020/2021/2023, PFE amort 2019, GE taxes 2023/2024, KLAC cf_ar 2025/2026, LMT D&A 2015, LRCX ppe 2023/2026, WELL div 2019/2025 (14)
+GENERAL (rounding) | compare at the coarser dcml: a shown value that rounds to the family fact at the fact's dcml is AUTO_MATCH; a dcml -8/-9 family fact (rounded "$x billion" sentence) can never prove a mismatch -> NEEDS_READ | DHR amort 2016/2017; BMY amort 2020/2021/2023; PFE amort 2019 (6)
+GENERAL (unit) | filter family facts by uom = USD (USD/shares for per-share); CB tags CommonStockDividendsPerShareDeclared in both USD and CHF, 3.15 is SFr | CB dps 2024 (1)
+GENERAL (fixed-positive polarity) | for is_fixed_positive data points compare |shown| to |fact| (filer stores the payment negative) | UNP cash_paid_for_income_taxes 2021 (1)
+net_income | drop NetIncomeLossAvailableToCommonStockholdersBasic as tier 2 ahead of ProfitLoss; when NetIncomeLoss is absent use ProfitLoss - NetIncomeLossAttributableToNoncontrollingInterest (registry step 2); available-to-common is after preferred dividends, outside the definition | AVGO 2020 (1)
+share_buybacks | add TreasuryStockValueAcquiredCostMethod (equity-statement 'Repurchase of common shares') as an accepted narrow line when the CF repurchase line label says 'and other' | AXP 2023 (1)
+other_income_expense_net | replace the single tier (OtherNonoperatingIncomeExpense, NonoperatingIncomeExpense) with the band rule of definition 2026-11-21 d: sum of printed lines between operating income and pretax minus interest lines; NonoperatingIncomeExpense (band total incl. interest) and OtherNonoperatingIncomeExpense when it is only the note 'Other' row are not the data point; accept interest_split (combined line - InterestIncomeOther/InvestmentIncomeInterest) | AMGN 2023, BLK 2018/2019/2023, RTX 2020 (5 RIGHT); the resolver side is wrong for IBM/ORCL/PANW (below)
+other_income_expense_net (sign) | a debit-type custom line printed in an expense block ('Other (income) and expense', IBM OtherIncomeAndExpense/OtherExpenseAndIncome) must be flipped to income-positive before comparing; resolver serves it raw | IBM 2020/2021/2022/2024/2025 (resolver wrong)
+other_income_expense_net (derived parts) | a sum(printed nonoperating lines) part whose XBRL sign contradicts the printed total identity (OI + band = pretax) should follow the identity, not the fact sign: AT&T 2019 IncomeLossFromEquityMethodInvestments is tagged -6 but the printed total proves +6 | T 2019 (1)
+operating_expenses | tier 2 CostsAndExpenses includes cost of revenue -> remove it from the family (registry step 2 is CostsAndExpenses - cost_of_revenue, a derivation); evaluate derived:total_costs_and_expenses-cost_of_revenue from the filing's facts instead of requiring a subtracted part in the cited parts list; accept derived:sum(printed operating lines) | BMY 2018, QCOM 2021 (2)
+cash_and_equivalents | tier 2: add CashCashEquivalentsAndShortTermInvestments and company cash tags printed on the BS face (CVX CashandCashEquivalentsExcludingTimeDeposits*); use CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents only when it is a BS face line, never the CF reconciliation total; for banks/dealers CashAndDueFromBanks (X95) ranks with CashAndCashEquivalentsAtCarryingValue when the latter is only a CF total holding restricted cash | CAT 2019, CVX 2019/2023/2024/2025, MS 2017 (6)
+revenue | add OilAndGasRevenue to the one revenue tier and do not take us-gaap:Revenues when its printed label is 'Total Revenues and Other Income' (combined, registry step 2) while a narrower revenue line is printed above it | CVX 2017 (1)
+dividends_per_share | (same unit filter as GENERAL) | CB 2024
+amortization_of_intangibles | add company tags printed on the IS face for acquired-intangible amortization (bmy:AmortizationofAcquiredIntangibleAssets, AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction, AdjustmentForAmortization on CF) to tier 1 | BMY 2017/2020/2021/2023, PFE 2019, DHR 2016/2017 (7)
+depreciation_and_amortization | add DepreciationAndAmortizationIncludingDiscontinuedOperations (CF add-back) to tier 1; the segment-note DepreciationAndAmortization is continuing ops only | LMT 2015 (1)
+ppe_net | swap tiers: when the BS face prints PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAsset...AfterAccumulatedDepreciation, it decides over an unprinted PropertyPlantAndEquipmentNet (definition includes finance-lease ROU where printed together) | LRCX 2023/2026 (2)
+cf_ar_change | add IncreaseDecreaseInAccountsReceivableExcludingAcquisitionRelated to tier 1 | KLAC 2025/2026 (2)
+cash_paid_for_income_taxes | add company CF tags (GE CashPaidReceivedForIncomeTaxesNetOfDiscontinuedOperations) and prefer the printed CF line over an unprinted IncomeTaxesPaidNet (ASU 2023-09 note total) | GE 2023/2024 (2)
+dividends_paid | add CashDistributionsToStockholders / PaymentsOfDividends when printed on the CF face, ahead of an unprinted PaymentsOfDividendsCommonStock that equals the equity-statement charge | WELL 2019/2025 (2)
+accounts_receivable | checker tier 1 AccountsReceivableNetCurrent (note split, X16) is RIGHT for BMY/CVX/MU/QCOM/VLO/ACN: the resolver serves the wider face line (ReceivablesNetCurrent, AccountsNotesAndLoansReceivableNetCurrent, AccountsAndOtherReceivablesNetCurrent, ReceivablesAndContractAssets) under badge as_printed. No checker change except: a dcml -8 narrow fact (CVX 2020-2022) should report NEEDS_READ, not AUTO_MISMATCH | resolver wrong: ACN 2, BMY 5, CVX 6, MU 7, QCOM 2, VLO 3 (25)
+income_tax_expense | checker RIGHT (SCCO: IncomeTaxExpenseBenefit = current+royalty line + deferred line); resolver serves the current line only | SCCO 2020-2025 (6, resolver wrong)
+comprehensive_income | checker RIGHT (ComprehensiveIncomeNetOfTax tier 1 = parent line); LIN-2026-11-21 ruling picked the incl.-NCI line | LIN 2015 (1, resolver wrong)
+total_liabilities | checker RIGHT (identity 5,005.9; temporary equity prints 0.0) | PANW 2019 (1, resolver wrong)
+
+## reader B
+- amortization_of_intangibles: us-gaap:AdjustmentForAmortization (CF line "Amortization expense") is not in the family; GILD FY2015-2025 serve it (8 cells). Add as a label-gated tier (CF label "Amortization expense"/"Amortization of intangible assets", and no separate intangible line in the filing).
+- gross_profit / total_liabilities: GILD derived cells (revenue-COGS; L&E - total equity incl NCI - temporary equity) exported with a blank badge instead of derived:...; the method=text path should recompute the formula from the parts. Also hint_parts for total_liabilities name stockholders_equity (parent) while the figure uses total equity incl NCI and temporary equity (GILD 2015/2016) - parts list should name the parts actually used.
+- stockholders_equity: accept us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest as parent equity when the balance sheet prints no NCI line (AVGO FY2024/2025).
+- other_income_expense_net: INTC 2015/2018/2019 and AVGO 2025 are derived (combined line minus interest, or identity) but INTC exported badge as_printed -> should be derived:sum(printed nonoperating lines)/identity. The probe marks note-detail facts (AVGO R63 InterestIncomeOther 347) NOT PRINTED although the R page prints them; the checker should not require a presentation line for detail-page facts.
+- depreciation_and_amortization: WFC DepreciationAmortizationAndAccretionNet cells exported as_printed; badge should be combined:accretion (ruling 2026-11-21 e). Add the tag to the D&A family's combined tier.
+- MPC revenue 2015: top line 72,045 excludes a separately printed "Sales to related parties" 6; prior GP 2015 RULE used 72,051. Needs one decision (revenue = top line vs sum of printed sales lines) so revenue and GP agree.
+- basic_eps/diluted_eps: IncomeLossFromContinuingOperationsPer{Basic,Diluted}Share is the total EPS when the filing prints no discontinued-ops line (ADI 2015/2017/2018: label "Basic earnings per common share"); add as a tier gated on no IncomeLossFromDiscontinuedOperations* fact. When a discontinued line exists (DELL FY2020/2021 in 0001571996-22-000009) the continuing figure must NOT be served (HIDE eps_total_not_printed).
+- capex: PurchasesOfPropertyAndEquipmentAndIntangibleAssets (NVDA 2015-2019) belongs in the K40 combined tier; exported badge as_printed should be combined:intangible assets.
+- dividends_paid: add PaymentsOfOrdinaryDividends (ACN) to the family.
+- amortization_of_intangibles: AmortizationAndImpairmentOfIntangibleAssets with label "Amortization of acquired intangible assets" (MRVL 2020) should pass by label.
+- interest_income: InvestmentIncomeNonoperating with printed label "Interest income" (MRVL 2018-2024) should be a label-gated family member; MRVL 2018 badge combined:Interest and other income is wrong (line is interest income alone).
+- other_income_expense_net sign: IBM "Other (income) and expense" (ibm:OtherIncomeAndExpense) is expense-positive inside an expense block; the served sign must be flipped (IBM 2018 +1,152 shown, should be -1,152). Check every IBM year of this data point.
+- accounts_receivable: COP AccountsAndNotesReceivableNet (face) with a narrower AccountsReceivableNet trade fact in the same filing (R28 sentence) -> the narrow fact should win (step 2); the checker/resolver served the combined face line for COP 2025 (and prior reads 2023/2024 should be re-checked).
+- depreciation_and_amortization: AMGN "Depreciation, amortization and other" cells exported as_printed; badge should be combined:other.
+- other_income_expense_net: LIN NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent (sign reversed) as the sole non-interest line should be a recognised derived tier (ruling 16), badge derived:..., not as_printed.
+- cash_paid_for_interest: add InterestPaidOnLongTermDebt (AMZN) to the family.
+- amortization_of_intangibles: AmortizationAndImpairmentOfIntangibleAssets (CF "Amortization and impairment of intangible assets") must NOT pass as as_printed when the note states amortization alone: GOOG 2017/2021/2022 served CF 812/886/641 vs note 796/875/642 (note fact carries a sole acquisition-related-intangibles member, which the checker's undimensioned-only search misses). Use the note member fact; the CF combined line only as combined:impairment when no note figure exists.
+- operating_expenses (broker_am): NoninterestExpense "Total expenses excluding interest" (SCHW) should be in the family.
+- interest_expense: ETN InterestIncomeExpenseNet "Interest expense - net" cells exported as_printed; badge should be combined:net of interest income.
+- stockholders_equity: UNH parent equity is derived (total equity - NCI) or Schedule I; exported as_printed/text.
+- capex: add PaymentsToAcquireOtherPropertyPlantAndEquipment (LLY "Purchases of property and equipment") and PaymentsToAcquireOtherProductiveAssets (VZ "Capital expenditures (including capitalized software)") to the family.
+- cf_ar_change: add IncreaseDecreaseInAccountsAndOtherReceivables (LLY "Receivables") to the combined tier (badge combined:other receivables).
+- interest_expense: InterestIncomeExpenseNet whose printed label is "Interest expense" (V 2015) should pass by label.
+- stockholders_equity: V "Total equity" (StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest, no NCI line) 7 cells - same pattern as AVGO.
+- inventory: add InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings (BA "Inventories") to the family.
+- cash_paid_for_interest: add InterestPaidContractualInterest (PANW "Cash paid for contractual interest").
+- capex: PaymentsToAcquireProductiveAssets "Purchases of property, equipment, and other assets" (PANW) belongs in a combined tier (badge combined:other assets).
+- dividends_paid/dividends_per_share/share_buybacks stated zeros (BA, META, GOOG, AMZN, IBM): the checker needs a stated_zero / printed-dash path; also a CF line printed only for preferred dividends (BA 2025 "Dividends paid on Mandatory convertible preferred stock") must not be read as common dividends.
+- interest_expense: InterestCostsIncurred printed as "Interest expense" with a separate "Capitalized interest" face line (SCCO 2018-2025) - add as_printed by label; registry should state whether the gross printed line or the net (gross - capitalized) is the data point (I read gross, as printed).
+- capex: PaymentsForProceedsFromProductiveAssets "Premises, equipment and software, net" (MS) - no registry step covers a net-of-disposals line; propose a badge (combined:net of disposals) or explicit step.
+- operating_expenses (broker_am): NoninterestExpense "Total non-interest expenses" (MS) in the family.
+- cash_paid_for_income_taxes: sum of IncomeTaxesPaidNet by IncomeTaxAuthority members (SCCO) as derived:sum.
+- ppe_net: GE PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAsset... face line served as_printed for 2021-2024 while 2020 serves face - ROU (13,847): inconsistent series. Registry step 2 allows the combined line, but the definition excludes operating ROU and the ROU is stated; needs one rule (ppe_split_rou) applied to all GE years.
+- accounts_receivable (insurer): PremiumsReceivableAtCarryingValue "Insurance and reinsurance balances receivable" (CB) should be the insurer family member.
+- cash_and_equivalents: CashAndEquivalentsExcludingAssetsHeldForSale (GE 2015) in the family.
+- income_before_tax: add IncomeLossFromContinuingOperationsBeforeIncomeTaxes (MCD, 6 cells) to the family.
+- inventory: T face 'Inventories' is mis-tagged PrepaidExpenseCurrent (2020/2024/2025); accept by printed label.
+- amortization_of_intangibles: AdjustmentForAmortization must be label-gated: WELL CF "Other amortization expenses" (debt costs etc.) was served as intangible amortization for 2016/2017/2018/2020/2022 (wrong). Accept AdjustmentForAmortization only when the label names amortization expense of intangibles (GILD "Amortization expense") or the note confirms; for WELL use DepreciationAmortizationRelatedToInPlaceLeaseIntangiblesAndLeaseCommissions.
+- accounts_payable: AccountsPayableCurrentAndNoncurrent note fact (WELL) should be the X16 note-split tier.
+- interest_income: InterestAndFeeIncomeLoansAndLeases "Interest income" (WELL REIT revenue line) and RevenueFromContractWithCustomer[ProductOrService=InterestRevenue] (WELL 2019/2020) by label.
+- interest_expense: InterestExpenseBorrowings "Contractual interest expense" (WELL) in the family.
+- ppe_net (equity_reit): RealEstateInvestmentPropertyNet "Net real property owned" (WELL) - add to the REIT family (registry should say real property net is the REIT ppe_net).
+
+## reader C
+dividends_paid: add PaymentsOfOrdinaryDividends to the tier with PaymentsOfDividendsCommonStock (JNJ CF 'Dividends to shareholders', 4 cells FY2020-2023).
+revenue: add SalesRevenueGoodsNet to the revenue tier (JNJ FY2015 'Sales to customers'; KO FY2015 hint same).
+stockholders_equity: add a tier-2 StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest, accepted only when the filing has no MinorityInterest/NCI fact at that period (JNJ 2015/2017/2018/2020 'Total shareholders equity').
+inventory: add InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings to tier 1 (LMT 'Inventories, net').
+interest_income: InvestmentIncomeNet printed with label 'Interest income' (MU) -> accept in tier 2 when the printed label is interest income.
+amortization_of_intangibles: AdjustmentForAmortization (CF 'Amortization', MRK) should be a tier (ruling 15, CF face line beats rounded note).
+depreciation_and_amortization BAC 2016: derived (custom premises D&A + AmortizationOfIntangibleAssets) exported with badge as_printed; needs derived: badge.
+gross_profit TMO 2017: derived from Product+Service member cost lines, exported as_printed; needs derived: badge.
+other_income_expense_net SPGI 2015: resolver took OtherOperatingIncome (above operating profit) -> resolver bug; checker correctly did not match; rule: never take OtherOperatingIncome for other_income_expense_net.
+inventory: add InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings to tier 1 (LMT 'Inventories, net').
+interest_income: InvestmentIncomeNet printed with label 'Interest income' (MU) -> accept in tier 2 when the printed label is interest income.
+amortization_of_intangibles: AdjustmentForAmortization (CF 'Amortization', MRK) should be a tier (ruling 15, CF face line beats rounded note).
+depreciation_and_amortization BAC 2016: derived (custom premises D&A + AmortizationOfIntangibleAssets) exported with badge as_printed; needs derived: badge.
+gross_profit TMO 2017: derived from Product+Service member cost lines, exported as_printed; needs derived: badge.
+other_income_expense_net SPGI 2015: resolver took OtherOperatingIncome (above operating profit); never take OtherOperatingIncome for other_income_expense_net.
+other_income_expense_net AMAT 2019/2020: combined line 'Interest and other income, net' exported with badge as_printed; should be combined:Interest and other income, net (prior AMAT-2026-11-22).
+stockholders_equity CAT 2016: cell badged derived:total_equity-noncontrolling_interest but value = total incl. NCI (13,213, NCI 76 printed); the derivation subtraction was not applied -> derived export bug.
+other_income_expense_net PM: NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent (sign-flipped, cost) is the only non-interest line; checker could rebuild via step 2/4 identity (pretax - OI + interest net).
+other_income_expense_net ISRG 2019: badge 'combined:interest income' does not match the printed label 'Interest and other income, net' (label method failed); NonoperatingIncomeExpense in family; badge text should be the printed label. ISRG 2020/2022, AMAT: combined line exported as_printed.
+interest_income NOW: custom now:InterestIncomeNonOperating labelled 'Interest income' (family cannot see custom tags; label-based accept).
+interest_expense VRTX: 'Interest expense' line tagged InterestIncomeExpenseNet (with separate interest income line) -> accept InterestIncomeExpenseNet by printed label 'Interest expense'.
+operating_expenses COST: single SG&A line between merchandise costs and OI (X89 component sum) -> checker could accept SG&A when revenue - cost - SG&A = OI exactly.
+gross_profit VRTX 2019, BMY 2016: derived C1 exported as_printed/text; needs derived: badge.
+accounts_receivable: add AccountsAndOtherReceivablesNetCurrent to tier 2 (ABBV 2015). NFLX: TradeReceivablesHeldForSaleAmount is NFLX's (mis)tag for the note 'Trade receivables' in other current assets (R39) -> company-scoped note-split element.
+cf_inventory_change: add IncreaseDecreaseInRetailRelatedInventories (HD, 4 cells).
+amortization_of_intangibles: add AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction (PFE IS face line, 2 cells).
+dividends_paid: PaymentsOfOrdinaryDividends again (PFE 2 cells).
+depreciation_and_amortization ANET: served as note parts (Depreciation + AmortizationOfIntangibleAssets) while the CF prints 'Depreciation, amortization and other'; registry order puts the combined CF line (step 2) before parts (step 3) and AMGN with the same label serves the CF line -> rule conflict for Ritwik/Dhairya; exported as_printed, should be derived:depreciation+amortization.
+source: NFLX accounts_receivable 2018 cites 10-Q 0001065280-19-000157 (Q1 2019) for a FY-end balance; value right, re-point to 10-K 0001065280-20-000040 R39.
+accounts_receivable: add AccountsReceivableNet (BLK, 3 cells) to tier 1/2.
+amortization_of_intangibles: AmortizationAndImpairmentOfIntangibleAssets acceptable when the filing prints impairment 0 for the year (BLK 2022).
+revenue: add RevenuesExcludingInterestAndDividends (BLK 'Total revenue').
+interest_income: InvestmentIncomeNet labelled 'INTEREST INCOME' (FTNT 5 cells, MU) -> add to tier 2 when label says interest income.
+gross_profit RTX 2017-2020: derived from Product+Service member cost lines, exported as_printed (text); needs derived: badge.
+other_income_expense_net RTX 2017: resolver serves OtherIncome above Operating profit (I32) contrary to ruling 2026-11-21 (d); same class as SPGI 2015 -> one rule decision needed (I32 vs 11-21 d).
+loans_net: add NotesReceivableNet (C 'Total loans, net', 3 cells).
+provision_for_credit_losses: add ProvisionForLoanLossesExpensed and FinancingReceivableExcludingAccruedInterestCreditLossExpenseReversal (loans line); C resolver bug picks c:FinancingReceivableOtherAssetsCreditLossExpenseReversal (FY2022 76, FY2025 467); C series mixes perimeters (2015 total incl. benefits 7,913; 2019/2020 loans-only) -> needs one perimeter ruling for Citi.
+cf_ar_change: add IncreaseDecreaseInAccountsReceivableExcludingAcquisitionRelated (KLAC 6 cells).
+depreciation_and_amortization: add OtherDepreciationAndAmortization (AMD CF 'Depreciation and amortization').
+interest_income AMD: InterestIncomeExpenseNet labelled 'Interest income' in the other-income note -> label-based accept.
+income_before_tax: PG uses custom pg:IncomeLossFromContinuingOperationsBeforeIncomeTaxes on the face -> accept by label/position (4 cells); also consider us-gaap IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic... no; just label rule.
+operating_expenses PG: component sum (SG&A + Venezuela charge / impairment line) X89 -> checker identity revenue - COGS - opex = OI.
+gross_profit TMUS 2017-2022: derived C1 exported as_printed/text; needs derived badge.
+interest_expense TMUS 2024/2025: InterestIncomeExpenseNonoperatingNet 'Interest expense, net' (step 3) exported as_printed; needs combined badge; checker could add InterestIncomeExpenseNonoperatingNet to a step-3 tier.
+other_income_expense_net DE 2015/2016: resolver serves OtherIncome inside 'Net Sales and Revenues' -> must HIDE (structural_not_presented), as prior DE 2018-2020. Same family of bug as SPGI/RTX (an OtherIncome/OtherOperatingIncome element outside the OI->pretax band).
+accounts_receivable DE: AccountsReceivableNet 'Trade accounts and notes receivable - net' (2 cells) -> add AccountsReceivableNet to tier.
+ppe_net: add PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetExcludingLessorAssetUnderOperatingLeaseAfterAccumulatedDepreciationAndAmortization (DE 4 cells, tier 2) and PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization (GEV 3 cells, step 2 -> combined badge missing on export).
+accounts_receivable GEV 2023: related-party member sum exported as_printed; needs derived badge. cf_ar_change GEV: IncreaseDecreaseInOtherReceivables labelled 'current receivables' -> label accept.
+source: GEV ppe_net 2025 cites 10-Q 0001996810-26-000163; re-point to 10-K 0001996810-26-000015 R4.
+cost_of_revenue ORCL: derived sum of orcl cost extension lines exported as_printed (text); needs derived badge.
+income_before_tax ORCL: orcl:IncomeLossFromContinuingOperationsIncludingNoncontrollingInterestBeforeIncomeTaxesExtraordinaryItems on face (3 cells) -> label accept.
+cost_of_revenue: add CostOfPurchasedOilAndGas (CVX 2015 'Purchased crude oil and products').
+other_income_expense_net: cvx:NonoperatingIncome 'Other income' inside revenues accepted by prior CVX ruling (4 cells) while DE's revenue-section 'Other income' is HIDE by prior DE rulings -> cross-company inconsistency for the rules owner.
+inventory: add InventoryOtherThanOreStockpilesOnLeachpadsNetOfReserves (NEM 6 cells).
+interest_expense NEM: InterestIncomeExpenseNonoperatingNet labelled 'Interest expense, net of capitalized interest' -> label accept.
+gross_profit CVX/NEM, operating_expenses CVX: derived cells exported as_printed/text; need derived badge.
+source: NEM inventory 2025 cites 10-Q 0001164727-26-000043; re-point to FY2025 10-K.
+cf_ar_change: add IncreaseDecreaseInAccountsAndOtherReceivables (SHOP 4 cells, step 2 combined 'Trade and other receivables'; badge missing on export).
+income_before_tax: SHOP tags the pretax face line IncomeLossAttributableToParent (misuse) -> label/position accept (3 cells).
+revenue: add SalesRevenueServicesNet (SHOP 2015/2016 'Total revenues').
+interest_income: InterestIncomeExpenseNonoperatingNet labelled 'Interest income' (SHOP 2022).
+total_liabilities SHOP 2021: current + long-term liabilities derived (no printed total) exported as_printed; needs derived badge.
+operating_expenses: add NoninterestExpense for broker_am when printed 'Total operating expenses' (GS 6 cells).
+ppe_net: add gs:PropertyPlantsAndEquipmentNet / note-line acceptance (GS 5 cells, custom tag, note only).
+accounts_receivable GS 2015: two-line sum exported as_printed; needs derived badge.
+cash_paid_for_interest QCOM: custom qcom:Interestpaidnetofinterestreceived (note text 'Cash interest paid related to our commercial paper program and long-term debt', net of swap receipts in FY2019 10-K) -> company-scoped accept (5 cells).
+dividends_paid: PaymentsOfOrdinaryDividends (QCOM 3 cells).
+stockholders_equity: StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest when no NCI fact (QCOM 4 cells).
+other_income_expense_net QCOM 2020: InvestmentIncomeNonoperating combined line exported as_printed; needs combined badge (and a row-wide QCOM decision: combined line vs derived minus interest, see prior QCOM 2026 row).
+sbc XOM: note 'Compensation cost charged against income' (AllocatedShareBasedCompensationExpense, not in FSN probe) -> text/note-only reads needed; 9 cells.
+interest_income XOM: segment-note footnote text (untagged) -> text_stated rule.
+cf_ar_change WMT / cf_inventory_change WMT: IncreaseDecreaseInAccountsAndOtherReceivables, IncreaseDecreaseInRetailRelatedInventories (9 cells). operating_expenses WMT: single OSG&A line X89 (4 cells). other_income_expense_net WMT 2017: GainsLossesOnExtinguishmentOfDebt 0 sole non-interest line -> family tier 2 for step-2 sums.
+accounts_payable: add AccountsPayableCurrentAndNoncurrent (AXP 6 cells). basic/diluted_eps: add IncomeLossFromContinuingOperationsPerBasicShare/PerDilutedShare when the filer has no discontinued ops (AXP 3 cells). operating_expenses: NoninterestExpense 'Total expenses' (AXP 5 cells). share_buybacks AXP: equity-statement TreasuryStockValueAcquiredCostMethod (CF line wider).
+UNP: depreciation_and_amortization add us-gaap:Depreciation when it is the only CF D&A add-back (8 cells); cf_inventory_change add IncreaseDecreaseInMaterialsAndSupplies (5); inventory add MaterialsSuppliesAndOther (3, step 2).
+PGR: accounts_receivable add PremiumsReceivableAtCarryingValue for insurer (7); sbc add RestrictedStockExpense (4); D&A add Depreciation when sole add-back (2); share_buybacks add pgr:PaymentsforRepurchaseofCommonStockintheOpenMarket (open-market line, 7); cash 2015 us-gaap:Cash (tier 2 present).
+NEE: accounts_payable AccountsPayableCurrentAndNoncurrent (7); interest_expense add InterestExpenseAggregateExpenses (5); interest_income add us-gaap:InterestIncome (2); cf_ar/ap_change NEE IncreaseDecreaseInOtherCurrentAssets/Liabilities combined lines exported as_printed, need combined badge (8).

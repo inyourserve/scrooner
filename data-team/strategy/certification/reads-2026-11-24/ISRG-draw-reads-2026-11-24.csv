@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+other_income_expense_net,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001035267-20-000032 R5 IS 'Interest and other income, net' 127.7 (NonoperatingIncomeExpense), the only line between 'Income from operations' 1,374.5 and 'Income before taxes' 1,502.2; combined line per prior ISRG-2026-11-22 (badge combined)"
+other_income_expense_net,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001035267-21-000028 R5 IS 'Interest and other income, net' 157.2 (NonoperatingIncomeExpense), only non-operating line; combined per prior ISRG-2026-11-22; exported badge as_printed should be combined:Interest and other income, net"
+other_income_expense_net,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001035267-23-000019 R6 IS 'Interest and other income, net' 29.7 (NonoperatingIncomeExpense), only non-operating line; combined per prior ISRG-2026-11-22; exported badge as_printed should be combined"

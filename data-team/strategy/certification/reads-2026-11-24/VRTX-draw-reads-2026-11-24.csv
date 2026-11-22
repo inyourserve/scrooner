@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+gross_profit,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000875320-20-000007 R2 IS 'Revenues' 4,162,821 - 'Cost of sales' 547,758 (thousands) = 3,615,063; derived revenue-cost_of_revenue C1 (prior VRTX-2026-11-17)"
+interest_expense,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000875320-22-000007 R3 IS (2019 col) 'Interest expense' (58.5) tagged InterestIncomeExpenseNet; separate 'Interest income' line printed, so this line is interest expense; magnitude 58,500,000"
+interest_expense,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000875320-22-000007 R3 IS 'Interest expense' (61.5) tagged InterestIncomeExpenseNet; separate 'Interest income' 4.9 (InvestmentIncomeInterestAndDividend); magnitude 61,500,000"

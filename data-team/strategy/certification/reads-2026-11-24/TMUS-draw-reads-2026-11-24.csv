@@ -1,0 +1,8 @@
+data_point,fiscal_year,verdict,reader,evidence
+gross_profit,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-20-000026 R4 IS 2017 col 'Revenues' 40,604 - cost of services 6,100 - cost of equipment sales 11,608 (CostOfGoodsAndServicesSold Service/ProductEquipment members) = 22,896; derived C1 (prior TMUS-2026-11-17)"
+gross_profit,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-22-000018 R5 IS 2019 col 'Revenues' 44,998 - 6,622 - 11,899 = 26,477; derived C1"
+gross_profit,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-23-000016 R5 IS 2020 col 'Revenues' 68,397 - 11,878 - 16,388 = 40,131; derived C1"
+gross_profit,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-24-000008 R5 IS 2021 col 'Revenues' 80,118 - 13,934 - 22,671 = 43,513; derived C1"
+gross_profit,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-25-000012 R5 IS 2022 col 'Revenues' 79,571 - 14,666 - 21,540 = 43,365; derived C1"
+interest_expense,2024,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-25-000012 R5 IS 'Interest expense, net' (3,411) (InterestIncomeExpenseNonoperatingNet); no gross interest expense fact in the filing (only finance-lease interest 111 note); registry step 3 net line; exported as_printed, should carry combined badge (nets interest income)"
+interest_expense,2025,MATCH,agent:draw-reads-2026-11-24/C,"0001283699-26-000010 R5 IS 'Interest expense, net' (3,774) (InterestIncomeExpenseNonoperatingNet); registry step 3; badge should be combined"

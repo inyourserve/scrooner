@@ -1,0 +1,14 @@
+data_point,fiscal_year,verdict,reader,evidence
+interest_income,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000034088-25-000010 xom-20241231.htm segment note footnote '(2) Primarily Corporate and Financing Interest revenue of $ 1,600 million.' (2024); untagged text-stated; prior XOM-2026-11-21 text_stated_interest_revenue rule (FY2025 10-K repeats 1,600)"
+interest_income,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000034088-26-000045 xom-20251231.htm segment note footnote '(2) Primarily Corporate and Financing Interest revenue of $ 1,212 million.' (prior XOM-2026-11-21 read); text-stated"
+other_income_expense_net,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000034088-26-000045 R3 IS 'Other income' 3,500 (Revenues on ProductOrService=OtherRevenueMember) under 'Revenues and other income'; prior XOM-2026-11-21 ruling"
+other_income_expense_net,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000034088-26-000045 R3 IS 'Other income' 4,144 (Revenues[OtherRevenueMember]); prior XOM-2026-11-21 ruling"
+sbc,2015,MATCH,agent:draw-reads-2026-11-24/C,0000034088-16-000065 R72 Incentive Program (Narrative) (Details) 'Compensation cost charged against income $ 855 $ 831 $ 854' (2015|2014|2013); no CF SBC line; restricted stock is XOM's only SBC
+sbc,2018,MATCH,agent:draw-reads-2026-11-24/C,0000034088-19-000010 R76 Incentive Program (Narrative) (Details) 'Compensation cost charged against income $ 774 $ 856 $ 880' (2018|2017|2016)
+sbc,2019,MATCH,agent:draw-reads-2026-11-24/C,FY2021 10-K 0000034088-22-000011 R82 Incentive Program (Narrative) (Details) 'Compensation cost charged against income $ 612 $ 672 $ 741' (2021|2020|2019)
+sbc,2020,MATCH,agent:draw-reads-2026-11-24/C,0000034088-22-000011 R82 'Compensation cost charged against income $ 612 $ 672 $ 741' (2020 = 672)
+sbc,2021,MATCH,agent:draw-reads-2026-11-24/C,0000034088-22-000011 R82 'Compensation cost charged against income $ 612' (2021)
+sbc,2022,MATCH,agent:draw-reads-2026-11-24/C,FY2024 10-K 0000034088-25-000010 R92 Incentive Program 'Compensation cost charged against income | $ 835 $ 611 $ 648' (2024|2023|2022)
+sbc,2023,MATCH,agent:draw-reads-2026-11-24/C,0000034088-25-000010 R92 'Compensation cost charged against income $ 835 $ 611 $ 648' (2023 = 611)
+sbc,2024,MATCH,agent:draw-reads-2026-11-24/C,0000034088-25-000010 R92 'Compensation cost charged against income $ 835' (2024)
+sbc,2025,MATCH,agent:draw-reads-2026-11-24/C,0000034088-26-000045 R110 Incentive Program (Narrative) (Details) ($ in Billions) 'Compensation cost charged against income | $ 1.0 | $ 0.8 | $ 0.6' (prior XOM-2026-11-21 read; only billions precision printed)

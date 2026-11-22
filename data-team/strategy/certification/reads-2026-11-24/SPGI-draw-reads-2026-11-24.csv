@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+other_income_expense_net,2015,MISMATCH,agent:draw-reads-2026-11-24/C,"0000064040-16-000042 R2 IS: 'Other (income) loss' 11 (OtherOperatingIncome) sits ABOVE 'Operating profit' 1,917 (5,313-3,407+11=1,917) so it is operating; between operating profit and pretax only 'Interest expense, net' 102: 1,815-1,917+102 = 0; shown 11,000,000 is an operating line"

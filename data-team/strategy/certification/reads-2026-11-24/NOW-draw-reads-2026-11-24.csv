@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+interest_income,2021,MATCH,agent:draw-reads-2026-11-24/C,0001373715-24-000030 R5 IS (2021 col) 'Interest income' 20 (now:InterestIncomeNonOperating custom)
+interest_income,2024,MATCH,agent:draw-reads-2026-11-24/C,"0001373715-26-000007 R5 IS (2024 col) 'Interest income' 419 (now:InterestIncomeNonOperating custom); separate 'Other expense, net' (45)"
+interest_income,2025,MATCH,agent:draw-reads-2026-11-24/C,0001373715-26-000007 R5 IS 'Interest income' 451 (now:InterestIncomeNonOperating custom)

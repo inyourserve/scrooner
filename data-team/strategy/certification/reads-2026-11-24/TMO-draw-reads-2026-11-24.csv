@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+gross_profit,2017,MATCH,agent:draw-reads-2026-11-24/C,"0000097745-20-000009 R4 IS 2017 col 'Revenues' 20,918 - 'Cost of revenues' Product 8,975 + Service 2,495 (CostOfGoodsAndServicesSold on ProductOrServiceAxis) = 9,448; derived revenue-cost_of_revenue (prior TMO-2026-11-17 ruling)"

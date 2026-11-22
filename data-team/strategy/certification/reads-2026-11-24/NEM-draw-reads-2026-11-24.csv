@@ -1,0 +1,10 @@
+data_point,fiscal_year,verdict,reader,evidence
+gross_profit,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001558370-20-001041 R2 IS 2017 col 'Sales (Note 6)' 7,379 - 'Costs applicable to sales' 4,062 (CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization on CostOfGoodsSoldExcludingExplorationAndRemediationExpense member) = 3,317; derived C1 (prior NEM-2026-11-22)"
+interest_expense,2023,MATCH,agent:draw-reads-2026-11-24/C,"0001164727-26-000010 R3 IS 'Interest expense, net of capitalized interest of $144, $114 and $89, respectively' (243) (InterestIncomeExpenseNonoperatingNet); interest expense line, not netted with interest income (prior NEM-2026-11-22 ruling 17/19)"
+inventory,2015,MATCH,agent:draw-reads-2026-11-24/C,0001558370-17-000729 R7 BS 'Inventories (Note 19)' 561 (InventoryOtherThanOreStockpilesOnLeachpadsNetOfReserves); stockpiles/leach pads on separate line
+inventory,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001164727-21-000027 R8 BS 'Inventories (Note 21)' 1,014 (InventoryOtherThanOreStockpilesOnLeachpadsNetOfReserves)"
+inventory,2021,MATCH,agent:draw-reads-2026-11-24/C,0001164727-23-000011 R8 BS (2021 col) 'Inventories (Note 16)' 930 (same element)
+inventory,2022,MATCH,agent:draw-reads-2026-11-24/C,0001164727-24-000016 R6 BS (2022 col) 'Inventories (Note 16)' 979 (same element)
+inventory,2023,MATCH,agent:draw-reads-2026-11-24/C,"0001164727-25-000011 R6 BS (2023 col) 'Inventories (Note 16)' 1,663 (same element)"
+inventory,2025,MATCH,agent:draw-reads-2026-11-24/C,"0001164727-26-000043 R4 BS (Dec. 31 2025 col) 'Inventories (Note 13)' 1,512 (same element); cited filing is the Q3 2026 10-Q (comparative column), value as printed; source should be the FY2025 10-K"
+share_buybacks,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001558370-19-000806 R6 CF financing 'Repurchases of common stock' (98) carries a value only for 2018 (PaymentsForRepurchaseOfCommonStock 2018 only, none for 2016); prior NEM-2026-11-22 read the 10-K HTML: '(98) - -' printed dash for 2017 and 2016 = 0"

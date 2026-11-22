@@ -1,0 +1,3 @@
+data_point,fiscal_year,verdict,reader,evidence
+dividends_per_share,2018,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: FY2023 10-K 0001326801-24-000012 Item 5 Dividend Policy ""Prior to 2024, we had never declared or paid any cash dividend on our common stock."" (prior read META-2026-11-17); probe finds no dividend fact in 0001326801-19-000009 for FY2018"
+dividends_per_share,2023,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0001326801-24-000012 Item 5 Dividend Policy ""Prior to 2024, we had never declared or paid any cash dividend on our common stock. On February 1, 2024 we announced the initiation of our first..."" (prior read META-2026-11-17); probe: no dividend fact for FY2023"

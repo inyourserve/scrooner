@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+operating_expenses,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000909832-23-000042 R3 IS: 'Total revenue' 242,290; 'Merchandise costs' 212,586; 'Selling, general and administrative' 21,590; 'Operating Income' 8,114 (242,290-212,586-21,590=8,114): SG&A is the only line between cost and OI (X89 component sum; prior COST-2020 ruling)"
+operating_expenses,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000909832-24-000049 R3 IS: 'Total revenue' 254,453; 'Merchandise costs' 222,358; 'Selling, general and administrative' 22,810; 'Operating income' 9,285 (exact tie): SG&A sole opex line"
+operating_expenses,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000909832-25-000101 R3 IS: 'Total revenue' 275,235; 'Merchandise costs' 239,886; 'Selling, general and administrative' 24,966; 'Operating income' 10,383 (exact tie): SG&A sole opex line"

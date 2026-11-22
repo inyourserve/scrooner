@@ -1,0 +1,13 @@
+data_point,fiscal_year,verdict,reader,evidence
+accounts_receivable,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-17-056804 R4 BS Dec. 2015 col: 'Brokers, dealers and clearing organizations' 25,453 + 'Customers and counterparties' 46,430 = 71,883 (same-filing instant sum that later 10-Ks print as 'Customer and other receivables'); prior GS-2026-11-17 receivables_line_continuity (medium: row-level template question noted there); derived, exported as_printed"
+operating_expenses,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-16-488753 R2 IS 'Total operating expenses' 25,042 (NoninterestExpense)"
+operating_expenses,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-17-056804 R2 IS 'Total operating expenses' 20,304 (NoninterestExpense)"
+operating_expenses,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-18-056383 R2 IS 'Total operating expenses' 20,941 (NoninterestExpense)"
+operating_expenses,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-21-049380 R2 IS 'Total operating expenses' 28,983 (NoninterestExpense)"
+operating_expenses,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000886982-25-000005 R3 IS 'Total operating expenses' 33,767 (NoninterestExpense)"
+operating_expenses,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000886982-26-000091 R3 IS 'Total operating expenses' 37,544 (NoninterestExpense)"
+ppe_net,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-16-470289 gs:PropertyPlantsAndEquipmentNet 9,956 at 2015-12-31 (Other Assets detail note line 'Property, leasehold improvements and equipment', no face line); prior GS-2026-11-17 note_line_custom_tag_ppe (FY2016 10-K prints '$ 12,070 | $ 9,956')"
+ppe_net,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-17-056804 gs:PropertyPlantsAndEquipmentNet 12,070 at 2016-12-31 (Other Assets detail 'Property, leasehold improvements and equipment'); prior GS-2026-11-17"
+ppe_net,2018,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-19-050198 gs:PropertyPlantsAndEquipmentNet 18,317 at 2018-12-31 (Other Assets detail note line); prior GS-2026-11-17"
+ppe_net,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-20-043853 gs:PropertyPlantsAndEquipmentNet 21,886 at 2019-12-31 (Other Assets detail note line); prior GS-2026-11-17"
+ppe_net,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001193125-22-052682 gs:PropertyPlantsAndEquipmentNet 18,094 at 2021-12-31 (Other Assets detail note line); prior GS-2026-11-17"

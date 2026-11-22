@@ -1,0 +1,13 @@
+data_point,fiscal_year,verdict,reader,evidence
+dividends_paid,2023,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0000012927-24-000010 Item 7 Liquidity ""In 2020, we announced the suspension of our dividend until further notice. As a result, we did not pay any dividends in 2023, 2022 and 2021."" (prior read BA DPS 2021); CF R8 prints no dividend line"
+dividends_paid,2025,MATCH,agent:draw-reads-2026-11-24/B,"stated zero (common): 0001628280-26-004357 MD&A ""Our dividend to common shareholders has been suspended since 2020.""; CF R8 prints only ""Dividends paid on Mandatory convertible preferred stock"" (331), which is preferred, not common"
+dividends_per_share,2022,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: FY2023 10-K 0000012927-24-000010 ""we did not pay any dividends in 2023, 2022 and 2021"" after the 2020 suspension of ""the declaration or payment of dividends until further notice""; FY2024 10-K 0000012927-25-000015 CF has no common dividend amount for 2022"
+dividends_per_share,2023,MATCH,agent:draw-reads-2026-11-24/B,"stated zero: 0000012927-24-000010 Item 7 ""In 2020, we announced the suspension of our dividend until further notice. As a result, we did not pay any dividends in 2023, 2022 and 2021."""
+inventory,2015,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-16-000099 R6 BS ""Inventories, net of advances and progress billings"" 47,257 (InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings), the face inventory line"
+inventory,2017,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-19-000010 R5 BS ""Inventories"" 61,388 (InventoryNetOfAllowancesCustomerAdvancesAndProgressBillings)"
+inventory,2019,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-20-000014 R5 BS ""Inventories"" 76,622"
+inventory,2020,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-21-000011 R4 BS ""Inventories"" 81,715"
+inventory,2024,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-25-000015 R6 BS ""Inventories"" 87,550"
+inventory,2025,MATCH,agent:draw-reads-2026-11-24/B,"0001628280-26-004357 R6 BS ""Inventories"" 84,679"
+share_buybacks,2020,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-21-000011 R5 CF ""Common shares repurchased"" 2020 column printed dash (PaymentsForRepurchaseOfCommonStock no 2020 value); FY2025 10-K Item 5 ""Our open market common stock repurchase program was terminated in March 2020."""
+share_buybacks,2022,MATCH,agent:draw-reads-2026-11-24/B,"0000012927-23-000007 R8 CF financing prints no repurchase line for 2022 (only employee tax-withholding shares, excluded); ""Our open market common stock repurchase program was terminated in March 2020"" (Item 5, 0001628280-26-004357) -> 0"

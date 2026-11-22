@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+shares_outstanding,2020,MATCH,agent:draw-reads-2026-11-24/C,"0000077476-22-000010 R6/R7 BS 'Common stock, issued' 1,380 (millions, Dec. 26 2020 col; CommonStockSharesIssued, caption 'issued, net of repurchased common stock') = outstanding; prior PEP-2026-11-17 ruling"

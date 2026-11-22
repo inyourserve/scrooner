@@ -1,0 +1,5 @@
+data_point,fiscal_year,verdict,reader,evidence
+cf_inventory_change,2016,MATCH,agent:draw-reads-2026-11-24/C,0000354950-16-000060 R8 CF 'Merchandise Inventories' (546) printed negated; IncreaseDecreaseInRetailRelatedInventories element value +546; served sign follows the element (registry raw XBRL sign; prior PG cf_inventory_change ruling same convention)
+cf_inventory_change,2020,MATCH,agent:draw-reads-2026-11-24/C,0000354950-20-000015 R7 CF 'Changes in merchandise inventories' (593) printed negated; IncreaseDecreaseInRetailRelatedInventories +593 (raw element sign)
+cf_inventory_change,2021,MATCH,agent:draw-reads-2026-11-24/C,"0000354950-21-000089 R7 CF 'Changes in merchandise inventories' (1,657) printed negated; IncreaseDecreaseInRetailRelatedInventories +1,657 (raw element sign)"
+cf_inventory_change,2025,MATCH,agent:draw-reads-2026-11-24/C,0000354950-25-000085 R8 CF 'Changes in merchandise inventories' (743) printed negated; IncreaseDecreaseInRetailRelatedInventories +743 (raw element sign)

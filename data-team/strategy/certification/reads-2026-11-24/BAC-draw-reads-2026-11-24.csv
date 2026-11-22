@@ -1,0 +1,2 @@
+data_point,fiscal_year,verdict,reader,evidence
+depreciation_and_amortization,2016,MATCH,agent:draw-reads-2026-11-24/C,"0000070858-19-000012 R7 CF (2016 col) 'Depreciation and premises improvements amortization' 1,511 (bac:DepreciationAndAmortizationOfPremiseImprovements) + 'Amortization of intangibles' 730 (AmortizationOfIntangibleAssets) = 2,241; registry step 3 derived (prior BAC-2026-11-21 ruling same); exported as_printed, should carry derived badge"

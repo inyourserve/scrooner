@@ -1,0 +1,6 @@
+data_point,fiscal_year,verdict,reader,evidence
+interest_income,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001262039-16-000053 R4 IS 'INTEREST INCOME' 5,295 thousands (InvestmentIncomeNet), separate from 'OTHER INCOME (EXPENSE) NET'"
+interest_income,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001262039-18-000009 R4 IS (2016 col) 'INTEREST INCOME' 7,303 thousands (InvestmentIncomeNet)"
+interest_income,2021,MATCH,agent:draw-reads-2026-11-24/C,0001262039-22-000008 R5 IS 'INTEREST INCOME' 4.5M (InvestmentIncomeNet)
+interest_income,2022,MATCH,agent:draw-reads-2026-11-24/C,0001262039-23-000010 R5 IS 'INTEREST INCOME' 17.4M (InvestmentIncomeNet)
+interest_income,2025,MATCH,agent:draw-reads-2026-11-24/C,0001262039-26-000007 R5 IS 'INTEREST INCOME' 162.3M (InvestmentIncomeNet); separate 'INTEREST EXPENSE' (20.1) and 'OTHER INCOME (EXPENSE)NET' 55.3

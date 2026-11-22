@@ -1,0 +1,6 @@
+data_point,fiscal_year,verdict,reader,evidence
+amortization_of_intangibles,2020,MATCH,agent:draw-reads-2026-11-24/B,"0001835632-22-000016 R8 CF ""Amortization of acquired intangible assets"" 368,082 (tagged AmortizationAndImpairmentOfIntangibleAssets; label is amortization only)"
+interest_income,2018,MATCH,agent:draw-reads-2026-11-24/B,"0001058057-20-000014 R4 IS ""Interest income"" 17,381 (InvestmentIncomeNonoperating); value right, but the badge combined:Interest and other income, net is wrong: the printed line is interest income alone -> as_printed"
+interest_income,2022,MATCH,agent:draw-reads-2026-11-24/B,"0001835632-22-000016 R5 IS ""Interest income"" 750 (thousands; InvestmentIncomeNonoperating)"
+interest_income,2023,MATCH,agent:draw-reads-2026-11-24/B,"0001835632-23-000013 R5 IS ""Interest income"" 5.3 ($M; InvestmentIncomeNonoperating 5,300,000)"
+interest_income,2024,MATCH,agent:draw-reads-2026-11-24/B,"0001835632-24-000009 R5 IS ""Interest income"" 8.8 ($M; InvestmentIncomeNonoperating 8,800,000)"

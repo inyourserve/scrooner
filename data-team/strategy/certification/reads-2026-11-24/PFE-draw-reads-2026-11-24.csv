@@ -1,0 +1,6 @@
+data_point,fiscal_year,verdict,reader,evidence
+amortization_of_intangibles,2018,MATCH,agent:draw-reads-2026-11-24/C,"0000078003-21-000038 R2 IS 'Amortization of intangible assets' 4,736 (AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction), face line"
+amortization_of_intangibles,2019,MATCH,agent:draw-reads-2026-11-24/A,"0000078003-22-000027 R3 IS 'Amortization of intangible assets' 4,429 (AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction) is the printed face line (step 1); checker's 4,500 is the rounded '$4.5 billion' note total (dcml -8, unprinted). Same treatment as BMY."
+amortization_of_intangibles,2025,MATCH,agent:draw-reads-2026-11-24/C,"0000078003-26-000026 R3 IS 'Amortization of intangible assets' 4,874 (AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction), face line"
+dividends_paid,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000078003-16-000077 R8 CF 'Cash dividends paid' (6,940) PaymentsOfOrdinaryDividends; magnitude"
+dividends_paid,2024,MATCH,agent:draw-reads-2026-11-24/C,"0000078003-25-000054 R9 CF 'Cash dividends paid' (9,512) PaymentsOfOrdinaryDividends; magnitude"

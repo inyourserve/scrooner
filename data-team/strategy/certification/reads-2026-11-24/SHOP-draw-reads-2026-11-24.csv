@@ -1,0 +1,12 @@
+data_point,fiscal_year,verdict,reader,evidence
+cf_ar_change,2017,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-18-000009 R7 CF 'Trade and other receivables' printed negated, IncreaseDecreaseInAccountsAndOtherReceivables +13,037 thousands; only receivables change line (step 2 combined: trade and other); raw element sign"
+cf_ar_change,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-20-000010 R7 CF 'Trade and other receivables' IncreaseDecreaseInAccountsAndOtherReceivables +56,181 thousands (raw element sign; step 2 combined)"
+cf_ar_change,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-22-000011 R8 CF 'Trade and other receivables' IncreaseDecreaseInAccountsAndOtherReceivables +72,300 thousands (raw element sign; step 2 combined)"
+cf_ar_change,2025,MATCH,agent:draw-reads-2026-11-24/C,0001594805-26-000007 R7 CF 'Trade and other receivables' IncreaseDecreaseInAccountsAndOtherReceivables +219 million (raw element sign; step 2 combined)
+income_before_tax,2019,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-20-000010 R4 IS 'Loss before income taxes' (95,815) thousands (tagged IncomeLossAttributableToParent); -141,147 + 45,332 = -95,815"
+income_before_tax,2020,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-21-000008 R4 IS 'Income (loss) before income taxes' 240,364 thousands (IncomeLossAttributableToParent misused)"
+income_before_tax,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-22-000011 R5 IS 'Income before income taxes' 3,140,592 thousands (IncomeLossAttributableToParent misused)"
+interest_income,2022,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-25-000012 R5 IS (2022 col) 'Interest income' 75 (InterestIncomeExpenseNonoperatingNet, label is interest income)"
+revenue,2015,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-16-000019 R4 IS 'Total revenues' 205,233 thousands (SalesRevenueServicesNet) = subscription 111,979 + merchant 93,254"
+revenue,2016,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-17-000007 R4 IS 'Total revenues' 389,330 thousands (SalesRevenueServicesNet)"
+total_liabilities,2021,MATCH,agent:draw-reads-2026-11-24/C,"0001594805-23-000011 R3 BS 2021 col: 'Total current liabilities' 702,733 + 'Total long term liabilities' 1,504,098 = 2,206,831 thousands; no total liabilities line; derived (prior SHOP-2026-11-17)"

@@ -1,0 +1,8 @@
+data_point,fiscal_year,verdict,reader,evidence
+other_income_expense_net,2025,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-26-000062 R5 IS ""Loss on sale of subsidiary and subsidiaries held for sale"" (265) is the only non-interest line between ""Earnings from operations"" 18,964 and ""Total income before income taxes"" 14,697 (interest expense 4,002): 18,964-4,002-265 = 14,697"
+stockholders_equity,2015,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-17-000009 Schedule I (R85) ""Total UnitedHealth Group shareholders' equity | 38,274 | 33,830""; consolidated R2 ""Total equity"" 33,725 with nonredeemable NCI (105) -> 33,725+105 = 33,830 ties (prior read UNH-2026-11-21)"
+stockholders_equity,2016,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-18-000005 Schedule I (R82) ""Total UnitedHealth Group shareholders' equity | 47,776 | 38,274"" (prior read UNH-2026-11-21)"
+stockholders_equity,2021,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-23-000008 Schedule I (R86) ""Total UnitedHealth Group shareholders' equity | 77,772 | 71,760"" (prior read UNH-2026-11-21)"
+stockholders_equity,2022,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-24-000081 Schedule I (R87) ""Total UnitedHealth Group shareholders' equity | 88,756 | 77,772"" (prior read UNH-2026-11-21)"
+stockholders_equity,2023,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-25-000063 Schedule I (R89) ""Total UnitedHealth Group shareholders' equity | 92,658 | 88,756"" (prior read UNH-2026-11-21)"
+stockholders_equity,2025,MATCH,agent:draw-reads-2026-11-24/B,"0000731766-26-000062 Schedule I (R94) ""Total UnitedHealth Group shareholders' equity | 94,110""; ties to R3 BS ""Total equity"" 100,090 - NCI 5,980 = 94,110"

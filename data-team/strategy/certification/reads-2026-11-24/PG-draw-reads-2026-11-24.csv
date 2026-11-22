@@ -1,0 +1,8 @@
+data_point,fiscal_year,verdict,reader,evidence
+income_before_tax,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-17-000047 R2 IS (FY2015 col, recast) 'Earnings from Continuing Operations Before Income Taxes' 11,012 (pg:IncomeLossFromContinuingOperationsBeforeIncomeTaxes custom); 11,049-626+149+440 = 11,012"
+income_before_tax,2019,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-21-000100 R2 IS (FY2019 col) 'Earnings from Continuing Operations Before Income Taxes' 6,069 (custom IncomeLossFromContinuingOperationsBeforeIncomeTaxes)"
+income_before_tax,2022,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-23-000073 R3 IS (FY2022 col) 'Earnings from Continuing Operations Before Income Taxes' 17,995 (custom IncomeLossFromContinuingOperationsBeforeIncomeTaxes)"
+income_before_tax,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-23-000073 R3 IS 'Earnings from Continuing Operations Before Income Taxes' 18,353 (custom); 18,134-756+307+668 = 18,353"
+operating_expenses,2015,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-17-000047 R2 IS FY2015 col: 'Selling, General and Administrative Expense' 20,616 + 'Venezuela Deconsolidation Charge' 2,028 = 22,644; 70,749-37,056-22,644 = 11,049 'Operating Income' (X89 component sum; prior PG-2026-11-21)"
+operating_expenses,2018,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-20-000059 R2 IS FY2018 col: SG&A 19,037 + 'Goodwill & Indefinite Lived Intangible Asset Impairment Charges' 0 = 19,037; 66,832-34,432-19,037 = 13,363 OI (X89)"
+operating_expenses,2023,MATCH,agent:draw-reads-2026-11-24/C,"0000080424-23-000073 R3 IS: SG&A 21,112 sole line between COGS and OI; 82,006-42,760-21,112 = 18,134 OI (X89)"
