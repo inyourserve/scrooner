@@ -140,3 +140,28 @@ def test_drill_workflow_feeds_pattern_intake_on_main_with_30_tries():
     assert "seq 1 30" in step and "git push -q origin HEAD:main" in step
     assert "pattern-intake.csv" in step and "drill-class-accuracy.csv" in step
     assert "vars.DAILY_DRILL == 'true'" in wf   # the founder's switch is untouched
+
+
+def test_proof_resolved_names_match_resolver_data_points(tmp_path):
+    """cell_proof names the resolved layer (total_assets_resolved, revenue_sanity_resolved); the resolver uses the base name."""
+    rows = [R("AA", "total_assets", "2024-12-31", "mapped", "9000000", tags="Assets"),
+            R("AA", "revenue", "2024-12-31", "mapped", "100000000", tags="Revenues")]
+    batch = [dict(rank=1, ticker="AA", cik="1", name="x")]
+    proofs = [P("total_assets_resolved", "2024-12-31", "9000000"), P("revenue_sanity_resolved", "2024-12-31", "100000000"),
+              P("cfo_resolved", "2024-12-31", "5")]
+    roles = tmp_path / "roles.csv"
+    roles.write_text("data_point,stmt,parent,alternatives,combined_if,note_ok,custom_label,ruling,fallback\n")
+    fam = tmp_path / "fam.txt"
+    fam.write_text("")
+    items, st = dd.build(rows, [], proofs, [], str(tmp_path / "none"), str(roles), str(fam), "2026-11-17", batch)
+    assert st["proof"]["proof_compared"] == 3 and st["proof"]["proof_agree"] == 2
+    assert [(i["data_point"], i["class"]) for i in items] == [("cfo", "data_gap")]
+
+
+def test_every_resolved_catalog_concept_maps_to_a_registry_data_point():
+    """The shared rule (certification.model.base_name) sends each *_resolved concept to a metric-registry data point."""
+    reg = {r["data_point"] for r in csv.DictReader(open(ROOT / "pipeline/src/scrooner_pipeline/metrics/registry/data_points.csv"))}
+    cat = [r["name"] for r in csv.DictReader(open(ROOT / "data-team/47-fsn-store/company_tag_map/concepts_catalog.csv"))
+           if r["name"].endswith("_resolved")]
+    assert len(cat) >= 28
+    assert [c for c in cat if dd.base_name(c) not in reg] == ["employee_count_resolved"]   # not a template data point

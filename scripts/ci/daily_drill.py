@@ -19,6 +19,13 @@ import argparse, collections, csv, glob, json, os, re, sys
 from datetime import date, datetime
 from decimal import Decimal as D, InvalidOperation
 
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+sys.path.insert(0, os.path.join(ROOT, 'pipeline', 'src'))
+# The one stored-concept -> data point rule (x_resolved -> x, revenue_sanity_resolved -> revenue), shared with certification;
+# stdlib only, so the resolve job's plain python3 imports it. cell_proof names the resolved layer; the resolver and the metric
+# registry (pipeline/src/scrooner_pipeline/metrics/registry/data_points.csv) use the base name.
+from scrooner_pipeline.certification.model import base_name  # noqa: E402
+
 EPOCH = date(2026, 11, 17)
 WINDOW_START = '2015-01-01'
 VAL = ('mapped', 'component_sum', 'derived')
@@ -172,6 +179,7 @@ def gate_proofs(res, proofs, checks, day, cik2tk, att=None):
         if p['verdict'] not in ('PROVEN', 'NOT_PRESENTED'): continue
         tk = cik2tk.get(str(int(p['cik'])))
         if not tk: continue
+        p = dict(p, data_point=base_name(p['data_point']))
         r = res.find(tk, p['data_point'], p['period_end'])
         if p['verdict'] == 'PROVEN':
             stats['proof_compared'] += 1
