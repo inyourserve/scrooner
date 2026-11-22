@@ -1,0 +1,47 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+ELV,revenue,mapped,us-gaap:Revenues,IS,R5.htm,Total revenues,199125000000,199125000000,177011000000,177011000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,R5.htm,Cost of products sold,21178000000,21178000000,19750000000,19750000000,Y,"chosen tag FY[2019, 2020, 2021, 2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017, 2018]: check those 10-Ks)",FILING-CHECKED,accn 0001156039-26-000013
+ELV,gross_profit,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,operating_expenses,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,no opex total and no gross profit to tie a component sum to | accn 0001156039-26-000013
+ELV,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,R5.htm,Operating expense,20984000000,20984000000,20025000000,20025000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,research_and_development,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,operating_income,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,R5.htm,Interest expense,1402000000,1402000000,1185000000,1185000000,Y,"chosen tag FY[2024, 2025]; ERA-CHECK others: {'InterestExpense': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]}",FILING-CHECKED,accn 0001156039-26-000013
+ELV,interest_income,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,other_income_expense_net,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,R5.htm,Income before income tax expense,6710000000,6710000000,7904000000,7904000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,R5.htm,Income tax expense,1049000000,1049000000,1933000000,1933000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,net_income,mapped,us-gaap:NetIncomeLoss,IS,R5.htm,Shareholders’ net income,5662000000,5662000000,5980000000,5980000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,R5.htm,Basic (in dollars per share),25.28,25.28,25.81,25.81,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,R5.htm,Diluted (in dollars per share),25.21,25.21,25.68,25.68,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,weighted_basic_shares,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,weighted_diluted_shares,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,dividends_per_share,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001156039-26-000013
+ELV,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,R6.htm,Total shareholders’ comprehensive income,6358000000,6358000000,6146000000,6146000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,R3.htm,Cash and cash equivalents,9491000000,9491000000,8288000000,8288000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,accounts_receivable,not_presented,,BS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,inventory,not_presented,,BS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,current_assets,mapped,us-gaap:AssetsCurrent,BS,R3.htm,Total current assets,63001000000,63001000000,58942000000,58942000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,R3.htm,"Property and equipment, net",4679000000,4679000000,4652000000,4652000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,goodwill,mapped,us-gaap:Goodwill,BS,R3.htm,Goodwill,28344000000,28344000000,28277000000,28277000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,total_assets,mapped,us-gaap:Assets,BS,R3.htm,Total assets,121494000000,121494000000,116889000000,116889000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,R3.htm,Accounts payable and accrued expenses,7322000000,7322000000,6927000000,6927000000,Y,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,R3.htm,Total current liabilities,41035000000,41035000000,40581000000,40581000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,total_liabilities,mapped,us-gaap:Liabilities,BS,R3.htm,Total liabilities,77468000000,77468000000,75463000000,75463000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,total_debt,component sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,BS,R3.htm,"Short-term borrowings + Current portion of long-term debt + Long-term debt, less current portion",32046000000,32046000000,31232000000,31232000000,Y,,FILING-CHECKED (debt lines); perimeter DATA-INFERRED,BS debt lines (the one instant sum allowed); check for double counts | accn 0001156039-26-000013
+ELV,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R3.htm,Total shareholders’ equity,43882000000,43882000000,41315000000,41315000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BSP,R4.htm,"Common stock, shares outstanding (in shares)",220723898,220723898,227479695,227479695,Y,tag covers FY2015-FY2025,FILING-CHECKED,BS-date count | accn 0001156039-26-000013
+ELV,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R7.htm,Net cash provided by operating activities,4290000000,4290000000,5808000000,5808000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R7.htm,Net cash used in investing activities,-1344000000,-1344000000,-5167000000,-5167000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R7.htm,Net cash provided by (used in) financing activities,-1738000000,-1738000000,1193000000,1193000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,R7.htm,Purchases of property and equipment,-1116000000,1116000000,-1256000000,1256000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,R7.htm,Depreciation and amortization,1546000000,1546000000,1393000000,1393000000,Y,"chosen tag FY[2020, 2021, 2022, 2023, 2024, 2025]; ERA-CHECK others: {'Depreciation': [2015, 2016, 2017, 2018, 2019]}",FILING-CHECKED,accn 0001156039-26-000013
+ELV,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,R5.htm,Amortization of other intangible assets,628000000,628000000,580000000,580000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R7.htm,Share-based compensation,276000000,276000000,191000000,191000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,R7.htm,Cash dividends,-1529000000,1529000000,-1508000000,1508000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,R7.htm,Repurchase and retirement of common stock,-2605000000,2605000000,-2900000000,2900000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,R7.htm,"Receivables, net",-2526000000,2526000000,-683000000,683000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cf_inventory_change,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cf_ap_change,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,accn 0001156039-26-000013
+ELV,cash_paid_for_interest,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001156039-26-000013
+ELV,cash_paid_for_income_taxes,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001156039-26-000013

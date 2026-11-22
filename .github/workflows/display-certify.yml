@@ -68,8 +68,15 @@ jobs:
           cp $A/registry-history.csv cert-out/registry-history.csv 2>/dev/null || true
           for r in $REQUESTS; do
             echo "::group::$r"
+            # approver-committed filing reads of the drawn cells the automated checker could not settle:
+            # $A/reads/<TICKER>-<first 12 hex of the request's coverage sha256>.csv (draw_check.load_reads)
+            t=$(basename "$r" | sed 's/-request-.*//')
+            sha=$(grep -o 'sha256: `[0-9a-f]\{64\}`' "$r" | grep -o '[0-9a-f]\{64\}' | head -1)
+            READS=""
+            rf="$A/reads/${t}-$(printf %s "$sha" | cut -c1-12).csv"
+            if [ -n "$sha" ] && [ -f "$rf" ]; then READS="--reads $rf"; echo "reads: $rf"; fi
             timeout 300 uv run --project pipeline python pipeline/scripts/certify_display.py \
-              --request "$r" --live --out-dir cert-out --registry cert-out/registry.csv || echo "exit $? for $r"
+              --request "$r" --live $READS --out-dir cert-out --registry cert-out/registry.csv || echo "exit $? for $r"
             echo "::endgroup::"
           done
           for f in cert-out/*-display-cert-*.md; do [ -f "$f" ] && { cat "$f"; echo; } >> "$GITHUB_STEP_SUMMARY"; done

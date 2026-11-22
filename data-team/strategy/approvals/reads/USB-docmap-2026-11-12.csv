@@ -1,0 +1,47 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+USB,revenue,not_found,,IS,R4.htm,,,,,,,,FILING-CHECKED,no revenue-family tag on the IS: check bank/insurer top line | accn 0000036104-26-000011
+USB,cost_of_revenue,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,no cost-of-revenue line | accn 0000036104-26-000011
+USB,gross_profit,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,operating_expenses,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,no opex total and no gross profit to tie a component sum to | accn 0000036104-26-000011
+USB,sga_expense,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,research_and_development,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,operating_income,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,R4.htm,Total interest expense,14321000000,14321000000,15377000000,15377000000,Y,"chosen tag FY[2024, 2025]; ERA-CHECK others: {'InterestExpense': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023], 'InterestIncomeExpenseNet': [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]}",FILING-CHECKED,accn 0000036104-26-000011
+USB,interest_income,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,other_income_expense_net,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,R4.htm,Income before income taxes,9517000000,9517000000,7909000000,7909000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,R4.htm,Applicable income taxes,1921000000,1921000000,1580000000,1580000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,net_income,mapped,us-gaap:NetIncomeLoss,IS,R4.htm,Net income (loss) attributable to U.S. Bancorp,7570000000,7570000000,6299000000,6299000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,R4.htm,Earnings per common share (in dollars per share),4.62,4.62,3.79,3.79,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,R4.htm,Diluted earnings per common share (in dollars per share),4.62,4.62,3.79,3.79,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,R4.htm,Average common shares outstanding (in shares),1557000000,1557000000,1560000000,1560000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,R4.htm,Average diluted common shares outstanding (in shares),1558000000,1558000000,1561000000,1561000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQP,R7.htm,Common stock dividends (in dollars per share),2.04,2.04,1.98,1.98,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,R5.htm,Comprehensive income (loss) attributable to U.S. Bancorp,10347000000,10347000000,6631000000,6631000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,cash_and_equivalents,mapped,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,CF,R8.htm,Cash and due from banks at end of period,46890000000,46890000000,56502000000,56502000000,Y,"chosen tag FY[2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017, 2018, 2019, 2020, 2021]: check those 10-Ks)",FILING-CHECKED,no BS total cash line: CF printed ending cash (bank rule a); CF row shows ending balance: verify column | accn 0000036104-26-000011
+USB,accounts_receivable,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,inventory,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,current_assets,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,ppe_net,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,goodwill,mapped,us-gaap:Goodwill,BS,R2.htm,Goodwill,12635000000,12635000000,12536000000,12536000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,total_assets,mapped,us-gaap:Assets,BS,R2.htm,Total assets,692345000000,692345000000,678318000000,678318000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,accounts_payable,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,current_liabilities,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,total_liabilities,mapped,us-gaap:Liabilities,BS,R2.htm,Total liabilities,626694000000,626694000000,619278000000,619278000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,total_debt,mapped,us-gaap:ShortTermBorrowings,BS,R2.htm,Short-term borrowings,17162000000,17162000000,15518000000,15518000000,Y,tag covers FY2015-FY2025,FILING-CHECKED (debt lines); perimeter DATA-INFERRED,accn 0000036104-26-000011
+USB,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R2.htm,Total U.S. Bancorp shareholders’ equity,65193000000,65193000000,58578000000,58578000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,shares_outstanding,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,no balance-sheet-date shares-outstanding count printed (BS or its parenthetical); the dei cover count is never used | accn 0000036104-26-000011
+USB,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R8.htm,Net cash provided by operating activities,7970000000,7970000000,11350000000,11350000000,Y,"chosen tag FY[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017]: check those 10-Ks)",FILING-CHECKED,accn 0000036104-26-000011
+USB,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R8.htm,Net cash (used in) provided by investing activities,-20538000000,-20538000000,-24534000000,-24534000000,Y,"chosen tag FY[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017]: check those 10-Ks)",FILING-CHECKED,accn 0000036104-26-000011
+USB,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R8.htm,Net cash provided by (used in) financing activities,2250000000,2250000000,8821000000,8821000000,Y,"chosen tag FY[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017]: check those 10-Ks)",FILING-CHECKED,accn 0000036104-26-000011
+USB,capex,not_found,,CF,R8.htm,,,,,,,,FILING-CHECKED,no capex-family tag on the CF: find the printed line | accn 0000036104-26-000011
+USB,depreciation_and_amortization,component sum,us-gaap:DepreciationNonproduction+us-gaap:AmortizationOfIntangibleAssets,CF,R8.htm,Depreciation and amortization of premises and equipment + Amortization of intangibles,875000000,875000000,939000000,939000000,Y,,FILING-CHECKED,printed depreciation + amortization lines (rule 13) | accn 0000036104-26-000011
+USB,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,CF,R8.htm,Amortization of intangibles,498000000,498000000,569000000,569000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,sbc,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,R8.htm,Cash dividends paid on common stock,-3168000000,3168000000,-3092000000,3092000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,R8.htm,Repurchase of common stock,-489000000,489000000,-173000000,173000000,Y (sign differs: printed in parentheses/negated label),tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011
+USB,cf_ar_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,cf_inventory_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,cf_ap_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000036104-26-000011
+USB,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,R8.htm,Cash paid for interest,14388000000,14388000000,15382000000,15382000000,Y,"chosen tag FY[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]; ERA GAP (no 10-K fact for FY[2015, 2016, 2017]: check those 10-Ks)",FILING-CHECKED,accn 0000036104-26-000011
+USB,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,R8.htm,Cash paid for income taxes,544000000,544000000,499000000,499000000,Y,tag covers FY2015-FY2025,FILING-CHECKED,accn 0000036104-26-000011

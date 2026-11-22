@@ -312,7 +312,18 @@ def norm_dims(seg: str) -> str:
         if "=" not in kv:
             continue
         a, m = (x.strip().split(":")[-1] for x in kv.split("=", 1))
-        out.append(f"{a.removesuffix('Axis')}={m.removesuffix('Member')}")
+        a = a.removesuffix("Axis")
+        # fsn.dim drops a leading "Statement" from standard axes (StatementEquityComponentsAxis ->
+        # EquityComponents, StatementBusinessSegmentsAxis -> BusinessSegments) but keeps "StatementOf..."
+        # (StatementOfIncomeLocationBalance): checked on all 213,416 fsn.dim rows, 2026-11-22.
+        if (
+            a.startswith("Statement")
+            and len(a) > 9
+            and a[9].isupper()
+            and not a.startswith("StatementOf")
+        ):
+            a = a[9:]
+        out.append(f"{a}={m.removesuffix('Member')}")
     return ";".join(sorted(out))
 
 

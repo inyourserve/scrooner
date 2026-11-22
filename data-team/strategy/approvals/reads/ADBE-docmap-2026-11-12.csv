@@ -1,0 +1,47 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+ADBE,revenue,mapped,us-gaap:Revenues,IS,R5.htm,Revenue,23769000000,23769000000,21505000000,21505000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,R5.htm,Cost of revenue,2551000000,2551000000,2358000000,2358000000,Y,tag covers last 5 FY,FILING-CHECKED,line above gross profit (rule 4) | accn 0000796343-26-000003
+ADBE,gross_profit,mapped,us-gaap:GrossProfit,IS,R5.htm,Gross profit,21218000000,21218000000,19147000000,19147000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,R5.htm,Total operating expenses,12512000000,12512000000,12406000000,12406000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,sga_expense,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,research_and_development,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,R5.htm,Operating income,8706000000,8706000000,6741000000,6741000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,R5.htm,Interest expense,-263000000,263000000,-169000000,169000000,Y (sign differs: printed in parentheses/negated label),"chosen tag FY[2024, 2025]; ERA-CHECK others: {'InterestExpense': [2021, 2022, 2023]}",FILING-CHECKED,accn 0000796343-26-000003
+ADBE,interest_income,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,R5.htm,"Other income (expense), net",248000000,248000000,311000000,311000000,Y,chosen tag FY[2025],FILING-CHECKED,accn 0000796343-26-000003
+ADBE,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,R5.htm,Income before income taxes,8734000000,8734000000,6931000000,6931000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,R5.htm,Provision for income taxes,1604000000,1604000000,1371000000,1371000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,net_income,mapped,us-gaap:NetIncomeLoss,IS,R5.htm,Net income,7130000000,7130000000,5560000000,5560000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,R5.htm,Basic net income per share (in usd per share),16.73,16.73,12.43,12.43,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,R5.htm,Diluted net income per share (in usd per share),16.7,16.7,12.36,12.36,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,R5.htm,Shares used to compute basic net income per share (in shares),426200000,426200000,447100000,447100000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,R5.htm,Shares used to compute diluted net income per share (in shares),427000000,427000000,449700000,449700000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,dividends_per_share,not_presented,,IS,R5.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0000796343-26-000003
+ADBE,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,R6.htm,"Total comprehensive income, net of taxes",7086000000,7086000000,5644000000,5644000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,R3.htm,Cash and cash equivalents,5431000000,5431000000,7613000000,7613000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,R3.htm,"Trade receivables, net of allowances for doubtful accounts of $13 and of $14, respectively",2344000000,2344000000,2072000000,2072000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,inventory,not_presented,,BS,R3.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,current_assets,mapped,us-gaap:AssetsCurrent,BS,R3.htm,Total current assets,10163000000,10163000000,11232000000,11232000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,R3.htm,"Property and equipment, net",1873000000,1873000000,1936000000,1936000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,goodwill,mapped,us-gaap:Goodwill,BS,R3.htm,Goodwill,12857000000,12857000000,12788000000,12788000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,total_assets,mapped,us-gaap:Assets,BS,R3.htm,Total assets,29496000000,29496000000,30230000000,30230000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,R3.htm,Trade payables,417000000,417000000,361000000,361000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,R3.htm,Total current liabilities,10200000000,10200000000,10521000000,10521000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,total_liabilities,mapped,us-gaap:Liabilities,BS,R3.htm,Total liabilities,17873000000,17873000000,16125000000,16125000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,total_debt,component sum,us-gaap:DebtCurrent+us-gaap:LongTermDebt,BS,R3.htm,Debt + Debt,6210000000,6210000000,5628000000,5628000000,Y,,FILING-CHECKED (debt lines); perimeter DATA-INFERRED,BS debt lines (the one instant sum allowed); check for double counts | accn 0000796343-26-000003
+ADBE,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R3.htm,Total stockholders’ equity,11623000000,11623000000,14105000000,14105000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,shares_outstanding,mapped,dei:EntityCommonStockSharesOutstanding,COVER,R1.htm,"Entity Common Stock, Shares Outstanding",410500000,410500000,,,Y,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R8.htm,Net cash provided by operating activities,10031000000,10031000000,8056000000,8056000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R8.htm,Net cash provided by (used for) investing activities,-1187000000,-1187000000,149000000,149000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R8.htm,Net cash used for financing activities,-11060000000,-11060000000,-7724000000,-7724000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,R8.htm,Purchases of property and equipment,-179000000,179000000,-183000000,183000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,R8.htm,"Depreciation, amortization and accretion",818000000,818000000,857000000,857000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,amortization_of_intangibles,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R8.htm,Stock-based compensation,1942000000,1942000000,1833000000,1833000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,dividends_paid,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,R8.htm,Repurchases of common stock,-11281000000,11281000000,-9500000000,9500000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,R8.htm,"Trade receivables, net",-275000000,275000000,143000000,-143000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cf_inventory_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,R8.htm,Trade payables,64000000,64000000,44000000,44000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,R8.htm,Cash paid for interest,246000000,246000000,143000000,143000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003
+ADBE,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,R8.htm,"Cash paid for income taxes, net of refunds",2219000000,2219000000,1727000000,1727000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0000796343-26-000003

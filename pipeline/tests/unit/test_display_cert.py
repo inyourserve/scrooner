@@ -1247,7 +1247,7 @@ def test_a_printed_badge_is_never_a_derived_cell():
     f = fact(
         "CommonStockDividendsPerShareDeclared",
         "1.64",
-        dims="StatementEquityComponents=CommonStock",
+        dims="EquityComponents=CommonStock",  # fsn.dim's own spelling (MA 0001141391-23-000020, 2026-11-22)
         reports=(),
     )
     assert dc.check_cell(tagged, [f]).result == "MATCH"
@@ -1289,3 +1289,19 @@ def test_other_income_identity_is_checked_from_one_filing():
     other = [*cells[:-1], c("interest_income", "113", acc="0000000000-99-000001")]
     r = dc.check_derived(oie, other, [])
     assert r.result == "NOT_FOUND" and "one filing" in r.evidence
+
+
+def test_norm_dims_drops_the_statement_prefix_like_fsn():
+    """MA DPS cites StatementEquityComponentsAxis=CommonStockMember; fsn.dim stores EquityComponents=CommonStock."""
+    assert (
+        dc.norm_dims("us-gaap:StatementEquityComponentsAxis=us-gaap:CommonStockMember")
+        == "EquityComponents=CommonStock"
+    )
+    assert (
+        dc.norm_dims("EquityComponents=CommonStock;") == "EquityComponents=CommonStock"
+    )
+    assert dc.norm_dims("StatementBusinessSegmentsAxis=X") == "BusinessSegments=X"
+    assert (
+        dc.norm_dims("StatementOfIncomeLocationBalance=Y")
+        == "StatementOfIncomeLocationBalance=Y"
+    )
