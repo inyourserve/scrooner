@@ -91,6 +91,7 @@ def validate(instance: Any, schema: dict, where: str = "$") -> list[str]:
             "object": dict,
             "array": list,
             "null": type(None),
+            "boolean": bool,
         }
         ok = any(
             isinstance(instance, py[x])

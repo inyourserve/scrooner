@@ -5,7 +5,7 @@ Source: doc 02, commit 438677db. A shown cell must hold a real proven value; a r
 ## Pass test, per company
 
 1. **No OPEN cells.** Any OPEN cell fails the company.
-2. **Shown cells.** A seeded random draw of 32 SHOWN_VALUE cells. Each must equal the filing's printed value at its cited accession, R page, tag and column.
+2. **Shown cells.** A seeded random draw of SHOWN_VALUE cells: 32 until 2026-11-22; since then min(199, shown cells), stratified by statement and badge class (certify_display, SYSTEMS.md #14). Each must equal the filing's printed value at its cited accession, R page, tag and column.
    - Sums are checked part by part against every line in the data point's perimeter: total_debt includes face short-term debt and CP, current and long-term debt, note finance leases and pre-842 capital leases.
    - Split cells (a combined line split from note breakdowns) are checked against the note parts, and the parts must sum to the combined face line.
 3. **Census rows.** Every total_debt year that is shown is checked against its full perimeter.
@@ -15,7 +15,7 @@ Source: doc 02, commit 438677db. A shown cell must hold a real proven value; a r
 8. **Stated values** (doc 02 rule 3: `stated_zero`, `text_stated`) have no XBRL fact to match. A drawn one goes to the approver as NOT_FOUND (REVIEW), and none counts toward a PASS until the founder accepts the proof.
 6. **Locators.** Every shown cell, and every part of a sum or split, carries an accession and an R page.
 
-**Bound:** 0 errors in the shown draw gives a Clopper-Pearson 95% upper bound of 8.94% per company (n=32). The 0.10% target applies pooled across certified companies.
+**Bound:** 0 errors in the shown draw gives a Clopper-Pearson 95% upper bound of 8.94% per company at n=32; the tool draws n >= ln(0.05)/ln(1-0.015) = 199 since 2026-11-22, for 1.49%. The 0.10% target applies pooled across certified companies.
 
 ## Effect on earlier verdicts
 
@@ -34,7 +34,7 @@ The checks above run as one tool, `pipeline/scripts/certify_display.py` (logic i
 
 - **Run:** dispatch the `Display certification (approver)` workflow (`.github/workflows/display-certify.yml`). It takes request files, or `pending` for every request without a verdict file. It is read-only and writes nothing to the database or the repo. Locally with DATABASE_URL: `python pipeline/scripts/certify_display.py --request <request.md> --live --out-dir <dir>`.
 - **Seed:** `<TICKER>-<first 12 hex of the coverage sha256>`. The draw is fixed by the file, so anyone can re-run it and get the same sample.
-- **Outputs:** a verdict page and an evidence CSV per company, plus one row in `data-team/strategy/approvals/registry.csv`. The pooled bound is computed over every company whose latest row is PASS.
+- **Outputs:** a verdict page and an evidence CSV per company, plus the verdict appended to `registry-history.csv`; `data-team/strategy/approvals/registry.csv` is rewritten as one latest row per company (since 2026-11-22). The pooled bound is computed over every company whose latest row is PASS.
 - **The approver still decides.** Any REVIEW item (a lease location the facts cannot show, a hidden row with no tag family on file, a locator-only difference) is checked by hand, and the approver commits the certificate or final-draw file.
 - **Known gap:** fsn.* can miss a fact. For example, MSFT `CapitalLeaseObligationsCurrent` at 2016-06-30 is absent from its FY2017 10-K row set. A NOT_FOUND therefore goes to the approver, not straight to FAIL in the published verdict.
 - **Machine-readable certificate (2026-11-21):** each run also writes `<TICKER>-display-cert-<date>.json`, using schema `pipeline/src/scrooner_pipeline/certification/schemas/display_certificate.v1.schema.json` (`display-certificate/1`).

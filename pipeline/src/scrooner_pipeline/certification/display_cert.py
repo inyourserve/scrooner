@@ -14,7 +14,13 @@ The approver's checks, as a system:
 4. Hides: a HIDDEN_ROW must have no undimensioned fact of its family in any periodic
    filing of the company; a HIDDEN_YEAR must have no statement fact dated at that year end
    in any periodic filing (10-K, 10-Q, 20-F, 40-F, including comparative columns).
-5. Bound: exact Clopper-Pearson upper bound on the shown-cell error rate.
+5. Bound: exact Clopper-Pearson upper bound on the shown-cell error rate. The draw size is the
+   smallest n whose 0-error bound is <= 1.5% at 95% (n >= ln(0.05)/ln(1-0.015) = 198.2, so 199),
+   stratified by statement and badge class, capped by the company's shown cells.
+
+A mechanical re-check (`certify(..., mechanical=True)`) runs every census check above with no
+draw; it never yields a certificate (the weekly certified re-check uses it; the top100 flow gate
+uses the self-check, certify_display.py --self-check-dir, which opens every failing cell).
 
 Pure functions. The fact source is injected (`FactSource.facts(...)`), so the same checks run
 on a live connection (`SqlFactSource`) or on an evidence bundle exported as JSON. Money and
@@ -26,6 +32,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import random
 import re
 from collections import defaultdict
@@ -33,6 +40,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
+from fractions import Fraction
+from functools import lru_cache
 from math import comb
 from pathlib import Path
 from typing import Protocol
@@ -46,7 +55,19 @@ PER_SHARE_CEILING = Decimal(
     1000
 )  # above any US per-share EPS or dividend on record (BRK-A excluded)
 CONTROL_TAG = "Assets"  # every periodic filer reports it undimensioned
-DRAW_SIZE = 32  # 0 errors in 32 -> 8.94% per-company bound; the 0.10% target is pooled
+# Draw size (Backbone 2026-11-22): the per-company bound with 0 errors found must be <= 1.5% at 95%.
+# For k = 0 the exact Clopper-Pearson upper bound is 1 - alpha**(1/n), so (1 - target)**n <= alpha,
+# n >= ln(alpha) / ln(1 - target) = ln(0.05) / ln(0.985) = 198.2 -> 199 (was 32: 8.94%).
+TARGET_UPPER_95 = 0.015
+ALPHA = 0.05
+
+
+def required_draw_size(target: float = TARGET_UPPER_95, alpha: float = ALPHA) -> int:
+    """Smallest n whose 0-error Clopper-Pearson upper bound is <= target: ceil(ln(alpha)/ln(1-target))."""
+    return math.ceil(math.log(alpha) / math.log(1 - target))
+
+
+DRAW_SIZE = required_draw_size()  # 199
 PERIODIC_FORMS = (
     "10-K",
     "10-K/A",
@@ -416,12 +437,96 @@ def gate(cells: list[Cell]) -> list[Finding]:
     return out
 
 
-def draw(cells: list[Cell], seed: str, n: int = DRAW_SIZE) -> list[Cell]:
-    pool = sorted(
+BADGE_CLASSES = ("as_printed", "combined", "derived")
+
+
+def badge_class(c: Cell) -> str:
+    """Stratum by how the value reaches the page: derived (badge derived:, or no tag and no parts),
+    combined (badge combined:, or a sum of several printed facts), else as_printed."""
+    b = c.badge or ""
+    if b.startswith("derived:") or is_derived(c):
+        return "derived"
+    if b.startswith("combined:") or len(c.parts) > 1:
+        return "combined"
+    return "as_printed"
+
+
+@lru_cache(maxsize=1)
+def registry_statements() -> dict[str, str]:
+    """data_point -> statement from metrics/registry/data_points.csv (one statement per data point)."""
+    from scrooner_pipeline.metrics.registry import load_data_points
+
+    return {dp: d.statement for (dp, _sector), d in load_data_points().items()}
+
+
+def stratum(c: Cell, statements: dict[str, str]) -> str:
+    return f"{statements.get(c.data_point, 'other')}|{badge_class(c)}"
+
+
+def draw_pool(cells: list[Cell]) -> list[Cell]:
+    """Shown cells the draw may pick: every SHOWN_VALUE except total_debt (a census of its own)."""
+    return sorted(
         (c for c in cells if c.display == SHOWN and c.data_point != "total_debt"),
         key=lambda c: c.key,
     )
-    return random.Random(seed).sample(pool, min(n, len(pool)))
+
+
+def allocate(sizes: dict[str, int], n: int) -> dict[str, int]:
+    """Stratified allocation of n draws: every non-empty stratum gets one first (when n allows),
+    the rest is proportional to the remaining cells by largest remainder (ties: stratum name), and
+    no stratum gets more than it holds. n >= the total is a census."""
+    keys = sorted(k for k, v in sizes.items() if v > 0)
+    total = sum(sizes[k] for k in keys)
+    n = max(0, min(n, total))
+    if n == total:
+        return {k: sizes[k] for k in keys}
+    alloc = {k: (1 if n >= len(keys) else 0) for k in keys}
+    rest = n - sum(alloc.values())
+    cap = {k: sizes[k] - alloc[k] for k in keys}
+    capsum = sum(cap.values())
+    quota = {
+        k: Fraction(rest * cap[k], capsum) if capsum else Fraction(0) for k in keys
+    }
+    for k in keys:
+        alloc[k] += int(quota[k])
+    left = n - sum(alloc.values())
+    order = sorted(keys, key=lambda k: (-(quota[k] - int(quota[k])), -cap[k], k))
+    while left > 0:
+        for k in order:
+            if left and alloc[k] < sizes[k]:
+                alloc[k] += 1
+                left -= 1
+    return alloc
+
+
+def strata(
+    cells: list[Cell], n: int = DRAW_SIZE, statements: dict[str, str] | None = None
+) -> dict[str, tuple[int, int]]:
+    """stratum -> (shown cells in the pool, cells to draw)."""
+    st = registry_statements() if statements is None else statements
+    sizes: dict[str, int] = defaultdict(int)
+    for c in draw_pool(cells):
+        sizes[stratum(c, st)] += 1
+    alloc = allocate(dict(sizes), n)
+    return {k: (sizes[k], alloc.get(k, 0)) for k in sorted(sizes)}
+
+
+def draw(
+    cells: list[Cell],
+    seed: str,
+    n: int = DRAW_SIZE,
+    statements: dict[str, str] | None = None,
+) -> list[Cell]:
+    """Seeded stratified draw of min(n, pool) shown cells (statement x badge class)."""
+    st = registry_statements() if statements is None else statements
+    by: dict[str, list[Cell]] = defaultdict(list)
+    for c in draw_pool(cells):
+        by[stratum(c, st)].append(c)
+    rng = random.Random(seed)
+    out: list[Cell] = []
+    for k, (_size, take) in strata(cells, n, st).items():
+        out += rng.sample(by[k], take)
+    return out
 
 
 # ---------------------------------------------------------------- facts
@@ -1207,6 +1312,10 @@ class Run:
     derived: list[CellCheck] = field(
         default_factory=list
     )  # census of undrawn derived cells
+    strata: dict[str, tuple[int, int]] = field(
+        default_factory=dict
+    )  # stratum -> (pool cells, drawn)
+    mechanical: bool = False  # census checks only, no draw: never a certificate
 
     @property
     def errors(self) -> int:
@@ -1244,15 +1353,18 @@ class Plan:
     sample: list[Cell]
     debt: list[Cell]
     family_tags: frozenset[str]
+    strata: dict[str, tuple[int, int]] = field(default_factory=dict)
 
     @property
     def debt_acc(self) -> set[str]:
         return {(c.parts[0].accession if c.parts else c.accession) for c in self.debt}
 
 
-def plan(ticker: str, coverage: Path, seed: str | None = None) -> Plan:
+def plan(
+    ticker: str, coverage: Path, seed: str | None = None, n: int = DRAW_SIZE
+) -> Plan:
     """Everything the checks will read, decided from the coverage file alone (so an offline bundle
-    and a live run look at exactly the same cells)."""
+    and a live run look at exactly the same cells). n = 0 plans a mechanical re-check (no draw)."""
     cells = read_coverage(coverage)
     sha = sha256(coverage)
     seed = seed or f"{ticker}-{sha[:12]}"
@@ -1262,18 +1374,27 @@ def plan(ticker: str, coverage: Path, seed: str | None = None) -> Plan:
         for dp in {c.data_point for c in cells if c.display == HIDDEN_ROW}
         for t in HIDE_FAMILY.get(dp, ())
     )
-    return Plan(cells, sha, seed, draw(cells, seed), debt, fam)
+    return Plan(cells, sha, seed, draw(cells, seed, n), debt, fam, strata(cells, n))
 
 
 def certify(
-    ticker: str, cik: str, coverage: Path, source: FactSource, seed: str | None = None
+    ticker: str,
+    cik: str,
+    coverage: Path,
+    source: FactSource,
+    seed: str | None = None,
+    mechanical: bool = False,
 ) -> Run:
-    p = plan(ticker, coverage, seed)
+    """mechanical=True: every census check, no draw (a re-check of a certified export or the flow
+    gate). Its verdict says whether the mechanical checks pass; it is never a certificate."""
+    p = plan(ticker, coverage, seed, 0 if mechanical else DRAW_SIZE)
     counts: dict[str, int] = defaultdict(int)
     for c in p.cells:
         counts[c.display] += 1
     run = Run(ticker, str(coverage), p.sha, p.seed, dict(counts), gate=gate(p.cells))
     run.cells = p.cells
+    run.strata = p.strata
+    run.mechanical = mechanical
     run.hides += check_hide_reasons(p.cells)
     run.gate += check_badges(p.cells)
     need_tags = (
@@ -1298,7 +1419,7 @@ def certify(
         | {c.accession for c in derived_census}
     )
     facts = source.facts(need_acc, need_tags)
-    if (p.sample or p.debt) and not facts:
+    if (p.sample or p.debt or derived_census) and not facts:
         # Positive control: the drawn filings always carry facts. None at all means the source
         # or its filters are broken (2026-11-16: a coreg filter matched nothing), never a pass.
         run.gate.append(
@@ -1447,11 +1568,43 @@ select json_build_object(
   'year_ends', (select coalesce(json_object_agg(accession, d), '{{}}') from ye)) as bundle"""
 
 
+def bound(run: Run) -> dict:
+    """The certificate's bound block: drawn n, errors, the exact upper bound, the target and the
+    draw-size rule, and the stratified draw (statement x badge class)."""
+    n, k = len(run.shown), run.errors
+    pool = sum(m for m, _ in run.strata.values())
+    return {
+        "n": n,
+        "errors": k,
+        "upper_95": f"{clopper_pearson_upper(k, n):.6f}",
+        "target_upper_95": f"{TARGET_UPPER_95:.6f}",
+        "required_n": DRAW_SIZE,
+        "rule": f"n = min(ceil(ln({ALPHA}) / ln(1 - {TARGET_UPPER_95})), shown cells) = min({DRAW_SIZE}, {pool})",
+        "pool": pool,
+        "census": n == pool,
+        "strata": [
+            {
+                "statement": key.split("|")[0],
+                "badge_class": key.split("|")[1],
+                "cells": m,
+                "drawn": a,
+            }
+            for key, (m, a) in sorted(run.strata.items())
+        ],
+    }
+
+
 def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> str:
     n, k = len(run.shown), run.errors
     ub = clopper_pearson_upper(k, n)
+    b = bound(run)
+    title = (
+        "mechanical re-check (no draw; not a certificate)"
+        if run.mechanical
+        else "display certification"
+    )
     lines = [
-        f"# {run.ticker} display certification ({approver}, {today}): {run.verdict}",
+        f"# {run.ticker} {title} ({approver}, {today}): {run.verdict}",
         "",
         f"Coverage `{run.coverage_path}` (sha256 `{run.coverage_sha256}`). Cells by display class: "
         + ", ".join(f"{k_}={v}" for k_, v in sorted(run.counts.items()))
@@ -1462,13 +1615,24 @@ def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> 
         "| Check | Result |",
         "|---|---|",
         f"| Gate (no OPEN; value, accession and R page on every shown cell and part; parts sum) | {sum(1 for f in run.gate if f.severity == 'FAIL')} failing |",
-        f"| {n} random shown cells | {sum(1 for s in run.shown if s.result == 'MATCH')} match, {k} wrong, {sum(1 for s in run.shown if s.result == 'LOCATOR')} locator only |",
+        f"| {n} random shown cells (stratified, {len(run.strata)} strata of {b['pool']} shown) | {sum(1 for s in run.shown if s.result == 'MATCH')} match, {k} wrong, {sum(1 for s in run.shown if s.result == 'LOCATOR')} locator only |",
         f"| total_debt census ({len(run.debt)} years) | {sum(1 for d in run.debt if d.result == 'MATCH')} match, {sum(1 for d in run.debt if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.debt if d.result == 'REVIEW')} for review |",
         f"| Derived cells census ({len(run.derived)} undrawn) | {sum(1 for d in run.derived if d.result == 'MATCH')} match, {sum(1 for d in run.derived if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.derived if d.result != 'MATCH' and d.result != 'MISMATCH')} for review |",
         f"| Hidden rows and years | {sum(1 for f in run.hides if f.severity == 'FAIL')} failing, {sum(1 for f in run.hides if f.severity == 'REVIEW')} for review, {sum(1 for f in run.hides if f.severity == 'INFO')} evidenced |",
         "",
-        f"**Bound:** {k} error(s) in {n} random shown cells: Clopper-Pearson 95% upper bound **{ub:.2%}** for {run.ticker} alone "
-        "(per-company screen; the 0.10% target is pooled across certified companies in registry.csv).",
+        (
+            "**Bound:** none: a mechanical re-check draws no cells; it checks every census rule of the export."
+            if run.mechanical
+            else f"**Bound:** {k} error(s) in {n} random shown cells: Clopper-Pearson 95% upper bound **{ub:.2%}** for {run.ticker} alone "
+            f"(target {TARGET_UPPER_95:.1%}; draw {b['rule']}{', a census of every shown cell' if b['census'] else ''}). "
+            "The 0.10% target is pooled across certified companies in registry.csv."
+        ),
+        "",
+        "Draw by stratum (statement | badge class: drawn of shown): "
+        + (
+            ", ".join(f"{key} {a}/{m}" for key, (m, a) in sorted(run.strata.items()))
+            or "none"
+        ),
         "",
     ]
     bad = (
@@ -1565,15 +1729,85 @@ REGISTRY_HEADER = [
 ]
 
 
+def history_path(registry: Path) -> Path:
+    """registry.csv holds ONE row per company (its latest verdict); every verdict ever recorded,
+    superseded ones included, is appended to registry-history.csv beside it."""
+    registry = Path(registry)
+    return registry.with_name(f"{registry.stem}-history{registry.suffix}")
+
+
+def _read_rows(path: Path) -> list[dict]:
+    if not Path(path).exists():
+        return []
+    with open(path, newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
+def latest_rows(rows: Iterable[dict]) -> list[dict]:
+    """The latest row per ticker: latest date; on the same date the later line. Sorted by ticker."""
+    latest: dict[str, tuple[str, int, dict]] = {}
+    for i, r in enumerate(rows):
+        tk, d = (r.get("ticker") or "").strip(), (r.get("date") or "").strip()
+        if tk and (tk not in latest or (d, i) >= latest[tk][:2]):
+            latest[tk] = (d, i, r)
+    return [latest[tk][2] for tk in sorted(latest)]
+
+
+def _write_rows(path: Path, rows: list[dict]) -> None:
+    tmp = Path(path).with_suffix(".tmp")
+    with open(tmp, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=REGISTRY_HEADER, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    tmp.replace(path)
+
+
+def record_verdict(registry: Path, row: dict) -> None:
+    """Append one verdict to the history, then rewrite registry.csv as the latest row per ticker.
+    A legacy registry with no history file seeds the history first, so no row is lost."""
+    registry, hist = Path(registry), history_path(registry)
+    rows = _read_rows(hist) if hist.exists() else _read_rows(registry)
+    rows.append({k: str(row[k]) for k in REGISTRY_HEADER})
+    _write_rows(hist, rows)
+    _write_rows(registry, latest_rows(rows))
+
+
+def registry_problems(registry: Path) -> list[str]:
+    """registry.csv must hold one row per ticker, each the latest row of registry-history.csv for
+    that ticker, and every history row's ticker must be in the registry."""
+    reg, hist = _read_rows(registry), _read_rows(history_path(registry))
+    out = []
+    seen: set[str] = set()
+    for r in reg:
+        if r["ticker"] in seen:
+            out.append(f"{r['ticker']}: more than one registry row")
+        seen.add(r["ticker"])
+    want = {r["ticker"]: r for r in latest_rows(hist)}
+    have = {r["ticker"]: r for r in reg}
+    for tk in sorted(set(want) | set(have)):
+        if tk not in have:
+            out.append(f"{tk}: in the history, not in the registry")
+        elif tk not in want:
+            out.append(f"{tk}: in the registry, not in the history")
+        elif dict(want[tk]) != dict(have[tk]):
+            out.append(f"{tk}: registry row is not the latest history row")
+    return out
+
+
+def certified_tickers(registry: Path) -> list[str]:
+    """Tickers whose latest verdict is PASS."""
+    return [
+        r["ticker"]
+        for r in latest_rows(_read_rows(registry))
+        if (r.get("verdict") or "").strip().upper() == "PASS"
+    ]
+
+
 def pooled_bound(registry: Path) -> tuple[int, int, float]:
     """Pool the random shown draws of every PASS row (latest per ticker)."""
     if not Path(registry).exists():
         return 0, 0, 1.0
-    latest: dict[str, dict] = {}
-    with open(registry, newline="") as fh:
-        for r in csv.DictReader(fh):
-            latest[r["ticker"]] = r
-    passed = [r for r in latest.values() if r["verdict"] == "PASS"]
+    passed = [r for r in latest_rows(_read_rows(registry)) if r["verdict"] == "PASS"]
     n = sum(int(r["n"]) for r in passed)
     k = sum(int(r["errors"]) for r in passed)
     return n, k, clopper_pearson_upper(k, n)
@@ -1743,7 +1977,8 @@ def certificate(
                 "detail": why,
             }
         )
-    n, k = len(run.shown), run.errors
+    if run.mechanical:
+        raise ValueError("a mechanical re-check is not a certificate")
     return {
         "schema": CERTIFICATE_SCHEMA,
         "ticker": run.ticker,
@@ -1760,11 +1995,7 @@ def certificate(
         "approver": approver,
         "certified_at": certified_at,
         "counts": dict(sorted(run.counts.items())),
-        "bound": {
-            "n": n,
-            "errors": k,
-            "upper_95": f"{clopper_pearson_upper(k, n):.6f}",
-        },
+        "bound": bound(run),
         "gate": [
             {
                 "data_point": f.data_point,

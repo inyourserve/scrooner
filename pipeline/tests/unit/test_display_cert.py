@@ -243,10 +243,13 @@ def test_clopper_pearson_known_values():
 
 
 def test_draw_is_deterministic_and_excludes_total_debt():
-    cells = [cell(dp=f"d{i}") for i in range(50)] + [debt_cell("1")]
+    cells = [cell(dp=f"d{i}") for i in range(300)] + [debt_cell("1")]
     a, b = dc.draw(cells, "s"), dc.draw(cells, "s")
-    assert a == b and len(a) == 32 and all(c.data_point != "total_debt" for c in a)
+    assert a == b and len(a) == 199 and all(c.data_point != "total_debt" for c in a)
     assert dc.draw(cells, "t") != a
+    # capped by the company's shown cells: a smaller pool is drawn in full (a census)
+    small = [cell(dp=f"d{i}") for i in range(50)] + [debt_cell("1")]
+    assert len(dc.draw(small, "s")) == 50
 
 
 class Src:
@@ -725,6 +728,7 @@ def _check_schema(obj, schema, path="$"):
             "string": str,
             "integer": int,
             "null": type(None),
+            "boolean": bool,
         }
         assert any(
             isinstance(obj, py[k]) and not (k == "integer" and isinstance(obj, bool))
@@ -834,6 +838,19 @@ def test_certificate_json_matches_schema_and_classifies_every_cell(tmp_path):
         "n": 1,
         "errors": 0,
         "upper_95": "0.950000",
+        "target_upper_95": "0.015000",
+        "required_n": 199,
+        "rule": "n = min(ceil(ln(0.05) / ln(1 - 0.015)), shown cells) = min(199, 1)",
+        "pool": 1,
+        "census": True,
+        "strata": [
+            {
+                "statement": "income_statement",
+                "badge_class": "as_printed",
+                "cells": 1,
+                "drawn": 1,
+            }
+        ],
     }
 
 
@@ -971,7 +988,10 @@ def test_derived_total_liabilities_excludes_temporary_equity():
     )
 
 
-def test_every_derived_cell_is_checked_not_only_drawn_ones(tmp_path):
+def test_every_derived_cell_is_checked_not_only_drawn_ones(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dc, "DRAW_SIZE", 32
+    )  # a pool larger than the draw, so undrawn cells exist
     rows = [
         [f"d{i}", "2023", "2023-12-31", "100", ACC, "R4", "Revenues", "", dc.SHOWN]
         for i in range(40)
@@ -1079,7 +1099,12 @@ def test_export_without_badge_column_skips_badge_checks():
     assert dc.check_badges([cell()]) == []
 
 
-def test_every_combined_cell_is_value_checked_not_only_drawn_ones(tmp_path):
+def test_every_combined_cell_is_value_checked_not_only_drawn_ones(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(
+        dc, "DRAW_SIZE", 32
+    )  # a pool larger than the draw, so undrawn cells exist
     years = range(2015, 2025)
     p = tmp_path / "cov.csv"
     with open(p, "w", newline="") as fh:

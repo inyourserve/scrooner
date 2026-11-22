@@ -1,0 +1,105 @@
+name: Certified re-check (weekly, read-only on the DB)
+
+# SYSTEMS.md #14/#15: every company whose latest registry.csv verdict is PASS is re-run through
+# certify_display's mechanical checks (no new draw) on its CURRENT coverage export, rebuilt here for those
+# companies only. Read-only: the export session is default_transaction_read_only=on, and the checks are indexed
+# SELECTs on fsn.* under a 15 s statement_timeout on one connection. No SEC downloads, no verdicts.
+# A company that no longer passes gets data-team/strategy/approvals/regressions/<TICKER>-<date>.md committed to main
+# (that file is the only write), and the job FAILS (workflow-health-check.yml then flags it too). An error that stops a
+# re-check also fails the job. Nothing passes silently: zero certified companies is printed as such.
+on:
+  schedule:
+    - cron: "37 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: certified-recheck-weekly
+  cancel-in-progress: false
+
+jobs:
+  recheck:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # The shared Settings model refuses to load without these, although this job only reads.
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      PYTHONPATH: pipeline/src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Certified companies
+        id: ids
+        run: |
+          set -eu
+          IDS=$(pipeline/.venv/bin/python pipeline/scripts/recheck_certified.py --list-ids)
+          echo "certified company ids: '${IDS}'"
+          [ -n "$IDS" ] || echo "::notice::no certified company (no latest PASS in registry.csv): nothing to re-check"
+          echo "ids=$IDS" >> "$GITHUB_OUTPUT"
+      - name: Rebuild the current export of the certified companies (read-only session)
+        if: steps.ids.outputs.ids != ''
+        env:
+          PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=900000"
+          IDS: ${{ steps.ids.outputs.ids }}
+        run: timeout 2400 pipeline/.venv/bin/python pipeline/scripts/top100_coverage.py "$RUNNER_TEMP/cov" --company-ids "$IDS"
+      - name: Mechanical re-check (no new draw)
+        id: recheck
+        if: steps.ids.outputs.ids != ''
+        env:
+          PGOPTIONS: "-c default_transaction_read_only=on"
+        run: |
+          set -u -o pipefail
+          rc=0
+          # pipefail: the pipeline's status is the script's, not tee's
+          timeout 1200 pipeline/.venv/bin/python pipeline/scripts/recheck_certified.py \
+            --coverage "$RUNNER_TEMP/cov/top100-coverage.csv" --live | tee "$RUNNER_TEMP/recheck.txt" || rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          { echo "## Certified re-check"; echo; sed 's/^::error:://' "$RUNNER_TEMP/recheck.txt"; } >> "$GITHUB_STEP_SUMMARY"
+          for f in data-team/strategy/approvals/regressions/*.md; do [ -f "$f" ] && { echo "===== $f"; cat "$f"; }; done
+          exit 0
+      - name: Commit regression entries (named paths only)
+        if: steps.recheck.outputs.rc != '' && steps.recheck.outputs.rc != '0'
+        run: |
+          set -u
+          D=data-team/strategy/approvals/regressions
+          [ -n "$(git status --porcelain -- $D)" ] || { echo "no regression entry written"; exit 0; }
+          mkdir -p "$RUNNER_TEMP/reg" && cp $D/*.md "$RUNNER_TEMP/reg/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            mkdir -p $D && cp "$RUNNER_TEMP"/reg/*.md $D/
+            git add $D/*.md
+            git diff --cached --quiet && { echo "regression entries already on main"; exit 0; }
+            git commit -q -m "Certified regression: weekly re-check run $GITHUB_RUN_ID ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && { echo pushed; exit 0; }
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::push failed after retries"; exit 1
+      - name: Fail loudly on a regression or an error
+        if: steps.ids.outputs.ids != ''
+        env:
+          RC: ${{ steps.recheck.outputs.rc }}
+        run: |
+          case "$RC" in
+            0) echo "every certified company passes the mechanical checks";;
+            1) echo "::error::certified regression: see data-team/strategy/approvals/regressions/ and the job summary"; exit 1;;
+            *) echo "::error::the re-check could not run (exit '${RC}'): no company may be assumed to pass"; exit 1;;
+          esac

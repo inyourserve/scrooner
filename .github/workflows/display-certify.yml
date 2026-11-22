@@ -62,7 +62,10 @@ jobs:
           fi
           echo "requests:$REQUESTS"
           mkdir -p cert-out
+          # registry.csv = one latest row per company; registry-history.csv = every verdict (certify_display rewrites
+          # the first from the second). Copy both so the approver can commit both files from cert-out/ as they are.
           cp $A/registry.csv cert-out/registry.csv 2>/dev/null || true
+          cp $A/registry-history.csv cert-out/registry-history.csv 2>/dev/null || true
           for r in $REQUESTS; do
             echo "::group::$r"
             timeout 300 uv run --project pipeline python pipeline/scripts/certify_display.py \

@@ -28,7 +28,24 @@
       "properties": {
         "n": {"type": "integer", "description": "Drawn cells."},
         "errors": {"type": "integer"},
-        "upper_95": {"type": "string", "description": "Exact Clopper-Pearson one-sided 95% upper bound, decimal string."}
+        "upper_95": {"type": "string", "description": "Exact Clopper-Pearson one-sided 95% upper bound, decimal string."},
+        "target_upper_95": {"type": "string", "description": "The bound the draw size is chosen for (0.015000); absent on certificates before 2026-11-22."},
+        "required_n": {"type": "integer", "description": "ceil(ln(0.05)/ln(1-target)) = 199: the draw size giving the target at 0 errors."},
+        "rule": {"type": "string", "description": "The draw-size rule as applied: min(required_n, shown cells)."},
+        "pool": {"type": "integer", "description": "Shown cells the draw could pick (every shown cell except the total_debt census)."},
+        "census": {"type": "boolean", "description": "true when n equals the pool: every shown cell was drawn."},
+        "strata": {
+          "type": "array", "description": "Stratified draw: statement x badge class (as_printed / combined / derived).",
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["statement", "badge_class", "cells", "drawn"],
+            "properties": {
+              "statement": {"type": "string"},
+              "badge_class": {"enum": ["as_printed", "combined", "derived"]},
+              "cells": {"type": "integer"},
+              "drawn": {"type": "integer"}
+            }
+          }
+        }
       }
     },
     "gate": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "severity", "detail"]}},
