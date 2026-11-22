@@ -110,7 +110,7 @@ Resolver resolver-all110-.91. 5 elements named in this card have library knowled
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** interest_income; other_income_expense_net; polarity interest_income:signed; role interest_income:primary#2
 - **Rules:** I26; I27; family resolve_all.NARROW[interest_income]
-- **Evidence:** 50 companies, 617 served, 1444 proven, 48 certified cells; last verified 2026-11-15
+- **Evidence:** 50 companies, 616 served, 1444 proven, 48 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
 

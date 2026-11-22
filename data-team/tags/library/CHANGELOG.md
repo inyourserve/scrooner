@@ -1473,3 +1473,11 @@
 
 ## 2026-11-22 (resolver-all110-.91): 1 element changes, 28011 rows, coverage 65.2%
 - ~ SellingGeneralAndAdministrativeExpense: served_cells, known_problems
+
+## 2026-11-22 (resolver-all110-.91): 6 element changes, 28011 rows, coverage 65.2%
+- ~ CostOfGoodsAndServicesSold: served_cells
+- ~ InterestExpense: served_cells
+- ~ InvestmentIncomeInterest: served_cells
+- ~ OtherIncomeExpenseNet: served_cells
+- ~ RevenueFromContractWithCustomerExcludingAssessedTax: served_cells
+- ~ Revenues: served_cells

@@ -53,7 +53,7 @@ Resolver resolver-all110-.91. 6 elements named in this card have library knowled
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** revenue; gross_profit
 - **Rules:** X123
-- **Evidence:** 69 companies, 710 served, 12391 proven, 34 certified cells; last verified 2026-11-15
+- **Evidence:** 69 companies, 708 served, 12391 proven, 34 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CashFlowHedgeGainLossReclassifiedToRevenueNet@2013; CashFlowHedgeGainReclassifiedToRevenue@2013; CashFlowHedgeLossReclassifiedToRevenue@2013; DevelopmentStageEnterpriseCumulativeRevenue@2012 (+10 more)
@@ -63,7 +63,7 @@ Resolver resolver-all110-.91. 6 elements named in this card have library knowled
 - **Data point definition:** gross_profit: Revenue minus cost of revenue for the period. [not applicable: bank,lender,broker_am,insurer,equity_reit,utility,bdc]; revenue: Total revenues (net sales) for the period as printed: the top line of the income statement, after returns and allowances (+1 more)
 - **Data point:** revenue; gross_profit
 - **Rules:** none
-- **Evidence:** 64 companies, 652 served, 16994 proven, 75 certified cells; last verified 2026-11-15
+- **Evidence:** 64 companies, 650 served, 16994 proven, 75 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InitialFranchiseFees@2026; PropertyManagementFeeRevenue@2026; RevenueRecognitionMilestoneMethodRevenueRecognized@2026
