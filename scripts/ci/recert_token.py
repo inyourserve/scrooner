@@ -7,6 +7,12 @@ was not made from a coverage export dated on or after the token (that certificat
 consumed it). No state file: a newer certificate is the consumption record. Dates are day-grained, so the second test
 (the certificate's own coverage date) separates a same-day token from the certificate it supersedes.
 
+A token that NAMES the certificate it supersedes ("Supersedes certificate: `certificates/<file>.json`", the approver's
+form) is judged against that certificate instead: valid while the named certificate exists and no OTHER certificate is
+dated on or after the token. The day-grained export-date test cannot see a token written the same day as the certificate
+it supersedes (JNJ 2026-11-22: certificate JNJ-ffa773adb1c3 from the 11-22 export, token the same afternoon read as
+already consumed, so top100-flow run 45038935707 held JNJ and filed no request).
+
 Prints the token path (relative to --approvals) and exits 0 when valid; prints nothing and exits 1 otherwise.
 """
 import argparse
@@ -16,6 +22,7 @@ import sys
 from pathlib import Path
 
 DATE = r"\d{4}-\d{2}-\d{2}"
+SUPERSEDES = re.compile(r"Supersedes certificate:\s*`(?:[^`]*/)?([^`/]+\.json)`")
 
 
 def valid_token(approvals: Path, ticker: str) -> str | None:
@@ -33,10 +40,17 @@ def valid_token(approvals: Path, ticker: str) -> str | None:
         except ValueError:
             continue
         m = re.search(DATE, str(d.get("coverage_path", "")))
-        certs.append((str(d.get("certified_at", "")), m.group(0) if m else ""))
+        certs.append((str(d.get("certified_at", "")), m.group(0) if m else "", p.name))
     if not certs:
         return None  # no certificate to supersede: the token has nothing to act on
-    certified_at, cov_date = max(certs)
+    named = SUPERSEDES.search(token.read_text(errors="replace"))
+    if named:
+        if named.group(1) not in {n for _c, _v, n in certs}:
+            return None  # the certificate it supersedes is not on file: nothing to act on
+        if any(n != named.group(1) and c >= tdate for c, _v, n in certs):
+            return None  # consumed (or stale): another certificate is dated on or after the token
+        return str(approvals / "recert" / token.name)
+    certified_at, cov_date, _name = max(certs)
     if tdate < certified_at:
         return None  # stale: a certificate was issued after the token
     if cov_date and cov_date >= tdate:

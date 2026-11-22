@@ -23,7 +23,10 @@ def _approvals(tmp_path: Path, *, certs=(), tokens=()) -> Path:
             json.dumps({"certified_at": certified_at, "coverage_path": coverage})
         )
     for name in tokens:
-        (a / "recert" / name).write_text("token")
+        text = "token"
+        if isinstance(name, tuple):
+            name, text = name
+        (a / "recert" / name).write_text(text)
     return a
 
 
@@ -92,24 +95,53 @@ def test_another_companys_token_does_not_pass(tmp_path):
     assert _run(a)[0] == 1
 
 
-def test_the_real_jnj_token_on_main_is_spent_by_the_newer_pass():
-    """The real state on main: JNJ's re-cert token (recert/JNJ-2026-11-21.md) was consumed by the 2026-11-22 PASS
-    (JNJ-certificate-2026-11-22.md, a certificate made from a coverage export dated after the token), so no token is
-    pending and the guard applies again. Asserts the files that make it so, then the script's answer."""
+SAME_DAY_CERT = (
+    "JNJ-ffa773adb1c3.json",
+    "2026-11-22",
+    "data-team/strategy/certification/JNJ-coverage-2026-11-22.csv",
+)
+SAME_DAY_TOKEN = (
+    "JNJ-2026-11-22.md",
+    "- Supersedes certificate: `certificates/JNJ-ffa773adb1c3.json` (n=199, 2026-11-22).\n",
+)
+
+
+def test_token_naming_a_same_day_certificate_it_supersedes_passes(tmp_path):
+    # JNJ 2026-11-22 (top100-flow run 45038935707): certificate from the 11-22 export, token written the same day naming
+    # it. The export-date test alone reads the token as consumed and the guard holds the approved change.
+    a = _approvals(tmp_path, certs=[JNJ_CERT, SAME_DAY_CERT], tokens=[SAME_DAY_TOKEN])
+    rc, out = _run(a)
+    assert rc == 0 and out.endswith("recert/JNJ-2026-11-22.md")
+
+
+def test_named_token_is_consumed_by_the_next_certificate(tmp_path):
+    # the re-certification under that token (another certificate dated on or after the token) spends it
+    nxt = ("JNJ-ddd.json", "2026-11-22", "data-team/strategy/certification/JNJ-coverage-2026-11-22.csv")
+    a = _approvals(tmp_path, certs=[JNJ_CERT, SAME_DAY_CERT, nxt], tokens=[SAME_DAY_TOKEN])
+    assert _run(a)[0] == 1
+
+
+def test_named_token_whose_certificate_is_missing_is_held(tmp_path):
+    a = _approvals(tmp_path, certs=[JNJ_CERT], tokens=[SAME_DAY_TOKEN])
+    assert _run(a)[0] == 1
+
+
+def test_the_real_tokens_on_main():
+    """The real state on main: JNJ's 11-21 token was spent by the 11-22 certificate (JNJ-ffa773adb1c3); the approver's
+    11-22 token names that certificate and is pending (no newer certificate), so the flow skips the guard once.
+    When the next JNJ certificate lands this token is spent and the script prints nothing again."""
     approvals = REPO / "data-team/strategy/approvals"
-    assert (approvals / "recert" / "JNJ-2026-11-21.md").exists()
-    covs = []
-    for p in (approvals / "certificates").glob("JNJ-*.json"):
-        d = json.loads(p.read_text())
-        covs.append((str(d.get("certified_at", "")), str(d.get("coverage_path", ""))))
-    assert max(covs)[0] >= "2026-11-21"  # a certificate at or after the token date exists
     r = subprocess.run(
         [sys.executable, "-I", str(SCRIPT), "--approvals", str(approvals), "--ticker", "JNJ"],
         capture_output=True,
         text=True,
         cwd=REPO,
     )
-    assert r.returncode == 1 and r.stdout == ""
+    certs = [json.loads(p.read_text()) for p in (approvals / "certificates").glob("JNJ-*.json")]
+    if any(str(d.get("certified_at", "")) >= "2026-11-22" and "ffa773adb1c3" not in str(d.get("seed", "")) for d in certs):
+        assert r.returncode == 1 and r.stdout == ""
+    else:
+        assert r.returncode == 0 and r.stdout.strip().endswith("recert/JNJ-2026-11-22.md")
 
 
 def test_flow_wires_the_token_and_the_request_cites_it():

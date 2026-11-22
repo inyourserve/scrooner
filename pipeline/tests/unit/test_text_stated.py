@@ -101,6 +101,12 @@ def test_a_tagged_statement_carries_its_tag_as_one_part_so_it_is_not_read_as_der
     )
     # an untagged sentence keeps its quote locator only
     assert tc.locator_part("Item 1, Research and development", acc, Decimal(5)) == ""
+    # a computation of two printed lines is not the first element's value (LLY gross_profit FY2024, flow run
+    # 45038935707: the part 'Revenues=36624400000' made the self-check open the cell as 'filing differs')
+    gp = "R3.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000059478-25-000067, read FY2024 10-K"
+    assert tc.locator_part(gp, "0000059478-25-000067", Decimal("36624400000")) == ""
+    so = "R6.htm (us-gaap:CommonStockSharesIssued [CommonClassA] - us-gaap:TreasuryStockShares [CommonClassA]) of X"
+    assert tc.locator_part(so, acc, Decimal(5)) == ""
     sz = {
         ("TST", "cash_paid_for_interest"): {
             "2025-12-31": (

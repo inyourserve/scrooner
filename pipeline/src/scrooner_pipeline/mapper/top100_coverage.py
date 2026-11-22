@@ -2019,11 +2019,20 @@ _LOCATOR_TAG = re.compile(
 )
 
 
+_LOCATOR_FORMULA = re.compile(r"\s*[-+*/]\s*\(?\s*[a-z][\w-]*:[A-Za-z]")
+
+
 def locator_part(locator: str, accession: str, value: Decimal) -> str:
     """The one-filing part `Tag[dims]=value@accession#R<n>` of a stated value whose locator names the R page and the
     element that tags the statement, or '' (an untagged sentence keeps its quote locator only). Pure."""
     m = _LOCATOR_TAG.match(locator or "")
     if not m or not accession:
+        return ""
+    if _LOCATOR_FORMULA.match(locator[m.end() :]):
+        # a computation of printed lines ('R3.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold)'): the value
+        # is not the first element's, so no single part names it; the cell keeps its quote locator (the approver reads
+        # it). LLY gross_profit FY2024 and BMY FY2015-16 were opened by the self-check as 'filing differs: Revenues=...'
+        # (flow run 45038935707) because the part labelled the gross profit as revenue.
         return ""
     dims = f"[{m['dims'].strip()}]" if m["dims"] else ""
     return f"{m['tag']}{dims}={format(value.normalize(), 'f')}@{accession}#R{m['r']}"

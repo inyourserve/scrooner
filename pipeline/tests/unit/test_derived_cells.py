@@ -253,3 +253,38 @@ def test_c2_two_blanks_of_one_key_derive_one_cell_adi_2018():
         cells, stats(blank(6, 11, "I"), blank(6, 11, "I")), CI, PERIODS, proven_bs(), ops
     )
     assert len(out) == 1 and out[0]["value"] == Decimal(120 * M)
+
+
+def test_operands_read_the_authoritative_value_in_every_filing_that_prints_it_gild_fy2015():
+    """GILD FY2015 on the live core.fact (2026-11-22): the authoritative Assets / L&SE sit in the FY2016 10-K (A2), the
+    authoritative equity, NCI and temporary equity in the FY2015 10-K (A1); A2 prints the same equity numbers as
+    non-authoritative rows. The loader must show A2 printing them, or no filing prints both and the certified 32,601M
+    cell falls BLANK (flow run 45038935707). A non-authoritative value that differs never enters."""
+    from scrooner_pipeline.mapper.derived_cells import operand_filings_from_rows
+
+    P = 11
+    rows = [
+        ("Assets", P, "A1", Decimal(51839 * M), False),  # own filing, before the FY2016 re-presentation
+        ("Assets", P, "A2", Decimal(51716 * M), True),
+        (LSE, P, "A1", Decimal(51839 * M), False),
+        (LSE, P, "A2", Decimal(51716 * M), True),
+        ("StockholdersEquity", P, "A1", Decimal(18534 * M), True),
+        ("StockholdersEquity", P, "A2", Decimal(18534 * M), False),
+        ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest", P, "A1", Decimal(19113 * M), True),
+        ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest", P, "A2", Decimal(19113 * M), False),
+        ("TemporaryEquityCarryingAmountAttributableToParent", P, "A1", Decimal(2 * M), True),
+        ("TemporaryEquityCarryingAmountAttributableToParent", P, "A2", Decimal(2 * M), False),
+    ]
+    ops = operand_filings_from_rows(rows)
+    assert ops[("Assets", P)] == {"A2": Decimal(51716 * M)}  # the differing non-authoritative A1 value never enters
+    assert ops[(LSE, P)] == {"A2": Decimal(51716 * M)}
+    assert ops[("StockholdersEquity", P)] == {"A1": Decimal(18534 * M), "A2": Decimal(18534 * M)}
+    proven = {
+        ("total_assets", "I", FYE, FYE): {Decimal(51716 * M)},
+        ("stockholders_equity", "I", FYE, FYE): {Decimal(18534 * M)},
+    }
+    cells = [cell(4, 11, 51716, "A2"), cell(5, 11, 18534, "A1")]
+    out = _derive(cells, stats(blank(6, 11, "I")), CI, PERIODS, proven, {}, ops)
+    assert [o["value"] for o in out] == [Decimal(32601 * M)]
+    # no authoritative fact for a key: nothing of that key is read
+    assert operand_filings_from_rows([("Assets", P, "A1", Decimal(1), False)]) == {}

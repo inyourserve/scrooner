@@ -102,20 +102,44 @@ def load_proven(
 def load_operand_filings(
     conn: psycopg.Connection, company_id: int
 ) -> dict[tuple[str, int], dict[str, Decimal]]:
-    """(tag, period_id) -> {accession: printed value} of the C2 operand tags, so the operands can be read from the one
-    filing that prints the proven assets and equity. A key with two distinct values in one accession is dropped."""
-    seen: dict[tuple[str, int, str], set[Decimal]] = defaultdict(set)
-    for tag, period_id, acc, value in conn.execute(
+    """(tag, period_id) -> {accession: printed value} of the C2 operand tags (operand_filings_from_rows)."""
+    rows = conn.execute(
         """
-        select c.tag, f.period_id, fl.accession_number, f.value
+        select c.tag, f.period_id, fl.accession_number, f.value, f.is_authoritative
         from core.fact f join core.concept c on c.id = f.concept_id
         join core.filing fl on fl.id = f.filing_id
-        where f.company_id = %s and f.is_authoritative and not f.is_derived
+        where f.company_id = %s and not f.is_derived
           and c.taxonomy = 'us-gaap' and c.tag = any(%s)
         """,
         (company_id, list(OPERAND_TAGS)),
-    ).fetchall():
-        seen[(tag, period_id, acc)].add(Decimal(value))
+    ).fetchall()
+    return operand_filings_from_rows(rows)
+
+
+def operand_filings_from_rows(
+    rows: list[tuple[str, int, str, Decimal, bool]],
+) -> dict[tuple[str, int], dict[str, Decimal]]:
+    """(tag, period_id) -> {accession: printed value}, so the operands can be read from the one filing that prints the
+    proven assets and equity. Rows: (tag, period_id, accession, value, is_authoritative). Pure.
+
+    Every value is the AUTHORITATIVE value of its (tag, period): an authoritative fact counts in its own filing, and a
+    non-authoritative fact counts in its filing only when it carries exactly that authoritative value (the same printed
+    number, filed again in a later 10-K). No non-authoritative value ever enters a derivation; it only shows which other
+    filing prints the authoritative number. GILD FY2015 (2026-11-22): the authoritative Assets and L&SE are the FY2016
+    10-K's (51,716M), the authoritative StockholdersEquity, MinorityInterest and temporary equity the FY2015 10-K's
+    (18,534M / 579M / 2M, the same numbers the FY2016 10-K prints). Reading authoritative rows only left no filing that
+    prints both, so the cell, certified at 32,601M on 2026-11-16, fell BLANK. A key with two distinct values in one
+    accession is dropped."""
+    seen: dict[tuple[str, int, str], set[Decimal]] = defaultdict(set)
+    auth: dict[tuple[str, int], set[Decimal]] = defaultdict(set)
+    for tag, period_id, acc, value, is_auth in rows:
+        if is_auth:
+            auth[(tag, period_id)].add(Decimal(value))
+    for tag, period_id, acc, value, is_auth in rows:
+        v = Decimal(value)
+        a = auth.get((tag, period_id))
+        if is_auth or (a is not None and len(a) == 1 and v in a):
+            seen[(tag, period_id, acc)].add(v)
     out: dict[tuple[str, int], dict[str, Decimal]] = defaultdict(dict)
     for (tag, period_id, acc), v in seen.items():
         if len(v) == 1:
