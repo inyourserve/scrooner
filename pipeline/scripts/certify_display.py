@@ -27,6 +27,19 @@ registry row. Used by the weekly certified re-check.
 
 Self-check writes DIR/verifier-self-check-<company_id>.csv (every finding, FAIL and REVIEW), never the registry, and
 exits 0 when the checks ran (opened or not), 3 when they could not run (the company is then marked not gate-ready).
+An AUTO_MISMATCH of the automated draw checker is one of those failures (check draw_check).
+
+Automated draw checker (certification/draw_check.py, 2026-11-22): every drawn cell is checked against the cited
+filing's own XBRL facts (AUTO_MATCH / AUTO_MISMATCH / NEEDS_READ). Only NEEDS_READ and AUTO_MISMATCH cells go to a
+person or agent read:
+
+  # the reads of those cells (CSV: data_point, fiscal_year, verdict MATCH|MISMATCH, reader, evidence)
+  python pipeline/scripts/certify_display.py --request R.md --live --reads READS.csv --out-dir OUT
+  # the verifier samples the checker: a seeded 5% of AUTO_MATCH cells for an agent read, then its agreement
+  python pipeline/scripts/certify_display.py --request R.md --live --audit-out AUDIT.csv --out-dir OUT
+  python pipeline/scripts/certify_display.py --request R.md --live --audit-reads AUDIT.csv --out-dir OUT
+  # read-only run over every company of a top100-coverage.csv: outcomes, mismatches, needs-read, runtime per company
+  python pipeline/scripts/certify_display.py --draw-check-all data-team/strategy/top100-coverage.csv --out-dir OUT
 """
 
 from __future__ import annotations
@@ -35,12 +48,14 @@ import argparse
 import csv
 import json
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from scrooner_pipeline.certification import display_cert as dc
+from scrooner_pipeline.certification import draw_check as dck
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_REGISTRY = REPO / "data-team/strategy/approvals/registry.csv"
@@ -88,7 +103,29 @@ def main(argv: list[str] | None = None) -> int:
         help="a top100_coverage output dir: run the checks on --company-id's rows and open every failing cell there",
     )
     ap.add_argument("--company-id", help="with --self-check-dir")
+    ap.add_argument(
+        "--reads",
+        type=Path,
+        help="filing reads of the drawn cells the automated checker sent to a read (draw_check.load_reads)",
+    )
+    ap.add_argument(
+        "--audit-out",
+        type=Path,
+        help="write the checker audit sheet: a seeded 5%% of AUTO_MATCH cells for an agent filing read",
+    )
+    ap.add_argument(
+        "--audit-reads",
+        type=Path,
+        help="the filled audit sheet: report the agent reads' agreement with the machine in the certificate",
+    )
+    ap.add_argument(
+        "--draw-check-all",
+        type=Path,
+        help="a top100-coverage.csv: run the automated draw checker on every company's draw (read-only), with --out-dir",
+    )
     a = ap.parse_args(argv)
+    if a.draw_check_all:
+        return draw_check_all(a.draw_check_all, a.out_dir, a.date)
     if a.self_check_dir:
         if not (a.company_id and a.cik):
             ap.error("--self-check-dir needs --company-id and --cik")
@@ -122,14 +159,36 @@ def main(argv: list[str] | None = None) -> int:
             assert a.cik or company_id is not None  # argparse checks above
             cik = a.cik or dc.resolve_cik(conn, company_id or 0)
             run = dc.certify(
-                t, cik, a.coverage, dc.SqlFactSource(conn), a.seed, a.mechanical
+                t,
+                cik,
+                a.coverage,
+                dc.SqlFactSource(conn),
+                a.seed,
+                a.mechanical,
+                reads=dck.load_reads(a.reads),
             )
     else:
         raw = json.loads(a.bundle.read_text())
         bundle = raw[0]["bundle"] if isinstance(raw, list) else raw.get("bundle", raw)
         run = dc.certify(
-            t, a.cik, a.coverage, dc.BundleFactSource(bundle), a.seed, a.mechanical
+            t,
+            a.cik,
+            a.coverage,
+            dc.BundleFactSource(bundle),
+            a.seed,
+            a.mechanical,
+            reads=dck.load_reads(a.reads),
         )
+    if run.auto is not None:
+        sample = dck.audit_sample(run.auto, run.seed)
+        if a.audit_out:
+            dck.write_audit_request(a.audit_out, sample)
+            print(
+                f"checker audit: {len(sample)} AUTO_MATCH cell(s) for an agent read -> {a.audit_out}"
+            )
+        if a.audit_reads:
+            run.audit = dck.audit_agreement(sample, dck.load_reads(a.audit_reads))
+            print(f"checker audit agreement: {json.dumps(run.audit)}")
 
     a.out_dir.mkdir(parents=True, exist_ok=True)
     if a.mechanical:
@@ -215,12 +274,26 @@ def self_check(cov_dir: Path, company_id: str, cik: str, source=None) -> int:
         else:
             run = dc.certify(ticker, cik, one, source)
         findings = dc.self_check_findings(run)
-        review = [f for f in run.gate + run.hides if f.severity == "REVIEW"] + [
-            dc.Finding(k, *s.cell.key, "REVIEW", s.result + ": " + s.evidence)
-            for k, lst in (("shown", run.shown), ("derived", run.derived))
-            for s in lst
-            if s.result in ("LOCATOR", "NOT_FOUND")
-        ]
+        review = (
+            [f for f in run.gate + run.hides if f.severity == "REVIEW"]
+            + [
+                dc.Finding(k, *s.cell.key, "REVIEW", s.result + ": " + s.evidence)
+                for k, lst in (("shown", run.shown), ("derived", run.derived))
+                for s in lst
+                if s.result in ("LOCATOR", "NOT_FOUND")
+            ]
+            + [
+                dc.Finding(
+                    "draw_check",
+                    x.data_point,
+                    x.fiscal_year,
+                    "REVIEW",
+                    f"NEEDS_READ ({x.method}): {x.detail}",
+                )
+                for x in run.auto or ()
+                if x.outcome == dck.NEEDS_READ
+            ]
+        )
     except Exception as e:  # noqa: BLE001 -- the checks could not run: never a pass
         err, review = f"{type(e).__name__}: {e}"[:300], []
     finally:
@@ -287,6 +360,127 @@ def self_check(cov_dir: Path, company_id: str, cik: str, source=None) -> int:
 
 
 SELF_NOTE = "verifier self-check"
+
+DRAW_CHECK_COLUMNS = [
+    "ticker",
+    "company_id",
+    "data_point",
+    "fiscal_year",
+    "period_end",
+    "badge",
+    "outcome",
+    "method",
+    "shown_value",
+    "filing_value",
+    "accession",
+    "detail",
+]
+DRAW_SUMMARY_COLUMNS = [
+    "ticker",
+    "company_id",
+    "shown",
+    "drawn",
+    "auto_match",
+    "auto_mismatch",
+    "needs_read",
+    "pct_auto_match",
+    "seconds",
+]
+
+
+def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
+    """The automated draw checker over every company of a top100-coverage.csv, read-only: the same seeded draw
+    certify() would take (plan), checked against the cited filings' facts. Writes OUT/draw-check-<date>.csv (one row
+    per drawn cell) and OUT/draw-check-summary-<date>.csv (counts and seconds per company)."""
+    fields, rows = _read(cov)
+    by: dict[str, list[dict]] = {}
+    for r in rows:
+        by.setdefault(r["company_id"], []).append(r)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cells_out, summ = [], []
+    conn_cm = None
+    if source is None:
+        from scrooner_pipeline.db.connection import get_connection
+
+        conn_cm = get_connection()
+        conn = conn_cm.__enter__()
+        conn.read_only = True
+        source = dc.SqlFactSource(conn, timeout_ms=60000)
+    try:
+        for cid, mine in sorted(
+            by.items(), key=lambda kv: int(kv[1][0].get("rank") or 0)
+        ):
+            t0 = time.monotonic()
+            ticker = mine[0]["ticker"]
+            one = out_dir / f".draw-check-{cid}.csv"
+            _write(one, fields, mine)
+            try:
+                p = dc.plan(ticker, one)
+            finally:
+                one.unlink(missing_ok=True)
+            got = source.filing_facts(*dck.needs(p.sample)) if p.sample else ([], [])
+            if conn_cm is not None:
+                source.conn.rollback()
+            checks = dck.check_draw(p.sample, *got) if p.sample else []
+            secs = time.monotonic() - t0
+            k = dck.counts(checks)
+            badge = {c.key: c for c in p.sample}
+            for x in checks:
+                c = badge[x.key]
+                cells_out.append(
+                    {
+                        "ticker": ticker,
+                        "company_id": cid,
+                        "data_point": x.data_point,
+                        "fiscal_year": x.fiscal_year,
+                        "period_end": c.period_end,
+                        "badge": c.badge or "",
+                        "outcome": x.outcome,
+                        "method": x.method,
+                        "shown_value": "" if c.value is None else str(c.value),
+                        "filing_value": ""
+                        if x.filing_value is None
+                        else str(x.filing_value),
+                        "accession": c.accession,
+                        "detail": x.detail,
+                    }
+                )
+            summ.append(
+                {
+                    "ticker": ticker,
+                    "company_id": cid,
+                    "shown": sum(1 for c in p.cells if c.display == dc.SHOWN),
+                    "drawn": len(checks),
+                    "auto_match": k[dck.AUTO_MATCH],
+                    "auto_mismatch": k[dck.AUTO_MISMATCH],
+                    "needs_read": k[dck.NEEDS_READ],
+                    "pct_auto_match": f"{100 * k[dck.AUTO_MATCH] / len(checks):.1f}"
+                    if checks
+                    else "",
+                    "seconds": f"{secs:.2f}",
+                }
+            )
+            print(
+                f"draw-check {ticker}: {len(checks)} drawn, {k[dck.AUTO_MATCH]} auto-match, "
+                f"{k[dck.AUTO_MISMATCH]} mismatch, {k[dck.NEEDS_READ]} needs read, {secs:.1f}s",
+                flush=True,
+            )
+    finally:
+        if conn_cm is not None:
+            conn_cm.__exit__(None, None, None)
+    _write(out_dir / f"draw-check-{today}.csv", DRAW_CHECK_COLUMNS, cells_out)
+    _write(out_dir / f"draw-check-summary-{today}.csv", DRAW_SUMMARY_COLUMNS, summ)
+    tot = dck.counts(
+        dck.AutoCheck(r["data_point"], r["fiscal_year"], r["outcome"], "", None, "")
+        for r in cells_out
+    )
+    n = len(cells_out)
+    print(
+        f"draw-check total: {n} drawn cells over {len(summ)} companies; "
+        f"AUTO_MATCH {tot[dck.AUTO_MATCH]} ({100 * tot[dck.AUTO_MATCH] / n if n else 0:.1f}%), "
+        f"AUTO_MISMATCH {tot[dck.AUTO_MISMATCH]}, NEEDS_READ {tot[dck.NEEDS_READ]}"
+    )
+    return 0
 
 
 if __name__ == "__main__":

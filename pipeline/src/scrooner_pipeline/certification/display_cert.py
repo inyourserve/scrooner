@@ -46,6 +46,8 @@ from math import comb
 from pathlib import Path
 from typing import Protocol
 
+from scrooner_pipeline.certification import draw_check as dck
+
 SHOWN = "SHOWN_VALUE"
 HIDDEN_ROW = "HIDDEN_ROW"
 HIDDEN_YEAR = "HIDDEN_YEAR"
@@ -665,6 +667,10 @@ class SqlFactSource:
         )
         return {acc: set(t) for acc, t in rows}
 
+    def filing_facts(self, accessions, period_ends):
+        """The automated draw checker's own read of the cited filings (draw_check.FILING_FACT_SQL)."""
+        return dck.sql_filing_facts(self._q, accessions, period_ends)
+
 
 class BundleFactSource:
     """Offline source: an evidence bundle (JSON) holding the rows of the three queries above."""
@@ -694,6 +700,9 @@ class BundleFactSource:
     def presented_lines(self, cik, tags):
         tg = set(tags)
         return {k: set(v) & tg for k, v in self.b.get("lines", {}).items()}
+
+    def filing_facts(self, accessions, period_ends):
+        return dck.bundle_filing_facts(self.b, accessions)
 
 
 # ---------------------------------------------------------------- checks
@@ -1316,10 +1325,34 @@ class Run:
         default_factory=dict
     )  # stratum -> (pool cells, drawn)
     mechanical: bool = False  # census checks only, no draw: never a certificate
+    # automated draw checker (draw_check): one AutoCheck per drawn cell, None when the source has no filing read
+    auto: list[dck.AutoCheck] | None = None
+    reads: dict[tuple[str, str], dck.Read] = field(default_factory=dict)
+    audit: dict | None = (
+        None  # draw_check.audit_agreement of the checker's 5% audit sample, when read
+    )
+
+    @property
+    def pending_reads(self) -> list[dck.AutoCheck]:
+        """Drawn cells the machine did not settle (NEEDS_READ, AUTO_MISMATCH) and no person or agent has read yet."""
+        return [
+            a
+            for a in self.auto or ()
+            if a.outcome != dck.AUTO_MATCH and a.key not in self.reads
+        ]
+
+    @property
+    def read_wrong(self) -> list[dck.Read]:
+        """Filing reads that found a drawn cell wrong."""
+        drawn = {a.key for a in self.auto or ()}
+        return [
+            r for k, r in self.reads.items() if k in drawn and r.verdict == "MISMATCH"
+        ]
 
     @property
     def errors(self) -> int:
-        return sum(1 for s in self.shown if s.result == "MISMATCH")
+        wrong = {s.cell.key for s in self.shown if s.result == "MISMATCH"}
+        return len(wrong | {(r.data_point, r.fiscal_year) for r in self.read_wrong})
 
     @property
     def verdict(self) -> str:
@@ -1333,6 +1366,7 @@ class Run:
             return "FAIL"
         if (
             any(s.result in ("LOCATOR", "NOT_FOUND") for s in self.shown)
+            or self.pending_reads
             or any(d.result == "REVIEW" for d in self.debt)
             or any(d.result in ("LOCATOR", "NOT_FOUND") for d in self.derived)
             or any(f.severity == "REVIEW" for f in self.hides)
@@ -1377,6 +1411,28 @@ def plan(
     return Plan(cells, sha, seed, draw(cells, seed, n), debt, fam, strata(cells, n))
 
 
+def auto_check(sample: list[Cell], source) -> list[dck.AutoCheck] | None:
+    """The automated draw checker over the drawn cells: its own read of the cited filings, never the export's tag or
+    canonical_fact (draw_check docstring). None when the source cannot read filings (an old evidence bundle)."""
+    read = getattr(source, "filing_facts", None)
+    if read is None or not sample:
+        return None if read is None else []
+    got = read(*dck.needs(sample))
+    if got is None:
+        return None
+    if not got[0]:
+        # Positive control: a drawn filing always carries facts at its own period ends. None means the read or its
+        # filters are broken, and every cell would look NEEDS_READ: refuse instead.
+        raise SourceBroken(
+            "draw checker read no facts for the drawn filings: source broken"
+        )
+    return dck.check_draw(sample, *got)
+
+
+class SourceBroken(RuntimeError):
+    pass
+
+
 def certify(
     ticker: str,
     cik: str,
@@ -1384,9 +1440,11 @@ def certify(
     source: FactSource,
     seed: str | None = None,
     mechanical: bool = False,
+    reads: dict[tuple[str, str], dck.Read] | None = None,
 ) -> Run:
     """mechanical=True: every census check, no draw (a re-check of a certified export or the flow
-    gate). Its verdict says whether the mechanical checks pass; it is never a certificate."""
+    gate). Its verdict says whether the mechanical checks pass; it is never a certificate.
+    reads: filing reads (draw_check.load_reads) for the drawn cells the automated checker sent to a read."""
     p = plan(ticker, coverage, seed, 0 if mechanical else DRAW_SIZE)
     counts: dict[str, int] = defaultdict(int)
     for c in p.cells:
@@ -1436,6 +1494,12 @@ def certify(
         for c in p.sample
     ]
     run.debt = [check_debt(c, facts) for c in p.debt]
+    run.reads = dict(reads or {})
+    try:
+        run.auto = auto_check(p.sample, source)
+    except SourceBroken as e:
+        run.auto = None
+        run.gate.append(Finding("gate", "*", "*", "FAIL", str(e)))
     # Census, not sample: every derived cell is checked against its identity (founder 2026-11-17
     # allows derived instants; each one is a computation the filing does not print).
     run.derived = [
@@ -1616,6 +1680,18 @@ def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> 
         "|---|---|",
         f"| Gate (no OPEN; value, accession and R page on every shown cell and part; parts sum) | {sum(1 for f in run.gate if f.severity == 'FAIL')} failing |",
         f"| {n} random shown cells (stratified, {len(run.strata)} strata of {b['pool']} shown) | {sum(1 for s in run.shown if s.result == 'MATCH')} match, {k} wrong, {sum(1 for s in run.shown if s.result == 'LOCATOR')} locator only |",
+        (
+            f"| Automated draw checker ({dck.CHECKER_VERSION}, the filing's own facts) | "
+            + (
+                "not run (source has no filing read) |"
+                if run.auto is None
+                else f"{sum(1 for a in run.auto if a.outcome == dck.AUTO_MATCH)} auto-matched, "
+                f"{sum(1 for a in run.auto if a.outcome == dck.AUTO_MISMATCH)} auto-mismatched, "
+                f"{sum(1 for a in run.auto if a.outcome == dck.NEEDS_READ)} need a read; "
+                f"{len(run.auto) - len(run.pending_reads) - sum(1 for a in run.auto if a.outcome == dck.AUTO_MATCH)} read, "
+                f"{len(run.pending_reads)} pending |"
+            )
+        ),
         f"| total_debt census ({len(run.debt)} years) | {sum(1 for d in run.debt if d.result == 'MATCH')} match, {sum(1 for d in run.debt if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.debt if d.result == 'REVIEW')} for review |",
         f"| Derived cells census ({len(run.derived)} undrawn) | {sum(1 for d in run.derived if d.result == 'MATCH')} match, {sum(1 for d in run.derived if d.result == 'MISMATCH')} wrong, {sum(1 for d in run.derived if d.result != 'MATCH' and d.result != 'MISMATCH')} for review |",
         f"| Hidden rows and years | {sum(1 for f in run.hides if f.severity == 'FAIL')} failing, {sum(1 for f in run.hides if f.severity == 'REVIEW')} for review, {sum(1 for f in run.hides if f.severity == 'INFO')} evidenced |",
@@ -1641,6 +1717,23 @@ def render(run: Run, today: str, approver: str = "Ritwik (cloud), approver") -> 
         + [d for d in run.derived if d.result != "MATCH"]
     )
     fails = [f for f in run.gate + run.hides if f.severity in ("FAIL", "REVIEW")]
+    queue = dck.read_queue(run.auto or ())
+    if queue:
+        lines += [
+            "## Drawn cells for a person or agent read (the machine did not settle them)",
+            "",
+        ]
+        for a in queue:
+            r = run.reads.get(a.key)
+            lines.append(
+                f"- **{a.outcome}** {a.data_point} FY{a.fiscal_year} ({a.method}): {a.detail}"
+                + (
+                    f" -- read by {r.reader}: {r.verdict} ({r.evidence})"
+                    if r
+                    else " -- pending read"
+                )
+            )
+        lines.append("")
     if bad or fails:
         lines += ["## Findings", ""]
         for f in fails:
@@ -1707,6 +1800,18 @@ def evidence_rows(run: Run) -> list[list[str]]:
                 str(d.cell.value),
                 str(d.perimeter),
                 d.evidence,
+            ]
+        )
+    for a in run.auto or ():
+        rows.append(
+            [
+                "draw_check",
+                a.data_point,
+                a.fiscal_year,
+                a.outcome,
+                "",
+                "" if a.filing_value is None else str(a.filing_value),
+                f"{a.method}; verified_by {dck.verified_by(a, run.reads)}; {a.detail}",
             ]
         )
     for f in run.gate + run.hides:
@@ -1896,6 +2001,41 @@ def _grain(dp: str) -> str:
     return "I" if dp in INSTANT_DPS else "FY"
 
 
+def draw_check_block(run: Run) -> dict:
+    """Who verified the draw: counts of the automated checker's outcomes and, per verifier, the drawn cells the
+    machine settled (AUTO_MATCH) versus those a person or agent read (reads) or still must read."""
+    if run.auto is None:
+        return {"checker": dck.CHECKER_VERSION, "ran": False}
+    by: dict[str, int] = defaultdict(int)
+    for a in run.auto:
+        by[dck.verified_by(a, run.reads)] += 1
+    read_cells = [
+        {
+            "data_point": a.data_point,
+            "fiscal_year": a.fiscal_year,
+            "machine": a.outcome,
+            "reader": run.reads[a.key].reader,
+            "verdict": run.reads[a.key].verdict,
+            "evidence": run.reads[a.key].evidence,
+        }
+        for a in run.auto
+        if a.outcome != dck.AUTO_MATCH and a.key in run.reads
+    ]
+    return {
+        "checker": dck.CHECKER_VERSION,
+        "ran": True,
+        "drawn": len(run.auto),
+        "auto_matched": sum(1 for a in run.auto if a.outcome == dck.AUTO_MATCH),
+        "auto_mismatched": sum(1 for a in run.auto if a.outcome == dck.AUTO_MISMATCH),
+        "needs_read": sum(1 for a in run.auto if a.outcome == dck.NEEDS_READ),
+        "verified_by_machine": by.get("machine", 0),
+        "verified_by_read": sum(v for k, v in by.items() if k.startswith("read:")),
+        "pending_read": by.get("pending_read", 0),
+        "read_cells": read_cells,
+        "audit": run.audit,
+    }
+
+
 def certificate(
     run: Run, req: Request | None, certified_at: str, approver: str
 ) -> dict:
@@ -1915,6 +2055,7 @@ def certificate(
         (f.data_point, f.fiscal_year): f for f in run.hides if f.check == "hide_reason"
     }
     gate_fail = {(f.data_point, f.fiscal_year): f for f in run.gate}
+    auto = {a.key: a for a in run.auto or ()}
     cells = []
     for c in run.cells:
         if c.key in drawn:
@@ -1975,6 +2116,21 @@ def certificate(
                 "evidence": ev,
                 "result": res,
                 "detail": why,
+                **(
+                    {
+                        "auto_check": {
+                            "outcome": auto[c.key].outcome,
+                            "method": auto[c.key].method,
+                            "filing_value": None
+                            if auto[c.key].filing_value is None
+                            else str(auto[c.key].filing_value),
+                            "detail": auto[c.key].detail,
+                        },
+                        "verified_by": dck.verified_by(auto[c.key], run.reads),
+                    }
+                    if c.key in auto
+                    else {}
+                ),
             }
         )
     if run.mechanical:
@@ -1996,6 +2152,7 @@ def certificate(
         "certified_at": certified_at,
         "counts": dict(sorted(run.counts.items())),
         "bound": bound(run),
+        "draw_check": draw_check_block(run),
         "gate": [
             {
                 "data_point": f.data_point,
@@ -2099,6 +2256,18 @@ def self_check_findings(run: Run) -> list[Finding]:
         Finding("debt", *d.cell.key, "FAIL", f"perimeter {d.perimeter}: {d.evidence}")
         for d in run.debt
         if d.result == "MISMATCH"
+    ]
+    # Automated draw checker: a drawn cell whose filing fact differs is OPEN with the checker's reason.
+    out += [
+        Finding(
+            "draw_check",
+            a.data_point,
+            a.fiscal_year,
+            "FAIL",
+            f"AUTO_MISMATCH ({a.method}) filing {a.filing_value}: {a.detail}",
+        )
+        for a in run.auto or ()
+        if a.outcome == dck.AUTO_MISMATCH
     ]
     return out
 

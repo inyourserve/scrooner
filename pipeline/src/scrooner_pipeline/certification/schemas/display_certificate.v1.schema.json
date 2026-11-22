@@ -48,6 +48,17 @@
         }
       }
     },
+    "draw_check": {
+      "type": "object", "required": ["checker", "ran"],
+      "description": "Automated draw checker (certification/draw_check.py, since 2026-11-22): each drawn cell against the cited filing's own XBRL facts, and who verified it: the machine (AUTO_MATCH) or a person/agent filing read (NEEDS_READ, AUTO_MISMATCH). Absent on older certificates.",
+      "properties": {
+        "checker": {"type": "string"}, "ran": {"type": "boolean"}, "drawn": {"type": "integer"},
+        "auto_matched": {"type": "integer"}, "auto_mismatched": {"type": "integer"}, "needs_read": {"type": "integer"},
+        "verified_by_machine": {"type": "integer"}, "verified_by_read": {"type": "integer"}, "pending_read": {"type": "integer"},
+        "read_cells": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "machine", "reader", "verdict", "evidence"]}},
+        "audit": {"type": ["object", "null"], "description": "draw_check.audit_agreement: agent reads of a seeded 5% of AUTO_MATCH cells."}
+      }
+    },
     "gate": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "severity", "detail"]}},
     "cells": {
       "type": "array",
@@ -70,7 +81,12 @@
           "parts": {"type": "array", "items": {"type": "object", "required": ["tag", "dims", "value", "sign", "accession", "r_page"]}},
           "evidence": {"enum": ["drawn", "census", "sampled"]},
           "result": {"enum": ["MATCH", "MISMATCH", "NOT_FOUND", "LOCATOR", "REVIEW", "SAMPLED"]},
-          "detail": {"type": "string"}
+          "detail": {"type": "string"},
+          "auto_check": {"type": "object", "required": ["outcome", "method", "filing_value", "detail"],
+                         "properties": {"outcome": {"enum": ["AUTO_MATCH", "AUTO_MISMATCH", "NEEDS_READ"]}, "method": {"type": "string"},
+                                        "filing_value": {"type": ["string", "null"]}, "detail": {"type": "string"}}},
+          "verified_by": {"type": "string", "pattern": "^(machine|pending_read|read:.+)$",
+                          "description": "Drawn cells only: machine (AUTO_MATCH), read:<reader> (a person or agent read the filing), or pending_read."}
         }
       }
     }
