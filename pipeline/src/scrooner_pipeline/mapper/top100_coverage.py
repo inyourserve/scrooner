@@ -2005,7 +2005,9 @@ def attach_stated_zero(
         r[kind] = "Y"
         r["accession"], r["r_page"], r["evidence"] = rec[0], rec[1], rec[2]
         r["locator_source"] = kind
-        part = locator_part(rec[1], rec[0], rec[4])
+        part = locator_valued_parts(rec[1], rec[0], rec[4]) or locator_part(
+            rec[1], rec[0], rec[4]
+        )
         if part and not r.get("tag") and not r.get("parts"):
             # a tagged statement is a printed value (badge as_printed), never a derivation: certify_display reads a cell
             # with neither tag nor parts as derived (MA cash_paid_for_interest FY2025, DPS FY2020-21, 2026-11-22)
@@ -2017,6 +2019,37 @@ def attach_stated_zero(
 _LOCATOR_TAG = re.compile(
     r"^\s*R(?P<r>\d+)\.htm\b[^(]*\((?:[a-z][\w-]*):(?P<tag>[A-Za-z0-9_]+)(?:\s*\[(?P<dims>[^\]]+)\])?"
 )
+
+
+_VALUED_TERM = re.compile(
+    r"(?:^|(?P<sign>[-+]))\s*(?:[a-z][\w-]*):(?P<tag>[A-Za-z0-9_]+)(?:\s*\[(?P<dims>[^\]]+)\])?=(?P<val>-?[0-9.]+)"
+)
+_LOCATOR_HEAD = re.compile(r"^\s*R(?P<r>\d+)\.htm\b[^(]*\((?P<body>.*)\)\s+of\s")
+
+
+def locator_valued_parts(locator: str, accession: str, value: Decimal) -> str:
+    """The parts of a read whose element lists every printed line with its value ('R2.htm (us-gaap:A=4751000000 +
+    us-gaap:B=6468000000 + bmy:C=97000000) of ...'): '[-]Tag=value@accession#R<n>' joined by ';' when the signed
+    values sum to the shown value, else ''. A summed cell (badge derived:sum(...)) is shown only with its parts
+    (verifier 2026-11-22: BMY operating_expenses FY2017-18 had none). Pure."""
+    m = _LOCATOR_HEAD.match(locator or "")
+    if not m or not accession:
+        return ""
+    body = m["body"]
+    terms = list(_VALUED_TERM.finditer(body))
+    if len(terms) < 2:
+        return ""
+    total = Decimal(0)
+    out = []
+    for t in terms:
+        v = Decimal(t["val"])
+        sg = -1 if t["sign"] == "-" else 1
+        total += sg * v
+        dims = f"[{t['dims'].strip()}]" if t["dims"] else ""
+        out.append(
+            f"{'-' if sg < 0 else ''}{t['tag']}{dims}={format(v.normalize(), 'f')}@{accession}#R{m['r']}"
+        )
+    return ";".join(out) if total == value else ""
 
 
 _LOCATOR_FORMULA = re.compile(r"\s*[-+*/]\s*\(?\s*[a-z][\w-]*:[A-Za-z]")
@@ -2307,6 +2340,12 @@ def attach_badges(
                     r["_badge_issue"] = ""
                 except reg.BadgeUndecided as exc:
                     r["_badge_issue"] += f"; proof step: {exc}"
+        if (r["_badge"] or "").startswith("derived:sum(") and not str(
+            r.get("parts") or ""
+        ).strip():
+            # verifier 2026-11-22 (BMY opex FY2017-18): a summed cell is shown only with the printed parts it adds
+            r["_badge"], r["badge"] = None, ""
+            r["_badge_issue"] = "derived:sum badge without parts"
         if not r["_badge"]:
             # founder 2026-11-22 (badges): a shown cell carries the registry step that produced it. A value that fits no
             # step is open work with the reason, never a shown cell with a blank badge.

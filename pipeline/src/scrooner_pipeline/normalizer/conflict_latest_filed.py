@@ -346,6 +346,23 @@ def choose_tag_map_winner(
     return w[0].fact_id, RULE_TAGMAP
 
 
+def overrides_authoritative(chosen: tuple[int, str] | None, auth_ids: set[int]) -> bool:
+    """True when the chosen copy must replace an eligible authoritative copy of the group. Pure.
+
+    - statement coherence: the statement filing's copy beats an eligible authoritative copy of another filing;
+    - precision (ruling 15, Dhairya 2026-11-22): a rounded reprint never replaces the finer figure. When the group is
+      the rounding class and the authoritative copy is a coarser reprint (set by an earlier stage, e.g. Stage 2e-b
+      latest_filed_fy_v1 for Revenues), the most precise copy takes over. LLY revenue FY2023-24: the FY2025 10-K's
+      34,124M / 45,043M was authoritative over the own-10-K 34,124.1M / 45,042.7M while cost of revenue kept its
+      precise print, so the served gross profit identity was off by 0.1-0.3M."""
+    return (
+        chosen is not None
+        and bool(auth_ids)
+        and chosen[0] not in auth_ids
+        and chosen[1] in (RULE_TAGMAP_STATEMENT, RULE_TAGMAP_PRECISION)
+    )
+
+
 def _tag_map_dcml(conn: psycopg.Connection, rows) -> dict[int, int]:
     """fact id -> smallest decimals the copy's own filing printed for that tag and period (fsn.value,
     non-dimensional; period matched by the SEC month-end ddate and the quarter count)."""
@@ -449,13 +466,7 @@ def plan_tag_map_promotions(
         sf = _group_statement_filing(rs, face)
         chosen = choose_tag_map_winner(copies, sf)
         auth_ids = {c.fact_id for c in auth}
-        # statement coherence: the statement filing's copy beats an eligible authoritative copy of another filing
-        override = (
-            chosen is not None
-            and chosen[1] == RULE_TAGMAP_STATEMENT
-            and chosen[0] not in auth_ids
-            and bool(auth)
-        )
+        override = overrides_authoritative(chosen, auth_ids)
         if auth and not bad and not override:
             continue  # resolved by an eligible copy: leave it
         if override:

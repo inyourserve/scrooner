@@ -187,6 +187,7 @@ def test_attach_badges_reads_the_resolver_step_and_records_undecided_cells():
             "2024-12-31",
             t100.SHOWN_VALUE,
             _sector="general",
+            parts="OtherNonoperatingIncomeExpense=1@0001-24-000001#R2;InvestmentIncomeInterest=2@0001-24-000001#R2",
         ),
         _cell(
             1, "cash_and_equivalents", "2024-12-31", t100.SHOWN_VALUE, _sector="general"
@@ -437,3 +438,57 @@ def test_every_flow_coverage_export_writes_display_state():
     assert len(calls) == 2
     assert all("--write-display-state" in ln for ln in calls)
     assert not any("default_transaction_read_only" in ln for ln in calls)
+
+
+def test_a_summed_cell_without_parts_is_never_shown_bmy_opex():
+    """Verifier 2026-11-22 (BMY operating_expenses FY2017-18, coverage 2a1319707e95): a cell badged derived:sum(...)
+    must export the printed parts it adds; without them it is OPEN with the reason, never shown. A read whose element
+    lists each line with its value exports those parts. Mutation: drop the derived:sum check in attach_badges."""
+    from datetime import date
+
+    steps = {
+        ("T", "operating_expenses"): [
+            (
+                date(2017, 12, 31),
+                {
+                    "decision": "mapped",
+                    "flags": "filing_read;text_stated;derived:sum(printed operating lines)",
+                    "nodes": "",
+                },
+            )
+        ],
+    }
+    bare = _cell(
+        1, "operating_expenses", "2017-12-31", t100.SHOWN_VALUE, _sector="general"
+    )
+    acc = "0000014272-20-000082"
+    loc = (
+        "R2.htm (us-gaap:SellingGeneralAndAdministrativeExpense=4751000000 + us-gaap:ResearchAndDevelopmentExpense=6468000000"
+        " + bmy:AmortizationofAcquiredIntangibleAssets=97000000 (the printed operating lines)) of "
+        + acc
+        + ", read FY2017 10-K"
+    )
+    parts = t100.locator_valued_parts(loc, acc, Decimal("11316000000"))
+    assert parts == (
+        f"SellingGeneralAndAdministrativeExpense=4751000000@{acc}#R2;ResearchAndDevelopmentExpense=6468000000@{acc}#R2;"
+        f"AmortizationofAcquiredIntangibleAssets=97000000@{acc}#R2"
+    )
+    assert (
+        t100.locator_valued_parts(loc, acc, Decimal("11316000001")) == ""
+    )  # parts must add up
+    full = _cell(
+        2,
+        "operating_expenses",
+        "2017-12-31",
+        t100.SHOWN_VALUE,
+        _sector="general",
+        parts=parts,
+    )
+    full["company_id"] = 1
+    t100.attach_badges([bare, full], steps)
+    assert (bare["display"], bare["reason_code"]) == (t100.OPEN, t100.NO_REGISTRY_STEP)
+    assert "without parts" in bare["reason"]
+    assert (full["display"], full["badge"]) == (
+        t100.SHOWN_VALUE,
+        "derived:sum(printed operating lines)",
+    )
