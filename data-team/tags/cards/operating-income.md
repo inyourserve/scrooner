@@ -125,10 +125,10 @@ Relayed lessons (FILING-CHECKED by the named role; not re-opened by me):
 5. (REFINED by Dhairya 2026-11-12) A corporate IS that prints NO cost-of-revenue-type line anywhere, and whose printed total contains no cost-of-sales-type component (cost of products/services, fuel, purchased power, food and paper, cost of operations, production/operating costs, direct or distribution/servicing costs), maps that total as opex: no COGS, so GP = revenue and the total = GP − OI (BKNG `OperatingExpenses`; Visa `CostsAndExpenses` 17,793M). If the total contains any cost-of-sales-type line → combined (NEE fuel and purchased power; UNP fuel; MCD food and paper; BLK distribution/servicing and direct fund costs; the sector template decides display). Banks/insurers → sector template.
 6. Applied (Dhairya 2026-11-12): COP production and operating costs and VLO `CostOfGoodsAndServicesSoldOverhead` are cost of sales, so never opex; DHR, MDT, LMT, BA = rule-3 component sums where the R page shows the tie; DE, IBM, KLAC, DIS, VZ blank only where the R page confirms no OI line or no exact tie (cite the R page, else a dispute).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 30 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 30 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
@@ -332,6 +332,15 @@ Resolver resolver-all110-.89. 30 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `InterestIncomeExpenseNonoperatingNet`
+- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
+- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
+- **Rules:** I20; I21; I22; I23; I24
+- **Evidence:** 9 companies, 21 served, 51 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `InterestExpenseOperating`
 - **Meaning:** Interest Expense, Operating (us-gaap, duration, debit). Amount of interest expense classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).
@@ -370,15 +379,6 @@ Resolver resolver-all110-.89. 30 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces RestatementOfPriorYearIncomeGross@2020
-
-### `InterestIncomeExpenseNonoperatingNet`
-- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
-- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
-- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
-- **Rules:** I20; I21; I22; I23; I24
-- **Evidence:** 9 companies, 13 served, 51 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
 
 ### `IncomeLossAttributableToParent`
 - **Meaning:** Income (Loss) Attributable to Parent, before Tax (us-gaap, duration, credit). Amount, before tax, of income (loss) attributable to parent. Includes, but is not limited to, income (loss) from continuing operations, discontinued operations and equity method investments.

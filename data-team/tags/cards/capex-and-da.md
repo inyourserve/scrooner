@@ -41,10 +41,10 @@ FSN rules: capex `cf.capex_block_member@1-4` (calc position) + `cf.capex_nature_
 ## 7. D&A source rule (Dhairya 2026-11-11, refining the Verifier utility ruling)
 - The CF D&A line wins over the IS line UNLESS the CF line is combined (accretion, nuclear fuel, impairment, financing-cost amortization); then the pure IS D&A line is served (DUK FY2025: CF 7,704M combined, IS 6,324M served).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 17 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 17 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `AmortizationOfIntangibleAssets`
 - **Meaning:** Intangible Asset, Finite-Lived, Amortization Expense (us-gaap, duration, debit). Amount of amortization expense for finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.

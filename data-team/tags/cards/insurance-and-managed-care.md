@@ -43,10 +43,10 @@ Sector Analyst face counts (Reader 1, latest 10-K, FC by them): PremiumsEarnedNe
 - The draft leads M1/M2 (`HealthCarePremium...`, `...IncurredHealthCare`) are correct only for history: one is not an element, the other was deprecated in 2024. Confirms the Sector Analyst's merge of M1/M2 into I1/I4 for current periods.
 - Verified by: Tag Expert (me), 2026-10-22.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `Revenues`
 - **Meaning:** Revenues (us-gaap, duration, credit). Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities that constitute an earning process. Includes, but is not limited to, investment and interest income before deduction of interest expens...

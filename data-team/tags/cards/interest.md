@@ -143,10 +143,10 @@ Relayed lessons processed this run (FILING-CHECKED by the named role unless mark
 - **Cash interest paid**: XBRL US DQC_0065 "Interest Paid Net (Operating) Not on Cash Flow" (final, released 2017-10-04, rule v5; github.com/DataQualityCommittee/dqc_us_rules docs/DQC_US_0065/DQC_0065.md) — the codification requires indirect-method filers to report interest paid net of capitalized interest; `InterestPaidNet` is that element; `InterestPaid` includes the capitalized component. So `InterestPaidNet` wins; `InterestPaid` only when the net element is not reported. This CORRECTS my earlier "InterestPaid wins" rule (shareholder-returns.md §9 and the library), which the readers' keys (41 of 43 on the net tag) had already contradicted.
 - **2024 interest elements**: XBRL US DQC_0181 "Interest Expense Operating and Nonoperating" (final, released 2024-06-27, effective 2024-08-31; docs/DQC_US_0181/DQC_0181.md) — the 2024 US-GAAP taxonomy added `InterestExpenseNonoperating` and `InterestExpenseOperating`, and `InterestExpense` now means both together; filers are asked to replace `InterestExpense` with the specific element. Component 10180: InterestExpense/InterestExpenseOperating must not be calc descendants of `NonoperatingIncomeExpense`; 10181: InterestExpense/InterestExpenseNonoperating must not be descendants of `InterestIncomeExpenseNet` (operating net interest, the bank NII line); 10182: InterestExpense/InterestExpenseNonoperating must not sit under `OperatingExpenses`. Use: a 2024+ switch from InterestExpense to InterestExpenseNonoperating on the same face line is an era change, not a meaning change; an `InterestExpenseOperating` line is operating (bank or opex block).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `OperatingIncomeLoss`
 - **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
@@ -235,8 +235,8 @@ Resolver resolver-all110-.89. 31 elements named in this card have library knowle
 - **Meaning:** Interest Income (Expense), Operating (us-gaap, duration, credit). Amount of interest income (expense) classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+4 more)
 - **Data point:** interest_expense; net_interest_income; other_income_expense_net; revenue; interest_income; polarity interest_expense:positive; net_interest_income:signed; role interest_expense:combined#2; net_interest_income:primary#1
-- **Rules:** X90; I20; I21; I22; I23; I24
-- **Evidence:** 14 companies, 145 served, 686 proven, 0 certified cells; last verified 2026-11-15
+- **Rules:** X90; X125; I20; I21; I22; I23; I24
+- **Evidence:** 14 companies, 149 served, 686 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InterestRevenueExpense@2012
@@ -335,6 +335,15 @@ Resolver resolver-all110-.89. 31 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `InterestIncomeExpenseNonoperatingNet`
+- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
+- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
+- **Rules:** I20; I21; I22; I23; I24
+- **Evidence:** 9 companies, 21 served, 51 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `InterestExpenseOperating`
 - **Meaning:** Interest Expense, Operating (us-gaap, duration, debit). Amount of interest expense classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).
@@ -353,15 +362,6 @@ Resolver resolver-all110-.89. 31 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InterestRevenueExpense@2012
-
-### `InterestIncomeExpenseNonoperatingNet`
-- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
-- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
-- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
-- **Rules:** I20; I21; I22; I23; I24
-- **Evidence:** 9 companies, 13 served, 51 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
 
 ### `InterestCostsIncurred`
 - **Meaning:** Interest Costs Incurred (us-gaap, duration, debit). Total interest costs incurred during the period and either capitalized or charged against earnings.

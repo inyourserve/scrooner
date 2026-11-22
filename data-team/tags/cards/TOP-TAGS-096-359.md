@@ -272,10 +272,10 @@ Same columns as TOP-TAGS-001-095.md. Ranks 1-359 together = 80% of top-1,000 com
 
 Explicit: 105; family: 159.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 95 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 95 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `EarningsPerShareBasic`
 - **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.

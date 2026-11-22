@@ -284,10 +284,10 @@ Sources: Mac Ritwik `origin/work/tag-library/ranks-1-50` @ aea0cf4 (`data-team/4
 - Labels named only from FSN (BALL, TFX, BIO, FE, AFL, EQT, RTX, LIN, WFC, CBOE, SNEX, AES, SRE, WELL) are DATA-INFERRED.
 - Values were not compared with companyfacts. That is the mapping step ("SEC FOR MAPPING").
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.

@@ -134,10 +134,10 @@ Precedence (Dhairya 2026-11-12): where a DQC rule conflicts with a card, the DQC
 | DQC_0213 | Missing Calculation Children for Key Balance Sheet Items | Final | October 15, 2025 | Assets;AssetsCurrent;Liabilities;LiabilitiesCurrent;StockholdersEquity | https://raw.githubusercontent.com/DataQualityCommittee/dqc_us_rules/master/docs/DQC_US_0213/DQC_0213.md |
 | DQC_0214 | Missing Equity Concepts in Balance Sheet Calculation | Final | October 15, 2025 | TreasuryStockValue | https://raw.githubusercontent.com/DataQualityCommittee/dqc_us_rules/master/docs/DQC_US_0214/DQC_0214.md |
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 70 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 70 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.

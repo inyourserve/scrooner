@@ -25,10 +25,10 @@ Relay from the certification lead (scrooner-9a), with the Verifier's filing read
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 6 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `InterestExpense`
 - **Meaning:** Interest Expense, Operating and Nonoperating (us-gaap, duration, debit). Amount of interest expense classified as operating and nonoperating. Includes, but is not limited to, cost of borrowing accounted for as interest expense.
@@ -44,8 +44,8 @@ Resolver resolver-all110-.89. 6 elements named in this card have library knowled
 - **Meaning:** Interest Income (Expense), Operating (us-gaap, duration, credit). Amount of interest income (expense) classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+4 more)
 - **Data point:** interest_expense; net_interest_income; other_income_expense_net; revenue; interest_income; polarity interest_expense:positive; net_interest_income:signed; role interest_expense:combined#2; net_interest_income:primary#1
-- **Rules:** X90; I20; I21; I22; I23; I24
-- **Evidence:** 14 companies, 145 served, 686 proven, 0 certified cells; last verified 2026-11-15
+- **Rules:** X90; X125; I20; I21; I22; I23; I24
+- **Evidence:** 14 companies, 149 served, 686 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InterestRevenueExpense@2012
@@ -69,21 +69,21 @@ Resolver resolver-all110-.89. 6 elements named in this card have library knowled
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `InterestIncomeExpenseNonoperatingNet`
+- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
+- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
+- **Rules:** I20; I21; I22; I23; I24
+- **Evidence:** 9 companies, 21 served, 51 proven, 0 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `InterestExpenseOperating`
 - **Meaning:** Interest Expense, Operating (us-gaap, duration, debit). Amount of interest expense classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).
 - **Data point:** interest_expense; polarity interest_expense:positive; role interest_expense:primary#5
 - **Rules:** I20; I21; I22; I23; I24
 - **Evidence:** 11 companies, 20 served, 142 proven, 0 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `InterestIncomeExpenseNonoperatingNet`
-- **Meaning:** Interest Income (Expense), Nonoperating (us-gaap, duration, credit). Amount of interest income (expense) classified as nonoperating.
-- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+1 more)
-- **Data point:** interest_expense; interest_income; other_income_expense_net; polarity interest_expense:positive; role interest_expense:combined#1
-- **Rules:** I20; I21; I22; I23; I24
-- **Evidence:** 9 companies, 13 served, 51 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 <!-- END GENERATED: tag library rows -->

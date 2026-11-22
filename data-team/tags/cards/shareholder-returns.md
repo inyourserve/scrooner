@@ -71,10 +71,10 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 ## 11. Annual DPS from printed quarters (Dhairya ruling 2026-11-12)
 - When a 10-K prints only quarterly DPS, annual DPS = the sum of the FOUR quarterly facts printed in that same filing (declared, or paid if only paid is printed), served with the note "sum of printed quarterly dividends". Conditions: all four quarters in the one filing; one basis; each fact on its own 3-month or dated-payment context (a quarterly rate on a 12-month context, as at CFG, V, NVDA, is not a quarterly fact); no special dividend unless printed as such. Otherwise not_presented. Cases: C 2.32 (0.56 + 0.56 + 0.60 + 0.60), COF, CRM 1.664 (4 × 0.416), DIS (dated payments in the fiscal year). DPS is additive; EPS is never derived.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `NetIncomeLoss`
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.

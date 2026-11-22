@@ -1,3 +1,5 @@
 repo_path,storage_path,sha256,bytes,moved_on
 doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz,repo-archive/2026-11-21/doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz,b873fa56ec69f6f2115ee46cfdab397e7924b75d20c5842a40bd425835ce4d7c,9654647,2026-11-21
 data-team/39-shared-accession-apply/before-image/fact.jsonl,repo-archive/2026-11-21/data-team/39-shared-accession-apply/before-image/fact.jsonl,96e0fbc0c957b47a89de057b50d494ac788941f50ad97a42327cc5457824d9e0,6923618,2026-11-21
+data-team/tags/library/library.csv,repo-archive/2026-11-22/6b5a13b7c209/data-team/tags/library/library.csv,6b5a13b7c20970ffd51d793a29761191dd04e5bcae5e16311c835c2107e8617a,15177198,2026-11-22
+data-team/tags/library/library.json,repo-archive/2026-11-22/ee424448f5a2/data-team/tags/library/library.json,ee424448f5a2657227f642e64caca5508775688ec11e5c72406cbd551bf27f65,1741494,2026-11-22

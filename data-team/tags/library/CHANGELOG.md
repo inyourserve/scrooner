@@ -1061,3 +1061,9 @@
 - ~ TreasuryStockCommonShares: known_problems
 - ~ WeightedAverageNumberOfDilutedSharesOutstanding: known_problems
 - ~ WeightedAverageNumberOfSharesOutstandingBasic: known_problems
+
+## 2026-11-22 (resolver-all110-.90): 4 element changes, 28011 rows, coverage 65.2%
+- ~ AllocatedShareBasedCompensationExpense: served_cells
+- ~ InterestIncomeExpenseNet: rule_id, served_cells
+- ~ InterestIncomeExpenseNonoperatingNet: served_cells
+- ~ InvestmentIncomeInterestAndDividend: rule_id, served_cells

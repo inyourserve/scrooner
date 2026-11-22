@@ -137,10 +137,10 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 
 - EPS printed per class only (Visa, SHOP): serve Class A EPS as printed (Dhairya ruling 2026-11-12); never average or derive across classes.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.89). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.90). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.89. 18 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.90. 18 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `WeightedAverageNumberOfSharesOutstandingBasic`
 - **Meaning:** Weighted Average Number of Shares Outstanding, Basic (us-gaap, duration). Number of [basic] shares or units, after adjustment for contingently issuable shares or units and other shares or units not deemed outstanding, determined by relating the portion of time within a reporting period that common shares or units...
@@ -223,8 +223,8 @@ Resolver resolver-all110-.89. 18 elements named in this card have library knowle
 - **Meaning:** Interest Income (Expense), Operating (us-gaap, duration, credit). Amount of interest income (expense) classified as operating.
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+4 more)
 - **Data point:** interest_expense; net_interest_income; other_income_expense_net; revenue; interest_income; polarity interest_expense:positive; net_interest_income:signed; role interest_expense:combined#2; net_interest_income:primary#1
-- **Rules:** X90; I20; I21; I22; I23; I24
-- **Evidence:** 14 companies, 145 served, 686 proven, 0 certified cells; last verified 2026-11-15
+- **Rules:** X90; X125; I20; I21; I22; I23; I24
+- **Evidence:** 14 companies, 149 served, 686 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces InterestRevenueExpense@2012
