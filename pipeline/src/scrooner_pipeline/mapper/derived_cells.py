@@ -136,10 +136,10 @@ def operand_filings_from_rows(
         if is_auth:
             auth[(tag, period_id)].add(Decimal(value))
     for tag, period_id, acc, value, is_auth in rows:
-        v = Decimal(value)
+        val = Decimal(value)
         a = auth.get((tag, period_id))
-        if is_auth or (a is not None and len(a) == 1 and v in a):
-            seen[(tag, period_id, acc)].add(v)
+        if is_auth or (a is not None and len(a) == 1 and val in a):
+            seen[(tag, period_id, acc)].add(val)
     out: dict[tuple[str, int], dict[str, Decimal]] = defaultdict(dict)
     for (tag, period_id, acc), v in seen.items():
         if len(v) == 1:
