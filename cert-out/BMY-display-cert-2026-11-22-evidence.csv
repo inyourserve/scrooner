@@ -1,0 +1,431 @@
+check,data_point,fiscal_year,result,served,filing,evidence
+shown,cash_and_equivalents,2016,MATCH,4237000000,4237000000.0000,"CashAndCashEquivalentsAtCarryingValue=4237000000.0000@0000014272-17-000047#R4 (fsn reports R4,R6)"
+shown,stockholders_equity,2015,MATCH,14266000000,14266000000.0000,StockholdersEquity=14266000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,total_assets,2019,MATCH,129944000000,129944000000.0000,Assets=129944000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,cash_and_equivalents,2021,MATCH,13979000000,13979000000.0000,CashAndCashEquivalentsAtCarryingValue=13979000000.0000@0000014272-22-000051#R5 (fsn reports R5)
+shown,stockholders_equity,2022,MATCH,31061000000,31061000000.0000,StockholdersEquity=31061000000.0000@0000014272-23-000046#R5 (fsn reports R5)
+shown,cash_and_equivalents,2017,MATCH,5421000000,5421000000.0000,"CashAndCashEquivalentsAtCarryingValue=5421000000.0000@0000014272-18-000055#R4 (fsn reports R4,R6)"
+shown,total_assets,2024,MATCH,92603000000,92603000000.0000,Assets=92603000000.0000@0000014272-25-000039#R5 (fsn reports R5)
+shown,ppe_net,2023,MATCH,6646000000,6646000000.0000,PropertyPlantAndEquipmentNet=6646000000.0000@0000014272-24-000044#R5 (fsn reports R5)
+shown,current_assets,2024,MATCH,29780000000,29780000000.0000,AssetsCurrent=29780000000.0000@0000014272-25-000039#R5 (fsn reports R5)
+shown,total_liabilities,2020,MATCH,80599000000,80599000000.0000,Liabilities=80599000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,accounts_receivable,2025,LOCATOR,9592000000,None,"text-stated value located by its quote (R5.htm (face) + R98.htm Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: net trade receivables)) of 0000014272-26-000004, read FY2025 10-K of 0000014272-26-000004), no tag: approver reads the quote"
+shown,accounts_payable,2016,MATCH,1664000000,1664000000.0000,AccountsPayableCurrent=1664000000.0000@0000014272-17-000047#R4 (fsn reports R4)
+shown,total_assets,2015,MATCH,31748000000,31748000000.0000,Assets=31748000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,cash_and_equivalents,2019,MATCH,12346000000,12346000000.0000,CashAndCashEquivalentsAtCarryingValue=12346000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,goodwill,2015,MATCH,6881000000,6881000000.0000,Goodwill=6881000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,current_liabilities,2024,MATCH,23774000000,23774000000.0000,LiabilitiesCurrent=23774000000.0000@0000014272-25-000039#R5 (fsn reports R5)
+shown,current_assets,2017,MATCH,14854000000,14854000000.0000,AssetsCurrent=14854000000.0000@0000014272-18-000055#R4 (fsn reports R4)
+shown,inventory,2020,MATCH,2074000000,2074000000.0000,InventoryNet=2074000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,current_assets,2023,MATCH,31770000000,31770000000.0000,AssetsCurrent=31770000000.0000@0000014272-24-000044#R5 (fsn reports R5)
+shown,goodwill,2019,MATCH,22488000000,22488000000.0000,Goodwill=22488000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,inventory,2025,MATCH,2690000000,2690000000.0000,InventoryNet=2690000000.0000@0000014272-26-000004#R5 (fsn reports R5)
+shown,current_liabilities,2015,MATCH,8017000000,8017000000.0000,LiabilitiesCurrent=8017000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,total_liabilities,2015,MATCH,17324000000,17324000000.0000,Liabilities=17324000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,goodwill,2025,MATCH,21754000000,21754000000.0000,Goodwill=21754000000.0000@0000014272-26-000004#R5 (fsn reports R5)
+shown,stockholders_equity,2020,MATCH,37822000000,37822000000.0000,StockholdersEquity=37822000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,ppe_net,2019,MATCH,6252000000,6252000000.0000,PropertyPlantAndEquipmentNet=6252000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,goodwill,2021,MATCH,20502000000,20502000000.0000,Goodwill=20502000000.0000@0000014272-22-000051#R5 (fsn reports R5)
+shown,inventory,2015,MATCH,1221000000,1221000000.0000,InventoryNet=1221000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,accounts_receivable,2021,LOCATOR,7979000000,None,"text-stated value located by its quote (R5.htm (face) + R87.htm Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: net trade receivables)) of 0000014272-22-000051, read FY2021 10-K of 0000014272-22-000051), no tag: approver reads the quote"
+shown,ppe_net,2020,MATCH,5886000000,5886000000.0000,PropertyPlantAndEquipmentNet=5886000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,current_assets,2021,MATCH,33262000000,33262000000.0000,AssetsCurrent=33262000000.0000@0000014272-22-000051#R5 (fsn reports R5)
+shown,accounts_receivable,2018,LOCATOR,4636000000,None,"text-stated value located by its quote (R4.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-20-000082, read FY2018 10-K of 0000014272-20-000082), no tag: approver reads the quote"
+shown,total_assets,2025,MATCH,90038000000,90038000000.0000,Assets=90038000000.0000@0000014272-26-000004#R5 (fsn reports R5)
+shown,current_liabilities,2022,MATCH,21890000000,21890000000.0000,LiabilitiesCurrent=21890000000.0000@0000014272-23-000046#R5 (fsn reports R5)
+shown,current_liabilities,2017,MATCH,9563000000,9563000000.0000,LiabilitiesCurrent=9563000000.0000@0000014272-18-000055#R4 (fsn reports R4)
+shown,goodwill,2020,MATCH,20547000000,20547000000.0000,Goodwill=20547000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,accounts_payable,2024,MATCH,3602000000,3602000000.0000,AccountsPayableCurrent=3602000000.0000@0000014272-25-000039#R5 (fsn reports R5)
+shown,cash_and_equivalents,2020,MATCH,14546000000,14546000000.0000,CashAndCashEquivalentsAtCarryingValue=14546000000.0000@0000014272-21-000066#R4 (fsn reports R4)
+shown,accounts_payable,2018,MATCH,1892000000,1892000000.0000,AccountsPayableCurrent=1892000000.0000@0000014272-19-000047#R4 (fsn reports R4)
+shown,current_liabilities,2016,MATCH,8841000000,8841000000.0000,LiabilitiesCurrent=8841000000.0000@0000014272-17-000047#R4 (fsn reports R4)
+shown,cash_and_equivalents,2023,MATCH,11464000000,11464000000.0000,CashAndCashEquivalentsAtCarryingValue=11464000000.0000@0000014272-24-000044#R5 (fsn reports R5)
+shown,current_assets,2015,MATCH,10415000000,10415000000.0000,AssetsCurrent=10415000000.0000@0000014272-16-000288#R4 (fsn reports R4)
+shown,accounts_payable,2022,MATCH,3040000000,3040000000.0000,AccountsPayableCurrent=3040000000.0000@0000014272-23-000046#R5 (fsn reports R5)
+shown,accounts_receivable,2022,LOCATOR,8151000000,None,"text-stated value located by its quote (R5.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-23-000046, read FY2022 10-K of 0000014272-23-000046), no tag: approver reads the quote"
+shown,accounts_receivable,2019,LOCATOR,6476000000,None,"text-stated value located by its quote (R4.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-20-000082, read FY2019 10-K of 0000014272-20-000082), no tag: approver reads the quote"
+shown,current_assets,2019,MATCH,29354000000,29354000000.0000,AssetsCurrent=29354000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,total_liabilities,2019,MATCH,78246000000,78246000000.0000,Liabilities=78246000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,current_liabilities,2019,MATCH,18304000000,18304000000.0000,LiabilitiesCurrent=18304000000.0000@0000014272-20-000082#R4 (fsn reports R4)
+shown,total_assets,2022,MATCH,96820000000,96820000000.0000,Assets=96820000000.0000@0000014272-23-000046#R5 (fsn reports R5)
+shown,accounts_payable,2017,MATCH,2248000000,2248000000.0000,AccountsPayableCurrent=2248000000.0000@0000014272-18-000055#R4 (fsn reports R4)
+shown,shares_outstanding,2015,MATCH,1661000000,1661000000.0000,CommonStockSharesIssued=2200000000.0000@0000014272-16-000288#R5 (fsn reports R5); -TreasuryStockShares=539000000.0000@0000014272-16-000288#R5 (fsn reports R5)
+shown,shares_outstanding,2025,MATCH,2013000000,2013000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-26-000004#R6 (fsn reports R6); -TreasuryStockCommonShares=887000000.0000@0000014272-26-000004#R6 (fsn reports R6)
+shown,shares_outstanding,2016,MATCH,1664000000,1664000000.0000,CommonStockSharesIssued=2200000000.0000@0000014272-17-000047#R5 (fsn reports R5); -TreasuryStockShares=536000000.0000@0000014272-17-000047#R5 (fsn reports R5)
+shown,shares_outstanding,2018,MATCH,1624000000,1624000000.0000,CommonStockSharesIssued=2200000000.0000@0000014272-19-000047#R5 (fsn reports R5); -TreasuryStockShares=576000000.0000@0000014272-19-000047#R5 (fsn reports R5)
+shown,shares_outstanding,2019,MATCH,2228000000,2228000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-20-000082#R5 (fsn reports R5); -TreasuryStockShares=672000000.0000@0000014272-20-000082#R5 (fsn reports R5)
+shown,cf_inventory_change,2020,MATCH,-2672000000,2672000000.0000,IncreaseDecreaseInInventories=-2672000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,dividends_paid,2018,MATCH,2613000000,2613000000.0000,PaymentsOfDividends=2613000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,cf_inventory_change,2017,MATCH,29000000,29000000.0000,IncreaseDecreaseInInventories=29000000.0000@0000014272-18-000055#R6 (fsn reports R6)
+shown,cash_paid_for_interest,2019,MATCH,414000000,414000000.0000,InterestPaidNet=414000000.0000@0000014272-20-000082#R80 (fsn reports -)
+shown,cash_paid_for_interest,2017,MATCH,221000000,221000000.0000,InterestPaidNet=221000000.0000@0000014272-20-000082#R80 (fsn reports -)
+shown,cfo,2015,MATCH,2105000000,2105000000.0000,NetCashProvidedByUsedInOperatingActivities=2105000000.0000@0000014272-18-000055#R6 (fsn reports R6)
+shown,cash_flow_financing,2016,MATCH,-2653000000,2653000000.0000,NetCashProvidedByUsedInFinancingActivities=-2653000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,cfo,2016,MATCH,3058000000,3058000000.0000,NetCashProvidedByUsedInOperatingActivities=3058000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,cash_paid_for_income_taxes,2024,MATCH,3900000000,3900000000.0000,IncomeTaxesPaidNet=3900000000.0000@0000014272-25-000039#R82 (fsn reports -)
+shown,depreciation_and_amortization,2018,MATCH,637000000,637000000.0000,DepreciationDepletionAndAmortization=637000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,share_buybacks,2025,MATCH,0,0.0000,PaymentsForRepurchaseOfCommonStock=0.0000@0000014272-26-000004#R7 (fsn reports R7)
+shown,cash_paid_for_interest,2020,MATCH,1600000000,1600000000.0000,InterestPaidNet=1600000000.0000@0000014272-21-000066#R80 (fsn reports -)
+shown,dividends_paid,2024,MATCH,4863000000,4863000000.0000,PaymentsOfDividends=4863000000.0000@0000014272-25-000039#R7 (fsn reports R7)
+shown,cf_ar_change,2021,MATCH,1054000000,1054000000.0000,IncreaseDecreaseInReceivables=1054000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,capex,2015,MATCH,820000000,820000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=820000000.0000@0000014272-16-000288#R6 (fsn reports R6)
+shown,capex,2018,MATCH,951000000,951000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=951000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,capex,2016,MATCH,1215000000,1215000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=1215000000.0000@0000014272-17-000047#R6 (fsn reports R6)
+shown,cf_ar_change,2023,MATCH,995000000,995000000.0000,IncreaseDecreaseInReceivables=995000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,cf_inventory_change,2021,MATCH,-13000000,13000000.0000,IncreaseDecreaseInInventories=-13000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,cfo,2018,MATCH,7066000000,7066000000.0000,NetCashProvidedByUsedInOperatingActivities=7066000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,share_buybacks,2022,MATCH,8001000000,8001000000.0000,PaymentsForRepurchaseOfCommonStock=8001000000.0000@0000014272-23-000046#R7 (fsn reports R7)
+shown,cash_flow_financing,2025,MATCH,-10348000000,10348000000.0000,NetCashProvidedByUsedInFinancingActivities=-10348000000.0000@0000014272-26-000004#R7 (fsn reports R7)
+shown,cash_paid_for_interest,2021,MATCH,1500000000,1500000000.0000,InterestPaidNet=1500000000.0000@0000014272-22-000051#R81 (fsn reports -)
+shown,dividends_paid,2023,MATCH,4744000000,4744000000.0000,PaymentsOfDividends=4744000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,capex,2017,MATCH,1055000000,1055000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=1055000000.0000@0000014272-18-000055#R6 (fsn reports R6)
+shown,depreciation_and_amortization,2024,MATCH,9600000000,9600000000.0000,DepreciationDepletionAndAmortization=9600000000.0000@0000014272-25-000039#R7 (fsn reports R7)
+shown,cf_ap_change,2016,MATCH,104000000,104000000.0000,IncreaseDecreaseInAccountsPayable=104000000.0000@0000014272-17-000047#R6 (fsn reports R6)
+shown,sbc,2023,MATCH,518000000,518000000.0000,ShareBasedCompensation=518000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,cf_ap_change,2021,MATCH,245000000,245000000.0000,IncreaseDecreaseInAccountsPayable=245000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,dividends_paid,2016,MATCH,2547000000,2547000000.0000,PaymentsOfDividends=2547000000.0000@0000014272-17-000047#R6 (fsn reports R6)
+shown,share_buybacks,2021,MATCH,6287000000,6287000000.0000,PaymentsForRepurchaseOfCommonStock=6287000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,cf_ar_change,2015,MATCH,942000000,942000000.0000,IncreaseDecreaseInReceivables=942000000.0000@0000014272-16-000288#R6 (fsn reports R6)
+shown,cash_paid_for_income_taxes,2015,MATCH,577000000,577000000.0000,IncomeTaxesPaidNet=577000000.0000@0000014272-16-000288#R74 (fsn reports -)
+shown,cf_ap_change,2023,MATCH,198000000,198000000.0000,IncreaseDecreaseInAccountsPayable=198000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,dividends_paid,2020,MATCH,4075000000,4075000000.0000,PaymentsOfDividends=4075000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,dividends_paid,2022,MATCH,4634000000,4634000000.0000,PaymentsOfDividends=4634000000.0000@0000014272-23-000046#R7 (fsn reports R7)
+shown,depreciation_and_amortization,2023,MATCH,9760000000,9760000000.0000,DepreciationDepletionAndAmortization=9760000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,cf_ap_change,2024,MATCH,184000000,184000000.0000,IncreaseDecreaseInAccountsPayable=184000000.0000@0000014272-25-000039#R7 (fsn reports R7)
+shown,cash_flow_financing,2017,MATCH,-4077000000,4077000000.0000,NetCashProvidedByUsedInFinancingActivities=-4077000000.0000@0000014272-18-000055#R6 (fsn reports R6)
+shown,cf_inventory_change,2015,MATCH,-97000000,97000000.0000,IncreaseDecreaseInInventories=-97000000.0000@0000014272-16-000288#R6 (fsn reports R6)
+shown,sbc,2018,MATCH,221000000,221000000.0000,ShareBasedCompensation=221000000.0000@0000014272-19-000047#R6 (fsn reports R6)
+shown,cfo,2025,MATCH,14156000000,14156000000.0000,NetCashProvidedByUsedInOperatingActivities=14156000000.0000@0000014272-26-000004#R7 (fsn reports R7)
+shown,cfo,2020,MATCH,14052000000,14052000000.0000,NetCashProvidedByUsedInOperatingActivities=14052000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,cash_flow_investing,2020,MATCH,-10859000000,10859000000.0000,NetCashProvidedByUsedInInvestingActivities=-10859000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,cfo,2019,MATCH,8210000000,8210000000.0000,NetCashProvidedByUsedInOperatingActivities=8210000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,cfo,2017,MATCH,5275000000,5275000000.0000,NetCashProvidedByUsedInOperatingActivities=5275000000.0000@0000014272-18-000055#R6 (fsn reports R6)
+shown,cash_flow_investing,2016,MATCH,1480000000,1480000000.0000,NetCashProvidedByUsedInInvestingActivities=1480000000.0000@0000014272-17-000047#R6 (fsn reports R6)
+shown,cash_flow_financing,2024,MATCH,5127000000,5127000000.0000,NetCashProvidedByUsedInFinancingActivities=5127000000.0000@0000014272-25-000039#R7 (fsn reports R7)
+shown,share_buybacks,2023,MATCH,5155000000,5155000000.0000,PaymentsForRepurchaseOfCommonStock=5155000000.0000@0000014272-24-000044#R7 (fsn reports R7)
+shown,dividends_paid,2021,MATCH,4396000000,4396000000.0000,PaymentsOfDividends=4396000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,cash_flow_financing,2021,MATCH,-16224000000,16224000000.0000,NetCashProvidedByUsedInFinancingActivities=-16224000000.0000@0000014272-22-000051#R7 (fsn reports R7)
+shown,dividends_paid,2019,MATCH,2679000000,2679000000.0000,PaymentsOfDividends=2679000000.0000@0000014272-20-000082#R6 (fsn reports R6)
+shown,cf_inventory_change,2022,MATCH,69000000,69000000.0000,IncreaseDecreaseInInventories=69000000.0000@0000014272-23-000046#R7 (fsn reports R7)
+shown,cash_paid_for_income_taxes,2021,MATCH,3500000000,3500000000.0000,IncomeTaxesPaidNet=3500000000.0000@0000014272-22-000051#R71 (fsn reports -)
+shown,share_buybacks,2024,MATCH,0,0.0000,PaymentsForRepurchaseOfCommonStock=0.0000@0000014272-25-000039#R7 (fsn reports R7)
+shown,cf_ar_change,2025,MATCH,295000000,295000000.0000,IncreaseDecreaseInReceivables=295000000.0000@0000014272-26-000004#R7 (fsn reports R7)
+shown,cf_ap_change,2022,MATCH,109000000,109000000.0000,IncreaseDecreaseInAccountsPayable=109000000.0000@0000014272-23-000046#R7 (fsn reports R7)
+shown,cf_ap_change,2020,MATCH,188000000,188000000.0000,IncreaseDecreaseInAccountsPayable=188000000.0000@0000014272-21-000066#R6 (fsn reports R6)
+shown,net_income,2024,MATCH,-8948000000,8948000000.0000,NetIncomeLoss=-8948000000.0000@0000014272-25-000039#R3 (fsn reports R3)
+shown,interest_income,2022,MATCH,171000000,171000000.0000,InvestmentIncomeInterest=171000000.0000@0000014272-23-000046#R67 (fsn reports -)
+shown,gross_profit,2019,LOCATOR,18067000000,None,"text-stated value located by its quote (R3.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-22-000051, read FY2019 10-K of 0000014272-22-000051), no tag: approver reads the quote"
+shown,cost_of_revenue,2016,MATCH,4969000000,4969000000.0000,CostOfGoodsAndServicesSold=4969000000.0000@0000014272-19-000047#R2 (fsn reports R2)
+shown,weighted_diluted_shares,2021,MATCH,2245000000,2245000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=2245000000.0000@0000014272-22-000051#R76 (fsn reports -)
+shown,diluted_eps,2024,MATCH,-4.41,4.4100,EarningsPerShareDiluted=-4.4100@0000014272-25-000039#R3 (fsn reports R3)
+shown,cost_of_revenue,2020,MATCH,11773000000,11773000000.0000,CostOfGoodsAndServicesSold=11773000000.0000@0000014272-21-000066#R2 (fsn reports R2)
+shown,research_and_development,2017,MATCH,6468000000,6468000000.0000,ResearchAndDevelopmentExpense=6468000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,income_tax_expense,2016,MATCH,1408000000,1408000000.0000,IncomeTaxExpenseBenefit=1408000000.0000@0000014272-17-000047#R2 (fsn reports R2)
+shown,sga_expense,2015,MATCH,4841000000,4841000000.0000,SellingGeneralAndAdministrativeExpense=4841000000.0000@0000014272-16-000288#R2 (fsn reports R2)
+shown,diluted_eps,2015,MATCH,0.9300,0.9300,EarningsPerShareDiluted=0.9300@0000014272-16-000288#R2 (fsn reports R2)
+shown,dividends_per_share,2025,MATCH,2.49,2.4900,CommonStockDividendsPerShareDeclared=2.4900@0000014272-26-000004#R115 (fsn reports -)
+shown,interest_income,2018,MATCH,173000000,173000000.0000,InvestmentIncomeInterest=173000000.0000@0000014272-19-000047#R67 (fsn reports -)
+shown,dividends_per_share,2024,MATCH,2.42,2.4200,CommonStockDividendsPerShareDeclared=2.4200@0000014272-25-000039#R116 (fsn reports -)
+shown,income_before_tax,2019,MATCH,4975000000,4975000000.0000,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=4975000000.0000@0000014272-22-000051#R3 (fsn reports R3)
+shown,sga_expense,2024,MATCH,8414000000,8414000000.0000,SellingGeneralAndAdministrativeExpense=8414000000.0000@0000014272-25-000039#R3 (fsn reports R3)
+shown,interest_income,2017,MATCH,126000000,126000000.0000,InvestmentIncomeInterest=126000000.0000@0000014272-20-000082#R68 (fsn reports -)
+shown,basic_eps,2024,MATCH,-4.41,4.4100,EarningsPerShareBasic=-4.4100@0000014272-25-000039#R3 (fsn reports R3)
+shown,interest_income,2023,MATCH,449000000,449000000.0000,InvestmentIncomeInterest=449000000.0000@0000014272-24-000044#R69 (fsn reports -)
+shown,net_income,2018,MATCH,4920000000.0000,4920000000.0000,NetIncomeLoss=4920000000.0000@0000014272-19-000047#R2 (fsn reports R2)
+shown,interest_expense,2023,MATCH,1166000000,1166000000.0000,InterestExpenseNonoperating=1166000000.0000@0000014272-25-000039#R75 (fsn reports -)
+shown,weighted_diluted_shares,2017,MATCH,1652000000,1652000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=1652000000.0000@0000014272-18-000055#R74 (fsn reports -)
+shown,weighted_basic_shares,2023,MATCH,2069000000,2069000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=2069000000.0000@0000014272-24-000044#R81 (fsn reports -)
+shown,net_income,2017,MATCH,1007000000.0000,1007000000.0000,NetIncomeLoss=1007000000.0000@0000014272-18-000055#R2 (fsn reports R2)
+shown,research_and_development,2022,MATCH,9509000000,9509000000.0000,ResearchAndDevelopmentExpense=9509000000.0000@0000014272-23-000046#R3 (fsn reports R3)
+shown,weighted_diluted_shares,2024,MATCH,2027000000,2027000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=2027000000.0000@0000014272-25-000039#R87 (fsn reports -)
+shown,income_before_tax,2024,MATCH,-8379000000,8379000000.0000,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=-8379000000.0000@0000014272-25-000039#R3 (fsn reports R3)
+shown,income_tax_expense,2020,MATCH,2124000000,2124000000.0000,IncomeTaxExpenseBenefit=2124000000.0000@0000014272-21-000066#R2 (fsn reports R2)
+shown,research_and_development,2025,MATCH,9951000000,9951000000.0000,ResearchAndDevelopmentExpense=9951000000.0000@0000014272-26-000004#R3 (fsn reports R3)
+shown,net_income,2025,MATCH,7054000000,7054000000.0000,NetIncomeLoss=7054000000.0000@0000014272-26-000004#R3 (fsn reports R3)
+shown,dividends_per_share,2018,MATCH,1.6100,1.6100,CommonStockDividendsPerShareDeclared=1.6100@0000014272-19-000047#R84 (fsn reports -)
+shown,net_income,2016,MATCH,4457000000.0000,4457000000.0000,NetIncomeLoss=4457000000.0000@0000014272-17-000047#R2 (fsn reports R2)
+shown,diluted_eps,2022,MATCH,2.95,2.9500,EarningsPerShareDiluted=2.9500@0000014272-23-000046#R3 (fsn reports R3)
+shown,comprehensive_income,2022,MATCH,6314000000,6314000000.0000,ComprehensiveIncomeNetOfTax=6314000000.0000@0000014272-23-000046#R4 (fsn reports R4)
+shown,gross_profit,2018,LOCATOR,16094000000,None,"text-stated value located by its quote (R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-21-000066, read FY2018 10-K of 0000014272-21-000066), no tag: approver reads the quote"
+shown,research_and_development,2024,MATCH,11159000000,11159000000.0000,ResearchAndDevelopmentExpense=11159000000.0000@0000014272-25-000039#R3 (fsn reports R3)
+shown,gross_profit,2016,LOCATOR,14458000000,None,"text-stated value located by its quote (R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-19-000047, read FY2016 10-K of 0000014272-19-000047), no tag: approver reads the quote"
+shown,diluted_eps,2021,MATCH,3.12,3.1200,EarningsPerShareDiluted=3.1200@0000014272-22-000051#R3 (fsn reports R3)
+shown,interest_income,2020,MATCH,121000000,121000000.0000,InvestmentIncomeInterest=121000000.0000@0000014272-21-000066#R68 (fsn reports -)
+shown,basic_eps,2015,MATCH,0.9400,0.9400,EarningsPerShareBasic=0.9400@0000014272-16-000288#R2 (fsn reports R2)
+shown,amortization_of_intangibles,2021,MATCH,10023000000.0000,10023000000.0000,AmortizationofAcquiredIntangibleAssets=10023000000.0000@0000014272-24-000044#R3 (fsn reports R3)
+shown,income_tax_expense,2015,MATCH,446000000,446000000.0000,IncomeTaxExpenseBenefit=446000000.0000@0000014272-16-000288#R2 (fsn reports R2)
+shown,sga_expense,2019,MATCH,4871000000,4871000000.0000,SellingGeneralAndAdministrativeExpense=4871000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,interest_expense,2024,MATCH,1947000000,1947000000.0000,InterestExpenseNonoperating=1947000000.0000@0000014272-25-000039#R75 (fsn reports -)
+shown,income_tax_expense,2023,MATCH,400000000,400000000.0000,IncomeTaxExpenseBenefit=400000000.0000@0000014272-24-000044#R3 (fsn reports R3)
+shown,income_tax_expense,2017,MATCH,4156000000,4156000000.0000,IncomeTaxExpenseBenefit=4156000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,weighted_basic_shares,2017,MATCH,1645000000,1645000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=1645000000.0000@0000014272-18-000055#R74 (fsn reports -)
+shown,research_and_development,2020,MATCH,10048000000,10048000000.0000,ResearchAndDevelopmentExpense=10048000000.0000@0000014272-23-000046#R3 (fsn reports R3)
+shown,revenue,2016,MATCH,19427000000,19427000000.0000,Revenues=19427000000.0000@0000014272-19-000047#R2 (fsn reports R2)
+shown,interest_expense,2025,MATCH,1891000000,1891000000.0000,InterestExpenseNonoperating=1891000000.0000@0000014272-26-000004#R72 (fsn reports -)
+shown,income_before_tax,2023,MATCH,8440000000,8440000000.0000,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=8440000000.0000@0000014272-24-000044#R3 (fsn reports R3)
+shown,gross_profit,2020,LOCATOR,30745000000,None,"text-stated value located by its quote (R3.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-23-000046, read FY2020 10-K of 0000014272-23-000046), no tag: approver reads the quote"
+shown,weighted_diluted_shares,2022,MATCH,2146000000,2146000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=2146000000.0000@0000014272-23-000046#R78 (fsn reports -)
+shown,comprehensive_income,2016,MATCH,4422000000,4422000000.0000,ComprehensiveIncomeNetOfTax=4422000000.0000@0000014272-17-000047#R3 (fsn reports R3)
+shown,interest_income,2025,MATCH,586000000,586000000.0000,InvestmentIncomeInterest=586000000.0000@0000014272-26-000004#R72 (fsn reports -)
+shown,weighted_diluted_shares,2025,MATCH,2039000000,2039000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=2039000000.0000@0000014272-26-000004#R85 (fsn reports -)
+shown,sga_expense,2023,MATCH,7772000000,7772000000.0000,SellingGeneralAndAdministrativeExpense=7772000000.0000@0000014272-24-000044#R3 (fsn reports R3)
+shown,amortization_of_intangibles,2023,MATCH,9047000000.0000,9047000000.0000,AmortizationofAcquiredIntangibleAssets=9047000000.0000@0000014272-26-000004#R3 (fsn reports R3)
+shown,income_tax_expense,2021,MATCH,1084000000,1084000000.0000,IncomeTaxExpenseBenefit=1084000000.0000@0000014272-22-000051#R3 (fsn reports R3)
+shown,dividends_per_share,2023,MATCH,2.31,2.3100,CommonStockDividendsPerShareDeclared=2.3100@0000014272-24-000044#R109 (fsn reports -)
+shown,diluted_eps,2025,MATCH,3.46,3.4600,EarningsPerShareDiluted=3.4600@0000014272-26-000004#R3 (fsn reports R3)
+shown,weighted_basic_shares,2018,MATCH,1633000000,1633000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=1633000000.0000@0000014272-19-000047#R74 (fsn reports -)
+shown,comprehensive_income,2020,MATCH,-9334000000,9334000000.0000,ComprehensiveIncomeNetOfTax=-9334000000.0000@0000014272-21-000066#R3 (fsn reports R3)
+shown,basic_eps,2021,MATCH,3.15,3.1500,EarningsPerShareBasic=3.1500@0000014272-22-000051#R3 (fsn reports R3)
+shown,basic_eps,2019,MATCH,2.0200,2.0200,EarningsPerShareBasic=2.0200@0000014272-20-000082#R2 (fsn reports R2)
+shown,sga_expense,2021,MATCH,7690000000,7690000000.0000,SellingGeneralAndAdministrativeExpense=7690000000.0000@0000014272-22-000051#R3 (fsn reports R3)
+shown,interest_expense,2018,MATCH,183000000,183000000.0000,InterestExpense=183000000.0000@0000014272-19-000047#R67 (fsn reports -)
+shown,comprehensive_income,2025,MATCH,6767000000,6767000000.0000,ComprehensiveIncomeNetOfTax=6767000000.0000@0000014272-26-000004#R4 (fsn reports R4)
+shown,income_tax_expense,2019,MATCH,1515000000,1515000000.0000,IncomeTaxExpenseBenefit=1515000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,revenue,2019,MATCH,26145000000.0000,26145000000.0000,Revenues=26145000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,weighted_diluted_shares,2015,MATCH,1679000000,1679000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=1679000000.0000@0000014272-16-000288#R76 (fsn reports -)
+shown,basic_eps,2025,MATCH,3.47,3.4700,EarningsPerShareBasic=3.4700@0000014272-26-000004#R3 (fsn reports R3)
+shown,gross_profit,2017,LOCATOR,14762000000,None,"text-stated value located by its quote (R2.htm (us-gaap:Revenues - us-gaap:CostOfGoodsAndServicesSold) of 0000014272-20-000082, read FY2017 10-K of 0000014272-20-000082), no tag: approver reads the quote"
+shown,weighted_basic_shares,2022,MATCH,2130000000,2130000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=2130000000.0000@0000014272-23-000046#R78 (fsn reports -)
+shown,basic_eps,2018,MATCH,3.0100,3.0100,EarningsPerShareBasic=3.0100@0000014272-19-000047#R2 (fsn reports R2)
+shown,operating_expenses,2019,MATCH,12154000000.0000,12154000000.0000,ResearchAndDevelopmentExpense=6148000000.0000@0000014272-20-000082#R2 (fsn reports R2); SellingGeneralAndAdministrativeExpense=4871000000.0000@0000014272-20-000082#R2 (fsn reports R2); AmortizationofAcquiredIntangibleAssets=1135000000.0000@0000014272-20-000082#R2 (fsn reports R2)
+shown,other_income_expense_net,2022,MATCH,485000000,485000000.0000,OtherNonoperatingIncomeExpense=-576000000.0000@0000014272-23-000046#R3 (fsn reports R3); -InvestmentIncomeInterest=171000000.0000@0000014272-23-000046#R67 (fsn reports -); InterestExpense=1232000000.0000@0000014272-23-000046#R67 (fsn reports -)
+shown,other_income_expense_net,2025,MATCH,631000000,631000000.0000,OtherNonoperatingIncomeExpense=-674000000.0000@0000014272-26-000004#R3 (fsn reports R3); InterestExpenseNonoperating=1891000000.0000@0000014272-26-000004#R72 (fsn reports -); -InvestmentIncomeInterest=586000000.0000@0000014272-26-000004#R72 (fsn reports -)
+shown,other_income_expense_net,2020,MATCH,3613000000,3613000000.0000,OtherNonoperatingIncomeExpense=2314000000.0000@0000014272-21-000066#R2 (fsn reports R2); InterestExpense=1420000000.0000@0000014272-21-000066#R68 (fsn reports -); -InvestmentIncomeInterest=121000000.0000@0000014272-21-000066#R68 (fsn reports -)
+shown,gross_profit,2021,MATCH,36445000000,36445000000.0000,Revenues=46385000000.0000@0000014272-22-000051#R3 (fsn reports R3); -CostOfGoodsAndServicesSold=9940000000.0000@0000014272-22-000051#R3 (fsn reports R3)
+shown,operating_expenses,2024,MATCH,41818000000.0000,41818000000.0000,"ResearchAndDevelopmentExpense=11159000000.0000@0000014272-25-000039#R3 (fsn reports R3); SellingGeneralAndAdministrativeExpense=8414000000.0000@0000014272-25-000039#R3 (fsn reports R3); AcquiredIPRD=13373000000.0000@0000014272-25-000039#R3 (fsn reports R3,R7); AmortizationofAcquiredIntangibleAssets=8872000000.0000@0000014272-25-000039#R3 (fsn reports R3)"
+shown,other_income_expense_net,2016,MATCH,1518000000,1518000000.0000,OtherNonoperatingIncomeExpense=1448000000.0000@0000014272-19-000047#R2 (fsn reports R2); InterestExpense=167000000.0000@0000014272-19-000047#R67 (fsn reports -); -InvestmentIncomeInterest=97000000.0000@0000014272-19-000047#R67 (fsn reports -)
+shown,other_income_expense_net,2018,MATCH,864000000,864000000.0000,OtherNonoperatingIncomeExpense=854000000.0000@0000014272-21-000066#R2 (fsn reports R2); -InvestmentIncomeInterest=173000000.0000@0000014272-21-000066#R68 (fsn reports -); InterestExpense=183000000.0000@0000014272-21-000066#R68 (fsn reports -)
+shown,gross_profit,2022,MATCH,36022000000,36022000000.0000,Revenues=46159000000.0000@0000014272-23-000046#R3 (fsn reports R3); -CostOfGoodsAndServicesSold=10137000000.0000@0000014272-23-000046#R3 (fsn reports R3)
+shown,other_income_expense_net,2015,MATCH,270000000,270000000.0000,OtherNonoperatingIncomeExpense=187000000.0000@0000014272-16-000288#R2 (fsn reports R2); InterestExpense=184000000.0000@0000014272-16-000288#R69 (fsn reports -); -InvestmentIncomeInterest=101000000.0000@0000014272-16-000288#R69 (fsn reports -)
+shown,operating_expenses,2021,MATCH,29067000000.0000,29067000000.0000,"ResearchAndDevelopmentExpense=11354000000.0000@0000014272-22-000051#R3 (fsn reports R3); SellingGeneralAndAdministrativeExpense=7690000000.0000@0000014272-22-000051#R3 (fsn reports R3); AmortizationofAcquiredIntangibleAssets=10023000000.0000@0000014272-22-000051#R3 (fsn reports R3); MyoKardiaAssetAcquisitionIPRDCharge=0.0000@0000014272-22-000051#R3 (fsn reports R3,R7)"
+derived,gross_profit,2023,MATCH,34313000000,34313000000.0000,Revenues=45006000000.0000@0000014272-24-000044#R3 (fsn reports R3); -CostOfGoodsAndServicesSold=10693000000.0000@0000014272-24-000044#R3 (fsn reports R3)
+derived,gross_profit,2024,MATCH,34332000000,34332000000.0000,Revenues=48300000000.0000@0000014272-25-000039#R3 (fsn reports R3); -CostOfGoodsAndServicesSold=13968000000.0000@0000014272-25-000039#R3 (fsn reports R3)
+derived,gross_profit,2025,MATCH,34258000000,34258000000.0000,Revenues=48194000000.0000@0000014272-26-000004#R3 (fsn reports R3); -CostOfGoodsAndServicesSold=13936000000.0000@0000014272-26-000004#R3 (fsn reports R3)
+derived,operating_expenses,2015,MATCH,10761000000,10761000000.0000,ResearchAndDevelopmentExpense=5920000000.0000@0000014272-16-000288#R2 (fsn reports R2); SellingGeneralAndAdministrativeExpense=4841000000.0000@0000014272-16-000288#R2 (fsn reports R2)
+derived,operating_expenses,2016,MATCH,9991000000,9991000000.0000,ResearchAndDevelopmentExpense=5012000000.0000@0000014272-19-000047#R2 (fsn reports R2); SellingGeneralAndAdministrativeExpense=4979000000.0000@0000014272-19-000047#R2 (fsn reports R2)
+derived,operating_expenses,2020,MATCH,39930000000.0000,39930000000.0000,"SellingGeneralAndAdministrativeExpense=7661000000.0000@0000014272-21-000066#R2 (fsn reports R2); ResearchAndDevelopmentExpense=11143000000.0000@0000014272-21-000066#R2 (fsn reports R2); AmortizationofAcquiredIntangibleAssets=9688000000.0000@0000014272-21-000066#R2 (fsn reports R2); MyoKardiaAssetAcquisitionIPRDCharge=11438000000.0000@0000014272-21-000066#R2 (fsn reports R2,R6)"
+derived,operating_expenses,2022,MATCH,27733000000.0000,27733000000.0000,SellingGeneralAndAdministrativeExpense=7814000000.0000@0000014272-23-000046#R3 (fsn reports R3); AmortizationofAcquiredIntangibleAssets=9595000000.0000@0000014272-23-000046#R3 (fsn reports R3); MyoKardiaAssetAcquisitionIPRDCharge=815000000.0000@0000014272-23-000046#R3 (fsn reports R3); ResearchAndDevelopmentExpense=9509000000.0000@0000014272-23-000046#R3 (fsn reports R3)
+derived,operating_expenses,2023,MATCH,27031000000.0000,27031000000.0000,"SellingGeneralAndAdministrativeExpense=7772000000.0000@0000014272-24-000044#R3 (fsn reports R3); AmortizationofAcquiredIntangibleAssets=9047000000.0000@0000014272-24-000044#R3 (fsn reports R3); AcquiredIPRD=913000000.0000@0000014272-24-000044#R3 (fsn reports R3,R7); ResearchAndDevelopmentExpense=9299000000.0000@0000014272-24-000044#R3 (fsn reports R3)"
+derived,operating_expenses,2025,MATCH,24256000000.0000,24256000000.0000,"SellingGeneralAndAdministrativeExpense=7267000000.0000@0000014272-26-000004#R3 (fsn reports R3); ResearchAndDevelopmentExpense=9951000000.0000@0000014272-26-000004#R3 (fsn reports R3); AcquiredIPRD=3721000000.0000@0000014272-26-000004#R3 (fsn reports R3,R7); AmortizationofAcquiredIntangibleAssets=3317000000.0000@0000014272-26-000004#R3 (fsn reports R3)"
+derived,other_income_expense_net,2017,MATCH,1755000000,1755000000.0000,OtherNonoperatingIncomeExpense=1685000000.0000@0000014272-20-000082#R2 (fsn reports R2); InterestExpense=196000000.0000@0000014272-20-000082#R68 (fsn reports -); -InvestmentIncomeInterest=126000000.0000@0000014272-20-000082#R68 (fsn reports -)
+derived,other_income_expense_net,2019,MATCH,-746000000,-746000000.0000,OtherNonoperatingIncomeExpense=-938000000.0000@0000014272-20-000082#R2 (fsn reports R2); InterestExpense=656000000.0000@0000014272-20-000082#R68 (fsn reports -); -InvestmentIncomeInterest=464000000.0000@0000014272-20-000082#R68 (fsn reports -)
+derived,other_income_expense_net,2021,MATCH,2015000000,2015000000.0000,OtherNonoperatingIncomeExpense=720000000.0000@0000014272-22-000051#R3 (fsn reports R3); InterestExpense=1334000000.0000@0000014272-22-000051#R65 (fsn reports -); -InvestmentIncomeInterest=39000000.0000@0000014272-22-000051#R65 (fsn reports -)
+derived,other_income_expense_net,2023,MATCH,1875000000,1875000000.0000,OtherNonoperatingIncomeExpense=1158000000.0000@0000014272-24-000044#R3 (fsn reports R3); InterestExpense=1166000000.0000@0000014272-24-000044#R69 (fsn reports -); -InvestmentIncomeInterest=449000000.0000@0000014272-24-000044#R69 (fsn reports -)
+derived,other_income_expense_net,2024,MATCH,576000000,576000000.0000,OtherNonoperatingIncomeExpense=-893000000.0000@0000014272-25-000039#R3 (fsn reports R3); -InvestmentIncomeInterest=478000000.0000@0000014272-25-000039#R75 (fsn reports -); InterestExpenseNonoperating=1947000000.0000@0000014272-25-000039#R75 (fsn reports -)
+derived,shares_outstanding,2017,MATCH,1625000000,1625000000.0000,CommonStockSharesIssued=2200000000.0000@0000014272-18-000055#R5 (fsn reports R5); -TreasuryStockShares=575000000.0000@0000014272-18-000055#R5 (fsn reports R5)
+derived,shares_outstanding,2020,MATCH,2221000000,2221000000.0000,"CommonStockSharesIssued=2900000000.0000@0000014272-21-000066#R5 (fsn reports R4,R5); -TreasuryStockShares=679000000.0000@0000014272-21-000066#R5 (fsn reports R4,R5)"
+derived,shares_outstanding,2021,MATCH,2153000000,2153000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-22-000051#R6 (fsn reports R6); -TreasuryStockShares=747000000.0000@0000014272-22-000051#R6 (fsn reports R6)
+derived,shares_outstanding,2022,MATCH,2075000000,2075000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-23-000046#R6 (fsn reports R6); -TreasuryStockCommonShares=825000000.0000@0000014272-23-000046#R6 (fsn reports R6)
+derived,shares_outstanding,2023,MATCH,1998000000,1998000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-24-000044#R6 (fsn reports R6); -TreasuryStockCommonShares=902000000.0000@0000014272-24-000044#R6 (fsn reports R6)
+derived,shares_outstanding,2024,MATCH,2006000000,2006000000.0000,CommonStockSharesIssued=2900000000.0000@0000014272-25-000039#R6 (fsn reports R6); -TreasuryStockCommonShares=894000000.0000@0000014272-25-000039#R6 (fsn reports R6)
+total_debt,total_debt,2015,MATCH,6689000000,6689000000.0000,"face {'DebtCurrent': Decimal('139000000.0000'), 'LongTermDebtNoncurrent': Decimal('6550000000.0000')}; lease no lease facts"
+total_debt,total_debt,2016,MATCH,6708000000,6708000000.0000,"face {'DebtCurrent': Decimal('992000000.0000'), 'LongTermDebtNoncurrent': Decimal('5716000000.0000')}; lease no lease facts"
+total_debt,total_debt,2017,MATCH,7962000000,7962000000.0000,"face {'DebtCurrent': Decimal('987000000.0000'), 'LongTermDebtNoncurrent': Decimal('6975000000.0000')}; lease no lease facts"
+total_debt,total_debt,2018,MATCH,7349000000,7349000000.0000,"face {'DebtCurrent': Decimal('1703000000.0000'), 'LongTermDebtNoncurrent': Decimal('5646000000.0000')}; lease no lease facts"
+total_debt,total_debt,2019,MATCH,46733000000,46733000000.0000,"face {'DebtCurrent': Decimal('3346000000.0000'), 'LongTermDebtNoncurrent': Decimal('43387000000.0000')}; lease no lease facts"
+total_debt,total_debt,2020,MATCH,50676000000,50676000000.0000,"face {'DebtCurrent': Decimal('2340000000.0000'), 'LongTermDebtNoncurrent': Decimal('48336000000.0000')}; lease no lease facts"
+total_debt,total_debt,2021,MATCH,44553000000,44553000000.0000,"face {'DebtCurrent': Decimal('4948000000.0000'), 'LongTermDebtNoncurrent': Decimal('39605000000.0000')}; lease no lease facts"
+total_debt,total_debt,2022,MATCH,39320000000,39320000000.0000,"face {'DebtCurrent': Decimal('4264000000.0000'), 'LongTermDebtNoncurrent': Decimal('35056000000.0000')}; lease no lease facts"
+total_debt,total_debt,2023,MATCH,39772000000,39772000000.0000,"face {'DebtCurrent': Decimal('3119000000.0000'), 'LongTermDebtNoncurrent': Decimal('36653000000.0000')}; lease no lease facts"
+total_debt,total_debt,2024,MATCH,49649000000,49649000000.0000,"face {'DebtCurrent': Decimal('2046000000.0000'), 'LongTermDebtNoncurrent': Decimal('47603000000.0000')}; lease no lease facts"
+total_debt,total_debt,2025,MATCH,45111000000,45111000000.0000,"face {'DebtCurrent': Decimal('2261000000.0000'), 'LongTermDebtNoncurrent': Decimal('42850000000.0000')}; lease no lease facts"
+draw_check,cash_and_equivalents,2016,AUTO_MATCH,,4237000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=4237000000.0000 (dcml -6, 2016-12-31, qtrs 0)"
+draw_check,stockholders_equity,2015,AUTO_MATCH,,14266000000.0000,"family; verified_by machine; tier 1: StockholdersEquity=14266000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,total_assets,2019,AUTO_MATCH,,129944000000.0000,"family; verified_by machine; tier 1: Assets=129944000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,cash_and_equivalents,2021,AUTO_MATCH,,13979000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=13979000000.0000 (dcml -6, 2021-12-31, qtrs 0)"
+draw_check,stockholders_equity,2022,AUTO_MATCH,,31061000000.0000,"family; verified_by machine; tier 1: StockholdersEquity=31061000000.0000 (dcml -6, 2022-12-31, qtrs 0)"
+draw_check,cash_and_equivalents,2017,AUTO_MATCH,,5421000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=5421000000.0000 (dcml -6, 2017-12-31, qtrs 0)"
+draw_check,total_assets,2024,AUTO_MATCH,,92603000000.0000,"family; verified_by machine; tier 1: Assets=92603000000.0000 (dcml -6, 2024-12-31, qtrs 0)"
+draw_check,ppe_net,2023,AUTO_MATCH,,6646000000.0000,"family; verified_by machine; tier 1: PropertyPlantAndEquipmentNet=6646000000.0000 (dcml -6, 2023-12-31, qtrs 0)"
+draw_check,current_assets,2024,AUTO_MATCH,,29780000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=29780000000.0000 (dcml -6, 2024-12-31, qtrs 0)"
+draw_check,total_liabilities,2020,AUTO_MATCH,,80599000000.0000,"family; verified_by machine; tier 1: Liabilities=80599000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,accounts_receivable,2025,NEEDS_READ,,,"text; verified_by pending_read; text-stated value (no tagged fact): read the quote at R5.htm (face) + R98.htm Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: net trade receivables)) of 0000014272-26-000004, read FY2025 10-K of 0000014272-26-000004"
+draw_check,accounts_payable,2016,AUTO_MATCH,,1664000000.0000,"family; verified_by machine; tier 1: AccountsPayableCurrent=1664000000.0000 (dcml -6, 2016-12-31, qtrs 0)"
+draw_check,total_assets,2015,AUTO_MATCH,,31748000000.0000,"family; verified_by machine; tier 1: Assets=31748000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,cash_and_equivalents,2019,AUTO_MATCH,,12346000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=12346000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,goodwill,2015,AUTO_MATCH,,6881000000.0000,"family; verified_by machine; tier 1: Goodwill=6881000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,current_liabilities,2024,AUTO_MATCH,,23774000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=23774000000.0000 (dcml -6, 2024-12-31, qtrs 0)"
+draw_check,current_assets,2017,AUTO_MATCH,,14854000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=14854000000.0000 (dcml -6, 2017-12-31, qtrs 0)"
+draw_check,inventory,2020,AUTO_MATCH,,2074000000.0000,"family; verified_by machine; tier 1: InventoryNet=2074000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,current_assets,2023,AUTO_MATCH,,31770000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=31770000000.0000 (dcml -6, 2023-12-31, qtrs 0)"
+draw_check,goodwill,2019,AUTO_MATCH,,22488000000.0000,"family; verified_by machine; tier 1: Goodwill=22488000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,inventory,2025,AUTO_MATCH,,2690000000.0000,"family; verified_by machine; tier 1: InventoryNet=2690000000.0000 (dcml -6, 2025-12-31, qtrs 0)"
+draw_check,current_liabilities,2015,AUTO_MATCH,,8017000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=8017000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,total_liabilities,2015,AUTO_MATCH,,17324000000.0000,"family; verified_by machine; tier 1: Liabilities=17324000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,goodwill,2025,AUTO_MATCH,,21754000000.0000,"family; verified_by machine; tier 1: Goodwill=21754000000.0000 (dcml -6, 2025-12-31, qtrs 0)"
+draw_check,stockholders_equity,2020,AUTO_MATCH,,37822000000.0000,"family; verified_by machine; tier 1: StockholdersEquity=37822000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,ppe_net,2019,AUTO_MATCH,,6252000000.0000,"family; verified_by machine; tier 1: PropertyPlantAndEquipmentNet=6252000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,goodwill,2021,AUTO_MATCH,,20502000000.0000,"family; verified_by machine; tier 1: Goodwill=20502000000.0000 (dcml -6, 2021-12-31, qtrs 0)"
+draw_check,inventory,2015,AUTO_MATCH,,1221000000.0000,"family; verified_by machine; tier 1: InventoryNet=1221000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,accounts_receivable,2021,NEEDS_READ,,,"text; verified_by pending_read; text-stated value (no tagged fact): read the quote at R5.htm (face) + R87.htm Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: net trade receivables)) of 0000014272-22-000051, read FY2021 10-K of 0000014272-22-000051"
+draw_check,ppe_net,2020,AUTO_MATCH,,5886000000.0000,"family; verified_by machine; tier 1: PropertyPlantAndEquipmentNet=5886000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,current_assets,2021,AUTO_MATCH,,33262000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=33262000000.0000 (dcml -6, 2021-12-31, qtrs 0)"
+draw_check,accounts_receivable,2018,NEEDS_READ,,,"text; verified_by pending_read; text-stated value (no tagged fact): read the quote at R4.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-20-000082, read FY2018 10-K of 0000014272-20-000082"
+draw_check,total_assets,2025,AUTO_MATCH,,90038000000.0000,"family; verified_by machine; tier 1: Assets=90038000000.0000 (dcml -6, 2025-12-31, qtrs 0)"
+draw_check,current_liabilities,2022,AUTO_MATCH,,21890000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=21890000000.0000 (dcml -6, 2022-12-31, qtrs 0)"
+draw_check,current_liabilities,2017,AUTO_MATCH,,9563000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=9563000000.0000 (dcml -6, 2017-12-31, qtrs 0)"
+draw_check,goodwill,2020,AUTO_MATCH,,20547000000.0000,"family; verified_by machine; tier 1: Goodwill=20547000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,accounts_payable,2024,AUTO_MATCH,,3602000000.0000,"family; verified_by machine; tier 1: AccountsPayableCurrent=3602000000.0000 (dcml -6, 2024-12-31, qtrs 0)"
+draw_check,cash_and_equivalents,2020,AUTO_MATCH,,14546000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=14546000000.0000 (dcml -6, 2020-12-31, qtrs 0)"
+draw_check,accounts_payable,2018,AUTO_MATCH,,1892000000.0000,"family; verified_by machine; tier 1: AccountsPayableCurrent=1892000000.0000 (dcml -6, 2018-12-31, qtrs 0)"
+draw_check,current_liabilities,2016,AUTO_MATCH,,8841000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=8841000000.0000 (dcml -6, 2016-12-31, qtrs 0)"
+draw_check,cash_and_equivalents,2023,AUTO_MATCH,,11464000000.0000,"family; verified_by machine; tier 1: CashAndCashEquivalentsAtCarryingValue=11464000000.0000 (dcml -6, 2023-12-31, qtrs 0)"
+draw_check,current_assets,2015,AUTO_MATCH,,10415000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=10415000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,accounts_payable,2022,AUTO_MATCH,,3040000000.0000,"family; verified_by machine; tier 1: AccountsPayableCurrent=3040000000.0000 (dcml -6, 2022-12-31, qtrs 0)"
+draw_check,accounts_receivable,2022,NEEDS_READ,,,"text; verified_by pending_read; text-stated value (no tagged fact): read the quote at R5.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-23-000046, read FY2022 10-K of 0000014272-23-000046"
+draw_check,accounts_receivable,2019,NEEDS_READ,,,"text; verified_by pending_read; text-stated value (no tagged fact): read the quote at R4.htm (face) + Receivables note (us-gaap:AccountsReceivableNetCurrent (Receivables note: trade receivables, net)) of 0000014272-20-000082, read FY2019 10-K of 0000014272-20-000082"
+draw_check,current_assets,2019,AUTO_MATCH,,29354000000.0000,"family; verified_by machine; tier 1: AssetsCurrent=29354000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,total_liabilities,2019,AUTO_MATCH,,78246000000.0000,"family; verified_by machine; tier 1: Liabilities=78246000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,current_liabilities,2019,AUTO_MATCH,,18304000000.0000,"family; verified_by machine; tier 1: LiabilitiesCurrent=18304000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,total_assets,2022,AUTO_MATCH,,96820000000.0000,"family; verified_by machine; tier 1: Assets=96820000000.0000 (dcml -6, 2022-12-31, qtrs 0)"
+draw_check,accounts_payable,2017,AUTO_MATCH,,2248000000.0000,"family; verified_by machine; tier 1: AccountsPayableCurrent=2248000000.0000 (dcml -6, 2017-12-31, qtrs 0)"
+draw_check,shares_outstanding,2015,AUTO_MATCH,,1661000000.0000,"parts; verified_by machine; 2 parts: +CommonStockSharesIssued=2200000000.0000 (dcml -6, 2015-12-31, qtrs 0) -TreasuryStockShares=539000000.0000 (dcml -6, 2015-12-31, qtrs 0)"
+draw_check,shares_outstanding,2025,AUTO_MATCH,,2013000000.0000,"parts; verified_by machine; 2 parts: +CommonStockSharesIssued=2900000000.0000 (dcml -8, 2025-12-31, qtrs 0) -TreasuryStockCommonShares=887000000.0000 (dcml -6, 2025-12-31, qtrs 0)"
+draw_check,shares_outstanding,2016,AUTO_MATCH,,1664000000.0000,"parts; verified_by machine; 2 parts: +CommonStockSharesIssued=2200000000.0000 (dcml -6, 2016-12-31, qtrs 0) -TreasuryStockShares=536000000.0000 (dcml -6, 2016-12-31, qtrs 0)"
+draw_check,shares_outstanding,2018,AUTO_MATCH,,1624000000.0000,"parts; verified_by machine; 2 parts: +CommonStockSharesIssued=2200000000.0000 (dcml -6, 2018-12-31, qtrs 0) -TreasuryStockShares=576000000.0000 (dcml -6, 2018-12-31, qtrs 0)"
+draw_check,shares_outstanding,2019,AUTO_MATCH,,2228000000.0000,"parts; verified_by machine; 2 parts: +CommonStockSharesIssued=2900000000.0000 (dcml -6, 2019-12-31, qtrs 0) -TreasuryStockShares=672000000.0000 (dcml -6, 2019-12-31, qtrs 0)"
+draw_check,cf_inventory_change,2020,AUTO_MATCH,,-2672000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInInventories=-2672000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,dividends_paid,2018,AUTO_MATCH,,2613000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=2613000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,cf_inventory_change,2017,AUTO_MATCH,,29000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInInventories=29000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,cash_paid_for_interest,2019,AUTO_MATCH,,414000000.0000,"family; verified_by machine; tier 1: InterestPaidNet=414000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,cash_paid_for_interest,2017,AUTO_MATCH,,221000000.0000,"family; verified_by machine; tier 1: InterestPaidNet=221000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,cfo,2015,AUTO_MATCH,,2105000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=2105000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,cash_flow_financing,2016,AUTO_MATCH,,-2653000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInFinancingActivities=-2653000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,cfo,2016,AUTO_MATCH,,3058000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=3058000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,cash_paid_for_income_taxes,2024,AUTO_MATCH,,3900000000.0000,"family; verified_by machine; tier 1: IncomeTaxesPaidNet=3900000000.0000 (dcml -8, 2024-12-31, qtrs 4)"
+draw_check,depreciation_and_amortization,2018,AUTO_MATCH,,637000000.0000,"family; verified_by machine; tier 1: DepreciationDepletionAndAmortization=637000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,share_buybacks,2025,AUTO_MATCH,,0.0000,"family; verified_by machine; tier 1: PaymentsForRepurchaseOfCommonStock=0.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,cash_paid_for_interest,2020,AUTO_MATCH,,1600000000.0000,"family; verified_by machine; tier 1: InterestPaidNet=1600000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,dividends_paid,2024,AUTO_MATCH,,4863000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=4863000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,cf_ar_change,2021,AUTO_MATCH,,1054000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInReceivables=1054000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,capex,2015,AUTO_MATCH,,820000000.0000,"family; verified_by machine; tier 1: PaymentsToAcquirePropertyPlantAndEquipment=820000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,capex,2018,AUTO_MATCH,,951000000.0000,"family; verified_by machine; tier 1: PaymentsToAcquirePropertyPlantAndEquipment=951000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,capex,2016,AUTO_MATCH,,1215000000.0000,"family; verified_by machine; tier 1: PaymentsToAcquirePropertyPlantAndEquipment=1215000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,cf_ar_change,2023,AUTO_MATCH,,995000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInReceivables=995000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,cf_inventory_change,2021,AUTO_MATCH,,-13000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInInventories=-13000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,cfo,2018,AUTO_MATCH,,7066000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=7066000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,share_buybacks,2022,AUTO_MATCH,,8001000000.0000,"family; verified_by machine; tier 1: PaymentsForRepurchaseOfCommonStock=8001000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,cash_flow_financing,2025,AUTO_MATCH,,-10348000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInFinancingActivities=-10348000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,cash_paid_for_interest,2021,AUTO_MATCH,,1500000000.0000,"family; verified_by machine; tier 1: InterestPaidNet=1500000000.0000 (dcml -8, 2021-12-31, qtrs 4)"
+draw_check,dividends_paid,2023,AUTO_MATCH,,4744000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=4744000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,capex,2017,AUTO_MATCH,,1055000000.0000,"family; verified_by machine; tier 1: PaymentsToAcquirePropertyPlantAndEquipment=1055000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,depreciation_and_amortization,2024,AUTO_MATCH,,9600000000.0000,"family; verified_by machine; tier 1: DepreciationDepletionAndAmortization=9600000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,cf_ap_change,2016,AUTO_MATCH,,104000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=104000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,sbc,2023,AUTO_MATCH,,518000000.0000,"family; verified_by machine; tier 1: ShareBasedCompensation=518000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,cf_ap_change,2021,AUTO_MATCH,,245000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=245000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,dividends_paid,2016,AUTO_MATCH,,2547000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=2547000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,share_buybacks,2021,AUTO_MATCH,,6287000000.0000,"family; verified_by machine; tier 1: PaymentsForRepurchaseOfCommonStock=6287000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,cf_ar_change,2015,AUTO_MATCH,,942000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInReceivables=942000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,cash_paid_for_income_taxes,2015,AUTO_MATCH,,577000000.0000,"family; verified_by machine; tier 1: IncomeTaxesPaidNet=577000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,cf_ap_change,2023,AUTO_MATCH,,198000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=198000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,dividends_paid,2020,AUTO_MATCH,,4075000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=4075000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,dividends_paid,2022,AUTO_MATCH,,4634000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=4634000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,depreciation_and_amortization,2023,AUTO_MATCH,,9760000000.0000,"family; verified_by machine; tier 1: DepreciationDepletionAndAmortization=9760000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,cf_ap_change,2024,AUTO_MATCH,,184000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=184000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,cash_flow_financing,2017,AUTO_MATCH,,-4077000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInFinancingActivities=-4077000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,cf_inventory_change,2015,AUTO_MATCH,,-97000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInInventories=-97000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,sbc,2018,AUTO_MATCH,,221000000.0000,"family; verified_by machine; tier 1: ShareBasedCompensation=221000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,cfo,2025,AUTO_MATCH,,14156000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=14156000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,cfo,2020,AUTO_MATCH,,14052000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=14052000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,cash_flow_investing,2020,AUTO_MATCH,,-10859000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInInvestingActivities=-10859000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,cfo,2019,AUTO_MATCH,,8210000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=8210000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,cfo,2017,AUTO_MATCH,,5275000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInOperatingActivities=5275000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,cash_flow_investing,2016,AUTO_MATCH,,1480000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInInvestingActivities=1480000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,cash_flow_financing,2024,AUTO_MATCH,,5127000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInFinancingActivities=5127000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,share_buybacks,2023,AUTO_MATCH,,5155000000.0000,"family; verified_by machine; tier 1: PaymentsForRepurchaseOfCommonStock=5155000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,dividends_paid,2021,AUTO_MATCH,,4396000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=4396000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,cash_flow_financing,2021,AUTO_MATCH,,-16224000000.0000,"family; verified_by machine; tier 1: NetCashProvidedByUsedInFinancingActivities=-16224000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,dividends_paid,2019,AUTO_MATCH,,2679000000.0000,"family; verified_by machine; tier 2: PaymentsOfDividends=2679000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,cf_inventory_change,2022,AUTO_MATCH,,69000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInInventories=69000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,cash_paid_for_income_taxes,2021,AUTO_MATCH,,3500000000.0000,"family; verified_by machine; tier 1: IncomeTaxesPaidNet=3500000000.0000 (dcml -8, 2021-12-31, qtrs 4)"
+draw_check,share_buybacks,2024,AUTO_MATCH,,0.0000,"family; verified_by machine; tier 1: PaymentsForRepurchaseOfCommonStock=0.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,cf_ar_change,2025,AUTO_MATCH,,295000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInReceivables=295000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,cf_ap_change,2022,AUTO_MATCH,,109000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=109000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,cf_ap_change,2020,AUTO_MATCH,,188000000.0000,"family; verified_by machine; tier 1: IncreaseDecreaseInAccountsPayable=188000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,net_income,2024,AUTO_MATCH,,-8948000000.0000,"family; verified_by machine; tier 1: NetIncomeLoss=-8948000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,interest_income,2022,AUTO_MATCH,,171000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=171000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,gross_profit,2019,AUTO_MATCH,,18067000000.0000,"identity; verified_by machine; Revenues=26145000000.0000 (dcml -6, 2019-12-31, qtrs 4) - CostOfGoodsAndServicesSold=8078000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,cost_of_revenue,2016,AUTO_MATCH,,4969000000.0000,"family; verified_by machine; tier 1: CostOfGoodsAndServicesSold=4969000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2021,AUTO_MATCH,,2245000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=2245000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,diluted_eps,2024,AUTO_MATCH,,-4.4100,"family; verified_by machine; tier 1: EarningsPerShareDiluted=-4.4100 (dcml 2, 2024-12-31, qtrs 4)"
+draw_check,cost_of_revenue,2020,AUTO_MATCH,,11773000000.0000,"family; verified_by machine; tier 1: CostOfGoodsAndServicesSold=11773000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,research_and_development,2017,AUTO_MATCH,,6468000000.0000,"family; verified_by machine; tier 1: ResearchAndDevelopmentExpense=6468000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,income_tax_expense,2016,AUTO_MATCH,,1408000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=1408000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,sga_expense,2015,AUTO_MATCH,,4841000000.0000,"family; verified_by machine; tier 1: SellingGeneralAndAdministrativeExpense=4841000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,diluted_eps,2015,AUTO_MATCH,,0.9300,"family; verified_by machine; tier 1: EarningsPerShareDiluted=0.9300 (dcml 2, 2015-12-31, qtrs 4)"
+draw_check,dividends_per_share,2025,AUTO_MATCH,,2.4900,"family; verified_by machine; tier 1: CommonStockDividendsPerShareDeclared=2.4900 (dcml 2, 2025-12-31, qtrs 4)"
+draw_check,interest_income,2018,AUTO_MATCH,,173000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=173000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,dividends_per_share,2024,AUTO_MATCH,,2.4200,"family; verified_by machine; tier 1: CommonStockDividendsPerShareDeclared=2.4200 (dcml 2, 2024-12-31, qtrs 4)"
+draw_check,income_before_tax,2019,AUTO_MATCH,,4975000000.0000,"family; verified_by machine; tier 1: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=4975000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,sga_expense,2024,AUTO_MATCH,,8414000000.0000,"family; verified_by machine; tier 1: SellingGeneralAndAdministrativeExpense=8414000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,interest_income,2017,AUTO_MATCH,,126000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=126000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,basic_eps,2024,AUTO_MATCH,,-4.4100,"family; verified_by machine; tier 1: EarningsPerShareBasic=-4.4100 (dcml 2, 2024-12-31, qtrs 4)"
+draw_check,interest_income,2023,AUTO_MATCH,,449000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=449000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,net_income,2018,AUTO_MATCH,,4920000000.0000,"family; verified_by machine; tier 1: NetIncomeLoss=4920000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,interest_expense,2023,AUTO_MATCH,,1166000000.0000,"family; verified_by machine; tier 1: InterestExpenseNonoperating=1166000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2017,AUTO_MATCH,,1652000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=1652000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,weighted_basic_shares,2023,AUTO_MATCH,,2069000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfSharesOutstandingBasic=2069000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,net_income,2017,AUTO_MATCH,,1007000000.0000,"family; verified_by machine; tier 1: NetIncomeLoss=1007000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,research_and_development,2022,AUTO_MATCH,,9509000000.0000,"family; verified_by machine; tier 1: ResearchAndDevelopmentExpense=9509000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2024,AUTO_MATCH,,2027000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=2027000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,income_before_tax,2024,AUTO_MATCH,,-8379000000.0000,"family; verified_by machine; tier 1: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=-8379000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,income_tax_expense,2020,AUTO_MATCH,,2124000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=2124000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,research_and_development,2025,AUTO_MATCH,,9951000000.0000,"family; verified_by machine; tier 1: ResearchAndDevelopmentExpense=9951000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,net_income,2025,AUTO_MATCH,,7054000000.0000,"family; verified_by machine; tier 1: NetIncomeLoss=7054000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,dividends_per_share,2018,AUTO_MATCH,,1.6100,"family; verified_by machine; tier 1: CommonStockDividendsPerShareDeclared=1.6100 (dcml 2, 2018-12-31, qtrs 4)"
+draw_check,net_income,2016,AUTO_MATCH,,4457000000.0000,"family; verified_by machine; tier 1: NetIncomeLoss=4457000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,diluted_eps,2022,AUTO_MATCH,,2.9500,"family; verified_by machine; tier 1: EarningsPerShareDiluted=2.9500 (dcml 2, 2022-12-31, qtrs 4)"
+draw_check,comprehensive_income,2022,AUTO_MATCH,,6314000000.0000,"family; verified_by machine; tier 1: ComprehensiveIncomeNetOfTax=6314000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,gross_profit,2018,AUTO_MATCH,,16094000000.0000,"identity; verified_by machine; Revenues=22561000000.0000 (dcml -6, 2018-12-31, qtrs 4) - CostOfGoodsAndServicesSold=6467000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,research_and_development,2024,AUTO_MATCH,,11159000000.0000,"family; verified_by machine; tier 1: ResearchAndDevelopmentExpense=11159000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,gross_profit,2016,AUTO_MATCH,,14458000000.0000,"identity; verified_by machine; Revenues=19427000000.0000 (dcml -6, 2016-12-31, qtrs 4) - CostOfGoodsAndServicesSold=4969000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,diluted_eps,2021,AUTO_MATCH,,3.1200,"family; verified_by machine; tier 1: EarningsPerShareDiluted=3.1200 (dcml 2, 2021-12-31, qtrs 4)"
+draw_check,interest_income,2020,AUTO_MATCH,,121000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=121000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,basic_eps,2015,AUTO_MATCH,,0.9400,"family; verified_by machine; tier 1: EarningsPerShareBasic=0.9400 (dcml 2, 2015-12-31, qtrs 4)"
+draw_check,amortization_of_intangibles,2021,AUTO_MATCH,,10023000000.0000,"family; verified_by machine; tier 1: AmortizationofAcquiredIntangibleAssets=10023000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,income_tax_expense,2015,AUTO_MATCH,,446000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=446000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,sga_expense,2019,AUTO_MATCH,,4871000000.0000,"family; verified_by machine; tier 1: SellingGeneralAndAdministrativeExpense=4871000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,interest_expense,2024,AUTO_MATCH,,1947000000.0000,"family; verified_by machine; tier 1: InterestExpenseNonoperating=1947000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,income_tax_expense,2023,AUTO_MATCH,,400000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=400000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,income_tax_expense,2017,AUTO_MATCH,,4156000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=4156000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,weighted_basic_shares,2017,AUTO_MATCH,,1645000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfSharesOutstandingBasic=1645000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,research_and_development,2020,AUTO_MATCH,,10048000000.0000,"family; verified_by machine; tier 1: ResearchAndDevelopmentExpense=10048000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,revenue,2016,AUTO_MATCH,,19427000000.0000,"family; verified_by machine; tier 1: Revenues=19427000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,interest_expense,2025,AUTO_MATCH,,1891000000.0000,"family; verified_by machine; tier 1: InterestExpenseNonoperating=1891000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,income_before_tax,2023,AUTO_MATCH,,8440000000.0000,"family; verified_by machine; tier 1: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=8440000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,gross_profit,2020,AUTO_MATCH,,30745000000.0000,"identity; verified_by machine; Revenues=42518000000.0000 (dcml -6, 2020-12-31, qtrs 4) - CostOfGoodsAndServicesSold=11773000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2022,AUTO_MATCH,,2146000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=2146000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,comprehensive_income,2016,AUTO_MATCH,,4422000000.0000,"family; verified_by machine; tier 1: ComprehensiveIncomeNetOfTax=4422000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,interest_income,2025,AUTO_MATCH,,586000000.0000,"family; verified_by machine; tier 2: InvestmentIncomeInterest=586000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2025,AUTO_MATCH,,2039000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=2039000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,sga_expense,2023,AUTO_MATCH,,7772000000.0000,"family; verified_by machine; tier 1: SellingGeneralAndAdministrativeExpense=7772000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,amortization_of_intangibles,2023,AUTO_MATCH,,9047000000.0000,"family; verified_by machine; tier 1: AmortizationofAcquiredIntangibleAssets=9047000000.0000 (dcml -6, 2023-12-31, qtrs 4)"
+draw_check,income_tax_expense,2021,AUTO_MATCH,,1084000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=1084000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,dividends_per_share,2023,AUTO_MATCH,,2.3100,"family; verified_by machine; tier 1: CommonStockDividendsPerShareDeclared=2.3100 (dcml 2, 2023-12-31, qtrs 4)"
+draw_check,diluted_eps,2025,AUTO_MATCH,,3.4600,"family; verified_by machine; tier 1: EarningsPerShareDiluted=3.4600 (dcml 2, 2025-12-31, qtrs 4)"
+draw_check,weighted_basic_shares,2018,AUTO_MATCH,,1633000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfSharesOutstandingBasic=1633000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,comprehensive_income,2020,AUTO_MATCH,,-9334000000.0000,"family; verified_by machine; tier 1: ComprehensiveIncomeNetOfTax=-9334000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,basic_eps,2021,AUTO_MATCH,,3.1500,"family; verified_by machine; tier 1: EarningsPerShareBasic=3.1500 (dcml 2, 2021-12-31, qtrs 4)"
+draw_check,basic_eps,2019,AUTO_MATCH,,2.0200,"family; verified_by machine; tier 1: EarningsPerShareBasic=2.0200 (dcml 2, 2019-12-31, qtrs 4)"
+draw_check,sga_expense,2021,AUTO_MATCH,,7690000000.0000,"family; verified_by machine; tier 1: SellingGeneralAndAdministrativeExpense=7690000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,interest_expense,2018,AUTO_MATCH,,183000000.0000,"family; verified_by machine; tier 1: InterestExpense=183000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,comprehensive_income,2025,AUTO_MATCH,,6767000000.0000,"family; verified_by machine; tier 1: ComprehensiveIncomeNetOfTax=6767000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,income_tax_expense,2019,AUTO_MATCH,,1515000000.0000,"family; verified_by machine; tier 1: IncomeTaxExpenseBenefit=1515000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,revenue,2019,AUTO_MATCH,,26145000000.0000,"family; verified_by machine; tier 1: Revenues=26145000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,weighted_diluted_shares,2015,AUTO_MATCH,,1679000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfDilutedSharesOutstanding=1679000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,basic_eps,2025,AUTO_MATCH,,3.4700,"family; verified_by machine; tier 1: EarningsPerShareBasic=3.4700 (dcml 2, 2025-12-31, qtrs 4)"
+draw_check,gross_profit,2017,AUTO_MATCH,,14762000000.0000,"identity; verified_by machine; Revenues=20776000000.0000 (dcml -6, 2017-12-31, qtrs 4) - CostOfGoodsAndServicesSold=6014000000.0000 (dcml -6, 2017-12-31, qtrs 4)"
+draw_check,weighted_basic_shares,2022,AUTO_MATCH,,2130000000.0000,"family; verified_by machine; tier 1: WeightedAverageNumberOfSharesOutstandingBasic=2130000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,basic_eps,2018,AUTO_MATCH,,3.0100,"family; verified_by machine; tier 1: EarningsPerShareBasic=3.0100 (dcml 2, 2018-12-31, qtrs 4)"
+draw_check,operating_expenses,2019,AUTO_MATCH,,12154000000.0000,"parts; verified_by machine; 3 parts: +ResearchAndDevelopmentExpense=6148000000.0000 (dcml -6, 2019-12-31, qtrs 4) +SellingGeneralAndAdministrativeExpense=4871000000.0000 (dcml -6, 2019-12-31, qtrs 4) +AmortizationofAcquiredIntangibleAssets=1135000000.0000 (dcml -6, 2019-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2022,AUTO_MATCH,,485000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=-576000000.0000 (dcml -6, 2022-12-31, qtrs 4) -InvestmentIncomeInterest=171000000.0000 (dcml -6, 2022-12-31, qtrs 4) +InterestExpense=1232000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2025,AUTO_MATCH,,631000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=-674000000.0000 (dcml -6, 2025-12-31, qtrs 4) +InterestExpenseNonoperating=1891000000.0000 (dcml -6, 2025-12-31, qtrs 4) -InvestmentIncomeInterest=586000000.0000 (dcml -6, 2025-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2020,AUTO_MATCH,,3613000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=2314000000.0000 (dcml -6, 2020-12-31, qtrs 4) +InterestExpense=1420000000.0000 (dcml -6, 2020-12-31, qtrs 4) -InvestmentIncomeInterest=121000000.0000 (dcml -6, 2020-12-31, qtrs 4)"
+draw_check,gross_profit,2021,AUTO_MATCH,,36445000000.0000,"parts; verified_by machine; 2 parts: +Revenues=46385000000.0000 (dcml -6, 2021-12-31, qtrs 4) -CostOfGoodsAndServicesSold=9940000000.0000 (dcml -6, 2021-12-31, qtrs 4)"
+draw_check,operating_expenses,2024,AUTO_MATCH,,41818000000.0000,"parts; verified_by machine; 4 parts: +ResearchAndDevelopmentExpense=11159000000.0000 (dcml -6, 2024-12-31, qtrs 4) +SellingGeneralAndAdministrativeExpense=8414000000.0000 (dcml -6, 2024-12-31, qtrs 4) +AcquiredIPRD=13373000000.0000 (dcml -6, 2024-12-31, qtrs 4) +AmortizationofAcquiredIntangibleAssets=8872000000.0000 (dcml -6, 2024-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2016,AUTO_MATCH,,1518000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=1448000000.0000 (dcml -6, 2016-12-31, qtrs 4) +InterestExpense=167000000.0000 (dcml -6, 2016-12-31, qtrs 4) -InvestmentIncomeInterest=97000000.0000 (dcml -6, 2016-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2018,AUTO_MATCH,,864000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=854000000.0000 (dcml -6, 2018-12-31, qtrs 4) -InvestmentIncomeInterest=173000000.0000 (dcml -6, 2018-12-31, qtrs 4) +InterestExpense=183000000.0000 (dcml -6, 2018-12-31, qtrs 4)"
+draw_check,gross_profit,2022,AUTO_MATCH,,36022000000.0000,"parts; verified_by machine; 2 parts: +Revenues=46159000000.0000 (dcml -6, 2022-12-31, qtrs 4) -CostOfGoodsAndServicesSold=10137000000.0000 (dcml -6, 2022-12-31, qtrs 4)"
+draw_check,other_income_expense_net,2015,AUTO_MATCH,,270000000.0000,"parts; verified_by machine; 3 parts: +OtherNonoperatingIncomeExpense=187000000.0000 (dcml -6, 2015-12-31, qtrs 4) +InterestExpense=184000000.0000 (dcml -6, 2015-12-31, qtrs 4) -InvestmentIncomeInterest=101000000.0000 (dcml -6, 2015-12-31, qtrs 4)"
+draw_check,operating_expenses,2021,AUTO_MATCH,,29067000000.0000,"parts; verified_by machine; 4 parts: +ResearchAndDevelopmentExpense=11354000000.0000 (dcml -6, 2021-12-31, qtrs 4) +SellingGeneralAndAdministrativeExpense=7690000000.0000 (dcml -6, 2021-12-31, qtrs 4) +AmortizationofAcquiredIntangibleAssets=10023000000.0000 (dcml -6, 2021-12-31, qtrs 4) +MyoKardiaAssetAcquisitionIPRDCharge=0.0000 (dcml -6, 2021-12-31, qtrs 4)"
+hidden_row,operating_income,*,INFO,,,"no presented, undimensioned, annual ['OperatingIncomeLoss'] fact at a display-year end in any periodic filing"
