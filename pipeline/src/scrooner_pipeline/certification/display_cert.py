@@ -1109,6 +1109,22 @@ def search_evidenced_absent(c: Cell) -> bool:
     return c.hide_class == HC_VERIFIED_ABSENT and full_search_evidenced(c.evidence)
 
 
+def search_scope_gap(c: Cell, cik: str | None) -> str:
+    """doc 02 Dhairya ruling 2026-11-22 (NOT DISCLOSED): every 10-K and 10-Q presenting the period was searched.
+    The quote must name the scope that guarantees it: the company's CIK and the form types that present the
+    period (10-K for a duration; 10-K and 10-Q for an instant, since a 10-Q shows the prior year-end column).
+    Returns what is missing, or "" when the scope covers them."""
+    ev = c.evidence or ""
+    missing = []
+    if cik and cik.lstrip("0") not in ev:
+        missing.append(f"CIK {cik.lstrip('0')}")
+    if "10-K" not in ev:
+        missing.append("10-K")
+    if c.data_point in INSTANT_DPS and "10-Q" not in ev:
+        missing.append("10-Q (an instant: 10-Qs present the year-end column)")
+    return ", ".join(missing)
+
+
 def line_tested_hide(c: Cell) -> bool:
     """A hidden year inside the filing window that is judged by the printed-line test: an allowlisted data point,
     a not-pure line (only combined, only after tax) or a search-evidenced verified absence."""
@@ -1326,6 +1342,7 @@ def check_hidden_years(
     cells: list[Cell],
     year_ends: dict[str, list[str]],
     lines: dict[str, set[str]] | None = None,
+    cik: str | None = None,
 ) -> list[Finding]:
     out = []
     lines = lines or {}
@@ -1363,6 +1380,23 @@ def check_hidden_years(
                     f"periodic filing {presenting[0]} presents {c.period_end} (own or comparative column): not a pre-filing year, "
                     f"and {c.data_point} is neither on the hide allowlist nor hidden as reported only combined "
                     "nor a verified absence evidenced by a full-text search",
+                )
+            )
+            continue
+        gap = (
+            search_scope_gap(c, cik)
+            if search_evidenced_absent(c)
+            and c.data_point not in HIDE_YEAR_ALLOWLIST
+            and c.hide_basis not in LINE_NOT_PURE
+            else ""
+        )
+        if gap:
+            out.append(
+                Finding(
+                    "hidden_year",
+                    *c.key,
+                    "FAIL",
+                    f"not-disclosed search evidence does not cover every presenting filing: {gap}",
                 )
             )
             continue
@@ -1659,7 +1693,7 @@ def certify(
                     )
                 )
                 return run
-        run.hides += check_hidden_years(p.cells, year_ends, lines)
+        run.hides += check_hidden_years(p.cells, year_ends, lines, cik)
     return run
 
 
