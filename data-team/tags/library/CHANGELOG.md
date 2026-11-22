@@ -1504,3 +1504,11 @@
 - ~ ReceivablesAndContractAssets: served_cells
 - ~ ReceivablesNetCurrent: served_cells
 - ~ StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest: served_cells
+
+## 2026-11-22 (resolver-all110-.91): 6 element changes, 28011 rows, coverage 65.1%
+- ~ CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents: served_cells
+- ~ CostmethodInvestmentsOtherThanTemporaryImpairment: served_cells
+- ~ GainsLossesOnExtinguishmentOfDebt: served_cells
+- ~ IncomeLossFromEquityMethodInvestments: served_cells
+- ~ NetIncomeLossAvailableToCommonStockholdersBasic: served_cells
+- ~ OtherNonoperatingIncomeExpense: served_cells

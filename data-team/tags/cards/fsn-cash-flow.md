@@ -531,7 +531,7 @@ Resolver resolver-all110-.91. 33 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** other_income_expense_net; operating_expenses
 - **Rules:** none
-- **Evidence:** 17 companies, 74 served, 8 proven, 3 certified cells; last verified 2026-11-15
+- **Evidence:** 17 companies, 73 served, 8 proven, 3 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces GainLossOnNonRecourseDebt@2022; GainsLossesOnRecourseDebt@2022

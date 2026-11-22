@@ -431,7 +431,7 @@ Resolver resolver-all110-.91. 32 elements named in this card have library knowle
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank] (+1 more)
 - **Data point:** other_income_expense_net; interest_income; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#2
 - **Rules:** X59; I28; I29; I30; I31; I32; I33; I34; I35; resolver functions COMBINED_YIELDS_TO
-- **Evidence:** 67 companies, 613 served, 1993 proven, 46 certified cells; last verified 2026-11-15
+- **Evidence:** 67 companies, 607 served, 1993 proven, 46 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -515,7 +515,7 @@ Resolver resolver-all110-.91. 32 elements named in this card have library knowle
 - **Data point definition:** operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. [not applicable: bank]; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
 - **Data point:** operating_expenses; other_income_expense_net
 - **Rules:** none
-- **Evidence:** 13 companies, 87 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 13 companies, 82 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** filer XBRL error 0001562762-20-000064: T FY2019 10-K t-20191231.htm consolidated statements of income: Equity in net income (loss) of affiliates 6 (2018: (48));  the XBRL fact is -6 and the printed to
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeLossFromEquityMethodInvestmentsMember@2013; MinorityInterestAndEarningsLossesEquityInvestmentsMember@2013
@@ -525,7 +525,7 @@ Resolver resolver-all110-.91. 32 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#2
 - **Rules:** none
-- **Evidence:** 11 companies, 76 served, 383 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 11 companies, 75 served, 383 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

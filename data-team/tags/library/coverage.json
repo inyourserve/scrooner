@@ -6,12 +6,12 @@
  "rows_full": 116,
  "taxonomy_elements": 22756,
  "served_cells": 56004,
- "served_cells_all_elements_full": 36470,
+ "served_cells_all_elements_full": 36469,
  "coverage_pct": 65.1,
  "pattern_hits": {
   "P01": {
    "companies": 32,
-   "cells": 98
+   "cells": 96
   },
   "P02": {
    "companies": 0,

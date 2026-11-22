@@ -302,7 +302,7 @@ Resolver resolver-all110-.91. 24 elements named in this card have library knowle
 - **Data point definition:** cash_and_equivalents: Cash and cash equivalents at period end as printed.
 - **Data point:** cash_and_equivalents; role cash_and_equivalents:primary#6
 - **Rules:** B05; B06; B07; B08
-- **Evidence:** 17 companies, 85 served, 666 proven, 6 certified cells; last verified 2026-11-15
+- **Evidence:** 17 companies, 84 served, 666 proven, 6 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 4 companies, e.g. CRWD cash_and_equivalents 2018-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P05 (4)
 

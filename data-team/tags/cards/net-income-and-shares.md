@@ -244,7 +244,7 @@ Resolver resolver-all110-.91. 18 elements named in this card have library knowle
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#2
 - **Rules:** none
-- **Evidence:** 11 companies, 76 served, 383 proven, 0 certified cells; last verified 2026-11-15
+- **Evidence:** 11 companies, 75 served, 383 proven, 0 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
