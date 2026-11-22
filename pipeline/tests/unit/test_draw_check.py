@@ -27,6 +27,11 @@ def ln(tag, label, acc=ACC, stmt="BS"):
     return dck.FilingLine(acc, tag, 2, stmt, label)
 
 
+def isl(tag, label, line, acc=ACC, negating=False):
+    """A printed income-statement line at a position (fsn.line.line)."""
+    return dck.FilingLine(acc, tag, 4, "IS", label, line, negating)
+
+
 def cell(
     dp="revenue", value="100", tag="Revenues", parts=(), badge=None, acc=ACC, pe=PE
 ):
@@ -655,10 +660,16 @@ def test_a_rounded_note_mention_is_not_a_mismatch_but_a_read():
     )
     r = chk(c, [ff("AmortizationOfIntangibleAssets", "2800000000", dcml=-8)])
     assert r.outcome == dck.NEEDS_READ and "rounded" in r.detail
-    # a rounded fact the shown value does not round to is still a mismatch
-    c2 = cell(dp="amortization_of_intangibles", value="2700000000", tag="X")
+    # reads 2026-11-24: a dcml -8 mention never proves a mismatch, even when the shown value does not round to it
+    # (BMY 2020 amortization 9,688 shown, the note's "$9.9 billion"; the face line is right)
+    c2 = cell(dp="amortization_of_intangibles", value="9688000000", tag="X")
     assert (
-        chk(c2, [ff("AmortizationOfIntangibleAssets", "2800000000", dcml=-8)]).outcome
+        chk(c2, [ff("AmortizationOfIntangibleAssets", "9900000000", dcml=-8)]).outcome
+        == dck.NEEDS_READ
+    )
+    # a finer fact still proves it
+    assert (
+        chk(c2, [ff("AmortizationOfIntangibleAssets", "9900000000", dcml=-6)]).outcome
         == dck.AUTO_MISMATCH
     )
 
@@ -730,19 +741,765 @@ def test_derived_without_parts_matches_a_printed_line_or_its_own_identity_only()
         tag="",
         badge="derived:income_before_tax-operating_income+interest_expense-interest_income",
     )
-    assert chk(i, oi).outcome == dck.AUTO_MATCH
+    # the identity is the printed band (definition 2026-11-21 d): it needs the income statement's own lines
+    assert chk(i, oi).outcome == dck.NEEDS_READ
+    band = [
+        isl("OperatingIncomeLoss", "Operating income", 10),
+        isl("InterestExpense", "Interest expense", 11),
+        isl(
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            "Income before income taxes",
+            13,
+        ),
+    ]
+    assert chk(i, oi, band).outcome == dck.AUTO_MATCH
 
 
-def test_parent_net_income_tagged_as_available_to_common_decides_before_profit_loss():
+def test_parent_net_income_is_profit_loss_less_the_printed_nci_share_not_available_to_common():
+    # CAT/SCCO shape: ProfitLoss 3,003 with an NCI share of 5 printed on the income statement -> parent 2,998
     facts = [
         ff("NetIncomeLossAvailableToCommonStockholdersBasic", "2998"),
         ff("ProfitLoss", "3003"),
+        ff("NetIncomeLossAttributableToNoncontrollingInterest", "5"),
     ]
+    nci = [isl("NetIncomeLossAttributableToNoncontrollingInterest", "Less: NCI", 20)]
     assert (
-        chk(cell(dp="net_income", value="2998", tag="X"), facts).outcome
+        chk(cell(dp="net_income", value="2998", tag="X"), facts, nci).outcome
         == dck.AUTO_MATCH
     )
     assert (
-        chk(cell(dp="net_income", value="3003", tag="X"), facts).outcome
+        chk(cell(dp="net_income", value="3003", tag="X"), facts, nci).outcome
         == dck.AUTO_MISMATCH
     )
+    # AVGO FY2020 (0001730168-20-000226 R4): net income 2,960 (ProfitLoss, NCI 0 printed); 2,663 is available to
+    # common after preferred dividends, outside the definition
+    avgo = [
+        ff("ProfitLoss", "2960000000", ddate="2020-11-01"),
+        ff(
+            "NetIncomeLossAttributableToNoncontrollingInterest", "0", ddate="2020-11-01"
+        ),
+        ff(
+            "NetIncomeLossAvailableToCommonStockholdersBasic",
+            "2663000000",
+            ddate="2020-11-01",
+        ),
+    ]
+    c = cell(dp="net_income", value="2960000000", tag="ProfitLoss", pe="2020-11-01")
+    assert chk(c, avgo, nci).outcome == dck.AUTO_MATCH
+    c2 = cell(dp="net_income", value="2663000000", tag="X", pe="2020-11-01")
+    assert chk(c2, avgo, nci).outcome == dck.AUTO_MISMATCH
+    # MA FY2019: the NCI share (-1) is printed only in the equity statement; ProfitLoss 8,118 is the parent line
+    ma = [
+        ff("ProfitLoss", "8118000000", ddate="2019-12-31"),
+        ff(
+            "NetIncomeLossAttributableToNoncontrollingInterest",
+            "-1000000",
+            ddate="2019-12-31",
+        ),
+    ]
+    eq = [
+        ln(
+            "NetIncomeLossAttributableToNoncontrollingInterest",
+            "Activity related to NCI",
+            stmt="EQ",
+        )
+    ]
+    c3 = cell(dp="net_income", value="8118000000", tag="ProfitLoss", pe="2019-12-31")
+    assert chk(c3, ma, eq).outcome == dck.AUTO_MATCH
+    # TMO tags its "Net Income" line only as available to common: the last tier
+    c4 = cell(dp="net_income", value="2938000000", tag="X")
+    assert (
+        chk(
+            c4, [ff("NetIncomeLossAvailableToCommonStockholdersBasic", "2938000000")]
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+
+
+# ---------------------------------------------------------------- fixes from the 2026-11-24 filing reads
+# Each test is built from the real cell that exposed the checker error (reads-2026-11-24/, checker-fixes-2026-11-24.txt).
+PRE = "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+
+
+def cfl(tag, label, acc=ACC):
+    return dck.FilingLine(acc, tag, 8, "CF", label, 1)
+
+
+def test_a_fact_in_another_currency_is_never_the_shown_figure():
+    # CB FY2024 (0000896159-25-000004): DPS tagged 3.59 USD and 3.15 CHF on the same element and period
+    facts = [
+        dck.FilingFact(
+            ACC,
+            "CommonStockDividendsPerShareDeclared",
+            "2024-12-31",
+            4,
+            "",
+            D("3.15"),
+            2,
+            "CHF",
+        ),
+        dck.FilingFact(
+            ACC,
+            "CommonStockDividendsPerShareDeclared",
+            "2024-12-31",
+            4,
+            "",
+            D("3.59"),
+            2,
+            "USD",
+        ),
+    ]
+    c = cell(
+        dp="dividends_per_share",
+        value="3.59",
+        tag="CommonStockDividendsPerShareDeclared",
+        pe="2024-12-31",
+    )
+    assert chk(c, facts).outcome == dck.AUTO_MATCH
+    assert (
+        chk(
+            cell(dp="dividends_per_share", value="3.15", tag="X", pe="2024-12-31"),
+            facts,
+        ).outcome
+        == dck.AUTO_MISMATCH
+    )
+    assert (
+        dck.usd_unit("USD")
+        and dck.usd_unit("USD/shares")
+        and dck.usd_unit("shares")
+        and dck.usd_unit("")
+    )
+    assert not dck.usd_unit("CHF") and not dck.usd_unit("EUR/shares")
+    # the offline bundle carries the unit as its 8th column
+    got = dck.bundle_filing_facts(
+        {
+            "filing_facts": [[ACC, "Revenues", PE, 4, "", "1", -6, "CHF"]],
+            "filing_lines": [],
+        },
+        [ACC],
+    )
+    assert got[0][0].uom == "CHF"
+
+
+def test_cash_taxes_compare_as_a_magnitude():
+    # UNP FY2021: IncomeTaxesPaidNet tagged -1,658 (payment stored negative), shown 1,658
+    c = cell(
+        dp="cash_paid_for_income_taxes", value="1658000000", tag="IncomeTaxesPaidNet"
+    )
+    assert chk(c, [ff("IncomeTaxesPaidNet", "-1658000000")]).outcome == dck.AUTO_MATCH
+
+
+def test_a_finer_shown_value_matches_a_coarser_fact_at_the_facts_decimals():
+    # DHR FY2016: the CF prints 583.1 (dcml -5), the note tags 583 (dcml -6)
+    facts = [ff("AmortizationOfIntangibleAssets", "583000000", dcml=-6)]
+    c = cell(dp="amortization_of_intangibles", value="583100000", tag="X")
+    assert chk(c, facts).outcome == dck.AUTO_MATCH
+    assert (
+        chk(
+            cell(dp="amortization_of_intangibles", value="590100000", tag="X"), facts
+        ).outcome
+        == dck.AUTO_MISMATCH
+    )
+
+
+def test_an_unprinted_family_fact_never_overrules_a_printed_line_but_a_note_split_still_does():
+    # WELL FY2019: the CF prints "Cash distributions to stockholders" 1,400,712 (company tag); the family's
+    # PaymentsOfDividendsCommonStock 1,404,977 is unprinted (the equity-statement charge) -> a read, not a mismatch
+    facts = [
+        ff("PaymentsOfDividendsCommonStock", "1404977000", dcml=-3),
+        ff("CashDistributionsToStockholders", "1400712000", dcml=-3),
+    ]
+    c = cell(
+        dp="dividends_paid", value="1400712000", tag="CashDistributionsToStockholders"
+    )
+    r = chk(
+        c,
+        facts,
+        [cfl("CashDistributionsToStockholders", "Cash distributions to stockholders")],
+    )
+    assert r.outcome == dck.NEEDS_READ and "not printed" in r.detail
+    # ACN FY2022 (X16): the face's "Receivables and contract assets" 11,776,775 vs the note split 10,484,211
+    acn = [
+        ff("AccountsReceivableNetCurrent", "10484211000", qtrs=0, dcml=-3),
+        ff("ReceivablesAndContractAssets", "11776775000", qtrs=0, dcml=-3),
+    ]
+    a = cell(
+        dp="accounts_receivable",
+        value="11776775000",
+        tag="ReceivablesAndContractAssets",
+    )
+    assert (
+        chk(
+            a,
+            acn,
+            [ln("ReceivablesAndContractAssets", "Receivables and contract assets")],
+        ).outcome
+        == dck.AUTO_MISMATCH
+    )
+    # BMY FY2016: the cited face line is a lower family tier; the tier-1 note split decides
+    bmy = [
+        ff("AccountsReceivableNetCurrent", "3774000000", qtrs=0),
+        ff("ReceivablesNetCurrent", "5543000000", qtrs=0),
+    ]
+    b = cell(dp="accounts_receivable", value="5543000000", tag="ReceivablesNetCurrent")
+    assert (
+        chk(b, bmy, [ln("ReceivablesNetCurrent", "Receivables")]).outcome
+        == dck.AUTO_MISMATCH
+    )
+
+
+def test_a_printed_tier_decides_or_ranks_with_an_unprinted_first_tier():
+    # LRCX FY2023: the face prints PP&E with finance-lease ROU 1,856,672; PropertyPlantAndEquipmentNet 1,802,951
+    # is unprinted
+    pe = "2023-06-25"
+    t2 = "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"
+    facts = [
+        ff("PropertyPlantAndEquipmentNet", "1802951000", qtrs=0, dcml=-3, ddate=pe),
+        ff(t2, "1856672000", qtrs=0, dcml=-3, ddate=pe),
+    ]
+    lines = [ln(t2, "Property and equipment, net")]
+    assert (
+        chk(cell(dp="ppe_net", value="1856672000", tag=t2, pe=pe), facts, lines).outcome
+        == dck.AUTO_MATCH
+    )
+    assert (
+        chk(
+            cell(dp="ppe_net", value="1802951000", tag="X", pe=pe), facts, lines
+        ).outcome
+        == dck.AUTO_MISMATCH
+    )
+    # WELL FY2025: the printed CF payment ranks with the unprinted common-dividend element (AVGO's printed line also
+    # holds preferred dividends, so the first tier still counts)
+    div = [
+        ff("PaymentsOfDividendsCommonStock", "1877289000", dcml=-3),
+        ff("PaymentsOfDividends", "1877959000", dcml=-3),
+    ]
+    dl = [cfl("PaymentsOfDividends", "Cash distributions to stockholders")]
+    for v in ("1877959000", "1877289000"):
+        assert (
+            chk(cell(dp="dividends_paid", value=v, tag="X"), div, dl).outcome
+            == dck.AUTO_MATCH
+        )
+    # MS FY2017: CashAndCashEquivalentsAtCarryingValue 80,395 is only the CF total; the face prints cash and due
+    # from banks 24,816
+    cash = [
+        ff("CashAndCashEquivalentsAtCarryingValue", "80395000000", qtrs=0),
+        ff("CashAndDueFromBanks", "24816000000", qtrs=0),
+    ]
+    cl = [
+        cfl(
+            "CashAndCashEquivalentsAtCarryingValue",
+            "Cash and cash equivalents, end of period",
+        ),
+        ln("CashAndDueFromBanks", "Cash and due from banks"),
+    ]
+    c = cell(dp="cash_and_equivalents", value="24816000000", tag="CashAndDueFromBanks")
+    assert chk(c, cash, cl).outcome == dck.AUTO_MATCH
+    assert (
+        chk(c, cash, cl[:1] + [cfl("CashAndDueFromBanks", "x")]).outcome
+        == dck.AUTO_MISMATCH
+    )
+
+
+def test_cash_never_comes_from_the_restricted_cash_cf_total():
+    # CVX FY2019: the face prints "Cash and cash equivalents" 5,686 (company tag); 6,911 is the CF reconciliation
+    rc = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"
+    cvx = "CashandCashEquivalentsExcludingTimeDepositsatCarryingValue"
+    facts = [ff(rc, "6911000000", qtrs=0), ff(cvx, "5686000000", qtrs=0)]
+    lines = [
+        cfl(rc, "Cash, Cash Equivalents and Restricted Cash at December 31"),
+        ln(cvx, "Cash and cash equivalents"),
+    ]
+    assert (
+        chk(
+            cell(dp="cash_and_equivalents", value="5686000000", tag=cvx), facts, lines
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    r = chk(cell(dp="cash_and_equivalents", value="6911000000", tag=rc), facts, lines)
+    assert r.outcome == dck.AUTO_MISMATCH and "5686000000" in r.detail
+    # CAT FY2019: "Cash and short-term investments" 8,284 on the face, 8,292 with restricted cash on the CF
+    cat = [
+        ff(rc, "8292000000", qtrs=0),
+        ff("CashCashEquivalentsAndShortTermInvestments", "8284000000", qtrs=0),
+    ]
+    cl = [
+        cfl(rc, "Cash at end of year"),
+        ln(
+            "CashCashEquivalentsAndShortTermInvestments",
+            "Cash and short-term investments",
+        ),
+    ]
+    assert (
+        chk(
+            cell(dp="cash_and_equivalents", value="8284000000", tag="X"), cat, cl
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    # a restricted-cash total the balance sheet itself prints is the registry's step 2 (BAC, AXP)
+    assert (
+        chk(
+            cell(dp="cash_and_equivalents", value="6911000000", tag=rc),
+            facts[:1],
+            [ln(rc, "Cash")],
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+
+
+def test_revenue_is_not_the_total_with_other_income_when_a_narrower_line_is_printed():
+    # CVX FY2017: "Sales and other operating revenues" 134,674 (OilAndGasRevenue); "Total Revenues and Other Income"
+    # 141,722 (Revenues)
+    facts = [ff("Revenues", "141722000000"), ff("OilAndGasRevenue", "134674000000")]
+    lines = [
+        isl("OilAndGasRevenue", "Sales and other operating revenues", 3),
+        isl("Revenues", "Total Revenues and Other Income", 6),
+    ]
+    assert (
+        chk(cell(value="134674000000", tag="X"), facts, lines).outcome == dck.AUTO_MATCH
+    )
+    assert (
+        chk(cell(value="141722000000", tag="Revenues"), facts, lines).outcome
+        == dck.AUTO_MISMATCH
+    )
+
+
+def test_buybacks_take_the_equity_statement_line_when_the_cf_line_says_and_other():
+    # AXP FY2023: CF "Repurchase of American Express common shares and other" 3,650; equity statement 3,519
+    facts = [
+        ff("PaymentsForRepurchaseOfCommonStock", "3650000000"),
+        ff("TreasuryStockValueAcquiredCostMethod", "3519000000"),
+    ]
+    c = cell(
+        dp="share_buybacks",
+        value="3519000000",
+        tag="TreasuryStockValueAcquiredCostMethod",
+    )
+    lines = [
+        cfl(
+            "PaymentsForRepurchaseOfCommonStock",
+            "Repurchase of American Express common shares and other",
+        )
+    ]
+    assert chk(c, facts, lines).outcome == dck.AUTO_MATCH
+    assert (
+        chk(
+            c,
+            facts,
+            [cfl("PaymentsForRepurchaseOfCommonStock", "Repurchase of common shares")],
+        ).outcome
+        == dck.AUTO_MISMATCH
+    )
+
+
+def test_operating_expenses_is_never_total_costs_and_expenses():
+    # BMY FY2018: CostsAndExpenses 16,593 holds cost of products sold; shown 10,980 is not proved wrong by it
+    bmy = [
+        ff("CostsAndExpenses", "16593000000"),
+        ff("CostOfGoodsAndServicesSold", "6547000000"),
+    ]
+    assert (
+        chk(cell(dp="operating_expenses", value="10980000000", tag="X"), bmy).outcome
+        == dck.NEEDS_READ
+    )
+    # QCOM FY2021: derived total_costs_and_expenses-cost_of_revenue = 23,777 - 14,262, cited parts R&D + SG&A
+    b = "derived:total_costs_and_expenses-cost_of_revenue"
+    ps = [
+        part("ResearchAndDevelopmentExpense", "7176000000"),
+        part("SellingGeneralAndAdministrativeExpense", "2339000000"),
+    ]
+    facts = [
+        ff("ResearchAndDevelopmentExpense", "7176000000"),
+        ff("SellingGeneralAndAdministrativeExpense", "2339000000"),
+        ff("CostsAndExpenses", "23777000000"),
+        ff("CostOfRevenue", "14262000000"),
+    ]
+    r = chk(
+        cell(dp="operating_expenses", value="9515000000", tag="", parts=ps, badge=b),
+        facts,
+    )
+    assert (r.outcome, r.method) == (dck.AUTO_MATCH, "identity")
+
+
+def _band_lines(*mid):
+    return [
+        isl("OperatingIncomeLoss", "Operating income", 10),
+        *mid,
+        isl(PRE, "Income before income taxes", 30),
+    ]
+
+
+def test_other_income_is_the_printed_band_without_its_interest_lines():
+    # BLK FY2018 (0001564590-21-008796 R4): OI 5,457; net gain on investments 1; interest and dividend income 104;
+    # interest expense 184; pretax 5,378 -> other income 1 (NonoperatingIncomeExpense -79 is the band with interest)
+    facts = [
+        ff(PRE, "5378000000"),
+        ff("OperatingIncomeLoss", "5457000000"),
+        ff("GainLossOnInvestments", "1000000"),
+        ff("InvestmentIncomeInterestAndDividend", "104000000"),
+        ff("InterestExpense", "184000000"),
+        ff("NonoperatingIncomeExpense", "-79000000"),
+    ]
+    lines = _band_lines(
+        isl("GainLossOnInvestments", "Net gain (loss) on investments", 26),
+        isl("InvestmentIncomeInterestAndDividend", "Interest and dividend income", 27),
+        isl("InterestExpense", "Interest expense", 28),
+        isl("NonoperatingIncomeExpense", "Total nonoperating income (expense)", 29),
+    )
+    c = cell(
+        dp="other_income_expense_net", value="1000000", tag="GainLossOnInvestments"
+    )
+    assert chk(c, facts, lines).outcome == dck.AUTO_MATCH
+    r = chk(
+        cell(
+            dp="other_income_expense_net",
+            value="-79000000",
+            tag="NonoperatingIncomeExpense",
+        ),
+        facts,
+        lines,
+    )
+    assert r.outcome == dck.AUTO_MISMATCH and "band" in r.detail
+
+
+def test_unprinted_interest_income_inside_other_income_is_taken_out():
+    # PANW FY2019 (0001327567-21-000029 R4): OI -54.1, interest expense 83.9, "Other income, net" 63.4, pretax
+    # -74.6; the note's interest income 69.8 sits inside other income -> 63.4 is not the data point
+    facts = [
+        ff(PRE, "-74600000", dcml=-5),
+        ff("OperatingIncomeLoss", "-54100000", dcml=-5),
+        ff("InterestExpense", "83900000", dcml=-5),
+        ff("OtherNonoperatingIncomeExpenseNet", "63400000", dcml=-5),
+        ff("InterestIncomeOther", "69800000", dcml=-5),
+    ]
+    lines = _band_lines(
+        isl("InterestExpense", "Interest expense", 18),
+        isl("OtherNonoperatingIncomeExpenseNet", "Other income, net", 19),
+    )
+    r = chk(
+        cell(
+            dp="other_income_expense_net",
+            value="63400000",
+            tag="OtherNonoperatingIncomeExpenseNet",
+        ),
+        facts,
+        lines,
+    )
+    assert r.outcome == dck.AUTO_MISMATCH
+    assert (
+        chk(
+            cell(dp="other_income_expense_net", value="-6400000", tag="X"), facts, lines
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    # PM FY2023: "Interest expense, net" -1,061 already holds interest income (note 465): either reading may hold
+    pm = [
+        ff(PRE, "10450000000"),
+        ff("OperatingIncomeLoss", "11556000000"),
+        ff("InterestIncomeExpenseNet", "-1061000000"),
+        ff("InvestmentIncomeInterest", "465000000"),
+    ]
+    pl = _band_lines(
+        isl("InterestIncomeExpenseNet", "Interest expense, net (Note 15)", 20)
+    )
+    assert (
+        chk(
+            cell(dp="other_income_expense_net", value="-45000000", tag="X"), pm, pl
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    # AMGN FY2023: the only interest income fact is a rounded note mention (dcml -8): a read, never a mismatch
+    am = [
+        ff(PRE, "7855000000"),
+        ff("OperatingIncomeLoss", "7897000000"),
+        ff("InterestExpenseDebt", "2875000000"),
+        ff("InvestmentIncomeInterest", "1200000000", dcml=-8),
+    ]
+    al = _band_lines(
+        isl("InterestExpenseDebt", "Interest expense, net", 17),
+        isl("NonoperatingIncomeExpense", "Other income, net", 18),
+    )
+    assert (
+        chk(
+            cell(dp="other_income_expense_net", value="1608000000", tag="X"), am, al
+        ).outcome
+        == dck.NEEDS_READ
+    )
+    # even a shown value outside the mention's rounding: the "$1.2 billion" cannot prove it wrong
+    assert (
+        chk(
+            cell(dp="other_income_expense_net", value="1500000000", tag="X"), am, al
+        ).outcome
+        == dck.NEEDS_READ
+    )
+
+
+def test_an_interest_block_subtotal_stands_for_its_lines():
+    # WMT FY2017: Interest: debt, finance lease, interest income (100), "Interest, net" 2,267; the sole other line
+    # is a 0 loss on extinguishment
+    facts = [
+        ff(PRE, "20497000000", ddate="2017-01-31"),
+        ff("OperatingIncomeLoss", "22764000000", ddate="2017-01-31"),
+        ff("InterestExpenseDebt", "2044000000", ddate="2017-01-31"),
+        ff("InvestmentIncomeInterest", "100000000", ddate="2017-01-31"),
+        ff("InterestIncomeExpenseNet", "-2267000000", ddate="2017-01-31"),
+    ]
+    lines = _band_lines(
+        isl("InterestExpenseDebt", "Debt", 11),
+        isl("InvestmentIncomeInterest", "Interest income", 12),
+        isl("InterestIncomeExpenseNet", "Interest, net", 13),
+    )
+    c = cell(
+        dp="other_income_expense_net",
+        value="0",
+        tag="GainsLossesOnExtinguishmentOfDebt",
+        pe="2017-01-31",
+    )
+    assert chk(c, facts, lines).outcome == dck.AUTO_MATCH
+
+
+def test_an_expense_positive_custom_other_line_must_be_shown_flipped():
+    # IBM FY2020: ibm:OtherIncomeAndExpense 802 printed "Other (income) and expense" (not negated); no OI line
+    facts = [ff("OtherIncomeAndExpense", "802000000")]
+    lines = [isl("OtherIncomeAndExpense", "Other (income) and expense (Note A)", 12)]
+    c = cell(
+        dp="other_income_expense_net", value="802000000", tag="OtherIncomeAndExpense"
+    )
+    r = chk(c, facts, lines)
+    assert (r.outcome, r.method) == (dck.AUTO_MISMATCH, "sign")
+    # a standard element printed with a negated "(income)" label is income-positive already (KLAC, JNJ)
+    neg = [
+        isl("OtherIncomeAndExpense", "Other expense (income), net", 12, negating=True)
+    ]
+    assert chk(c, facts, neg).outcome == dck.NEEDS_READ
+
+
+def test_a_sum_part_whose_tag_sign_contradicts_the_printed_band_follows_the_band():
+    # T FY2019: equity in net income of affiliates tagged -6, the printed total identity proves +6
+    facts = [
+        ff(PRE, "18468000000"),
+        ff("OperatingIncomeLoss", "27955000000"),
+        ff("InterestExpense", "8422000000"),
+        ff("IncomeLossFromEquityMethodInvestments", "-6000000"),
+        ff("OtherNonoperatingIncomeExpense", "-1071000000"),
+    ]
+    lines = _band_lines(isl("InterestExpense", "Interest expense", 21))
+    ps = [
+        part("IncomeLossFromEquityMethodInvestments", "6000000"),
+        part("OtherNonoperatingIncomeExpense", "-1071000000"),
+    ]
+    c = cell(
+        dp="other_income_expense_net",
+        value="-1065000000",
+        tag="",
+        parts=ps,
+        badge="derived:sum(printed nonoperating lines)",
+    )
+    assert chk(c, facts, lines).outcome == dck.AUTO_MATCH
+    assert (
+        chk(c, facts).outcome == dck.AUTO_MISMATCH
+    )  # no printed band: the part's sign is all there is
+
+
+def test_missing_family_tags_from_the_reads():
+    # KLAC FY2025 cf_ar_change 367,897 (ExcludingAcquisitionRelated) beside IncreaseDecreaseInAccountsReceivable 430,874
+    k = [
+        ff("IncreaseDecreaseInAccountsReceivable", "430874000", dcml=-3),
+        ff(
+            "IncreaseDecreaseInAccountsReceivableExcludingAcquisitionRelated",
+            "367897000",
+            dcml=-3,
+        ),
+    ]
+    assert (
+        chk(cell(dp="cf_ar_change", value="367897000", tag="X"), k).outcome
+        == dck.AUTO_MATCH
+    )
+    # LMT FY2015 D&A: the CF add-back 1,026 including discontinued operations; segment note 945 continuing only
+    lm = [
+        ff("DepreciationAndAmortization", "945000000"),
+        ff("DepreciationAndAmortizationIncludingDiscontinuedOperations", "1026000000"),
+    ]
+    assert (
+        chk(
+            cell(dp="depreciation_and_amortization", value="1026000000", tag="X"), lm
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    # BMY FY2017 IS face bmy:AmortizationofAcquiredIntangibleAssets 97 (the note's AmortizationOfIntangibleAssets 190)
+    bm = [
+        ff("AmortizationOfIntangibleAssets", "190000000"),
+        ff("AmortizationofAcquiredIntangibleAssets", "97000000"),
+    ]
+    assert (
+        chk(
+            cell(dp="amortization_of_intangibles", value="97000000", tag="X"), bm
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+    # GE FY2023 printed CF cash taxes 1,041 (company tag) beside the ASU 2023-09 note total 994
+    ge = [
+        ff("IncomeTaxesPaidNet", "994000000"),
+        ff("CashPaidReceivedForIncomeTaxesNetOfDiscontinuedOperations", "1041000000"),
+    ]
+    assert (
+        chk(
+            cell(dp="cash_paid_for_income_taxes", value="1041000000", tag="X"), ge
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+
+
+def test_label_gated_family_members():
+    # GILD FY2015 CF "Amortization expense" 937 (AdjustmentForAmortization) is intangible amortization ...
+    g = [ff("AdjustmentForAmortization", "937000000")]
+    c = cell(
+        dp="amortization_of_intangibles",
+        value="937000000",
+        tag="AdjustmentForAmortization",
+    )
+    assert (
+        chk(c, g, [cfl("AdjustmentForAmortization", "Amortization expense")]).outcome
+        == dck.AUTO_MATCH
+    )
+    # ... WELL's "Other amortization expenses" (debt costs) is not
+    assert (
+        chk(
+            c, g, [cfl("AdjustmentForAmortization", "Other amortization expenses")]
+        ).outcome
+        == dck.NEEDS_READ
+    )
+    # SCCO "Interest expense" tagged InterestCostsIncurred 360.9
+    s = [ff("InterestCostsIncurred", "360900000", dcml=-5)]
+    ie = cell(dp="interest_expense", value="360900000", tag="InterestCostsIncurred")
+    assert (
+        chk(ie, s, [isl("InterestCostsIncurred", "Interest expense", 20)]).outcome
+        == dck.AUTO_MATCH
+    )
+    assert (
+        chk(
+            ie, s, [isl("InterestCostsIncurred", "Interest costs incurred", 20)]
+        ).outcome
+        == dck.NEEDS_READ
+    )
+    # FTNT "Interest income" tagged InvestmentIncomeNet 5,295
+    f = [ff("InvestmentIncomeNet", "5295000", dcml=-3)]
+    ii = cell(dp="interest_income", value="5295000", tag="InvestmentIncomeNet")
+    assert (
+        chk(ii, f, [isl("InvestmentIncomeNet", "INTEREST INCOME", 20)]).outcome
+        == dck.AUTO_MATCH
+    )
+    assert (
+        chk(ii, f, [isl("InvestmentIncomeNet", "Investment income, net", 20)]).outcome
+        == dck.NEEDS_READ
+    )
+
+
+def test_gated_tiers_continuing_eps_and_total_equity():
+    # ADI FY2017 "Basic earnings per common share" 2.32 tagged as continuing operations, no discontinued line
+    e = [ff("IncomeLossFromContinuingOperationsPerBasicShare", "2.32", dcml=2)]
+    c = cell(
+        dp="basic_eps",
+        value="2.32",
+        tag="IncomeLossFromContinuingOperationsPerBasicShare",
+    )
+    assert chk(c, e).outcome == dck.AUTO_MATCH
+    # DELL FY2020: a discontinued-operations line exists, the continuing figure is not total EPS
+    assert (
+        chk(c, [*e, ff("IncomeLossFromDiscontinuedOperationsNetOfTax", "100")]).outcome
+        == dck.NEEDS_READ
+    )
+    # AVGO FY2024 "Total stockholders' equity" 67,678 with no NCI line
+    t = [
+        ff(
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "67678000000",
+            qtrs=0,
+        )
+    ]
+    s = cell(dp="stockholders_equity", value="67678000000", tag="X")
+    assert chk(s, t).outcome == dck.AUTO_MATCH
+    assert (
+        chk(s, [*t, ff("MinorityInterest", "76000000", qtrs=0)]).outcome
+        == dck.NEEDS_READ
+    )
+
+
+def test_derived_cells_without_a_derived_badge_and_the_parent_equity_identity():
+    # GILD FY2015 total liabilities exported with a blank badge: assets 51,716 - total equity 19,113 - temporary
+    # equity 2 = 32,601
+    facts = [
+        ff("Assets", "51716000000", qtrs=0),
+        ff(
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "19113000000",
+            qtrs=0,
+        ),
+        ff("TemporaryEquityCarryingAmountAttributableToParent", "2000000", qtrs=0),
+    ]
+    c = cell(dp="total_liabilities", value="32601000000", tag="", badge="as_printed")
+    assert chk(c, facts).outcome == dck.AUTO_MATCH
+    assert (
+        chk(
+            cell(
+                dp="total_liabilities", value="32603000000", tag="", badge="as_printed"
+            ),
+            facts,
+        ).outcome
+        == dck.NEEDS_READ
+    )
+    # CAT FY2016: badge total_equity-noncontrolling_interest but the value is the total with NCI (13,213, NCI 76)
+    cat = [
+        ff(
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "13213000000",
+            qtrs=0,
+        ),
+        ff("MinorityInterest", "76000000", qtrs=0),
+    ]
+    b = "derived:total_equity-noncontrolling_interest"
+    r = chk(cell(dp="stockholders_equity", value="13213000000", tag="X", badge=b), cat)
+    assert r.outcome == dck.AUTO_MISMATCH and "13137000000" in r.detail
+    assert (
+        chk(
+            cell(dp="stockholders_equity", value="13137000000", tag="X", badge=b), cat
+        ).outcome
+        == dck.AUTO_MATCH
+    )
+
+
+def test_dps_on_the_company_level_common_stock_member():
+    # MA FY2020 (0001141391-23-000020 R94): CommonStockDividendsPerShareDeclared[EquityComponents=CommonStock]=1.64
+    p = part(
+        "CommonStockDividendsPerShareDeclared",
+        "1.64",
+        dims="EquityComponents=CommonStock",
+    )
+    c = cell(
+        dp="dividends_per_share",
+        value="1.64",
+        tag="",
+        parts=[p],
+        badge="as_printed",
+        pe="2020-12-31",
+    )
+    f = [
+        ff(
+            "CommonStockDividendsPerShareDeclared",
+            "1.64",
+            ddate="2020-12-31",
+            dims="EquityComponents=CommonStock",
+            dcml=2,
+        )
+    ]
+    assert chk(c, f).outcome == dck.AUTO_MATCH
+    f2 = [
+        ff(
+            "CommonStockDividendsPerShareDeclared",
+            "1.81",
+            ddate="2020-12-31",
+            dims="EquityComponents=CommonStock",
+            dcml=2,
+        )
+    ]
+    assert chk(c, f2).outcome == dck.AUTO_MISMATCH
