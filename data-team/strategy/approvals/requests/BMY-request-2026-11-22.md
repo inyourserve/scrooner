@@ -11,6 +11,6 @@ Automatic, from the top100-flow workflow gate. Method: CERTIFICATION-METHOD-2026
 - resolver file: `data-team/tags/line_map/resolver/BMY.csv`
 - resolver_version: `resolver-all110-.93.d6`
 - resolver sha256: `1a4147b0b0c1a811d7af8468e33487d0e72e77bda6665930f169d6a22027bbd9`
-- code: `6196b781f51362854732725bedd47ade17a14ba3`
-- run: https://github.com/inyourserve/scrooner/actions/runs/45060415462
+- code: `7b063cbab6f3119b3a70e134761f58052891ef5b`
+- run: https://github.com/inyourserve/scrooner/actions/runs/45064117325
 - gate: 0 OPEN; every shown cell and part has an accession and R page; no no_public_filing_for_period or before_first_10k on a shown cell.
