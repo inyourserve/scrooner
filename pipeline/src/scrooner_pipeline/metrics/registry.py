@@ -447,6 +447,10 @@ def _badge_ok(b: str) -> bool:
     if b == "as_printed":
         return True
     kind, sep, what = b.partition(":")
+    if kind == "as_printed":
+        # a printed figure from a named source other than the statement line (resolver .90: as_printed:note, sbc
+        # fallback 3, the note's stated pre-tax expense)
+        return bool(sep) and bool(what.strip())
     return bool(sep) and f"{kind}:" in BADGE_KINDS[1:] and bool(what.strip())
 
 
@@ -598,7 +602,10 @@ def badge_for(
     # A filing read's VALUE row is `mapped` and carries the reader's `badge=derived:<formula>` as this flag
     # (filing_reads.badge_flag): the value is that derivation, not a printed line (WMT other income FY2015 = 0 by the
     # pretax identity, 2026-11-22)
-    stepped = [f for f in flags if f.startswith("derived:") and f in d.badges]
+    # resolver .90 X127: flag `as_printed:note` names the note step (sbc fallback 3, MO), for a mapped or an award-type sum row
+    stepped = [
+        f for f in flags if f.startswith(("derived:", "as_printed:")) and f in d.badges
+    ]
     if (
         decision in ("component_sum", "derived_not_printed", "mapped")
         and len(stepped) == 1

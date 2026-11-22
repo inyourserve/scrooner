@@ -30,7 +30,7 @@ CELLS = os.path.join(HERE, '..', 'rules', 'filing_read_cells.csv')
 SKIPS = os.path.join(HERE, '..', 'rules', 'filing_read_skips.csv')
 OUT_COLS = ['cik', 'ticker', 'data_point', 'period_end', 'fiscal_year', 'outcome', 'value', 'element', 'accession', 'r_page', 'hide_class',
             'quote', 'rule_proposal', 'source_file']
-HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed)\b')
+HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed|disclosure_discontinued)\b')
 BLANK = ('combined', 'not_presented', 'no_role', 'not_in_template', 'derived', 'open')
 ACC_RE = re.compile(r'\d{10}-\d{2}-\d{6}')
 BADGE_RE = re.compile(r'^\s*badge=(\w+):([^;]*)')
@@ -213,9 +213,16 @@ def import_files(resolver_dir, files, skips_path=None):
             elif e['outcome'] == 'VALUE' and (not e['value'] or not ACC_RE.fullmatch(e['accession'] or '') or not e['r_page'] or not e['quote']):
                 why = 'VALUE row without value, accession, R page or quote'
             elif e['outcome'] == 'HIDE':
-                m = HIDE_RE.match(e['quote'] or '')
-                if not m: why = 'HIDE row without a hide class at the start of the quote'
-                else: row['hide_class'] = m.group(1)
+                # X129 (.90): the outcome column decides; the class is read from the start of the quote, else of the rule
+                # proposal (NVDA cash_paid_for_interest FY2026: quote = the search evidence, rule text 'HIDE disclosure_discontinued')
+                m = HIDE_RE.match(e['quote'] or '') or HIDE_RE.match((e.get('rule_proposal') or '').strip())
+                if not m: why = 'HIDE row without a hide class at the start of the quote or the rule proposal'
+                else:
+                    row['hide_class'] = m.group(1)
+                    if not row['accession'] and len(pes) == 1:
+                        # a full-text-search hide names no single filing (GILD interest_income FY2014-21): it cites the
+                        # cell's own 10-K, the filing whose statements were read for the year
+                        row['accession'] = next((x.get('accession') or '' for x in res if x['data_point'] == e['data_point'] and x['period_end'] == pes[0]), '')
             elif e['outcome'] not in ('VALUE',): why = f"unknown outcome {e['outcome']}"
             if why: skipped.append(dict(row, reason=why))
             else: kept.append(row)

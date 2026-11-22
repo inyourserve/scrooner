@@ -1082,6 +1082,89 @@ def apply_sbc_award_members(rows, memberfacts):
     return rows
 
 
+def apply_sbc_note_expense(rows):
+    """X127 (.90; registry data_points.csv sbc fallback 3, Dhairya 2026-11-23, MO): a company that prints no cash-flow add-back and
+    no gross equity-statement line in ANY year (its equity line is net of withholding, 'Stock award activity') reports sbc only as
+    the note's stated pre-tax compensation expense (AllocatedShareBasedCompensationExpense by award type). That note expense serves
+    the WHOLE row, one source per row (run after the filing reads): a year with one award type (MO FY2015-16, restricted stock and RSUs only; PSUs start in
+    FY2017) takes that stated expense, the award-type sums keep theirs; every such row carries the badge flag as_printed:note.
+    A company with any CF add-back or equity-statement sbc row is never touched (the award sum is then not the row's source)."""
+    by = collections.defaultdict(list)
+    for r in rows:
+        if r['data_point'] == 'sbc': by[r.get('cik')].append(r)
+    for ck, rs in by.items():
+        note = [r for r in rs if 'award_type_member_sum' in (r.get('flags') or '') or 'reported_by_award_type' in (r.get('flags') or '')]
+        # another source in the row: an XBRL add-back / equity line (a valued row the resolver made itself), or a filing read
+        # that REPLACED an award-type sum with a different figure (CB FY2021-25: the equity statement's 'Share-based
+        # compensation expense'); a read that fills a blank year (MO FY2015-16, replaces:not_presented) is no other source
+        other = [r for r in rs if r not in note and r['status'] in ('mapped', 'component_sum', 'derived')
+                 and ('filing_read' not in (r.get('flags') or '') or 'replaces:component_sum' in (r.get('flags') or '')
+                      or 'replaces:mapped' in (r.get('flags') or ''))]
+        note += [r for r in rs if r not in note and r not in other and r['status'] == 'mapped']
+        if not note or other or not any('award_type_member_sum' in (r.get('flags') or '') for r in note): continue
+        for r in note:
+            if 'reported_by_award_type' in (r.get('flags') or '') and r['status'] == 'not_presented':
+                m = re.search(r'reported only by award type \((\w+) (-?[\d.]+)\)', r.get('why') or '')
+                if not m or D(m.group(2)) <= 0: continue
+                r.update(status='mapped', value=D(m.group(2)), tags=f"AllocatedShareBasedCompensationExpense[AwardType={m.group(1)}]", r_page='NOTE',
+                         nodes=f"AllocatedShareBasedCompensationExpense[AwardType={m.group(1)}]={m.group(2)} [NOTE]",
+                         why=f"the note's stated pre-tax share-based compensation expense ({m.group(1)}, the only award type of the year); the company prints "
+                             "no cash-flow add-back and no gross equity-statement line in any year (registry sbc fallback 3, Dhairya 2026-11-23)")
+                r['flags'] = ';'.join(x for x in (r.get('flags') or '').split(';') if x and x not in ('reported_by_award_type', 'never_reported'))
+            if r['status'] in ('mapped', 'component_sum'):
+                r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'as_printed:note') if x)
+    return rows
+
+
+NET_INTEREST_EXPENSE_TAGS = ('InterestIncomeExpenseNet', 'InterestIncomeExpenseNonoperatingNet', 'InterestRevenueExpenseNet')
+INTEREST_EXPENSE_NET_LABEL = re.compile(r"^interest expense\s*[-,–—]?\s*net\b(?!\s+of\s+capitali[sz]ed)", re.I)   # 'net of capitalized interest' is no combined line
+INTEREST_DIVIDEND_LABEL = re.compile(r"^interest and dividend income\b", re.I)
+
+
+def _combined_line_label(r):
+    m = re.search(r"'([^']+)'", r.get('why') or '') or re.search(r"'([^']+)'", r.get('nodes') or '')
+    return m.group(1).strip() if m else ''
+
+
+def apply_combined_interest_lines(rows, filings):
+    """X125 (.90; registry data_points.csv fallback 2 of interest_expense and interest_income, founder standard 2026-11-22: a
+    printed combined line is a VALUE with a badge; reverses the X17 only_combined hide for these two lines): a cell whose only
+    printed line is
+      interest_expense: 'Interest expense - net' / 'Interest expense, net' (InterestIncomeExpenseNet and its nonoperating /
+                        revenue variants, an income-minus-expense element): value = minus the stored fact (expense positive);
+      interest_income:  InvestmentIncomeInterestAndDividend labelled 'Interest and dividend income' or unlabelled (a note fact;
+                        ruling 3: interest-and-dividend income counts as interest income);
+    is served as that line (mapped), flag combined:<printed label> (ETN FY2014-18/2022-23, QCOM FY2017-26). A wider label
+    ('Investment and other income', 'Interest and other income, net') or a non-positive result stays combined."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        dp = r['data_point']
+        if r['status'] != 'combined' or dp not in ('interest_expense', 'interest_income') or (r.get('column') or 'own') != 'own': continue
+        m = re.match(r'^-?(\w+)(?:\[[^\]]*\])?(?:=(-?[\d.]+))?', r.get('nodes') or '')
+        if not m: continue
+        tag, label = m.group(1), _combined_line_label(r)
+        if dp == 'interest_expense':
+            if tag not in NET_INTEREST_EXPENSE_TAGS or not INTEREST_EXPENSE_NET_LABEL.match(label): continue
+        elif tag != 'InvestmentIncomeInterestAndDividend' or (label and not INTEREST_DIVIDEND_LABEL.match(label)):
+            continue
+        v = D(m.group(2)) if m.group(2) else None
+        loc = re.search(r'\[(R\d+\.htm)(?::(\d+))?\]', r.get('nodes') or '')
+        if v is None and F.get(r['accession']):
+            vs = [l['val'] for l in face(parse(F[r['accession']])[0], 'IS') if l['tag'] == tag and l['val'] is not None]
+            v = vs[0] if len(set(vs)) == 1 else None
+        if v is None: continue
+        val = -v if dp == 'interest_expense' else v
+        if val <= 0: continue
+        lab = label or ('Interest and dividend income' if dp == 'interest_income' else 'Interest expense, net')
+        badge = 'combined:' + lab.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+        where = f"[{loc.group(1)}{':' + loc.group(2) if loc and loc.group(2) else ''}]" if loc else '[NOTE]'
+        r.update(status='mapped', value=val, tags=tag, nodes=f"{'-' if dp == 'interest_expense' else ''}{tag}={standard_inputs._plain(v)} {where}",
+                 why=f"the only printed line holding {dp} is the combined line '{lab}' ({tag}); served as that line with the badge "
+                     f"{badge} (registry {dp} fallback 2, founder standard 2026-11-22)")
+        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')] + [badge])
+    return rows
+
+
 LOAN_AXIS = re.compile(r'^\w*FinancingReceivable\w*=([^;=]+);$')
 
 
@@ -1762,6 +1845,51 @@ def apply_line_continuity(rows, notefacts, compfacts):
     return rows
 
 
+TXT_NUM = re.compile(r'(?<![\w.,])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\w,]*\d)')
+
+
+def expand_text_years(T, rows):
+    """X126 (.90): a stated note sentence or table row that states SEVERAL years fills every stated year, each at its latest print
+    (the cell takes its own 10-K's statement, else the latest later 10-K stating the year, as before). Two shapes, nothing else:
+      'N amounts ... N years' (XOM 'was $ 648 million, $ 612 million, and $ 672 million for 2022, 2021, and 2020') -> paired in order;
+      a table row with 2-3 amounts and no year (IBM 'Interest income (108 ) (72 )', VZ 'Interest income $ 115 $ 108 $ 64') -> the
+      10-K column order, the row's own year first, then FY-1, FY-2.
+    The amount paired with the row's own year must equal the row's value (that fixes the unit); otherwise nothing is added. An added
+    row is a comparative statement (own=0) of the same filing, quote_period = the resolver period of that year."""
+    pes = collections.defaultdict(list)
+    for r in rows: pes[(str(r.get('cik') or '').lstrip('0'), r['data_point'])].append(str(r['period_end']))
+    add = []
+    for key, ts in list(T.items()):
+        for t in ts:
+            if t.get('value_source') != 'text_stated' or not t.get('quote') or str(t.get('own', '1')) != '1': continue
+            nums = TXT_NUM.findall(t['quote'])
+            years = [n for n in nums if re.fullmatch(r'(19|20)\d\d', n)]
+            amts = [D(n.replace(',', '')) for n in nums if n not in years]
+            y0 = int(t['period_end'][:4])
+            if years:
+                if len(years) != len(amts) or str(y0) not in years: continue
+                pairs = list(zip((int(y) for y in years), amts))
+            else:
+                if not 2 <= len(amts) <= 3: continue
+                pairs = [(y0 - i, a) for i, a in enumerate(amts)]
+            own = [a for y, a in pairs if y == y0]
+            v = abs(D(t['value']))
+            if len(own) != 1 or own[0] == 0 or v % own[0] != 0: continue
+            unit = v / own[0]
+            if unit not in (1, 1000, 10 ** 6, 10 ** 9): continue
+            sign = -1 if D(t['value']) < 0 else 1
+            d0 = date.fromisoformat(t['period_end'])
+            for y, a in pairs:
+                if y == y0 or a == 0: continue
+                cand = [pe for pe in pes.get((key[0], key[1]), []) if abs((d0 - date.fromisoformat(pe)).days - 365 * (y0 - y)) <= 20]
+                if len(cand) != 1: continue
+                add.append(dict(t, period_end=cand[0], quote_period=cand[0], own='0', value=str(sign * a * unit)))
+    for t in add:
+        k = (str(t['cik']).lstrip('0'), t['data_point'], t['period_end'])
+        if not any(x['accession'] == t['accession'] for x in T.get(k, [])): T[k].append(t)
+    return T
+
+
 def apply_text_disclosures(rows, path=None):
     """Amounts and explicit zeros the filing states only in prose (text_disclosure.py read -> rules/text_disclosures.csv, reviewed).
     Fills a cell only when it has no XBRL fact and no face line (status in TEXT_OK, never mapped/component_sum/combined/not_in_template)
@@ -1772,6 +1900,7 @@ def apply_text_disclosures(rows, path=None):
     T = collections.defaultdict(list)
     for t in csv.DictReader(open(path)):
         if t['decision'] == 'mapped': T[(str(t['cik']).lstrip('0'), t['data_point'], t['period_end'])].append(t)
+    T = expand_text_years(T, rows)   # X126
     yy = lambda acc: (acc[11:13], acc)   # the filing year inside the accession number
     for r in rows:
         cand = T.get((str(r.get('cik') or '').lstrip('0'), r['data_point'], str(r['period_end'])), [])
@@ -1902,6 +2031,39 @@ def role(f, L, arcs, notes, R):
                         flags='custom_note_element' + (';net_of_interest_received' if dp == 'cash_paid_for_interest' and re.search(r'(?i)received', t) else ''))
     return dict(status='not_presented', tags='', value=None, r_page='',
                 why=f"no {dp} line on the {stmt if stmt != 'NOTE' else 'statements'} of this filing" + (' nor an undimensioned note fact' if R['note_ok'] == 'Y' or stmt == 'NOTE' else ''))
+PER_SHARE_DPS = ('dividends_per_share', 'basic_eps', 'diluted_eps')
+
+
+def apply_per_share_scale_guard(rows):
+    """X128 (.90; Ritwik draw 2026-11-16, close-out 2026-11-23 STX DPS FY2022 2,770,000 -> 2.77): the last guard on every per-share
+    cell, whatever route set it (latest print, comparative fill, member fact). A per-share value |v| >= 1000 whose company's other
+    years of the same data point (0 < |x| < 1000, at least two) have a median 10^3 or 10^6 times smaller (within half a decade) is the
+    filer's monetary scale: divided by that power of ten, flag filer_scale_error. A genuinely large per-share company (all years
+    large) is never touched; standard_inputs.per_share_scale_errors fixes the facts upstream, this catches what still slips."""
+    import statistics
+    by = collections.defaultdict(list)
+    for r in rows:
+        if r['data_point'] in PER_SHARE_DPS and r['status'] in ('mapped', 'component_sum', 'derived') and r.get('value') not in (None, ''):
+            by[(r.get('cik'), r['data_point'])].append(r)
+    for rs in by.values():
+        small = [abs(D(r['value'])) for r in rs if 0 < abs(D(r['value'])) < 1000]
+        if len(small) < 2: continue
+        ref = statistics.median(small)
+        for r in rs:
+            v = D(r['value'])
+            if abs(v) < 1000: continue
+            k = next((k for k in (6, 3) if abs((abs(v) / ref).log10() - k) <= D('0.5')), None)
+            if k is None: continue
+            nv = v / D(10) ** k
+            r['why'] = ((r.get('why') or '') + f"; filer scale error: stored {standard_inputs._plain(v)}, the company's other years are "
+                        f"10^{k} smaller (median {standard_inputs._plain(ref)}): served {standard_inputs._plain(nv)}").lstrip('; ')
+            r['value'] = nv
+            r['nodes'] = re.sub(r'=(-?\d+(?:\.\d+)?)', lambda m_: f"={standard_inputs._plain(nv)}" if D(m_.group(1)) == v else m_.group(0), r.get('nodes') or '', count=1)
+            if 'filer_scale_error' not in (r.get('flags') or ''):
+                r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'filer_scale_error') if x)
+    return rows
+
+
 def apply_rounded_share_count(rows, memberfacts):
     """X111 (Dhairya 2026-11-22, DIS FY2023-25): an undimensioned CommonStockSharesOutstanding that is an exact multiple of
     100M (the filer tagged the rounded billions of the cover or a note: DIS 1,800,000,000) loses to the equity statement's
@@ -2195,6 +2357,7 @@ if __name__ == '__main__':
     rows = apply_weighted_class(rows, memberfacts)
     rows = apply_member_loans(rows, filings, memberfacts)
     rows = apply_eps_per_class(rows, filings)
+    rows = apply_combined_interest_lines(rows, filings)   # X125
     rows = mark_presented_and_never_reported(rows, filings, compfacts)
     rows = apply_absent_in_own_filing(rows, filings, notefacts, compfacts)
     rows = apply_bank_template(rows, filings)
@@ -2210,10 +2373,12 @@ if __name__ == '__main__':
     rows = apply_latest_print(rows, compfacts, filings)
     rows = apply_amort_finer_print(rows, compfacts)   # X116
     rows = apply_rounded_share_count(rows, memberfacts)   # X111
+    rows = apply_per_share_scale_guard(rows)   # X128
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
     rows = filing_reads.apply(rows, log=_frl)
     print('filing reads:', collections.Counter(x[0] for x in _frl), file=sys.stderr)
+    rows = apply_sbc_note_expense(rows)   # X127: after the reads (a read replacing an award sum names another row source)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']

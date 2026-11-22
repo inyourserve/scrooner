@@ -226,7 +226,12 @@ def test_every_badge_from_the_live_resolver_output_is_a_step_of_its_data_point()
                 "component_sum",
                 "derived_not_printed",
             ) or "DERIVED" in reg.resolver_flags(r):
-                assert b.startswith("derived:"), (r["ticker"], r["data_point"], b)
+                # an award-type sum of the note's stated expense is that printed note figure (X127, as_printed:note)
+                assert b.startswith(("derived:", "as_printed:")), (
+                    r["ticker"],
+                    r["data_point"],
+                    b,
+                )
             seen.add(b)
     assert "as_printed" in seen
     assert any(b.startswith("derived:") for b in seen)
@@ -299,3 +304,16 @@ def test_a_filing_read_value_carrying_a_derived_badge_gets_that_step_not_as_prin
         )
         == "as_printed"
     )
+
+
+def test_sbc_note_expense_rows_carry_the_note_step_badge():
+    """Resolver .90 X127 (Dhairya 2026-11-23, MO): sbc fallback 3 = the note's stated pre-tax expense, badge
+    as_printed:note, for a mapped single-award row and an award-type sum alike. Mutation: drop 'as_printed:' from
+    badge_for's stepped prefixes and the component_sum row raises BadgeUndecided."""
+    assert "as_printed:note" in DPS[("sbc", "general")].badges
+    assert reg.badge_for("sbc", "general", _row("mapped", "cf_family;as_printed:note")) == "as_printed:note"
+    assert (
+        reg.badge_for("sbc", "general", _row("component_sum", "cf_family;award_type_member_sum;as_printed:note"))
+        == "as_printed:note"
+    )
+    assert reg.badge_for("sbc", "general", _row("mapped", "cf_family")) == "as_printed"
