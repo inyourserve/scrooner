@@ -9,8 +9,8 @@ Automatic, from the top100-flow workflow gate. Method: CERTIFICATION-METHOD-2026
 - proof DETECTOR_VERSION: `cell_proof_v21_2026-11-16`
 - resolver: `data-team/tags/line_map/resolver`
 - resolver file: `data-team/tags/line_map/resolver/MA.csv`
-- resolver_version: `resolver-all110-.90`
-- resolver sha256: `07b1160ee49ad37a971ead48d97823268ad4f875d891864289d8ac3501ce4226`
-- code: `0d6af17081e730c4afa24cbff3efca63b414a7ef`
-- run: https://github.com/inyourserve/scrooner/actions/runs/44997883379
+- resolver_version: `resolver-all110-.93`
+- resolver sha256: `a08af8cda37fd57cd0f0d7e94f7f25b6a28d2155cbf5d9fb00a82622d3f50e93`
+- code: `ac3ca2d62be20c41f2a6d3280fcb908e3deb3b0e`
+- run: https://github.com/inyourserve/scrooner/actions/runs/45038935707
 - gate: 0 OPEN; every shown cell and part has an accession and R page; no no_public_filing_for_period or before_first_10k on a shown cell.
