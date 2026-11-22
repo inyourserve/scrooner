@@ -7,7 +7,7 @@ rank,ticker,company_id,cells,PROVEN,REASON,DERIVED,HELD,DISAGREE,UNCHECKED,BLANK
 6,META,5050,506,456,38,9,0,0,0,3,1,0,0,4,99.4,470,460,10,2,14,97.9,1,4,no,no,verifier self-check: 5 opened,2026-11-22T15:37Z
 7,AVGO,5116,493,481,1,0,2,4,0,5,7,0,0,0,97.8,493,481,12,0,0,97.6,7,0,no,no,,2026-11-22T14:18Z
 8,TSLA,4945,506,455,41,0,0,0,0,10,0,0,0,0,98.0,465,455,10,3,8,97.8,0,0,no,no,,2026-11-22T15:36Z
-9,AKTX,2781,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,,0,0,no,no,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: ADS ratio (true $0.016B)),2026-11-22T14:18Z
+9,AKTX,2781,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,,0,0,no,no,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: ADS ratio (true $0.016B)),2026-11-22T15:34Z
 10,LLY,666,506,450,36,20,0,0,0,0,0,0,0,0,100.0,480,469,11,2,4,97.7,0,0,no,no,verifier self-check: 11 opened,2026-11-22T15:36Z
 11,TBLA,2766,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,,0,0,no,no,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: filer diluted shares 1000x (true $0.93B)),2026-11-22T15:34Z
 12,MU,1321,539,522,13,0,2,1,0,1,0,0,0,0,99.3,534,519,15,0,5,97.2,0,0,no,no,verifier self-check: 3 opened,2026-11-22T15:37Z
