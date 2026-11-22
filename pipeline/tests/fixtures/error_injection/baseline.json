@@ -1,0 +1,15 @@
+{
+ "available_to_common_ni": 1.0,
+ "combined_as_narrow": 1.0,
+ "derived_two_filings": 1.0,
+ "dropped_component": 0.5,
+ "missing_badge": 1.0,
+ "period_shift": 1.0,
+ "restricted_cash_total": 1.0,
+ "rounded_duplicate": 1.0,
+ "scale_x1000": 1.0,
+ "scale_x1e6": 1.0,
+ "sign_flip": 1.0,
+ "subline_as_total": 0.5,
+ "wrong_hide": 1.0
+}

@@ -1,0 +1,1172 @@
+ticker,data_point,fiscal_year,role,class,p_drawn,caught_self_check,caught_patterns,caught_cell_match,caught_draw_check,caught_any,base_self_check,base_patterns,base_cell_match,base_draw_check,mut_self_check,mut_patterns,mut_cell_match,mut_draw_check,note
+AAPL,cf_ap_change,2023,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,cf_inventory_change,2018,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,diluted_eps,2024,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,interest_income,2018,control,,0.389,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-18-000145 presents InvestmentIncomeInterestAndDividend at 2018-09-29,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000320193-18-000145 presents InvestmentIncomeInterestAndDividend at 2018-09-29,,,
+AAPL,interest_income,2025,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,inventory,2020,injected,scale_x1000,0.389,0,0,1,1,1,,,,,,,InventoryNet=4061000000.0000@0000320193-20-000096#R4 (fsn reports R4),"family: value differs: tier 1 InventoryNet=4061000000.0000 (dcml -6, 2020-09-30, qtrs 0), shown 4061000000000",x1000
+AAPL,other_income_expense_net,2018,control,,0.389,0,0,0,0,0,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,,
+AAPL,research_and_development,2022,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,share_buybacks,2015,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,shares_outstanding,2015,control,,0.389,0,0,0,0,0,,,,,,,,,
+AAPL,total_debt,2025,control,,0.389,0,0,0,0,0,,,,,,,,,
+ABBV,accounts_payable,2015,control,,0.427,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+ABBV,accounts_receivable,2020,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,cash_flow_financing,2023,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,cash_flow_investing,2025,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,cf_ap_change,2018,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,cf_ap_change,2024,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,income_before_tax,2017,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,income_before_tax,2025,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,inventory,2024,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABBV,net_income,2025,injected,available_to_common_ni,0.427,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=4226000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 4186000000",NetIncomeLossAvailableToCommonStockholdersBasic=4186000000 served for 4226000000
+ABBV,other_income_expense_net,2020,injected,derived_two_filings,0.427,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived ForeignCurrencyTransactionGainLossBeforeTax,OtherNonoperatingIncomeExpense value -5685000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001551152-21-000008', '0001551152-22-000007']",part OtherNonoperatingIncomeExpense cited from later filing 0001551152-22-000007
+ABBV,revenue,2023,injected,subline_as_total,0.427,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=54318000000.0000 (dcml -6, 2023-12-31, qtrs 4); RevenueFromContractWithCustomerExcludingAssessedTax=54318000000.0000 (dcml -6, 2023-12-31, qtrs 4), shown 3035000",RevenueFromContractWithCustomerExcludingAssessedTax[ProductOrService=OtherProducts]=3035000000 of total 54318000000
+ABBV,total_assets,2016,injected,sign_flip,0.427,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 Assets=66099000000.0000 (dcml -6, 2016-12-31, qtrs 0), shown -66099000000",negated
+ABBV,total_liabilities,2020,injected,sign_flip,0.427,0,1,1,0,1,badge: shown cell has no badge,P08: derived - value 137468000000: no parts,,,badge: shown cell has no badge,P08: derived - value -137468000000: no parts,"Assets 150565000000.0000 - total equity incl. NCI 13097000000.0000 - temporary equity 0 (Assets=150565000000.0000, CommonStockSharesIssued=1792140764.0000, LiabilitiesAndStockholdersEquity=15056500000",,negated
+ABBV,weighted_basic_shares,2020,control,,0.427,0,0,0,0,0,,,,,,,,,
+ABT,accounts_payable,2017,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,basic_eps,2016,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,cash_flow_financing,2017,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,cf_ap_change,2015,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,cf_ap_change,2017,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,income_tax_expense,2018,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,net_income,2016,injected,available_to_common_ni,0.409,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=1400000000.0000 (dcml -6, 2016-12-31, qtrs 4), shown 1393000000",NetIncomeLossAvailableToCommonStockholdersBasic=1393000000 served for 1400000000
+ABT,share_buybacks,2019,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,shares_outstanding,2015,control,,0.409,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+ABT,stockholders_equity,2022,injected,period_shift,0.409,0,0,1,1,1,,,,,,,StockholdersEquity=36686000000.0000@0001628280-23-004026#R7 (fsn reports R7),"family: value differs: tier 1 StockholdersEquity=36686000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 35802000000",FY2021 value 35802000000 under FY2022 citation
+ABT,total_assets,2019,control,,0.409,0,0,0,0,0,,,,,,,,,
+ABT,total_liabilities,2025,control,,0.409,0,0,0,0,0,badge: shown cell has no badge,P08: derived - value 33942000000: no parts,,,badge: shown cell has no badge,P08: derived - value 33942000000: no parts,,,
+ACN,capex,2025,injected,scale_x1e6,0.397,0,0,1,1,1,,,,,,,PaymentsToAcquirePropertyPlantAndEquipment=600039000.0000@0001467373-25-000217#R8 (fsn reports R8),"family: value differs: tier 1 PaymentsToAcquirePropertyPlantAndEquipment=600039000.0000 (dcml -3, 2025-08-31, qtrs 4), shown 600039000000000",x1000000
+ACN,cash_and_equivalents,2026,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,cash_flow_financing,2017,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,cash_paid_for_income_taxes,2022,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,cf_inventory_change,2020,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,cf_inventory_change,2026,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,comprehensive_income,2025,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,current_assets,2023,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,current_liabilities,2016,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,dividends_per_share,2021,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,income_before_tax,2024,control,,0.397,0,0,0,0,0,,,,,,,,,
+ACN,operating_expenses,2023,injected,dropped_component,0.397,0,0,0,0,0,,,,,,,,,dropped GeneralAndAdministrativeExpense=4275943000
+ACN,research_and_development,2023,injected,rounded_duplicate,0.397,0,0,1,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,ResearchAndDevelopmentExpense=1298657000.0000@0001467373-23-000324# (fsn reports -),"family: value differs: tier 1 ResearchAndDevelopmentExpense=1298657000.0000 (dcml -3, 2023-08-31, qtrs 4), shown 1300000000",1298657000 rounded to 1300000000
+ACN,revenue,2020,injected,subline_as_total,0.397,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=44327039000.0000 (dcml -3, 2020-08-31, qtrs 4), shown 24227024000",Revenues[ProductOrService=ConsultingRevenue]=24227024000 of total 44327039000
+ADI,comprehensive_income,2022,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,diluted_eps,2023,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,dividends_per_share,2021,injected,missing_badge,0.411,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+ADI,interest_income,2023,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,other_income_expense_net,2023,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,research_and_development,2023,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,sbc,2018,injected,wrong_hide,0.411,1,1,0,0,1,,,,,"hidden_year: 0000006281-18-000126 presents 2018-11-03 and prints the line (AllocatedShareBasedCompensationExpense, ShareBasedCompensation); a printed value or dash must be shown",P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000006281-18-000126 presents ShareBasedCompensation at 2018-11-03,,,ShareBasedCompensation hidden as line_presented_combined
+ADI,sbc,2019,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,total_assets,2017,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,total_debt,2025,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,total_liabilities,2016,control,,0.411,0,0,0,0,0,,,,,,,,,
+ADI,total_liabilities,2018,control,,0.411,0,0,0,0,0,,,,,,,,,
+AMAT,accounts_payable,2019,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,accounts_payable,2023,injected,combined_as_narrow,0.421,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 AccountsPayableCurrent=1478000000.0000 (dcml -6, 2023-10-31, qtrs 0), shown 4297000000",AccountsPayableAndAccruedLiabilitiesCurrent=4297000000 served for narrow 1478000000
+AMAT,cf_ap_change,2023,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,cf_inventory_change,2024,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,dividends_per_share,2023,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,dividends_per_share,2024,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,interest_expense,2022,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,interest_income,2021,control,,0.421,0,0,0,0,0,,P05: HIDDEN_YEAR (line_presented_combined) but 10-K 0000006951-23-000041 prints InvestmentIncomeNet at 2021-10-31 as a comparative,,,,P05: HIDDEN_YEAR (line_presented_combined) but 10-K 0000006951-23-000041 prints InvestmentIncomeNet at 2021-10-31 as a comparative,,,
+AMAT,revenue,2019,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,sga_expense,2018,injected,dropped_component,0.421,0,0,0,0,0,,,,,,,,,dropped GeneralAndAdministrativeExpense=483000000
+AMAT,stockholders_equity,2021,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,stockholders_equity,2023,control,,0.421,0,0,0,0,0,,,,,,,,,
+AMAT,total_debt,2019,injected,dropped_component,0.421,1,0,0,0,1,,,,,"debt: perimeter 5313000000.0000: face {'LongTermDebtNoncurrent': Decimal('4713000000.0000'), 'ShortTermBorrowings': Decimal('600000000.0000')}; lease no lease facts",,,,dropped ShortTermBorrowings=600000000
+AMD,capex,2018,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,comprehensive_income,2025,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,current_liabilities,2025,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,dividends_per_share,2024,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,gross_profit,2015,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,interest_income,2016,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,operating_expenses,2024,injected,dropped_component,0.439,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,dropped ResearchAndDevelopmentExpense=6456000000
+AMD,other_income_expense_net,2015,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,sbc,2017,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,stockholders_equity,2017,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMD,total_debt,2015,control,,0.439,0,0,0,0,0,,,,,,,,,
+AMGN,accounts_receivable,2021,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,accounts_receivable,2023,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,cash_and_equivalents,2017,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,cost_of_revenue,2023,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,current_assets,2020,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,current_liabilities,2022,injected,missing_badge,0.423,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+AMGN,dividends_per_share,2025,injected,period_shift,0.423,0,0,1,1,1,,,,,,,CommonStockDividendsPerShareDeclared=9.6600@0000318154-26-000010#R8 (fsn reports R8),"family: value differs: tier 1 CommonStockDividendsPerShareDeclared=9.6600 (dcml 2, 2025-12-31, qtrs 4), shown 9.13",FY2024 value 9.13 under FY2025 citation
+AMGN,interest_income,2018,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,interest_income,2021,control,,0.423,0,0,0,0,0,,P05: HIDDEN_YEAR (line_presented_combined) but 10-K 0000318154-24-000011 prints InvestmentIncomeInterest at 2021-12-31 as a comparative,,,,P05: HIDDEN_YEAR (line_presented_combined) but 10-K 0000318154-24-000011 prints InvestmentIncomeInterest at 2021-12-31 as a comparative,,,
+AMGN,inventory,2019,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,inventory,2021,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,research_and_development,2020,control,,0.423,0,0,0,0,0,,,,,,,,,
+AMGN,revenue,2016,injected,subline_as_total,0.423,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=22991000000.0000 (dcml -6, 2016-12-31, qtrs 4); SalesRevenueGoodsNet=21892000000.0000 (dcml -6, 2016-12-31, qtrs 4), shown 18326000000",Revenues[Geographical=US]=18326000000 of total 22991000000
+AMZN,accounts_receivable,2016,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,cash_flow_financing,2016,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,cf_ap_change,2015,injected,sign_flip,0.449,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 IncreaseDecreaseInAccountsPayable=4294000000.0000 (dcml -6, 2015-12-31, qtrs 4), shown -4294000000",negated
+AMZN,cf_ap_change,2022,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,cfo,2021,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,comprehensive_income,2015,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,dividends_per_share,2016,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,interest_expense,2024,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,operating_expenses,2016,injected,derived_two_filings,0.449,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived FulfillmentExpense,GeneralAndAdministrativeExpense,MarketingExpense,OtherCostAndExpenseOperating,TechnologyAndContentExpense value 43536000000.0000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001018724-18-000005', '0001018724-19-000004']",part MarketingExpense cited from later filing 0001018724-18-000005
+AMZN,research_and_development,2024,control,,0.449,0,0,0,0,0,,,,,,,,,
+AMZN,total_liabilities,2019,control,,0.449,0,0,0,0,0,badge: shown cell has no badge,P08: derived - value 163188000000: no parts,,,badge: shown cell has no badge,P08: derived - value 163188000000: no parts,,,
+AMZN,weighted_diluted_shares,2024,control,,0.449,0,0,0,0,0,,,,,,,,,
+ANET,accounts_payable,2018,injected,sign_flip,0.448,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 AccountsPayableCurrent=93757000.0000 (dcml -3, 2018-12-31, qtrs 0), shown -93757000",negated
+ANET,basic_eps,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,basic_eps,2024,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,cash_flow_investing,2023,injected,missing_badge,0.448,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+ANET,comprehensive_income,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,cost_of_revenue,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,net_income,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,other_income_expense_net,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,other_income_expense_net,2025,injected,dropped_component,0.448,0,0,0,1,1,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,"identity: the printed band without its interest lines gives 10200000.0000 or 10200000.0000, shown 393600000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",dropped -InterestIncomeOther=383400000
+ANET,research_and_development,2016,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,sga_expense,2023,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,share_buybacks,2016,control,,0.448,0,0,0,0,0,,,,,,,,,
+ANET,shares_outstanding,2021,injected,missing_badge,0.448,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+ANET,total_debt,2025,control,,0.448,0,0,0,0,0,,,,,,,,,
+AVGO,cash_flow_investing,2022,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,cfo,2025,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,comprehensive_income,2015,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,diluted_eps,2015,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,dividends_paid,2018,control,,0.418,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+AVGO,gross_profit,2016,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,net_income,2020,injected,available_to_common_ni,0.418,0,0,0,1,1,,,,,,,,"family: value differs: tier 2 ProfitLoss-NetIncomeLossAttributableToNoncontrollingInterest=2960000000.0000 (dcml -6, 2020-10-31, qtrs 4), shown 2663000000",NetIncomeLossAvailableToCommonStockholdersBasic=2663000000 served for 2960000000
+AVGO,share_buybacks,2022,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,total_assets,2018,control,,0.418,0,0,0,0,0,,,,,,,,,
+AVGO,total_debt,2025,injected,dropped_component,0.418,1,0,0,0,1,,,,,"debt: perimeter 65136000000.0000: face {'LongTermDebtAndCapitalLeaseObligations': Decimal('61984000000.0000'), 'LongTermDebtAndCapitalLeaseObligationsCurrent': Decimal('3152000000.0000')}; lease lease",,,,dropped LongTermDebtAndCapitalLeaseObligationsCurrent=3152000000
+AXP,accounts_payable,2017,injected,sign_flip,0.470,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 3 AccountsPayableCurrentAndNoncurrent=14657000000.0000 (dcml -6, 2017-12-31, qtrs 0), shown -14657000000",negated
+AXP,basic_eps,2022,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,cash_flow_financing,2020,injected,scale_x1e6,0.470,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInFinancingActivities=-9068000000.0000@0000004962-21-000013#R7 (fsn reports R7),"family: value differs: tier 1 NetCashProvidedByUsedInFinancingActivities=-9068000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown -9068000000000000",x1000000
+AXP,cash_paid_for_interest,2016,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,cf_ap_change,2017,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,cf_ap_change,2024,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,cfo,2024,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,deposits,2019,injected,scale_x1000,0.470,0,0,0,1,1,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,"family: value differs: tier 1 Deposits=73287000000.0000 (dcml -6, 2019-12-31, qtrs 0), shown 73287000000000",x1000
+AXP,dividends_per_share,2021,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,net_income,2020,injected,available_to_common_ni,0.470,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=3135000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown 3056000000",NetIncomeLossAvailableToCommonStockholdersBasic=3056000000 served for 3135000000
+AXP,noninterest_income,2019,injected,period_shift,0.470,0,0,1,1,1,badge: shown cell has no badge,,,,badge: shown cell has no badge,,NoninterestIncome=34936000000.0000@0000004962-20-000030#R2 (fsn reports R2),"family: value differs: tier 1 NoninterestIncome=34936000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown 32675000000",FY2018 value 32675000000 under FY2019 citation
+AXP,ppe_net,2016,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,ppe_net,2020,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,revenue,2019,injected,subline_as_total,0.470,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 RevenueFromContractWithCustomerExcludingAssessedTax=28159000000.0000 (dcml -6, 2019-12-31, qtrs 4); RevenuesNetOfInterestExpense=43556000000.0000 (dcml -6, 2019-12-31, qt",RevenuesNetOfInterestExpense[Geographical=US]=32557000000 of total 43556000000
+AXP,shares_outstanding,2015,control,,0.470,0,0,0,0,0,,,,,,,,,
+AXP,shares_outstanding,2021,control,,0.470,0,0,0,0,0,,,,,,,,,
+BA,amortization_of_intangibles,2016,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,capex,2023,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,cash_paid_for_interest,2020,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,cf_ar_change,2019,injected,period_shift,0.407,0,0,1,1,1,,,,,,,IncreaseDecreaseInAccountsReceivable=-603000000.0000@0000012927-20-000014#R7 (fsn reports R7),"family: value differs: tier 1 IncreaseDecreaseInAccountsReceivable=-603000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown 795000000",FY2018 value 795000000 under FY2019 citation
+BA,comprehensive_income,2019,injected,rounded_duplicate,0.407,0,0,1,1,1,,,,,,,ComprehensiveIncomeNetOfTax=-1706000000.0000@0000012927-21-000011#R3 (fsn reports R3),"family: value differs: tier 1 ComprehensiveIncomeNetOfTax=-1706000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown -1700000000",-1706000000 rounded to -1700000000
+BA,cost_of_revenue,2024,injected,subline_as_total,0.407,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CostOfRevenue=68508000000.0000 (dcml -6, 2024-12-31, qtrs 4), shown 57394000000",CostOfGoodsAndServicesSold[ProductOrService=Product]=57394000000 of total 68508000000
+BA,dividends_paid,2018,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,interest_income,2016,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,interest_income,2019,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,net_income,2021,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,other_income_expense_net,2017,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,research_and_development,2023,control,,0.407,0,0,0,0,0,,,,,,,,,
+BA,total_debt,2022,control,,0.407,0,0,0,0,0,,,,,,,,,
+BAC,cash_flow_investing,2016,injected,wrong_hide,0.638,1,1,0,0,1,,,,,hidden_year: 0000070858-17-000013 presents 2016-12-31 and prints the line (NetCashProvidedByUsedInInvestingActivitiesContinuingOperations); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000070858-17-000013 presents NetCashProvidedByUsedInInvestingActivitiesContinuingOperations at 2016-12-31,,,NetCashProvidedByUsedInInvestingActivities hidden as line_presented_combined
+BAC,cash_flow_investing,2025,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,cash_paid_for_interest,2016,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,cf_ap_change,2016,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,cf_ap_change,2020,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,cfo,2018,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,diluted_eps,2025,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,net_income,2015,injected,available_to_common_ni,0.638,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=15910000000.0000 (dcml -6, 2015-12-31, qtrs 4), shown 14427000000",NetIncomeLossAvailableToCommonStockholdersBasic=14427000000 served for 15910000000
+BAC,ppe_net,2023,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,revenue,2015,injected,subline_as_total,0.638,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=82965000000.0000 (dcml -6, 2015-12-31, qtrs 4), shown 72117000000",Revenues[Geographical=US]=72117000000 of total 82965000000
+BAC,stockholders_equity,2023,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,stockholders_equity,2025,control,,0.638,0,0,0,0,0,,,,,,,,,
+BAC,total_assets,2018,control,,0.638,0,0,0,0,0,,,,,,,,,
+BLK,amortization_of_intangibles,2023,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,cash_and_equivalents,2019,injected,restricted_cash_total,0.598,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=4829000000.0000 (dcml -6, 2019-12-31, qtrs 0), shown 4846000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=4846000000 served for 4829000000
+BLK,cash_flow_investing,2016,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,cf_inventory_change,2020,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,comprehensive_income,2025,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,ppe_net,2019,injected,missing_badge,0.598,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+BLK,revenue,2022,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,share_buybacks,2015,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,share_buybacks,2022,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,share_buybacks,2025,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,shares_outstanding,2015,control,,0.598,0,0,0,0,0,,,,,,,,,
+BLK,shares_outstanding,2016,injected,wrong_hide,0.598,0,0,0,0,0,,,,,,,,,CommonStockSharesOutstanding hidden as verified_absent
+BLK,stockholders_equity,2024,control,,0.598,0,0,0,0,0,,,,,,,,,
+BMY,accounts_payable,2025,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,cash_paid_for_income_taxes,2024,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,cash_paid_for_interest,2016,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,cost_of_revenue,2021,injected,period_shift,0.410,0,0,1,1,1,,,,,,,CostOfGoodsAndServicesSold=9940000000.0000@0000014272-22-000051#R3 (fsn reports R3),"family: value differs: tier 1 CostOfGoodsAndServicesSold=9940000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown 11773000000",FY2020 value 11773000000 under FY2021 citation
+BMY,depreciation_and_amortization,2021,injected,scale_x1000,0.410,0,0,1,1,1,,,,,,,DepreciationDepletionAndAmortization=10686000000.0000@0000014272-22-000051#R7 (fsn reports R7),"family: value differs: tier 1 DepreciationDepletionAndAmortization=10686000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown 10686000000000",x1000
+BMY,income_tax_expense,2020,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,income_tax_expense,2021,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,operating_expenses,2021,injected,dropped_component,0.410,0,0,0,0,0,,,,,,,,,dropped AmortizationofAcquiredIntangibleAssets=10023000000
+BMY,operating_income,2015,control,,0.410,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+BMY,operating_income,2024,control,,0.410,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+BMY,ppe_net,2019,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,stockholders_equity,2025,control,,0.410,0,0,0,0,0,,,,,,,,,
+BMY,total_assets,2018,control,,0.410,0,0,0,0,0,,,,,,,,,
+C,cash_paid_for_interest,2021,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,dividends_per_share,2021,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,dividends_per_share,2025,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,net_income,2024,injected,available_to_common_ni,0.510,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=12682000000.0000 (dcml -6, 2024-12-31, qtrs 4), shown 11458000000",NetIncomeLossAvailableToCommonStockholdersBasic=11458000000 served for 12682000000
+C,noninterest_expense,2021,control,,0.510,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+C,provision_for_credit_losses,2022,control,,0.510,0,0,0,0,0,badge: shown cell has no badge,,,"family: value differs: tier 1 ProvisionForLoanLossesExpensed=4745000000.0000 (dcml -6, 2022-12-31, qtrs 4); FinancingReceivableExcludingAccruedInterestCreditLossExpenseReversal=4745000000.0000 (dcml -",badge: shown cell has no badge,,,"family: value differs: tier 1 ProvisionForLoanLossesExpensed=4745000000.0000 (dcml -6, 2022-12-31, qtrs 4); FinancingReceivableExcludingAccruedInterestCreditLossExpenseReversal=4745000000.0000 (dcml -",
+C,revenue,2020,injected,period_shift,0.510,0,0,1,1,1,,,,,,,Revenues=75501000000.0000@0000831001-23-000037#R3 (fsn reports R3),"family: value differs: tier 1 Revenues=75501000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown 75067000000",FY2019 value 75067000000 under FY2020 citation
+C,stockholders_equity,2021,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,stockholders_equity,2025,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,total_assets,2024,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,total_debt,2017,control,,0.510,0,0,0,0,0,,,,,,,,,
+C,total_liabilities,2023,injected,rounded_duplicate,0.510,0,0,1,1,1,,,,,,,Liabilities=2205583000000.0000@0000831001-24-000033#R5 (fsn reports R5),"family: value differs: tier 1 Liabilities=2205583000000.0000 (dcml -6, 2023-12-31, qtrs 0), shown 2205600000000",2205583000000 rounded to 2205600000000
+C,weighted_diluted_shares,2016,control,,0.510,0,0,0,0,0,,,,,,,,,
+CAT,cash_and_equivalents,2023,injected,restricted_cash_total,0.409,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=6978000000.0000 (dcml -6, 2023-12-31, qtrs 0), shown 6985000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=6985000000 served for 6978000000
+CAT,cash_paid_for_interest,2023,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,diluted_eps,2016,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,goodwill,2023,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,interest_expense,2015,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,interest_income,2018,control,,0.409,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-19-000034 presents InvestmentIncomeNet at 2018-12-31,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-19-000034 presents InvestmentIncomeNet at 2018-12-31,,,
+CAT,interest_income,2020,control,,0.409,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-21-000063 presents InvestmentIncomeNet at 2020-12-31,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000018230-21-000063 presents InvestmentIncomeNet at 2020-12-31,,,
+CAT,operating_income,2020,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,other_income_expense_net,2019,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,other_income_expense_net,2020,control,,0.409,0,0,0,0,0,,,,,,,,,
+CAT,weighted_basic_shares,2015,control,,0.409,0,0,0,0,0,,,,,,,,,
+CB,accounts_receivable,2018,injected,wrong_hide,0.618,1,0,0,0,1,,,,,hidden_year: 0000896159-19-000005 presents 2018-12-31 and prints the line (PremiumsReceivableAtCarryingValue); a printed value or dash must be shown,,,,PremiumsReceivableAtCarryingValue hidden as line_presented_combined
+CB,accounts_receivable,2024,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,basic_eps,2024,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,cash_and_equivalents,2023,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,cf_ap_change,2018,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,cfo,2025,injected,rounded_duplicate,0.618,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInOperatingActivities=12816000000.0000@0000896159-26-000005#R8 (fsn reports R8),"family: value differs: tier 1 NetCashProvidedByUsedInOperatingActivities=12816000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 12800000000",12816000000 rounded to 12800000000
+CB,depreciation_and_amortization,2018,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,interest_expense,2016,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,interest_expense,2023,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,shares_outstanding,2022,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,total_assets,2018,control,,0.618,0,0,0,0,0,,,,,,,,,
+CB,total_liabilities,2016,control,,0.618,0,0,0,0,0,,,,,,,,,
+COP,accounts_receivable,2015,control,,0.438,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+COP,cash_paid_for_interest,2015,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,cf_ap_change,2022,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,cfo,2025,injected,scale_x1000,0.438,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInOperatingActivities=19796000000.0000@0001163165-26-000009#R7 (fsn reports R7),"family: value differs: tier 1 NetCashProvidedByUsedInOperatingActivities=19796000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 19796000000000",x1000
+COP,cost_of_revenue,2023,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,current_assets,2019,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,goodwill,2021,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,interest_income,2015,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,operating_income,2025,control,,0.438,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+COP,other_income_expense_net,2015,injected,dropped_component,0.438,1,0,0,0,1,gate: part OtherNonoperatingIncome has no accession or R page,,,,badge: shown cell has no badge,,,,dropped OtherNonoperatingIncome=125000000
+COP,sbc,2015,control,,0.438,0,0,0,0,0,,,,,,,,,
+COP,weighted_basic_shares,2022,control,,0.438,0,0,0,0,0,,,,,,,,,
+COST,cash_and_equivalents,2017,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,cash_and_equivalents,2023,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,cash_flow_financing,2020,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,cash_flow_investing,2024,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,cf_ar_change,2021,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,cf_inventory_change,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,goodwill,2021,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,other_income_expense_net,2024,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,revenue,2022,injected,subline_as_total,0.425,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=226954000000.0000 (dcml -6, 2022-08-31, qtrs 4); RevenueFromContractWithCustomerExcludingAssessedTax=226954000000.0000 (dcml -6, 2022-08-31, qtrs 4), shown 85629",RevenueFromContractWithCustomerExcludingAssessedTax[ProductOrService=FoodandSundries]=85629000000 of total 226954000000
+COST,shares_outstanding,2025,control,,0.425,0,0,0,0,0,,,,,,,,,
+COST,total_liabilities,2021,control,,0.425,0,0,0,0,0,,,,,,,,,
+CRM,accounts_payable,2017,control,,0.450,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+CRM,cash_and_equivalents,2022,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,cf_ap_change,2025,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,diluted_eps,2022,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,goodwill,2024,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,income_tax_expense,2019,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,interest_expense,2017,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,inventory,2023,control,,0.450,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+CRM,other_income_expense_net,2018,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRM,other_income_expense_net,2025,injected,derived_two_filings,0.450,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived GainLossOnInvestments,OtherNonoperatingIncomeExpense value 233000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001108524-25-000006', '0001108524-26-000060']",part GainLossOnInvestments cited from later filing 0001108524-26-000060
+CRM,revenue,2024,injected,subline_as_total,0.450,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 RevenueFromContractWithCustomerExcludingAssessedTax=34857000000.0000 (dcml -6, 2024-01-31, qtrs 4), shown 32537000000",RevenueFromContractWithCustomerExcludingAssessedTax[ProductOrService=SubscriptionandSupport]=32537000000 of total 34857000000
+CRM,shares_outstanding,2017,control,,0.450,0,0,0,0,0,,,,,,,,,
+CRWD,cf_ar_change,2021,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,current_liabilities,2025,injected,scale_x1000,0.561,0,0,1,1,1,,,,,,,LiabilitiesCurrent=3461050000.0000@0001535527-25-000009#R3 (fsn reports R3),"family: value differs: tier 1 LiabilitiesCurrent=3461050000.0000 (dcml -3, 2025-01-31, qtrs 0), shown 3461050000000",x1000
+CRWD,dividends_paid,2021,control,,0.561,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+CRWD,interest_expense,2020,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,inventory,2025,control,,0.561,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+CRWD,ppe_net,2019,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,sbc,2023,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,share_buybacks,2018,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,shares_outstanding,2025,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,stockholders_equity,2019,injected,rounded_duplicate,0.561,0,0,1,1,1,,,,,,,StockholdersEquity=-487793000.0000@0001535527-20-000006#R2 (fsn reports R2),"family: value differs: tier 1 StockholdersEquity=-487793000.0000 (dcml -3, 2019-01-31, qtrs 0), shown -488000000",-487793000 rounded to -488000000
+CRWD,total_liabilities,2020,control,,0.561,0,0,0,0,0,,,,,,,,,
+CRWD,weighted_basic_shares,2025,control,,0.561,0,0,0,0,0,,,,,,,,,
+CSCO,basic_eps,2019,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,cash_flow_investing,2022,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,cf_ap_change,2016,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,cf_inventory_change,2020,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,cost_of_revenue,2023,injected,subline_as_total,0.378,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CostOfGoodsAndServicesSold=21245000000.0000 (dcml -6, 2023-07-31, qtrs 4), shown 16590000000",CostOfGoodsAndServicesSold[ProductOrService=Product]=16590000000 of total 21245000000
+CSCO,current_liabilities,2024,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,depreciation_and_amortization,2017,control,,0.378,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-17-000016 presents DepreciationDepletionAndAmortization at 2017-07-29,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-17-000016 presents DepreciationDepletionAndAmortization at 2017-07-29,,,
+CSCO,depreciation_and_amortization,2024,control,,0.378,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-24-000017 presents DepreciationDepletionAndAmortization at 2024-07-27,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000858877-24-000017 presents DepreciationDepletionAndAmortization at 2024-07-27,,,
+CSCO,goodwill,2025,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,net_income,2020,control,,0.378,0,0,0,0,0,,,,,,,,,
+CSCO,other_income_expense_net,2021,control,,0.378,0,0,0,0,0,,,,,,,,,
+CVX,capex,2022,injected,missing_badge,0.461,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+CVX,comprehensive_income,2020,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,cost_of_revenue,2024,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,current_liabilities,2023,injected,wrong_hide,0.461,1,0,0,0,1,,,,,hidden_year: 0000093410-24-000013 presents 2023-12-31 and prints the line (LiabilitiesCurrent); a printed value or dash must be shown,,,,LiabilitiesCurrent hidden as verified_absent
+CVX,depreciation_and_amortization,2016,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,diluted_eps,2015,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,diluted_eps,2019,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,dividends_paid,2025,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,income_before_tax,2023,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,income_tax_expense,2020,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,interest_income,2018,control,,0.461,0,0,0,0,0,,,,,,,,,
+CVX,operating_income,2015,control,,0.461,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+CVX,total_debt,2020,injected,derived_two_filings,0.461,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities,ShortTermBorrowings value 44315000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000093410-21-000009', '0000093410-22-000019']",part LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities cited from later filing 0000093410-22-000019
+DE,cash_and_equivalents,2020,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,cash_and_equivalents,2021,injected,restricted_cash_total,0.557,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=8017000000.0000 (dcml -6, 2021-10-31, qtrs 0), shown 8125000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=8125000000 served for 8017000000
+DE,cash_paid_for_interest,2024,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,cf_ap_change,2024,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,cf_ar_change,2018,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,cfo,2022,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,cfo,2024,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,depreciation_and_amortization,2025,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,dividends_per_share,2022,injected,scale_x1e6,0.557,1,0,1,1,1,,,,,gate: implausible per-share value 4360000 (> 1000) from 0001558370-22-018703,,implausible per-share value 4360000 (> 1000); CommonStockDividendsPerShareDeclared=4.3600@0001558370-22-018703#R2 (fsn reports R2),per_share: implausible per-share value 4360000 (> 1000),x1000000
+DE,income_before_tax,2022,injected,rounded_duplicate,0.557,0,0,1,1,1,,,,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments=9127000000.0000@0001558370-22-018703#R2 (fsn reports R2),"family: value differs: tier 1 IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments=9127000000.0000 (dcml -6, 2022-10-31, qtrs 4), shown 910000000",9127000000 rounded to 9100000000
+DE,inventory,2015,injected,wrong_hide,0.557,1,1,0,0,1,,,,,hidden_year: 0001047469-15-009300 presents 2015-10-31 and prints the line (InventoryNet); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001047469-15-009300 presents InventoryNet at 2015-10-31,,,InventoryNet hidden as line_presented_combined
+DE,net_income,2021,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,operating_income,2022,control,,0.557,0,0,0,0,0,,,,,,,,,
+DE,shares_outstanding,2024,control,,0.557,0,0,0,0,0,,,,,,,,,
+DELL,capex,2015,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,capex,2026,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,cash_and_equivalents,2020,injected,restricted_cash_total,0.408,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=9302000000.0000 (dcml -6, 2020-01-31, qtrs 0), shown 10151000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=10151000000 served for 9302000000
+DELL,cash_paid_for_interest,2019,injected,period_shift,0.408,0,0,1,1,1,,,,,,,InterestPaidNet=2347000000.0000@0001571996-19-000008#R7 (fsn reports R7),"family: value differs: tier 1 InterestPaidNet=2347000000.0000 (dcml -6, 2019-01-31, qtrs 4), shown 2192000000",FY2018 value 2192000000 under FY2019 citation
+DELL,cfo,2021,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,cost_of_revenue,2023,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,depreciation_and_amortization,2016,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,interest_expense,2018,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,interest_income,2017,control,,0.408,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-17-000004 presents InvestmentIncomeInterestAndDividend at 2017-02-03,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001571996-17-000004 presents InvestmentIncomeInterestAndDividend at 2017-02-03,,,
+DELL,shares_outstanding,2015,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,shares_outstanding,2018,control,,0.408,0,0,0,0,0,,,,,,,,,
+DELL,stockholders_equity,2019,control,,0.408,0,0,0,0,0,,,,,,,,,
+DHR,cash_flow_investing,2024,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,cash_paid_for_interest,2018,control,,0.414,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+DHR,cost_of_revenue,2020,injected,rounded_duplicate,0.414,0,0,1,1,1,,,,,,,CostOfGoodsAndServicesSold=9809000000.0000@0000313616-21-000045#R3 (fsn reports R3),"family: value differs: tier 1 CostOfGoodsAndServicesSold=9809000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown 9800000000",9809000000 rounded to 9800000000
+DHR,dividends_per_share,2015,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,gross_profit,2017,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,inventory,2021,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,inventory,2024,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,operating_expenses,2025,injected,dropped_component,0.414,0,0,0,0,0,,,,,,,,,dropped ResearchAndDevelopmentExpense=1598000000
+DHR,other_income_expense_net,2018,injected,derived_two_filings,0.414,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived GainsLossesOnExtinguishmentOfDebt,OtherNonoperatingIncome value 34500000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000313616-20-000041', '0000313616-23-000087']",part OtherNonoperatingIncome cited from later filing 0000313616-23-000087
+DHR,research_and_development,2025,injected,rounded_duplicate,0.414,0,0,1,1,1,,,,,,,ResearchAndDevelopmentExpense=1598000000.0000@0000313616-26-000062#R5 (fsn reports R5),"family: value differs: tier 1 ResearchAndDevelopmentExpense=1598000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 1600000000",1598000000 rounded to 1600000000
+DHR,sbc,2025,injected,scale_x1000,0.414,0,0,1,1,1,,,,,,,ShareBasedCompensation=298000000.0000@0000313616-26-000062#R8 (fsn reports R8),"family: value differs: tier 1 ShareBasedCompensation=298000000.0000 (dcml -6, 2025-12-31, qtrs 4); AllocatedShareBasedCompensationExpense=298000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 2980000000",x1000
+DHR,sga_expense,2020,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,share_buybacks,2017,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,stockholders_equity,2017,control,,0.414,0,0,0,0,0,,,,,,,,,
+DHR,total_debt,2022,injected,derived_two_filings,0.414,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived DebtCurrent,LongTermDebtNoncurrent value 19677000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000313616-23-000087', '0000313616-24-000052']",part LongTermDebtNoncurrent cited from later filing 0000313616-24-000052
+DHR,weighted_basic_shares,2022,control,,0.414,0,0,0,0,0,,,,,,,,,
+DIS,accounts_payable,2022,control,,0.569,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+DIS,capex,2017,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,cfo,2019,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,cost_of_revenue,2020,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,depreciation_and_amortization,2023,injected,sign_flip,0.569,0,0,0,1,1,,,,,,,,sign: sign: depreciation_and_amortization is fixed positive (polarity ruling) but shown -5369000000,negated
+DIS,dividends_paid,2024,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,income_tax_expense,2017,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,interest_income,2022,control,,0.569,0,0,0,0,0,,P05: HIDDEN_ROW (line_presented_combined) but 10-K 0001744489-23-000216 prints InvestmentIncomeNet at 2022-10-01 as a comparative,,,,P05: HIDDEN_ROW (line_presented_combined) but 10-K 0001744489-23-000216 prints InvestmentIncomeNet at 2022-10-01 as a comparative,,,
+DIS,operating_income,2022,control,,0.569,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+DIS,total_assets,2021,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,weighted_basic_shares,2017,control,,0.569,0,0,0,0,0,,,,,,,,,
+DIS,weighted_diluted_shares,2018,injected,missing_badge,0.569,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+ETN,accounts_payable,2025,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,capex,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,cf_inventory_change,2019,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,comprehensive_income,2015,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,comprehensive_income,2021,injected,scale_x1000,0.425,0,0,1,1,1,,,,,,,ComprehensiveIncomeNetOfTax=2706000000.0000@0001551182-22-000004#R4 (fsn reports R4),"family: value differs: tier 1 ComprehensiveIncomeNetOfTax=2706000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown 2706000000000",x1000
+ETN,interest_income,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,inventory,2018,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,operating_income,2024,control,,0.425,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+ETN,ppe_net,2022,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,revenue,2017,injected,scale_x1e6,0.425,0,0,1,1,1,,,,,,,RevenueFromContractWithCustomerExcludingAssessedTax=20404000000.0000@0001551182-19-000045#R2 (fsn reports R2),"family: value differs: tier 1 RevenueFromContractWithCustomerExcludingAssessedTax=20404000000.0000 (dcml -6, 2017-12-31, qtrs 4), shown 20404000000000000",x1000000
+ETN,share_buybacks,2020,injected,wrong_hide,0.425,1,1,0,0,1,,,,,hidden_year: 0001551182-21-000022 presents 2020-12-31 and prints the line (PaymentsForRepurchaseOfCommonStock); a printed value or dash must be shown,P06: HIDDEN_YEAR (verified_absent) but its own 10-K 0001551182-21-000022 presents PaymentsForRepurchaseOfCommonStock at 2020-12-31,,,PaymentsForRepurchaseOfCommonStock hidden as verified_absent
+ETN,shares_outstanding,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+ETN,weighted_diluted_shares,2015,control,,0.425,0,0,0,0,0,,,,,,,,,
+FTNT,amortization_of_intangibles,2021,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,basic_eps,2017,injected,wrong_hide,0.429,1,1,0,0,1,,,,,hidden_year: 0001262039-18-000009 presents 2017-12-31 and prints the line (EarningsPerShareBasic); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001262039-18-000009 presents EarningsPerShareBasic at 2017-12-31,,,EarningsPerShareBasic hidden as line_presented_combined
+FTNT,cash_and_equivalents,2020,injected,period_shift,0.429,0,0,1,1,1,,,,,,,CashAndCashEquivalentsAtCarryingValue=1061800000.0000@0001262039-21-000008#R2 (fsn reports R2),"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=1061800000.0000 (dcml -5, 2020-12-31, qtrs 0), shown 1222500000",FY2019 value 1222500000 under FY2020 citation
+FTNT,cfo,2022,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,current_liabilities,2021,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,current_liabilities,2023,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,diluted_eps,2018,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,dividends_paid,2023,control,,0.429,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+FTNT,dividends_per_share,2021,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,net_income,2022,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,research_and_development,2025,control,,0.429,0,0,0,0,0,,,,,,,,,
+FTNT,share_buybacks,2024,control,,0.429,0,0,0,0,0,,,,,,,,,
+GE,cash_flow_financing,2017,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,cash_flow_investing,2023,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,cfo,2019,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,comprehensive_income,2024,injected,sign_flip,0.469,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 ComprehensiveIncomeNetOfTax=8845000000.0000 (dcml -6, 2024-12-31, qtrs 4), shown -8845000000",negated
+GE,cost_of_revenue,2025,injected,subline_as_total,0.469,0,0,0,0,0,,,,,,,,,CostOfGoodsAndServicesSold[ProductOrService=Service]=16586000000 of total 28968000000
+GE,current_assets,2017,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,dividends_paid,2017,control,,0.469,0,0,0,0,0,hidden_year: 0000040545-18-000014 presents 2017-12-31 and prints the line (PaymentsOfOrdinaryDividends); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-18-000014 presents PaymentsOfOrdinaryDividends at 2017-12-31,,,hidden_year: 0000040545-18-000014 presents 2017-12-31 and prints the line (PaymentsOfOrdinaryDividends); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000040545-18-000014 presents PaymentsOfOrdinaryDividends at 2017-12-31,,,
+GE,gross_profit,2025,control,,0.469,0,0,1,0,1,badge: shown cell has no badge,P08: derived - value 16887000000.0000: no parts,,,badge: shown cell has no badge,P08: derived - value 16887000000.0000: no parts,shown revenue 45855000000 - shown cost_of_revenue 16586000000,,
+GE,income_before_tax,2015,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,income_tax_expense,2023,injected,scale_x1000,0.469,0,0,1,1,1,,,,,,,"IncomeTaxExpenseBenefit=994000000.0000@0000040545-26-000008#R3 (fsn reports R3,R6)","family: value differs: tier 1 IncomeTaxExpenseBenefit=994000000.0000 (dcml -6, 2023-12-31, qtrs 4), shown 994000000000",x1000
+GE,net_income,2021,injected,available_to_common_ni,0.469,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=-6337000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown -6573000000",NetIncomeLossAvailableToCommonStockholdersBasic=-6573000000 served for -6337000000
+GE,sga_expense,2018,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,stockholders_equity,2018,control,,0.469,0,0,0,0,0,,,,,,,,,
+GE,total_assets,2022,control,,0.469,0,0,0,0,0,,,,,,,,,
+GILD,accounts_payable,2016,injected,sign_flip,0.402,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 AccountsPayableCurrent=1206000000.0000 (dcml -6, 2016-12-31, qtrs 0), shown -1206000000",negated
+GILD,basic_eps,2020,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,cash_and_equivalents,2021,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,cost_of_revenue,2022,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,current_liabilities,2015,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,interest_income,2015,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,interest_income,2025,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,inventory,2019,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,operating_expenses,2019,control,,0.402,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+GILD,operating_expenses,2020,injected,dropped_component,0.402,0,0,0,0,0,,,,,,,,,dropped ResearchAndDevelopmentInProcessIncludingImpairment=5856000000
+GILD,sbc,2023,control,,0.402,0,0,0,0,0,,,,,,,,,
+GILD,sbc,2025,injected,sign_flip,0.402,0,0,0,1,1,,,,,,,,sign: sign: sbc is fixed positive (polarity ruling) but shown -894000000,negated
+GILD,total_assets,2025,control,,0.402,0,0,0,0,0,,,,,,,,,
+GOOG,cash_flow_investing,2019,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,cash_paid_for_income_taxes,2015,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,cash_paid_for_income_taxes,2020,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,cf_inventory_change,2019,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,cost_of_revenue,2015,injected,rounded_duplicate,0.430,0,0,1,1,1,,,,,,,CostOfRevenue=28164000000.0000@0001652044-16-000012#R4 (fsn reports R4),"family: value differs: tier 1 CostOfRevenue=28164000000.0000 (dcml -6, 2015-12-31, qtrs 4), shown 28200000000",28164000000 rounded to 28200000000
+GOOG,current_liabilities,2016,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,depreciation_and_amortization,2015,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,operating_expenses,2017,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,other_income_expense_net,2019,control,,0.430,0,0,0,0,0,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,,
+GOOG,sbc,2017,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,share_buybacks,2020,control,,0.430,0,0,0,0,0,,,,,,,,,
+GOOG,weighted_basic_shares,2019,injected,sign_flip,0.430,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,negated
+GS,basic_eps,2019,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,cash_and_equivalents,2017,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,cash_and_equivalents,2018,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,cf_ar_change,2023,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,depreciation_and_amortization,2022,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,income_before_tax,2019,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,net_income,2016,injected,available_to_common_ni,0.550,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=7398000000.0000 (dcml -6, 2016-12-31, qtrs 4), shown 7087000000",NetIncomeLossAvailableToCommonStockholdersBasic=7087000000 served for 7398000000
+GS,operating_expenses,2019,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,other_income_expense_net,2017,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,weighted_basic_shares,2017,injected,missing_badge,0.550,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+GS,weighted_diluted_shares,2021,control,,0.550,0,0,0,0,0,,,,,,,,,
+GS,weighted_diluted_shares,2025,control,,0.550,0,0,0,0,0,,,,,,,,,
+HD,interest_expense,2018,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,operating_expenses,2021,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,ppe_net,2017,injected,rounded_duplicate,0.401,0,0,1,1,1,,,,,,,PropertyPlantAndEquipmentNet=21914000000.0000@0000354950-17-000005#R2 (fsn reports R2),"family: value differs: tier 1 PropertyPlantAndEquipmentNet=21914000000.0000 (dcml -6, 2017-01-31, qtrs 0), shown 21900000000",21914000000 rounded to 21900000000
+HD,research_and_development,2015,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,research_and_development,2019,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,revenue,2015,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,sbc,2021,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,sbc,2024,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,stockholders_equity,2024,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,total_assets,2015,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,total_debt,2017,control,,0.401,0,0,0,0,0,,,,,,,,,
+HD,total_debt,2024,injected,derived_two_filings,0.401,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived LongTermDebtAndCapitalLeaseObligations,LongTermDebtAndCapitalLeaseObligationsCurrent value 44111000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000354950-24-000062', '0000354950-25-000085']",part LongTermDebtAndCapitalLeaseObligations cited from later filing 0000354950-25-000085
+IBM,accounts_receivable,2021,injected,missing_badge,0.421,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+IBM,basic_eps,2024,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,cash_paid_for_income_taxes,2020,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,cfo,2019,injected,sign_flip,0.421,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 NetCashProvidedByUsedInOperatingActivities=14770000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown -14770000000",negated
+IBM,cfo,2023,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,depreciation_and_amortization,2018,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,gross_profit,2016,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,inventory,2015,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,operating_income,2020,control,,0.421,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+IBM,operating_income,2025,control,,0.421,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+IBM,revenue,2015,injected,subline_as_total,0.421,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=81741000000.0000 (dcml -6, 2015-12-31, qtrs 4); SalesRevenueGoodsNet=29967000000.0000 (dcml -6, 2015-12-31, qtrs 4); SalesRevenueServicesNet=49911000000.0000 (dc",Revenues[BusinessSegments=GlobalTechnologyServices]=32017000000 of total 81741000000
+IBM,sga_expense,2016,control,,0.421,0,0,0,0,0,,,,,,,,,
+IBM,weighted_basic_shares,2016,control,,0.421,0,0,0,0,0,,,,,,,,,
+INTC,cash_flow_investing,2016,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,current_liabilities,2015,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,current_liabilities,2020,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,current_liabilities,2025,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,depreciation_and_amortization,2021,injected,derived_two_filings,0.414,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived AmortizationOfIntangibleAssets,Depreciation value 11792000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000050863-22-000007', '0000050863-23-000006']",part AmortizationOfIntangibleAssets cited from later filing 0000050863-23-000006
+INTC,dividends_paid,2017,injected,scale_x1000,0.414,0,0,1,1,1,,,,,,,PaymentsOfDividendsCommonStock=5072000000.0000@0000050863-18-000007#R6 (fsn reports R6),"family: value differs: tier 1 PaymentsOfDividendsCommonStock=5072000000.0000 (dcml -6, 2017-12-31, qtrs 4), shown 5072000000000",x1000
+INTC,dividends_paid,2022,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,gross_profit,2021,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,income_before_tax,2018,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,share_buybacks,2024,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,share_buybacks,2025,control,,0.414,0,0,0,0,0,,,,,,,,,
+INTC,weighted_basic_shares,2024,control,,0.414,0,0,0,0,0,,,,,,,,,
+ISRG,accounts_payable,2018,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,amortization_of_intangibles,2023,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,basic_eps,2020,injected,scale_x1000,0.465,1,0,1,1,1,,,,,gate: implausible per-share value 3020 (> 1000) from 0001035267-23-000019,,implausible per-share value 3020 (> 1000); EarningsPerShareBasic=3.0200@0001035267-23-000019#R6 (fsn reports R6),per_share: implausible per-share value 3020 (> 1000),x1000
+ISRG,cash_flow_financing,2018,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,cash_flow_investing,2018,injected,period_shift,0.465,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInInvestingActivities=-1049600000.0000@0001035267-19-000012#R7 (fsn reports R7),"family: value differs: tier 1 NetCashProvidedByUsedInInvestingActivities=-1049600000.0000 (dcml -5, 2018-12-31, qtrs 4), shown 378700000",FY2017 value 378700000 under FY2018 citation
+ISRG,cash_flow_investing,2025,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,cf_ap_change,2024,injected,period_shift,0.465,0,0,1,1,1,,,,,,,IncreaseDecreaseInAccountsPayable=-400000.0000@0001035267-25-000017#R9 (fsn reports R9),"family: value differs: tier 1 IncreaseDecreaseInAccountsPayable=-400000.0000 (dcml -5, 2024-12-31, qtrs 4), shown 41700000",FY2023 value 41700000 under FY2024 citation
+ISRG,cf_ar_change,2019,injected,period_shift,0.465,0,0,1,1,1,,,,,,,IncreaseDecreaseInAccountsReceivable=-38800000.0000@0001035267-20-000032#R8 (fsn reports R8),"family: value differs: tier 1 IncreaseDecreaseInAccountsReceivable=-38800000.0000 (dcml -5, 2019-12-31, qtrs 4), shown 161300000",FY2018 value 161300000 under FY2019 citation
+ISRG,cf_ar_change,2024,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,cf_inventory_change,2025,injected,scale_x1000,0.465,0,0,1,1,1,,,,,,,IncreaseDecreaseInInventories=1063400000.0000@0001035267-26-000010#R9 (fsn reports R9),"family: value differs: tier 1 IncreaseDecreaseInInventories=1063400000.0000 (dcml -5, 2025-12-31, qtrs 4), shown 1063400000000",x1000
+ISRG,comprehensive_income,2019,injected,scale_x1e6,0.465,0,0,1,1,1,,,,,,,"ComprehensiveIncomeNetOfTax=1405000000.0000@0001035267-20-000032#R6 (fsn reports R5,R6)","family: value differs: tier 1 ComprehensiveIncomeNetOfTax=1405000000.0000 (dcml -5, 2019-12-31, qtrs 4), shown 1405000000000000",x1000000
+ISRG,cost_of_revenue,2016,injected,subline_as_total,0.465,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CostOfGoodsAndServicesSold=813600000.0000 (dcml -5, 2016-12-31, qtrs 4), shown 662600000",CostOfGoodsAndServicesSold[ProductOrService=Product]=662600000 of total 813600000
+ISRG,current_assets,2021,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,dividends_paid,2015,control,,0.465,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+ISRG,inventory,2024,injected,rounded_duplicate,0.465,0,0,1,1,1,,,,,,,InventoryNet=1487200000.0000@0001035267-25-000017#R4 (fsn reports R4),"family: value differs: tier 1 InventoryNet=1487200000.0000 (dcml -5, 2024-12-31, qtrs 0), shown 1500000000",1487200000 rounded to 1500000000
+ISRG,operating_expenses,2023,injected,missing_badge,0.465,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+ISRG,total_debt,2017,control,,0.465,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+ISRG,total_liabilities,2025,control,,0.465,0,0,0,0,0,,,,,,,,,
+ISRG,weighted_diluted_shares,2018,control,,0.465,0,0,0,0,0,,,,,,,,,
+JNJ,basic_eps,2016,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,capex,2017,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,cash_flow_investing,2024,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,cf_ap_change,2019,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,cost_of_revenue,2020,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,diluted_eps,2022,injected,scale_x1000,0.431,1,0,1,1,1,,,,,gate: implausible per-share value 6730 (> 1000) from 0000200406-23-000016,,implausible per-share value 6730 (> 1000); EarningsPerShareDiluted=6.7300@0000200406-23-000016#R5 (fsn reports R5),per_share: implausible per-share value 6730 (> 1000),x1000
+JNJ,operating_income,2016,control,,0.431,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+JNJ,other_income_expense_net,2016,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,sbc,2015,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,sga_expense,2018,control,,0.431,0,0,0,0,0,,,,,,,,,
+JNJ,total_debt,2016,injected,dropped_component,0.431,1,0,0,0,1,,,,,"debt: perimeter 27126000000.0000: face {'LongTermDebtNoncurrent': Decimal('22442000000.0000'), 'ShortTermBorrowings': Decimal('4684000000.0000')}; lease no lease facts",,,,dropped LongTermDebtNoncurrent=22442000000
+JNJ,weighted_basic_shares,2021,control,,0.431,0,0,0,0,0,,,,,,,,,
+JPM,amortization_of_intangibles,2025,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,cash_and_equivalents,2024,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,cash_and_equivalents,2025,injected,restricted_cash_total,0.585,0,0,0,1,1,,,,,,,,"family: value differs: tier 2 CashAndDueFromBanks=21742000000.0000 (dcml -6, 2025-12-31, qtrs 0), shown 343338000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=343338000000 served for 21742000000
+JPM,cash_flow_financing,2024,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,cash_paid_for_interest,2021,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,cf_ar_change,2019,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,diluted_eps,2018,injected,missing_badge,0.585,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+JPM,diluted_eps,2022,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,goodwill,2015,injected,wrong_hide,0.585,1,1,0,0,1,,,,,hidden_year: 0000019617-16-000902 presents 2015-12-31 and prints the line (Goodwill); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000019617-16-000902 presents Goodwill at 2015-12-31,,,Goodwill hidden as line_presented_combined
+JPM,interest_expense,2024,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,net_income,2025,injected,available_to_common_ni,0.585,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=57048000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 55681000000",NetIncomeLossAvailableToCommonStockholdersBasic=55681000000 served for 57048000000
+JPM,other_income_expense_net,2021,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,share_buybacks,2019,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,total_assets,2021,control,,0.585,0,0,0,0,0,,,,,,,,,
+JPM,total_debt,2019,injected,dropped_component,0.585,1,0,0,0,1,,,,,"debt: perimeter 332418000000.0000: face {'LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities': Decimal('291498000000.0000'), 'ShortTermBorrowings': Decimal('40920000000.0000')}; lease le",,,,dropped ShortTermBorrowings=40920000000
+KLAC,basic_eps,2017,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,cash_paid_for_interest,2017,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,comprehensive_income,2018,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,comprehensive_income,2020,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,current_assets,2025,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,depreciation_and_amortization,2018,injected,scale_x1e6,0.396,0,0,1,1,1,,,,,,,DepreciationDepletionAndAmortization=62684000.0000@0000319201-18-000045#R8 (fsn reports R8),"family: value differs: tier 1 DepreciationDepletionAndAmortization=62684000.0000 (dcml -3, 2018-06-30, qtrs 4), shown 62684000000000",x1000000
+KLAC,interest_expense,2026,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,operating_income,2016,control,,0.396,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+KLAC,operating_income,2018,control,,0.396,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+KLAC,other_income_expense_net,2023,control,,0.396,0,0,0,0,0,,,,,,,,,
+KLAC,sbc,2020,control,,0.396,0,0,0,0,0,,,,,,,,,
+KO,accounts_receivable,2015,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cash_and_equivalents,2020,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cash_flow_investing,2022,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cash_paid_for_income_taxes,2019,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cash_paid_for_interest,2019,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cf_ap_change,2022,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cf_ap_change,2024,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,cost_of_revenue,2019,injected,wrong_hide,0.426,1,1,0,0,1,,,,,hidden_year: 0000021344-20-000006 presents 2019-12-31 and prints the line (CostOfGoodsAndServicesSold); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000021344-20-000006 presents CostOfGoodsAndServicesSold at 2019-12-31,,,CostOfGoodsAndServicesSold hidden as line_presented_combined
+KO,total_debt,2018,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,weighted_basic_shares,2022,control,,0.426,0,0,0,0,0,,,,,,,,,
+KO,weighted_basic_shares,2023,control,,0.426,0,0,0,0,0,,,,,,,,,
+LIN,basic_eps,2023,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,cf_ap_change,2017,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,cf_ap_change,2025,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,cf_ar_change,2025,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,cf_inventory_change,2019,injected,sign_flip,0.462,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 IncreaseDecreaseInInventories=81000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown -81000000",negated
+LIN,dividends_paid,2021,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,income_tax_expense,2019,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,interest_expense,2021,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,net_income,2024,injected,rounded_duplicate,0.462,0,0,1,1,1,,,,,,,"NetIncomeLoss=6565000000.0000@0001628280-25-007990#R3 (fsn reports R3,R7)","family: value differs: tier 1 NetIncomeLoss=6565000000.0000 (dcml -6, 2024-12-31, qtrs 4), shown 6600000000",6565000000 rounded to 6600000000
+LIN,research_and_development,2025,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,weighted_basic_shares,2023,control,,0.462,0,0,0,0,0,,,,,,,,,
+LIN,weighted_diluted_shares,2020,control,,0.462,0,0,0,0,0,,,,,,,,,
+LLY,capex,2021,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,cash_and_equivalents,2024,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,cf_ap_change,2016,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,cf_ap_change,2019,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,cf_inventory_change,2017,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,depreciation_and_amortization,2016,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,income_before_tax,2019,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,income_before_tax,2022,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,sga_expense,2021,injected,rounded_duplicate,0.440,0,0,1,1,1,,,,,,,SellingGeneralAndAdministrativeExpense=6431600000.0000@0000059478-22-000068#R3 (fsn reports R3),"family: value differs: tier 1 SellingGeneralAndAdministrativeExpense=6431600000.0000 (dcml -5, 2021-12-31, qtrs 4), shown 6400000000",6431600000 rounded to 6400000000
+LLY,total_assets,2018,control,,0.440,0,0,0,0,0,,,,,,,,,
+LLY,total_debt,2018,control,,0.440,0,0,0,0,0,,,,,,,,,
+LMT,amortization_of_intangibles,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,cash_flow_investing,2015,injected,scale_x1e6,0.425,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInInvestingActivities=-9734000000.0000@0000936468-18-000013#R7 (fsn reports R7),"family: value differs: tier 1 NetCashProvidedByUsedInInvestingActivities=-9734000000.0000 (dcml -6, 2015-12-31, qtrs 4), shown -9734000000000000",x1000000
+LMT,cash_flow_investing,2018,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,cash_paid_for_interest,2022,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,cost_of_revenue,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,goodwill,2024,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,gross_profit,2018,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,inventory,2020,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,ppe_net,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,sga_expense,2019,control,,0.425,0,0,0,0,0,,,,,,,,,
+LMT,sga_expense,2022,control,,0.425,0,0,0,0,0,,,,,,,,,
+LRCX,cash_paid_for_interest,2021,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,cost_of_revenue,2019,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,income_tax_expense,2023,injected,scale_x1000,0.362,0,0,1,1,1,,,,,,,IncomeTaxExpenseBenefit=598279000.0000@0000707549-23-000102#R3 (fsn reports R3),"family: value differs: tier 1 IncomeTaxExpenseBenefit=598279000.0000 (dcml -3, 2023-06-30, qtrs 4), shown 598279000000",x1000
+LRCX,interest_expense,2022,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,operating_expenses,2019,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,operating_income,2018,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,ppe_net,2022,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,total_assets,2020,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,total_assets,2022,control,,0.362,0,0,0,0,0,,,,,,,,,
+LRCX,total_debt,2023,injected,derived_two_filings,0.362,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived LongTermDebtAndCapitalLeaseObligations,LongTermDebtAndCapitalLeaseObligationsCurrent value 5011541000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000707549-23-000102', '0000707549-24-000106']",part LongTermDebtAndCapitalLeaseObligationsCurrent cited from later filing 0000707549-24-000106
+MA,accounts_receivable,2019,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,cf_ap_change,2019,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,current_assets,2016,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,goodwill,2018,injected,sign_flip,0.467,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 Goodwill=2904000000.0000 (dcml -6, 2018-12-31, qtrs 0), shown -2904000000",negated
+MA,income_tax_expense,2015,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,net_income,2024,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,research_and_development,2017,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,research_and_development,2022,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,sga_expense,2015,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,sga_expense,2017,injected,missing_badge,0.467,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'derived:selling_and_marketing+general_and_administrative' blanked
+MA,shares_outstanding,2016,control,,0.467,0,0,0,0,0,,,,,,,,,
+MA,weighted_basic_shares,2016,control,,0.467,0,0,0,0,0,,,,,,,,,
+MCD,basic_eps,2025,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,cash_flow_investing,2019,injected,period_shift,0.475,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInInvestingActivities=-3071100000.0000@0000063908-20-000022#R7 (fsn reports R7),"family: value differs: tier 1 NetCashProvidedByUsedInInvestingActivities=-3071100000.0000 (dcml -5, 2019-12-31, qtrs 4), shown -2455100000",FY2018 value -2455100000 under FY2019 citation
+MCD,cash_paid_for_interest,2021,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,cf_ar_change,2017,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,cf_ar_change,2021,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,cf_inventory_change,2019,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,income_tax_expense,2018,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,inventory,2020,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,operating_income,2023,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,operating_income,2024,control,,0.475,0,0,0,0,0,,,,,,,,,
+MCD,research_and_development,2021,control,,0.475,0,0,0,0,0,,,,,,,,,
+META,cash_and_equivalents,2018,injected,restricted_cash_total,0.440,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=10019000000.0000 (dcml -6, 2018-12-31, qtrs 0), shown 10124000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=10124000000 served for 10019000000
+META,cash_paid_for_interest,2024,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,current_assets,2017,injected,period_shift,0.440,0,0,1,1,1,,,,,,,AssetsCurrent=48563000000.0000@0001326801-18-000009#R2 (fsn reports R2),"family: value differs: tier 1 AssetsCurrent=48563000000.0000 (dcml -6, 2017-12-31, qtrs 0), shown 34401000000",FY2016 value 34401000000 under FY2017 citation
+META,current_liabilities,2020,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,diluted_eps,2018,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,income_before_tax,2017,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,inventory,2016,control,,0.440,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+META,inventory,2021,control,,0.440,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+META,net_income,2018,injected,available_to_common_ni,0.440,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=22112000000.0000 (dcml -6, 2018-12-31, qtrs 4), shown 22111000000",NetIncomeLossAvailableToCommonStockholdersBasic=22111000000 served for 22112000000
+META,research_and_development,2017,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,research_and_development,2024,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,revenue,2021,injected,scale_x1e6,0.440,0,0,1,1,1,,,,,,,RevenueFromContractWithCustomerExcludingAssessedTax=117929000000.0000@0001326801-22-000018#R5 (fsn reports R5),"family: value differs: tier 1 RevenueFromContractWithCustomerExcludingAssessedTax=117929000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown 117929000000000000",x1000000
+META,sbc,2016,control,,0.440,0,0,0,0,0,,,,,,,,,
+META,sbc,2018,control,,0.440,0,0,0,0,0,,,,,,,,,
+MO,amortization_of_intangibles,2024,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,basic_eps,2017,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,comprehensive_income,2023,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,cost_of_revenue,2025,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,depreciation_and_amortization,2024,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,inventory,2018,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,other_income_expense_net,2020,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,other_income_expense_net,2025,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,revenue,2016,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,shares_outstanding,2015,control,,0.442,0,0,0,0,0,,,,,,,,,
+MO,total_debt,2019,injected,dropped_component,0.442,1,0,0,0,1,,,,,"debt: perimeter 28042000000.0000: face {'LongTermDebtCurrent': Decimal('1000000000.0000'), 'LongTermDebtNoncurrent': Decimal('27042000000.0000'), 'ShortTermBorrowings': Decimal('0.0000')}; lease no le",,,,dropped LongTermDebtNoncurrent=27042000000
+MPC,capex,2016,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,cash_and_equivalents,2019,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,cf_ar_change,2022,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,dividends_paid,2016,injected,wrong_hide,0.426,1,1,0,0,1,,,,,hidden_year: 0001510295-17-000017 presents 2016-12-31 and prints the line (PaymentsOfDividendsCommonStock); a printed value or dash must be shown,P06: HIDDEN_YEAR (verified_absent) but its own 10-K 0001510295-17-000017 presents PaymentsOfDividendsCommonStock at 2016-12-31,,,PaymentsOfDividendsCommonStock hidden as verified_absent
+MPC,income_tax_expense,2021,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,interest_income,2020,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,net_income,2018,injected,period_shift,0.426,0,0,1,1,1,,,,,,,NetIncomeLoss=2780000000.0000@0001510295-19-000014#R2 (fsn reports R2),"family: value differs: tier 1 NetIncomeLoss=2780000000.0000 (dcml -6, 2018-12-31, qtrs 4), shown 3432000000.0000",FY2017 value 3432000000.0000 under FY2018 citation
+MPC,research_and_development,2015,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,research_and_development,2018,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,sbc,2017,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,share_buybacks,2021,control,,0.426,0,0,0,0,0,,,,,,,,,
+MPC,total_assets,2021,control,,0.426,0,0,0,0,0,,,,,,,,,
+MRK,basic_eps,2017,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,cash_and_equivalents,2015,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,cash_and_equivalents,2022,injected,restricted_cash_total,0.418,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=12694000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 12773000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=12773000000 served for 12694000000
+MRK,cost_of_revenue,2015,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,income_before_tax,2015,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,inventory,2020,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,operating_expenses,2022,injected,dropped_component,0.418,0,0,0,0,0,,,,,,,,,dropped ResearchAndDevelopmentExpense=13548000000
+MRK,operating_income,2017,control,,0.418,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+MRK,operating_income,2019,control,,0.418,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+MRK,other_income_expense_net,2015,injected,dropped_component,0.418,0,0,0,0,0,gate: part OtherNonoperatingIncomeExpense has no accession or R page,,,,gate: part OtherNonoperatingIncomeExpense has no accession or R page,,,,dropped -InvestmentIncomeInterest=289000000
+MRK,research_and_development,2016,injected,subline_as_total,0.418,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 ResearchAndDevelopmentExpense=10261000000.0000 (dcml -6, 2016-12-31, qtrs 4), shown 9218000000",ResearchAndDevelopmentExpense[ConsolidationItems=MaterialReconcilingItems]=9218000000 of total 10261000000
+MRK,research_and_development,2020,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,revenue,2018,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRK,shares_outstanding,2023,injected,dropped_component,0.418,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,dropped CommonStockSharesIssued=3577103522
+MRK,weighted_diluted_shares,2016,control,,0.418,0,0,0,0,0,,,,,,,,,
+MRVL,accounts_receivable,2017,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,basic_eps,2025,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,cf_ap_change,2020,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,cf_ap_change,2023,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,cost_of_revenue,2026,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,interest_income,2015,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,interest_income,2017,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,other_income_expense_net,2017,control,,0.428,0,0,0,0,0,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,,
+MRVL,other_income_expense_net,2021,control,,0.428,0,0,0,0,0,,,,,,,,,
+MRVL,revenue,2021,injected,subline_as_total,0.428,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 RevenueFromContractWithCustomerExcludingAssessedTax=2968900000.0000 (dcml -3, 2021-01-31, qtrs 4), shown 2213645000",RevenueFromContractWithCustomerExcludingAssessedTax[ContractWithCustomerSalesChannel=SalesChannelDirectlyToConsumer]=2213645000 of total 2968900000
+MRVL,sbc,2018,control,,0.428,0,0,0,0,0,,,,,,,,,
+MS,accounts_payable,2016,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,amortization_of_intangibles,2018,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,income_tax_expense,2018,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,net_income,2025,injected,available_to_common_ni,0.584,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=16861000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 16249000000",NetIncomeLossAvailableToCommonStockholdersBasic=16249000000 served for 16861000000
+MS,net_interest_income,2015,control,,0.584,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+MS,operating_expenses,2018,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,other_income_expense_net,2024,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,revenue,2015,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,revenue,2023,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,total_liabilities,2021,control,,0.584,0,0,0,0,0,,,,,,,,,
+MS,weighted_basic_shares,2021,control,,0.584,0,0,0,0,0,,,,,,,,,
+MSFT,amortization_of_intangibles,2021,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,capex,2020,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,cash_flow_investing,2015,injected,scale_x1e6,0.386,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInInvestingActivitiesContinuingOperations=-23001000000.0000@0001193125-15-272806#R7 (fsn reports R7),"family: value differs: tier 2 NetCashProvidedByUsedInInvestingActivitiesContinuingOperations=-23001000000.0000 (dcml -6, 2015-06-30, qtrs 4), shown -23001000000000000",x1000000
+MSFT,cf_inventory_change,2021,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,cfo,2017,injected,scale_x1000,0.386,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInOperatingActivities=39507000000.0000@0001564590-18-019062#R6 (fsn reports R6),"family: value differs: tier 1 NetCashProvidedByUsedInOperatingActivities=39507000000.0000 (dcml -6, 2017-06-30, qtrs 4), shown 39507000000000",x1000
+MSFT,comprehensive_income,2016,injected,scale_x1e6,0.386,0,0,1,1,1,,,,,,,ComprehensiveIncomeNetOfTax=19811000000.0000@0001564590-18-019062#R3 (fsn reports R3),"family: value differs: tier 1 ComprehensiveIncomeNetOfTax=19811000000.0000 (dcml -6, 2016-06-30, qtrs 4), shown 19811000000000000",x1000000
+MSFT,depreciation_and_amortization,2018,control,,0.386,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-18-019062 presents Depreciation at 2018-06-30,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-18-019062 presents Depreciation at 2018-06-30,,,
+MSFT,depreciation_and_amortization,2020,control,,0.386,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-20-034944 presents Depreciation at 2020-06-30,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001564590-20-034944 presents Depreciation at 2020-06-30,,,
+MSFT,dividends_per_share,2015,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,interest_expense,2024,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,operating_income,2017,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,ppe_net,2026,injected,scale_x1e6,0.386,0,0,1,1,1,,,,,,,PropertyPlantAndEquipmentNet=313076000000.0000@0001193125-26-323660#R4 (fsn reports R4),"family: value differs: tier 1 PropertyPlantAndEquipmentNet=313076000000.0000 (dcml -6, 2026-06-30, qtrs 0), shown 313076000000000000",x1000000
+MSFT,sbc,2016,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,sga_expense,2021,injected,derived_two_filings,0.386,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived GeneralAndAdministrativeExpense,SellingAndMarketingExpense value 25224000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001564590-21-039151', '0001564590-22-026876']",part SellingAndMarketingExpense cited from later filing 0001564590-22-026876
+MSFT,share_buybacks,2019,control,,0.386,0,0,0,0,0,,,,,,,,,
+MSFT,stockholders_equity,2023,injected,period_shift,0.386,0,0,1,1,1,,,,,,,"StockholdersEquity=206223000000.0000@0000950170-23-035122#R4 (fsn reports R4,R7)","family: value differs: tier 1 StockholdersEquity=206223000000.0000 (dcml -6, 2023-06-30, qtrs 0), shown 166542000000",FY2022 value 166542000000 under FY2023 citation
+MU,accounts_payable,2017,injected,combined_as_narrow,0.428,0,0,0,1,1,,,,,,,,"family: value differs: tier 2 AccountsPayableTradeCurrent=1333000000.0000 (dcml -6, 2017-08-31, qtrs 0), shown 3664000000",AccountsPayableAndAccruedLiabilitiesCurrent=3664000000 served for narrow 1333000000
+MU,cash_and_equivalents,2021,injected,restricted_cash_total,0.428,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=7763000000.0000 (dcml -6, 2021-08-31, qtrs 0), shown 7829000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=7829000000 served for 7763000000
+MU,cash_paid_for_income_taxes,2025,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,cf_ap_change,2020,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,cf_ap_change,2024,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,cfo,2021,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,current_assets,2016,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,interest_expense,2015,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,other_income_expense_net,2019,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,sga_expense,2016,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,shares_outstanding,2025,control,,0.428,0,0,0,0,0,,,,,,,,,
+MU,total_debt,2021,injected,derived_two_filings,0.428,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived DebtCurrent,LongTermDebtAndCapitalLeaseObligations value 6776000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000723125-21-000065', '0000723125-22-000048']",part DebtCurrent cited from later filing 0000723125-22-000048
+MU,weighted_diluted_shares,2026,control,,0.428,0,0,0,0,0,,,,,,,,,
+NEE,accounts_payable,2015,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,accounts_receivable,2019,injected,combined_as_narrow,0.485,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 AccountsReceivableNetCurrent=2282000000.0000 (dcml -6, 2019-12-31, qtrs 0), shown 2807000000",ReceivablesNetCurrent=2807000000 served for narrow 2282000000
+NEE,cash_and_equivalents,2021,injected,restricted_cash_total,0.485,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=639000000.0000 (dcml -6, 2021-12-31, qtrs 0), shown 1316000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=1316000000 served for 639000000
+NEE,cash_paid_for_interest,2018,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,cfo,2017,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,current_liabilities,2015,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,depreciation_and_amortization,2017,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,diluted_eps,2021,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,gross_profit,2023,control,,0.485,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+NEE,operating_income,2015,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,research_and_development,2020,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,stockholders_equity,2022,control,,0.485,0,0,0,0,0,,,,,,,,,
+NEE,stockholders_equity,2025,injected,rounded_duplicate,0.485,0,0,1,1,1,,,,,,,StockholdersEquity=54608000000.0000@0000753308-26-000015#R6 (fsn reports R6),"family: value differs: tier 1 StockholdersEquity=54608000000.0000 (dcml -6, 2025-12-31, qtrs 0), shown 54600000000",54608000000 rounded to 54600000000
+NEM,amortization_of_intangibles,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,amortization_of_intangibles,2023,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,basic_eps,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,cf_inventory_change,2018,control,,0.448,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+NEM,cfo,2024,injected,scale_x1000,0.448,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInOperatingActivities=6363000000.0000@0001164727-25-000011#R8 (fsn reports R8),"family: value differs: tier 1 NetCashProvidedByUsedInOperatingActivities=6363000000.0000 (dcml -6, 2024-12-31, qtrs 4), shown 6363000000000",x1000
+NEM,diluted_eps,2024,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,dividends_per_share,2020,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,goodwill,2023,injected,scale_x1e6,0.448,0,0,1,1,1,,,,,,,Goodwill=3001000000.0000@0001164727-24-000016#R6 (fsn reports R6),"family: value differs: tier 1 Goodwill=3001000000.0000 (dcml -6, 2023-12-31, qtrs 0), shown 3001000000000000",x1000000
+NEM,inventory,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,ppe_net,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,revenue,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+NEM,share_buybacks,2023,control,,0.448,0,0,0,0,0,,,,,,,,,
+NFLX,depreciation_and_amortization,2019,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,interest_income,2025,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,inventory,2025,control,,0.517,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+NFLX,operating_expenses,2019,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,operating_expenses,2020,injected,derived_two_filings,0.517,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived GeneralAndAdministrativeExpense,MarketingExpense,TechnologyandDevelopmentExpense value 5134448000.0000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001065280-22-000036', '0001065280-23-000035']",part GeneralAndAdministrativeExpense cited from later filing 0001065280-23-000035
+NFLX,ppe_net,2022,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,revenue,2015,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,revenue,2025,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,sga_expense,2016,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,shares_outstanding,2015,control,,0.517,0,0,0,0,0,,,,,,,,,
+NFLX,shares_outstanding,2022,control,,0.517,0,0,0,0,0,,,,,,,,,
+NOW,amortization_of_intangibles,2023,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,cash_and_equivalents,2017,injected,restricted_cash_total,0.448,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=726495000.0000 (dcml -3, 2017-12-31, qtrs 0), shown 727829000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=727829000 served for 726495000
+NOW,cost_of_revenue,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,gross_profit,2016,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,income_before_tax,2015,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,income_tax_expense,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,interest_income,2018,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,inventory,2015,control,,0.448,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+NOW,sga_expense,2023,injected,sign_flip,0.448,0,0,0,1,1,,,,,,,,"parts: formula 'selling_and_marketing+general_and_administrative' subtracts nothing, but a part is subtracted",negated
+NOW,shares_outstanding,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,shares_outstanding,2023,injected,scale_x1e6,0.448,0,0,1,1,1,,,,,,,CommonStockSharesOutstanding=204724000.0000@0001373715-24-000030#R4 (fsn reports R4),"family: value differs: tier 1 CommonStockSharesOutstanding=204724000.0000 (dcml -3, 2023-12-31, qtrs 0), shown 204724000000000",x1000000
+NOW,shares_outstanding,2025,control,,0.448,0,0,0,0,0,,,,,,,,,
+NOW,total_assets,2024,control,,0.448,0,0,0,0,0,,,,,,,,,
+NVDA,accounts_receivable,2022,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,accounts_receivable,2023,injected,wrong_hide,0.363,1,1,0,0,1,,,,,hidden_year: 0001045810-23-000017 presents 2023-01-29 and prints the line (AccountsReceivableNetCurrent); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001045810-23-000017 presents AccountsReceivableNetCurrent at 2023-01-29,,,AccountsReceivableNetCurrent hidden as line_presented_combined
+NVDA,cash_flow_financing,2015,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,cash_flow_financing,2016,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,cash_paid_for_income_taxes,2024,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,cf_ap_change,2018,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,cf_ar_change,2024,injected,scale_x1000,0.363,0,0,1,1,1,,,,,,,IncreaseDecreaseInAccountsReceivable=6172000000.0000@0001045810-24-000029#R9 (fsn reports R9),"family: value differs: tier 1 IncreaseDecreaseInAccountsReceivable=6172000000.0000 (dcml -6, 2024-01-31, qtrs 4), shown 6172000000000",x1000
+NVDA,cf_inventory_change,2017,injected,sign_flip,0.363,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 IncreaseDecreaseInInventories=375000000.0000 (dcml -6, 2017-01-31, qtrs 4), shown -375000000",negated
+NVDA,current_liabilities,2022,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,diluted_eps,2017,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,income_before_tax,2019,control,,0.363,0,0,0,0,0,,,,,,,,,
+NVDA,total_debt,2015,injected,derived_two_filings,0.363,1,1,1,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived CapitalLeaseObligationsNoncurrent,LongTermDebt value 1398428000: parts cite 2 filings",CapitalLeaseObligationsNoncurrent=14000000.0000@0001045810-16-000205#R5 (fsn reports R4); LongTermDebt=1384342000.0000@0001045810-15-000036#R5 (fsn reports R5),"parts: derivation uses more than one filing ['0001045810-15-000036', '0001045810-16-000205']",part CapitalLeaseObligationsNoncurrent cited from later filing 0001045810-16-000205
+ORCL,amortization_of_intangibles,2023,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,basic_eps,2015,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,capex,2021,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,cf_ap_change,2021,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,diluted_eps,2023,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,gross_profit,2016,control,,0.424,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+ORCL,income_before_tax,2026,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,income_tax_expense,2023,injected,wrong_hide,0.424,1,1,0,0,1,,,,,hidden_year: 0000950170-23-028914 presents 2023-05-31 and prints the line (IncomeTaxExpenseBenefit); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000950170-23-028914 presents IncomeTaxExpenseBenefit at 2023-05-31,,,IncomeTaxExpenseBenefit hidden as line_presented_combined
+ORCL,interest_expense,2019,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,net_income,2022,control,,0.424,0,0,0,0,0,,,,,,,,,
+ORCL,shares_outstanding,2022,control,,0.424,0,0,0,0,0,,,,,,,,,
+PANW,cash_and_equivalents,2020,injected,restricted_cash_total,0.404,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=2958000000.0000 (dcml -5, 2020-07-31, qtrs 0), shown 2961700000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=2961700000 served for 2958000000
+PANW,cash_paid_for_income_taxes,2017,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,cfo,2023,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,cost_of_revenue,2024,injected,subline_as_total,0.404,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CostOfGoodsAndServicesSold=2059200000.0000 (dcml -5, 2024-07-31, qtrs 4), shown 1711000000",CostOfGoodsAndServicesSold[ProductOrService=Service]=1711000000 of total 2059200000
+PANW,diluted_eps,2023,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,dividends_paid,2018,control,,0.404,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+PANW,gross_profit,2024,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,inventory,2015,control,,0.404,0,0,0,0,0,"hide_reason: verified_absent, but inventory is not on the VERIFIED_ABSENT_HIDE allowlist and the cell carries no full-text search evidence",,,,"hide_reason: verified_absent, but inventory is not on the VERIFIED_ABSENT_HIDE allowlist and the cell carries no full-text search evidence",,,,
+PANW,inventory,2025,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,sbc,2015,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,stockholders_equity,2022,control,,0.404,0,0,0,0,0,,,,,,,,,
+PANW,total_debt,2016,injected,derived_two_filings,0.404,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived ConvertibleDebtCurrent,ConvertibleDebtNoncurrent value 500200000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001327567-16-000073', '0001327567-17-000027']",part ConvertibleDebtCurrent cited from later filing 0001327567-17-000027
+PANW,total_debt,2025,control,,0.404,0,0,0,0,0,,,,,,,,,
+PEP,accounts_payable,2018,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,accounts_payable,2021,injected,combined_as_narrow,0.427,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 AccountsPayableCurrent=9834000000.0000 (dcml -6, 2021-12-31, qtrs 0), shown 21159000000",AccountsPayableAndAccruedLiabilitiesCurrent=21159000000 served for narrow 9834000000
+PEP,cash_and_equivalents,2022,injected,restricted_cash_total,0.427,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=4954000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 5100000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=5100000000 served for 4954000000
+PEP,cf_ap_change,2018,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,cf_ap_change,2023,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,cf_inventory_change,2024,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,dividends_paid,2025,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,dividends_per_share,2018,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,income_before_tax,2017,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,income_tax_expense,2016,injected,wrong_hide,0.427,1,1,0,0,1,,,,,hidden_year: 0000077476-17-000010 presents 2016-12-31 and prints the line (IncomeTaxExpenseBenefit); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000077476-17-000010 presents IncomeTaxExpenseBenefit at 2016-12-31,,,IncomeTaxExpenseBenefit hidden as line_presented_combined
+PEP,interest_expense,2024,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,sbc,2025,control,,0.427,0,0,0,0,0,,,,,,,,,
+PEP,weighted_basic_shares,2020,control,,0.427,0,0,0,0,0,,,,,,,,,
+PFE,amortization_of_intangibles,2024,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,cf_ap_change,2017,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,depreciation_and_amortization,2019,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,depreciation_and_amortization,2024,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,goodwill,2020,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,income_before_tax,2020,injected,period_shift,0.416,0,0,1,1,1,,,,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=7036000000.0000@0000078003-23-000024#R3 (fsn reports R3),"family: value differs: tier 1 IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=7036000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown 11321000000",FY2019 value 11321000000 under FY2020 citation
+PFE,inventory,2018,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,net_income,2018,injected,available_to_common_ni,0.416,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=11153000000.0000 (dcml -6, 2018-12-31, qtrs 4), shown 11152000000",NetIncomeLossAvailableToCommonStockholdersBasic=11152000000 served for 11153000000
+PFE,operating_expenses,2015,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,operating_income,2023,control,,0.416,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+PFE,ppe_net,2018,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,sga_expense,2019,control,,0.416,0,0,0,0,0,,,,,,,,,
+PFE,total_debt,2017,injected,dropped_component,0.416,1,0,0,0,1,,,,,"debt: perimeter 43491000000.0000: face {'DebtCurrent': Decimal('9953000000.0000'), 'LongTermDebtNoncurrent': Decimal('33538000000.0000')}; lease no lease facts",,,,dropped LongTermDebtNoncurrent=33538000000
+PG,accounts_receivable,2018,injected,sign_flip,0.425,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 AccountsReceivableNetCurrent=4686000000.0000 (dcml -6, 2018-06-30, qtrs 0), shown -4686000000",negated
+PG,basic_eps,2019,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,capex,2019,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,capex,2023,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,cf_ap_change,2015,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,cf_ap_change,2017,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,cfo,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,net_income,2015,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,net_income,2019,injected,available_to_common_ni,0.425,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=3897000000.0000 (dcml -6, 2019-06-30, qtrs 4), shown 3634000000",NetIncomeLossAvailableToCommonStockholdersBasic=3634000000 served for 3897000000
+PG,operating_expenses,2016,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,other_income_expense_net,2023,control,,0.425,0,0,0,0,0,,,,,,,,,
+PG,share_buybacks,2017,control,,0.425,0,0,0,0,0,,,,,,,,,
+PGR,cash_and_equivalents,2017,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,cfo,2018,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,comprehensive_income,2020,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,depreciation_and_amortization,2016,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,interest_expense,2015,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,interest_income,2022,control,,0.596,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-23-000006 presents InterestAndDividendIncomeOperating at 2022-12-31,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0000080661-23-000006 presents InterestAndDividendIncomeOperating at 2022-12-31,,,
+PGR,net_income,2021,injected,available_to_common_ni,0.596,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=3350900000.0000 (dcml -5, 2021-12-31, qtrs 4), shown 3324000000",NetIncomeLossAvailableToCommonStockholdersBasic=3324000000 served for 3350900000
+PGR,operating_expenses,2019,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,other_income_expense_net,2020,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,ppe_net,2018,control,,0.596,0,0,0,0,0,,,,,,,,,
+PGR,stockholders_equity,2021,control,,0.596,0,0,0,0,0,,,,,,,,,
+PLTR,accounts_payable,2019,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,capex,2023,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,cash_and_equivalents,2024,injected,restricted_cash_total,0.666,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=2098524000.0000 (dcml -3, 2024-12-31, qtrs 0), shown 2119936000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=2119936000 served for 2098524000
+PLTR,cfo,2022,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,current_liabilities,2018,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,income_before_tax,2017,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,net_income,2021,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,sbc,2024,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,sga_expense,2024,injected,dropped_component,0.666,0,0,0,0,0,,,,,,,,,dropped SellingAndMarketingExpense=887755000
+PLTR,share_buybacks,2024,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,shares_outstanding,2021,control,,0.666,0,0,0,0,0,,,,,,,,,
+PLTR,stockholders_equity,2020,control,,0.666,0,0,0,0,0,,,,,,,,,
+PM,cash_and_equivalents,2020,injected,restricted_cash_total,0.405,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=7280000000.0000 (dcml -6, 2020-12-31, qtrs 0), shown 7285000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=7285000000 served for 7280000000
+PM,cf_ar_change,2018,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,cf_ar_change,2021,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,cfo,2023,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,depreciation_and_amortization,2021,injected,wrong_hide,0.405,1,1,0,0,1,,,,,hidden_year: 0001413329-22-000011 presents 2021-12-31 and prints the line (DepreciationAndAmortization); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001413329-22-000011 presents Depreciation at 2021-12-31,,,DepreciationDepletionAndAmortization hidden as line_presented_combined
+PM,interest_expense,2019,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,net_income,2022,injected,available_to_common_ni,0.405,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=9048000000.0000 (dcml -6, 2022-12-31, qtrs 4), shown 9024000000",NetIncomeLossAvailableToCommonStockholdersBasic=9024000000 served for 9048000000
+PM,operating_expenses,2024,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,other_income_expense_net,2018,control,,0.405,0,0,0,0,0,,,,"identity: the printed band without its interest lines gives -41000000.0000 or -231000000.0000, shown 41000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquit",,,,"identity: the printed band without its interest lines gives -41000000.0000 or -231000000.0000, shown 41000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquit",
+PM,sga_expense,2023,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,share_buybacks,2025,control,,0.405,0,0,0,0,0,,,,,,,,,
+PM,shares_outstanding,2023,control,,0.405,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+PM,weighted_diluted_shares,2021,control,,0.405,0,0,0,0,0,,,,,,,,,
+QCOM,cash_paid_for_interest,2024,control,,0.383,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+QCOM,current_liabilities,2022,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,dividends_per_share,2024,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,goodwill,2015,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,interest_income,2018,control,,0.383,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-18-000095 presents InvestmentIncomeInterestAndDividend at 2018-09-30,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-18-000095 presents InvestmentIncomeInterestAndDividend at 2018-09-30,,,
+QCOM,interest_income,2020,control,,0.383,0,0,0,0,0,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-20-000067 presents InvestmentIncomeInterestAndDividend at 2020-09-27,,,,P06: HIDDEN_ROW (line_presented_combined) but its own 10-K 0001728949-20-000067 presents InvestmentIncomeInterestAndDividend at 2020-09-27,,,
+QCOM,inventory,2015,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,net_income,2022,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,research_and_development,2020,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,revenue,2018,injected,subline_as_total,0.383,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=22611000000.0000 (dcml -6, 2018-09-30, qtrs 4), shown 17282000000",Revenues[BusinessSegments=Qct]=17282000000 of total 22611000000
+QCOM,share_buybacks,2022,control,,0.383,0,0,0,0,0,,,,,,,,,
+QCOM,total_debt,2016,injected,derived_two_filings,0.383,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived CommercialPaper,LongTermDebt value 11757000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0001234452-16-000552', '0001234452-17-000190']",part CommercialPaper cited from later filing 0001234452-17-000190
+RTX,amortization_of_intangibles,2019,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,cash_and_equivalents,2021,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,cash_flow_financing,2015,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,cash_paid_for_income_taxes,2015,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,cash_paid_for_income_taxes,2017,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,cf_inventory_change,2024,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,comprehensive_income,2016,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,gross_profit,2022,control,,0.447,0,0,0,0,0,badge: shown cell has no badge,P08: derived - value 13668000000.0000: no parts,,,badge: shown cell has no badge,P08: derived - value 13668000000.0000: no parts,,,
+RTX,income_before_tax,2023,injected,missing_badge,0.447,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+RTX,income_tax_expense,2025,injected,period_shift,0.447,0,0,1,1,1,,,,,,,IncomeTaxExpenseBenefit=1664000000.0000@0000101829-26-000006#R3 (fsn reports R3),"family: value differs: tier 1 IncomeTaxExpenseBenefit=1664000000.0000 (dcml -6, 2025-12-31, qtrs 4), shown 1181000000",FY2024 value 1181000000 under FY2025 citation
+RTX,interest_income,2023,control,,0.447,0,0,0,0,0,,,,,,,,,
+RTX,net_income,2019,injected,scale_x1e6,0.447,0,0,1,1,1,,,,,,,"NetIncomeLoss=5537000000.0000@0000101829-20-000013#R2 (fsn reports R2,R7)","family: value differs: tier 1 NetIncomeLoss=5537000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown 5537000000000000",x1000000
+RTX,shares_outstanding,2018,injected,dropped_component,0.447,0,1,0,0,1,badge: shown cell has no badge,P03: shares_outstanding=861482 vs net income/basic EPS = 800759878: off by 10^-3,,,badge: shown cell has no badge,P03: shares_outstanding=-585479 vs net income/basic EPS = 800759878: off by 10^-3,,,dropped CommonStockSharesIssued=1446961
+RTX,shares_outstanding,2021,control,,0.447,0,0,0,0,0,"hidden_year: 0000101829-22-000005 presents 2021-12-31 and prints the line (CommonStockSharesIssued, TreasuryStockShares); a printed value or dash must be shown",,,,"hidden_year: 0000101829-22-000005 presents 2021-12-31 and prints the line (CommonStockSharesIssued, TreasuryStockShares); a printed value or dash must be shown",,,,
+RTX,total_debt,2020,injected,derived_two_filings,0.447,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived LongTermDebtAndCapitalLeaseObligations,LongTermDebtAndCapitalLeaseObligationsCurrent,ShortTermBorrowings value 31823000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000101829-21-000008', '0000101829-22-000005']",part LongTermDebtAndCapitalLeaseObligationsCurrent cited from later filing 0000101829-22-000005
+SCCO,cash_flow_financing,2018,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,cash_flow_financing,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,cf_ap_change,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,comprehensive_income,2024,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,cost_of_revenue,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,diluted_eps,2017,injected,missing_badge,0.448,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+SCCO,dividends_paid,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,income_before_tax,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,interest_income,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,net_income,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCCO,sga_expense,2021,injected,subline_as_total,0.448,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 SellingGeneralAndAdministrativeExpense=125200000.0000 (dcml -5, 2021-12-31, qtrs 4), shown 12300000",SellingGeneralAndAdministrativeExpense[ConsolidationItems=CorporateAndEliminations]=12300000 of total 125200000
+SCCO,share_buybacks,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+SCHW,capex,2023,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,cash_and_equivalents,2019,injected,restricted_cash_total,0.605,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=29345000000.0000 (dcml -6, 2019-12-31, qtrs 0), shown 45577000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=45577000000 served for 29345000000
+SCHW,goodwill,2025,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,interest_income,2018,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,net_income,2022,injected,available_to_common_ni,0.605,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=7183000000.0000 (dcml -6, 2022-12-31, qtrs 4), shown 6635000000",NetIncomeLossAvailableToCommonStockholdersBasic=6635000000 served for 7183000000
+SCHW,net_income,2025,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,sbc,2024,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,share_buybacks,2023,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,share_buybacks,2024,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,shares_outstanding,2019,control,,0.605,0,0,0,0,0,,,,,,,,,
+SCHW,shares_outstanding,2024,control,,0.605,0,0,0,0,0,hidden_year: 0000316709-25-000010 presents 2024-12-31 and prints the line (CommonStockSharesOutstanding); a printed value or dash must be shown,,,,hidden_year: 0000316709-25-000010 presents 2024-12-31 and prints the line (CommonStockSharesOutstanding); a printed value or dash must be shown,,,,
+SCHW,total_liabilities,2018,control,,0.605,0,0,0,0,0,,,,,,,,,
+SHOP,accounts_payable,2022,injected,combined_as_narrow,0.485,0,0,0,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,"family: value differs: tier 2 AccountsPayableTradeCurrent=364000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 542000000",AccountsPayableAndAccruedLiabilitiesCurrent=542000000 served for narrow 364000000
+SHOP,amortization_of_intangibles,2019,injected,period_shift,0.485,0,0,1,1,1,,,,,,,AmortizationOfIntangibleAssets=18872000.0000@0001594805-20-000010#R67 (fsn reports -),"family: value differs: tier 1 AmortizationOfIntangibleAssets=18872000.0000 (dcml -3, 2019-12-31, qtrs 4), shown 10141000",FY2018 value 10141000 under FY2019 citation
+SHOP,cash_and_equivalents,2021,injected,rounded_duplicate,0.485,0,0,1,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,CashAndCashEquivalentsAtCarryingValue=2502992000.0000@0001594805-22-000011# (fsn reports -),"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=2502992000.0000 (dcml -3, 2021-12-31, qtrs 0), shown 2500000000",2502992000 rounded to 2500000000
+SHOP,cf_inventory_change,2016,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,cfo,2015,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,cost_of_revenue,2021,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,current_assets,2024,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,dividends_per_share,2020,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,gross_profit,2023,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,net_income,2022,injected,scale_x1e6,0.485,0,0,1,1,1,,,,,,,"NetIncomeLoss=-3460000000.0000@0001594805-25-000012#R5 (fsn reports R5,R7)","family: value differs: tier 1 NetIncomeLoss=-3460000000.0000 (dcml -6, 2022-12-31, qtrs 4), shown -3460000000000000",x1000000
+SHOP,other_income_expense_net,2019,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,revenue,2025,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,stockholders_equity,2025,control,,0.485,0,0,0,0,0,,,,,,,,,
+SHOP,total_liabilities,2017,control,,0.485,0,0,0,0,0,badge: shown cell has no badge,P08: derived - value 112464000: no parts,,,badge: shown cell has no badge,P08: derived - value 112464000: no parts,,,
+SHOP,total_liabilities,2020,injected,sign_flip,0.485,0,1,1,0,1,badge: shown cell has no badge,P08: derived - value 1362182000: no parts,,,badge: shown cell has no badge,P08: derived - value -1362182000: no parts,"Assets 7762905000.0000 - total equity incl. NCI 6400723000.0000 - temporary equity 0 (Assets=7762905000.0000, LiabilitiesAndStockholdersEquity=7762905000.0000, StockholdersEquity=6400723000.0000)",,negated
+SPGI,amortization_of_intangibles,2024,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,cash_and_equivalents,2020,injected,restricted_cash_total,0.452,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=4108000000.0000 (dcml -6, 2020-12-31, qtrs 0), shown 4122000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=4122000000 served for 4108000000
+SPGI,depreciation_and_amortization,2023,injected,derived_two_filings,0.452,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived AmortizationOfIntangibleAssets,Depreciation value 1143000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000064040-24-000071', '0000064040-26-000013']",part Depreciation cited from later filing 0000064040-26-000013
+SPGI,diluted_eps,2022,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,income_before_tax,2022,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,interest_income,2022,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,inventory,2016,control,,0.452,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+SPGI,net_income,2015,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,other_income_expense_net,2022,injected,derived_two_filings,0.452,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived GainsLossesOnExtinguishmentOfDebt,OtherNonoperatingIncomeExpense value 62000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000064040-23-000058', '0000064040-24-000071']",part GainsLossesOnExtinguishmentOfDebt cited from later filing 0000064040-24-000071
+SPGI,ppe_net,2023,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,sbc,2019,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,shares_outstanding,2016,control,,0.452,0,0,0,0,0,,,,,,,,,
+SPGI,total_debt,2016,control,,0.452,0,0,0,0,0,,,,,,,,,
+STX,cfo,2019,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,current_liabilities,2020,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,depreciation_and_amortization,2026,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,dividends_paid,2015,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,gross_profit,2020,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,gross_profit,2021,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,income_tax_expense,2022,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,inventory,2018,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,ppe_net,2020,control,,0.369,0,0,0,0,0,,,,,,,,,
+STX,sbc,2020,injected,missing_badge,0.369,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+STX,weighted_basic_shares,2018,control,,0.369,0,0,0,0,0,,,,,,,,,
+T,accounts_payable,2018,injected,combined_as_narrow,0.477,0,0,0,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,"family: value differs: tier 1 AccountsPayableCurrent=27018000000.0000 (dcml -6, 2018-12-31, qtrs 0), shown 43184000000",AccountsPayableAndAccruedLiabilitiesCurrent=43184000000 served for narrow 27018000000
+T,basic_eps,2025,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,cash_and_equivalents,2020,injected,restricted_cash_total,0.477,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=9740000000.0000 (dcml -6, 2020-12-31, qtrs 0), shown 9870000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=9870000000 served for 9740000000
+T,cf_ap_change,2023,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,cf_ar_change,2022,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,current_assets,2023,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,current_liabilities,2015,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,depreciation_and_amortization,2022,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,goodwill,2019,injected,rounded_duplicate,0.477,0,0,1,1,1,,,,,,,Goodwill=146241000000.0000@0001562762-20-000064#R5 (fsn reports R5),"family: value differs: tier 1 Goodwill=146241000000.0000 (dcml -6, 2019-12-31, qtrs 0), shown 146200000000",146241000000 rounded to 146200000000
+T,gross_profit,2022,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,net_income,2018,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,net_income,2022,injected,available_to_common_ni,0.477,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=-8524000000.0000 (dcml -6, 2022-12-31, qtrs 4), shown -8727000000",NetIncomeLossAvailableToCommonStockholdersBasic=-8727000000 served for -8524000000
+T,revenue,2022,control,,0.477,0,0,0,0,0,,,,,,,,,
+T,sga_expense,2016,control,,0.477,0,0,0,0,0,,,,,,,,,
+TJX,capex,2020,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,cash_flow_investing,2020,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,cash_flow_investing,2022,injected,scale_x1e6,0.423,0,0,1,1,1,,,,,,,NetCashProvidedByUsedInInvestingActivities=-1046000000.0000@0000109198-24-000014#R8 (fsn reports R8),"family: value differs: tier 1 NetCashProvidedByUsedInInvestingActivities=-1046000000.0000 (dcml -6, 2022-01-31, qtrs 4), shown -1046000000000000",x1000000
+TJX,cash_paid_for_income_taxes,2016,injected,missing_badge,0.423,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+TJX,cfo,2026,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,cost_of_revenue,2022,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,current_assets,2025,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,current_liabilities,2026,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,inventory,2016,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,operating_expenses,2022,injected,subline_as_total,0.423,0,0,0,0,0,,,,,,,,,SellingGeneralAndAdministrativeExpense[ConsolidationItems=CorporateNonSegment]=611000000 of total 9081000000
+TJX,other_income_expense_net,2015,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,research_and_development,2015,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,revenue,2017,control,,0.423,0,0,0,0,0,,,,,,,,,
+TJX,revenue,2022,injected,rounded_duplicate,0.423,0,0,1,1,1,,,,,,,RevenueFromContractWithCustomerIncludingAssessedTax=48549982000.0000@0000109198-22-000008#R3 (fsn reports R3),"family: value differs: tier 1 RevenueFromContractWithCustomerIncludingAssessedTax=48549982000.0000 (dcml -3, 2022-01-31, qtrs 4), shown 48500000000",48549982000 rounded to 48500000000
+TMO,cash_and_equivalents,2022,injected,restricted_cash_total,0.400,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=8524000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 8537000000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=8537000000 served for 8524000000
+TMO,cfo,2022,injected,wrong_hide,0.400,1,1,0,0,1,,,,,hidden_year: 0000097745-23-000008 presents 2022-12-31 and prints the line (NetCashProvidedByUsedInOperatingActivities); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000097745-23-000008 presents NetCashProvidedByUsedInOperatingActivities at 2022-12-31,,,NetCashProvidedByUsedInOperatingActivities hidden as line_presented_combined
+TMO,current_liabilities,2024,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,depreciation_and_amortization,2019,injected,derived_two_filings,0.400,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),"P08: derived AmortizationOfIntangibleAssets,Depreciation value 2277000000: parts cite 2 filings",,"parts: derivation uses more than one filing ['0000097745-20-000009', '0000097745-21-000011']",part Depreciation cited from later filing 0000097745-21-000011
+TMO,income_before_tax,2015,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,income_before_tax,2022,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,interest_expense,2018,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,operating_income,2023,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,other_income_expense_net,2022,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,sbc,2019,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMO,share_buybacks,2015,control,,0.400,0,0,0,0,0,,,,,,,,,
+TMUS,accounts_payable,2017,injected,combined_as_narrow,0.448,0,0,0,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,"family: value differs: tier 2 AccountsPayableTradeCurrent=6182000000.0000 (dcml -6, 2017-12-31, qtrs 0), shown 8528000000",AccountsPayableAndAccruedLiabilitiesCurrent=8528000000 served for narrow 6182000000
+TMUS,amortization_of_intangibles,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,cf_ap_change,2015,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,cf_inventory_change,2018,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,cfo,2023,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,cost_of_revenue,2015,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,interest_income,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,net_income,2017,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,research_and_development,2015,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,total_debt,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,weighted_basic_shares,2025,control,,0.448,0,0,0,0,0,,,,,,,,,
+TMUS,weighted_diluted_shares,2019,injected,rounded_duplicate,0.448,0,0,1,1,1,,,,,,,WeightedAverageNumberOfDilutedSharesOutstanding=863433511.0000@0001283699-20-000026#R4 (fsn reports R4),"family: value differs: tier 1 WeightedAverageNumberOfDilutedSharesOutstanding=863433511.0000 (dcml 0, 2019-12-31, qtrs 4), shown 900000000",863433511 rounded to 900000000
+TSLA,accounts_receivable,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,basic_eps,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,cash_flow_financing,2016,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,cf_ap_change,2015,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,cfo,2015,injected,missing_badge,0.448,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+TSLA,depreciation_and_amortization,2024,control,,0.448,0,0,0,0,0,,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001628280-25-003063 presents Depreciation at 2024-12-31,,,,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001628280-25-003063 presents Depreciation at 2024-12-31,,,
+TSLA,diluted_eps,2019,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,interest_income,2022,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,net_income,2022,injected,available_to_common_ni,0.448,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=12556000000.0000 (dcml -6, 2022-12-31, qtrs 4), shown 12583000000",NetIncomeLossAvailableToCommonStockholdersBasic=12583000000 served for 12556000000
+TSLA,revenue,2021,injected,subline_as_total,0.448,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 Revenues=53823000000.0000 (dcml -6, 2021-12-31, qtrs 4); RevenueFromContractWithCustomerExcludingAssessedTax=53823000000.0000 (dcml -6, 2021-12-31, qtrs 4), shown 4723200",RevenueFromContractWithCustomerExcludingAssessedTax[ProductOrService=AutomotiveRevenues]=47232000000 of total 53823000000
+TSLA,sga_expense,2016,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,sga_expense,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,stockholders_equity,2023,injected,rounded_duplicate,0.448,0,0,1,1,1,,,,,,,StockholdersEquity=62634000000.0000@0001628280-24-002390#R3 (fsn reports R3),"family: value differs: tier 1 StockholdersEquity=62634000000.0000 (dcml -6, 2023-12-31, qtrs 0), shown 62600000000",62634000000 rounded to 62600000000
+TSLA,total_liabilities,2021,control,,0.448,0,0,0,0,0,,,,,,,,,
+TSLA,weighted_basic_shares,2018,injected,sign_flip,0.448,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 WeightedAverageNumberOfSharesOutstandingBasic=853000000.0000 (dcml -6, 2018-12-31, qtrs 4), shown -853000000",negated
+TXN,amortization_of_intangibles,2021,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,cash_flow_investing,2022,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,cf_ap_change,2016,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,cfo,2019,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,current_assets,2025,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,current_liabilities,2017,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,gross_profit,2025,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,other_income_expense_net,2025,injected,scale_x1e6,0.421,0,0,1,1,1,,,,,,,OtherNonoperatingIncomeExpense=230000000.0000@0000097476-26-000059#R3 (fsn reports R3),"identity: the printed band without its interest lines gives 230000000.0000, shown 230000000000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=571000000",x1000000
+TXN,ppe_net,2017,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,shares_outstanding,2020,control,,0.421,0,0,0,0,0,,,,,,,,,
+TXN,stockholders_equity,2016,control,,0.421,0,0,0,0,0,,,,,,,,,
+UBER,basic_eps,2025,injected,wrong_hide,0.542,1,1,0,0,1,,,,,hidden_year: 0001543151-26-000015 presents 2025-12-31 and prints the line (EarningsPerShareBasic); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001543151-26-000015 presents EarningsPerShareBasic at 2025-12-31,,,EarningsPerShareBasic hidden as line_presented_combined
+UBER,cf_inventory_change,2021,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,cf_inventory_change,2025,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,cost_of_revenue,2021,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,goodwill,2023,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,goodwill,2025,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,gross_profit,2019,injected,scale_x1000,0.542,0,1,1,0,1,badge: shown cell has no badge,P08: derived - value 6939000000: no parts,,,badge: shown cell has no badge,P08: derived - value 6939000000000: no parts,shown revenue 13000000000 - shown cost_of_revenue 6061000000,,x1000
+UBER,interest_expense,2020,injected,period_shift,0.542,0,0,1,1,1,,,,,,,InterestExpense=458000000.0000@0001543151-21-000014#R4 (fsn reports R4),"family: value differs: tier 1 InterestExpense=458000000.0000 (dcml -6, 2020-12-31, qtrs 4); InterestExpenseDebt=463000000.0000 (dcml -6, 2020-12-31, qtrs 4), shown 559000000",FY2019 value 559000000 under FY2020 citation
+UBER,other_income_expense_net,2022,injected,dropped_component,0.542,0,0,0,1,1,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,"identity: the printed band without its interest lines gives -7168000000.0000 or -7168000000.0000, shown -7029000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFro",dropped -InvestmentIncomeInterest=139000000
+UBER,other_income_expense_net,2023,control,,0.542,0,0,0,0,0,gate: part NonoperatingIncomeExpense has no accession or R page,,,,gate: part NonoperatingIncomeExpense has no accession or R page,,,,
+UBER,sbc,2017,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,share_buybacks,2025,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,total_debt,2020,control,,0.542,0,0,0,0,0,gate: part LongTermDebtNoncurrent has no accession or R page,,,,gate: part LongTermDebtNoncurrent has no accession or R page,,,,
+UBER,weighted_diluted_shares,2020,control,,0.542,0,0,0,0,0,,,,,,,,,
+UBER,weighted_diluted_shares,2022,injected,scale_x1e6,0.542,0,1,1,1,1,,,,,,P03: weighted_diluted_shares=1974928000000000 vs net income/basic EPS = 1970043103: off by 10^6,WeightedAverageNumberOfDilutedSharesOutstanding=1974928000.0000@0001543151-23-000010#R5 (fsn reports R5),"family: value differs: tier 1 WeightedAverageNumberOfDilutedSharesOutstanding=1974928000.0000 (dcml -3, 2022-12-31, qtrs 4), shown 1974928000000000",x1000000
+UNH,accounts_receivable,2023,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,cf_ap_change,2018,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,income_tax_expense,2018,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,income_tax_expense,2020,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,income_tax_expense,2024,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,operating_expenses,2022,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,research_and_development,2023,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,sbc,2016,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,sbc,2017,injected,period_shift,0.468,0,0,1,1,1,,,,,,,ShareBasedCompensation=597000000.0000@0000731766-18-000005#R7 (fsn reports R7),"family: value differs: tier 1 ShareBasedCompensation=597000000.0000 (dcml -6, 2017-12-31, qtrs 4), shown 485000000",FY2016 value 485000000 under FY2017 citation
+UNH,sbc,2024,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNH,total_liabilities,2024,control,,0.468,0,0,0,0,0,,,,,,,,,
+UNP,cash_and_equivalents,2019,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,cash_and_equivalents,2022,injected,scale_x1e6,0.469,0,0,1,1,1,,,,,,,CashAndCashEquivalentsAtCarryingValue=973000000.0000@0001437749-23-002959#R5 (fsn reports R5),"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=973000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 973000000000000",x1000000
+UNP,cash_flow_financing,2020,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,current_liabilities,2022,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,current_liabilities,2023,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,depreciation_and_amortization,2018,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,dividends_per_share,2023,injected,scale_x1000,0.469,1,0,1,1,1,,,,,gate: implausible per-share value 5200 (> 1000) from 0001437749-24-003599,,implausible per-share value 5200 (> 1000); CommonStockDividendsPerShareDeclared=5.2000@0001437749-24-003599#R9 (fsn reports R9),per_share: implausible per-share value 5200 (> 1000),x1000
+UNP,goodwill,2025,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,income_before_tax,2015,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,income_tax_expense,2015,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,research_and_development,2019,control,,0.469,0,0,0,0,0,,,,,,,,,
+UNP,weighted_diluted_shares,2015,control,,0.469,0,0,0,0,0,,,,,,,,,
+V,accounts_receivable,2017,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,amortization_of_intangibles,2022,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,capex,2017,injected,missing_badge,0.488,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+V,cash_flow_financing,2023,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,cf_ap_change,2015,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,cf_ar_change,2016,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,current_liabilities,2025,injected,sign_flip,0.488,0,0,0,1,1,,,,,,,,"family: sign: shown with the opposite sign of the filing's fact: tier 1 LiabilitiesCurrent=35048000000.0000 (dcml -6, 2025-09-30, qtrs 0), shown -35048000000",negated
+V,diluted_eps,2023,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,dividends_paid,2017,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,gross_profit,2019,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,income_tax_expense,2016,injected,missing_badge,0.488,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+V,other_income_expense_net,2020,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,sbc,2018,control,,0.488,0,0,0,0,0,,,,,,,,,
+V,shares_outstanding,2018,injected,derived_two_filings,0.488,1,1,0,1,1,,,,,badge: derivation uses more than one filing (doc 02: one filing per derivation),P08: derived CommonStockSharesOutstanding value 2025000000.0000: parts cite 2 filings,,"parts: derivation uses more than one filing ['0001403161-18-000055', '0001403161-19-000050']",part CommonStockSharesOutstanding cited from later filing 0001403161-19-000050
+VLO,amortization_of_intangibles,2025,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,cf_inventory_change,2023,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,cfo,2021,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,comprehensive_income,2016,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,current_assets,2020,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,current_assets,2022,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,dividends_per_share,2020,injected,scale_x1e6,0.431,1,0,1,1,1,,,,,gate: implausible per-share value 3920000 (> 1000) from 0001035002-21-000051,,implausible per-share value 3920000 (> 1000); CommonStockDividendsPerShareCashPaid=3.9200@0001035002-21-000051#R7 (fsn reports R7),per_share: implausible per-share value 3920000 (> 1000),x1000000
+VLO,goodwill,2024,injected,wrong_hide,0.431,0,1,0,0,1,,,,,,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0001035002-25-000005 presents Goodwill at 2024-12-31,,,Goodwill hidden as line_presented_combined
+VLO,interest_income,2025,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,operating_expenses,2020,injected,subline_as_total,0.431,0,0,0,0,0,,,,,,,,,GeneralAndAdministrativeExpense[ConsolidationItems=CorporateNonSegment]=756000000 of total 839000000
+VLO,other_income_expense_net,2024,injected,scale_x1000,0.431,0,0,1,1,1,,,,,,,OtherNonoperatingIncomeExpense=499000000.0000@0001035002-25-000005#R5 (fsn reports R5),"identity: the printed band without its interest lines gives 499000000.0000, shown 499000000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=3698000000.0",x1000
+VLO,other_income_expense_net,2025,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,ppe_net,2023,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,weighted_basic_shares,2025,control,,0.431,0,0,0,0,0,,,,,,,,,
+VLO,weighted_diluted_shares,2016,injected,missing_badge,0.431,1,0,0,0,1,,,,,badge: shown cell has no badge,,,,badge 'as_printed' blanked
+VRTX,accounts_payable,2023,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,accounts_receivable,2019,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,cash_and_equivalents,2025,injected,restricted_cash_total,0.432,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=5084800000.0000 (dcml -5, 2025-12-31, qtrs 0), shown 5087800000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=5087800000 served for 5084800000
+VRTX,cf_inventory_change,2018,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,dividends_paid,2022,control,,0.432,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+VRTX,gross_profit,2015,control,,0.432,0,0,0,0,0,badge: shown cell has no badge,P08: derived - value 915185000.0000: no parts,,,badge: shown cell has no badge,P08: derived - value 915185000.0000: no parts,,,
+VRTX,income_tax_expense,2025,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,interest_expense,2025,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,interest_income,2015,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,net_income,2017,injected,available_to_common_ni,0.432,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=263484000.0000 (dcml -3, 2017-12-31, qtrs 4), shown 263191000",NetIncomeLossAvailableToCommonStockholdersBasic=263191000 served for 263484000
+VRTX,sga_expense,2015,control,,0.432,0,0,0,0,0,,,,,,,,,
+VRTX,shares_outstanding,2018,control,,0.432,0,0,0,0,0,,,,,,,,,
+VZ,accounts_payable,2015,control,,0.467,0,0,0,0,0,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,,
+VZ,accounts_payable,2022,injected,combined_as_narrow,0.467,0,0,0,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,"family: value differs: tier 1 AccountsPayableCurrent=8750000000.0000 (dcml -6, 2022-12-31, qtrs 0), shown 23977000000",AccountsPayableAndAccruedLiabilitiesCurrent=23977000000 served for narrow 8750000000
+VZ,accounts_receivable,2021,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,cash_flow_financing,2018,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,cash_paid_for_income_taxes,2020,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,cash_paid_for_interest,2022,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,cf_ap_change,2025,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,cf_ar_change,2019,injected,wrong_hide,0.467,1,1,0,0,1,,,,,hidden_year: 0000732712-20-000014 presents 2019-12-31 and prints the line (IncreaseDecreaseInAccountsReceivable); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000732712-20-000014 presents IncreaseDecreaseInAccountsReceivable at 2019-12-31,,,IncreaseDecreaseInAccountsReceivable hidden as line_presented_combined
+VZ,cost_of_revenue,2017,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,other_income_expense_net,2022,control,,0.467,0,0,0,0,0,,,,"identity: the printed band without its interest lines gives 1271000000.0000, shown 1373000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=28271000000.0",,,,"identity: the printed band without its interest lines gives 1271000000.0000, shown 1373000000: IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=28271000000.0",
+VZ,revenue,2016,control,,0.467,0,0,0,0,0,,,,,,,,,
+VZ,total_liabilities,2016,control,,0.467,0,0,0,0,0,,,,,,,,,
+WELL,cash_and_equivalents,2020,injected,restricted_cash_total,0.512,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 CashAndCashEquivalentsAtCarryingValue=1545046000.0000 (dcml -3, 2020-12-31, qtrs 0), shown 2021043000",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents=2021043000 served for 1545046000
+WELL,current_assets,2024,control,,0.512,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+WELL,depreciation_and_amortization,2015,injected,scale_x1000,0.512,0,0,1,1,1,,,,,,,DepreciationDepletionAndAmortization=826240000.0000@0000766704-16-000055#R6 (fsn reports R6),"family: value differs: tier 1 DepreciationDepletionAndAmortization=826240000.0000 (dcml -3, 2015-12-31, qtrs 4); DepreciationAndAmortization=826240000.0000 (dcml -3, 2015-12-31, qtrs 4), shown 8262400",x1000
+WELL,dividends_paid,2022,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,goodwill,2015,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,income_tax_expense,2017,injected,wrong_hide,0.512,1,1,0,0,1,,,,,hidden_year: 0000766704-18-000012 presents 2017-12-31 and prints the line (IncomeTaxExpenseBenefit); a printed value or dash must be shown,P06: HIDDEN_YEAR (line_presented_combined) but its own 10-K 0000766704-18-000012 presents IncomeTaxExpenseBenefit at 2017-12-31,,,IncomeTaxExpenseBenefit hidden as line_presented_combined
+WELL,operating_income,2019,control,,0.512,0,0,0,0,0,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,"hide_reason: verified_absent applies to a year, not a whole row (that is structural_not_presented)",,,,
+WELL,other_income_expense_net,2021,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,sbc,2024,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,shares_outstanding,2019,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,total_assets,2019,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,total_liabilities,2018,control,,0.512,0,0,0,0,0,,,,,,,,,
+WELL,weighted_basic_shares,2022,control,,0.512,0,0,0,0,0,,,,,,,,,
+WFC,basic_eps,2021,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,cash_paid_for_interest,2017,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,cf_ap_change,2025,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,cf_ar_change,2019,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,goodwill,2019,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,income_tax_expense,2019,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,net_income,2016,injected,available_to_common_ni,0.603,0,0,0,1,1,,,,,,,,"family: value differs: tier 1 NetIncomeLoss=21938000000.0000 (dcml -6, 2016-12-31, qtrs 4), shown 20373000000",NetIncomeLossAvailableToCommonStockholdersBasic=20373000000 served for 21938000000
+WFC,net_income,2020,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,ppe_net,2022,control,,0.603,0,0,0,0,0,,,,,,,,,
+WFC,sbc,2024,injected,sign_flip,0.603,0,0,0,1,1,,,,,,,,sign: sign: sbc is fixed positive (polarity ruling) but shown -1281000000,negated
+WFC,shares_outstanding,2017,control,,0.603,0,0,0,0,0,badge: shown cell has no badge,,,,badge: shown cell has no badge,,,,
+WFC,total_assets,2025,control,,0.603,0,0,0,0,0,,,,,,,,,
+XOM,accounts_payable,2021,injected,combined_as_narrow,0.545,0,0,0,1,1,gate: shown cell has no accession or R page,,,,gate: shown cell has no accession or R page,,,"family: value differs: tier 2 AccountsPayableTradeCurrent=26623000000.0000 (dcml -6, 2021-12-31, qtrs 0), shown 50766000000",AccountsPayableAndAccruedLiabilitiesCurrent=50766000000 served for narrow 26623000000
+XOM,amortization_of_intangibles,2019,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,cash_flow_investing,2023,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,depreciation_and_amortization,2024,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,dividends_paid,2017,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,income_tax_expense,2024,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,inventory,2022,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,other_income_expense_net,2016,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,ppe_net,2021,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,research_and_development,2022,control,,0.545,0,0,0,0,0,,,,,,,,,
+XOM,sga_expense,2019,injected,rounded_duplicate,0.545,0,0,1,1,1,,,,,,,SellingGeneralAndAdministrativeExpense=11398000000.0000@0000034088-22-000011#R2 (fsn reports R2),"family: value differs: tier 1 SellingGeneralAndAdministrativeExpense=11398000000.0000 (dcml -6, 2019-12-31, qtrs 4), shown 11400000000",11398000000 rounded to 11400000000
+XOM,stockholders_equity,2025,control,,0.545,0,0,0,0,0,,,,,,,,,
