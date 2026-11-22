@@ -18,10 +18,12 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
 import urllib.request
 import zipfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from scrooner_pipeline.common import sec_rate  # noqa: E402
 
 csv.field_size_limit(1 << 24)
 BASE = "https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/"
@@ -41,10 +43,10 @@ def download(url, dest):
     if not ua:
         raise SystemExit("SEC_USER_AGENT is required (doc 07)")
     req = urllib.request.Request(url, headers={"User-Agent": ua})
+    sec_rate.wait()  # the one machine-wide SEC budget (2 req/s in total)
     with urllib.request.urlopen(req, timeout=1800) as r, open(dest, "wb") as fo:
         while chunk := r.read(1 << 20):
             fo.write(chunk)
-    time.sleep(0.25)  # <= 4 requests per second
 
 
 def rows(zf, name):

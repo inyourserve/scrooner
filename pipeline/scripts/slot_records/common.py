@@ -7,7 +7,8 @@ rule that every family uses, so a fix lands once and is re-verified once:
   fetch_instants(cur, cik, tags)   same-accession instant facts (the original
                                    filing of each instant, periodic forms only)
   rounding_unit(values)            the filer's rounding unit (identity tolerance)
-  SecClient                        sec.gov fetch: SEC_USER_AGENT, <= 4 req/s,
+  SecClient                        sec.gov fetch: SEC_USER_AGENT, the shared 2 req/s
+                                   budget (common/sec_rate.py),
                                    disk floor, request counter
   face_rows_for(path, accessions)  ordered BS face rows per filing from the FSDS
                                    pre extract (plain or .gz)
@@ -19,6 +20,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import time
 import urllib.request
 from collections import defaultdict
@@ -26,6 +28,11 @@ from decimal import Decimal
 from pathlib import Path
 
 import build_debt_slots as b
+
+_SRC = str(Path(__file__).resolve().parents[2] / "src")  # pipeline/src: the one SEC budget
+if _SRC not in sys.path:
+    sys.path.insert(0, _SRC)
+from scrooner_pipeline.common import sec_rate  # noqa: E402
 
 PERIODIC_FORMS = ("10-K", "10-Q", "10-K/A", "10-Q/A")
 NOTE_ROLE_RX = b.NOTE_ROLE_RX
@@ -206,7 +213,7 @@ def face_rows_for(path, accessions, stmt="BS"):
 
 
 class SecClient:
-    """sec.gov only; SEC_USER_AGENT from the environment; <= 4 requests/second;
+    """sec.gov only; SEC_USER_AGENT from the environment; the shared 2 req/s budget (sec_rate);
     stops when free disk < 4 GB; counts requests for the push message."""
 
     def __init__(self, min_free_gb=4):
@@ -226,9 +233,7 @@ class SecClient:
         floor_path = "/private/tmp" if os.path.isdir("/private/tmp") else tempfile.gettempdir()
         if shutil.disk_usage(floor_path).free < self.min_free:
             raise SystemExit(f"free disk below floor after {self.requests} requests; stopping")
-        wait = 0.26 - (time.monotonic() - self._last)
-        if wait > 0:
-            time.sleep(wait)
+        sec_rate.wait()
         req = urllib.request.Request(url, headers={"User-Agent": self.ua, "Accept-Encoding": "gzip, deflate"})
         self._last = time.monotonic()
         self.requests += 1

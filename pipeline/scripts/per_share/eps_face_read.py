@@ -1,18 +1,18 @@
 """Face read for the Family C 'copies disagree' EPS cells: the cell's own original periodic filing's R pages
-(quarterly-data note for a 10-K Q4, the income statement for a 10-Q). sec.gov only, SEC_USER_AGENT, <= 4 req/s.
+(quarterly-data note for a 10-K Q4, the income statement for a 10-Q). sec.gov only, SEC_USER_AGENT, the shared 2 req/s budget (common/sec_rate.py).
 usage: eps_face_read.py <scratch>  (DB read-only for the filing list; kit from pipeline/src on PYTHONPATH)"""
 
 import json
 import os
 import re
 import sys
-import time
 import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, sys.argv[1])
 from ro import conn  # noqa: E402
+from scrooner_pipeline.common import sec_rate  # noqa: E402
 from scrooner_pipeline.verification import filing_kit as fk  # noqa: E402
 
 S = Path(sys.argv[1])
@@ -24,7 +24,7 @@ class Client:
     def get(self, url: str) -> bytes:
         global REQUESTS
         assert url.startswith("https://www.sec.gov/"), url
-        time.sleep(0.3)
+        sec_rate.wait()
         REQUESTS += 1
         with urllib.request.urlopen(
             urllib.request.Request(url, headers={"User-Agent": UA}), timeout=60

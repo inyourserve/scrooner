@@ -7,7 +7,7 @@
    rows (sub.adsh where sub.cik is in the cohort) of EVERY table in the zip
    into compressed files (zstd if available, else xz); tables without an adsh
    column (tag, dim) are kept whole. 4. Keep the zip unless free disk would
-   drop below 3 GB. sec.gov only, SEC_USER_AGENT, <= 4 req/s.
+   drop below 3 GB. sec.gov only, SEC_USER_AGENT, the shared 2 req/s budget (common/sec_rate.py).
 usage: fsn_pilot.py <quarter e.g. 2024q4> <cohort_ciks.txt> <out_dir>
 """
 import csv
@@ -23,6 +23,9 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from scrooner_pipeline.common import sec_rate  # noqa: E402
+
 quarter, cohort_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
 out.mkdir(parents=True, exist_ok=True)
 UA = os.environ["SEC_USER_AGENT"]
@@ -34,6 +37,7 @@ GB = 1024**3
 
 
 def head(u):
+    sec_rate.wait()
     r = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": UA}, method="HEAD"), timeout=60)
     return int(r.headers.get("Content-Length", "0")), r.headers.get("Accept-Ranges")
 
@@ -46,6 +50,7 @@ if size > 1.5e9 or free - size < 3 * GB:
 zpath = out / f"{quarter}_notes.zip"
 t0 = time.monotonic()
 sha = hashlib.sha256()
+sec_rate.wait()
 with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=600) as r, open(zpath, "wb") as f:
     while True:
         chunk = r.read(1 << 20)

@@ -68,3 +68,68 @@ def test_module_level_wait_uses_the_shared_limiter(monkeypatch):
     sec_rate.wait()
     sec_rate.wait()
     assert calls == [1, 1]
+
+
+class _Resp:
+    def __init__(self, body: bytes, headers: dict | None = None):
+        self._body, self.headers = body, headers or {}
+
+    def read(self):
+        return self._body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+
+def _offline(monkeypatch, body=b"<html/>"):
+    """No network: urlopen returns `body`; every wait() is counted; the UA is declared."""
+    calls, seen = [], []
+    monkeypatch.setattr(sec_rate, "wait", lambda: calls.append(1))
+    monkeypatch.setenv("SEC_USER_AGENT", "Scrooner test test@example.com")
+
+    def fake_urlopen(req, timeout=0):
+        seen.append(req)
+        return _Resp(body)
+
+    monkeypatch.setattr(sec_rate.urllib.request, "urlopen", fake_urlopen)
+    return calls, seen
+
+
+def test_cli_fetch_waits_on_the_budget_and_never_refetches(
+    monkeypatch, tmp_path, capsys
+):
+    calls, seen = _offline(monkeypatch)
+    out = tmp_path / "r" / "R2.htm"
+    url = "https://www.sec.gov/Archives/edgar/data/320193/x/R2.htm"
+    assert sec_rate.main(["fetch", url, str(out)]) == 0
+    assert out.read_bytes() == b"<html/>" and calls == [1]
+    assert seen[0].get_header("User-agent") == "Scrooner test test@example.com"
+    assert sec_rate.main(["fetch", url, str(out)]) == 0  # cached: no second request
+    assert calls == [1] and len(seen) == 1
+    assert "cached" in capsys.readouterr().out
+
+
+def test_cli_fetch_refuses_non_sec_hosts_and_bad_usage(monkeypatch, tmp_path):
+    calls, seen = _offline(monkeypatch)
+    assert sec_rate.main(["fetch", "https://example.com/x", str(tmp_path / "x")]) == 2
+    assert sec_rate.main(["get", "https://www.sec.gov/x"]) == 2
+    assert calls == [] and seen == []
+
+
+def test_fetch_decodes_gzip(monkeypatch):
+    import gzip
+
+    _offline(monkeypatch)
+    monkeypatch.setattr(
+        sec_rate.urllib.request,
+        "urlopen",
+        lambda req, timeout=0: _Resp(
+            gzip.compress(b"{}"), {"Content-Encoding": "gzip"}
+        ),
+    )
+    assert (
+        sec_rate.fetch("https://data.sec.gov/submissions/CIK0000320193.json") == b"{}"
+    )

@@ -47,3 +47,23 @@ def test_text_disclosure_paces_through_the_shared_budget(monkeypatch):
     calls = _spy(monkeypatch)
     assert td.get("https://www.sec.gov/Archives/y") == "<xml/>"
     assert calls == [1]
+
+
+def test_sec_pace_cli_is_the_shared_fetch(monkeypatch, tmp_path):
+    """`python3 -I sec_pace.py fetch URL OUT` = sec_rate.main: one budget wait per request, cache on rerun."""
+    calls = []
+    monkeypatch.setattr(sec_pace.sec_rate, "wait", lambda: calls.append(1))
+    monkeypatch.setenv("SEC_USER_AGENT", "Scrooner test test@example.com")
+    import urllib.request
+
+    def fake(req, timeout=0):
+        r = _Resp(b"<xml/>")
+        r.headers = {}
+        return r
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake)
+    out = tmp_path / "f.xml"
+    assert sec_pace.sec_rate.main(["fetch", "https://www.sec.gov/Archives/z", str(out)]) == 0
+    assert sec_pace.sec_rate.main(["fetch", "https://www.sec.gov/Archives/z", str(out)]) == 0
+    assert out.read_bytes() == b"<xml/>" and calls == [1]
+    assert sec_pace.fetch("https://www.sec.gov/Archives/z2") == b"<xml/>" and calls == [1, 1]

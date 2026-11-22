@@ -22,6 +22,8 @@ from pathlib import Path
 
 import httpx
 
+from scrooner_pipeline.common import sec_rate
+
 TABLES = ("sub", "pre", "num", "cal", "ren", "tag", "dim")
 SEC_BASE = "https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets"
 PREFIX = "predecessors/"
@@ -38,6 +40,7 @@ def sec_url(fsn_set: str) -> str:
 def download_zip(fsn_set: str, dest: Path, user_agent: str) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(".part")
+    sec_rate.wait()
     with httpx.stream(
         "GET",
         sec_url(fsn_set),
