@@ -267,6 +267,9 @@ class Cell:
         "general"  # data_points.csv sector; the export's sector column when present
     )
     evidence: str = ""  # the export's evidence column (a hide's quote); "" when absent
+    proof: str = (
+        ""  # the export's proof_verdict (PROVEN, UNCHECKED, ...); "" when absent
+    )
 
     @property
     def hide_basis(self) -> str | None:
@@ -371,6 +374,7 @@ def read_coverage(path: Path) -> list[Cell]:
                 badge=(r["badge"] or "").strip() if "badge" in r else None,
                 sector=(r.get("sector") or "general").strip() or "general",
                 evidence=(r.get("evidence") or "").strip(),
+                proof=(r.get("proof_verdict") or "").strip(),
             )
         )
     return cells
@@ -684,6 +688,21 @@ class SqlFactSource:
         """The automated draw checker's own read of the cited filings (draw_check.FILING_FACT_SQL)."""
         return dck.sql_filing_facts(self._q, accessions, period_ends)
 
+    def identity_facts(self, cik, tags):
+        """The identity web's operands: the company's own undimensioned facts of `tags` (any duration) and the first
+        lines of each filing's cash-flow statement (proof/identities WEB_FACT_SQL, WEB_CF_LINE_SQL)."""
+        from scrooner_pipeline.proof import identities as idw
+
+        p = {
+            "cik": cik,
+            "forms": list(idw.WEB_FORMS),
+            "tags": sorted(set(tags)),
+            "floor": idw.WEB_FLOOR,
+        }
+        return idw.WebFacts(
+            self._q(idw.WEB_FACT_SQL, p), self._q(idw.WEB_CF_LINE_SQL, p)
+        )
+
 
 class BundleFactSource:
     """Offline source: an evidence bundle (JSON) holding the rows of the three queries above."""
@@ -716,6 +735,19 @@ class BundleFactSource:
 
     def filing_facts(self, accessions, period_ends):
         return dck.bundle_filing_facts(self.b, accessions)
+
+    def identity_facts(self, cik, tags):
+        """bundle['identity_facts'] rows [acc, form, tag, ddate, qtrs, value, dcml, uom] and bundle['cf_lines']
+        rows [acc, tag, report, line]; None when the bundle has no identity read."""
+        if "identity_facts" not in self.b:
+            return None
+        from scrooner_pipeline.proof import identities as idw
+
+        tg = set(tags)
+        return idw.WebFacts(
+            [r for r in self.b["identity_facts"] if r[2] in tg],
+            self.b.get("cf_lines", []),
+        )
 
 
 # ---------------------------------------------------------------- checks
@@ -1464,6 +1496,9 @@ class Run:
     audit: dict | None = (
         None  # draw_check.audit_agreement of the checker's 5% audit sample, when read
     )
+    # identity web (proof/identities, 2026-11-22): every identity x fiscal year over the shown cells; None when the
+    # source has no identity read
+    web: list | None = None
 
     @property
     def pending_reads(self) -> list[dck.AutoCheck]:
@@ -1566,6 +1601,50 @@ class SourceBroken(RuntimeError):
     pass
 
 
+def identity_web_check(
+    cells: list[Cell], cik: str, source
+) -> tuple[list, dict[tuple[str, str], dck.AutoCheck]] | None:
+    """The identity web (proof/identities.identity_web) over every SHOWN member cell of the export: each member's
+    support is the draw checker's census outcome against its cited filing (one Filing per accession) and its proof
+    verdict; the operands come from the company's own filings (source.identity_facts). Returns (results, census) or
+    None when the source cannot read the operands or the filings."""
+    from scrooner_pipeline.proof import identities as idw
+
+    read, filing = (
+        getattr(source, "identity_facts", None),
+        getattr(source, "filing_facts", None),
+    )
+    if read is None or filing is None:
+        return None
+    members = [
+        c
+        for c in cells
+        if c.display == SHOWN
+        and c.data_point in idw.WEB_MEMBER_DPS
+        and c.value is not None
+    ]
+    if not members:
+        return [], {}
+    wf = read(cik, idw.web_tags(members))
+    got = filing(*dck.needs(members))
+    if wf is None or got is None:
+        return None
+    facts, lines = got
+    by_acc: dict[str, list[Cell]] = defaultdict(list)
+    for c in members:
+        by_acc[c.accession].append(c)
+    census: dict[tuple[str, str], dck.AutoCheck] = {}
+    for acc, cs in by_acc.items():
+        accs = {acc} | {p.accession for c in cs for p in c.parts}
+        fl_f = [f for f in facts if f.accession in accs]
+        fl_l = [ln for ln in lines if ln.accession in accs]
+        for a in dck.check_draw(cs, fl_f, fl_l):
+            census[a.key] = a
+    auto = {k: a.outcome for k, a in census.items()}
+    proof = {c.key: c.proof for c in members}
+    return idw.identity_web(members, wf, auto, proof), census
+
+
 def certify(
     ticker: str,
     cik: str,
@@ -1633,6 +1712,14 @@ def certify(
     except SourceBroken as e:
         run.auto = None
         run.gate.append(Finding("gate", "*", "*", "FAIL", str(e)))
+    got_web = identity_web_check(p.cells, cik, source)
+    if got_web is not None:
+        from scrooner_pipeline.proof import identities as idw
+
+        run.web = got_web[0]
+        if run.auto:
+            # a drawn cell an exact identity corroborates (every other member matched its filing fact) is settled
+            run.auto = dck.corroborate(run.auto, idw.web_corroborated(run.web))
     # Census, not sample: every derived cell is checked against its identity (founder 2026-11-17
     # allows derived instants; each one is a computation the filing does not print).
     run.derived = [
@@ -2400,6 +2487,14 @@ def self_check_findings(run: Run) -> list[Finding]:
         )
         for a in run.auto or ()
         if a.outcome == dck.AUTO_MISMATCH
+    ]
+    # Identity web: a broken identity opens the member(s) no filing fact or proof supports, with the identity's reason
+    # (a banded identity never opens a proven cell: WebResult.opens).
+    out += [
+        Finding("identity", dp, r.fiscal_year, "FAIL", r.reason(dp))
+        for r in run.web or ()
+        for dp in r.suspects
+        if r.opens(dp)
     ]
     return out
 

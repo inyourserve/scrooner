@@ -629,9 +629,7 @@ class AutoCheck:
     data_point: str
     fiscal_year: str
     outcome: str  # AUTO_MATCH | AUTO_MISMATCH | NEEDS_READ
-    method: (
-        str  # family | label | parts | identity | text | per_share | sign | debt | none
-    )
+    method: str  # family | label | parts | identity (a formula, or the identity web) | text | per_share | sign | debt | none
     filing_value: Decimal | None
     detail: str
 
@@ -1549,6 +1547,27 @@ def check_draw(
 ) -> list[AutoCheck]:
     fl = Filing(facts, lines)
     return [check_cell(c, fl) for c in sample]
+
+
+def corroborate(
+    checks: list[AutoCheck], corroborated: dict[tuple[str, str], str]
+) -> list[AutoCheck]:
+    """A drawn NEEDS_READ cell an exact accounting identity corroborates (proof/identities.web_corroborated: the
+    identity holds over the shown cells and the filing's own operands, and every other member is AUTO_MATCH) is
+    AUTO_MATCH by method 'identity'. An AUTO_MISMATCH is never overturned."""
+    return [
+        AutoCheck(
+            a.data_point,
+            a.fiscal_year,
+            AUTO_MATCH,
+            "identity",
+            None,
+            corroborated[a.key],
+        )
+        if a.outcome == NEEDS_READ and a.key in corroborated
+        else a
+        for a in checks
+    ]
 
 
 def needs(sample: list[Cell]) -> tuple[set[str], set[str]]:

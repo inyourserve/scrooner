@@ -40,6 +40,15 @@ person or agent read:
   python pipeline/scripts/certify_display.py --request R.md --live --audit-reads AUDIT.csv --out-dir OUT
   # read-only run over every company of a top100-coverage.csv: outcomes, mismatches, needs-read, runtime per company
   python pipeline/scripts/certify_display.py --draw-check-all data-team/strategy/top100-coverage.csv --out-dir OUT
+
+Identity web (proof/identities.py, 2026-11-22): every accounting identity over every company x fiscal year, read-only.
+The self-check opens each BREAK's suspect cell (check identity); a drawn NEEDS_READ cell an exact identity corroborates
+is AUTO_MATCH (method identity).
+
+  # every company of the export, and (--resolver) the same identities over the resolver files read as cells
+  python pipeline/scripts/certify_display.py --identity-web-all data-team/strategy/top100-coverage.csv --out-dir OUT
+  python pipeline/scripts/certify_display.py --identity-web-all data-team/strategy/top100-coverage.csv --resolver \
+      data-team/tags/line_map/resolver --out-dir OUT
 """
 
 from __future__ import annotations
@@ -123,7 +132,19 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="a top100-coverage.csv: run the automated draw checker on every company's draw (read-only), with --out-dir",
     )
+    ap.add_argument(
+        "--identity-web-all",
+        type=Path,
+        help="a top100-coverage.csv: run the identity web over every company x fiscal year (read-only), with --out-dir",
+    )
+    ap.add_argument(
+        "--resolver",
+        type=Path,
+        help="with --identity-web-all: the resolver directory (one <TICKER>.csv per company), judged as shown cells",
+    )
     a = ap.parse_args(argv)
+    if a.identity_web_all:
+        return identity_web_all(a.identity_web_all, a.out_dir, a.date, a.resolver)
     if a.draw_check_all:
         return draw_check_all(a.draw_check_all, a.out_dir, a.date)
     if a.self_check_dir:
@@ -293,6 +314,26 @@ def self_check(cov_dir: Path, company_id: str, cik: str, source=None) -> int:
                 for x in run.auto or ()
                 if x.outcome == dck.NEEDS_READ
             ]
+            # an identity break whose every member matches its filing fact: the filing or the operand set, not a
+            # shown value; reported for the tag expert, never opened
+            + [
+                dc.Finding(
+                    "identity",
+                    ",".join(m.data_point for m in r.members),
+                    r.fiscal_year,
+                    "REVIEW",
+                    f"FILING_BREAK {r.identity}: {r.lhs} vs {r.rhs} (tolerance {r.tolerance}); {r.detail}",
+                )
+                for r in run.web or ()
+                if r.status == "FILING_BREAK"
+            ]
+            # a banded identity's break on a proven cell: a read, not an open
+            + [
+                dc.Finding("identity", dp, r.fiscal_year, "REVIEW", r.reason(dp))
+                for r in run.web or ()
+                for dp in r.suspects
+                if not r.opens(dp)
+            ]
         )
     except Exception as e:  # noqa: BLE001 -- the checks could not run: never a pass
         err, review = f"{type(e).__name__}: {e}"[:300], []
@@ -386,6 +427,197 @@ DRAW_SUMMARY_COLUMNS = [
     "pct_auto_match",
     "seconds",
 ]
+
+
+WEB_COLUMNS = [
+    "source",
+    "ticker",
+    "company_id",
+    "identity",
+    "fiscal_year",
+    "status",
+    "suspects",
+    "members",
+    "lhs",
+    "rhs",
+    "diff",
+    "tolerance",
+    "detail",
+]
+WEB_SUMMARY_COLUMNS = [
+    "source",
+    "ticker",
+    "company_id",
+    "identity",
+    "checked",
+    "pass",
+    "break",
+    "filing_break",
+    "fiscal_years",
+]
+
+RESOLVER_SERVED = ("mapped", "component_sum", "derived_not_printed")
+
+
+def resolver_cells(path: Path, fy_of: dict[str, str]) -> tuple[str, list[dc.Cell]]:
+    """(cik, cells) of one resolver file read as shown cells: every row with a value and a served decision; the
+    fiscal year from the export's period end when known, else the period end's year; the first node's tag."""
+    _f, rows = _read(path)
+    cik, cells = "", []
+    for r in rows:
+        cik = cik or r.get("cik", "")
+        if (
+            r.get("decision") not in RESOLVER_SERVED
+            or not (r.get("value") or "").strip()
+        ):
+            continue
+        node = (r.get("nodes") or "").split("|")[0].split(";")[0].strip()
+        tag = (
+            node.split("=")[0].strip()
+            if r["decision"] == "mapped" and "=" in node
+            else ""
+        )
+        pe = r.get("period_end", "")
+        cells.append(
+            dc.Cell(
+                r["data_point"],
+                fy_of.get(pe, pe[:4]),
+                pe,
+                dc.SHOWN,
+                dc._dec(r["value"]),
+                (r.get("accession") or "").strip(),
+                "",
+                tag,
+            )
+        )
+    return cik.lstrip("0"), cells
+
+
+def identity_web_all(
+    cov: Path, out_dir: Path, today: str, resolver: Path | None = None, source=None
+) -> int:
+    """The identity web over every company x fiscal year of a top100-coverage.csv (and of the resolver files), read
+    only. Writes OUT/identity-web-<date>.csv (every BREAK and FILING_BREAK) and OUT/identity-web-summary-<date>.csv
+    (checked / pass / break / filing_break per company x identity)."""
+    _fields, rows = _read(cov)
+    by: dict[str, list[dict]] = {}
+    for r in rows:
+        by.setdefault(r["company_id"], []).append(r)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    conn_cm = None
+    if source is None:
+        from scrooner_pipeline.db.connection import get_connection
+
+        conn_cm = get_connection()
+        conn = conn_cm.__enter__()
+        conn.read_only = True
+        source = dc.SqlFactSource(conn, timeout_ms=60000)
+    breaks, summ = [], []
+
+    def record(kind: str, ticker: str, cid: str, results: list) -> None:
+        agg: dict[str, dict[str, int]] = {}
+        fys: dict[str, set[str]] = {}
+        for r in results:
+            a = agg.setdefault(
+                r.identity, {"checked": 0, "PASS": 0, "BREAK": 0, "FILING_BREAK": 0}
+            )
+            a["checked"] += 1
+            a[r.status] += 1
+            fys.setdefault(r.identity, set()).add(r.fiscal_year)
+            if r.status != "PASS":
+                breaks.append(
+                    {
+                        "source": kind,
+                        "ticker": ticker,
+                        "company_id": cid,
+                        "identity": r.identity,
+                        "fiscal_year": r.fiscal_year,
+                        "status": r.status,
+                        "suspects": ";".join(r.suspects),
+                        "members": "; ".join(
+                            f"{m.data_point}={m.value} [{m.support}]" for m in r.members
+                        ),
+                        "lhs": str(r.lhs),
+                        "rhs": str(r.rhs),
+                        "diff": str(r.lhs - r.rhs),
+                        "tolerance": str(r.tolerance),
+                        "detail": r.detail,
+                    }
+                )
+        for ident, a in sorted(agg.items()):
+            summ.append(
+                {
+                    "source": kind,
+                    "ticker": ticker,
+                    "company_id": cid,
+                    "identity": ident,
+                    "checked": a["checked"],
+                    "pass": a["PASS"],
+                    "break": a["BREAK"],
+                    "filing_break": a["FILING_BREAK"],
+                    "fiscal_years": len(fys[ident]),
+                }
+            )
+
+    try:
+        for cid, mine in sorted(
+            by.items(), key=lambda kv: int(kv[1][0].get("rank") or 0)
+        ):
+            t0 = time.monotonic()
+            ticker = mine[0]["ticker"]
+            one = out_dir / f".identity-web-{cid}.csv"
+            _write(one, _fields, mine)
+            try:
+                cells = dc.read_coverage(one)
+            finally:
+                one.unlink(missing_ok=True)
+            rpath = resolver / f"{ticker}.csv" if resolver else None
+            fy_of = {c.period_end: c.fiscal_year for c in cells if c.period_end}
+            rcik, rcells = (
+                resolver_cells(rpath, fy_of) if rpath and rpath.is_file() else ("", [])
+            )
+            try:
+                cik = rcik or (
+                    dc.resolve_cik(source.conn, int(cid)) if conn_cm is not None else ""
+                )
+                got = dc.identity_web_check(cells, cik, source)
+                res = got[0] if got else []
+                record("export", ticker, cid, res)
+                rres: list = []
+                if rcells:
+                    rgot = dc.identity_web_check(rcells, cik, source)
+                    rres = rgot[0] if rgot else []
+                    record("resolver", ticker, cid, rres)
+            except Exception as e:  # noqa: BLE001 -- one company's read failing never stops the run
+                print(
+                    f"identity-web {ticker}: ERROR {type(e).__name__}: {e}"[:300],
+                    flush=True,
+                )
+                res, rres = [], []
+            finally:
+                if conn_cm is not None:
+                    source.conn.rollback()
+            nb = sum(1 for r in res if r.status == "BREAK")
+            print(
+                f"identity-web {ticker}: {len(res)} checked, {nb} break, "
+                f"{sum(1 for r in res if r.status == 'FILING_BREAK')} filing-break; resolver {len(rres)} checked, "
+                f"{sum(1 for r in rres if r.status == 'BREAK')} break; {time.monotonic() - t0:.1f}s",
+                flush=True,
+            )
+    finally:
+        if conn_cm is not None:
+            conn_cm.__exit__(None, None, None)
+    _write(out_dir / f"identity-web-{today}.csv", WEB_COLUMNS, breaks)
+    _write(out_dir / f"identity-web-summary-{today}.csv", WEB_SUMMARY_COLUMNS, summ)
+    for kind in ("export", "resolver"):
+        rows_k = [s for s in summ if s["source"] == kind]
+        if rows_k:
+            print(
+                f"identity-web {kind}: {len({s['ticker'] for s in rows_k})} companies, "
+                f"{sum(s['checked'] for s in rows_k)} identity x year checks, {sum(s['pass'] for s in rows_k)} pass, "
+                f"{sum(s['break'] for s in rows_k)} break, {sum(s['filing_break'] for s in rows_k)} filing-break"
+            )
+    return 0
 
 
 def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
