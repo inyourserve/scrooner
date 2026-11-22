@@ -56,7 +56,9 @@
         "auto_matched": {"type": "integer"}, "auto_mismatched": {"type": "integer"}, "needs_read": {"type": "integer"},
         "verified_by_machine": {"type": "integer"}, "verified_by_read": {"type": "integer"}, "pending_read": {"type": "integer"},
         "read_cells": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "machine", "reader", "verdict", "evidence"]}},
-        "audit": {"type": ["object", "null"], "description": "draw_check.audit_agreement: agent reads of a seeded 5% of AUTO_MATCH cells."}
+        "audit": {"type": ["object", "null"], "description": "draw_check.audit_agreement: agent reads of a seeded 5% of AUTO_MATCH cells."},
+        "three_source": {"type": "object", "required": ["AGREE3", "AGREE2", "DISAGREE", "SINGLE"],
+                         "description": "draw_check.agreement_counts of the drawn cells (since 2026-11-22, when run with a source store): FSN fact, companyfacts and the printed R page."}
       }
     },
     "gate": {"type": "array", "items": {"type": "object", "required": ["data_point", "fiscal_year", "severity", "detail"]}},
@@ -86,7 +88,12 @@
                          "properties": {"outcome": {"enum": ["AUTO_MATCH", "AUTO_MISMATCH", "NEEDS_READ"]}, "method": {"type": "string"},
                                         "filing_value": {"type": ["string", "null"]}, "detail": {"type": "string"}}},
           "verified_by": {"type": "string", "pattern": "^(machine|pending_read|read:.+)$",
-                          "description": "Drawn cells only: machine (AUTO_MATCH), read:<reader> (a person or agent read the filing), or pending_read."}
+                          "description": "Drawn cells only: machine (AUTO_MATCH), read:<reader> (a person or agent read the filing), or pending_read."},
+          "source_agreement": {"type": "object", "required": ["outcome", "legs", "detail"],
+                               "description": "Drawn cells, when the three-source check ran: AGREE3 (FSN fact, companyfacts and the printed R page all equal the shown value), AGREE2 (one missing), DISAGREE (a source differs: may be a wrong shown value), SINGLE (fewer than two sources). legs: per filed figure, each source's value and agreement.",
+                               "properties": {"outcome": {"enum": ["AGREE3", "AGREE2", "DISAGREE", "SINGLE"]},
+                                              "legs": {"type": "array", "items": {"type": "object", "required": ["tag", "accession", "fsn", "companyfacts", "rpage", "agree"]}},
+                                              "detail": {"type": "string"}}}
         }
       }
     }

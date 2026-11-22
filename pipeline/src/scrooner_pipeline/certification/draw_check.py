@@ -29,11 +29,17 @@ unprinted first tier (PRINTED_DECIDES / PRINTED_JOINS); label- and statement-gat
 FACE_ONLY); other_income_expense_net by the printed band rule of definition 2026-11-21 (d) (_band), never an element
 family; net income as ProfitLoss less the printed NCI share; operating expenses never total costs and expenses;
 derived cells exported without a derived: badge rebuilt by their identity.
+
+@3 (2026-11-22): three-source agreement (three_source): each checked cell's deciding FSN fact (AutoCheck.fact, or each
+part of a summed cell) against the SEC companyfacts value of that tag, period and accession and the number printed on
+the cited R page's line of that tag: AGREE3 (auto-proven), AGREE2 (one source missing), DISAGREE (may be a wrong
+shown value), SINGLE (fewer than two sources). The AUTO_* outcomes are unchanged.
 """
 
 from __future__ import annotations
 
 import csv
+import json
 import math
 import random
 import re
@@ -50,7 +56,7 @@ if TYPE_CHECKING:  # import cycle: display_cert imports this module
     from scrooner_pipeline.certification.display_cert import Cell
 
 CHECKER_VERSION = (
-    "draw_check@2"  # @2: fixes from the 2026-11-24 reads (checker-fixes-2026-11-24.txt)
+    "draw_check@3"  # @3: three-source agreement; @2: fixes from the 2026-11-24 reads
 )
 AUTO_MATCH = "AUTO_MATCH"
 AUTO_MISMATCH = "AUTO_MISMATCH"
@@ -632,6 +638,9 @@ class AutoCheck:
     method: str  # family | label | parts | identity (a formula, or the identity web) | text | per_share | sign | debt | none
     filing_value: Decimal | None
     detail: str
+    # the one filing fact that decided a single-element cell (AUTO_MATCH or AUTO_MISMATCH); the three-source
+    # check reads that fact's tag in companyfacts and on the printed page. None for parts, identities and reads.
+    fact: FilingFact | None = None
 
     @property
     def key(self) -> tuple[str, str]:
@@ -1105,7 +1114,13 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
         for f in got:
             if _shown_matches(dp, shown, f.value)[0]:
                 return AutoCheck(
-                    dp, fy, AUTO_MATCH, "label", f.value, f"line {label!r}: {_fmt(f)}"
+                    dp,
+                    fy,
+                    AUTO_MATCH,
+                    "label",
+                    f.value,
+                    f"line {label!r}: {_fmt(f)}",
+                    f,
                 )
         return AutoCheck(
             dp,
@@ -1116,6 +1131,7 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
             f"line {label!r} holds "
             + "; ".join(_fmt(f) for f in got)
             + f", shown {shown}",
+            got[0],
         )
     if not c.tag and not c.parts:
         if dp in IDENTITY_FORMULAS:
@@ -1155,6 +1171,7 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
                     f.value,
                     ("" if ok else f"value differs, shown {shown}: ")
                     + f"company-level member {_fmt(f)}",
+                    f,
                 )
         return AutoCheck(
             dp,
@@ -1170,7 +1187,7 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
         ok, why = _shown_matches(dp, shown, f.value)
         if ok:
             return AutoCheck(
-                dp, fy, AUTO_MATCH, "family", f.value, f"tier {tier + 1}: {_fmt(f)}"
+                dp, fy, AUTO_MATCH, "family", f.value, f"tier {tier + 1}: {_fmt(f)}", f
             )
     # Coarser decimals: the shown figure (from a finer face line) rounds to the family fact at the fact's own
     # decimals (DHR 2016 amortization 583.1 vs the note's 583, dcml -6). A rounded mention is never a match.
@@ -1184,6 +1201,7 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
                     "family",
                     f.value,
                     f"tier {tier + 1}: {_fmt(f)}, shown {shown} rounds to it at the fact's decimals",
+                    f,
                 )
     if dp == "operating_expenses" and (ox := _opex_identity(c, fl, shown)):
         return ox
@@ -1222,6 +1240,7 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
         f"{why}: tier {tier + 1} "
         + "; ".join(_fmt(f) for f in got)
         + f", shown {shown}",
+        got[0],
     )
 
 
@@ -1700,3 +1719,339 @@ def write_audit_request(path: Path, sample: list[AutoCheck]) -> None:
                     "",
                 ]
             )
+
+
+# ---------------------------------------------------------------- three-source agreement (@3, 2026-11-22)
+# Each shown cell is compared across three renderings of the cited filing: (1) the FSN filing fact the checker
+# decided the cell by (AutoCheck.fact; per part for a summed cell), (2) the SEC companyfacts API value of that tag at
+# the same period end and accession, (3) the number printed on the cited R page's line of that tag. Never the
+# resolver's output or the value tables: the tag is the checker's own fact's tag (a part's tag for a summed cell).
+AGREE3 = "AGREE3"  # all three sources present and equal to the shown value: auto-proven, no draw needed
+AGREE2 = "AGREE2"  # one source missing (custom tag not in companyfacts, no printed line); the two present agree
+DISAGREE = "DISAGREE"  # a present source differs from the shown value: may be a wrong shown value
+SINGLE = "SINGLE"  # fewer than two sources (a read, a dimensioned part, an identity): never proven by agreement
+AGREEMENT = (AGREE3, AGREE2, DISAGREE, SINGLE)
+SOURCES = ("fsn", "companyfacts", "rpage")
+CF_TOLERANCE_DAYS = 7  # the checker's own period window (52/53-week years)
+
+
+@dataclass(frozen=True)
+class CfFact:
+    tag: str
+    accession: str
+    start: str  # "" for an instant
+    end: str
+    value: Decimal
+    uom: str
+
+
+class CompanyFacts:
+    """One companyfacts JSON (data.sec.gov/api/xbrl/companyfacts), indexed by (tag local name, accession)."""
+
+    def __init__(self, doc: dict):
+        self._by: dict[tuple[str, str], list[CfFact]] = {}
+        for tax in (doc.get("facts") or {}).values():
+            for tag, body in tax.items():
+                for uom, rows in (body.get("units") or {}).items():
+                    for r in rows:
+                        if r.get("val") is None or not r.get("accn"):
+                            continue
+                        f = CfFact(
+                            tag,
+                            r["accn"],
+                            r.get("start") or "",
+                            r["end"],
+                            Decimal(str(r["val"])),
+                            uom,
+                        )
+                        self._by.setdefault((tag, f.accession), []).append(f)
+
+    def values(
+        self, tag: str, accession: str, period_end: str, qtrs: int
+    ) -> list[CfFact]:
+        """The undimensioned USD (or share, per-share) facts of a tag the accession reported at the period end: an
+        instant (no start) for qtrs 0, a 350-380 day duration for qtrs 4."""
+        out = []
+        for f in self._by.get((tag, accession), ()):
+            if not usd_unit(f.uom) or _days(f.end, period_end) > CF_TOLERANCE_DAYS:
+                continue
+            if qtrs == 0 and f.start:
+                continue
+            if qtrs == 4 and not (f.start and 350 <= _days(f.end, f.start) <= 380):
+                continue
+            out.append(f)
+        return out
+
+
+class SourceStore:
+    """Companyfacts JSON and R pages under one cache directory (cf/CIK##########.json, r/<accession>/R<n>.htm).
+    fetch=True fetches a missing file through the machine-wide SEC budget (common/sec_rate.py, sec.gov only);
+    fetch=False reads the cache only and a missing file is a missing source."""
+
+    def __init__(self, cache: Path, fetch: bool = False):
+        self.cache, self.fetch = Path(cache), fetch
+        self._cf: dict[str, CompanyFacts | None] = {}
+        self._pages: dict[tuple[str, str], object] = {}
+
+    def _file(self, url: str, out: Path) -> Path | None:
+        if not (out.exists() and out.stat().st_size > 0) and self.fetch:
+            from scrooner_pipeline.common import sec_rate
+
+            try:
+                sec_rate.fetch_to(url, out)
+            except Exception:  # noqa: BLE001 - an unreachable page is a missing source, never a match
+                return None
+        return out if out.exists() and out.stat().st_size > 0 else None
+
+    def companyfacts(self, cik: str) -> CompanyFacts | None:
+        cik = str(cik).lstrip("0").zfill(10)
+        if cik not in self._cf:
+            if len(self._cf) > 2:  # one company at a time; the JSON is large
+                self._cf.clear()
+            p = self._file(
+                f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json",
+                self.cache / "cf" / f"CIK{cik}.json",
+            )
+            try:
+                self._cf[cik] = CompanyFacts(json.loads(p.read_text())) if p else None
+            except ValueError:
+                self._cf[cik] = None
+        return self._cf[cik]
+
+    def rpage(self, cik: str, accession: str, r_page: str):
+        """The parsed R page (verification/filing_kit.parse_rpage), None when absent or unparseable."""
+        from scrooner_pipeline.verification.filing_kit import parse_rpage
+
+        r = re.sub(r"\.htm$", "", (r_page or "").strip())
+        if not re.fullmatch(r"R\d+", r) or not accession:
+            return None
+        k = (accession, r)
+        if k not in self._pages:
+            if len(self._pages) > 512:
+                self._pages.clear()
+            p = self._file(
+                f"https://www.sec.gov/Archives/edgar/data/{str(cik).lstrip('0')}/"
+                f"{accession.replace('-', '')}/{r}.htm",
+                self.cache / "r" / accession / f"{r}.htm",
+            )
+            try:
+                self._pages[k] = (
+                    parse_rpage(p.read_text(errors="replace")) if p else None
+                )
+            except (ValueError, KeyError, IndexError):
+                self._pages[k] = None
+        return self._pages[k]
+
+
+def printed_values(
+    page, tag: str, period_end: str, qtrs: int, uom: str
+) -> list[tuple[Decimal, Decimal]]:
+    """The numbers printed on the page's line(s) of `tag` in the column ending at the period end (+-7 days; a
+    12-month column for a flow when the page has several durations), scaled by the page's printed unit: money by
+    the money unit, shares by the share unit, per-share figures unscaled. Returns (value, printed unit) per line:
+    the unit is the scale times the printed decimals (1,234.5 in millions: 100,000). Signs are printed (a negated
+    label prints the fact's opposite), so callers compare magnitudes."""
+    if page is None or not tag:
+        return []
+    cols = [
+        i
+        for i, d in enumerate(page.columns)
+        if abs((d - date.fromisoformat(period_end)).days) <= 7
+    ]
+    if qtrs == 4 and len(cols) > 1:
+        twelve = [i for i in cols if page.months[i] == 12]
+        cols = twelve or cols
+    if len(cols) != 1:
+        return []  # no column, or an ambiguous one (several durations or columns): a missing source
+    i = cols[0]
+    if "/" in uom:
+        mult = 1
+    elif "share" in uom.lower():
+        mult = page.share_multiplier
+    else:
+        mult = page.multiplier
+    out = []
+    for row in page.rows:
+        if row.tag != tag or i >= len(row.values) or row.values[i] is None:
+            continue
+        dec = row.decimals[i] if i < len(row.decimals) else None
+        out.append((row.values[i] * mult, Decimal(mult).scaleb(-(dec or 0))))
+    return out
+
+
+@dataclass(frozen=True)
+class Leg:
+    """One filed figure behind a shown cell: the whole cell (single element) or one part of a summed cell."""
+
+    tag: str
+    dims: str
+    accession: str
+    r_page: str
+    expected: Decimal  # what the sources must equal: the shown value (single) or the part as filed
+    fact: FilingFact | None  # the FSN fact (source 1); None = FSN missing
+    single: bool  # True: compared by the polarity rule against the shown value; False: a part as filed
+
+
+@dataclass(frozen=True)
+class SourceCheck:
+    data_point: str
+    fiscal_year: str
+    outcome: str  # AGREE3 | AGREE2 | DISAGREE | SINGLE
+    legs: tuple[dict, ...]
+    detail: str
+
+    @property
+    def key(self) -> tuple[str, str]:
+        return (self.data_point, self.fiscal_year)
+
+    def as_json(self) -> dict:
+        return {
+            "outcome": self.outcome,
+            "legs": list(self.legs),
+            "detail": self.detail,
+        }
+
+
+def _agrees(dp: str, leg: Leg, v: Decimal, dcml: int) -> bool:
+    if leg.single:
+        if _shown_matches(dp, leg.expected, v)[0]:
+            return True
+        probe = FilingFact("", "", "", 0, "", v, dcml)
+        return (
+            ROUNDED_MENTION_DCML < dcml < 32767
+            and _rounds_to(leg.expected, probe)
+            and (
+                is_fixed_positive(dp)
+                or dp in MAGNITUDE
+                or (leg.expected < 0) == (v < 0)
+            )
+        )
+    return v == leg.expected
+
+
+def _printed_agrees(leg: Leg, printed: Decimal, unit: Decimal) -> bool:
+    """Magnitudes (the printed sign follows the label) within half the printed unit: a page in millions prints
+    293 for 293,223,000 only to the million it shows, so the unit bounds the difference, never more."""
+    return abs(abs(printed) - abs(leg.expected)) * 2 <= unit
+
+
+def _legs(c: Cell, a: AutoCheck, fl: Filing) -> list[Leg]:
+    dp = c.data_point
+    shown = c.value if c.value is not None else Decimal(0)
+    if a.fact is not None and len(c.parts) <= 1:
+        if a.fact.dcml <= ROUNDED_MENTION_DCML:
+            return []  # a rounded mention proves nothing either way
+        return [
+            Leg(a.fact.tag, a.fact.dims, c.accession, c.r_page, shown, a.fact, True)
+        ]
+    if len(c.parts) > 1 and a.outcome == AUTO_MATCH:
+        # a summed cell the checker matched (the parts sum to the shown value): each part across the sources
+        return [
+            Leg(
+                p.tag.split(":")[-1],
+                p.dims,
+                p.accession,
+                p.r_page,
+                p.value,
+                fl.fact(
+                    p.accession, p.tag.split(":")[-1], c.period_end, _qtrs(dp), p.dims
+                ),
+                False,
+            )
+            for p in c.parts
+        ]
+    return []
+
+
+def three_source_cell(
+    c: Cell, a: AutoCheck, fl: Filing, store: SourceStore, cik: str
+) -> SourceCheck:
+    """Three-source agreement of one shown cell. A cell the checker found AUTO_MISMATCH is DISAGREE (its FSN source
+    differs from the shown value) whatever the other two say."""
+    dp, fy = c.key
+    q = _qtrs(dp)
+    legs = _legs(c, a, fl)
+    out, n_present, bad = [], [], []
+    for leg in legs:
+        got: dict[str, Decimal | None] = dict.fromkeys(SOURCES)
+        ok: dict[str, bool | None] = dict.fromkeys(SOURCES)
+        # the unit decides the printed scale: companyfacts' own unit first (FSN tags EPS in 'USD'), per-share by the
+        # data point, else the FSN fact's
+        uom = "USD/shares" if dp in PER_SHARE else (leg.fact.uom if leg.fact else "")
+        dcml = leg.fact.dcml if leg.fact else 32767
+        if leg.fact is not None:
+            got["fsn"] = leg.fact.value
+            ok["fsn"] = _agrees(dp, leg, leg.fact.value, dcml)
+        if not leg.dims:  # companyfacts and the statement line carry no dimensions
+            cf = store.companyfacts(cik)
+            vals = cf.values(leg.tag, leg.accession, c.period_end, q) if cf else []
+            if vals:
+                hit = [f for f in vals if _agrees(dp, leg, f.value, dcml)]
+                got["companyfacts"] = (hit or vals)[0].value
+                ok["companyfacts"] = bool(hit)
+                uom = vals[0].uom
+            page = store.rpage(cik, leg.accession, leg.r_page)
+            pv = printed_values(page, leg.tag, c.period_end, q, uom or "USD")
+            if pv:
+                printed = [v for v, u in pv if _printed_agrees(leg, v, u)]
+                got["rpage"] = (printed or [v for v, _ in pv])[0]
+                ok["rpage"] = bool(printed)
+        present = [s for s in SOURCES if ok[s] is not None]
+        n_present.append(len(present))
+        bad += [
+            f"{leg.tag} {s} {got[s]} vs {leg.expected}" for s in present if not ok[s]
+        ]
+        out.append(
+            {
+                "tag": leg.tag,
+                "dims": leg.dims,
+                "accession": leg.accession,
+                "r_page": leg.r_page,
+                "expected": str(leg.expected),
+                **{s: None if got[s] is None else str(got[s]) for s in SOURCES},
+                "agree": ok,
+            }
+        )
+    if a.outcome == AUTO_MISMATCH:
+        outcome = DISAGREE
+        bad = bad or [f"fsn: {a.detail}"]
+    elif bad:
+        outcome = DISAGREE
+    elif not legs or min(n_present) < 2:
+        outcome = SINGLE
+    elif min(n_present) == 3:
+        outcome = AGREE3
+    else:
+        outcome = AGREE2
+    detail = (
+        "; ".join(bad)
+        if bad
+        else (
+            "no filed figure the three sources can share"
+            if not legs
+            else f"{len(legs)} leg(s), sources present per leg {n_present}"
+        )
+    )
+    return SourceCheck(dp, fy, outcome, tuple(out), detail)
+
+
+def three_source(
+    sample: list[Cell],
+    checks: list[AutoCheck],
+    facts: list[FilingFact],
+    lines: list[FilingLine],
+    store: SourceStore,
+    cik: str,
+) -> list[SourceCheck]:
+    fl = Filing(facts, lines)
+    by = {a.key: a for a in checks}
+    return [
+        three_source_cell(c, by[c.key], fl, store, cik) for c in sample if c.key in by
+    ]
+
+
+def agreement_counts(checks: Iterable[SourceCheck]) -> dict[str, int]:
+    out = dict.fromkeys(AGREEMENT, 0)
+    for s in checks:
+        out[s.outcome] += 1
+    return out

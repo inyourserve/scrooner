@@ -45,6 +45,7 @@ class Row:
     decimals: list[int | None] = field(
         default_factory=list
     )  # digits after the point as printed
+    tag: str = ""  # the line's element (local name) from its defref link; "" when the page links none
 
 
 class AmbiguousColumn(KeyError):
@@ -60,6 +61,7 @@ class RPage:
     months: list[int | None] = field(
         default_factory=list
     )  # "N Months Ended" per column; None = instant
+    share_multiplier: int = 1  # printed unit of share counts ('shares in Millions'); per-share figures are unscaled
 
     def column(self, when: date, months: int | None = None) -> int:
         """Index of the column ending ``when``. Duration pages repeat the end date
@@ -168,7 +170,30 @@ def money_multiplier(header: str) -> int:
     for m in _UNIT_PHRASE.finditer(header):
         if (m.group(1) or "").lower() in _NON_MONEY:
             continue
+        if (m.group(1) or "").lower() == "data" and re.search(
+            r"shares?\s*$", header[: m.start(1)], re.IGNORECASE
+        ):
+            continue  # 'Share data in Millions' scales share counts only (WMT FY2015 equity details)
         return _SCALE[m.group(2).lower()]
+    return 1
+
+
+_SHARE_PHRASE = re.compile(
+    r"(?<!per )\bshares?(?: data)? in (thousands|millions|billions)", re.IGNORECASE
+)
+_DEFREF = re.compile(r"defref_[A-Za-z0-9-]+?_([A-Za-z][A-Za-z0-9_]*)")
+
+
+def share_multiplier(header: str) -> int:
+    """Scale of the share counts: 'shares in Millions' (newer pages); on older pages a bare 'In Thousands' scales
+    share counts too unless it says 'except Share data' ('except Per Share data' leaves only per-share figures
+    unscaled: NVDA 2015 prints 544,913 shares in thousands). 1 when the page states none."""
+    m = _SHARE_PHRASE.search(header)
+    if m:
+        return _SCALE[m.group(1).lower()]
+    bare = next((u for u in _UNIT_PHRASE.finditer(header) if not u.group(1)), None)
+    if bare and not re.search(r"(?<!per )except\s+shares?\b", header, re.IGNORECASE):
+        return _SCALE[bare.group(2).lower()]
     return 1
 
 
@@ -189,7 +214,7 @@ def parse_rpage(page_html: str) -> RPage:
     footnote cells ('[1]', class fn) and blank spacer cells (class th) are
     dropped, then a row with more cells than columns (leading blank column on
     old pages) is aligned from the right. Hidden '- Definition' rows skipped."""
-    title, multiplier, columns = "", 1, []
+    title, multiplier, shares, columns = "", 1, 1, []
     spans: list[int] = []
     # duration headers as grid ranges (start, end, months) and the date cells'
     # grid start positions: a date cell can span a footnote column (colspan=2),
@@ -207,6 +232,7 @@ def parse_rpage(page_html: str) -> RPage:
         if title_row:
             title = cells[0][1]
             multiplier = money_multiplier(" ".join(t for _, t in cells))
+            shares = share_multiplier(" ".join(t for _, t in cells))
         if title_row and cells3 and cells3[0][0] == "tl":
             title_span = cells3[0][2]
         if not rows:
@@ -250,7 +276,8 @@ def parse_rpage(page_html: str) -> RPage:
         elif len(vals) < len(columns):
             pad = len(columns) - len(vals)
             vals, decs = vals + [None] * pad, decs + [None] * pad
-        rows.append(Row(label, vals, decs))
+        ref = _DEFREF.search(tr)
+        rows.append(Row(label, vals, decs, ref.group(1) if ref else ""))
     by_pos = [
         next((m for a, b, m in dur_ranges if a <= st < b), None) for st in date_starts
     ]
@@ -260,7 +287,7 @@ def parse_rpage(page_html: str) -> RPage:
         months = by_pos
     else:
         months = [None] * len(columns)
-    return RPage(title, multiplier, columns, rows, months)  # type: ignore[arg-type]
+    return RPage(title, multiplier, columns, rows, months, shares)  # type: ignore[arg-type]
 
 
 _IS_NAME = re.compile(r"income|operations|earnings|loss|profit", re.IGNORECASE)

@@ -49,6 +49,15 @@ is AUTO_MATCH (method identity).
   python pipeline/scripts/certify_display.py --identity-web-all data-team/strategy/top100-coverage.csv --out-dir OUT
   python pipeline/scripts/certify_display.py --identity-web-all data-team/strategy/top100-coverage.csv --resolver \
       data-team/tags/line_map/resolver --out-dir OUT
+Three-source agreement (draw_check.three_source, 2026-11-22): with --three-source-cache DIR every checked cell is also
+compared across the FSN fact the checker decided it by, the SEC companyfacts value of that tag, period and accession,
+and the number printed on the cited R page's line: AGREE3 (auto-proven), AGREE2 (one source missing), DISAGREE (may
+be a wrong shown value), SINGLE. DIR holds cf/CIK##########.json and r/<accession>/R<n>.htm; --three-source-fetch
+fetches what is missing through the shared SEC budget (2 requests/second machine-wide). With --draw-check-all,
+--all-shown checks every shown cell instead of the draw.
+
+  python pipeline/scripts/certify_display.py --draw-check-all data-team/strategy/top100-coverage.csv --out-dir OUT \
+      --three-source-cache CACHE --all-shown
 """
 
 from __future__ import annotations
@@ -142,11 +151,33 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="with --identity-web-all: the resolver directory (one <TICKER>.csv per company), judged as shown cells",
     )
+    ap.add_argument(
+        "--three-source-cache",
+        type=Path,
+        help="companyfacts + R page cache: add three-source agreement (FSN, companyfacts, printed R page)",
+    )
+    ap.add_argument(
+        "--three-source-fetch",
+        action="store_true",
+        help="fetch missing companyfacts / R pages into the cache (shared SEC budget)",
+    )
+    ap.add_argument(
+        "--all-shown",
+        action="store_true",
+        help="with --draw-check-all: check every shown cell, not only the draw",
+    )
     a = ap.parse_args(argv)
     if a.identity_web_all:
         return identity_web_all(a.identity_web_all, a.out_dir, a.date, a.resolver)
+    store = (
+        dck.SourceStore(a.three_source_cache, a.three_source_fetch)
+        if a.three_source_cache
+        else None
+    )
     if a.draw_check_all:
-        return draw_check_all(a.draw_check_all, a.out_dir, a.date)
+        return draw_check_all(
+            a.draw_check_all, a.out_dir, a.date, store=store, all_shown=a.all_shown
+        )
     if a.self_check_dir:
         if not (a.company_id and a.cik):
             ap.error("--self-check-dir needs --company-id and --cik")
@@ -187,6 +218,7 @@ def main(argv: list[str] | None = None) -> int:
                 a.seed,
                 a.mechanical,
                 reads=dck.load_reads(a.reads),
+                store=store,
             )
     else:
         raw = json.loads(a.bundle.read_text())
@@ -199,6 +231,7 @@ def main(argv: list[str] | None = None) -> int:
             a.seed,
             a.mechanical,
             reads=dck.load_reads(a.reads),
+            store=store,
         )
     if run.auto is not None:
         sample = dck.audit_sample(run.auto, run.seed)
@@ -415,6 +448,11 @@ DRAW_CHECK_COLUMNS = [
     "filing_value",
     "accession",
     "detail",
+    "agreement",
+    "fsn",
+    "companyfacts",
+    "rpage",
+    "agreement_detail",
 ]
 DRAW_SUMMARY_COLUMNS = [
     "ticker",
@@ -425,6 +463,10 @@ DRAW_SUMMARY_COLUMNS = [
     "auto_mismatch",
     "needs_read",
     "pct_auto_match",
+    "agree3",
+    "agree2",
+    "disagree",
+    "single",
     "seconds",
 ]
 
@@ -620,10 +662,19 @@ def identity_web_all(
     return 0
 
 
-def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
+def draw_check_all(
+    cov: Path,
+    out_dir: Path,
+    today: str,
+    source=None,
+    store: dck.SourceStore | None = None,
+    all_shown: bool = False,
+    cik_of=None,
+) -> int:
     """The automated draw checker over every company of a top100-coverage.csv, read-only: the same seeded draw
     certify() would take (plan), checked against the cited filings' facts. Writes OUT/draw-check-<date>.csv (one row
-    per drawn cell) and OUT/draw-check-summary-<date>.csv (counts and seconds per company)."""
+    per drawn cell) and OUT/draw-check-summary-<date>.csv (counts and seconds per company). store: also the three-source
+    agreement per cell (cik_of(company_id) -> CIK; default core.company). all_shown: every shown cell, not the draw."""
     fields, rows = _read(cov)
     by: dict[str, list[dict]] = {}
     for r in rows:
@@ -650,13 +701,24 @@ def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
                 p = dc.plan(ticker, one)
             finally:
                 one.unlink(missing_ok=True)
-            got = source.filing_facts(*dck.needs(p.sample)) if p.sample else ([], [])
+            sample = (
+                [c for c in p.cells if c.display == dc.SHOWN] if all_shown else p.sample
+            )
+            got = source.filing_facts(*dck.needs(sample)) if sample else ([], [])
+            three: dict = {}
+            if store is not None and sample:
+                cik = (cik_of or (lambda i: _company_cik(source.conn, int(i))))(cid)
             if conn_cm is not None:
                 source.conn.rollback()
-            checks = dck.check_draw(p.sample, *got) if p.sample else []
+            checks = dck.check_draw(sample, *got) if sample else []
+            if store is not None and sample:
+                three = {
+                    s.key: s for s in dck.three_source(sample, checks, *got, store, cik)
+                }
+            agree = dck.agreement_counts(three.values())
             secs = time.monotonic() - t0
             k = dck.counts(checks)
-            badge = {c.key: c for c in p.sample}
+            badge = {c.key: c for c in sample}
             for x in checks:
                 c = badge[x.key]
                 cells_out.append(
@@ -675,6 +737,7 @@ def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
                         else str(x.filing_value),
                         "accession": c.accession,
                         "detail": x.detail,
+                        **_agreement_row(three.get(x.key)),
                     }
                 )
             summ.append(
@@ -689,6 +752,16 @@ def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
                     "pct_auto_match": f"{100 * k[dck.AUTO_MATCH] / len(checks):.1f}"
                     if checks
                     else "",
+                    **(
+                        {
+                            "agree3": agree[dck.AGREE3],
+                            "agree2": agree[dck.AGREE2],
+                            "disagree": agree[dck.DISAGREE],
+                            "single": agree[dck.SINGLE],
+                        }
+                        if three
+                        else {}
+                    ),
                     "seconds": f"{secs:.2f}",
                 }
             )
@@ -712,7 +785,48 @@ def draw_check_all(cov: Path, out_dir: Path, today: str, source=None) -> int:
         f"AUTO_MATCH {tot[dck.AUTO_MATCH]} ({100 * tot[dck.AUTO_MATCH] / n if n else 0:.1f}%), "
         f"AUTO_MISMATCH {tot[dck.AUTO_MISMATCH]}, NEEDS_READ {tot[dck.NEEDS_READ]}"
     )
+    if store is not None:
+        ag = {
+            k: sum(1 for r in cells_out if r["agreement"] == k) for k in dck.AGREEMENT
+        }
+        print(
+            "three-source: "
+            + ", ".join(
+                f"{k} {v} ({100 * v / n if n else 0:.1f}%)" for k, v in ag.items()
+            )
+        )
     return 0
+
+
+def _company_cik(conn, company_id: int) -> str:
+    """The company's own CIK (core.company): companyfacts is per registrant, and fsn.filing can hold a predecessor's
+    CIK too (GOOGL: Google Inc. 1288776 and Alphabet 1652044)."""
+    with conn.cursor() as cur:
+        cur.execute("set statement_timeout = 15000")
+        cur.execute("select cik from core.company where id = %s", (company_id,))
+        row = cur.fetchone()
+    if not row:
+        raise ValueError(f"company {company_id}: not in core.company")
+    return str(row[0]).zfill(10)
+
+
+def _agreement_row(s) -> dict:
+    """The three-source columns of one checked cell (blank when the check did not run)."""
+    if s is None:
+        return dict.fromkeys(
+            ("agreement", "fsn", "companyfacts", "rpage", "agreement_detail"), ""
+        )
+
+    def col(src: str) -> str:
+        return "|".join("" if g[src] is None else g[src] for g in s.legs)
+
+    return {
+        "agreement": s.outcome,
+        "fsn": col("fsn"),
+        "companyfacts": col("companyfacts"),
+        "rpage": col("rpage"),
+        "agreement_detail": s.detail,
+    }
 
 
 if __name__ == "__main__":

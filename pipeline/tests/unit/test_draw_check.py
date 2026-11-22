@@ -4,6 +4,7 @@ filing's own XBRL facts; only NEEDS_READ and AUTO_MISMATCH cells go to a person 
 from __future__ import annotations
 
 import csv
+import dataclasses
 import importlib.util
 import json
 from decimal import Decimal as D
@@ -1503,3 +1504,333 @@ def test_dps_on_the_company_level_common_stock_member():
         )
     ]
     assert chk(c, f2).outcome == dck.AUTO_MISMATCH
+
+
+# ---------------------------------------------------------------- three-source agreement (FSN, companyfacts, R page)
+CIK = "0000000001"
+_RPAGE = """<table class="report">
+<tr><th class="tl" colspan="1" rowspan="2"><div><strong>CONSOLIDATED STATEMENTS OF INCOME - USD ($)<br>
+ shares in Thousands, $ in Millions</strong></div></th><th class="th" colspan="2">12 Months Ended</th></tr>
+<tr><th class="th"><div>Dec. 31, 2023</div></th><th class="th"><div>Dec. 31, 2022</div></th></tr>
+<tr class="re"><td class="pl"><a onclick="Show.showAR( this, 'defref_us-gaap_Revenues', window );">Revenue</a></td>
+<td class="nump">$ 100</td><td class="nump">$ 90</td></tr>
+<tr class="ro"><td class="pl"><a onclick="Show.showAR( this, 'defref_us-gaap_CostOfRevenue', window );">Cost</a></td>
+<td class="nump">(40)</td><td class="nump">(35)</td></tr>
+<tr class="ro"><td class="pl"><a onclick="Show.showAR( this, 'defref_us-gaap_EarningsPerShareBasic', window );">Basic</a></td>
+<td class="nump">$ 1.25</td><td class="nump">$ 1.10</td></tr>
+<tr class="ro"><td class="pl"><a onclick="Show.showAR( this, 'defref_us-gaap_WeightedAverageNumberOfSharesOutstandingBasic', window );">Shares</a></td>
+<td class="nump">80,000</td><td class="nump">81,000</td></tr>
+</table>"""
+
+
+def _cf(*facts):
+    """companyfacts JSON: (tag, value, uom[, start, end, accn])."""
+    out: dict = {}
+    for t in facts:
+        tag, val, uom = t[:3]
+        start, end, accn = (t[3:] + ("2023-01-01", PE, ACC)[len(t) - 3 :])[:3]
+        row = {"end": end, "val": val, "accn": accn, "form": "10-K"}
+        if start:
+            row["start"] = start
+        out.setdefault(tag, {"units": {}})["units"].setdefault(uom, []).append(row)
+    return {"cik": 1, "facts": {"us-gaap": out}}
+
+
+def _store(tmp_path, cf=None, page=_RPAGE):
+    if cf is not None:
+        (tmp_path / "cf").mkdir(parents=True, exist_ok=True)
+        (tmp_path / "cf" / f"CIK{CIK}.json").write_text(json.dumps(cf))
+    if page is not None:
+        (tmp_path / "r" / ACC).mkdir(parents=True, exist_ok=True)
+        (tmp_path / "r" / ACC / "R4.htm").write_text(page)
+    return dck.SourceStore(tmp_path)
+
+
+def three(c, facts, store, lines=()):
+    fl = dck.Filing(list(facts), list(lines))
+    return dck.three_source_cell(c, dck.check_cell(c, fl), fl, store, CIK)
+
+
+def test_three_sources_agree_and_the_certificate_says_so(tmp_path):
+    st = _store(tmp_path, _cf(("Revenues", 100_000_000, "USD")))
+    s = three(cell(value="100000000", tag="abc_X"), [ff("Revenues", "100000000")], st)
+    assert s.outcome == dck.AGREE3, s
+    (leg,) = s.legs
+    # the checker's own fact's tag, never the export's cited tag
+    assert leg["tag"] == "Revenues" and leg["rpage"] == "100000000"
+    assert leg["agree"] == {"fsn": True, "companyfacts": True, "rpage": True}
+
+
+def test_one_missing_source_is_agree2_and_none_but_one_is_single(tmp_path):
+    rev = [ff("Revenues", "100000000")]
+    c = cell(value="100000000")
+    # companyfacts holds nothing for that accession (a custom tag, a later filing's comparative)
+    st = _store(
+        tmp_path,
+        _cf(("Revenues", 100_000_000, "USD", "2023-01-01", PE, "0000000009-25-000001")),
+    )
+    assert three(c, rev, st).outcome == dck.AGREE2
+    # no printed page and no companyfacts: the FSN fact alone never proves a cell
+    assert three(c, rev, dck.SourceStore(tmp_path / "empty")).outcome == dck.SINGLE
+    # a cell the checker sends to a read has no decided fact: SINGLE
+    assert (
+        three(
+            cell(dp="research_and_development", value="7", tag="abc_RandD"),
+            [ff("abc_RandD", "7")],
+            st,
+        ).outcome
+        == dck.SINGLE
+    )
+
+
+def test_a_source_that_differs_is_disagree(tmp_path):
+    rev = [ff("Revenues", "100000000")]
+    c = cell(value="100000000")
+    # companyfacts differs
+    s = three(c, rev, _store(tmp_path / "a", _cf(("Revenues", 101_000_000, "USD"))))
+    assert s.outcome == dck.DISAGREE and s.legs[0]["agree"]["companyfacts"] is False
+    # the printed line differs (the page prints 100 million; the shown and filed 103 million)
+    s = three(
+        cell(value="103000000"),
+        [ff("Revenues", "103000000")],
+        _store(tmp_path / "b", _cf(("Revenues", 103_000_000, "USD"))),
+    )
+    assert s.outcome == dck.DISAGREE and s.legs[0]["agree"]["rpage"] is False
+    # the checker's own AUTO_MISMATCH is a disagreeing FSN source whatever the others say
+    s = three(
+        cell(value="90000000"),
+        rev,
+        _store(tmp_path / "c", _cf(("Revenues", 90_000_000, "USD"))),
+    )
+    assert s.outcome == dck.DISAGREE
+
+
+def test_companyfacts_matches_tag_accession_period_and_duration():
+    cf = dck.CompanyFacts(
+        _cf(
+            ("Revenues", 100, "USD"),
+            ("Revenues", 25, "USD", "2023-10-01", PE, ACC),  # a quarter
+            ("Revenues", 90, "USD", "2022-01-01", "2022-12-31", ACC),  # prior year
+            ("Revenues", 7, "EUR"),  # another currency
+            ("Assets", 500, "USD", "", PE, ACC),
+        )
+    )
+    assert [f.value for f in cf.values("Revenues", ACC, PE, 4)] == [D(100)]
+    assert [f.value for f in cf.values("Assets", ACC, "2024-01-03", 0)] == [
+        D(500)
+    ]  # +-7 days
+    assert (
+        cf.values("Assets", ACC, PE, 4) == []
+        and cf.values("Revenues", "x", PE, 4) == []
+    )
+
+
+def test_printed_values_scale_by_the_lines_unit_and_take_the_cited_period_column(
+    tmp_path,
+):
+    page = _store(tmp_path, page=_RPAGE).rpage(CIK, ACC, "R4.htm")
+    assert page.rows[0].tag == "Revenues" and page.share_multiplier == 1000
+    pv = dck.printed_values
+    assert pv(page, "Revenues", PE, 4, "USD") == [(D(100_000_000), D(1_000_000))]
+    assert pv(page, "Revenues", "2022-12-31", 4, "USD")[0][0] == D(90_000_000)
+    assert pv(page, "EarningsPerShareBasic", PE, 4, "USD/shares") == [
+        (D("1.25"), D("0.01"))
+    ]
+    assert pv(page, "WeightedAverageNumberOfSharesOutstandingBasic", PE, 4, "shares")[
+        0
+    ][0] == D(80_000_000)
+    assert (
+        pv(page, "Revenues", "2021-12-31", 4, "USD") == []
+        and pv(None, "Revenues", PE, 4, "USD") == []
+    )
+    # 'Share data in Millions' scales share counts, never money (WMT FY2015 prints $ 462,000,000 in full)
+    from scrooner_pipeline.verification.filing_kit import (
+        money_multiplier,
+        share_multiplier,
+    )
+
+    wmt = "Shareholder's Equity (Narrative)(Details) (USD $) Share data in Millions, unless otherwise specified"
+    assert (money_multiplier(wmt), share_multiplier(wmt)) == (1, 1_000_000)
+
+
+def test_printed_sign_follows_the_label_and_per_share_is_unscaled(tmp_path):
+    st = _store(
+        tmp_path,
+        _cf(
+            ("CostOfRevenue", 40_000_000, "USD"),
+            ("EarningsPerShareBasic", 1.25, "USD/shares"),
+        ),
+    )
+    s = three(
+        cell(dp="cost_of_revenue", value="40000000", tag="CostOfRevenue"),
+        [ff("CostOfRevenue", "40000000")],
+        st,
+    )
+    assert s.outcome == dck.AGREE3, s  # printed (40) is the magnitude 40 million
+    # FSN tags EPS in 'USD': the per-share line is still read unscaled
+    eps = [dck.FilingFact(ACC, "EarningsPerShareBasic", PE, 4, "", D("1.25"), 2, "USD")]
+    assert (
+        three(
+            cell(dp="basic_eps", value="1.25", tag="EarningsPerShareBasic"), eps, st
+        ).outcome
+        == dck.AGREE3
+    )
+    # without a companyfacts unit, the data point decides: the per-share line is unscaled, not $ in millions
+    st2 = _store(tmp_path / "noeps", _cf(("Revenues", 1, "USD")))
+    assert (
+        three(
+            cell(dp="basic_eps", value="1.25", tag="EarningsPerShareBasic"), eps, st2
+        ).outcome
+        == dck.AGREE2
+    )
+
+
+def test_summed_cells_check_each_part_across_the_sources(tmp_path):
+    st = _store(
+        tmp_path,
+        _cf(("Revenues", 100_000_000, "USD"), ("CostOfRevenue", 40_000_000, "USD")),
+    )
+    facts = [ff("Revenues", "100000000"), ff("CostOfRevenue", "40000000")]
+    c = cell(
+        dp="sga_expense",
+        value="140000000",
+        tag="",
+        parts=(part("Revenues", "100000000"), part("CostOfRevenue", "40000000")),
+        badge="derived:selling_and_marketing+general_and_administrative",
+    )
+    a = dck.check_cell(c, dck.Filing(facts, []))
+    assert a.outcome == dck.AUTO_MATCH, a
+    s = dck.three_source_cell(c, a, dck.Filing(facts, []), st, CIK)
+    assert s.outcome == dck.AGREE3 and [g["tag"] for g in s.legs] == [
+        "Revenues",
+        "CostOfRevenue",
+    ]
+    # the parts do not sum to the shown value: the checker's mismatch is a disagreeing FSN source, never SINGLE
+    bad = dataclasses.replace(c, value=D("150000000"))
+    a2 = dck.check_cell(bad, dck.Filing(facts, []))
+    assert a2.outcome == dck.AUTO_MISMATCH
+    assert (
+        dck.three_source_cell(bad, a2, dck.Filing(facts, []), st, CIK).outcome
+        == dck.DISAGREE
+    )
+
+
+def test_certificate_and_draw_check_all_record_source_agreement(tmp_path):
+    cov = _two(tmp_path)
+    st = _store(tmp_path / "cache", _cf(("Revenues", 100, "USD")), page=None)
+    run = dc.certify(
+        "T", "1", cov, Src([ff("Revenues", "100"), ff("abc_RandD", "7")]), store=st
+    )
+    assert dck.agreement_counts(run.three) == {
+        dck.AGREE3: 0,
+        dck.AGREE2: 1,
+        dck.DISAGREE: 0,
+        dck.SINGLE: 1,
+    }
+    reads = tmp_path / "reads.csv"
+    reads.write_text(
+        "data_point,fiscal_year,verdict,reader,evidence\nresearch_and_development,2023,MATCH,a,R4 7\n"
+    )
+    done = dc.certify(
+        "T",
+        "1",
+        cov,
+        Src([ff("Revenues", "100"), ff("abc_RandD", "7")]),
+        reads=dck.load_reads(reads),
+        store=st,
+    )
+    cert = json.loads(
+        json.dumps(dc.certificate(done, None, "2026-11-22", "Ritwik (cloud)"))
+    )
+    _check_schema(cert, json.loads(dc.CERTIFICATE_SCHEMA_PATH.read_text()))
+    by = {c["data_point"]: c["source_agreement"]["outcome"] for c in cert["cells"]}
+    assert by == {"revenue": dck.AGREE2, "research_and_development": dck.SINGLE}
+    assert cert["draw_check"]["three_source"][dck.AGREE2] == 1
+    # the read-only top-100 run: every shown cell (--all-shown), agreement columns and per-company counts
+    p = tmp_path / "top100-coverage.csv"
+    with open(p, "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(
+            [
+                "rank",
+                "ticker",
+                "company_id",
+                "data_point",
+                "fiscal_year",
+                "period_end",
+                "shown_value",
+                "accession",
+                "r_page",
+                "tag",
+                "parts",
+                "display",
+            ]
+        )
+        w.writerow(
+            [
+                "1",
+                "T",
+                "7",
+                "revenue",
+                "2023",
+                PE,
+                "100",
+                ACC,
+                "R4",
+                "Revenues",
+                "",
+                dc.SHOWN,
+            ]
+        )
+    sc = _script()
+    assert (
+        sc.draw_check_all(
+            p,
+            tmp_path / "o",
+            "d",
+            source=Src([ff("Revenues", "100")]),
+            store=st,
+            all_shown=True,
+            cik_of=lambda i: CIK,
+        )
+        == 0
+    )
+    (row,) = _rows(tmp_path / "o" / "draw-check-d.csv")
+    assert (row["agreement"], row["fsn"], row["companyfacts"]) == (
+        dck.AGREE2,
+        "100",
+        "100",
+    )
+    (summ,) = _rows(tmp_path / "o" / "draw-check-summary-d.csv")
+    assert (summ["agree3"], summ["agree2"]) == ("0", "1")
+    # --all-shown checks every shown cell, not only the draw of 199
+    with open(p, "a", newline="") as fh:
+        w = csv.writer(fh)
+        for y in range(1800, 1800 + dc.DRAW_SIZE):
+            w.writerow(
+                [
+                    "1",
+                    "T",
+                    "7",
+                    "revenue",
+                    str(y),
+                    PE,
+                    "100",
+                    ACC,
+                    "R4",
+                    "Revenues",
+                    "",
+                    dc.SHOWN,
+                ]
+            )
+    for every, n in ((True, dc.DRAW_SIZE + 1), (False, dc.DRAW_SIZE)):
+        sc.draw_check_all(
+            p,
+            tmp_path / "o2",
+            "d",
+            source=Src([ff("Revenues", "100")]),
+            store=st,
+            all_shown=every,
+            cik_of=lambda i: CIK,
+        )
+        assert len(_rows(tmp_path / "o2" / "draw-check-d.csv")) == n

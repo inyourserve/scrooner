@@ -1516,6 +1516,8 @@ class Run:
     # identity web (proof/identities, 2026-11-22): every identity x fiscal year over the shown cells; None when the
     # source has no identity read
     web: list | None = None
+    # three-source agreement (draw_check.three_source) per drawn cell; None when not run (no source store)
+    three: list[dck.SourceCheck] | None = None
 
     @property
     def pending_reads(self) -> list[dck.AutoCheck]:
@@ -1670,10 +1672,12 @@ def certify(
     seed: str | None = None,
     mechanical: bool = False,
     reads: dict[tuple[str, str], dck.Read] | None = None,
+    store: dck.SourceStore | None = None,
 ) -> Run:
     """mechanical=True: every census check, no draw (a re-check of a certified export or the flow
     gate). Its verdict says whether the mechanical checks pass; it is never a certificate.
-    reads: filing reads (draw_check.load_reads) for the drawn cells the automated checker sent to a read."""
+    reads: filing reads (draw_check.load_reads) for the drawn cells the automated checker sent to a read.
+    store: companyfacts and R pages (draw_check.SourceStore): every drawn cell also gets its three-source agreement."""
     p = plan(ticker, coverage, seed, 0 if mechanical else DRAW_SIZE)
     counts: dict[str, int] = defaultdict(int)
     for c in p.cells:
@@ -1737,6 +1741,9 @@ def certify(
         if run.auto:
             # a drawn cell an exact identity corroborates (every other member matched its filing fact) is settled
             run.auto = dck.corroborate(run.auto, idw.web_corroborated(run.web))
+    if store is not None and run.auto is not None and p.sample:
+        got = getattr(source, "filing_facts")(*dck.needs(p.sample))
+        run.three = dck.three_source(p.sample, run.auto, *got, store, cik)
     # Census, not sample: every derived cell is checked against its identity (founder 2026-11-17
     # allows derived instants; each one is a computation the filing does not print).
     run.derived = [
@@ -2287,6 +2294,11 @@ def draw_check_block(run: Run) -> dict:
         "pending_read": by.get("pending_read", 0),
         "read_cells": read_cells,
         "audit": run.audit,
+        **(
+            {}
+            if run.three is None
+            else {"three_source": dck.agreement_counts(run.three)}
+        ),
     }
 
 
@@ -2310,6 +2322,7 @@ def certificate(
     }
     gate_fail = {(f.data_point, f.fiscal_year): f for f in run.gate}
     auto = {a.key: a for a in run.auto or ()}
+    three = {s.key: s for s in run.three or ()}
     cells = []
     for c in run.cells:
         if c.key in drawn:
@@ -2383,6 +2396,11 @@ def certificate(
                         "verified_by": dck.verified_by(auto[c.key], run.reads),
                     }
                     if c.key in auto
+                    else {}
+                ),
+                **(
+                    {"source_agreement": three[c.key].as_json()}
+                    if c.key in three
                     else {}
                 ),
             }
