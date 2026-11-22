@@ -317,3 +317,23 @@ def test_sbc_note_expense_rows_carry_the_note_step_badge():
         == "as_printed:note"
     )
     assert reg.badge_for("sbc", "general", _row("mapped", "cf_family")) == "as_printed"
+
+
+def test_mapped_row_serving_a_combined_line_takes_its_combined_badge_jnj_cf_ap_change():
+    """JNJ cf_ap_change FY2014-25 (resolver .92 X133): the row is `mapped` with flag
+    `combined:Increase in accounts payable and accrued liabilities`. Badged as_printed, the verifier's 2026-11-22 re-cert
+    failed on all 12 cells: the badge is the combined step with the printed label."""
+    row = {
+        "decision": "mapped",
+        "flags": "cf_family;combined:Increase in accounts payable and accrued liabilities",
+        "nodes": "IncreaseDecreaseInAccountsPayableAndAccruedLiabilities=5141000000 [R9.htm:14]",
+    }
+    assert (
+        reg.badge_for("cf_ap_change", "general", row)
+        == "combined:Increase in accounts payable and accrued liabilities"
+    )
+    # a filing read's percent-encoded label is decoded
+    row2 = dict(row, flags="filing_read;text_stated;combined:Accounts payable%2C accrued and other")
+    assert reg.badge_for("cf_ap_change", "general", row2) == "combined:Accounts payable, accrued and other"
+    # a label the data point's combined steps do not name is never invented as a badge
+    assert reg.badge_for("revenue", "general", dict(row, flags="combined:Revenues and other income")) == "as_printed"

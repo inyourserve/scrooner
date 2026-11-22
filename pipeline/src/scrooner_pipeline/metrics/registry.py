@@ -567,6 +567,19 @@ def printed_label(row: dict) -> str:
     return m.group(1).strip() if m else ""
 
 
+def badge_matches(badge: str, allowed: tuple[str, ...] | list[str]) -> bool:
+    """A badge equals one of the allowed steps, or fills an allowed step's <placeholder> after its fixed prefix."""
+    for b in allowed:
+        m = _PLACEHOLDER.search(b)
+        if m:
+            prefix = b[: m.start()]
+            if badge.startswith(prefix) and badge[len(prefix) :].strip():
+                return True
+        elif badge == b:
+            return True
+    return False
+
+
 def _derived_formula(badge: str) -> str:
     return badge[len("derived:") :]
 
@@ -611,6 +624,28 @@ def badge_for(
         and len(stepped) == 1
     ):
         return stepped[0]
+    # resolver .92 X133 / a filing read's badge=combined:<label>: a MAPPED row that serves a printed combined line carries
+    # the flag `combined:<printed label>`; the cell is that combined step, never as_printed (JNJ cf_ap_change FY2014-25
+    # serves 'Increase in accounts payable and accrued liabilities'; badged as_printed, the 2026-11-22 re-cert failed).
+    combined = [
+        f[len("combined:") :]
+        .replace("%3B", ";")
+        .replace("%2C", ",")
+        .replace("%25", "%")
+        for f in sorted(flags)
+        if f.startswith("combined:") and f[len("combined:") :].strip()
+    ]
+    combined = [
+        f"combined:{x}" for x in combined if badge_matches(f"combined:{x}", d.badges)
+    ]
+    if len(combined) > 1:
+        # a printed label beats a bare element name flagged beside it (interest_income: 'Interest and dividend income'
+        # and 'InvestmentIncomeInterestAndDividend')
+        combined = [c for c in combined if " " in c[len("combined:") :].strip()]
+    if decision == "mapped" and len(combined) == 1:
+        return combined[0]
+    # no combined flag, a label the data point's combined steps do not name (other_income_expense_net 'Other
+    # income/(expense), net' vs its only step 'combined:interest income'), or no single label: the mapped rule decides
     if decision == "derived_not_printed" or "DERIVED" in flags:
         named = [DERIVED_FLAG_BADGES[f] for f in flags if f in DERIVED_FLAG_BADGES]
         if named:
