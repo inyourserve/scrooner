@@ -197,3 +197,40 @@ def test_a_read_of_zero_is_served_as_stated_zero_never_text_stated(tmp_path):
     assert 'stated_zero' in fl and 'text_stated' not in fl
     fl = filing_reads.apply([row()], cells(tmp_path, read()))[0]['flags'].split(';')
     assert 'text_stated' in fl and 'stated_zero' not in fl
+
+
+def test_a_read_of_an_element_reported_only_dimensioned_carries_the_facts_dimensions_in_its_locator(tmp_path, monkeypatch):
+    # verifier 2026-11-22 (MO sbc FY2015-16 held at REVIEW): the read names AllocatedShareBasedCompensationExpense with no
+    # dimension, but the fact exists only as [AwardType=RestrictedAndDeferredStock]; the part locator must carry that member
+    el = 'us-gaap:AllocatedShareBasedCompensationExpense (text-stated, RSU pre-tax compensation expense)'
+    reads = [dict(cik='0000764180', ticker='MO', data_point='sbc', period_end='2015-12-31', fiscal_year='2015', outcome='VALUE', value='51000000',
+                  element=el, accession='0000764180-18-000028', r_page='R75.htm', quote='FY2017 10-K Note Stock Plans: $51 million (2015)',
+                  rule_proposal='badge=as_printed', source_file='MO-2026-11-23.csv'),
+             dict(cik='0000764180', ticker='MO', data_point='sbc', period_end='2016-12-31', fiscal_year='2016', outcome='VALUE', value='44000000',
+                  element=el, accession='0000764180-19-000023', r_page='R72.htm', quote='FY2018 10-K R72: Pre-tax compensation expense | $ 39 | $ 49 | $ 44',
+                  rule_proposal='badge=as_printed', source_file='MO-2026-11-23.csv')]
+    p = cells(tmp_path, *reads)
+    mf = {   # the standard extract's member facts (current-period facts of each filing), run 44909486990
+        '0000764180-16-000128': 'AllocatedShareBasedCompensationExpense|4|51000000.0000|AwardType=RestrictedAndDeferredStock;',
+        '0000764180-17-000028': 'AllocatedShareBasedCompensationExpense|4|44000000.0000|AwardType=RestrictedAndDeferredStock;',
+        '0000764180-18-000028': 'AllocatedShareBasedCompensationExpense|4|6000000.0000|AwardType=PerformanceShares;~'
+                                'AllocatedShareBasedCompensationExpense|4|49000000.0000|AwardType=RestrictedAndDeferredStock;',
+        '0000764180-19-000023': 'AllocatedShareBasedCompensationExpense|4|7000000.0000|AwardType=PerformanceShares;~'
+                                'AllocatedShareBasedCompensationExpense|4|39000000.0000|AwardType=RestrictedAndDeferredStock;'}
+    nf = {a: 'Assets|0|1.0000' for a in mf}
+    rs = [dict(row(dp='sbc', pe='2015-12-31', acc='0000764180-16-000128'), ticker='MO', cik='764180'),
+          dict(row(dp='sbc', pe='2016-12-31', acc='0000764180-17-000028'), ticker='MO', cik='764180')]
+    out = filing_reads.apply(rs, p, memberfacts=mf, notefacts=nf)
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'pipeline', 'src'))
+    for k, v in (('DATABASE_URL', 'postgresql://scrooner_test:unused@127.0.0.1:9/scrooner_test'), ('SUPABASE_URL', 'https://scrooner-test.invalid'),
+                 ('SUPABASE_SERVICE_ROLE_KEY', 'test-only-not-a-secret'), ('SEC_USER_AGENT', 'Scrooner test suite test@example.invalid')):
+        monkeypatch.setenv(k, v)   # unreachable values (pipeline/tests/conftest.py): the export's settings load at import
+    from scrooner_pipeline.mapper.top100_coverage import locator_part
+    assert [locator_part(r['locator'], r['accession'], r['value']) for r in out] == [
+        'AllocatedShareBasedCompensationExpense[AwardType=RestrictedAndDeferredStock]=51000000@0000764180-18-000028#R75',
+        'AllocatedShareBasedCompensationExpense[AwardType=RestrictedAndDeferredStock]=44000000@0000764180-19-000023#R72']
+    # an element the filing also reports undimensioned keeps the read's own (undimensioned) locator
+    nf2 = dict(nf, **{'0000764180-18-000028': 'AllocatedShareBasedCompensationExpense|4|51000000.0000',
+                      '0000764180-16-000128': 'AllocatedShareBasedCompensationExpense|4|51000000.0000'})
+    r0 = filing_reads.apply([dict(row(dp='sbc', pe='2015-12-31', acc='0000764180-16-000128'), ticker='MO', cik='764180')], p, memberfacts=mf, notefacts=nf2)[0]
+    assert locator_part(r0['locator'], r0['accession'], r0['value']) == 'AllocatedShareBasedCompensationExpense=51000000@0000764180-18-000028#R75'

@@ -100,8 +100,34 @@ def _locator(t):
     return f"{t['r_page']} ({el}) of {t['accession']}, read {fy}" if el else f"{t['r_page']} of {t['accession']}"
 
 
-def apply(rows, path=None, log=None):
-    """The rule (docstring above). Returns rows; log (a list) collects one tuple per applied row."""
+def _fact_dims(tag, value, accessions, memberfacts, notefacts):
+    """The dimensions of the one fact a read actually reads: an element the read names WITHOUT dimensions that the read's
+    filing (or the cell's own-year filing, which prints the same period's fact) reports only DIMENSIONED (no undimensioned
+    fact of the element in either filing's notefacts) at exactly the read's value under one member set -> that set
+    ('AwardType=RestrictedAndDeferredStock'), else ''. MO sbc FY2015-16 (verifier 2026-11-22): the read cites
+    AllocatedShareBasedCompensationExpense, which exists only as [AwardType=RestrictedAndDeferredStock]."""
+    if not tag or not memberfacts: return ''
+    accs = [a for a in dict.fromkeys(accessions) if a]
+    for a in accs:
+        if any(x.split('|')[0] == tag for x in ((notefacts or {}).get(a) or '').split('~') if x): return ''
+    for a in accs:
+        dims = {q[3].strip(';') for q in (x.split('|') for x in (memberfacts.get(a) or '').split('~') if x)
+                if len(q) == 4 and q[0] == tag and q[3].strip(';') and D(q[2]) == value}
+        if len(dims) == 1: return dims.pop()
+        if dims: return ''
+    return ''
+
+
+def _with_dims(element, dims):
+    """'us-gaap:Tag (note)' + dims -> 'us-gaap:Tag [dims] (note)' (the locator form top100_coverage._LOCATOR_TAG parses)."""
+    m = re.search(r'((?:us-gaap|[a-z]+):\w+)', element or '')
+    if not m or not dims or re.match(r'\s*\[', element[m.end():]): return element
+    return f"{element[:m.end()]} [{dims}]{element[m.end():]}"
+
+
+def apply(rows, path=None, log=None, memberfacts=None, notefacts=None):
+    """The rule (docstring above). Returns rows; log (a list) collects one tuple per applied row. memberfacts / notefacts
+    (the standard extract's, accession -> raw) let a served read's locator carry the dimensions of the fact it reads."""
     T = load(path)
     if not T: return rows
     for r in rows:
@@ -130,9 +156,11 @@ def apply(rows, path=None, log=None):
                 continue
             rounding = False
             was = f"{r['status']}={r.get('value')}" if rv is not None else r['status']
+            dims = _fact_dims(_norm_tag(t.get('element')), ev, (t['accession'], own_acc), memberfacts, notefacts)
+            loc = _locator(dict(t, element=_with_dims(t.get('element') or '', dims)))
             r.update(status='mapped', value=ev, tags='', r_page='', nodes='', calc_check='', accession=t['accession'],
                      column='own' if t['accession'] == own_acc else 'comparative',
-                     quote=t['quote'], locator=_locator(t), quote_period=str(r['period_end']),
+                     quote=t['quote'], locator=loc, quote_period=str(r['period_end']),
                      why=(f"filing read ({t['source_file']}): the {('later print rounds the figure the resolver served (' + was + '); the latest print wins (ruling e, 2026-11-21)') if rounding else ('reader found the value in the filing where the resolver had ' + was)}"
                           + (f"; reader note: {t['rule_proposal']}" if t.get('rule_proposal') else '')))
             # X118 (.88): a read of 0 is served under the stated_zero contract (structural_loader refuses a text_stated 0: TMUS/DELL DPS, GOOG dividends)

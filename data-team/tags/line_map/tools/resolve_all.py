@@ -2643,7 +2643,7 @@ if __name__ == '__main__':
     rows = apply_cash_less_restricted(rows, notefacts, filings)   # X135 (.93)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
-    rows = filing_reads.apply(rows, log=_frl)
+    rows = filing_reads.apply(rows, log=_frl, memberfacts=memberfacts, notefacts=notefacts)
     print('filing reads:', collections.Counter(x[0] for x in _frl), file=sys.stderr)
     rows = apply_read_stated_years(rows)   # X132 (P01): after the reads, before the sbc note step
     rows = apply_sbc_note_expense(rows)   # X127: after the reads (a read replacing an award sum names another row source)
