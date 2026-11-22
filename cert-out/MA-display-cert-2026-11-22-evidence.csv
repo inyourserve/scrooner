@@ -1,0 +1,95 @@
+check,data_point,fiscal_year,result,served,filing,evidence
+shown,weighted_basic_shares,2017,MATCH,1067000000.0000,1067000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=1067000000.0000@0001141391-18-000009#R4 (fsn reports R4)
+shown,stockholders_equity,2022,MATCH,6298000000,6298000000.0000,StockholdersEquity=6298000000.0000@0001141391-23-000020#R5 (fsn reports R5)
+shown,cf_ap_change,2023,MATCH,-99000000,99000000.0000,IncreaseDecreaseInAccountsPayable=-99000000.0000@0001141391-24-000022#R8 (fsn reports R8)
+shown,depreciation_and_amortization,2015,MATCH,366000000,366000000.0000,DepreciationAmortizationAndAccretionNet=366000000.0000@0001141391-18-000009#R8 (fsn reports R8)
+shown,cfo,2016,MATCH,4637000000,4637000000.0000,NetCashProvidedByUsedInOperatingActivities=4637000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+shown,interest_expense,2015,MATCH,61000000,61000000.0000,InterestExpense=61000000.0000@0001141391-16-000085#R4 (fsn reports R4)
+shown,operating_expenses,2023,MATCH,11090000000,11090000000.0000,OperatingExpenses=11090000000.0000@0001141391-24-000022#R3 (fsn reports R3)
+shown,cash_flow_investing,2020,MATCH,-1879000000,1879000000.0000,NetCashProvidedByUsedInInvestingActivities=-1879000000.0000@0001141391-21-000018#R7 (fsn reports R7)
+shown,operating_income,2025,MATCH,18897000000,18897000000.0000,OperatingIncomeLoss=18897000000.0000@0001141391-26-000013#R3 (fsn reports R3)
+shown,cash_flow_financing,2021,MATCH,-6555000000,6555000000.0000,NetCashProvidedByUsedInFinancingActivities=-6555000000.0000@0001141391-22-000023#R8 (fsn reports R8)
+shown,cash_flow_financing,2019,MATCH,-5867000000,5867000000.0000,NetCashProvidedByUsedInFinancingActivities=-5867000000.0000@0001141391-20-000032#R7 (fsn reports R7)
+shown,total_liabilities,2020,MATCH,27067000000,27067000000.0000,Liabilities=27067000000.0000@0001141391-21-000018#R4 (fsn reports R4)
+shown,diluted_eps,2023,MATCH,11.83,11.8300,EarningsPerShareDiluted=11.8300@0001141391-24-000022#R3 (fsn reports R3)
+shown,sbc,2025,MATCH,597000000,597000000.0000,ShareBasedCompensation=597000000.0000@0001141391-26-000013#R8 (fsn reports R8)
+shown,cf_ap_change,2025,MATCH,45000000,45000000.0000,IncreaseDecreaseInAccountsPayable=45000000.0000@0001141391-26-000013#R8 (fsn reports R8)
+shown,ppe_net,2020,MATCH,1902000000,1902000000.0000,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization=1902000000.0000@0001141391-21-000018#R4 (fsn reports R4)
+shown,cash_flow_financing,2023,MATCH,-9488000000,9488000000.0000,NetCashProvidedByUsedInFinancingActivities=-9488000000.0000@0001141391-24-000022#R8 (fsn reports R8)
+shown,sga_expense,2017,MATCH,5424000000,5424000000.0000,GeneralAndAdministrativeExpense=4526000000.0000@0001141391-18-000009#R4 (fsn reports R4); MarketingAndAdvertisingExpense=898000000.0000@0001141391-18-000009#R4 (fsn reports R4)
+shown,weighted_basic_shares,2020,MATCH,1002000000,1002000000.0000,WeightedAverageNumberOfSharesOutstandingBasic=1002000000.0000@0001141391-21-000018#R2 (fsn reports R2)
+shown,basic_eps,2016,MATCH,3.7000,3.7000,EarningsPerShareBasic=3.7000@0001141391-17-000014#R4 (fsn reports R4)
+shown,sbc,2019,MATCH,250000000,250000000.0000,ShareBasedCompensation=250000000.0000@0001141391-20-000032#R7 (fsn reports R7)
+shown,cfo,2022,MATCH,11195000000,11195000000.0000,NetCashProvidedByUsedInOperatingActivities=11195000000.0000@0001141391-23-000020#R8 (fsn reports R8)
+shown,net_income,2015,MATCH,3808000000.0000,3808000000.0000,"ProfitLoss=3808000000.0000@0001141391-16-000085#R4 (fsn reports R4,R5,R6,R8)"
+shown,weighted_diluted_shares,2025,MATCH,906000000,906000000.0000,WeightedAverageNumberOfDilutedSharesOutstanding=906000000.0000@0001141391-26-000013#R3 (fsn reports R3)
+shown,dividends_paid,2022,MATCH,1903000000,1903000000.0000,PaymentsOfDividends=1903000000.0000@0001141391-23-000020#R8 (fsn reports R8)
+shown,current_liabilities,2022,MATCH,14171000000,14171000000.0000,LiabilitiesCurrent=14171000000.0000@0001141391-23-000020#R5 (fsn reports R5)
+shown,current_assets,2017,MATCH,13797000000,13797000000.0000,AssetsCurrent=13797000000.0000@0001141391-18-000009#R2 (fsn reports R2)
+shown,dividends_per_share,2017,MATCH,0.91,0.9100,CommonStockDividendsPerShareDeclared=0.9100@0001141391-18-000009#R7 (fsn reports R7)
+shown,goodwill,2015,MATCH,1891000000,1891000000.0000,Goodwill=1891000000.0000@0001141391-16-000085#R2 (fsn reports R2)
+shown,shares_outstanding,2022,MATCH,956000000.0000,956000000.0000,CommonStockSharesOutstanding[ClassOfStock=CommonClassA]=948000000.0000@0001141391-23-000020#R6 (fsn reports R6); CommonStockSharesOutstanding[ClassOfStock=CommonClassB]=8000000.0000@0001141391-23-000020#R6 (fsn reports R6)
+shown,stockholders_equity,2024,MATCH,6485000000,6485000000.0000,StockholdersEquity=6485000000.0000@0001141391-25-000011#R5 (fsn reports R5)
+shown,accounts_payable,2019,MATCH,489000000,489000000.0000,AccountsPayableCurrent=489000000.0000@0001141391-20-000032#R4 (fsn reports R4)
+derived,capex,2015,MATCH,342000000,342000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=177000000.0000@0001141391-16-000085#R8 (fsn reports R8); PaymentsToAcquireSoftware=165000000.0000@0001141391-16-000085#R8 (fsn reports R8)
+derived,capex,2016,MATCH,382000000,382000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=215000000.0000@0001141391-17-000014#R8 (fsn reports R8); PaymentsToAcquireSoftware=167000000.0000@0001141391-17-000014#R8 (fsn reports R8)
+derived,capex,2017,MATCH,423000000,423000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=300000000.0000@0001141391-18-000009#R8 (fsn reports R8); PaymentsToAcquireSoftware=123000000.0000@0001141391-18-000009#R8 (fsn reports R8)
+derived,capex,2018,MATCH,504000000,504000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=330000000.0000@0001141391-19-000013#R8 (fsn reports R8); PaymentsToAcquireSoftware=174000000.0000@0001141391-19-000013#R8 (fsn reports R8)
+derived,capex,2019,MATCH,728000000,728000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=422000000.0000@0001141391-20-000032#R7 (fsn reports R7); PaymentsToAcquireSoftware=306000000.0000@0001141391-20-000032#R7 (fsn reports R7)
+derived,capex,2020,MATCH,708000000,708000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=339000000.0000@0001141391-21-000018#R7 (fsn reports R7); PaymentsToAcquireSoftware=369000000.0000@0001141391-21-000018#R7 (fsn reports R7)
+derived,capex,2021,MATCH,814000000,814000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=407000000.0000@0001141391-22-000023#R8 (fsn reports R8); PaymentsToAcquireSoftware=407000000.0000@0001141391-22-000023#R8 (fsn reports R8)
+derived,capex,2022,MATCH,1097000000,1097000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=442000000.0000@0001141391-23-000020#R8 (fsn reports R8); PaymentsToAcquireSoftware=655000000.0000@0001141391-23-000020#R8 (fsn reports R8)
+derived,capex,2023,MATCH,1088000000,1088000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=371000000.0000@0001141391-24-000022#R8 (fsn reports R8); PaymentsToAcquireSoftware=717000000.0000@0001141391-24-000022#R8 (fsn reports R8)
+derived,capex,2024,MATCH,1194000000,1194000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=474000000.0000@0001141391-25-000011#R8 (fsn reports R8); PaymentsToAcquireSoftware=720000000.0000@0001141391-25-000011#R8 (fsn reports R8)
+derived,capex,2025,MATCH,1215000000,1215000000.0000,PaymentsToAcquirePropertyPlantAndEquipment=489000000.0000@0001141391-26-000013#R8 (fsn reports R8); PaymentsToAcquireSoftware=726000000.0000@0001141391-26-000013#R8 (fsn reports R8)
+derived,cash_paid_for_interest,2025,NOT_FOUND,680000000,None,"derived cell with no tag, parts or known identity: approver checks by hand"
+derived,dividends_per_share,2020,NOT_FOUND,1.64,None,"derived cell with no tag, parts or known identity: approver checks by hand"
+derived,dividends_per_share,2021,NOT_FOUND,1.81,None,"derived cell with no tag, parts or known identity: approver checks by hand"
+derived,sga_expense,2015,MATCH,4162000000,4162000000.0000,GeneralAndAdministrativeExpense=3341000000.0000@0001141391-16-000085#R4 (fsn reports R4); MarketingAndAdvertisingExpense=821000000.0000@0001141391-16-000085#R4 (fsn reports R4)
+derived,sga_expense,2016,MATCH,4525000000,4525000000.0000,GeneralAndAdministrativeExpense=3714000000.0000@0001141391-17-000014#R4 (fsn reports R4); MarketingAndAdvertisingExpense=811000000.0000@0001141391-17-000014#R4 (fsn reports R4)
+derived,sga_expense,2018,MATCH,6081000000,6081000000.0000,GeneralAndAdministrativeExpense=5174000000.0000@0001141391-19-000013#R4 (fsn reports R4); MarketingAndAdvertisingExpense=907000000.0000@0001141391-19-000013#R4 (fsn reports R4)
+derived,sga_expense,2019,MATCH,6697000000,6697000000.0000,GeneralAndAdministrativeExpense=5763000000.0000@0001141391-20-000032#R2 (fsn reports R2); MarketingAndAdvertisingExpense=934000000.0000@0001141391-20-000032#R2 (fsn reports R2)
+derived,sga_expense,2020,MATCH,6567000000,6567000000.0000,GeneralAndAdministrativeExpense=5910000000.0000@0001141391-21-000018#R2 (fsn reports R2); MarketingAndAdvertisingExpense=657000000.0000@0001141391-21-000018#R2 (fsn reports R2)
+derived,sga_expense,2021,MATCH,7982000000,7982000000.0000,GeneralAndAdministrativeExpense=7087000000.0000@0001141391-22-000023#R3 (fsn reports R3); MarketingAndAdvertisingExpense=895000000.0000@0001141391-22-000023#R3 (fsn reports R3)
+derived,sga_expense,2022,MATCH,8867000000,8867000000.0000,GeneralAndAdministrativeExpense=8078000000.0000@0001141391-23-000020#R3 (fsn reports R3); MarketingAndAdvertisingExpense=789000000.0000@0001141391-23-000020#R3 (fsn reports R3)
+derived,sga_expense,2023,MATCH,9752000000,9752000000.0000,GeneralAndAdministrativeExpense=8927000000.0000@0001141391-24-000022#R3 (fsn reports R3); MarketingAndAdvertisingExpense=825000000.0000@0001141391-24-000022#R3 (fsn reports R3)
+derived,sga_expense,2024,MATCH,11008000000,11008000000.0000,GeneralAndAdministrativeExpense=10193000000.0000@0001141391-25-000011#R3 (fsn reports R3); MarketingAndAdvertisingExpense=815000000.0000@0001141391-25-000011#R3 (fsn reports R3)
+derived,sga_expense,2025,MATCH,12247000000,12247000000.0000,GeneralAndAdministrativeExpense=11318000000.0000@0001141391-26-000013#R3 (fsn reports R3); MarketingAndAdvertisingExpense=929000000.0000@0001141391-26-000013#R3 (fsn reports R3)
+total_debt,total_debt,2015,MATCH,3268000000,3268000000.0000,face {'LongTermDebtNoncurrent': Decimal('3268000000.0000')}; lease no lease facts
+total_debt,total_debt,2016,MATCH,5180000000,5180000000.0000,face {'LongTermDebtNoncurrent': Decimal('5180000000.0000')}; lease no lease facts
+total_debt,total_debt,2017,MATCH,5424000000,5424000000.0000,face {'LongTermDebtNoncurrent': Decimal('5424000000.0000')}; lease no lease facts
+total_debt,total_debt,2018,MATCH,6334000000,6334000000.0000,"face {'LongTermDebtCurrent': Decimal('500000000.0000'), 'LongTermDebtNoncurrent': Decimal('5834000000.0000')}; lease no lease facts"
+total_debt,total_debt,2019,MATCH,8527000000,8527000000.0000,"face {'LongTermDebtCurrent': Decimal('0.0000'), 'LongTermDebtNoncurrent': Decimal('8527000000.0000')}; lease no lease facts"
+total_debt,total_debt,2020,MATCH,12672000000,12672000000.0000,"face {'LongTermDebtCurrent': Decimal('649000000.0000'), 'LongTermDebtNoncurrent': Decimal('12023000000.0000')}; lease no lease facts"
+total_debt,total_debt,2021,MATCH,13901000000,13901000000.0000,"face {'LongTermDebtCurrent': Decimal('792000000.0000'), 'LongTermDebtNoncurrent': Decimal('13109000000.0000')}; lease no lease facts"
+total_debt,total_debt,2022,MATCH,14023000000,14023000000.0000,"face {'LongTermDebtCurrent': Decimal('274000000.0000'), 'LongTermDebtNoncurrent': Decimal('13749000000.0000')}; lease no lease facts"
+total_debt,total_debt,2023,MATCH,15681000000,15681000000.0000,"face {'LongTermDebtCurrent': Decimal('1337000000.0000'), 'LongTermDebtNoncurrent': Decimal('14344000000.0000')}; lease no lease facts"
+total_debt,total_debt,2024,MATCH,18226000000,18226000000.0000,"face {'LongTermDebtCurrent': Decimal('750000000.0000'), 'LongTermDebtNoncurrent': Decimal('17476000000.0000')}; lease no lease facts"
+total_debt,total_debt,2025,MATCH,19000000000,19000000000.0000,"face {'LongTermDebtCurrent': Decimal('749000000.0000'), 'LongTermDebtNoncurrent': Decimal('18251000000.0000')}; lease no lease facts"
+badge,net_income,2024,FAIL,,,shown cell has no badge
+badge,net_income,2025,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2019,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2020,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2021,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2022,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2023,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2024,FAIL,,,shown cell has no badge
+badge,other_income_expense_net,2025,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2015,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2016,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2017,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2018,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2019,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2020,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2021,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2022,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2023,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2024,FAIL,,,shown cell has no badge
+badge,shares_outstanding,2025,FAIL,,,shown cell has no badge
+hidden_row,cf_inventory_change,*,INFO,,,"no presented, undimensioned, annual ['IncreaseDecreaseInInventories'] fact at a display-year end in any periodic filing"
+hidden_row,comprehensive_income,*,INFO,,,"no presented, undimensioned, annual ['ComprehensiveIncomeNetOfTax'] fact at a display-year end in any periodic filing"
+hidden_row,cost_of_revenue,*,INFO,,,"no presented, undimensioned, annual ['CostOfGoodsAndServicesSold', 'CostOfRevenue'] fact at a display-year end in any periodic filing"
+hidden_row,gross_profit,*,INFO,,,"no presented, undimensioned, annual ['GrossProfit'] fact at a display-year end in any periodic filing"
+hidden_row,interest_income,*,INFO,,,"no presented, undimensioned, annual ['InterestAndOtherIncome', 'InterestIncomeNonoperating', 'InterestIncomeOperating', 'InterestIncomeOther', 'InvestmentIncomeInterest', 'InvestmentIncomeInterestAndDividend'] fact at a display-year end in any periodic filing"
+hidden_row,inventory,*,INFO,,,"no presented, undimensioned, annual ['InventoryNet'] fact at a display-year end in any periodic filing"
+hidden_row,research_and_development,*,INFO,,,"no presented, undimensioned, annual ['ResearchAndDevelopmentExpense'] fact at a display-year end in any periodic filing"
