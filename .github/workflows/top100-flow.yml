@@ -7,6 +7,9 @@ name: Top-100 per-company flow (scripts/top100_flow.sh)
 # bi_a/bi_b, proof jsonl, coverage CSVs, regressions). The aggregate job joins the per-company result lines into a job
 # summary + artifact. It never commits to main.
 # Company list: `company_ids` (comma-separated core.company ids) OR, if empty, `csv_path` (column company_id).
+# run_label (2026-11-22, canary releases): top100-auto-trigger names its canary run so it can find that run and wait for
+# it; empty keeps the default title. It changes nothing in the chain.
+run-name: ${{ inputs.run_label != '' && inputs.run_label || 'Top-100 per-company flow' }}
 on:
   workflow_dispatch:
     inputs:
@@ -23,6 +26,9 @@ on:
       parallel:
         description: "Companies at once, 1..20 (jobs also wait while pg_stat_activity > 80; data loads stay within 70)"
         default: "16"
+      run_label:
+        description: "Run title (top100-auto-trigger sets 'canary <sha> <run id>' for its canary run). Empty = default"
+        default: ""
 
 permissions:
   contents: read

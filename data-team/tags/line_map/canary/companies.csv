@@ -1,0 +1,11 @@
+ticker,company_id,sector,reason
+JPM,1,bank,largest US bank: bank template (no gross profit, deposits, loan-loss provision) and bank-specific resolver roles
+CB,1813,insurer,P&C insurer: insurer template (premiums, losses and LAE, no current/noncurrent split)
+WELL,1421,reit,healthcare REIT: REIT template (real estate at cost, FFO-style lines, unclassified balance sheet)
+XOM,5351,energy,integrated oil major: DD&A, asset retirement, large equity-method and noncontrolling lines
+LLY,666,pharma,pharma: R&D and acquired IPR&D lines, intangibles amortization; gate_ready at selection
+MSFT,4,tech,large-cap tech with a certificate (2026-11-14): certified-guard path, June fiscal year end
+WMT,1134,retailer,retailer: January fiscal year end, merchandise inventory, finance leases in debt
+GOOG,9,multi-class,multi-class filer (Class A/B/C): share counts and EPS across classes, buyback perimeter
+CAT,251,industrial,industrial with a finance arm (Cat Financial): debt perimeter and segment-heavy statements
+MA,3932,certified,verifier-certified (registry) with 0 open shown: any regression here always blocks

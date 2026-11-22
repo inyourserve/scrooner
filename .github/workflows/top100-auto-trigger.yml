@@ -11,13 +11,26 @@ name: Top-100 auto trigger (resolver change -> top100-flow for the changed compa
 # (data-team/tags/line_map/<TICKER>.csv) runs scripts/ci/top100_changed.py, which diffs rows (resolver_version ignored)
 # and maps changed tickers to core.company ids through data-team/strategy/top100-coverage-summary.csv. The ids are
 # dispatched to top100-flow.yml with workflow_dispatch (GITHUB_TOKEN, actions: write). top100-flow keeps its own
-# "dispatch on main only" guard untouched. This workflow holds no secret other than GITHUB_TOKEN and writes nothing.
+# "dispatch on main only" guard untouched. This workflow holds no secret other than GITHUB_TOKEN and writes nothing to
+# the DB itself; its only commit is a canary-failures file (canary job, below).
 # Debounce, no lost work: runs of this workflow queue in their own group (never cancelled). The diff base is the head
 # commit of the last SUCCESSFUL run of this workflow, so a run replaced while pending (GitHub keeps one pending run per
-# group) is covered by the next one. Before dispatching, it waits until no top100-flow run is active, because a second
+# group) is covered by the next one. A canary regression fails the run, so the next trigger re-covers the same range.
+# Before dispatching, it waits until no top100-flow run is active, because a second
 # dispatch would replace a pending flow run in the manual-db-jobs queue and drop its company list.
 # Shared rules (line_map/rules/*) carry no company key and are not fanned out. Cap: 256 companies (the flow's limit);
 # above it the job fails instead of truncating.
+# Canary releases (2026-11-22, SYSTEMS.md #20; resolver releases had pushed open shown cells 1,735 -> 1,862 -> 2,233 before
+# anyone saw it): the dispatch below no longer sends the changed companies straight to top100-flow. It first runs
+# top100-flow on the fixed canary set data-team/tags/line_map/canary/companies.csv (10 companies by sector, with the
+# reason), then `canary` compares each canary's open_shown, verifier self-check FAILs, draw_check mismatches and certified
+# status before (main, just before the dispatch) and after (the canary run's artifacts) with scripts/ci/top100_canary.py
+# (tests: pipeline/tests/test_top100_canary.py). Only if no canary regresses, or every regression is listed in a
+# CHANGELOG row of this range as `canary-expected: TICKER:metric`, does `rest` dispatch the other changed companies.
+# A certified company regressing always blocks. On regression: no wider flow, the per-company diff is committed to
+# data-team/tags/line_map/canary-failures/<date>-<sha>.md, and the job fails. NOTE: the canary run is a normal
+# top100-flow run, so it WRITES production rows (and publishes open-shown/coverage rows) for the 10 canaries before
+# the gate decides; nothing is written for any other company until the gate passes.
 on:
   push:
     branches: [main]
@@ -39,6 +52,9 @@ concurrency:
 
 jobs:
   trigger:
+    outputs:
+      ids: ${{ steps.c.outputs.ids }}
+      label: ${{ steps.d.outputs.label }}
     if: github.ref == 'refs/heads/main' && (vars.AUTO_LOOP == 'true' || vars.AUTO_FLOW_ON_RESOLVER == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 355
@@ -63,10 +79,13 @@ jobs:
           IDS=$(python3 -I scripts/ci/top100_changed.py companies "$BASE" "$HEAD_SHA")
           echo "company_ids=$IDS"
           echo "ids=$IDS" >> "$GITHUB_OUTPUT"
-      - name: Wait until no top100-flow run is active, then dispatch
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+      - name: Wait until no top100-flow run is active, then dispatch the canary run
+        id: d
         if: steps.c.outputs.ids != ''
         env:
           IDS: ${{ steps.c.outputs.ids }}
+          BASE: ${{ steps.c.outputs.base }}
         run: |
           set -eu
           for i in $(seq 1 165); do
@@ -79,5 +98,112 @@ jobs:
             echo "top100-flow active ($N); waiting"; sleep 120
           done
           [ "$N" -eq 0 ] || { echo "::error::top100-flow still active; not dispatching (the next trigger covers this range)"; exit 1; }
-          gh workflow run top100-flow.yml --repo "$REPO" --ref main -f company_ids="$IDS"
-          echo "dispatched top100-flow for $IDS"
+          # canary first: snapshot the canaries' state on the latest main, then dispatch the flow for the canaries only
+          git fetch -q origin main && git checkout -q FETCH_HEAD
+          python3 -I scripts/ci/top100_canary.py snapshot --repo . --base "$BASE" --head "$HEAD_SHA" --out canary-before.json
+          CIDS=$(python3 -I scripts/ci/top100_canary.py ids)
+          LABEL="canary $HEAD_SHA $GITHUB_RUN_ID"
+          gh workflow run top100-flow.yml --repo "$REPO" --ref main -f company_ids="$CIDS" -f parallel=10 -f run_label="$LABEL"
+          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
+          echo "dispatched canary top100-flow for $CIDS (changed companies: $IDS)" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: steps.c.outputs.ids != ''
+        with:
+          name: canary-before
+          path: canary-before.json
+
+  canary:
+    # Waits for the canary run, compares before/after, and gates the wide flow. Only this job holds contents: write (to
+    # commit the canary-failures file); it holds no DB secret and runs only scripts/ci/top100_canary.py (python3 -I).
+    needs: trigger
+    if: needs.trigger.outputs.label != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      HEAD_SHA: ${{ github.sha }}
+      LABEL: ${{ needs.trigger.outputs.label }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          name: canary-before
+          path: canary
+      - name: Wait for the canary run to complete
+        id: w
+        run: |
+          set -eu
+          RID=""
+          for i in $(seq 1 165); do
+            J=$(gh run list --repo "$REPO" --workflow top100-flow.yml --event workflow_dispatch --limit 30 \
+                  --json databaseId,displayTitle,status --jq "[.[] | select(.displayTitle == \"$LABEL\")][0] // {}")
+            RID=$(printf '%s' "$J" | python3 -I -c "import json,sys; print(json.load(sys.stdin).get('databaseId',''))")
+            ST=$(printf '%s' "$J" | python3 -I -c "import json,sys; print(json.load(sys.stdin).get('status',''))")
+            [ -n "$RID" ] && [ "$ST" = completed ] && break
+            echo "canary run '${RID:-not listed yet}' ${ST:-}; waiting"; sleep 120
+          done
+          [ -n "$RID" ] && [ "$ST" = completed ] || { echo "::error::canary run did not complete in time: no wider flow"; exit 1; }
+          echo "rid=$RID" >> "$GITHUB_OUTPUT"
+          gh run download "$RID" --repo "$REPO" --pattern 'flow-*' --dir canary/art || echo "some canary artifacts missing (a canary without one regresses)"
+      - name: Compare canaries before/after and gate
+        run: |
+          set +e -u  # the gate's exit code decides below (the default shell is bash -eo pipefail)
+          D=$(date -u +%F); S=$(printf '%s' "$HEAD_SHA" | cut -c1-12)
+          F="data-team/tags/line_map/canary-failures/$D-$S.md"
+          python3 -I scripts/ci/top100_canary.py compare --before canary/canary-before.json --artifacts canary/art \
+            --sha "$HEAD_SHA" --date "$D" --out-md "$F" | tee -a "$GITHUB_STEP_SUMMARY"
+          rc=${PIPESTATUS[0]}
+          [ "$rc" -eq 0 ] && { echo "canary PASS (run ${{ steps.w.outputs.rid }}): wide flow allowed"; exit 0; }
+          [ "$rc" -eq 1 ] && [ -f "$F" ] || { echo "::error::canary gate could not run (exit $rc): no wider flow"; exit 1; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp "$F" "$RUNNER_TEMP/canary.md"
+          for i in $(seq 1 30); do
+            git fetch -q origin main && git reset -q --hard origin/main || { sleep $((RANDOM % 20 + 3)); continue; }
+            mkdir -p "$(dirname "$F")"; cp "$RUNNER_TEMP/canary.md" "$F"; git add "$F"
+            git diff --cached --quiet && break
+            git commit -q -m "Canary regression at $S: wide top100-flow not dispatched (top100-auto-trigger run $GITHUB_RUN_ID)"
+            git push -q origin HEAD:main && break
+            sleep $((RANDOM % 20 + 3))
+          done
+          echo "::error::canary regression: see $F; the wide flow was NOT dispatched"; exit 1
+
+  rest:
+    # Canary passed: dispatch the changed companies that are not canaries (the canaries already ran).
+    needs: [trigger, canary]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      IDS: ${{ needs.trigger.outputs.ids }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            scripts/ci
+            data-team/tags/line_map/canary
+      - name: Dispatch the rest
+        run: |
+          set -eu
+          REST=$(python3 -I scripts/ci/top100_canary.py rest --ids "$IDS")
+          [ -n "$REST" ] || { echo "every changed company is a canary: nothing more to dispatch"; exit 0; }
+          for i in $(seq 1 12); do
+            N=0
+            for s in queued in_progress waiting pending; do
+              K=$(gh run list --repo "$REPO" --workflow top100-flow.yml --status "$s" --json databaseId --jq 'length')
+              N=$((N + K))
+            done
+            [ "$N" -eq 0 ] && break
+            echo "top100-flow active ($N); waiting"; sleep 120
+          done
+          [ "$N" -eq 0 ] || { echo "::error::top100-flow still active; not dispatching the rest"; exit 1; }
+          gh workflow run top100-flow.yml --repo "$REPO" --ref main -f company_ids="$REST"
+          echo "canary passed: dispatched top100-flow for $REST" | tee -a "$GITHUB_STEP_SUMMARY"
