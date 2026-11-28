@@ -5,7 +5,7 @@ Founder order 2026-11-22: one resource file of every system, so nobody builds a 
 **Chain:** SEC filing → (1) SEC access/collector raw → (3) normalizer core.fact (standard-tag values) + (4) FSN store/standard extract → (5,6) tag knowledge + tag library → (7) predictor → (8) line_map resolver ← (9) filing reads → (10) structural loader → analytics.canonical_fact → (11) proof → (12) templates + (13) coverage/display state → (14,15) verifier + display certificate → (16) metric registry/calculators → (17) screener + (18) AI query → (19) apps/app pages. Cross-cutting: (20) flow + CI, (21) nightly refresh, (22) migrations, (23) mind, (24) agent roles. (25) lists legacy systems.
 
 ## Target architecture: one pipeline, six stages (founder-approved 2026-11-28)
-Founder, 2026-11-28: "yes approved". This is the target every session builds toward. The 25 blocks below stay as the detailed inventory, and each one now belongs to exactly one stage. **No work outside these six stages and two support layers.** Every brief and commit names its stage.
+Founder, 2026-11-28: "yes approved". This is the target every session builds toward. The engineering contract (stage inputs and outputs, idempotency keys, orchestration, failure handling, capacity math, SLOs, merge steps M1-M6) is [`PIPELINE.md`](PIPELINE.md). The 25 blocks below stay as the detailed inventory, and each one now belongs to exactly one stage. **No work outside these six stages and two support layers.** Every brief and commit names its stage.
 
 ```
 new filing or rule-version change
