@@ -149,6 +149,11 @@ def load_cmd(
         "--increment",
         help="EDGAR-built directories (scrooner-fsn nightly): add or replace those accessions only.",
     ),
+    bulk_missing: bool = typer.Option(
+        False,
+        "--bulk-missing",
+        help="With --increment: directories built from SEC bulk sets (shard); insert accessions the store holds in no set, touch nothing held.",
+    ),
     input_sha: str = typer.Option(
         "", help="sha256 of the dispatched CIK list, recorded in the rule_run stats."
     ),
@@ -159,6 +164,8 @@ def load_cmd(
     ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
+    if bulk_missing and not increment:
+        raise typer.BadParameter("--bulk-missing requires --increment")
     from scrooner_pipeline.db.connection import get_connection
     from scrooner_pipeline.fsn_store import load
 
@@ -175,6 +182,7 @@ def load_cmd(
                 predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
                 increment=increment,
                 force=force,
+                bulk_missing=bulk_missing,
             )
         if report:
             Path(report).write_text(json.dumps(plan, indent=1, default=str))
@@ -194,6 +202,7 @@ def load_cmd(
                 connect=lambda: psycopg.connect(settings.database_url),
                 increment=increment,
                 input_sha=input_sha or None,
+                bulk_missing=bulk_missing,
             )
     except psycopg.OperationalError:
         if res is None:

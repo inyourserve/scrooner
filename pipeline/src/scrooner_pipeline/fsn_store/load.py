@@ -132,11 +132,14 @@ def load_company(
     force: bool = False,
     predecessors: dict[str, str] | None = None,
     increment: bool = False,
+    bulk_missing: bool = False,
 ) -> dict[str, Any]:
     """Load one companies/<cik>/ directory. Returns the row counts written (or {"skipped": True}).
     predecessors: predecessor cik -> successor cik (a registrant reorganised into a new holding
     company: XOM 0000034088 -> 0002115436); its filings load under the successor's company.
-    increment: the directory holds EDGAR-built filings only (module docstring)."""
+    increment: the directory holds EDGAR-built filings only (module docstring).
+    bulk_missing (with increment): the directory is built from SEC FSN bulk sets (fsn_store.shard); only accessions
+    the store holds in no set are inserted, every held accession is left alone (insert-only, nothing deleted)."""
     predecessors = predecessors or {}
     loader_commit = loader_commit or _git_commit()
     data = read(company_dir)
@@ -213,7 +216,7 @@ def load_company(
             subs = {r["adsh"]: r for r in data["sub"]}
             acc_sha = m.get("accession_sha256") or {}
             if increment:
-                if any(
+                if not bulk_missing and any(
                     not r["fsn_set"].startswith(EDGAR_SET_PREFIX) for r in subs.values()
                 ):
                     raise ValueError(
@@ -229,7 +232,10 @@ def load_company(
                     if a not in held:
                         continue
                     fs, sha = held[a]
-                    if not fs.startswith(EDGAR_SET_PREFIX):
+                    if bulk_missing:
+                        counts["held_not_touched"] += 1  # insert-only by accession
+                        subs.pop(a)
+                    elif not fs.startswith(EDGAR_SET_PREFIX):
                         counts["held_from_fsn_set"] += 1  # the SEC set wins
                         subs.pop(a)
                     elif sha == acc_sha.get(a) and not force:
@@ -508,6 +514,7 @@ def run(
     connect: Callable[[], psycopg.Connection] | None = None,
     increment: bool = False,
     input_sha: str | None = None,
+    bulk_missing: bool = False,
 ) -> dict[str, Any]:
     """Load every (or the named) company directories; one rule_run for the batch. input_sha: the sha256 of the
     dispatched CIK list (pipeline-fsn-write.yml `ciks`), recorded in the run's stats.
@@ -556,6 +563,7 @@ def run(
                         force=force,
                         predecessors=predecessors,
                         increment=increment,
+                        bulk_missing=bulk_missing,
                     )
                     current.commit()
                     break
@@ -613,6 +621,7 @@ def plan(
     predecessors: dict[str, str] | None = None,
     increment: bool = False,
     force: bool = False,
+    bulk_missing: bool = False,
 ) -> dict[str, Any]:
     """Dry run of `run`: what loading these directories would write, with NO write (the connection is put in a
     read-only transaction, so any write would raise; no rule_run row is started). Per company: the accessions
@@ -660,7 +669,9 @@ def plan(
                     insert.append(a)
                     continue
                 fs, sha = held[a]
-                if not increment:
+                if bulk_missing:
+                    sec_held.append(a)  # held in any set: not touched
+                elif not increment:
                     replace.append(
                         a
                     )  # a full load deletes and reinserts the company's own

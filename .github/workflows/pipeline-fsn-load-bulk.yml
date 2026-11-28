@@ -10,15 +10,23 @@ name: FSN load from the SEC bulk sets (universe_5000.csv rank range, insert-only
 #   apply=true: PRODUCTION WRITE to fsn.* (founder order 2026-11-29: load the FSN store for the top 5,000).
 # Disk pacing (coordinator rule): max_db_gb refuses to start when pg_database_size is already above it; dispatch one
 # range per window (about 20 MB a company measured at the 1,000 cohort) and read pg_database_size after each.
+# mode=missing (founder/coordinator 2026-11-29): instead of new companies, loads ONLY the accessions that `scrooner-fsn-missing`
+# lists (core.filing 10-K/10-Q since 2015, no fsn.filing) for companies ALREADY in fsn.company_load, from the bulk sets
+# of the months those filings were filed (`scrooner-fsn shard --periods`, then `load --increment --bulk-missing`:
+# insert-only by accession, nothing held is touched, no delete). Filings newer than the latest bulk set stay missing
+# (the nightly EDGAR stage loads them).
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: "new = ranks of universe_5000.csv not yet loaded; missing = missing accessions of loaded companies"
+        default: "new"
       rank_from:
-        description: "First universe_5000.csv rank"
-        required: true
+        description: "First universe_5000.csv rank (mode new)"
+        default: "1"
       rank_to:
-        description: "Last universe_5000.csv rank"
-        required: true
+        description: "Last universe_5000.csv rank (mode new)"
+        default: "1"
       shards:
         description: "Company-disjoint shards, one runner and 2 connections each (1-4)"
         default: "2"
@@ -49,7 +57,9 @@ jobs:
     outputs:
       shards: ${{ steps.s.outputs.shards }}
       todo: ${{ steps.s.outputs.todo }}
+      periods: ${{ steps.s.outputs.periods }}
     env:
+      MODE: ${{ inputs.mode }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       RANK_FROM: ${{ inputs.rank_from }}
       RANK_TO: ${{ inputs.rank_to }}
@@ -61,6 +71,7 @@ jobs:
           if [ "$GITHUB_REF" != "refs/heads/main" ] || [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; then
             echo "::error::runs only from workflow_dispatch on main"; exit 1
           fi
+          printf '%s' "$MODE" | grep -Eq '^(new|missing)$' || { echo "::error::mode new or missing"; exit 1; }
           for v in "$RANK_FROM" "$RANK_TO" "$SHARDS" "$MAX_DB_GB"; do printf '%s' "$v" | grep -Eq '^[0-9]{1,4}$' || { echo "::error::numeric inputs only"; exit 1; }; done
           [ "$SHARDS" -ge 1 ] && [ "$SHARDS" -le 4 ] || { echo "::error::shards 1-4"; exit 1; }
       - uses: actions/checkout@v4
@@ -78,12 +89,43 @@ jobs:
           echo "database $gb GB (limit $MAX_DB_GB); client backends $used"
           [ "$gb" -le "$MAX_DB_GB" ] || { echo "::error::database $gb GB above max_db_gb $MAX_DB_GB"; exit 1; }
           [ $((used + 2 * SHARDS)) -le "$MAX_BACKENDS" ] || { echo "::error::backends $used + $((2 * SHARDS)) above $MAX_BACKENDS"; exit 1; }
+      - uses: astral-sh/setup-uv@v6
+        if: ${{ inputs.mode == 'missing' }}
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        if: ${{ inputs.mode == 'missing' }}
+        with:
+          python-version: "3.12"
+      - name: Missing accessions of loaded companies (mode missing)
+        if: ${{ inputs.mode == 'missing' }}
+        run: |
+          set -eu
+          uv sync --project pipeline --locked
+          uv run --project pipeline scrooner-fsn-missing > missing.csv
+          psql "$DATABASE_URL" -tAF, -c "select id, cik from core.company" > cik_of.csv
+          wc -l missing.csv
       - id: s
         run: |
           set -eu
           psql "$DATABASE_URL" -tAc "select cik from fsn.company_load" > loaded.txt
           python3 - <<'EOF' >> "$GITHUB_OUTPUT"
           import csv, json, os
+          if os.environ["MODE"] == "missing":
+              cik_of = dict(l.strip().split(",") for l in open("cik_of.csv") if l.strip())
+              rows = list(csv.DictReader(open("missing.csv")))
+              ciks = sorted({cik_of[r["company_id"]].zfill(10) for r in rows})
+              periods = set()
+              for r in rows:
+                  y, m = int(r["filed"][:4]), int(r["filed"][5:7])
+                  for yy, mm in ((y, m), (y + (m == 12), m % 12 + 1)):  # filing month and the next
+                      periods.add("%dq%d" % (yy, (mm - 1) // 3 + 1) if (yy, mm) < (2020, 10) else "%dm%02d" % (yy, mm))
+              n = max(1, min(int(os.environ["SHARDS"]), len(ciks)))
+              print("todo=%d" % len(rows))
+              print("periods=" + ",".join(sorted(periods)))
+              print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n)] if ciks else []))
+              raise SystemExit(0)
           loaded = {l.strip().zfill(10) for l in open("loaded.txt") if l.strip()}
           lo, hi, n = int(os.environ["RANK_FROM"]), int(os.environ["RANK_TO"]), int(os.environ["SHARDS"])
           rows = [r for r in csv.DictReader(open("doc/data-moat/team/top1000/universe_5000.csv"))
@@ -91,6 +133,7 @@ jobs:
           ciks = [r["cik"].zfill(10) for r in rows]
           n = max(1, min(n, len(ciks)))
           print("todo=%d" % len(ciks))
+          print("periods=")
           print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n)] if ciks else []))
           EOF
 
@@ -111,6 +154,8 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       CIKS: ${{ matrix.shard.ciks }}
       APPLY: ${{ inputs.apply }}
+      PERIODS: ${{ needs.plan.outputs.periods }}
+      MODE: ${{ inputs.mode }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,17 +169,21 @@ jobs:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
       - name: Shard from the fsn-notes bucket (no SEC requests)
-        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3
+        run: |
+          if [ -n "$PERIODS" ]; then P="--periods $PERIODS"; else P=""; fi
+          uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" $P --out companies --cache .cache/fsn-shard --floor-gb 3
       - name: Dry run (read-only transaction)
         if: ${{ !inputs.apply }}
         run: |
           mkdir -p out
-          uv run --project pipeline scrooner-fsn load --companies companies --dry-run --report out/load-plan.json
+          if [ "$MODE" = missing ]; then F="--increment --bulk-missing"; else F=""; fi
+          uv run --project pipeline scrooner-fsn load --companies companies $F --dry-run --report out/load-plan.json
       - name: Load fsn.* (PRODUCTION WRITE, one transaction per company)
         if: ${{ inputs.apply }}
         run: |
           mkdir -p out
-          uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
+          if [ "$MODE" = missing ]; then F="--increment --bulk-missing"; else F=""; fi
+          uv run --project pipeline scrooner-fsn load --companies companies $F --report out/load.json
       - name: Database size after
         if: always()
         run: psql "$DATABASE_URL" -tAc "select 'db_gb_after', round(pg_database_size(current_database())/1e9,2)"

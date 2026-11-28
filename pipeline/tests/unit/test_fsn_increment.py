@@ -361,3 +361,41 @@ def test_load_plan_is_a_dry_run_that_writes_nothing(conn, tmp_path):
     # a company outside the master is reported, not raised
     p3 = load.plan(conn, inc.parent, [CIK], predecessors={}, increment=True)
     assert p3["totals"]["companies"] == 1
+
+
+@pytest.mark.integration
+def test_bulk_missing_inserts_only_accessions_held_in_no_set(conn, tmp_path):
+    cid = _one(
+        conn,
+        "insert into core.company (cik, company_name) values (%s, 'META TEST') returning id",
+        (CIK,),
+    )
+    conn.commit()
+    hist = _company_dir(tmp_path / "hist", cik=CIK)
+    load.load_company(conn, hist, loader_commit="c1")
+    conn.commit()
+    before = _one(conn, "select count(*) from fsn.value")
+    # a bulk-set directory carrying one held accession (the hist one) must change nothing
+    r0 = load.load_company(
+        conn, hist, loader_commit="c1", increment=True, bulk_missing=True
+    )
+    conn.commit()
+    assert r0["skipped"] and r0["held_not_touched"] == 1
+    assert _one(conn, "select count(*) from fsn.value") == before
+    # a bulk-set directory (SEC set label) with a missing accession inserts it, leaves the rest
+    new = _increment_dir(tmp_path, cid, fsn_set="2026m10")
+    r1 = load.load_company(
+        conn, new, loader_commit="c1", increment=True, bulk_missing=True
+    )
+    conn.commit()
+    assert r1["filings"] == 1 and r1["value"] > 500
+    assert conn.execute(
+        "select accession, fsn_set from fsn.filing where company_id = %s order by accession",
+        (cid,),
+    ).fetchall() == sorted([(FSN_ACC, "2026m07"), (META, "2026m10")])
+    # the same directory again: held now, nothing written
+    r2 = load.load_company(
+        conn, new, loader_commit="c1", increment=True, bulk_missing=True
+    )
+    assert r2["skipped"]
+    conn.rollback()
