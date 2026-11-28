@@ -17,11 +17,15 @@ SQL136 = (DB / "pending/0136_pipeline_event_work_items.sql").read_text()
 @pytest.fixture
 def conn(isolated_database_url):
     with psycopg.connect(isolated_database_url) as c:
-        # hermetic: the CI template database holds the migrated core/fsn/analytics schemas (empty fsn.filing makes every
-        # company "no FSN", i.e. blocked_on_ingest); each test builds the tables it needs, in this throwaway copy only
+        # The copy carries every migration (CI: postgres:16 over pipeline/db/migrations), so `core`, `fsn` and `analytics` exist.
+        # Each test owns its lake: drop them and give the planner's ingest gate (planner._has_fsn) a real fsn.filing
+        # with the companies these tests queue already ingested; `lake` below adds its own companies and filings.
         c.execute("drop schema if exists ops, core, fsn, analytics cascade")
         c.execute(SQL135)
         c.execute(SQL136)
+        c.execute("create schema fsn; create table fsn.filing (id bigint primary key, cik text, accession text)")
+        c.execute("insert into fsn.filing select 1000 + n, cik, 'ingested-' || cik "
+                  "from unnest(array['1','2','3','10','20']) with ordinality as t(cik, n)")
         c.commit()
     with psycopg.connect(isolated_database_url, autocommit=True) as c:
         yield c
@@ -81,6 +85,16 @@ def test_rule_event_targets_only_affected_companies_and_never_fans_out(conn):
     assert items(conn) == [("10", 3, "pending", ["rule_version"], False), ("20", 3, "pending", ["rule_version"], False)]
     assert rep.unscoped == 1  # R2: the index cannot say, so nothing is queued for anyone
     assert conn.execute("select plan_outcome from ops.pipeline_event where versions->>'rule'='R2'").fetchone()[0] == "unscoped"
+
+
+def test_rule_event_for_a_company_not_ingested_is_blocked_on_ingest(conn):
+    ev(conn, "99", "rule_version", rule="a")  # 99 has no fsn.filing row: stage 3 cannot run yet
+    ev(conn, "1", "rule_version", rule="a")
+    rep = planner.plan_events(conn)
+    assert rep.blocked_on_ingest == 1 and rep.queued == 1
+    assert items(conn) == [("99", 3, "blocked_on_ingest", ["rule_version"], False), ("1", 3, "pending", ["rule_version"], False)]
+    conn.execute("insert into fsn.filing values (9999, '99', 'z-1')")
+    assert planner.unblock_ingested(conn) == 1 and items(conn, "cik='99'")[0][2] == "pending"
 
 
 def test_cohort_leaves_other_events_unplanned(conn):
@@ -399,7 +413,6 @@ def lake(conn):
     conn.execute("create schema if not exists core; create schema if not exists fsn;")
     conn.execute("create table core.company (id bigint primary key, cik text, primary_ticker text)")
     conn.execute("create table core.filing (id bigint primary key, company_id bigint, accession_number text, form text, period_of_report date)")
-    conn.execute("create table fsn.filing (id bigint primary key, cik text, accession text)")
     conn.execute("insert into core.company values (1,'111','AAA'),(2,'222','BBB')")
     conn.execute("insert into core.filing values (1,1,'a-1','10-K','2024-12-31'),(2,1,'a-2','10-Q','2025-03-31'),"
                  "(3,2,'b-1','10-K','2024-12-31'),(4,2,'b-0','10-K','2010-12-31'),(5,1,'a-3','8-K','2025-04-01')")
