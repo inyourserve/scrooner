@@ -280,8 +280,28 @@ def gate_no_role(res, day):
 NODE_TAG = re.compile(r'([A-Za-z][A-Za-z0-9_]*)(?:\[[^\]]*\])?=-?[\d.]+')
 
 
-def known_tags(roles_csv, families_txt):
+def predictor_decided_tags(rules_dir=None):
+    """Elements the one rule store (data-team/tags/rules, M2 loader rule_store.py) already decides: map, component, combined or
+    excluded. A drill item for one of them is no new element family (2026-11-28: 101 of the 400 seeded proposals, e.g. Assets,
+    LiabilitiesAndStockholdersEquity)."""
+    sys.path.insert(0, os.path.join(ROOT, 'data-team', 'tags', 'rules'))
+    import rule_store
+    return {tag for _, tag in rule_store.tag_decisions(rule_store.load_predictor(rules_dir))}
+
+
+def resolver_read_tags(resolver_dir=None):
+    """Every element a committed resolver row reads (nodes or tags), at any company or filing."""
+    out = set()
+    for p in glob.glob(os.path.join(resolver_dir or os.path.join(ROOT, 'data-team', 'tags', 'line_map', 'resolver'), '*.csv')):
+        for r in csv.DictReader(open(p)):
+            out.update(NODE_TAG.findall(r.get('nodes') or ''))
+            out.update(t for t in re.split(r'[+;,]', r.get('tags') or '') if t)
+    return out
+
+
+def known_tags(roles_csv, families_txt, rules_dir=None, resolver_dir=None):
     tags, fam = set(), []
+    tags |= predictor_decided_tags(rules_dir) | resolver_read_tags(resolver_dir)
     for r in csv.DictReader(open(roles_csv)):
         for k in ('parent', 'alternatives', 'combined_if', 'fallback'):
             for t in re.split(r'[|;+, ]', r.get(k) or ''):
@@ -295,10 +315,12 @@ def known_tags(roles_csv, families_txt):
 
 
 def gate_families(res, filings, tk_of_cik, known, fam, day):
-    used = collections.defaultdict(set)
+    # an element the resolver reads for any row of the batch is read: a year served from a later filing (latest print) carries the
+    # later accession, so a per-accession set called the own filing's line unread (ACN FY2015 Assets; 69 of the 400 seeded proposals)
+    used = set()
     for r in res.rows:
-        used[r['accession']].update(NODE_TAG.findall(r.get('nodes') or ''))
-        used[r['accession']].update(t for t in re.split(r'[+;,]', r.get('tags') or '') if t)
+        used.update(NODE_TAG.findall(r.get('nodes') or ''))
+        used.update(t for t in re.split(r'[+;,]', r.get('tags') or '') if t)
     new = {}
     for f in filings:
         for s in (f.get('lines') or '').split('~'):
@@ -306,7 +328,7 @@ def gate_families(res, filings, tk_of_cik, known, fam, day):
             if len(x) < 9: continue
             st, rep, ln, tag, cus, neg, prole, lb, val = x[:9]
             if st not in ('BS', 'IS', 'CF') or val in ('', None): continue
-            if tag in known or tag in used[f['a']] or any(p.match(tag) for p in fam): continue
+            if tag in known or tag in used or any(p.match(tag) for p in fam): continue
             e = new.setdefault(tag, dict(n=set(), first=(f, st, rep, ln, lb, val, cus), count=0))
             e['n'].add(tk_of_cik.get(str(int(f['cik'])), f['cik'])); e['count'] += 1
     out = []

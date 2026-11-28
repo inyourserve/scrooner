@@ -168,3 +168,29 @@ def test_every_resolved_catalog_concept_maps_to_a_registry_data_point():
            if r["name"].endswith("_resolved")]
     assert len(cat) >= 28
     assert [c for c in cat if dd.base_name(c) not in reg] == ["employee_count_resolved"]   # not a template data point
+
+
+def test_family_gate_skips_elements_read_or_decided_anywhere(tmp_path):
+    # ACN FY2015: total_assets is served from the FY2016 print (row accession A16), so the own filing's Assets line was called
+    # unread; an element the rule store already decides (LiabilitiesAndStockholdersEquity: identity line) is no new family either
+    roles = tmp_path / "roles.csv"
+    roles.write_text("data_point,stmt,parent,alternatives,combined_if,note_ok,custom_label,ruling,fallback\n")
+    fam = tmp_path / "families.txt"
+    fam.write_text("")
+    rules = tmp_path / "rules"
+    rules.mkdir()
+    (rules / "bs.csv").write_text(
+        "rule_id,version,namespace,data_point,scope,era,kind,when,then,precedence,evidence,author,date,note\n"
+        'lib.bs.LiabilitiesAndStockholdersEquity,1,bs,,all,,tag,"{""stmt"":""BS"",""tag"":""LiabilitiesAndStockholdersEquity"",""order"":2}",'
+        '"{""decision"":""excluded"",""concept"":"""",""parent_concept"":"""",""reason_class"":""identity_check_line""}",data point,explicit,x,2026-11-28,\n')
+    known, fams = dd.known_tags(str(roles), str(fam), rules_dir=str(rules), resolver_dir=str(tmp_path / "none"))
+    assert "LiabilitiesAndStockholdersEquity" in known
+
+    class Res:
+        rows = [dict(accession="A16", nodes="Assets=18202647000 [R2.htm:25@A16]", tags="Assets", status="mapped")]
+
+    line = lambda tag, lb: f"BS|2|1|{tag}|0|0|terseLabel|{lb}|1"
+    filings = [dict(a="A15", cik="1467373", p="2015-08-31",
+                    lines="~".join([line("Assets", "Total assets"), line("LiabilitiesAndStockholdersEquity", "Total"), line("BrandNewElement", "New line")]))]
+    out, n = dd.gate_families(Res(), filings, {"1467373": "ACN"}, known, fams, "2026-11-28")
+    assert [o["tag"] for o in out] == ["BrandNewElement"] and n == 1
