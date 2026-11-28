@@ -1001,24 +1001,56 @@ def stmt_pages_by_company(
 
 
 def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIndex:
-    """fsn.line of the cited filings: every statement line, and the note lines (any stmt) of the tags shown."""
+    """fsn.line of the cited filings: every statement line, and the note lines (any stmt) of the tags shown.
+
+    Egress fix (2026-11-28): the rows of a filing are read from the local cache (common/fsn_read_cache) while the
+    filing's fsn.filing.src_sha256 is unchanged; only the missing filings go to the DB, all in batched queries."""
+    from scrooner_pipeline.common import fsn_read_cache as rc
+
     idx = LocatorIndex()
     accs = sorted(a for a in accessions if a)
-    for i in range(0, len(accs), 200):
+    tag_list = sorted(tags)
+    shas = rc.filing_shas(conn, accs) if accs and rc.enabled() else {}
+    key_tail = "|".join(list(STATEMENT_STMTS)) + "#" + ",".join(tag_list)
+    hit: dict[str, tuple[list, list]] = {}
+    miss: list[str] = []
+    for acc in accs:
+        got = (
+            rc.get("locator", acc + "|" + key_tail, shas[acc])
+            if shas.get(acc)
+            else None
+        )
+        if got is None:
+            miss.append(acc)
+        else:
+            hit[acc] = got
+    fetched: dict[str, tuple[list, list]] = {a: ([], []) for a in miss}
+    for i in range(0, len(miss), 1000):
+        chunk = miss[i : i + 1000]
         for acc, report, line, stmt, tag, plabel in conn.execute(
             """select f.accession, l.report, l.line, l.stmt, t.tag, l.plabel
                from fsn.line l join fsn.filing f on f.id = l.filing_id join fsn.tag t on t.id = l.tag_id
                where f.accession = any(%s) and (l.stmt = any(%s) or t.tag = any(%s))""",
-            (accs[i : i + 200], list(STATEMENT_STMTS), sorted(tags)),
+            (chunk, list(STATEMENT_STMTS), tag_list),
         ).fetchall():
-            idx.add(acc, report, line, stmt, tag, plabel)
+            fetched[acc][0].append((acc, report, line, stmt, tag, plabel))
         for acc, report, title in conn.execute(
             """select f.accession, r.report, r.shortname
                from fsn.report r join fsn.filing f on f.id = r.filing_id
                where f.accession = any(%s) and r.shortname is not null""",
-            (accs[i : i + 200],),
+            (chunk,),
         ).fetchall():
-            idx.titles[(acc, report)] = title
+            fetched[acc][1].append((acc, report, title))
+    for acc, got in fetched.items():
+        if shas.get(acc):
+            rc.put("locator", acc + "|" + key_tail, shas[acc], got)
+    hit.update(fetched)
+    for acc in accs:
+        lines, titles = hit[acc]
+        for a2, report, line, stmt, tag, plabel in lines:
+            idx.add(a2, report, line, stmt, tag, plabel)
+        for a2, report, title in titles:
+            idx.titles[(a2, report)] = title
     return idx
 
 
