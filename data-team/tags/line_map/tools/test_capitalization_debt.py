@@ -88,6 +88,18 @@ if __name__ == '__main__':
     print(n, 'tests passed')
 
 
+def test_pre842_capital_lease_with_only_the_current_part_is_cited_under_that_element():
+    # NVDA FY2018 (0001045810-18-000010): only CapitalLeaseObligationsCurrent 5 is tagged at 2018-01-28 (no total, no
+    # noncurrent). The 5 is added (calc parent not a debt line) and cited as CapitalLeaseObligationsCurrent, the fact the
+    # filing carries; citing CapitalLeaseObligations left the served sum with no stored fact for the part
+    calc = 'g|OtherLiabilitiesCurrent|CapitalLeaseObligationsCurrent|1'
+    f = _f([('BS', 'Assets', 'Total assets', 900), ('BS', 'OtherLiabilitiesCurrent', 'Accrued and other current liabilities', 50),
+            ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 100), ('BS', 'StockholdersEquity', 'Total stockholders equity', 300)], calc)
+    own = _own(total_debt.run([f], _vals(f, ('CapitalLeaseObligationsCurrent', '2017-12-31', 5)), {}))
+    assert D(own['value']) == D(105), own
+    assert own['tags'].split('+') == ['LongTermDebtNoncurrent', 'CapitalLeaseObligationsCurrent'], own['tags']
+
+
 # ---- RULEBOOK D07 / D10 / D12 (Ritwik measurement 2026-11-17: total_debt rules without a test)
 _FACE = [('BS', 'Assets', 'Total assets', 900), ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 100),
          ('BS', 'OtherLiabilitiesNoncurrent', 'Other long-term liabilities', 70), ('BS', 'StockholdersEquity', 'Total stockholders equity', 300)]

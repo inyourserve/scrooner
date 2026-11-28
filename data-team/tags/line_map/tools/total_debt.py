@@ -167,6 +167,13 @@ def run(filings, vals, flloc):
                 if cl is None and any(t in vv[col] or t in cap_und for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')):
                     cl = sum((vv[col].get(t, cap_und.get(t, D(0))) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')), D(0))
                 pars = set().union(*[lease_parent.get(t, set()) for t in ('CapitalLeaseObligations', 'CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')])
+                # the elements the figure is cited under: the present-value parts when both are tagged or when the
+                # figure is their sum (no CapitalLeaseObligations total in the column), else the total. NVDA FY2018:
+                # only CapitalLeaseObligationsCurrent 5 is tagged; citing it as CapitalLeaseObligations named a fact
+                # the filing does not carry and the serve rejected the sum (no stored fact for the part)
+                cl_parts = (['CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent'] if both else
+                            [] if (vv[col].get('CapitalLeaseObligations') or cap_und.get('CapitalLeaseObligations')) else
+                            [t for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent') if t in vv[col] or t in cap_und])
                 if cap_loc:
                     # one figure per location member: Current + Noncurrent when tagged, else the total; duplicates once
                     bym = {}
@@ -185,15 +192,15 @@ def run(filings, vals, flloc):
                     if pars & tags: flags.append('capital lease inside a debt line (calc parent): not added')
                     elif pars and pars & set(onbs):
                         why_ = f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"
-                        if both:   # cite the present-value parts under their own elements (AMZN 2016: CapitalLeaseObligations is the gross 9,406)
-                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')]
+                        if cl_parts:   # cite the present-value parts under their own elements (AMZN 2016: CapitalLeaseObligations is the gross 9,406)
+                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in cl_parts]
                         else:
                             nodes.append(('CapitalLeaseObligations', cl, 'NOTE', why_))
                     elif (f['a'], 'CapitalLeaseObligations') in LEASE_TEXT:
                         # location evidence 5: the filing's own sentence places the liabilities outside debt lines (rules/lease_location_text.csv)
                         why_ = f"pre-842 capital lease outside debt lines, as the filing states: '{LEASE_TEXT[(f['a'], 'CapitalLeaseObligations')]['quote'][-80:]}'"
-                        if both:
-                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')]
+                        if cl_parts:
+                            nodes += [(t, vv[col].get(t, cap_und.get(t)), 'NOTE', why_) for t in cl_parts]
                         else:
                             nodes.append(('CapitalLeaseObligations', cl, 'NOTE', why_))
                     else:
