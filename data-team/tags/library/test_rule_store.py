@@ -140,3 +140,22 @@ def test_parity_catches_a_one_sided_edit(tmp_path):
     mutated = rs.tag_decisions(rs.load_all(str(r), str(d)))
     assert mutated == predict.load_kb(str(r))["lib"]
     assert mutated != predict.load_kb(str(TAGS / "rules"))["lib"]
+
+
+def test_predictor_reads_through_the_loader(monkeypatch):
+    """M2 step 2: predict.load_kb takes its rows from rule_store.load_predictor (not its own csv read)."""
+    full = predict.load_kb(str(TAGS / "rules"))
+    assert full["ov"] and full["lib"]
+    seen = []
+    real = rs.load_predictor
+
+    def fewer(d=None):
+        seen.append(d)
+        return [r for r in real(d) if r.cls != "override"]
+
+    monkeypatch.setattr(rs, "load_predictor", fewer)
+    kb = predict.load_kb(str(TAGS / "rules"))
+    assert seen and kb["ov"] == {} and kb["lib"] == full["lib"]
+    assert (
+        kb["version"] == full["version"]
+    )  # the VERSION hash still covers the files, not the loaded rows

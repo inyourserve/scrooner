@@ -4,18 +4,19 @@ Inputs: FSN face lines of the latest 10-K (tools/LINES.sql) + optional note fact
 Usage: predict.py LINES.jsonl TICKER RANK RULES_DIR [NOTES.jsonl] > TICKER-prediction.csv
 """
 import csv, json, re, sys, os, glob, hashlib
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'rules'))
+import rule_store  # noqa: E402
 def dp_of(concept):
     c = (concept or '').strip()
     c = {'revenue_sanity_resolved':'revenue'}.get(c, c)
     return c[:-9] if c.endswith('_resolved') else c
 def load_kb(d):
-    rows = []
     h = hashlib.sha256()
     for f in sorted(glob.glob(os.path.join(d, '*.csv'))):
         data = open(f, 'rb').read(); h.update(os.path.basename(f).encode()); h.update(data)
-        rows += list(csv.DictReader(open(f, newline='')))
-    for r in rows:
-        r['W'] = json.loads(r['when'] or '{}'); r['T'] = json.loads(r['then'] or '{}')
+    # M2: the rows come through the one rule loader (rules/rule_store.py); the VERSION hash still covers the files
+    rows = [dict(rule_id=x.rule_id, kind=x.cls, data_point=x.data['data_point'], W=x.data['when'], T=x.data['then'])
+            for x in rule_store.load_predictor(d)]
     K = {'version': 'v7-' + h.hexdigest()[:10]}
     by = lambda kind: sorted([r for r in rows if r['kind'] == kind], key=lambda r: (r['W'].get('order', 0), r['W'].get('rank', 0)))
     K['DPS'] = [r['data_point'] for r in by('data_point')]
@@ -44,7 +45,7 @@ def load_kb(d):
     sr = [r for r in by('stmt_restrict') if r['data_point'] == 'shares_outstanding'][0]; K['SHR_STMTS'] = (tuple(sr['W']['stmts']), sr['rule_id'])
     K['PTH_OK'] = set(by('parenthetical_allowed')[0]['T']['data_points'])
     K['P'] = {r['rule_id']: r['W'] for r in by('procedure')}
-    K['PT'] = {r['rule_id']: json.loads(r.get('then') or '{}') for r in by('procedure')}
+    K['PT'] = {r['rule_id']: r['T'] for r in by('procedure')}
     return K
 def home(dp): return KB['HOME'].get(dp, 'IS')
 KB = None
