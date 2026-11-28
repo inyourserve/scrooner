@@ -579,7 +579,7 @@ def printed_label(row: dict) -> str:
 
 # a locator naming a computation of two or more elements: 'R2.htm (us-gaap:A - us-gaap:B) of ...' (top100_coverage._LOCATOR_FORMULA)
 _FORMULA_LOCATOR = re.compile(
-    r"^\s*R\d+\.htm\b[^(]*\((?:[a-z][\w-]*):[A-Za-z0-9_]+(?:\s*\[[^\]]+\])?(?P<rest>.*)$"
+    r"^\s*R\d+\.htm\b[^(]*\((?:derived:\s*)?(?:[a-z][\w-]*):[A-Za-z0-9_]+(?:\s*\[[^\]]+\])?(?P<rest>.*)$"
 )
 _FORMULA_TERM = re.compile(r"\s([-+])\s*\(?\s*[a-z][\w-]*:[A-Za-z]")
 
@@ -616,6 +616,16 @@ def _derived_formula(badge: str) -> str:
     return badge[len("derived:") :]
 
 
+def _step_of(flag: str, badges: tuple[str, ...] | list[str]) -> str:
+    """The registry step a derived:/as_printed: flag names when it is that step followed by ' (<note>': else the flag. Pure."""
+    if not flag.startswith(("derived:", "as_printed:")) or flag in badges:
+        return flag
+    for b in badges:
+        if b.startswith(("derived:", "as_printed:")) and flag.startswith(b + " ("):
+            return b
+    return flag
+
+
 def badge_for(
     dp: str,
     sector: str,
@@ -648,6 +658,9 @@ def badge_for(
     # (filing_reads.badge_flag): the value is that derivation, not a printed line (WMT other income FY2015 = 0 by the
     # pretax identity, 2026-11-22)
     # resolver .90 X127: flag `as_printed:note` names the note step (sbc fallback 3, MO), for a mapped or an award-type sum row
+    # a reader's badge label may carry a trailing note ('derived:<formula> (registry fallback 4; ...' cut at its first ';'): the
+    # flag names the registry step it starts with (PM other_income_expense_net FY2015)
+    flags = {_step_of(f, d.badges) for f in flags}
     stepped = [
         f for f in flags if f.startswith(("derived:", "as_printed:")) and f in d.badges
     ]

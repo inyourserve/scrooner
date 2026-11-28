@@ -2193,6 +2193,7 @@ HC_VERIFIED_ABSENT = "verified_absent"
 # ruling 2026-11-21 (Dhairya, resolver .86): share-based compensation the filing discloses ONLY after tax is never served
 # as sbc (VZ FY2017-25 RSU/PSU narrative, GE FY2015-17 note); the year is hidden with this class, evidenced by the read
 HC_AFTER_TAX = "only_after_tax_disclosed"
+NOT_SEPARATELY_STATED = "interest_income_not_separately_stated"
 HIDE_ELIGIBLE: dict[str, str] = {
     **{code: HC_STRUCTURAL for code in NOT_PRESENTED_CODES},
     **{code: HC_PRE_FILING for code in NO_PERIOD_CODES},
@@ -2214,7 +2215,14 @@ READER_HIDE_CLASSES: dict[str, str] = {
     # cash_paid_for_interest FY2026, LLY interest_income FY2025) is a verified-absent YEAR; it hides only with a
     # full-text search quote (full_search_evidenced) or on the allowlist
     "disclosure_discontinued": HC_VERIFIED_ABSENT,
+    # founder 2026-11-28 (session scrooner-36, doc 02): a year in which every filing presenting it prints only a residual
+    # "Other income (expense), net" and states no annual interest-income amount (CRWD FY2018-20). It is a verified-absent
+    # YEAR: stored under the existing class (no schema change), named by the reader class in reason_code and evidence, and
+    # accepted only for interest_income with a full-text-search quote that cites the 10-K (not_separately_stated_problem)
+    NOT_SEPARATELY_STATED: HC_VERIFIED_ABSENT,
 }
+NOT_SEPARATELY_STATED_DPS = frozenset({"interest_income"})
+_CITED_ACCESSION = re.compile(r"\b\d{10}-\d{2}-\d{6}\b")
 # (reader class, display hide class, evidence text, accession, locator)
 ReaderHide = tuple[str, str, str, str, str]
 # Dhairya ruling (founder standard 2026-11-22: hide only when the figure is in no filing): a year hide whose quote records
@@ -2232,6 +2240,18 @@ def full_search_evidenced(evidence: str | None) -> bool:
     """True when a reader's hide quote records a full-text search of the filings that found no amount. Pure."""
     ev = evidence or ""
     return bool(_FULL_SEARCH_RE.search(ev) and _NO_AMOUNT_RE.search(ev))
+
+
+def not_separately_stated_problem(data_point: str, evidence: str) -> str:
+    """Why a `interest_income_not_separately_stated` year hide is refused, or ''. The state exists only for interest_income
+    and needs the full-text-search quote that finds no annual amount and cites the 10-K (an accession). Pure."""
+    if data_point not in NOT_SEPARATELY_STATED_DPS:
+        return f"{NOT_SEPARATELY_STATED} applies to {sorted(NOT_SEPARATELY_STATED_DPS)} only"
+    if not full_search_evidenced(evidence):
+        return "no full-text-search quote that finds no annual amount"
+    if not _CITED_ACCESSION.search(evidence):
+        return "the quote cites no 10-K accession"
+    return ""
 
 
 def load_filing_read_hides(
@@ -2254,6 +2274,10 @@ def load_filing_read_hides(
             if hc is None:
                 continue
             quote = (r.get("quote") or "").strip()
+            if cls == NOT_SEPARATELY_STATED and not_separately_stated_problem(
+                r["data_point"], quote
+            ):
+                continue  # refused: the cell stays what it was (open work)
             out[(r["ticker"], r["data_point"], r["period_end"])] = (
                 cls,
                 hc,

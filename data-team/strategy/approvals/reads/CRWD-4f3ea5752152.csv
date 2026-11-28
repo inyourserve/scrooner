@@ -1,0 +1,4 @@
+data_point,fiscal_year,verdict,reader,evidence
+dividends_per_share,2018,MATCH,"Scrooner data verifier (preparer, 2026-11-28; FILING-CHECKED, main document fetched from sec.gov)","FY2020 10-K 0001535527-20-000006 crwd-20200131.htm Item 5 Dividend Policy: ""We have never declared or paid any cash dividends on our capital stock."" No dividends-paid line anywhere in the document. Served 0."
+dividends_per_share,2023,MATCH,"Scrooner data verifier (preparer, 2026-11-28; FILING-CHECKED, main document fetched from sec.gov)","FY2023 10-K 0001535527-23-000008 crwd-20230131.htm Item 5 Dividend Policy: ""We have never declared or paid any cash dividends on our capital stock."" Served 0."
+dividends_per_share,2024,MATCH,"Scrooner data verifier (preparer, 2026-11-28; FILING-CHECKED, main document fetched from sec.gov)","FY2024 10-K 0001535527-24-000007 crwd-20240131.htm Item 5 Dividend Policy: ""We have never declared or paid any cash dividends on our capital stock."" Served 0."

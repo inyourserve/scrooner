@@ -30,9 +30,10 @@ CELLS = os.path.join(HERE, '..', 'rules', 'filing_read_cells.csv')
 SKIPS = os.path.join(HERE, '..', 'rules', 'filing_read_skips.csv')
 OUT_COLS = ['cik', 'ticker', 'data_point', 'period_end', 'fiscal_year', 'outcome', 'value', 'element', 'accession', 'r_page', 'hide_class',
             'quote', 'rule_proposal', 'source_file']
-HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed|disclosure_discontinued)\b')
+HIDE_RE = re.compile(r'^HIDE\s+(structural_not_presented|line_presented_combined|never_reported|verified_absent|pre_filing|only_after_tax_disclosed|disclosure_discontinued|interest_income_not_separately_stated)\b')
 BLANK = ('combined', 'not_presented', 'no_role', 'not_in_template', 'derived', 'open')
 ACC_RE = re.compile(r'\d{10}-\d{2}-\d{6}')
+R_PAGE_RE = re.compile(r'\s*R\d+\.htm\b')
 BADGE_RE = re.compile(r'^\s*badge=(\w+):([^;]*)')
 
 
@@ -144,6 +145,19 @@ def apply(rows, path=None, log=None, memberfacts=None, notefacts=None):
         if t['outcome'] == 'VALUE':
             ev = D(t['value'])
             badge = badge_flag(t)
+            if rv is not None and rv == ev and ev == 0 and 'printed_zero' in (r.get('flags') or '').split(';') and not R_PAGE_RE.match(t.get('r_page') or ''):
+                # (.94, M3-cert) a zero the resolver INFERRED from a dash in a report the store keeps no page of (printed_zero: BA DPS
+                # FY2020-21, 'R6.htm:35' of an FSN statement) and the reader found STATED IN TEXT (Item 6 dash, Item 7 'we paid no
+                # dividends'): the reader's quote and section locator replace the unlocatable node, served under the stated_zero
+                # contract (same value 0, so no value changes). A read that names an R page (INTC DPS FY2025) keeps the resolver's node.
+                r.update(status='mapped', value=ev, tags='', r_page='', nodes='', calc_check='', accession=t['accession'],
+                         column='own' if t['accession'] == own_acc else 'comparative', quote=t['quote'], locator=_locator(dict(t, element='')),
+                         quote_period=str(r['period_end']),
+                         why=f"filing read ({t['source_file']}): the resolver inferred the zero from a printed dash it cannot locate; the reader states it in the filing text"
+                             + (f"; reader note: {t['rule_proposal']}" if t.get('rule_proposal') else ''))
+                r['flags'] = ';'.join(x for x in ('filing_read', 'stated_zero', 'replaces:printed_zero', badge) if x)
+                if log is not None: log.append(('printed_zero_to_text', r['ticker'], r['data_point'], r['period_end']))
+                continue
             if rv is not None and rv == ev:
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read', badge) if x)
                 if log is not None: log.append(('agree', r['ticker'], r['data_point'], r['period_end']))
