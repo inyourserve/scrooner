@@ -125,3 +125,38 @@ def test_expanded_shares_1y_ago_flag_on_reads_shown_and_unproven_is_null(monkeyp
     )
     assert "analytics.shown_cell cf" in conn.sql[1]
     assert "cf.cell_state = 'value'" in conn.sql[1]
+
+
+QROW = (2024, "Q1", D("5"), [3], date(2024, 3, 31), False)
+AROW = (2024, D("20"), [4], date(2024, 12, 31))
+
+
+@pytest.mark.unit
+def test_price_loaders_flag_off_are_canonical_fact_and_unchanged():
+    c1 = FakeConn([QROW])
+    assert price_metrics._load_quarterly_facts(c1, 1, 9)[(2024, "Q1")] == (D("5"), [3])
+    c2 = FakeConn([AROW])
+    assert price_metrics._load_annual_facts(c2, 1, 9) == {
+        2024: (D("20"), [4], date(2024, 12, 31))
+    }
+    c3 = FakeConn([NOW])
+    assert price_metrics._latest_instant_fact(c3, 1, 9) == NOW
+    for c in (c1, c2, c3):
+        assert _uses_facts(c) and "shown_cell" not in c.sql[0]
+
+
+@pytest.mark.unit
+def test_price_loaders_flag_on_read_shown_and_unproven_is_absent(monkeypatch):
+    _on(monkeypatch)
+    c1, c2, c3 = (
+        FakeConn([]),
+        FakeConn([]),
+        FakeConn([]),
+    )  # unproven cells are not in the view
+    assert dict(price_metrics._load_quarterly_facts(c1, 1, 9)) == {}
+    assert price_metrics._load_annual_facts(c2, 1, 9) == {}
+    assert (
+        price_metrics._latest_instant_fact(c3, 1, 9) is None
+    )  # callers then write their null reason
+    for c in (c1, c2, c3):
+        assert _uses_shown(c) and not _uses_facts(c)

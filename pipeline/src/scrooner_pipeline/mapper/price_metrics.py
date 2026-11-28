@@ -56,6 +56,7 @@ import structlog
 from scrooner_pipeline.common.derivation_policy import PER_SHARE_NOT_DERIVED_REASON
 from scrooner_pipeline.common.rule_flags import rule_enabled
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper import shown_source
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
 
 logger = structlog.get_logger()
@@ -116,13 +117,13 @@ def _load_quarterly_facts(
     """(fiscal_year, fiscal_period) -> (value, fact_ids) for real quarters only (Q1-4) -- same shape as ttm.py's own loader."""
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.end_date,
                    exists (select 1 from core.fact f
                            where f.id = any(cf.source_fact_ids) and f.is_derived) as any_derived
-            from analytics.canonical_fact cf
+            from {shown_source.fact_relation()} cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s
+            where cf.company_id = %s and cf.canonical_concept_id = %s{shown_source.value_filter()}
               and p.fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4')
             """,
             (company_id, concept_id),
@@ -141,11 +142,11 @@ def _load_annual_facts(
     are all filed (not derived). Used for TTM EPS at a Q4 anchor."""
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             select p.fiscal_year, cf.value, cf.source_fact_ids, p.end_date
-            from analytics.canonical_fact cf
+            from {shown_source.fact_relation()} cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s
+            where cf.company_id = %s and cf.canonical_concept_id = %s{shown_source.value_filter()}
               and p.fiscal_period = 'FY'
               and not exists (select 1 from core.fact f
                               where f.id = any(cf.source_fact_ids) and f.is_derived)
@@ -239,11 +240,11 @@ def _latest_instant_fact(
 ) -> tuple[Decimal, list[int], date | None] | None:
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             select cf.value, cf.source_fact_ids, p.end_date
-            from analytics.canonical_fact cf
+            from {shown_source.fact_relation()} cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s
+            where cf.company_id = %s and cf.canonical_concept_id = %s{shown_source.value_filter()}
             order by p.end_date desc
             limit 1
             """,
