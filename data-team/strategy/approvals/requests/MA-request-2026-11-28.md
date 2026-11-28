@@ -11,6 +11,6 @@ Automatic, from the top100-flow workflow gate. Method: CERTIFICATION-METHOD-2026
 - resolver file: `data-team/tags/line_map/resolver/MA.csv`
 - resolver_version: `resolver-all110-.93`
 - resolver sha256: `a08af8cda37fd57cd0f0d7e94f7f25b6a28d2155cbf5d9fb00a82622d3f50e93`
-- code: `54313f081f7ed807d4d610175c3abd845168daa1`
-- run: https://github.com/inyourserve/scrooner/actions/runs/46181566579
+- code: `10be225a0a5f024f6e9fe32ede5bfc180320da3a`
+- run: https://github.com/inyourserve/scrooner/actions/runs/46185160657
 - gate: 0 OPEN; every shown cell and part has an accession and R page; no no_public_filing_for_period or before_first_10k on a shown cell.
