@@ -1141,7 +1141,7 @@ LINE_NOT_PURE = frozenset({ONLY_COMBINED, HC_AFTER_TAX})
 # this one, so the test lives here too; test_display_cert keeps the two in step).
 _FULL_SEARCH_RE = re.compile(r"full[- ](?:text|document) search", re.I)
 _NO_AMOUNT_RE = re.compile(
-    r"\b0 (?:hits|matches)\b|returns 0\b|finds? no\b|no 10-K or 10-Q (?:states|prints)|finds only",
+    r"\b0 (?:hits|matches)\b|returns 0\b|finds? no\b|no 10-K or 10-Q (?:states|prints)|finds only|finds? ['\x22][^'\x22]{1,60}['\x22] only in (?:the title|product|risk)|\bhits only\b|\bnone from\b",
     re.I,
 )
 

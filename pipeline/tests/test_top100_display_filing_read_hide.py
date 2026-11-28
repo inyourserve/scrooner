@@ -206,3 +206,48 @@ def test_a_year_hide_with_a_full_text_search_quote_is_verified_absent_for_any_da
     assert "full-text search" in ii["evidence"]
     oie = by[("other_income_expense_net", 2014)]
     assert (oie["display"], oie["hide_class"]) == ("OPEN", "")
+
+
+def test_every_full_search_hide_quote_in_filing_read_cells_is_a_no_amount_search():
+    """Parity (Stage 4 Prove, M2): every HIDE row of data-team/tags/line_map/rules/filing_read_cells.csv whose quote records
+    a full-text search records one that found no amount, so full_search_evidenced (export) and the certificate's copy
+    (display_cert) both accept it. BAC capex FY2015-25 ("8 hits only ... none from the FY2015 10-K onward"), AAPL goodwill
+    and CRWD cf_inventory_change ("finds 'goodwill' only in the title ...") stayed OPEN before. Mutation: drop
+    `hits only|none from` (or the quoted-term `only in` branch) from _NO_AMOUNT_RE and this fails."""
+    import csv
+    from pathlib import Path
+
+    from scrooner_pipeline.certification import display_cert as dc
+
+    path = (
+        Path(__file__).resolve().parents[2]
+        / "data-team/tags/line_map/rules/filing_read_cells.csv"
+    )
+    with path.open(newline="") as fh:
+        hides = [
+            r
+            for r in csv.DictReader(fh)
+            if r["outcome"] == "HIDE" and t100._FULL_SEARCH_RE.search(r["quote"])
+        ]
+    assert len(hides) >= 11
+    missed = [
+        (r["ticker"], r["data_point"], r["fiscal_year"])
+        for r in hides
+        if not (
+            t100.full_search_evidenced(r["quote"])
+            and dc.full_search_evidenced(r["quote"])
+        )
+    ]
+    assert missed == []
+    bac = [r for r in hides if (r["ticker"], r["data_point"]) == ("BAC", "capex")]
+    assert len(bac) == 11
+    # each phrase on its own (BAC's quote carries both)
+    for q in (
+        "full-text search q=x: 8 hits only, all before FY2015",
+        "full-text search q=x: none from the FY2015 10-K onward",
+    ):
+        assert t100.full_search_evidenced(q) and dc.full_search_evidenced(q), q
+    # the phrases never accept a search that found an amount
+    assert not t100.full_search_evidenced(
+        "EDGAR full-text search q=capex: 12 hits, the FY2016 10-K prints 1,234"
+    )
