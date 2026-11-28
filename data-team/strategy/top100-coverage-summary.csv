@@ -1,7 +1,7 @@
 rank,ticker,company_id,cells,PROVEN,REASON,DERIVED,HELD,DISAGREE,UNCHECKED,BLANK,pageless_proven,pageless_reason,pageless_derived,parts_blank,pct_proven_plus_reason,shown_cells,shown_values,open_shown,hidden_rows,hidden_years,pct_shown_values,pageless_shown,parts_blank_shown,gate_ready,verifier_certified,note,as_of
 1,NVDA,2733,552,513,1,0,1,0,36,1,0,0,0,0,93.1,551,513,38,0,1,93.1,0,0,no,no,,2026-11-28T19:30Z
 2,AAPL,3,552,484,14,0,0,0,41,13,0,0,0,0,90.2,543,484,59,0,9,89.1,0,0,no,no,,2026-11-28T19:30Z
-3,GOOG,9,506,465,22,3,0,0,0,16,7,0,0,23,96.8,500,459,41,0,6,91.8,7,23,no,no,verifier self-check: 14 opened,2026-11-28T19:36Z
+3,GOOG,9,506,470,22,3,0,0,0,11,5,0,0,10,97.8,500,468,32,0,6,93.6,5,10,no,no,verifier self-check: 10 opened,2026-11-28T20:17Z
 4,MSFT,4,552,516,36,0,0,0,0,0,0,0,0,1,100.0,528,515,13,2,0,97.5,0,1,no,no,verifier self-check: 1 opened,2026-11-28T19:37Z
 5,AMZN,2328,506,402,47,20,2,0,33,2,6,0,0,0,92.7,470,422,48,3,3,89.8,6,0,no,no,,2026-11-28T19:30Z
 6,META,5050,506,390,38,9,0,0,66,3,1,0,0,0,86.4,470,399,71,2,14,84.9,1,0,no,no,,2026-11-28T19:30Z
