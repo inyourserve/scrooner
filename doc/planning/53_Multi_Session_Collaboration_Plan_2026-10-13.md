@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0137.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0138.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -90,6 +90,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0134 | Data Engineer (cert registry fixes) | `analytics.display_cell_certificate`: '' to NULL data fix plus CHECK that optional text columns are NULL or non-blank; `display_cell_certificate_status` restatement check rewritten to use idx_fsn_value_series / idx_fsn_filing_company_accepted (GILD load timed out); `invalidate_display_cell_certificates` computes status once. 0133 was already claimed | file `pipeline/db/pending/0134_display_cert_registry_fixes.sql` (branch work/ops/cert-registry-fixes-2026-11-21); **APPLIED 2026-11-21, ledger row 134** (founder-approved, session scrooner-8d); file stays in `pending/` (contiguity) |
 | 0135 | Data Engineer (PIPELINE.md M5) | `ops.exception_queue`: one exceptions queue (kind OPEN/DISAGREE/CENSUS_FAIL/SAMPLE_FAIL/NEEDS_READ/DRILL_MISS/DEAD_LETTER, root_cause_family, owner lane, idempotency key, close needs rule id + test path or evidenced hide) | file `pipeline/db/pending/0135_exception_queue.sql`; replayed in CI; NOT applied; needs the founder's typed words |
 | 0136 | Data Engineer (PIPELINE.md M4, orchestrator support) | `ops.pipeline_event`, `ops.work_item`, `ops.work_item_stage` (per-stage checkpoint), `ops.work_dead_letter`; events dedupe on (cik, cause, versions_hash), work items on (cik, from_stage, versions_hash) | file `pipeline/db/pending/0136_pipeline_event_work_items.sql`; NOT applied (founder's typed words) |
+| 0137 | Data Engineer (normalizer egress/write load) | drop `core.idx_fact_company_concept_period` (3.5 GB) and `core.idx_fact_unit_id` (0.9 GB); plain `drop index` under `lock_timeout` because the ledger path is one transaction (CONCURRENTLY alternative in the file header) | file `pipeline/db/pending/0137_drop_redundant_core_fact_indexes.sql` (branch work/egress/normalizer-copy); NOT applied; needs the founder's typed words |
 
 ### Applying a migration (ledger rule, 0131)
 

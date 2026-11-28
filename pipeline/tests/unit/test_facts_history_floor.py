@@ -58,6 +58,7 @@ def test_pre_2014_facts_are_skipped_and_2015_kept(monkeypatch):
         },
     )
     monkeypatch.setattr(facts, "_load_unit_lookup", lambda c: {"usd": 1})
+    monkeypatch.setattr(facts, "write_fact_rows", lambda c, rows: c.rows.extend(rows))
     monkeypatch.setattr(
         facts, "upsert_concepts", lambda c, pairs: {("us-gaap", "Revenues"): 7}
     )

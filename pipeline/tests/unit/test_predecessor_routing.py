@@ -59,6 +59,7 @@ def _setup(monkeypatch):
     monkeypatch.setattr(facts, "_load_filing_lookup", lambda c, cid: {})
     monkeypatch.setattr(facts, "upsert_concepts", lambda c, p: {("us-gaap", "Revenues"): 1})
     monkeypatch.setattr(facts, "_load_unit_lookup", lambda c: {"usd": 2})
+    monkeypatch.setattr(facts, "write_fact_rows", lambda c, rows: c.rows.extend(rows))
     periods = {
         (date(2024, 12, 31), date(2024, 12, 31), "instant"): 10,
         (date(2026, 6, 30), date(2026, 6, 30), "instant"): 11,

@@ -141,8 +141,36 @@ def _load_concept_lookup(conn: psycopg.Connection) -> dict[tuple[str, str], int]
 
 
 def upsert_concepts(
-    conn: psycopg.Connection, pairs: set[tuple[str, str]]
+    conn: psycopg.Connection,
+    pairs: set[tuple[str, str]],
+    cache: dict[tuple[str, str], int] | None = None,
 ) -> dict[tuple[str, str], int]:
+    """Insert any missing (taxonomy, tag) pairs and return the pair -> id lookup.
+
+    With `cache` (the run-wide lookup loaded once by normalize_facts) only the pairs
+    the cache does not hold are inserted, and only those are re-queried; the cache is
+    updated in place and returned. Without it the whole table is re-read (old path)."""
+    if cache is not None:
+        missing = sorted(p for p in pairs if p not in cache)
+        if missing:
+            found: list[tuple[str, str, int]] = []
+            with conn.cursor() as cur:
+                cur.executemany(
+                    "insert into core.concept (taxonomy, tag) values (%s, %s) on conflict (taxonomy, tag) do nothing",
+                    missing,
+                )
+                cur.execute(
+                    "select c.taxonomy, c.tag, c.id from core.concept c "
+                    "join unnest(%s::text[], %s::text[]) as n(taxonomy, tag) "
+                    "on c.taxonomy = n.taxonomy and c.tag = n.tag",
+                    ([m[0] for m in missing], [m[1] for m in missing]),
+                )
+                found = cur.fetchall()
+            conn.commit()
+            # only after the commit: a rolled-back insert must never leave a phantom id in the cache
+            for taxonomy, tag, cid in found:
+                cache[(taxonomy, tag)] = cid
+        return cache
     if pairs:
         with conn.cursor() as cur:
             cur.executemany(
@@ -151,6 +179,52 @@ def upsert_concepts(
             )
         conn.commit()
     return _load_concept_lookup(conn)
+
+
+_FACT_KEY = "company_id, concept_id, unit_id, period_id, filing_id"
+_FACT_STAGE_COLS = (
+    "company_id", "concept_id", "unit_id", "period_id", "filing_id", "value", "raw_object_id",
+)
+
+
+def write_fact_rows(conn: psycopg.Connection, rows: list[dict]) -> None:
+    """COPY `rows` into a temp staging table, then one set-based insert into core.fact.
+
+    Same result as the old per-row `executemany` (insert ... on conflict (key) do update
+    set value = excluded.value): a key repeated inside `rows` keeps its first insertion
+    position and ends with the LAST value (row-by-row semantics; a single set-based
+    ON CONFLICT would otherwise raise "cannot affect row a second time"). Values go to
+    COPY as Decimal/int, i.e. their exact text, never float. The caller commits; the
+    staging table is emptied at commit (`on commit delete rows`) and reused per session."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            create temp table if not exists _fact_stage (
+                seq bigint generated always as identity,
+                company_id bigint, concept_id bigint, unit_id bigint, period_id bigint,
+                filing_id bigint, value numeric, raw_object_id bigint
+            ) on commit delete rows
+            """
+        )
+        with cur.copy(
+            f"copy _fact_stage ({', '.join(_FACT_STAGE_COLS)}) from stdin"
+        ) as copy:
+            for r in rows:
+                copy.write_row([r[c] for c in _FACT_STAGE_COLS])
+        cur.execute(
+            f"""
+            insert into core.fact
+                (company_id, concept_id, unit_id, period_id, filing_id, value, raw_object_id)
+            select company_id, concept_id, unit_id, period_id, filing_id,
+                   (array_agg(value order by seq desc))[1],
+                   (array_agg(raw_object_id order by seq desc))[1]
+            from _fact_stage
+            group by {_FACT_KEY}
+            order by min(seq)
+            on conflict ({_FACT_KEY}) do update
+                set value = excluded.value
+            """
+        )
 
 
 def extract_fact_rows(payload: dict) -> list[dict]:
@@ -179,7 +253,11 @@ def extract_fact_rows(payload: dict) -> list[dict]:
 
 
 def normalize_facts_for_cik(
-    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+    storage: SupabaseStorageClient,
+    conn: psycopg.Connection,
+    cik: str,
+    concept_by_pair: dict[tuple[str, str], int] | None = None,
+    unit_by_name: dict[str, int] | None = None,
 ) -> dict:
     company_id = _get_company_id(conn, cik)
     routes = predecessor_routes(conn, cik)
@@ -195,10 +273,16 @@ def normalize_facts_for_cik(
     payload = _load_json(storage, storage_path)
     result: dict[str, Any] = {"cik": cik, "status": "ok"}
     if company_id is not None:
-        result = normalize_payload(conn, company_id, cik, payload, raw_object_id)
+        result = normalize_payload(
+            conn, company_id, cik, payload, raw_object_id,
+            concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+        )
     # Predecessor windows: the same payload, attributed to each successor company.
     result["predecessor_routes"] = [
-        normalize_payload(conn, r.company_id, cik, payload, raw_object_id, window=r)
+        normalize_payload(
+            conn, r.company_id, cik, payload, raw_object_id, window=r,
+            concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+        )
         for r in routes
     ]
     return result
@@ -211,8 +295,13 @@ def normalize_payload(
     payload: dict,
     raw_object_id: int,
     window: Route | None = None,
+    concept_by_pair: dict[tuple[str, str], int] | None = None,
+    unit_by_name: dict[str, int] | None = None,
 ) -> dict:
-    """`window` (predecessor routing, see normalizer/predecessors.py): only facts whose period END
+    """`concept_by_pair` / `unit_by_name`: run-wide lookups loaded once by normalize_facts (the
+    concept cache is extended in place with newly upserted tags); None loads them here.
+
+    `window` (predecessor routing, see normalizer/predecessors.py): only facts whose period END
     lies inside the window are written, to `company_id` (the successor).
 
     The ONE write path for facts: a companyfacts-shaped payload into
@@ -238,11 +327,15 @@ def normalize_payload(
             if window.contains(period)
         }
     period_by_key = _load_period_lookup(conn, company_id)
-    unit_by_name = _load_unit_lookup(conn)
+    if unit_by_name is None:
+        unit_by_name = _load_unit_lookup(conn)
 
     raw_rows = extract_fact_rows(payload)
     concept_pairs = {(r["taxonomy"], r["tag"]) for r in raw_rows}
-    concept_by_pair = upsert_concepts(conn, concept_pairs)
+    if concept_by_pair is None:
+        concept_by_pair = upsert_concepts(conn, concept_pairs)
+    else:
+        upsert_concepts(conn, concept_pairs, cache=concept_by_pair)
 
     stats = {
         "considered": len(raw_rows),
@@ -317,19 +410,7 @@ def normalize_payload(
         )
 
     if insert_rows:
-        with conn.cursor() as cur:
-            cur.executemany(
-                """
-                insert into core.fact
-                    (company_id, concept_id, unit_id, period_id, filing_id, value, raw_object_id)
-                values
-                    (%(company_id)s, %(concept_id)s, %(unit_id)s, %(period_id)s, %(filing_id)s,
-                     %(value)s, %(raw_object_id)s)
-                on conflict (company_id, concept_id, unit_id, period_id, filing_id) do update
-                    set value = excluded.value
-                """,
-                insert_rows,
-            )
+        write_fact_rows(conn, insert_rows)
         conn.commit()
     stats["written"] = len(insert_rows)
 
@@ -355,10 +436,18 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
     }
     errored: list[str] = []
     per_cik = {}
+    # Lookups are global and nearly static: load once per run, not once per CIK (live
+    # pg_stat_statements: 14,421 full core.concept scans). Concepts first seen during the run
+    # are added to concept_by_pair in place by upsert_concepts(cache=...).
+    unit_by_name = _load_unit_lookup(conn) if target_ciks else {}
+    concept_by_pair = _load_concept_lookup(conn) if target_ciks else {}
     with SupabaseStorageClient() as storage:
         for cik in sorted(target_ciks):
             try:
-                result = normalize_facts_for_cik(storage, conn, cik)
+                result = normalize_facts_for_cik(
+                    storage, conn, cik,
+                    concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+                )
             except Exception as exc:
                 errored.append(cik)
                 log_error(conn, "core.normalizer_error", cik, "facts", exc)
