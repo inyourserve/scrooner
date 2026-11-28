@@ -33,6 +33,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.mapper import shown_source
+
 from scrooner_pipeline.common.derivation_policy import (
     PER_SHARE_CANONICAL_CONCEPTS,
     PER_SHARE_NOT_DERIVED_REASON,
@@ -191,14 +193,14 @@ def _load_company_facts(
 ) -> FactsByPeriod:
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.start_date, p.end_date,
                    (select f.concept_id from core.fact f where f.id = cf.source_fact_ids[1]) as source_concept_id,
                    exists (select 1 from core.fact f
                            where f.id = any(cf.source_fact_ids) and f.is_derived) as any_derived
-            from analytics.canonical_fact cf
+            from {shown_source.fact_relation()} cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s
+            where cf.company_id = %s and cf.canonical_concept_id = %s{shown_source.value_filter()}
             """,
             (company_id, concept_id),
         )
