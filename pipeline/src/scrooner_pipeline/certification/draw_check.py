@@ -44,6 +44,14 @@ for this checker and the certifier's claim check (AXP 2017 Deposits was looked u
 filing tags no fact of the checker's family, the element the cell's claim names (the resolver/FSN structural
 mapping, also a filer extension) matches when its undimensioned fact holds the shown value (QCOM 2018/2020
 qcom_Interestpaidnetofinterestreceived; method "claim"); a family fact, when present, still decides.
+
+@5 (approver review data-team/strategy/approvals/draw-check-4-review-2026-11-29.md): (a) a calc total matches only
+when EVERY child is a family element or on the data point's allowlist (CALC_CHILD_ALLOW): cash plus
+ShortTermInvestments is wider than cash and never matches. (c) a claimed element matches only when the filing
+presents it on the cited R page (fsn.line) under a label that passes the data point's gate (CLAIM_LABEL_GATE); a
+data point with no gate never matches by claim. The claim is no longer checked against itself (MA FY2025
+InterestExpenseDebt, a claimed InterestExpense 722M). fsn.line holds the face statements only, so a claim printed
+only in a note (QCOM R63/R57) is NEEDS_READ again.
 """
 
 from __future__ import annotations
@@ -66,7 +74,7 @@ from scrooner_pipeline.common.polarity import is_fixed_positive
 if TYPE_CHECKING:  # import cycle: display_cert imports this module
     from scrooner_pipeline.certification.display_cert import Cell
 
-CHECKER_VERSION = "draw_check@4"  # @4: calc totals, registry period type, claimed element (2026-11-29 reads); @3: three-source agreement; @2: fixes from the 2026-11-24 reads
+CHECKER_VERSION = "draw_check@5"  # @5: calc children all admitted, claim needs a presented gated label; @4: calc totals, registry period type, claimed element (2026-11-29 reads); @3: three-source agreement; @2: fixes from the 2026-11-24 reads
 AUTO_MATCH = "AUTO_MATCH"
 AUTO_MISMATCH = "AUTO_MISMATCH"
 NEEDS_READ = "NEEDS_READ"
@@ -449,6 +457,23 @@ def is_instant(dp: str) -> bool:
 CALC_CHILD_EXCLUDE: dict[str, re.Pattern] = {
     "cash_and_equivalents": re.compile(r"Restricted"),
 }
+# The calculation children a printed total may hold beside the family's own elements and still be the data point
+# (approver 2026-11-29: every child admitted, else the total is wider). Cash: a bank's cash lines (C 2021) and fed
+# funds sold, part of the bank template's cash.
+CALC_CHILD_ALLOW: dict[str, frozenset[str]] = {
+    "cash_and_equivalents": frozenset(
+        {
+            "CashAndDueFromBanks",
+            "InterestBearingDepositsInBanks",
+            "FederalFundsSold",
+        }
+    ),
+}
+# A claimed element outside the family matches only when the filing prints it on the cited R page under a label of
+# this pattern (normalized, _norm_label): QCOM "Interest paid, net of interest received". No gate, no claim match.
+CLAIM_LABEL_GATE: dict[str, str] = {
+    "cash_paid_for_interest": r"\binterest paid\b",
+}
 
 # Identities for a derived cell with no parts (doc 02 / data_points.csv formulas), over the filing's own facts.
 TOTAL_EQUITY = (
@@ -762,20 +787,23 @@ class Filing:
     ) -> tuple[FilingFact, list[tuple[int, FilingFact]]] | None:
         """(total, [(weight, child fact)]) when the filing's calculation of `tag` holds at the period: every child
         has an undimensioned fact, their weighted sum equals the total's fact, one child is an element of the data
-        point's family (the data point's own line is inside the total) and no child is excluded for the data point
-        (CALC_CHILD_EXCLUDE). None otherwise."""
+        point's family (the data point's own line is inside the total), every child is a family element or on the
+        data point's allowlist (CALC_CHILD_ALLOW) and no child is excluded (CALC_CHILD_EXCLUDE). None otherwise."""
         q = _qtrs(dp)
         total = self.fact(acc, tag, period_end, q)
         if total is None:
             return None
         family = {t for tags in FAMILIES.get(dp, ()) for t in tags}
         excl = CALC_CHILD_EXCLUDE.get(dp)
+        admitted = family | CALC_CHILD_ALLOW.get(dp, frozenset())
         for _g, arcs in sorted(self._calc.get((acc, tag), {}).items()):
             found = [(a.weight, self.fact(acc, a.child, period_end, q)) for a in arcs]
             kids = [(w, f) for w, f in found if f is not None]
             if len(kids) != len(found):
                 continue
             if not any(a.child in family for a in arcs):
+                continue
+            if not all(a.child in admitted for a in arcs):
                 continue
             if excl is not None and any(excl.search(a.child) for a in arcs):
                 continue
@@ -1396,14 +1424,25 @@ def _claimed_element(c: Cell, fl: Filing, shown: Decimal) -> AutoCheck | None:
     """No family fact: the element the cell's claim names (the resolver/FSN structural mapping, a filer extension
     such as qcom_Interestpaidnetofinterestreceived) matches when its undimensioned fact at the period holds the shown
     value. Only reached when the filing tags no admitted fact of the family, so a family fact still decides when
-    present; a family element its gate refused (LABEL_GATED, FACE_ONLY, continuing EPS) is never readmitted here."""
+    present; a family element its gate refused (LABEL_GATED, FACE_ONLY, continuing EPS) is never readmitted here.
+    The element must be presented on the cited R page (fsn.line) under a label passing CLAIM_LABEL_GATE, so the claim
+    is never checked against itself (@5)."""
     t = _cited_tag(c)
-    if not t:
+    gate = CLAIM_LABEL_GATE.get(c.data_point)
+    rp = (c.r_page or "").removeprefix("R")
+    if not t or gate is None or not rp.isdigit():
         return None
     family = {x for tags in FAMILIES.get(c.data_point, ()) for x in tags}
     names = [t] + ([t.split("_", 1)[1]] if "_" in t else [])
     for name in names:
         if name in family:
+            continue
+        shown_on = [
+            ln
+            for ln in fl.printed(c.accession, name)
+            if ln.report == int(rp) and re.search(gate, _norm_label(ln.plabel))
+        ]
+        if not shown_on:
             continue
         f = fl.fact(c.accession, name, c.period_end, _qtrs(c.data_point))
         if f is not None and _shown_matches(c.data_point, shown, f.value)[0]:
@@ -1413,7 +1452,8 @@ def _claimed_element(c: Cell, fl: Filing, shown: Decimal) -> AutoCheck | None:
                 AUTO_MATCH,
                 "claim",
                 f.value,
-                f"no {c.data_point} family fact; the claimed element {_fmt(f)} holds the shown value",
+                f"no {c.data_point} family fact; the claimed element {_fmt(f)}, printed on {c.r_page} as "
+                f"{shown_on[0].plabel!r}, holds the shown value",
                 f,
             )
     return None

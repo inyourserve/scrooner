@@ -368,7 +368,7 @@ def test_certify_sends_only_unsettled_cells_to_a_read_and_the_certificate_says_w
 ):
     # revenue AUTO_MATCH; interest income on a label-gated family element the filing does not print with an
     # interest-income label -> NEEDS_READ. (A custom element the claim names that holds the shown value is an
-    # AUTO_MATCH since draw_check@4: test_claimed_custom_element_matches_when_the_family_is_silent.)
+    # AUTO_MATCH since draw_check@4: test_claimed_custom_element_matches_when_presented_on_the_cited_page_under_a_gated_label.)
     cov = _cov(
         tmp_path,
         [
@@ -2026,54 +2026,94 @@ def test_instant_data_points_take_the_registry_period_type_in_the_claim_check():
     )
 
 
-def test_claimed_custom_element_matches_when_the_family_is_silent():
+QCOM_TAG = "Interestpaidnetofinterestreceived"
+QCOM_LABEL = "Interest paid, net of interest received"
+
+
+def cfr(tag, label, report=4, acc=ACC):
+    """A line presented on report R<report> (the cell fixture cites R4)."""
+    return dck.FilingLine(acc, tag, report, "CF", label)
+
+
+def test_claimed_custom_element_matches_when_presented_on_the_cited_page_under_a_gated_label():
     # QCOM FY2018 (0001728949-18-000095 R63): interest paid 662 only as qcom_Interestpaidnetofinterestreceived
     pe = "2018-09-30"
-    facts = [ff("Interestpaidnetofinterestreceived", "662000000", ddate=pe)]
-    for tag in (
-        "Interestpaidnetofinterestreceived",
-        "qcom_Interestpaidnetofinterestreceived",
-    ):
+    facts = [ff(QCOM_TAG, "662000000", ddate=pe)]
+    lines = [cfr(QCOM_TAG, QCOM_LABEL)]
+    for tag in (QCOM_TAG, "qcom_" + QCOM_TAG):
         c = cell(dp="cash_paid_for_interest", value="662000000", tag=tag, pe=pe)
-        a = chk(c, facts)
+        a = chk(c, facts, lines)
         assert (a.outcome, a.method, a.filing_value) == (
             dck.AUTO_MATCH,
             "claim",
             D(662000000),
         )
-        assert a.fact is not None and a.fact.tag == "Interestpaidnetofinterestreceived"
-    c = cell(
-        dp="cash_paid_for_interest",
-        value="662000000",
-        tag="Interestpaidnetofinterestreceived",
-        pe=pe,
+        assert a.fact is not None and a.fact.tag == QCOM_TAG
+    c = cell(dp="cash_paid_for_interest", value="662000000", tag=QCOM_TAG, pe=pe)
+    # the claim is never checked against itself: not presented, presented on another page, or under another label
+    assert chk(c, facts).outcome == dck.NEEDS_READ
+    assert (
+        chk(c, facts, [cfr(QCOM_TAG, QCOM_LABEL, report=9)]).outcome == dck.NEEDS_READ
     )
+    assert chk(c, facts, [cfr(QCOM_TAG, "Interest expense")]).outcome == dck.NEEDS_READ
     # a family fact, when the filing tags one, still decides (a resolver that picked the wrong element is caught)
     assert (
-        chk(c, [*facts, ff("InterestPaidNet", "700000000", ddate=pe)]).outcome
+        chk(c, [*facts, ff("InterestPaidNet", "700000000", ddate=pe)], lines).outcome
         == dck.AUTO_MISMATCH
     )
     # the claimed element holding another value proves nothing: a read
-    assert (
-        chk(c, [ff("Interestpaidnetofinterestreceived", "1", ddate=pe)]).outcome
-        == dck.NEEDS_READ
-    )
+    assert chk(c, [ff(QCOM_TAG, "1", ddate=pe)], lines).outcome == dck.NEEDS_READ
     # a dimensioned claimed fact is not the company figure
     assert (
-        chk(
-            c,
-            [
-                ff(
-                    "Interestpaidnetofinterestreceived",
-                    "662000000",
-                    ddate=pe,
-                    dims="X=Y",
-                )
-            ],
-        ).outcome
+        chk(c, [ff(QCOM_TAG, "662000000", ddate=pe, dims="X=Y")], lines).outcome
         == dck.NEEDS_READ
     )
 
 
-def test_checker_version_is_bumped_for_the_2026_11_29_fixes():
-    assert dck.CHECKER_VERSION == "draw_check@4"
+def test_a_claimed_interest_expense_is_never_matched_as_interest_paid():
+    # approver 2026-11-29: an export mapping cash_paid_for_interest to InterestExpense (722M), with no interest-paid
+    # fact in the filing, must not AUTO_MATCH even though the claimed element holds the shown value and is printed
+    c = cell(dp="cash_paid_for_interest", value="722000000", tag="InterestExpense")
+    a = chk(
+        c,
+        [ff("InterestExpense", "722000000")],
+        [cfr("InterestExpense", "Interest expense")],
+    )
+    assert a.outcome != dck.AUTO_MATCH and a.method != "claim"
+    # MA FY2025: InterestExpenseDebt 680M, not presented with an interest-paid label: a read
+    m = cell(dp="cash_paid_for_interest", value="680000000", tag="InterestExpenseDebt")
+    assert chk(m, [ff("InterestExpenseDebt", "680000000")]).outcome == dck.NEEDS_READ
+
+
+def test_a_calc_total_with_a_child_outside_the_family_and_allowlist_is_not_cash():
+    # approver 2026-11-29: "Cash and short-term investments" = cash + ShortTermInvestments sums to the shown value
+    # but is wider than cash: never a calc match
+    tot = "CashCashEquivalentsAndShortTermInvestmentsTotal"
+    c = cell(dp="cash_and_equivalents", value="300", tag=tot)
+    facts = [
+        ff(tot, "300", qtrs=0),
+        ff("CashAndCashEquivalentsAtCarryingValue", "100", qtrs=0),
+        ff("ShortTermInvestments", "200", qtrs=0),
+    ]
+    lines = [
+        ln("CashAndCashEquivalentsAtCarryingValue", "Cash and cash equivalents"),
+        ln(tot, "Cash and short-term investments"),
+    ]
+    calc = [
+        dck.CalcArc(ACC, 1, tot, "CashAndCashEquivalentsAtCarryingValue", 1),
+        dck.CalcArc(ACC, 1, tot, "ShortTermInvestments", 1),
+    ]
+    a = dck.check_cell(c, dck.Filing(facts, lines, calc))
+    assert a.outcome != dck.AUTO_MATCH and a.method != "calc"
+    # the same total over admitted children (family + allowlist) matches
+    ok = [
+        ff(tot, "300", qtrs=0),
+        ff("CashAndCashEquivalentsAtCarryingValue", "100", qtrs=0),
+        ff("FederalFundsSold", "200", qtrs=0),
+    ]
+    k2 = [calc[0], dck.CalcArc(ACC, 1, tot, "FederalFundsSold", 1)]
+    assert dck.check_cell(c, dck.Filing(ok, lines, k2)).method == "calc"
+
+
+def test_checker_version_is_bumped_for_the_approver_review():
+    assert dck.CHECKER_VERSION == "draw_check@5"
