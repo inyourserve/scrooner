@@ -1,6 +1,6 @@
 # Scrooner data pipeline: target specification
 
-Founder-approved target, 2026-11-28 (six stages; see the "Target architecture" section in [`SYSTEMS.md`](SYSTEMS.md)). This file is the engineering contract: what each stage takes, produces and guarantees, and how the pipeline scales from 100 to 5,000 companies without adding people. SYSTEMS.md stays the inventory of modules. If code and this file disagree, raise it in the owning stage; don't build around it.
+Founder-approved target, 2026-11-28; approver review applied the same day (data-team/strategy/approvals/PIPELINE-review-approver-2026-11-28.md) (six stages; see the "Target architecture" section in [`SYSTEMS.md`](SYSTEMS.md)). This file is the engineering contract: what each stage takes, produces and guarantees, and how the pipeline scales from 100 to 5,000 companies without adding people. SYSTEMS.md stays the inventory of modules. If code and this file disagree, raise it in the owning stage; don't build around it.
 
 **Status labels:** **LIVE** means it runs on main today. **PARTIAL** means part of it exists (the gap is named). **TARGET** means not built yet. Any new table named here needs a migration claim in doc 53 and the founder's typed words before it is applied.
 
@@ -38,8 +38,8 @@ Founder-approved target, 2026-11-28 (six stages; see the "Target architecture" s
 | 1 Ingest | sec.gov (submissions, companyfacts, filing XBRL) | `raw.*` (immutable), `fsn.*` (filing structure: report, line, calc_arc, value), `core.fact` (SEC API standard-tag values), `core.company` | `cik`, `accession_number`, content hash | lossless; a filing is either fully stored or absent; never normalized | LIVE for raw/core; PARTIAL for fsn (new filings only by manual `pipeline-fsn-load-filings` while `FSN_NIGHTLY_STAGE` is off) |
 | 2 Know | verifier misses, drill misses, filing reads, tag-expert review | **one rule store** (`data-team/tags/library/library.csv` + `tags/rules/`), versioned; cards generated from it | rule id + store version | one source for predictor, resolver and readers; every rule has a test | PARTIAL (predictor, resolver and filing reads keep separate stores; merge M2) |
 | 3 Resolve | fsn structure + `core.fact` + rule store | `analytics.canonical_fact` (only writer: resolver via the structural loader) | `cik`, accession, cell key, rule-store version | deterministic; same inputs and version give the same cells; one writer | PARTIAL (older docmap/tagmap/era layers still write) |
-| 4 Prove | canonical_fact + filing + templates | `analytics.cell_proof`, then one state per cell: PROVEN, HIDDEN with reason, or OPEN (`cell_display_state`) | cell key + proof version | proof checks the resolver's decision and never re-decides; identities hold per company-year | PARTIAL (`cell_display_state` migrations 0130/0133 in `pending/`) |
-| 5 Certify | cell states + a stratified sample checked against the filing | `analytics.display_cell_certificate` + registry status | company + certificate id | sampled error at most 1.5% upper bound at 95% (199-cell draw); approver is not the preparer; a certified company that changes is held | LIVE (0131/0132/0134); auto re-check TARGET |
+| 4 Prove | canonical_fact + filing + templates | `analytics.cell_proof`, then one state per cell: PROVEN, HIDDEN with reason, or OPEN (`cell_display_state`) | cell key + proof version | proof checks the resolver's decision and never re-decides; identities hold per company-year; **owns the badge and parts contract**: a `derived:` cell carries parts from one filing, an as-printed cell never has a formula locator (rule 2b78da15), and identity inputs obey the one-vintage rule (X87; the LLY revenue reprint) | PARTIAL (`cell_display_state` migrations 0130/0133 in `pending/`) |
+| 5 Certify | cell states + census checks + a stratified sample checked against the filing | `analytics.display_cell_certificate` + registry status | ticker + `coverage_sha256` + judge version (a re-draw happens only on a new coverage sha) | **all census checks pass** (badges, per-share, debt, derived, hides: every real FAIL so far came from these) **and** the sampled error is at most 1.5% upper bound at 95% (199-cell draw); approver is not the preparer; a certified company that changes is held (meaning of "held": founder's call, open) | LIVE (0131/0132/0134); auto re-check TARGET |
 | 6 Serve | PROVEN cells only + metric registry | metric values, screener snapshot, AI query vocabulary, pages | metric id + formula version + input cell versions | no metric reads an unproven cell; every exclusion has a reason; AI emits only schema-valid queries | PARTIAL (calculators read canonical_fact, not proof; merge M3) |
 
 ### Data contract between stages
@@ -53,8 +53,8 @@ Founder-approved target, 2026-11-28 (six stages; see the "Target architecture" s
 
 - **Event log** (TARGET table, migration to be claimed): one row per trigger (`new_filing`, `rule_version`, `rank_change`, `template_change`) with `cik`, cause and the versions involved. Producers: the collector (new accession), the rule-store release, the rank job, the template seed.
 - **Planner:** turns events into per-company work items, `(cik, from_stage, versions)`, deduplicated. A rule-version event targets only the companies whose cells the rule touches (from the rule store's usage index), not everyone.
-- **Workers:** at most 4 shards (repo rule). Each worker takes one company at a time and runs stages 1-6 in order. Each stage commits per company in one transaction and records a checkpoint, so a crash resumes at the last finished stage.
-- **Backpressure:** a worker checks client backends before each write (`MAX_BACKENDS` 60, keep 2 free), sets its own `statement_timeout` and wall-clock cap, and yields while an FSN production write or the nightly refresh holds the lock (`heavy_job_guard.sh`).
+- **Workers:** company-disjoint shards within the connection budget in doc 02 (founder decision 2026-11-13; cite it, don't restate it here). Each worker takes one company at a time and runs stages 1-4 and 6 in order. For stage 5 it only runs the judge read-only and files a certify request. **Only the approver records the verdict, the registry row and the certificate**, so the preparer never certifies its own output. The DB certificate load stays a production write that needs the founder's typed words. Each stage commits per company in one transaction and records a checkpoint, so a crash resumes at the last finished stage.
+- **Backpressure:** a worker checks client backends before each write against the pause threshold in doc 02, sets its own `statement_timeout` and wall-clock cap, and yields while an FSN production write or the nightly refresh holds the lock (`heavy_job_guard.sh`).
 - **Failure handling:** retry transient errors (SEC 5xx, pooler drop) with backoff, at most 3 times; then put the item in a dead letter with the error class. A dead-lettered company never blocks the others. Dead letters are a queue with an owner, reported nightly.
 - **Catch-up sweep:** once a day, plan every company whose served versions lag the current versions. This replaces hand dispatches.
 
@@ -68,7 +68,9 @@ One queue (TARGET table; today OPEN cells, DISAGREE proofs, verifier FAILs and r
 |---|---|---|---|
 | OPEN cell (no proof, no evidenced hide) | stage 4 | resolver lane | a rule row resolves it, or an evidenced hide is recorded |
 | DISAGREE (resolver vs proof) | stage 4 | proof lane, then resolver | root-cause family fixed by a rule, with a test |
+| Census FAIL (badge, per-share, debt, derived, hide) | stage 5 | resolver or proof lane, by family | the check passes on a new coverage sha |
 | Sample FAIL | stage 5 | verifier, then tag expert | pattern row plus rule; the company is re-drawn |
+| NEEDS_READ / REVIEW (a drawn cell the machine check can't settle) | stage 5 | approver | the read is recorded; a read class that recurs becomes a `draw_check` rule (BMY's undimensioned AccountsReceivableNetCurrent note fact needed 9+ reads) |
 | Drill miss | stage 2 | tag expert | rule proposal accepted or rejected with a reason |
 | Dead-lettered company | orchestrator | data engineer | rerun passes |
 
@@ -100,7 +102,9 @@ The SEC budget isn't the constraint. **The constraints are the exceptions rate a
 | Filing acceptance to certified company | 24 h | all |
 | Exceptions queue size; inflow vs outflow per day | outflow ≥ inflow; top 100 close to 0 | 4-5 |
 | Shown cells that are PROVEN or HIDDEN with a reason | 100% | 4 |
-| Sampled error upper bound (95%) | ≤ 1.5% | 5 |
+| Sampled error upper bound (95%), per company | ≤ 1.5% | 5 |
+| Pooled sampled error upper bound (95%), all certified companies | ≤ 0.10% | 5 |
+| Census checks failing on certified companies | 0 | 5 |
 | Cells in auto-map-graduated classes | rising to ≥ 95% | 2 |
 | Dead-lettered companies older than 24 h | 0 | orchestrator |
 | Metrics reading unproven inputs | 0 | 6 |
