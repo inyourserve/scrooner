@@ -56,6 +56,17 @@ class Permanent(StageError):
     error_class = "permanent"
 
 
+class Blocked(StageError):
+    """The item cannot run yet and no retry would help: it waits in `status` (blocked_on_ingest | blocked_on_resolver).
+    Not a failure: no attempt is counted, no dead letter is written; the planner releases it when its input exists."""
+
+    error_class = "blocked"
+
+    def __init__(self, message: str, status: str = "blocked_on_resolver"):
+        super().__init__(message, status)
+        self.status = status
+
+
 @dataclass
 class StageResult:
     status: str = "done"  # done | skipped
@@ -354,6 +365,13 @@ def run_item(
                 return "released"
         finish(conn, item, served_versions(item.cik) if served_versions else None)
         return "done"
+    except Blocked as e:
+        conn.execute(
+            "update ops.work_item set status = %s, locked_by = null, lease_expires_at = null, updated_at = now(), "
+            "last_error = %s where id = %s",
+            (e.status, str(e)[:4000], item.id),
+        )
+        return e.status
     except StageError as e:
         return fail(conn, item, e, e.stage or stage, backoff_base=backoff_base)
     except (
@@ -393,7 +411,15 @@ def work_loop(
 ) -> dict[str, int]:
     """Take items until none is due (or the wall clock / item cap ends the loop). Items waiting in retry_wait are
     waited for while the clock allows, so a transient failure is retried within the same run."""
-    t0, tally = time.monotonic(), {"done": 0, "released": 0, "retry_wait": 0, "dead": 0}
+    t0 = time.monotonic()
+    tally = {
+        "done": 0,
+        "released": 0,
+        "retry_wait": 0,
+        "dead": 0,
+        "blocked_on_ingest": 0,
+        "blocked_on_resolver": 0,
+    }
     who = worker_id()
     n = 0
     while time.monotonic() - t0 < wall_clock_s and (max_items is None or n < max_items):

@@ -28,7 +28,7 @@ from pathlib import Path
 
 from . import cohort
 from .versions import detector_version
-from .worker import Item, Permanent, StageResult, Transient
+from .worker import Blocked, Item, Permanent, StageResult, Transient
 
 ROOT = Path(__file__).resolve().parents[4]
 TRANSIENT = re.compile(
@@ -174,12 +174,19 @@ class FlowRunner:
             return StageResult(
                 "skipped", {"reason": "dry_run: the flow writes production rows"}
             )
-        if not cohort.in_summary(m.company_id, self.root):
+        if not cohort.in_rank_source(m.company_id, self.root):
             raise Permanent(
-                f"company {m.company_id} ({m.ticker}) rank {m.rank} is outside data-team/strategy/top100-coverage-summary.csv; "
-                "top100_coverage takes only ranks in that file until scrooner-f1's any-rank-set change lands",
+                f"company {m.company_id} ({m.ticker}) rank {m.rank} is not in the rank source top100_coverage reads "
+                f"({cohort.SUMMARY}); give the run a universe file (TOP100_RANK_SOURCE) that holds it",
                 "cohort_unsupported",
                 3,
+            )
+        if not (
+            self.root / f"data-team/tags/line_map/resolver/{m.ticker}.csv"
+        ).is_file():
+            # not a failure: the resolver-data-refresh batch (dispatched by the plan job, rank order) writes the file
+            raise Blocked(
+                f"{m.ticker} has no resolver/{m.ticker}.csv yet", "blocked_on_resolver"
             )
         log = self.out / f"flow-{m.company_id}.log"
         code, tail = self.run_cmd(

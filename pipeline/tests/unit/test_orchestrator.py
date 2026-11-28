@@ -261,7 +261,10 @@ def test_classify_transient_vs_permanent():
 def _gate_repo(tmp_path, decision="PASS"):
     """A fake repo root: summary file, flow result line, and a run_cmd double that writes the gate's files."""
     (tmp_path / "data-team/strategy").mkdir(parents=True)
-    (tmp_path / "data-team/strategy/top100-coverage-summary.csv").write_text("rank,ticker,company_id\n1,AAA,7\n")
+    (tmp_path / "doc/data-moat/team/top1000").mkdir(parents=True)
+    (tmp_path / "doc/data-moat/team/top1000/shards.csv").write_text("rank,ticker,company_id\n1,AAA,7\n")
+    (tmp_path / "data-team/tags/line_map/resolver").mkdir(parents=True)
+    (tmp_path / "data-team/tags/line_map/resolver/AAA.csv").write_text("ticker\nAAA\n")
     (tmp_path / ".runs/top100_flow").mkdir(parents=True)
     (tmp_path / ".runs/top100_flow/flow_results.tsv").write_text("10:00Z\t7\tAAA shown 5/5 100 open=0 GATE_READY\n")
     (tmp_path / "pipeline/src/scrooner_pipeline/proof").mkdir(parents=True)
@@ -550,3 +553,28 @@ def test_seed_templates_seeds_only_missing_companies_and_is_idempotent(tmpl):
     assert lake.execute("select count(*) from analytics.company_data_point_template where company_id = 2").fetchone()[0] == 1  # untouched
     again = producers.seed_templates(lake, ms, root)
     assert again["missing"] == 0 and again["events"] == 0
+
+
+def test_missing_resolver_file_blocks_the_item_without_an_attempt_or_dead_letter_then_unblocks(conn, tmp_path):
+    _gate_repo(tmp_path)
+    (tmp_path / "data-team/tags/line_map/resolver/AAA.csv").unlink()
+    r = _runner(conn, tmp_path, lambda *a, **k: (0, ""))
+    queue(conn, "1")
+    t = loop(conn, r)
+    assert t["blocked_on_resolver"] == 1
+    assert conn.execute("select status, attempts from ops.work_item").fetchone() == ("blocked_on_resolver", 0)
+    assert conn.execute("select count(*) from ops.work_dead_letter").fetchone()[0] == 0
+    assert loop(conn, r)["blocked_on_resolver"] == 0  # a blocked item is not claimed again
+    assert planner.unblock_resolved(conn, {"2"}) == 0 and planner.unblock_resolved(conn, {"1"}) == 1
+    assert items(conn)[0][2] == "pending"
+
+
+def test_resolver_missing_lists_fsn_companies_without_a_file_in_rank_order(lake, tmp_path):
+    ms = [cohort.Member(5, "BBB", 2, "222"), cohort.Member(2, "AAA", 1, "111"), cohort.Member(9, "CCC", 3, "333")]
+    d = tmp_path / "data-team/tags/line_map/resolver"
+    d.mkdir(parents=True)
+    (d / "BBB.csv").write_text("x\n")
+    lake.execute("insert into core.company values (3,'333','CCC')")
+    got = producers.resolver_missing(lake, ms, tmp_path)
+    assert [m.ticker for m in got] == ["AAA"]  # BBB has its file; CCC has no FSN yet (blocked_on_ingest, not a resolver job)
+    assert producers.resolver_ready(ms, tmp_path) == {"222"}

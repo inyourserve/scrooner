@@ -92,6 +92,7 @@ jobs:
       pending: ${{ steps.p.outputs.pending }}
       shards: ${{ steps.p.outputs.shards }}
       matrix: ${{ steps.p.outputs.matrix }}
+      resolver_batch: ${{ steps.p.outputs.resolver_batch }}
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       GH_TOKEN: ${{ github.token }}
@@ -124,7 +125,35 @@ jobs:
           echo "pending=$(echo "$OUT" | jq -r .pending_items)" >> "$GITHUB_OUTPUT"
           echo "shards=$(echo "$OUT" | jq -r '.matrix.shard | length')" >> "$GITHUB_OUTPUT"
           echo "matrix=$(echo "$OUT" | jq -c .matrix)" >> "$GITHUB_OUTPUT"
+          echo "resolver_batch=$(echo "$OUT" | jq -r .resolver_batch)" >> "$GITHUB_OUTPUT"
           { echo '### Orchestrator plan'; echo '```json'; echo "$OUT" | jq .; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  resolver:
+    name: Resolver batch (stage 3 input for companies with FSN and no resolver file)
+    needs: plan
+    # one batch of tickers, rank order, ONE commit per batch (resolver-data-refresh gates and commits resolver/<T>.csv); skipped
+    # while a refresh or extract is active or queued, so it never displaces a pending run; a dry run dispatches nothing
+    if: needs.plan.outputs.resolver_batch != '' && inputs.dry_run != true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BATCH: ${{ needs.plan.outputs.resolver_batch }}
+    steps:
+      - run: |
+          set -eu
+          printf '%s' "$BATCH" | grep -Eq '^[A-Za-z0-9.,-]+$' || { echo "::error::bad ticker list"; exit 1; }
+          for wf in resolver-data-refresh.yml pipeline-standard-extract.yml; do
+            for st in in_progress queued waiting pending requested; do
+              n=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$wf" --status "$st" --limit 5 --json databaseId --jq length)
+              if [ "$n" != 0 ]; then echo "$wf has a $st run: not dispatching a second batch (the next orchestrator run takes the next batch)"; exit 0; fi
+            done
+          done
+          gh workflow run resolver-data-refresh.yml --repo "$GITHUB_REPOSITORY" --ref main -f tickers="$BATCH"
+          echo "dispatched resolver-data-refresh for: $BATCH" | tee -a "$GITHUB_STEP_SUMMARY"
 
   ingest:
     name: Stage 1 ingest (one process, 1 SEC request/second)

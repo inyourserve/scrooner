@@ -38,6 +38,13 @@ def cmd_plan(a, conn) -> int:
     if a.base and a.head:
         out["rule_changes"] = producers.rule_changes(conn, members, a.base, a.head)
     ciks = {m.cik for m in members}
+    out["unblocked_resolver"] = planner.unblock_resolved(
+        conn, producers.resolver_ready(members)
+    )
+    miss = producers.resolver_missing(conn, members)
+    out["resolver_missing"] = len(miss)
+    # ONE batch per run, in rank order: resolver-data-refresh commits once per batch, never once per company
+    out["resolver_batch"] = ",".join(m.ticker for m in miss[: a.resolver_batch])
     rep = planner.plan_events(
         conn, planner.DbRuleUsage(conn), cohort=ciks, dry_run=a.dry_run
     )
@@ -153,6 +160,7 @@ def main(argv=None) -> int:
         p.add_argument("--base")
         p.add_argument("--head")
         p.add_argument("--out", default=".runs/orchestrator")
+        p.add_argument("--resolver-batch", type=int, default=25)
         p.add_argument("--wall-clock", type=int, default=19000)
     sub.add_parser("report")
     r = sub.add_parser("resolve-dead-letter")

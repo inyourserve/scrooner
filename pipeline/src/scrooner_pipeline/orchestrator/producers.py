@@ -197,6 +197,31 @@ def seed_templates(
     return out
 
 
+def resolver_missing(conn: psycopg.Connection, members, root: Path = ROOT) -> list:
+    """Cohort members that have FSN filings but no resolver/<TICKER>.csv, in rank order (the resolver batch's input)."""
+    have_fsn = {
+        r[0]
+        for r in conn.execute(
+            "select distinct cik from fsn.filing where cik = any(%s)",
+            ([m.cik for m in members],),
+        )
+    }
+    return [
+        m
+        for m in sorted(members, key=lambda m: m.rank)
+        if m.cik in have_fsn
+        and not (root / f"data-team/tags/line_map/resolver/{m.ticker}.csv").is_file()
+    ]
+
+
+def resolver_ready(members, root: Path = ROOT) -> set[str]:
+    return {
+        m.cik
+        for m in members
+        if (root / f"data-team/tags/line_map/resolver/{m.ticker}.csv").is_file()
+    }
+
+
 def template_change(
     conn: psycopg.Connection,
     ciks: list[str],

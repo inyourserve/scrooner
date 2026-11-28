@@ -96,6 +96,14 @@ def unblock_ingested(conn: psycopg.Connection) -> int:
     ).rowcount
 
 
+def unblock_resolved(conn: psycopg.Connection, ready_ciks) -> int:
+    """blocked_on_resolver items whose resolver file now exists go back to pending (the caller names those ciks)."""
+    return conn.execute(
+        "update ops.work_item set status = 'pending', updated_at = now() where status = 'blocked_on_resolver' and cik = any(%s)",
+        (sorted(ready_ciks),),
+    ).rowcount
+
+
 def _event_from_stage(cause: str, versions: dict[str, Any]) -> int:
     stage = int(versions.get("from_stage", DEFAULT_FROM_STAGE[cause]))
     if stage not in STAGE_ORDER:
@@ -181,7 +189,7 @@ def _plan_one(
     cand = _merge_versions({}, cause, ev_versions)
     queued = conn.execute(
         """select id, from_stage, causes, versions, status from ops.work_item
-           where cik = %s and dry_run = %s and status in ('pending', 'retry_wait', 'blocked_on_ingest') for update""",
+           where cik = %s and dry_run = %s and status in ('pending', 'retry_wait', 'blocked_on_ingest', 'blocked_on_resolver') for update""",
         (cik, dry_run),
     ).fetchone()
     # a stage 3+ item for a company with no fsn.filing row cannot run: it waits (blocked_on_ingest), it is not dead-lettered
@@ -263,7 +271,7 @@ def sweep(
         r[0]
         for r in conn.execute(
             """select cik from ops.work_dead_letter where resolved_at is null
-               union select cik from ops.work_item where status in ('pending','retry_wait','running','blocked_on_ingest') and dry_run = %s""",
+               union select cik from ops.work_item where status in ('pending','retry_wait','running','blocked_on_ingest','blocked_on_resolver') and dry_run = %s""",
             (dry_run,),
         ).fetchall()
     }

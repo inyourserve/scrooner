@@ -24,7 +24,7 @@ create table if not exists ops.pipeline_event (
     source       text not null check (btrim(source) <> ''),
     occurred_at  timestamptz not null default now(),
     planned_at   timestamptz,
-    plan_outcome text check (plan_outcome in ('queued', 'merged', 'already_done', 'no_companies', 'unscoped', 'blocked_on_ingest')),
+    plan_outcome text check (plan_outcome in ('queued', 'merged', 'already_done', 'no_companies', 'unscoped', 'blocked_on_ingest', 'blocked_on_resolver')),
     constraint pipeline_event_idempotent unique (cik, cause, versions_hash),
     constraint pipeline_event_star_scope check (cik <> '*' or cause in ('rule_version', 'template_change')),
     constraint pipeline_event_planned_pair check ((planned_at is null) = (plan_outcome is null))
@@ -40,9 +40,10 @@ create table if not exists ops.work_item (
     versions_hash  text not null check (versions_hash ~ '^[0-9a-f]{64}$'),
     -- a dry-run item runs the stage commands without their write flags; it never counts as served
     dry_run        boolean not null default false,
+    -- blocked_on_resolver: it has filings but no resolver file yet (the resolver-data-refresh batch makes it); same rule: a wait, never a dead letter.
     -- blocked_on_ingest: the company has no fsn.filing row yet (a stage 3+ item cannot run); the planner unblocks it when
     -- filings appear. It is NOT a failure and never a dead letter (scrooner-36, M6-PREP: 3,315 of ranks 1,001-5,000 have none)
-    status         text not null default 'pending' check (status in ('pending', 'running', 'retry_wait', 'done', 'dead', 'blocked_on_ingest')),
+    status         text not null default 'pending' check (status in ('pending', 'running', 'retry_wait', 'done', 'dead', 'blocked_on_ingest', 'blocked_on_resolver')),
     attempts       integer not null default 0 check (attempts >= 0),
     next_attempt_at timestamptz not null default now(),
     locked_by      text,
@@ -54,7 +55,7 @@ create table if not exists ops.work_item (
     finished_at    timestamptz,
     constraint work_item_running_has_lease check (status <> 'running' or (locked_by is not null and lease_expires_at is not null))
 );
-create unique index if not exists work_item_one_queued_per_cik on ops.work_item (cik, dry_run) where status in ('pending', 'retry_wait', 'blocked_on_ingest');
+create unique index if not exists work_item_one_queued_per_cik on ops.work_item (cik, dry_run) where status in ('pending', 'retry_wait', 'blocked_on_ingest', 'blocked_on_resolver');
 create unique index if not exists work_item_one_running_per_cik on ops.work_item (cik) where status = 'running';
 create unique index if not exists work_item_done_once on ops.work_item (cik, versions_hash) where status = 'done' and not dry_run;
 create index if not exists idx_work_item_claim on ops.work_item (status, next_attempt_at, id);
