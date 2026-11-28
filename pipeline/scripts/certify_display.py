@@ -41,7 +41,7 @@ person or agent read:
   # read-only run over every company of a top100-coverage.csv: outcomes, mismatches, needs-read, runtime per company
   python pipeline/scripts/certify_display.py --draw-check-all data-team/strategy/top100-coverage.csv --out-dir OUT
 
-Identity web (proof/identities.py, 2026-11-22): every accounting identity over every company x fiscal year, read-only.
+Identity web (proof/identity_web.py, 2026-11-22): every accounting identity over every company x fiscal year, read-only.
 The self-check opens each BREAK's suspect cell (check identity); a drawn NEEDS_READ cell an exact identity corroborates
 is AUTO_MATCH (method identity).
 

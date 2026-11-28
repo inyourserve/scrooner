@@ -50,6 +50,9 @@ PINNED_VERSION = "cell_proof_v21_2026-11-16"
 # 2026-11-23 (resolver .90): re-pinned at the same floor; the verdict changes live in the new rules authority_tag_sum,
 # authority_copy_role, printed_zero_note and element_family (their call sites in locate/prove_note/load_shown and the
 # Shown.authority_skips field change no verdict a rule does not select); resolver_beats_combined v3 (load_shown)
+# 2026-11-28: same floor and hash; the identity web (3b15184b7) moved out of proof/identities.py into
+# proof/identity_web.py (certification only, no verdict caller). Rule pins: e5f031779 authority_tag_sum v2,
+# resolver_beats_combined v4 (load_shown).
 PINNED_HASH = "d12c3f03a47cac052b4c2d598f084b818aa255b3c045776d731cee204ffbe5a5"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
@@ -74,11 +77,11 @@ RULE_PINS = {
         "33d1e97595eeda814ef895ed873996455c08ff8d4c1e7c5dd05597b26c3a5c81",
     ),
     "resolver_beats_combined": (
-        3,
-        "60d03bf529ee3fb2903eec425c0758f7e0228816af96d9eaf06b8a957ebd1777",
+        4,
+        "cecddf7fe87b88195e545636947c698b787e8b6cc81817c7813d006328f8ed16",
     ),
     "authority_tag_sum": (
-        1,
+        2,
         "ef75b7c7fa50f6417eca3ad6d71c4a319188d1e8caaeb91b26a9e0c5ded4a1ba",
     ),
     "authority_copy_role": (
@@ -132,8 +135,8 @@ RULE_VERSIONS = {
     "perimeter": 1,
     "identities": 1,
     "component_sum_authority": 2,
-    "resolver_beats_combined": 3,
-    "authority_tag_sum": 1,
+    "resolver_beats_combined": 4,
+    "authority_tag_sum": 2,
     "authority_copy_role": 1,
     "printed_zero_note": 1,
     "element_family": 1,

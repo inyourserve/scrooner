@@ -1,4 +1,4 @@
-"""Identity web over the shown export (proof/identities.py, 2026-11-22): every accounting identity per company x
+"""Identity web over the shown export (proof/identity_web.py, 2026-11-22): every accounting identity per company x
 fiscal year, the suspect cell of a break (the member no filing fact or proof supports), the self-check opening it,
 and the draw checker counting an identity-consistent cell as corroborated. One pass and one break per identity, so
 each test fails without its identity (mutation-checked)."""
@@ -9,7 +9,7 @@ from decimal import Decimal as D
 
 from scrooner_pipeline.certification import display_cert as dc
 from scrooner_pipeline.certification import draw_check as dck
-from scrooner_pipeline.proof import identities as idw
+from scrooner_pipeline.proof import identity_web as idw
 
 ACC = "0000000001-24-000001"
 Q1, Q2, Q3 = "0000000001-24-000101", "0000000001-24-000102", "0000000001-24-000103"

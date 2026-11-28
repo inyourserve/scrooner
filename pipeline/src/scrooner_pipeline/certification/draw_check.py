@@ -1571,7 +1571,7 @@ def check_draw(
 def corroborate(
     checks: list[AutoCheck], corroborated: dict[tuple[str, str], str]
 ) -> list[AutoCheck]:
-    """A drawn NEEDS_READ cell an exact accounting identity corroborates (proof/identities.web_corroborated: the
+    """A drawn NEEDS_READ cell an exact accounting identity corroborates (proof/identity_web.web_corroborated: the
     identity holds over the shown cells and the filing's own operands, and every other member is AUTO_MATCH) is
     AUTO_MATCH by method 'identity'. An AUTO_MISMATCH is never overturned."""
     return [

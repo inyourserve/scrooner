@@ -690,8 +690,8 @@ class SqlFactSource:
 
     def identity_facts(self, cik, tags):
         """The identity web's operands: the company's own undimensioned facts of `tags` (any duration) and the first
-        lines of each filing's cash-flow statement (proof/identities WEB_FACT_SQL, WEB_CF_LINE_SQL)."""
-        from scrooner_pipeline.proof import identities as idw
+        lines of each filing's cash-flow statement (proof/identity_web WEB_FACT_SQL, WEB_CF_LINE_SQL)."""
+        from scrooner_pipeline.proof import identity_web as idw
 
         p = {
             "cik": cik,
@@ -741,7 +741,7 @@ class BundleFactSource:
         rows [acc, tag, report, line]; None when the bundle has no identity read."""
         if "identity_facts" not in self.b:
             return None
-        from scrooner_pipeline.proof import identities as idw
+        from scrooner_pipeline.proof import identity_web as idw
 
         tg = set(tags)
         return idw.WebFacts(
@@ -1513,7 +1513,7 @@ class Run:
     audit: dict | None = (
         None  # draw_check.audit_agreement of the checker's 5% audit sample, when read
     )
-    # identity web (proof/identities, 2026-11-22): every identity x fiscal year over the shown cells; None when the
+    # identity web (proof/identity_web, 2026-11-22): every identity x fiscal year over the shown cells; None when the
     # source has no identity read
     web: list | None = None
     # three-source agreement (draw_check.three_source) per drawn cell; None when not run (no source store)
@@ -1623,11 +1623,11 @@ class SourceBroken(RuntimeError):
 def identity_web_check(
     cells: list[Cell], cik: str, source
 ) -> tuple[list, dict[tuple[str, str], dck.AutoCheck]] | None:
-    """The identity web (proof/identities.identity_web) over every SHOWN member cell of the export: each member's
+    """The identity web (proof/identity_web.identity_web) over every SHOWN member cell of the export: each member's
     support is the draw checker's census outcome against its cited filing (one Filing per accession) and its proof
     verdict; the operands come from the company's own filings (source.identity_facts). Returns (results, census) or
     None when the source cannot read the operands or the filings."""
-    from scrooner_pipeline.proof import identities as idw
+    from scrooner_pipeline.proof import identity_web as idw
 
     read, filing = (
         getattr(source, "identity_facts", None),
@@ -1735,7 +1735,7 @@ def certify(
         run.gate.append(Finding("gate", "*", "*", "FAIL", str(e)))
     got_web = identity_web_check(p.cells, cik, source)
     if got_web is not None:
-        from scrooner_pipeline.proof import identities as idw
+        from scrooner_pipeline.proof import identity_web as idw
 
         run.web = got_web[0]
         if run.auto:
