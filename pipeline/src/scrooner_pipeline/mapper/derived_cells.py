@@ -15,6 +15,12 @@ and the identities skip it, proof/identities.not_printed):
 ONE-FILING RULE (approved 2026-11-17): every input of a derived cell comes from the SAME filing (cell `_accession`;
 operands from core.fact of that accession). Inputs whose winners sit in different filings (MPC FY2018: revenue from
 the FY2019 10-K, cost of revenue from the FY2020 10-K) never combine: the cell is not derived.
+C1 host filing (Stage 3 Resolve, 2026-11-29): the served revenue and cost of revenue may be the authoritative copies
+of two filings while ONE filing still prints both numbers (STX FY2016: revenue 11,160 served from the FY2018 10-K,
+cost of revenue 8,545 from the FY2016 10-K; the FY2018 10-K R4 prints both, and no gross profit line). The structural
+resolver's gross_profit derived_not_printed row names that filing and its two printed nodes; when the stored facts of
+that filing (core.fact / fsn.value) carry exactly the node values and they equal the PROVEN served values, the inputs
+are from one filing and the cell is derived (load_gp_hosts). Any other mismatch still leaves the cell underived.
 
 Never derived: a period without every operand served/printed and proven, a cell the mapper already serves or holds,
 a concept the template leaves out (not_in_template). Instants are never summed by the mapper (D3); C2 is the single
@@ -25,9 +31,13 @@ The hook is `add_derived_cells(...)`, called by company_tag_map.resolve_for_comp
 
 from __future__ import annotations
 
+import csv
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 import psycopg
@@ -155,8 +165,10 @@ def derive(
     proven: dict[ProvenKey, set[Decimal]],
     operands: dict[tuple[str, int], Decimal],
     operand_filings: dict[tuple[str, int], dict[str, Decimal]] | None = None,
+    gp_hosts: dict[int, GpHost] | None = None,
 ) -> list[dict]:
-    """The derived cells (pure); `cells` and `stats` are not touched (add_derived_cells applies them)."""
+    """The derived cells (pure); `cells` and `stats` are not touched (add_derived_cells applies them). gp_hosts:
+    period_id -> the one filing that prints revenue and cost of revenue (load_gp_hosts)."""
     by_base: dict[tuple[str, int], dict] = {}
     for c in cells:
         by_base[(_base(concept_info[c["canonical_concept_id"]][0]), c["period_id"])] = c
@@ -186,16 +198,33 @@ def derive(
         if base == "gross_profit" and b["grain"] in ("FY", "Q"):
             rev = by_base.get(("revenue", pid))
             cor = by_base.get(("cost_of_revenue", pid))
-            if (
+            host = (gp_hosts or {}).get(pid)
+            one_filing = (
                 rev is not None
                 and cor is not None
-                and rev.get("_accession") is not None
-                and rev.get("_accession") == cor.get("_accession")
+                and (
+                    (
+                        rev.get("_accession") is not None
+                        and rev.get("_accession") == cor.get("_accession")
+                    )
+                    or (
+                        host is not None
+                        and host.revenue == rev["value"]
+                        and host.cost_of_revenue == cor["value"]
+                    )
+                )
+            )
+            if (
+                one_filing
+                and rev is not None
+                and cor is not None
                 and is_proven("revenue", rev)
                 and is_proven("cost_of_revenue", cor)
             ):
                 value = rev["value"] - cor["value"]
                 note = f"{LABEL}: revenue {rev['value']} - cost_of_revenue {cor['value']} (both PROVEN); the filing prints no gross profit line"
+                if rev.get("_accession") != cor.get("_accession") and host is not None:
+                    note += f"; both printed in {host.accession} ({host.locator})"
         elif base == "total_liabilities" and b["grain"] == "I":
             value, note = _total_liabilities(
                 pid, by_base, operand_filings or {}, is_proven
@@ -217,6 +246,145 @@ def derive(
             }
         )
     return out
+
+
+@dataclass(frozen=True)
+class GpHost:
+    """The one filing that prints a year's revenue and cost of revenue (the resolver's C1 row, re-read from storage)."""
+
+    accession: str
+    revenue: Decimal
+    cost_of_revenue: Decimal
+    locator: str
+
+
+@dataclass(frozen=True)
+class GpClaim:
+    accession: str
+    period_end: date
+    plus: tuple[str, Decimal]
+    minus: tuple[str, Decimal]
+    locator: str
+
+
+def gp_claim(row: dict[str, str]) -> GpClaim | None:
+    """A structural resolver row (resolver/<TICKER>.csv) that derives gross_profit by ruling C1: decision
+    derived_not_printed, grain FY, exactly two undimensioned nodes `Tag=value [R<page>...]; -Tag=value [R<page>...]`,
+    each printed in the row's own accession. Anything else is None. Pure."""
+    from scrooner_pipeline.mapper import structural_loader as sl
+
+    if (
+        row.get("data_point") != "gross_profit"
+        or row.get("decision") != "derived_not_printed"
+        or row.get("grain") != "FY"
+    ):
+        return None
+    acc = (row.get("accession") or "").strip()
+    try:
+        pe = date.fromisoformat(row.get("period_end") or "")
+    except ValueError:
+        return None
+    left = (row.get("nodes") or "").partition("| why:")[0]
+    nodes = [n.strip() for n in sl.split_nodes(left) if n.strip()]
+    if not acc or len(nodes) != 2:
+        return None
+    got: list[tuple[bool, str, Decimal, str]] = []
+    for n in nodes:
+        m = sl.NODE_RE.match(n)
+        if m is None or m.group("mem") or m.group("tax") or not m.group("val"):
+            return None
+        loc = (m.group("loc") or "").strip()
+        page, _, on = loc.partition("@")
+        if not page.startswith("R") or (on and on.strip() != acc):
+            return None
+        got.append(
+            (m.group("neg") == "-", m.group("tag"), Decimal(m.group("val")), page)
+        )
+    (neg0, t0, v0, l0), (neg1, t1, v1, l1) = got
+    if neg0 or not neg1:
+        return None
+    return GpClaim(acc, pe, (t0, v0), (t1, v1), f"{t0} {l0}; {t1} {l1}")
+
+
+@lru_cache(maxsize=2)
+def _gp_claims(path: str) -> dict[str, tuple[GpClaim, ...]]:
+    p = Path(path)
+    files = sorted(p.glob("*.csv")) if p.is_dir() else [p]
+    out: dict[str, list[GpClaim]] = defaultdict(list)
+    for f in files:
+        with f.open(newline="") as fh:
+            for row in csv.DictReader(fh):
+                c = gp_claim(row)
+                if c is not None:
+                    out[(row.get("cik") or "").zfill(10)].append(c)
+    return {k: tuple(v) for k, v in out.items()}
+
+
+def gp_hosts_from(
+    claims: tuple[GpClaim, ...],
+    periods: dict[int, tuple[date, date, str]],
+    stored_value: Any,
+) -> dict[int, GpHost]:
+    """period_id -> GpHost for each C1 claim whose FY period is one of `periods` and whose two parts the claim's own
+    filing stores with exactly the node values (`stored_value(accession, tag, end, want)` -> Decimal or None). Pure
+    given stored_value."""
+    from scrooner_pipeline.common.fsn_dates import fsn_end_matches
+
+    out: dict[int, GpHost] = {}
+    for c in claims:
+        pids = [
+            pid
+            for pid, (s, e, pt) in periods.items()
+            if pt == "duration"
+            and _grain(s, e, pt) == "FY"
+            and fsn_end_matches(e, c.period_end)
+        ]
+        if len(pids) != 1:
+            continue
+        end = periods[pids[0]][1]
+        if any(
+            stored_value(c.accession, tag, end, want) != want
+            for tag, want in (c.plus, c.minus)
+        ):
+            continue
+        out[pids[0]] = GpHost(c.accession, c.plus[1], c.minus[1], c.locator)
+    return out
+
+
+def load_gp_hosts(
+    conn: psycopg.Connection,
+    company_id: int,
+    periods: dict[int, tuple[date, date, str]],
+) -> dict[int, GpHost]:
+    """The C1 host filings of one company: the resolver's gross_profit derived rows, re-read from the stored facts of
+    each row's one filing (structural_direct._stored_values / _part_value, the direct path's own reader)."""
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    path = sd.resolver_path()
+    if path is None:
+        return {}
+    row = conn.execute(
+        "select cik from core.company where id = %s", (company_id,)
+    ).fetchone()
+    if row is None:
+        return {}
+    claims = _gp_claims(str(path)).get(str(row[0]).zfill(10), ())
+    if not claims:
+        return {}
+    ends = {e for _s, e, _p in periods.values()} | {c.period_end for c in claims}
+    stored = sd._stored_values(
+        conn,
+        company_id,
+        {c.accession for c in claims},
+        {t for c in claims for t, _v in (c.plus, c.minus)},
+        ends,
+    )
+
+    def stored_value(acc: str, tag: str, end: date, want: Decimal) -> Decimal | None:
+        got = sd._part_value(stored[(acc, tag, end)], want)
+        return None if isinstance(got, str) else got[0]
+
+    return gp_hosts_from(claims, periods, stored_value)
 
 
 def _total_liabilities(
@@ -317,6 +485,7 @@ def add_derived_cells(
         load_proven(conn, company_id),
         {},
         load_operand_filings(conn, company_id),
+        load_gp_hosts(conn, company_id, periods),
     )
     if not new:
         return 0

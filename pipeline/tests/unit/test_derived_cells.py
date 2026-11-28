@@ -288,3 +288,71 @@ def test_operands_read_the_authoritative_value_in_every_filing_that_prints_it_gi
     assert [o["value"] for o in out] == [Decimal(32601 * M)]
     # no authoritative fact for a key: nothing of that key is read
     assert operand_filings_from_rows([("Assets", P, "A1", Decimal(1), False)]) == {}
+
+
+# C1 host filing (Stage 3 Resolve, 2026-11-29): STX FY2016 revenue 11,160 is served from the FY2018 10-K and cost of
+# revenue 8,545 from the FY2016 10-K; the FY2018 10-K R4 prints both and no gross profit line (read 2026-11-29).
+STX_ROW = {
+    "cik": "0001137789",
+    "ticker": "STX",
+    "data_point": "gross_profit",
+    "period_end": "2023-12-31",
+    "grain": "FY",
+    "decision": "derived_not_printed",
+    "nodes": "Revenues=11160000000.0000 [R4.htm:1@0001193125-18-238271]; "
+    "-CostOfGoodsAndServicesSold=8545000000.0000 [R4.htm:2@0001193125-18-238271] | why: latest print: ...",
+    "value": "2615000000",
+    "accession": "0001193125-18-238271",
+    "column": "comparative",
+}
+
+
+def _host_derive(hosts):
+    from scrooner_pipeline.mapper.derived_cells import derive as d
+
+    proven = {
+        ("revenue", "FY", FYS, FYE): {Decimal(11_160 * M)},
+        ("cost_of_revenue", "FY", FYS, FYE): {Decimal(8_545 * M)},
+    }
+    mixed = [cell(1, 10, 11_160, "FY2018-10K"), cell(2, 10, 8_545, "FY2016-10K")]
+    return d(mixed, stats(blank(3, 10, "FY")), CI, PERIODS, proven, {}, {}, hosts)
+
+
+def test_c1_host_filing_prints_both_inputs_derives_stx_fy2016():
+    from scrooner_pipeline.mapper.derived_cells import gp_claim, gp_hosts_from
+
+    c = gp_claim(STX_ROW)
+    assert c is not None and c.plus == ("Revenues", Decimal("11160000000.0000"))
+    stored = {("Revenues", 11_160 * M), ("CostOfGoodsAndServicesSold", 8_545 * M)}
+
+    def sv(acc, tag, end, want):
+        return want if acc == STX_ROW["accession"] and (tag, int(want)) in stored else None
+
+    hosts = gp_hosts_from((c,), PERIODS, sv)
+    assert set(hosts) == {10} and hosts[10].accession == STX_ROW["accession"]
+    out = _host_derive(hosts)
+    assert [o["value"] for o in out] == [Decimal(2_615 * M)]
+    assert STX_ROW["accession"] in out[0]["serve_note"]
+
+
+def test_c1_host_filing_refused_when_storage_or_values_disagree():
+    from scrooner_pipeline.mapper.derived_cells import GpHost, gp_claim, gp_hosts_from
+
+    c = gp_claim(STX_ROW)
+    # the filing does not store the node value: no host
+    assert gp_hosts_from((c,), PERIODS, lambda *a: None) == {}
+    # a host whose printed numbers are not the served proven values combines nothing (MPC FY2018 stays underived)
+    other = {10: GpHost("0001193125-18-238271", Decimal(11_000 * M), Decimal(8_545 * M), "x")}
+    assert _host_derive(other) == []
+    assert _host_derive({}) == []
+
+
+def test_c1_claim_shape_is_strict():
+    from scrooner_pipeline.mapper.derived_cells import gp_claim
+
+    assert gp_claim(dict(STX_ROW, decision="not_presented")) is None
+    assert gp_claim(dict(STX_ROW, data_point="total_liabilities")) is None
+    # a node printed in another filing, a member part, or a plus/minus swap is not the one-filing C1 row
+    assert gp_claim(dict(STX_ROW, nodes=STX_ROW["nodes"].replace("2@0001193125-18-238271", "2@0001193125-16-014732"))) is None
+    assert gp_claim(dict(STX_ROW, nodes="Revenues[Seg=A]=1 [R4.htm:1]; -CostOfGoodsAndServicesSold=1 [R4.htm:2] | why: x")) is None
+    assert gp_claim(dict(STX_ROW, nodes="-Revenues=1 [R4.htm:1]; CostOfGoodsAndServicesSold=1 [R4.htm:2] | why: x")) is None
