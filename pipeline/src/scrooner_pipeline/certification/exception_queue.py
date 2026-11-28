@@ -37,11 +37,20 @@ import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from collections.abc import Sequence
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
-KINDS = ("OPEN", "DISAGREE", "CENSUS_FAIL", "SAMPLE_FAIL", "NEEDS_READ", "DRILL_MISS", "DEAD_LETTER")
+KINDS = (
+    "OPEN",
+    "DISAGREE",
+    "CENSUS_FAIL",
+    "SAMPLE_FAIL",
+    "NEEDS_READ",
+    "DRILL_MISS",
+    "DEAD_LETTER",
+)
 LANES = ("resolver", "proof", "verifier", "tag_expert", "approver", "data_engineer")
 CHUNK = 1000
 STATEMENT_TIMEOUT_MS = 120_000
@@ -119,7 +128,8 @@ def coverage_rows(root: Path = ROOT) -> list[Row]:
                     company_id=int(r["company_id"]),
                     data_point=r["data_point"],
                     period_end=r["period_end"] or None,
-                    detail=f"proof_verdict={r['proof_verdict']}" + (f" shown_value={val}" if val else ""),
+                    detail=f"proof_verdict={r['proof_verdict']}"
+                    + (f" shown_value={val}" if val else ""),
                     source_sha=sha,
                     source_path=COVERAGE,
                     evidence_locator=loc,
@@ -187,7 +197,8 @@ def read_rows(root: Path = ROOT) -> list[Row]:
                         detail=f"verdict={v}",
                         source_sha=sha12,  # the certificate's coverage-sha prefix, from the file name
                         source_path=f"{READS}/{name}",
-                        evidence_locator=(r.get("evidence") or "")[:300] or f"{READS}/{name}",
+                        evidence_locator=(r.get("evidence") or "")[:300]
+                        or f"{READS}/{name}",
                         judge_version=UNRECORDED_JUDGE,
                     )
                 )
@@ -240,9 +251,11 @@ def failure_rows(root: Path = ROOT) -> list[Row]:
                 idempotency_key=f"DEAD_LETTER|refresh|{name}",
                 kind="DEAD_LETTER",
                 cell_key=f"refresh:{name}",
-                root_cause_family="refresh_refused:" + (reasons[0] if reasons else "no_reason_listed")[:80],
+                root_cause_family="refresh_refused:"
+                + (reasons[0] if reasons else "no_reason_listed")[:80],
                 owner_lane="data_engineer",
-                ticker=(scope.group(1).split(",")[0].strip() if scope else None) or "resolver-refresh",
+                ticker=(scope.group(1).split(",")[0].strip() if scope else None)
+                or "resolver-refresh",
                 cells_affected=max(int(n.group(1)) if n else 1, 1),
                 detail="; ".join(reasons)[:400],
                 source_sha=hashlib.sha256(text.encode()).hexdigest(),
@@ -258,8 +271,14 @@ def extra_rows(path: Path) -> list[Row]:
     out = []
     with path.open(newline="", encoding="utf-8") as fh:
         for i, r in enumerate(csv.DictReader(fh), 2):
-            kw = {k: _blank(r.get(k)) for k in COLUMNS}
-            for k in ("idempotency_key", "kind", "cell_key", "root_cause_family", "owner_lane"):
+            kw: dict = {k: _blank(r.get(k)) for k in COLUMNS}
+            for k in (
+                "idempotency_key",
+                "kind",
+                "cell_key",
+                "root_cause_family",
+                "owner_lane",
+            ):
                 if not kw[k]:
                     raise ValueError(f"{path}:{i}: {k} is required")
             if kw["kind"] not in KINDS or kw["owner_lane"] not in LANES:
@@ -270,11 +289,19 @@ def extra_rows(path: Path) -> list[Row]:
     return out
 
 
-def build(root: Path = ROOT, extra: list[Path] = ()) -> list[Row]:
-    rows = coverage_rows(root) + registry_rows(root) + read_rows(root) + drill_rows(root) + failure_rows(root)
+def build(root: Path = ROOT, extra: Sequence[Path] = ()) -> list[Row]:
+    rows = (
+        coverage_rows(root)
+        + registry_rows(root)
+        + read_rows(root)
+        + drill_rows(root)
+        + failure_rows(root)
+    )
     for p in extra:
         rows += extra_rows(p)
-    return list({r.idempotency_key: r for r in rows}.values())  # one row per key within a batch
+    return list(
+        {r.idempotency_key: r for r in rows}.values()
+    )  # one row per key within a batch
 
 
 def counts(rows) -> dict[tuple[str, str], tuple[int, int]]:
@@ -288,9 +315,14 @@ def counts(rows) -> dict[tuple[str, str], tuple[int, int]]:
 
 def format_counts(rows) -> str:
     by_kind = Counter(r.kind for r in rows)
-    lines = [f"rows: {len(rows)}"] + [f"kind {k}: {by_kind[k]}" for k in KINDS if by_kind[k]]
+    lines = [f"rows: {len(rows)}"] + [
+        f"kind {k}: {by_kind[k]}" for k in KINDS if by_kind[k]
+    ]
     lines.append("kind | root_cause_family | items | cells_affected")
-    for (k, f), (n, cells) in sorted(counts(rows).items(), key=lambda kv: (KINDS.index(kv[0][0]), -kv[1][1], kv[0][1])):
+    for (k, f), (n, cells) in sorted(
+        counts(rows).items(),
+        key=lambda kv: (KINDS.index(kv[0][0]), -kv[1][1], kv[0][1]),
+    ):
         lines.append(f"{k} | {f} | {n} | {cells}")
     return "\n".join(lines)
 
@@ -329,7 +361,10 @@ def load(conn, rows: list[Row], apply: bool) -> dict[str, int]:
     keys = [r.idempotency_key for r in rows]
     with conn.cursor() as cur:
         cur.execute(f"set local statement_timeout = {STATEMENT_TIMEOUT_MS}")
-        cur.execute("select count(*) from ops.exception_queue where idempotency_key = any(%s)", (keys,))
+        cur.execute(
+            "select count(*) from ops.exception_queue where idempotency_key = any(%s)",
+            (keys,),
+        )
         existing = cur.fetchone()[0]
         if apply:
             for i in range(0, len(rows), CHUNK):
@@ -341,14 +376,29 @@ def load(conn, rows: list[Row], apply: bool) -> dict[str, int]:
     return {"rows": len(rows), "new": len(rows) - existing, "existing": existing}
 
 
-def close_item(conn, key: str, by: str, rule_id=None, test_path=None, hide_class=None, evidence=None) -> bool:
+def close_item(
+    conn,
+    key: str,
+    by: str,
+    rule_id=None,
+    test_path=None,
+    hide_class=None,
+    evidence=None,
+) -> bool:
     """Close one open item. The table's CHECK refuses a close without (rule id + test path) or (hide class + evidence)."""
     with conn.cursor() as cur:
         cur.execute(f"set local statement_timeout = {STATEMENT_TIMEOUT_MS}")
         cur.execute(
             "update ops.exception_queue set closed_at = now(), closed_by = %s, close_rule_id = %s, close_test_path = %s, "
             "close_hide_class = %s, close_evidence = %s where idempotency_key = %s and closed_at is null",
-            (by, _blank(rule_id), _blank(test_path), _blank(hide_class), _blank(evidence), key),
+            (
+                by,
+                _blank(rule_id),
+                _blank(test_path),
+                _blank(hide_class),
+                _blank(evidence),
+                key,
+            ),
         )
         n = cur.rowcount
     conn.commit()
@@ -392,7 +442,9 @@ def report(conn, days: int = 14, top: int = 25) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     sub = ap.add_subparsers(dest="cmd", required=True)
     ld, rp, cl = (sub.add_parser(n) for n in ("load", "report", "close"))
     for p in (ld, rp, cl):
@@ -435,7 +487,9 @@ def main(argv: list[str] | None = None) -> int:
         if a.cmd == "report":
             print(report(conn, a.days, a.top))
             return 0
-        ok = close_item(conn, a.key, a.by, a.rule_id, a.test_path, a.hide_class, a.evidence)
+        ok = close_item(
+            conn, a.key, a.by, a.rule_id, a.test_path, a.hide_class, a.evidence
+        )
         print("closed" if ok else "no open item with that key")
         return 0 if ok else 1
 
