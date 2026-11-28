@@ -17,7 +17,9 @@ SQL136 = (DB / "pending/0136_pipeline_event_work_items.sql").read_text()
 @pytest.fixture
 def conn(isolated_database_url):
     with psycopg.connect(isolated_database_url) as c:
-        c.execute("drop schema if exists ops cascade")
+        # hermetic: the CI template database holds the migrated core/fsn/analytics schemas (empty fsn.filing makes every
+        # company "no FSN", i.e. blocked_on_ingest); each test builds the tables it needs, in this throwaway copy only
+        c.execute("drop schema if exists ops, core, fsn, analytics cascade")
         c.execute(SQL135)
         c.execute(SQL136)
         c.commit()
