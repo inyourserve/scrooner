@@ -430,7 +430,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ar_change: Cash-flow change in accounts receivable, raw XBRL sign.
 - **Data point:** cf_ar_change; polarity cf_ar_change:raw; role cf_ar_change:primary#1
 - **Rules:** K30; family resolve_cf.WC[cf_ar_change]; resolve_all.NARROW[cf_ar_change]
-- **Evidence:** 65 companies, 734 served, 2643 proven, 91 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 736 served, 2643 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. NEE cf_ar_change 2015-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -448,7 +448,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
 - **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:primary#1
 - **Rules:** none; family resolve_cf.WC[cf_ap_change]; resolve_all.NARROW[cf_ap_change]
-- **Evidence:** 58 companies, 617 served, 2226 proven, 102 certified cells; last verified 2026-11-15
+- **Evidence:** 58 companies, 629 served, 2226 proven, 102 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -476,7 +476,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
 - **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
 - **Rules:** none; family resolve_cf.WC[cf_ap_change]
-- **Evidence:** 34 companies, 348 served, 1 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 34 companies, 352 served, 1 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

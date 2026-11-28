@@ -152,7 +152,7 @@ Resolver resolver-all110-.93. 41 elements named in this card have library knowle
 - **Data point definition:** cf_ap_change: Cash-flow change in accounts payable, raw XBRL sign.
 - **Data point:** cf_ap_change; polarity cf_ap_change:raw; role cf_ap_change:combined#1
 - **Rules:** none; family resolve_cf.WC[cf_ap_change]
-- **Evidence:** 34 companies, 348 served, 1 proven, 11 certified cells; last verified 2026-11-15
+- **Evidence:** 34 companies, 352 served, 1 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

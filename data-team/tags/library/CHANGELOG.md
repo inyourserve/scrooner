@@ -2076,3 +2076,12 @@
 
 ## 2026-11-28 (resolver-all110-.93): 1 element changes, 28015 rows, coverage 64.6%
 - ~ CommonStockSharesOutstanding: served_cells
+
+## 2026-11-28 (resolver-all110-.93): 7 element changes, 28015 rows, coverage 64.6%
+- ~ IncreaseDecreaseInAccountsPayable: served_cells
+- ~ IncreaseDecreaseInAccountsPayableAndAccruedLiabilities: served_cells
+- ~ IncreaseDecreaseInAccountsReceivable: served_cells
+- ~ IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets: served_cells
+- ~ IncreaseDecreaseInInventoriesAndPropertySubjectToOrAvailableForOperatingLease: served_cells
+- ~ IncreaseDecreaseInInventoriesPrepaidExpensesAndOtherCurrentAssets: served_cells
+- ~ IncreaseDecreaseInOtherOperatingAssets: served_cells
