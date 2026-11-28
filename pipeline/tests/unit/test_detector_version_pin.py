@@ -45,7 +45,7 @@ VERDICT_SOURCES = (
 )
 
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
-# 2026-11-29: same floor; renamed_part_printed (rule component_sum_authority v3, resolver_beats_combined v5): an absent-part zero is vetoed when the column prints the line under a renamed component tag (IBM total_debt FY2019-21)
+# 2026-11-29: same floor; authority_skips sign_only (authority_copy_role v2: QCOM cf_inventory_change, DIS interest_expense); renamed_part_printed (rule component_sum_authority v3, resolver_beats_combined v5): an absent-part zero is vetoed when the column prints the line under a renamed component tag (IBM total_debt FY2019-21)
 # 2026-11-28: re-pinned at the same floor; common/authority.py reads face rows through the local FSN read cache (egress fix), same rows, no verdict change
 # 2026-11-22: re-pinned at the same floor; prove_component moved under rule component_parts (v2), no floor change
 # 2026-11-22: re-pinned at the same floor; stated_family_concepts added to shown.py (loads cells that had no proof row), no verdict changes; rule resolver_beats_combined v2 (load_shown)
@@ -91,8 +91,8 @@ RULE_PINS = {
         "ef75b7c7fa50f6417eca3ad6d71c4a319188d1e8caaeb91b26a9e0c5ded4a1ba",
     ),
     "authority_copy_role": (
-        1,
-        "ca3ac64963767553da2ebd76f35e3e43c582d3f97506756467156d62babbd991",
+        2,
+        "04a1ead1625b23ec30ab025219f28028df5e8362f49d95b8443051a68d8e7334",
     ),
     "printed_zero_note": (
         1,
@@ -147,7 +147,7 @@ RULE_VERSIONS = {
     "component_sum_authority": 3,
     "resolver_beats_combined": 5,
     "authority_tag_sum": 2,
-    "authority_copy_role": 1,
+    "authority_copy_role": 2,
     "printed_zero_note": 1,
     "element_family": 1,
     "split_parts": 2,

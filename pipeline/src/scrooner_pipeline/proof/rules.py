@@ -189,13 +189,15 @@ RULES: dict[str, Rule] = {
         ),
         Rule(
             "authority_copy_role",
-            1,
+            2,
             legacy_version=0,
             applies=_authority_skips,
             owners=("proof/shown.py:authority_skips", "proof/shown.py:_print_unit"),
             note="v1: a disagreeing copy is no authority when it is a coarser print of the shown figure (ruling 15: LRCX "
             "goodwill FY2024, MRK amortization FY2021-22), a per-share copy at the filer's monetary scale (STX DPS), or a "
-            "part line of its filing (its tag a calc child of another copy of the cell there: PFE 'Product revenues' FY2021)",
+            "part line of its filing (its tag a calc child of another copy of the cell there: PFE 'Product revenues' FY2021). v2 "
+            "(2026-11-29): a copy equal to minus the shown value is no disagreement (sign_only; QCOM cf_inventory_change FY2017-19, "
+            "DIS interest_expense FY2021-22); the printed-line check judges the value and sign",
         ),
         Rule(
             "printed_zero_note",

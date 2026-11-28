@@ -641,7 +641,8 @@ def authority_skips(
       filer_scale    a per-share copy exactly 10^3 or 10^6 times the shown value (the filer's monetary scale, STX DPS);
       sub_line       a copy whose tag, in its own filing, sits under another copy of the cell as a calc child: the copy is
                      a part line, not the cell's line (PFE revenue FY2021: the FY2023 10-K tags 'Product revenues' 73,636
-                     with the element FY2021's 'Total revenues' used; that filing's Revenues line holds the cell)."""
+                     with the element FY2021's 'Total revenues' used; that filing's Revenues line holds the cell);
+      sign_only      the copy equals minus the shown value (v2): never a disagreement, the printed-line check judges."""
     from scrooner_pipeline.common.per_share_guard import is_per_share
 
     tags_at: dict[str, set[str]] = defaultdict(set)
@@ -658,6 +659,11 @@ def authority_skips(
         unit = _print_unit(v)
         if unit >= 100 * _print_unit(shown_value) and abs(v - shown_value) <= unit / 2:
             why = "coarser_print"
+        elif shown_value != 0 and v == -shown_value:
+            # sign_only (v2, 2026-11-29): the copy is the shown figure with the opposite sign (a later filing's
+            # presentation sign, QCOM IncreaseDecreaseInInventories FY2017-19, DIS InterestExpense FY2021-22); the cell's
+            # own filing's printed line judges the value and its sign
+            why = "sign_only"
         elif (
             is_per_share(name)
             and shown_value != 0
