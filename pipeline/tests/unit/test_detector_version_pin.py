@@ -45,6 +45,7 @@ VERDICT_SOURCES = (
 )
 
 PINNED_VERSION = "cell_proof_v21_2026-11-16"
+# 2026-11-28: re-pinned at the same floor; common/authority.py reads face rows through the local FSN read cache (egress fix), same rows, no verdict change
 # 2026-11-22: re-pinned at the same floor; prove_component moved under rule component_parts (v2), no floor change
 # 2026-11-22: re-pinned at the same floor; stated_family_concepts added to shown.py (loads cells that had no proof row), no verdict changes; rule resolver_beats_combined v2 (load_shown)
 # 2026-11-23 (resolver .90): re-pinned at the same floor; the verdict changes live in the new rules authority_tag_sum,
@@ -53,7 +54,7 @@ PINNED_VERSION = "cell_proof_v21_2026-11-16"
 # 2026-11-28: same floor and hash; the identity web (3b15184b7) moved out of proof/identities.py into
 # proof/identity_web.py (certification only, no verdict caller). Rule pins: e5f031779 authority_tag_sum v2,
 # resolver_beats_combined v4 (load_shown).
-PINNED_HASH = "d12c3f03a47cac052b4c2d598f084b818aa255b3c045776d731cee204ffbe5a5"
+PINNED_HASH = "48a47759102b80daa49a9cb7d34ca228cab36a1b33bd91d1a036a37f663d5e8a"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
     "identity_tie": (
