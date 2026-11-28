@@ -231,6 +231,19 @@ RULES: dict[str, Rule] = {
             "(2026-11-22): the sum is SIGNED (calc weight, else polarity: an expense part enters a net line "
             "negatively); v1 added interest expense to MRK's 'Other (income) expense, net' and failed it",
         ),
+        # Stage 4 Prove, M1 (2026-11-29): total_debt_resolved had no proof path without a company_tag_map claim
+        Rule(
+            "debt_composition",
+            1,
+            legacy_version=0,
+            check_keys=("debt_composition",),
+            owners=("proof/prove.py:prove_debt_composition",),
+            note="v1: a total_debt_resolved cell with no company_tag_map claim is proven as the sum of its own source "
+            "tags when every one is a composition tag (prove.DEBT_COMPOSITION_TAGS, mapper/concept_fallback), each "
+            "part read from the shown value's own filing (prove_component), then the perimeter post-pass requires the "
+            "face short-term debt lines and the finance-lease liability (founder 2026-11-04); a tag outside the "
+            "composition stays UNCHECKED",
+        ),
         # stated zero (ruling 2026-11-16): a cell served from a zero the filing states, value_source stated_zero
         Rule(
             "stated_zero",

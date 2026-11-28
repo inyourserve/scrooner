@@ -48,7 +48,7 @@ def test_record_is_built_from_what_ran_and_stored_in_row_checks():
     p = proof(shown(claim=COMP, split=SPLIT), period_length={"status": "pass"})
     row = p.row()
     assert row["checks"]["rules"] == R.rules_used(p.shown, p.checks)
-    assert row["checks"]["rules"]["component_sum_authority"] == 2
+    assert row["checks"]["rules"]["component_sum_authority"] == 3  # v3: 8ce6807f3
     assert row["checks"]["rules"]["split_parts"] == 2
     assert (
         "rules" not in p.checks

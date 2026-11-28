@@ -55,7 +55,11 @@ PINNED_VERSION = "cell_proof_v21_2026-11-16"
 # 2026-11-28: same floor and hash; the identity web (3b15184b7) moved out of proof/identities.py into
 # proof/identity_web.py (certification only, no verdict caller). Rule pins: e5f031779 authority_tag_sum v2,
 # resolver_beats_combined v4 (load_shown).
-PINNED_HASH = "0a276061e414cdf5816b7a45abc7d779b4a397f8c45cc0cf2553485564289e35"
+# 2026-11-29 (Stage 4 Prove, M1): re-pinned at the same floor; prove.py gains the DEBT_COMPOSITION_TAGS constant and the
+# call site of the new rule debt_composition in _prove_cell. The call returns None (old path unchanged) for every cell
+# the rule does not select (total_debt_resolved without a claim, composition tags only); the verdicts that change are
+# the rule's (legacy_version 0, so the rule-scoped re-prove selects exactly them).
+PINNED_HASH = "aeb09f6fecca9763c2fe44aaff97796c3847ff1e93f3bda6aae338df44f116b9"
 # rule id -> (rule version, fingerprint of its owner functions); only rules that own code are listed
 RULE_PINS = {
     "identity_tie": (
@@ -110,6 +114,10 @@ RULE_PINS = {
         1,
         "4c0d6c12693cd5225b11b41d775bc64af17234db1efd2e27390d14320abd2059",
     ),
+    "debt_composition": (
+        1,
+        "ce3fc78c8168e0f76a0d48d45e3c3d398a96879fd32916ce905fe11d16ab8c7b",
+    ),
 }
 
 
@@ -145,6 +153,7 @@ RULE_VERSIONS = {
     "split_parts": 2,
     "stated_zero": 1,
     "text_stated": 1,
+    "debt_composition": 1,
 }
 
 

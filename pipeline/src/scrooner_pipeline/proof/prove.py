@@ -40,6 +40,26 @@ from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
 from scrooner_pipeline.proof.rules import RULES_KEY, rules_used
 
+# the tags mapper/concept_fallback.compute_total_debt sums into total_debt_resolved (DebtInstrumentCarryingAmount is
+# only its cross-check, never a part): the registry's debt composition, rule debt_composition. Kept here so the proof
+# stays pure (concept_fallback reads settings); tests/unit/test_proof_debt_composition.py pins it to concept_fallback.
+DEBT_COMPOSITION_TAGS = frozenset(
+    {
+        "DebtLongtermAndShorttermCombinedAmount",
+        "DebtAndCapitalLeaseObligations",
+        "LongTermDebt",
+        "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+        "LongTermDebtNoncurrent",
+        "LongTermDebtAndCapitalLeaseObligations",
+        "LongTermDebtCurrent",
+        "LongTermDebtAndCapitalLeaseObligationsCurrent",
+        "DebtCurrent",
+        "ShortTermBorrowings",
+        "CommercialPaper",
+        "ConvertibleLongTermNotesPayable",
+    }
+)
+
 RULE_ID = "proof.cell_proof@1"
 # Bump whenever a rule changes what a verdict means: a row written by an older detector is history, never the
 # verdict (coverage and the mapper hold read only rows of this version). The v1 string stayed through R13
@@ -362,8 +382,9 @@ STANDARD_PARENTS: dict[str, frozenset[str]] = {
         }
     ),
 }
-# total_debt_resolved is a composition (several lines), proven by the slot-record
-# producer, not by a single printed line: UNCHECKED here until that producer lands.
+# total_debt_resolved is a composition (several lines), not a single printed line. With a company_tag_map component
+# claim it is proven by prove_component; without one, rule debt_composition (prove_debt_composition) proves it as the
+# sum of the composition's own source tags.
 
 
 @dataclass(frozen=True)
@@ -1326,6 +1347,42 @@ def prove_cell(
     return p
 
 
+def prove_debt_composition(
+    shown: Shown,
+    structure: FilingStructure | None,
+    fsn_set: str | None,
+    prior_structure: FilingStructure | None = None,
+) -> Proof | None:
+    """Rule debt_composition (Stage 4 Prove, M1, 2026-11-29): a total_debt_resolved cell without a company_tag_map
+    claim is the composition mapper/concept_fallback.compute_total_debt wrote: the plain sum of the company's own debt
+    tags (borrowings, current and noncurrent long-term debt, an all-in total). It is proven as that sum: every source
+    tag must be a composition tag, and the cell is then judged exactly as a component claim of those tags
+    (prove_component: each part read from the shown value's own filing, same accession, same column; the sum within
+    the parts' own printed precision). The perimeter post-pass (proof/perimeter.py) then requires every face
+    short-term debt line and the finance-lease liability (founder 2026-11-04, doc 02: debt includes note finance
+    leases) to be in the sum, else DISAGREE perimeter_incomplete. A source tag outside the composition (an unknown
+    line) is no proof path: None, and the cell stays UNCHECKED. Returns None when the rule does not apply."""
+    if (
+        shown.data_point_name != "total_debt_resolved"
+        or shown.claim is not None
+        or shown.is_derived
+        or not shown.tags
+        or len(set(shown.tags)) != len(shown.tags)
+        or not set(shown.tags) <= DEBT_COMPOSITION_TAGS
+    ):
+        return None
+    claim = Claim("component", "BS", parts=tuple((1, t) for t in shown.tags))
+    p = _prove_cell(replace(shown, claim=claim), structure, fsn_set, prior_structure)
+    p.checks["debt_composition"] = {
+        "status": "applied",
+        "parts": list(shown.tags),
+        "why": "no company_tag_map claim: the cell is the composition's sum of its own source tags",
+    }
+    if isinstance(p.checks.get("claim"), dict):
+        p.checks["claim"]["source"] = "debt_composition"
+    return p
+
+
 def _prove_cell(
     shown: Shown,
     structure: FilingStructure | None,
@@ -1337,6 +1394,9 @@ def _prove_cell(
         return prove_stated_zero(shown, p)
     if shown.text_stated:
         return prove_text_stated(shown, p)
+    debt = prove_debt_composition(shown, structure, fsn_set, prior_structure)
+    if debt is not None:
+        return debt
     if shown.data_point_name not in EXPECTED and shown.claim is None:
         p.reason_text = (
             "no company_tag_map claim for this cell and no hand expectation: "
