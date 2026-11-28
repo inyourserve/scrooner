@@ -1,0 +1,101 @@
+rank,ticker,distance_cells_to_fix,open_shown,disagree_cells,unchecked_cells,pageless_shown,parts_blank_shown,census_gate_fail_findings,export_gate_ready,registry_status,certify_requests_filed,top_blocker_family,top_blocker_cells,all_blocker_families,status
+19,JNJ,0,0,0,0,0,0,0,yes,PASS 2026-11-22,2026-11-15;2026-11-16;2026-11-21;2026-11-22,,0,,CERTIFIED_PASS
+20,MA,0,0,0,0,0,0,0,yes,PASS 2026-11-22,2026-11-21;2026-11-22,,0,,CERTIFIED_PASS
+35,LRCX,0,0,0,0,0,0,0,yes,PASS 2026-11-22,2026-11-22,,0,,CERTIFIED_PASS
+61,GILD,0,0,0,0,0,0,0,yes,PASS 2026-11-22,2026-11-15;2026-11-16;2026-11-22,,0,,CERTIFIED_PASS
+97,MO,0,0,0,0,0,0,0,yes,PASS 2026-11-22,2026-11-15;2026-11-22,,0,,CERTIFIED_PASS
+100,BMY,0,0,0,0,0,0,0,yes,PASS 2026-11-28,2026-11-22,,0,,CERTIFIED_PASS
+75,PFE,1,1,1,0,0,0,1,no,none,,shown_is_not_the_authoritative_copy,1,shown_is_not_the_authoritative_copy=1,BLOCKED
+1,NVDA,2,2,0,0,0,0,2,no,none,,component_missing_for_period,1,component_missing_for_period=1 | docmap_component_sum_not_loaded=1,BLOCKED
+46,TMO,2,2,2,0,0,0,2,no,none,,shown_is_not_the_authoritative_copy,2,shown_is_not_the_authoritative_copy=2,BLOCKED
+62,ADI,2,2,0,0,0,0,2,no,none,,line_presented_combined,1,line_presented_combined=1 | not_presented_but_row_shown=1,BLOCKED
+84,BA,2,0,0,0,2,0,2,no,FAIL 2026-11-16,2026-11-15,shown_cell_no_accession_or_page,2,shown_cell_no_accession_or_page=2,BLOCKED
+13,WMT,3,3,0,0,0,0,3,no,FAIL 2026-11-22,2026-11-21,not_presented_but_row_shown,3,not_presented_but_row_shown=3,BLOCKED
+31,MRK,3,3,2,1,0,0,3,no,none,,shown_is_not_the_authoritative_copy,2,shown_is_not_the_authoritative_copy=2 | proof_is_for_another_value=1,BLOCKED
+38,PM,3,1,0,0,0,0,1,no,none,,hidden_blank:era_unmapped,2,hidden_blank:era_unmapped=2 | conflicting_values_in_filing=1,BLOCKED
+51,CRWD,4,1,0,0,0,0,1,no,none,,hidden_blank:era_unmapped,2,hidden_blank:era_unmapped=2 | hidden_unchecked:no_proof_row=1 | not_presented_but_row_shown=1,BLOCKED
+72,UNP,6,3,0,0,2,4,9,no,none,,no_authoritative_fact,2,no_authoritative_fact=2 | shown_cell_no_accession_or_page=2 | no_registry_step=1 | gate:part InvestmentIncomeInterest has no acc=1,BLOCKED
+87,STX,6,6,0,2,0,0,6,no,FAIL 2026-11-16,2026-11-15;2026-11-16,not_presented_but_row_shown,3,not_presented_but_row_shown=3 | proof_is_for_another_value=2 | no_registry_step=1,BLOCKED
+49,GEV,7,6,0,2,0,0,6,no,none,,line_presented_combined,1,line_presented_combined=1 | no_registry_step=1 | hidden_unchecked:no_proof_row=1 | no_proof_row=1 | era_unmapped=1 | reason_own_filing_unverified=1,BLOCKED
+50,AMGN,8,8,5,2,0,0,8,no,none,,split_parts_do_not_sum_to_combined_line,5,split_parts_do_not_sum_to_combined_line=5 | line_presented_combined=1 | proof_unchecked=1 | proof_is_for_another_value=1,BLOCKED
+56,IBM,8,8,3,0,0,0,8,no,none,,no_registry_step,5,no_registry_step=5 | shown_is_not_the_authoritative_copy=3,BLOCKED
+66,ABT,8,8,0,7,0,0,8,no,none,,no_proof_row,7,no_proof_row=7 | not_presented_but_row_shown=1,BLOCKED
+76,SCCO,8,8,0,1,0,0,8,no,none,,proof_disagree,5,proof_disagree=5 | component_missing_for_period=2 | proof_is_for_another_value=1,BLOCKED
+82,SCHW,8,8,0,0,0,0,8,no,none,,line_presented_combined,8,line_presented_combined=8,BLOCKED
+96,SPGI,8,8,2,0,0,0,8,no,none,,not_presented_but_row_shown,6,not_presented_but_row_shown=6 | shown_is_not_the_authoritative_copy=2,BLOCKED
+37,AMAT,9,9,0,0,0,0,9,no,none,,line_presented_combined,7,line_presented_combined=7 | not_presented_but_row_shown=2,BLOCKED
+83,ETN,9,7,0,3,0,0,7,no,none,,no_registry_step,6,no_registry_step=6 | proof_is_for_another_value=2 | no_proof_row=1,BLOCKED
+6,META,10,5,0,0,1,4,10,no,none,,gate:part InterestRevenueExpenseNet has no ac,3,gate:part InterestRevenueExpenseNet has no ac=3 | open_period=2 | not_presented_but_row_shown=2 | era_unmapped=1 | shown_cell_no_accession_or_page=1 | gate:part InterestExpense has no accession or=1,BLOCKED
+8,TSLA,10,10,0,0,0,0,10,no,none,,not_presented_but_row_shown,8,not_presented_but_row_shown=8 | no_authoritative_fact=2,BLOCKED
+21,ABBV,10,10,6,3,0,0,10,no,none,,filer_arithmetic_fails,6,filer_arithmetic_fails=6 | no_proof_row=3 | not_presented_but_row_shown=1,BLOCKED
+94,VRTX,11,11,0,0,0,0,11,no,none,,not_presented_but_row_shown,10,not_presented_but_row_shown=10 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=1,BLOCKED
+32,BAC,12,12,0,0,0,0,12,no,none,,structural_not_presented,11,structural_not_presented=11 | open_period=1,BLOCKED
+42,MS,12,12,0,0,0,0,12,no,none,,not_presented_but_row_shown,10,not_presented_but_row_shown=10 | line_presented_combined=2,BLOCKED
+4,MSFT,13,12,0,0,0,1,13,no,none,,line_presented_combined,12,line_presented_combined=12 | gate:part FinanceLeaseLiability has no access=1,BLOCKED
+5,AMZN,13,7,0,2,6,0,13,no,none,,shown_cell_no_accession_or_page,6,shown_cell_no_accession_or_page=6 | not_presented_but_row_shown=3 | proof_is_for_another_value=2 | components_from_different_filings=1 | proof_disagree=1,BLOCKED
+12,MU,13,13,1,0,0,0,13,no,none,,structural_not_presented,7,structural_not_presented=7 | opex_components_do_not_tie_gross_profit_to_operating_income=2 | not_presented_but_row_shown=1 | line_presented_combined=1 | shown_differs_from_printed_line=1 | no_registry_step=1,BLOCKED
+26,CSCO,13,13,0,12,0,0,13,no,none,,no_proof_row,11,no_proof_row=11 | era_unmapped=1 | proof_is_for_another_value=1,BLOCKED
+86,NOW,13,13,0,0,0,0,13,no,none,,not_presented_but_row_shown,7,not_presented_but_row_shown=7 | line_presented_combined=6,BLOCKED
+58,AXP,14,12,2,7,2,0,14,no,none,,no_proof_row,6,no_proof_row=6 | era_unmapped=3 | shown_cell_no_accession_or_page=2 | shown_is_not_the_authoritative_copy=2 | proof_is_for_another_value=1,BLOCKED
+88,UBER,14,4,0,3,0,13,17,no,none,,gate:part FinanceLeaseLiability has no access,7,gate:part FinanceLeaseLiability has no access=7 | no_proof_row=3 | hidden_blank:era_unmapped=2 | hidden_unchecked:reason_own_filing_unverified=1 | component_missing_for_period=1,BLOCKED
+92,VLO,14,8,2,0,6,0,14,no,none,,shown_cell_no_accession_or_page,6,shown_cell_no_accession_or_page=6 | not_presented_but_row_shown=5 | shown_is_not_the_authoritative_copy=1 | line_presented_combined=1 | identity_break=1,BLOCKED
+99,FTNT,14,14,2,2,0,0,14,no,none,,not_presented_but_row_shown,10,not_presented_but_row_shown=10 | proof_is_for_another_value=2 | shown_is_not_the_authoritative_copy=2,BLOCKED
+48,TXN,15,11,0,0,2,2,15,no,none,,not_presented_but_row_shown,11,not_presented_but_row_shown=11 | shown_cell_no_accession_or_page=2 | gate:part InvestmentIncomeInterest has no acc=2,BLOCKED
+91,MPC,15,7,0,3,0,9,16,no,none,,gate:part InterestExpenseOther has no accessi,7,gate:part InterestExpenseOther has no accessi=7 | proof_is_for_another_value=3 | line_presented_combined=2 | no_registry_step=1 | not_presented_but_row_shown=1 | gate:part InterestExpenseDebt has no accessio=1,BLOCKED
+93,LMT,15,14,2,1,0,1,15,no,none,,opex_components_do_not_tie_gross_profit_to_operating_income,9,opex_components_do_not_tie_gross_profit_to_operating_income=9 | identity_break=2 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=2 | no_proof_row=1 | gate:part LongTermDebtCurrent has no accessio=1,BLOCKED
+22,INTC,16,16,0,9,0,0,16,no,none,,no_proof_row,9,no_proof_row=9 | line_presented_combined=3 | not_presented_but_row_shown=3 | no_value_for_this_column=1,BLOCKED
+79,TJX,16,16,1,0,0,0,16,no,none,,not_presented_but_row_shown,9,not_presented_but_row_shown=9 | component_missing_for_period=4 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=1 | no_registry_step=1 | proof_disagree=1,BLOCKED
+64,SNDK,17,6,1,1,0,0,6,no,none,,hidden_unchecked:reason_own_filing_unverified,9,hidden_unchecked:reason_own_filing_unverified=9 | no_registry_step=2 | not_presented_but_row_shown=2 | hidden_unchecked:no_proof_row=2 | shown_differs_from_printed_line=1 | reason_own_filing_unverified=1,BLOCKED
+95,PGR,17,17,0,3,0,0,17,no,none,,line_presented_combined,11,line_presented_combined=11 | structural_not_presented=2 | proof_is_for_another_value=2 | no_proof_row=1 | not_presented_but_row_shown=1,BLOCKED
+57,C,18,18,0,12,0,0,18,no,none,,no_proof_row,11,no_proof_row=11 | not_presented_but_row_shown=6 | proof_is_for_another_value=1,BLOCKED
+67,QCOM,18,18,4,0,0,0,18,no,none,,opex_components_do_not_tie_gross_profit_to_operating_income,7,opex_components_do_not_tie_gross_profit_to_operating_income=7 | shown_is_not_the_authoritative_copy=4 | not_presented_but_row_shown=2 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=2 | no_authoritative_fact=1 | conflicting_values_in_filing=1,BLOCKED
+73,MCD,18,17,2,2,0,1,18,no,none,,no_registry_step,4,no_registry_step=4 | not_presented_but_row_shown=4 | filer_scale_error=4 | proof_disagree=2 | proof_is_for_another_value=2 | perimeter_incomplete=1,BLOCKED
+80,DHR,18,7,0,2,11,0,18,no,none,,shown_cell_no_accession_or_page,11,shown_cell_no_accession_or_page=11 | no_registry_step=3 | no_proof_row=2 | not_presented_but_row_shown=2,BLOCKED
+89,ACN,18,6,0,1,12,0,18,no,none,,shown_cell_no_accession_or_page,12,shown_cell_no_accession_or_page=12 | not_presented_but_row_shown=4 | proof_is_for_another_value=1 | no_registry_step=1,BLOCKED
+30,UNH,19,19,0,0,0,0,19,no,none,,line_presented_combined,12,line_presented_combined=12 | structural_not_presented=6 | era_unmapped=1,BLOCKED
+41,DELL,19,15,1,4,0,0,15,no,none,,era_unmapped,7,era_unmapped=7 | no_registry_step=2 | hidden_blank:not_in_template_but_in_template=2 | no_proof_row=2 | shown_differs_from_printed_line=1 | hidden_unchecked:reason_own_filing_unverified=1,BLOCKED
+43,PANW,19,17,0,13,1,1,19,no,none,,proof_is_for_another_value,13,proof_is_for_another_value=13 | not_presented_but_row_shown=3 | open_period=1 | shown_cell_no_accession_or_page=1 | gate:part InterestIncomeOther has no accessio=1,BLOCKED
+45,GS,19,12,1,0,7,0,19,no,none,,shown_cell_no_accession_or_page,7,shown_cell_no_accession_or_page=7 | not_in_template_but_in_template=6 | line_presented_combined=3 | no_registry_step=2 | filer_arithmetic_fails=1,BLOCKED
+70,BLK,19,19,0,10,0,0,19,no,none,,reason_refused_comparative_presented,8,reason_refused_comparative_presented=8 | line_presented_combined=7 | no_proof_row=2 | structural_not_presented=1 | docmap_not_presented=1,BLOCKED
+53,ANET,20,15,0,3,2,3,20,no,none,,not_presented_but_row_shown,11,not_presented_but_row_shown=11 | proof_is_for_another_value=3 | shown_cell_no_accession_or_page=2 | gate:part InterestExpenseOther has no accessi=2 | era_unmapped=1 | gate:part InterestIncomeOther has no accessio=1,BLOCKED
+10,LLY,21,12,0,21,0,0,12,no,none,,proof_is_for_another_value,21,proof_is_for_another_value=21,BLOCKED
+14,JPM,21,21,0,0,0,0,21,no,none,,line_presented_combined,14,line_presented_combined=14 | not_presented_but_row_shown=7,BLOCKED
+28,ORCL,21,9,2,2,9,2,20,no,none,,shown_cell_no_accession_or_page,9,shown_cell_no_accession_or_page=9 | no_registry_step=4 | no_proof_row=2 | gate:part FinanceLeaseLiability has no access=2 | not_presented_but_row_shown=1 | identity_break=1,BLOCKED
+25,COST,22,20,3,3,0,0,20,no,none,,line_presented_combined,11,line_presented_combined=11 | proof_unchecked=3 | shown_differs_from_printed_line=3 | hidden_blank:not_in_template_but_in_template=2 | not_in_template_but_in_template=1 | components_from_different_filings=1,BLOCKED
+27,KO,23,23,0,0,0,0,23,no,none,,no_registry_step,9,no_registry_step=9 | era_unmapped=9 | not_presented_but_row_shown=3 | docmap_not_presented=2,BLOCKED
+39,HD,23,23,0,2,0,0,23,no,none,,line_presented_combined,13,line_presented_combined=13 | not_presented_but_row_shown=8 | proof_is_for_another_value=2,BLOCKED
+44,RTX,23,23,12,3,0,0,23,no,none,,identity_break,6,identity_break=6 | shown_is_not_the_authoritative_copy=6 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=4 | not_presented_but_row_shown=4 | proof_is_for_another_value=3,BLOCKED
+78,WELL,24,24,0,4,0,0,24,no,none,,no_registry_step,7,no_registry_step=7 | era_unmapped=5 | not_presented_but_row_shown=5 | proof_is_for_another_value=4 | line_presented_combined=3,BLOCKED
+7,AVGO,25,18,4,0,7,0,25,no,none,,shown_cell_no_accession_or_page,7,shown_cell_no_accession_or_page=7 | no_registry_step=6 | shown_differs_from_printed_line=4 | no_value_no_reason=3 | docmap_component_sum_not_loaded=2 | line_presented_combined=1,BLOCKED
+15,AMD,25,16,8,2,0,9,25,no,none,,gate:part InterestIncomeExpenseNet has no acc,9,gate:part InterestIncomeExpenseNet has no acc=9 | shown_is_not_the_authoritative_copy=8 | not_presented_but_row_shown=3 | proof_is_for_another_value=2 | no_registry_step=1 | mixed_value_sources=1,BLOCKED
+17,V,25,19,0,2,0,0,19,no,none,,components_without_single_calc_parent,11,components_without_single_calc_parent=11 | hidden_blank:not_in_template_but_in_template=6 | line_presented_combined=5 | no_proof_row=2 | predictor_candidate=1,BLOCKED
+34,CAT,25,4,0,0,10,0,14,no,none,,hidden_blank:not_in_template_but_in_template,11,hidden_blank:not_in_template_but_in_template=11 | shown_cell_no_accession_or_page=10 | not_presented_but_row_shown=3 | era_unmapped=1,BLOCKED
+40,NFLX,26,19,3,2,7,0,26,no,none,,line_presented_combined,9,line_presented_combined=9 | shown_cell_no_accession_or_page=7 | not_presented_but_row_shown=5 | shown_is_not_the_authoritative_copy=3 | no_proof_row=2,BLOCKED
+68,PEP,27,27,0,0,0,0,27,no,none,,line_presented_combined,22,line_presented_combined=22 | fsn_value_not_on_face_line=2 | ancestor_in_component_set=2 | opex_components_do_not_tie_gross_profit_to_operating_income=1,BLOCKED
+85,ISRG,27,27,0,1,0,0,27,no,none,,structural_not_presented,20,structural_not_presented=20 | line_presented_combined=4 | era_unmapped=1 | docmap_not_presented=1 | proof_is_for_another_value=1,BLOCKED
+36,GE,28,10,0,4,15,0,25,no,none,,shown_cell_no_accession_or_page,15,shown_cell_no_accession_or_page=15 | line_presented_combined=6 | proof_is_for_another_value=4 | hidden_blank:era_unmapped=3,BLOCKED
+74,TMUS,28,28,1,0,0,0,28,no,none,,era_unmapped,10,era_unmapped=10 | no_registry_step=7 | not_in_template_but_in_template=4 | not_presented_but_row_shown=3 | proof_disagree=3 | perimeter_incomplete=1,BLOCKED
+2,AAPL,29,29,0,2,0,0,29,no,none,,not_presented_but_row_shown,23,not_presented_but_row_shown=23 | no_proof_row=2 | not_in_template_but_in_template=2 | line_presented_combined=1 | not_presented_read_verified=1,BLOCKED
+77,NEE,31,31,0,6,0,0,31,no,none,,not_presented_but_row_shown,17,not_presented_but_row_shown=17 | proof_is_for_another_value=5 | no_authoritative_fact=4 | no_registry_step=2 | no_proof_row=1 | line_presented_combined=1,BLOCKED
+47,WFC,33,30,2,5,3,0,33,no,none,,line_presented_combined,16,line_presented_combined=16 | proof_is_for_another_value=4 | shown_cell_no_accession_or_page=3 | not_presented_but_row_shown=3 | proof_disagree=2 | no_authoritative_fact=1,BLOCKED
+81,T,35,18,9,3,16,0,34,no,none,,shown_cell_no_accession_or_page,16,shown_cell_no_accession_or_page=16 | shown_is_not_the_authoritative_copy=9 | not_presented_but_row_shown=4 | no_registry_step=3 | proof_is_for_another_value=2 | no_proof_row=1,BLOCKED
+3,GOOG,36,27,0,0,7,23,57,no,none,,not_presented_but_row_shown,11,not_presented_but_row_shown=11 | structural_not_presented=11 | shown_cell_no_accession_or_page=7 | era_unmapped=5 | gate:part InterestExpense has no accession or=1 | gate:part LongTermDebtCurrent has no accessio=1,BLOCKED
+90,CB,36,22,6,2,14,0,36,no,none,,shown_cell_no_accession_or_page,14,shown_cell_no_accession_or_page=14 | line_presented_combined=8 | filer_arithmetic_fails=6 | no_registry_step=6 | proof_is_for_another_value=2,BLOCKED
+23,CVX,40,26,1,6,14,0,40,no,none,,shown_cell_no_accession_or_page,14,shown_cell_no_accession_or_page=14 | no_registry_step=11 | era_unmapped=5 | proof_is_for_another_value=3 | no_proof_row=3 | not_presented_but_row_shown=3,BLOCKED
+69,COP,43,43,0,0,0,0,43,no,none,,no_registry_step,19,no_registry_step=19 | line_presented_combined=11 | filer_scale_error=10 | not_presented_but_row_shown=2 | no_value_no_reason=1,BLOCKED
+71,DE,46,44,2,0,2,0,46,no,none,,line_presented_combined,10,line_presented_combined=10 | no_registry_step=6 | not_in_template_but_in_template=6 | structural_not_presented=4 | line_not_presented_on_statement=4 | not_presented_but_row_shown=3,BLOCKED
+63,DIS,48,27,2,4,12,6,45,no,none,,shown_cell_no_accession_or_page,12,shown_cell_no_accession_or_page=12 | line_presented_combined=9 | gate:part FinanceLeaseLiability has no access=6 | not_presented_but_row_shown=4 | hidden_blank:era_unmapped=3 | no_value_no_reason=3,BLOCKED
+55,KLAC,49,49,4,0,0,0,49,no,none,,era_unmapped,26,era_unmapped=26 | docmap_not_presented=14 | no_value_no_reason=4 | shown_differs_from_printed_line=4 | proof_disagree=1,BLOCKED
+65,VZ,53,23,11,0,23,0,46,no,none,,shown_cell_no_accession_or_page,23,shown_cell_no_accession_or_page=23 | shown_is_not_the_authoritative_copy=11 | G1_printed_line=7 | hidden_blank:era_unmapped=7 | no_registry_step=5,BLOCKED
+16,XOM,56,36,0,1,20,0,56,no,none,,line_presented_combined,33,line_presented_combined=33 | shown_cell_no_accession_or_page=20 | conflicting_values_in_filing=2 | proof_is_for_another_value=1,BLOCKED
+29,PG,57,57,10,1,0,0,57,no,none,,not_presented_but_row_shown,34,not_presented_but_row_shown=34 | shown_is_not_the_authoritative_copy=10 | era_unmapped=10 | no_proof_row=1 | no_registry_step=1 | company_tag_map:not_presented=1,BLOCKED
+54,SHOP,57,28,0,0,29,0,57,no,none,,shown_cell_no_accession_or_page,29,shown_cell_no_accession_or_page=29 | structural_not_presented=11 | not_presented_but_row_shown=10 | era_unmapped=6 | no_registry_step=1,BLOCKED
+52,LIN,59,45,0,43,14,0,59,no,none,,proof_unchecked,39,proof_unchecked=39 | shown_cell_no_accession_or_page=14 | no_proof_row=3 | proof_is_for_another_value=1 | structural_not_presented=1 | conflicting_values_in_filing=1,BLOCKED
+24,PLTR,66,19,2,2,4,0,23,no,none,,hidden_unchecked:reason_own_filing_unverified,34,hidden_unchecked:reason_own_filing_unverified=34 | not_presented_but_row_shown=10 | hidden_blank:era_unmapped=8 | shown_cell_no_accession_or_page=4 | proof_is_for_another_value=2 | not_presented_read_verified=2,BLOCKED
+60,CRM,67,61,3,40,3,3,67,no,none,,proof_unchecked,35,proof_unchecked=35 | structural_not_presented=10 | line_presented_combined=7 | shown_cell_no_accession_or_page=3 | no_proof_row=3 | proof_is_for_another_value=2,BLOCKED
+98,NEM,76,23,1,1,48,5,76,no,none,,shown_cell_no_accession_or_page,48,shown_cell_no_accession_or_page=48 | line_presented_combined=10 | no_registry_step=9 | gate:part FinanceLeaseLiability has no access=5 | opex_tie_needs_gross_profit_and_operating_income_of_the_filing=2 | shown_is_not_the_authoritative_copy=1,BLOCKED
+59,MRVL,79,52,4,44,24,3,79,no,none,,proof_unchecked,43,proof_unchecked=43 | shown_cell_no_accession_or_page=24 | shown_is_not_the_authoritative_copy=4 | line_presented_combined=3 | gate:part InterestExpense has no accession or=3 | no_registry_step=1,BLOCKED
+9,AKTX,,0,0,0,0,0,0,no,none,,,0,,TEMPLATE_UNAVAILABLE
+11,TBLA,,0,0,0,0,0,0,no,none,,,0,,TEMPLATE_UNAVAILABLE
+18,SPCX,,0,0,0,0,0,0,no,none,,,0,,TEMPLATE_UNAVAILABLE
+33,RPAY,,0,0,0,0,0,0,no,none,,,0,,TEMPLATE_UNAVAILABLE
