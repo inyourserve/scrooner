@@ -163,7 +163,7 @@ def test_two_combined_steps_are_told_apart_by_the_label():
         # a sum where the data point has no additive derived step (its only derived step subtracts)
         ("gross_profit", _row("component_sum")),
         # a sum of a data point with no derived step at all
-        ("accounts_payable", _row("component_sum")),
+        ("inventory", _row("component_sum")),
         # two non-sum derived steps and no flag naming one
         ("operating_income", _row("derived_not_printed", "core;DERIVED")),
         # a combined line where the data point has no combined step
@@ -370,3 +370,23 @@ def test_shares_outstanding_has_the_employee_benefit_trust_step_lly():
     row = {"decision": "mapped", "flags": "bs_family;filing_read;text_stated;derived:issued-treasury-employee_benefit_trust",
            "nodes": "", "locator": "R7.htm (us-gaap:CommonStockSharesIssued - us-gaap:TreasuryStockCommonShares - us-gaap:CommonStockSharesHeldInEmployeeTrustShares) of X"}
     assert reg.badge_for("shares_outstanding", "general", row) == "derived:issued-treasury-employee_benefit_trust"
+
+
+@pytest.mark.parametrize("sector", ["general", "broker_am", "insurer", "equity_reit", "utility"])
+@pytest.mark.parametrize(
+    "dp,flag,badge",
+    [
+        ("accounts_receivable", "ar_related_sum", "derived:sum(printed receivable lines)"),
+        ("accounts_payable", "ap_related_sum", "derived:sum(printed payable lines)"),
+    ],
+)
+def test_related_party_sums_take_the_registry_sum_step(sector, dp, flag, badge):
+    """B11/B16 (rulings 2026-11-14): AR / AP = the trade face line plus the related-party line (or the Nonrelated + Related
+    members), summed by the resolver as component_sum. The registry carries that step, so a shown proven sum has a badge
+    (COP, TMUS, DE, SNDK, AMD, GEV were open as no_registry_step: 0 matching steps)."""
+    row = {"decision": "component_sum", "flags": f"{flag};bs_family;face",
+           "nodes": "AccountsPayableCurrent=4895 [R5.htm:20]; DueToRelatedPartiesCurrent=38 [R5.htm:21]"}
+    assert reg.badge_for(dp, sector, row) == badge
+    # the printed single line and the combined line keep their own steps
+    assert reg.badge_for(dp, sector, {"decision": "mapped", "flags": "bs_family", "nodes": "X=1 [R5.htm:20]"}) == "as_printed"
+    assert reg.badge_for(dp, sector, _row("combined", label="Accounts payable and other liabilities")).startswith("combined:")

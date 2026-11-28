@@ -261,22 +261,22 @@ def test_attach_badges_reads_the_cells_own_evidence_when_the_resolver_names_no_s
             shown_value="10",
             parts=f"A=4@{acc}#R3;B=5@{acc}#R3",
         ),
-        # the resolver names a step the registry cannot place: stays undecided (no evidence override)
+        # the resolver names a step the registry cannot place (inventory has no additive step): stays undecided (no evidence override)
         _cell(
             1,
-            "accounts_payable",
+            "inventory",
             "2024-12-31",
             t100.SHOWN_VALUE,
             _sector="general",
             accession=acc,
             r_page="R2.htm",
-            tag="AccountsPayableCurrent",
+            tag="InventoryNet",
             shown_value="5",
             parts="",
         ),
     ]
     steps = {
-        ("T", "accounts_payable"): [
+        ("T", "inventory"): [
             (
                 date(2024, 12, 31),
                 {"decision": "component_sum", "flags": "", "nodes": ""},
