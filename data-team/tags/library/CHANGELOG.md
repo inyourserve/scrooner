@@ -2088,3 +2088,7 @@
 
 ## 2026-11-28 (resolver-all110-.93): 1 element changes, 28015 rows, coverage 64.6%
 - ~ CommonStockDividendsPerShareDeclared: served_cells
+
+## 2026-11-28 (resolver-all110-.93): 2 element changes, 28015 rows, coverage 64.6%
+- ~ CapitalLeaseObligations: served_cells
+- ~ CapitalLeaseObligationsCurrent: served_cells

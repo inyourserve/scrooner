@@ -285,7 +285,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
 - **Data point:** total_debt
 - **Rules:** none
-- **Evidence:** 8 companies, 27 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 8 companies, 28 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCurrentMaturitiesOfCapitalLeaseObligations@2021; PostconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021; PreconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021
@@ -350,7 +350,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
 - **Data point:** total_debt
 - **Rules:** X57; D13; resolver functions run
-- **Evidence:** 4 companies, 11 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 3 companies, 10 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
