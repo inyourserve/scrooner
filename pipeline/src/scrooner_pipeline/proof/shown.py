@@ -352,9 +352,7 @@ def renamed_part_printed(
     Such a filing does not print every part under the cell's tags and is not the authority; the older filing that prints
     every part is."""
     alts = {
-        str(r[3])
-        for r in map_rows
-        if r[1] == "component" and r[5] == name and r[3]
+        str(r[3]) for r in map_rows if r[1] == "component" and r[5] == name and r[3]
     } - own_part_tags
     return any(
         face.prints_column(accession, t, start, end, period_type) for t in sorted(alts)
