@@ -6,7 +6,7 @@ from the repo root; logic in `pipeline/src/scrooner_pipeline/mapper/top100_cover
 As-of timestamp is in every summary row (first run 2026-11-13T04:57Z, while 18 companies were being rewritten; rerun later).
 
 ## 1. Where the values and proofs come from (live DB, read-only)
-- Companies: ranks 1-100 of `doc/data-moat/team/top1000/shards.csv` (4 of them are flagged `excluded` there and have no docmap: AKTX, TBLA, SPCX, RPAY; listed `TEMPLATE_UNAVAILABLE`, zero cells).
+- Companies: ranks 1-100 of `doc/data-moat/team/top1000/shards.csv` by default; `--ranks N-M`, `--company-ids` (any rank) or `--company-ids-csv` widen it (Stage 4 Prove, M6). A company with no docmap (AKTX, TBLA, SPCX, RPAY in the top 100; every rank 101+) takes the registry template (`metrics/registry/data_points.csv`, sector applied) and its unexplained cells are BLANK `no_docmap` (OPEN); the summary note says `TEMPLATE_FROM_REGISTRY`.
 - Cells (template): the company's latest FILING-CHECKED docmap `data-team/companies/reads/<TICKER>-docmap-*.csv`, every data point whose status is not `OUT`. `analytics.company_data_point_template` (0120) has 0 rows live and `SECTOR-TEMPLATES-2026-11-01.md` is an unsigned proposal, so neither defines cells yet.
 - Fiscal years: `core.period` rows with `fiscal_period='FY'`, FY2015 to the latest FY ending on or before the as-of date (flow data points: the duration of at least 300 days; balance-sheet and share data points: the FY-end instant, `INSTANT_DPS` in the module).
 - Served value: `analytics.canonical_fact` joined to `core.period` and `analytics.canonical_concept`; for a data point `x` the resolved concept `x_resolved` is tried first (revenue: `revenue_sanity_resolved`), then `x`.

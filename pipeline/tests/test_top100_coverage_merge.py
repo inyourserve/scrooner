@@ -365,11 +365,16 @@ def test_export_cli_parses_company_ids():
     )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    out, write, ids = mod.parse_args(
+    out, write, ids, ranks, source = mod.parse_args(
         ["outdir", "--write-display-state", "--company-ids", "4,3,4"]
     )
-    assert (str(out), write, ids) == ("outdir", True, [3, 4])
-    assert mod.parse_args([]) == (pathlib.Path("data-team/strategy"), False, None)
+    assert (str(out), write, ids, ranks) == ("outdir", True, [3, 4], None)
+    assert source == mod.RANK_SOURCE
+    # no option: the top 100 (ranks None), the hourly default
+    assert mod.parse_args([]) == (
+        pathlib.Path("data-team/strategy"), False, None, None, mod.RANK_SOURCE
+    )
+    assert mod.parse_args(["--ranks", "101-200"])[3] == (101, 200)
     with pytest.raises(SystemExit):
         mod.parse_args(["--company-ids", "x"])
 

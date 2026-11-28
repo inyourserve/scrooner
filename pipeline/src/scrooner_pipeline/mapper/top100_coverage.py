@@ -1,7 +1,8 @@
 """Top-100 coverage report: the work queue for every session (read-only on the database).
 
 One row per (company, template data point, fiscal year FY2015..latest FY) for ranks 1-100 of
-doc/data-moat/team/top1000/shards.csv. Each cell is exactly one class:
+doc/data-moat/team/top1000/shards.csv by default; `ranks` (main) or `company_ids` widens the set to any rank of the
+rank source (any CSV with rank, ticker, company_id columns), built in chunks of CHUNK companies. Each cell is exactly one class:
 
   PROVEN     served value and the latest analytics.cell_proof verdict (basis='latest') is PROVEN for that value
   REASON     no served value and an evidenced reason is stored (cell_proof NOT_PRESENTED, cell_blank_reason
@@ -18,9 +19,10 @@ doc/data-moat/team/top1000/shards.csv. Each cell is exactly one class:
              that is not loaded yet, for the work queue)
 
 Template: the per-company data-point list is the FILING-CHECKED docmap (data-team/companies/reads/<T>-docmap-*.csv, latest
-file); rows with status OUT are not cells. analytics.company_data_point_template (0120) is empty live and the sector
-templates file is an unsigned proposal, so it cannot define cells yet. A company with no docmap has no template: it is
-listed in the summary as TEMPLATE_UNAVAILABLE with zero cells, never guessed.
+file); rows with status OUT are not cells. A company with no docmap (ranks 101+, Stage 4 Prove M6) takes the registry
+template (metrics/registry/data_points.csv, the one applicability source; is_template_cell applies its sector): every
+cell is still classified from the database (proof, served value, stored reason), its docmap_status is NO_DOCMAP, and an
+unexplained cell is BLANK `no_docmap` (OPEN work), never skipped. The summary note says TEMPLATE_FROM_REGISTRY.
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -788,6 +791,8 @@ def classify(
         return "REASON", f"company_tag_map:{tagmap_decision}"
     if blank_state == "defect":
         return "BLANK", blank_reason or "defect"
+    if docmap_status == NO_DOCMAP:
+        return "BLANK", NO_DOCMAP
     if docmap_status and docmap_status != "mapped":
         return "BLANK", f"docmap_{docmap_status.replace(' ', '_')}_not_loaded"
     return "BLANK", "no_value_no_reason"
@@ -801,11 +806,47 @@ class Company:
     excluded: str
 
 
-def load_top(path: Path, n: int = 100) -> list[Company]:
+# docmap_status of a cell whose company has no docmap (its template is the registry's, see registry_template)
+NO_DOCMAP = "no_docmap"
+# companies per build_rows call: every read is set-based over one chunk (`= any(ids)`), never a query per company or cell
+CHUNK = 100
+DEFAULT_TOP = 100
+
+
+def parse_ranks(spec: str) -> tuple[int, int]:
+    """'101-200' -> (101, 200); '500' -> (500, 500). Pure."""
+    a, _, b = spec.strip().partition("-")
+    try:
+        lo, hi = int(a), int(b or a)
+    except ValueError:
+        raise SystemExit(f"--ranks wants N or N-M, got {spec!r}")
+    if lo < 1 or hi < lo:
+        raise SystemExit(f"--ranks wants 1 <= N <= M, got {spec!r}")
+    return lo, hi
+
+
+def load_company_ids_csv(path: Path) -> list[int]:
+    """The company_id column of a CSV (a universe file, e.g. a 5k list). Sorted, no duplicates."""
+    with path.open(newline="") as fh:
+        ids = {
+            int(r["company_id"])
+            for r in csv.DictReader(fh)
+            if (r.get("company_id") or "").strip()
+        }
+    if not ids:
+        raise SystemExit(f"{path}: no company_id values")
+    return sorted(ids)
+
+
+def load_top(
+    path: Path, n: int = DEFAULT_TOP, ranks: tuple[int, int] | None = None
+) -> list[Company]:
+    """Companies of the rank source with rank in `ranks` (inclusive), default 1..n."""
+    lo, hi = ranks or (1, n)
     out = []
     with path.open(newline="") as fh:
         for r in csv.DictReader(fh):
-            if r["rank"].isdigit() and int(r["rank"]) <= n:
+            if r["rank"].isdigit() and lo <= int(r["rank"]) <= hi:
                 out.append(
                     Company(
                         int(r["rank"]),
@@ -823,6 +864,23 @@ def load_docmap(reads_dir: Path, ticker: str) -> dict[str, dict[str, str]]:
         return {}
     with files[-1].open(newline="") as fh:
         return {r["data_point"]: r for r in csv.DictReader(fh)}
+
+
+@lru_cache(maxsize=1)
+def registry_template() -> dict[str, dict[str, str]]:
+    """The template of a company with no docmap: every registry data point (metrics/registry/data_points.csv), status
+    NO_DOCMAP and no statement. is_template_cell then keeps only the points that apply to the company's sector."""
+    from scrooner_pipeline.metrics.registry import load_data_points
+
+    return {
+        dp: {"data_point": dp, "status": NO_DOCMAP, "stmt": ""}
+        for dp in sorted({dp for dp, _sector in load_data_points()})
+    }
+
+
+def company_template(reads_dir: Path, ticker: str) -> dict[str, dict[str, str]]:
+    """The filing-checked docmap when one exists, else the registry template (never an empty template)."""
+    return load_docmap(reads_dir, ticker) or registry_template()
 
 
 def reached_by_filing(
@@ -1080,8 +1138,9 @@ def build_rows(
     note_lookup: dict[tuple[str, str], int] | None = None,
     fix_pages: dict[tuple[str, str, str, str], dict[str, int]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
-    templates = {c.company_id: load_docmap(reads_dir, c.ticker) for c in companies}
-    live = [c for c in companies if templates[c.company_id]]
+    docmapped = {c.company_id for c in companies if load_docmap(reads_dir, c.ticker)}
+    templates = {c.company_id: company_template(reads_dir, c.ticker) for c in companies}
+    live = list(companies)
     ids = [c.company_id for c in live]
     annual = _annual_filings(conn, ids)
     periods = _fy_periods(conn, ids, today, annual)
@@ -1186,9 +1245,11 @@ def build_rows(
     }
 
     rows: list[dict[str, Any]] = []
+    no_years: set[int] = set()
     for c in live:
         years = sorted({fy for (cid, fy, _t) in periods if cid == c.company_id})
         if not years:
+            no_years.add(c.company_id)
             continue
         sector = sectors.get(c.company_id, "general")
         for dp, dm in sorted(templates[c.company_id].items()):
@@ -1447,15 +1508,50 @@ def build_rows(
     attach_stated_zero(rows, load_stated_zero())
     apply_display(rows)
     attach_badges(rows, load_resolver_steps())
-    note = {
-        c.company_id: (
-            "TEMPLATE_UNAVAILABLE"
-            + (f" (excluded: {c.excluded})" if c.excluded else " (no docmap)")
-        )
-        for c in companies
-        if not templates[c.company_id]
-    }
+    note: dict[int, str] = {}
+    for c in companies:
+        note_parts: list[str] = []
+        if c.company_id in no_years:
+            note_parts.append(
+                f"NO_FY_PERIODS (no FY period since FY{FIRST_FY} reached by a 10-K)"
+            )
+        if c.company_id not in docmapped:
+            note_parts.append("TEMPLATE_FROM_REGISTRY (no docmap)")
+        if c.excluded:
+            note_parts.append(f"excluded: {c.excluded}")
+        if note_parts:
+            note[c.company_id] = "; ".join(note_parts)
     return rows, note
+
+
+def build_rows_chunked(
+    conn: Any,
+    companies: list[Company],
+    reads_dir: Path,
+    today: date,
+    note_lookup: dict[tuple[str, str], int] | None = None,
+    fix_pages: dict[tuple[str, str, str, str], dict[str, int]] | None = None,
+    chunk: int = CHUNK,
+) -> tuple[list[dict[str, Any]], dict[int, str]]:
+    """build_rows over `companies` in chunks of `chunk` (rank order): each chunk's reads are set-based over its ids, so
+    a 5,000-company run is 50 bounded passes, not one unbounded scan. OUT_CELLS holds every chunk's OUT cells after."""
+    rows: list[dict[str, Any]] = []
+    notes: dict[int, str] = {}
+    outs: list[dict[str, Any]] = []
+    for i in range(0, len(companies), chunk):
+        part = companies[i : i + chunk]
+        r, n = build_rows(conn, part, reads_dir, today, note_lookup, fix_pages)
+        rows.extend(r)
+        notes.update(n)
+        outs.extend(OUT_CELLS)
+        if len(companies) > chunk:
+            print(
+                f"chunk {i // chunk + 1}: {len(part)} companies, {len(r)} cells",
+                flush=True,
+            )
+    OUT_CELLS.clear()
+    OUT_CELLS.extend(outs)
+    return rows, notes
 
 
 # the sign of each DERIVED_INPUTS input in the identity (gross profit = revenue - cost; liabilities = assets - equity)
@@ -3010,6 +3106,21 @@ def _display_state(
     )
 
 
+def universe(
+    shards: Path,
+    n: int = DEFAULT_TOP,
+    ranks: tuple[int, int] | None = None,
+    company_ids: list[int] | None = None,
+) -> list[Company]:
+    """The rank set: `ranks` when given; else every rank of the rank source when company_ids picks the companies (a
+    company at rank 500 is selectable by id); else the top n (the hourly default, unchanged)."""
+    if ranks is not None:
+        return load_top(shards, ranks=ranks)
+    if company_ids is not None:
+        return load_top(shards, ranks=(1, 10**9))
+    return load_top(shards, n)
+
+
 def select_companies(
     companies: list[Company], company_ids: list[int] | None
 ) -> list[Company]:
@@ -3024,7 +3135,9 @@ def select_companies(
     known = {c.company_id for c in companies}
     missing = sorted(wanted - known)
     if missing:
-        raise SystemExit(f"company ids not in the top {len(companies)}: {missing}")
+        raise SystemExit(
+            f"company ids not in the rank set ({len(companies)} companies): {missing}"
+        )
     return [c for c in companies if c.company_id in wanted]
 
 
@@ -3032,18 +3145,19 @@ def main(
     out_dir: Path,
     shards: Path,
     reads_dir: Path,
-    n: int = 100,
+    n: int = DEFAULT_TOP,
     write_display_state: bool = False,
     company_ids: list[int] | None = None,
+    ranks: tuple[int, int] | None = None,
 ) -> int:
     from scrooner_pipeline.db.connection import get_connection
 
-    companies = select_companies(load_top(shards, n), company_ids)
+    companies = select_companies(universe(shards, n, ranks, company_ids), company_ids)
     now = datetime.now(timezone.utc)
     with get_connection() as conn:
         conn.execute("set transaction read only")
         conn.execute("set statement_timeout = '10min'")
-        rows, notes = build_rows(
+        rows, notes = build_rows_chunked(
             conn,
             companies,
             reads_dir,
