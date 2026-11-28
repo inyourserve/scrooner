@@ -37,7 +37,7 @@ import random
 import re
 from collections import defaultdict
 from collections.abc import Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date
 from decimal import Decimal
 from fractions import Fraction
@@ -1687,12 +1687,24 @@ def certify(
     mechanical: bool = False,
     reads: dict[tuple[str, str], dck.Read] | None = None,
     store: dck.SourceStore | None = None,
+    sample: list[Cell] | None = None,
 ) -> Run:
     """mechanical=True: every census check, no draw (a re-check of a certified export or the flow
     gate). Its verdict says whether the mechanical checks pass; it is never a certificate.
     reads: filing reads (draw_check.load_reads) for the drawn cells the automated checker sent to a read.
-    store: companyfacts and R pages (draw_check.SourceStore): every drawn cell also gets its three-source agreement."""
-    p = plan(ticker, coverage, seed, 0 if mechanical else DRAW_SIZE)
+    store: companyfacts and R pages (draw_check.SourceStore): every drawn cell also gets its three-source agreement.
+    sample: this company's cells of a cohort draw (cohort_cert.draw_cohort) in place of the per-company draw; every
+    census check runs as usual. Its Run is a cohort input, never a per-company certificate."""
+    p = plan(
+        ticker, coverage, seed, 0 if mechanical or sample is not None else DRAW_SIZE
+    )
+    if sample is not None:
+        own = {c.key: c for c in p.cells}
+        if any(own.get(c.key) != c for c in sample):
+            raise ValueError(
+                f"{ticker}: a cohort-drawn cell is not a cell of {coverage}"
+            )
+        p = replace(p, sample=list(sample), strata={})
     counts: dict[str, int] = defaultdict(int)
     for c in p.cells:
         counts[c.display] += 1
