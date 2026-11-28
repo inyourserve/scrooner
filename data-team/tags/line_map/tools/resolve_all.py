@@ -2119,6 +2119,45 @@ def apply_combined_ap_change(rows):
     return rows
 
 
+# X137 (.94; registry data_points.csv fallback 2 'combined:<items named in the label>' of cf_ap_change, cf_ar_change and
+# cf_inventory_change; founder standard 2026-11-22: a printed combined line is a VALUE with a badge; Dhairya ruling 2026-11-22, X133:
+# a cell whose data is printed is never a combined-reason open cell): X133 for every working-capital change line. The line's own
+# label must name the data point's item FIRST (after an optional '(increase) decrease in' / 'change in' lead), then other items:
+#   cf_ap_change        'Accounts and other payables', 'Accounts payable and accrued expenses', 'Increase/(reduction) - Accounts and
+#                       other payables' (XOM FY2015-25), 'Increase (decrease) in accounts payable and equipment project deposits' (GEV)
+#   cf_ar_change        'Customer and other receivables' (NEE), 'Accounts receivable, net and other' (AMZN)
+#   cf_inventory_change 'Inventories, prepaid expenses and other current assets' (MCD, T), 'Inventories and operating lease vehicles'
+# A label led by another item ('Current liabilities and other current assets', MPC) or naming both sides of working capital
+# ('Receivables and payables, net', GS) stays combined; so does a signed node (a computed figure, not one printed line).
+WC_LEAD = r'(?i)^\s*(?:(?:\(?increase\)?|\(?decrease\)?|\(?reduction\)?|change)\s*(?:[/-]|and|or)?\s*)*(?:\s*[-\u2013\u2014]\s*)?(?:in\s+)?'
+WC_ITEM = {
+    'cf_ap_change': re.compile(WC_LEAD + r'(?:trade\s+)?(?:accounts?\s+(?:and\s+other\s+)?)?payables?\b'),
+    'cf_ar_change': re.compile(WC_LEAD + r'(?:trade\s+|customer\s+|accounts?\s+)?(?:and\s+other\s+)?receivables?\b'),
+    'cf_inventory_change': re.compile(WC_LEAD + r'inventor(?:y|ies)\b'),
+}
+WC_OTHER_SIDE = {'cf_ap_change': re.compile(r'(?i)\breceivable'), 'cf_ar_change': re.compile(r'(?i)\bpayable'),
+                 'cf_inventory_change': re.compile(r'(?i)\bpayable|\breceivable')}
+
+
+def apply_combined_working_capital_change(rows):
+    """X137 (.94): a cf_ap_change / cf_ar_change / cf_inventory_change cell whose only printed CF line is a combined line led by the data
+    point's own item (WC_ITEM) is served as that line (mapped, the stored fact's raw sign, rules/polarity.csv), flag combined:<printed
+    label>; the only_combined flags are dropped. Runs after X133 (its narrower payables form)."""
+    for r in rows:
+        dp = r['data_point']
+        if dp not in WC_ITEM or r['status'] != 'combined': continue
+        m = re.match(r'^(-?)(\w+)(?:\[[^\]]*\])?=(-?[\d.]+) \[(R\d+\.htm(?::\d+)?)\]\s*(?:\||$)', r.get('nodes') or '')
+        label = _combined_line_label(r)
+        if not m or m.group(1) or not label or not WC_ITEM[dp].match(label) or WC_OTHER_SIDE[dp].search(label): continue
+        tag, v = m.group(2), D(m.group(3))
+        badge = 'combined:' + label.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+        r.update(status='mapped', value=v, tags=tag, nodes=f"{tag}={standard_inputs._plain(v)} [{m.group(4)}]",
+                 why=f"the only printed line holding {dp} is the combined line '{label}' ({tag}), led by the data point's own item; served as "
+                     f"that line with the badge {badge} (registry {dp} fallback 2, founder standard 2026-11-22, X137)")
+        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';') if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')] + [badge])
+    return rows
+
+
 # X134 (.93, Dhairya ruling 2026-11-21 (d), confirmed by the draw-check reads cbe7a9da1): other_income_expense_net = every printed
 # income-statement line between operating income and pretax that is not interest income or interest expense (equity-method income,
 # debt extinguishment, pension, FX, gains included). Computed as pretax - operating income - the effect of the printed interest lines
@@ -2639,6 +2678,7 @@ if __name__ == '__main__':
     rows = apply_per_share_scale_guard(rows)   # X128
     rows = apply_one_line_one_data_point(rows, filings)   # X130 (P07)
     rows = apply_combined_ap_change(rows)   # X133 (.92)
+    rows = apply_combined_working_capital_change(rows)   # X137 (.94)
     rows = apply_other_income_band(rows, filings)   # X134 (.93)
     rows = apply_cash_less_restricted(rows, notefacts, filings)   # X135 (.93)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)

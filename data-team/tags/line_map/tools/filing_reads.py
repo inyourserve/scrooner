@@ -168,9 +168,12 @@ def apply(rows, path=None, log=None, memberfacts=None, notefacts=None):
             if log is not None: log.append(('rounding_vintage' if rounding else 'value', r['ticker'], r['data_point'], r['period_end'], was, str(ev)))
         elif t['outcome'] == 'HIDE':
             hc = t.get('hide_class') or ''
-            if hc == 'line_presented_combined' and rv is not None and any(f.startswith('derived:') for f in (r.get('flags') or '').split(';')):
+            if hc == 'line_presented_combined' and rv is not None and any(f.startswith(('derived:', 'combined:')) for f in (r.get('flags') or '').split(';')):
                 # X117 (.88): the registry's fallback order (metrics/registry/data_points.csv, founder 2026-11-22) derives the cell from
-                # the combined line's own filing (badge derived:<formula>); the 'combined -> hide' read is reversed by that decision
+                # the combined line's own filing (badge derived:<formula>); the 'combined -> hide' read is reversed by that decision.
+                # X137 (.94): the same for a cell the resolver serves AS the printed combined line with its registry badge
+                # (combined:<label>, X125/X133/X137): founder 2026-11-22 reversed the X17 combined hide, so a read made before that
+                # ('HIDE line_presented_combined', XOM cf_ap_change FY2015-25) no longer hides a printed value
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filing_read_hide_reversed') if x)
                 if log is not None: log.append(('hide_reversed', r['ticker'], r['data_point'], r['period_end'], hc))
                 continue
