@@ -804,6 +804,19 @@ class RecordingSource(dc.SqlFactSource):
         )
         return facts, lines
 
+    def filing_calc(self, accessions):
+        acc = sorted(set(accessions))
+        got = self._m(
+            "filing_calc",
+            [acc],
+            lambda: super(RecordingSource, self).filing_calc(acc),
+        )
+        self._add(
+            "filing_calc",
+            ([a.accession, a.grp, a.parent, a.child, a.weight] for a in got),
+        )
+        return got
+
     def presented_facts(self, cik, tags, dates):
         pd = pattern_detectors()
         tg, ds = sorted(set(tags)), sorted(set(dates))
@@ -960,7 +973,8 @@ def evaluate_copy(
     out.by_check["cell_match"] = cm
     ff, fl = source.filing_facts(*dck.needs(sample)) if sample else ([], [])
     dw = {}
-    for a in dck.check_draw(sample, ff, fl) if sample else []:
+    fc = dck.read_calc(source, dck.needs(sample)[0]) if sample else []
+    for a in dck.check_draw(sample, ff, fl, fc) if sample else []:
         if a.outcome == dck.AUTO_MISMATCH:
             dw[a.key] = f"{a.method}: {a.detail}"
     out.by_check["draw_check"] = dw

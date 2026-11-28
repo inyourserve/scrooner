@@ -81,8 +81,9 @@ PERIODIC_FORMS = (
     "40-F/A",
 )
 
-# Balance-sheet and share data points are instants (qtrs 0); everything else is a duration.
-INSTANT_DPS = frozenset(
+# Balance-sheet and share data points are instants (qtrs 0); everything else is a duration. The registry's statement
+# decides too (draw_check.registry_instant): AXP 2017 deposits was looked up as a 12-month value (2026-11-29 reads).
+INSTANT_DPS = dck.registry_instant() | frozenset(
     {
         "cash_and_equivalents",
         "accounts_receivable",
@@ -688,6 +689,10 @@ class SqlFactSource:
         """The automated draw checker's own read of the cited filings (draw_check.FILING_FACT_SQL)."""
         return dck.sql_filing_facts(self._q, accessions, period_ends)
 
+    def filing_calc(self, accessions):
+        """The cited filings' calculation arcs (draw_check.FILING_CALC_SQL)."""
+        return dck.sql_filing_calc(self._q, accessions)
+
     def identity_facts(self, cik, tags):
         """The identity web's operands: the company's own undimensioned facts of `tags` (any duration) and the first
         lines of each filing's cash-flow statement (proof/identity_web WEB_FACT_SQL, WEB_CF_LINE_SQL)."""
@@ -735,6 +740,9 @@ class BundleFactSource:
 
     def filing_facts(self, accessions, period_ends):
         return dck.bundle_filing_facts(self.b, accessions)
+
+    def filing_calc(self, accessions):
+        return dck.bundle_filing_calc(self.b, accessions)
 
     def identity_facts(self, cik, tags):
         """bundle['identity_facts'] rows [acc, form, tag, ddate, qtrs, value, dcml, uom] and bundle['cf_lines']
@@ -1627,7 +1635,7 @@ def auto_check(sample: list[Cell], source) -> list[dck.AutoCheck] | None:
         raise SourceBroken(
             "draw checker read no facts for the drawn filings: source broken"
         )
-    return dck.check_draw(sample, *got)
+    return dck.check_draw(sample, *got, dck.read_calc(source, dck.needs(sample)[0]))
 
 
 class SourceBroken(RuntimeError):
@@ -1663,6 +1671,7 @@ def identity_web_check(
     if wf is None or got is None:
         return None
     facts, lines = got
+    calc = dck.read_calc(source, dck.needs(members)[0])
     by_acc: dict[str, list[Cell]] = defaultdict(list)
     for c in members:
         by_acc[c.accession].append(c)
@@ -1671,7 +1680,8 @@ def identity_web_check(
         accs = {acc} | {p.accession for c in cs for p in c.parts}
         fl_f = [f for f in facts if f.accession in accs]
         fl_l = [ln for ln in lines if ln.accession in accs]
-        for a in dck.check_draw(cs, fl_f, fl_l):
+        fl_c = [a for a in calc if a.accession in accs]
+        for a in dck.check_draw(cs, fl_f, fl_l, fl_c):
             census[a.key] = a
     auto = {k: a.outcome for k, a in census.items()}
     proof = {c.key: c.proof for c in members}

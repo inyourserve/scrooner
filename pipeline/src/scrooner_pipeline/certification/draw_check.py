@@ -34,6 +34,16 @@ derived cells exported without a derived: badge rebuilt by their identity.
 part of a summed cell) against the SEC companyfacts value of that tag, period and accession and the number printed on
 the cited R page's line of that tag: AGREE3 (auto-proven), AGREE2 (one source missing), DISAGREE (may be a wrong
 shown value), SINGLE (fewer than two sources). The AUTO_* outcomes are unchanged.
+
+@4 (approver, 2026-11-29 cohort reads, data-team/strategy/certification/cohort/top100-cohort-reads-2026-11-29-verifier.md):
+three checker false positives fixed. (a) A printed total whose calculation children (fsn.calc_arc) sum to it, with
+the data point's own family line among them and no excluded child (CALC_CHILD_EXCLUDE), matches on the total
+(C 2021 cash 262,033 = cash and due from banks 27,515 + deposits with banks 234,518; method "calc"). (b) The period
+type (instant vs duration) of a data point comes from the registry statement (balance_sheet = instant, is_instant),
+for this checker and the certifier's claim check (AXP 2017 Deposits was looked up as a 12-month value). (c) When the
+filing tags no fact of the checker's family, the element the cell's claim names (the resolver/FSN structural
+mapping, also a filer extension) matches when its undimensioned fact holds the shown value (QCOM 2018/2020
+qcom_Interestpaidnetofinterestreceived; method "claim"); a family fact, when present, still decides.
 """
 
 from __future__ import annotations
@@ -47,6 +57,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
+from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -55,9 +66,7 @@ from scrooner_pipeline.common.polarity import is_fixed_positive
 if TYPE_CHECKING:  # import cycle: display_cert imports this module
     from scrooner_pipeline.certification.display_cert import Cell
 
-CHECKER_VERSION = (
-    "draw_check@3"  # @3: three-source agreement; @2: fixes from the 2026-11-24 reads
-)
+CHECKER_VERSION = "draw_check@4"  # @4: calc totals, registry period type, claimed element (2026-11-29 reads); @3: three-source agreement; @2: fixes from the 2026-11-24 reads
 AUTO_MATCH = "AUTO_MATCH"
 AUTO_MISMATCH = "AUTO_MISMATCH"
 NEEDS_READ = "NEEDS_READ"
@@ -416,6 +425,31 @@ INSTANT = frozenset(
         "deposits",
     }
 )
+
+
+@cache
+def registry_instant() -> frozenset[str]:
+    """Data points whose registry statement is the balance sheet (metrics/registry/data_points.csv): instants."""
+    from scrooner_pipeline.metrics.registry import load_data_points
+
+    return frozenset(
+        dp
+        for (dp, _s), d in load_data_points().items()
+        if d.statement == "balance_sheet"
+    )
+
+
+def is_instant(dp: str) -> bool:
+    """A balance (instant, qtrs 0) rather than a flow (duration): the registry's statement, or the checker's own list."""
+    return dp in INSTANT or dp in registry_instant()
+
+
+# A calculation child that makes a printed total wider than the data point: the total never matches on it
+# (cash excludes restricted cash, Dhairya 2026-11-22; CAT/CVX cash-and-restricted-cash totals stay mismatches).
+CALC_CHILD_EXCLUDE: dict[str, re.Pattern] = {
+    "cash_and_equivalents": re.compile(r"Restricted"),
+}
+
 # Identities for a derived cell with no parts (doc 02 / data_points.csv formulas), over the filing's own facts.
 TOTAL_EQUITY = (
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
@@ -527,6 +561,17 @@ class FilingFact:
 
 
 @dataclass(frozen=True)
+class CalcArc:
+    """One calculation arc of the filing (fsn.calc_arc): parent = sum of weight * child within a group."""
+
+    accession: str
+    grp: int
+    parent: str
+    child: str
+    weight: int
+
+
+@dataclass(frozen=True)
 class FilingLine:
     accession: str
     tag: str
@@ -556,6 +601,40 @@ select f.accession, t.tag, l.report, l.stmt, coalesce(l.plabel, ''), coalesce(l.
 from fsn.filing f join fsn.line l on l.filing_id = f.id join fsn.tag t on t.id = l.tag_id
 where f.accession = any(%(acc)s)
 """
+
+
+FILING_CALC_SQL = """
+select f.accession, a.grp, pt.tag, ct.tag, a.weight
+from fsn.filing f join fsn.calc_arc a on a.filing_id = f.id
+join fsn.tag pt on pt.id = a.parent_tag_id join fsn.tag ct on ct.id = a.child_tag_id
+where f.accession = any(%(acc)s)
+"""
+
+
+def sql_filing_calc(q, accessions: Iterable[str]) -> list[CalcArc]:
+    acc = sorted(set(accessions))
+    if not acc:
+        return []
+    return [
+        CalcArc(a, int(g), p, ch, int(w))
+        for a, g, p, ch, w in q(FILING_CALC_SQL, {"acc": acc})
+    ]
+
+
+def bundle_filing_calc(bundle: dict, accessions: Iterable[str]) -> list[CalcArc]:
+    """Offline: bundle['filing_calc'] rows [acc, grp, parent, child, weight]; [] when the bundle has none."""
+    acc = set(accessions)
+    return [
+        CalcArc(r[0], int(r[1]), r[2], r[3], int(r[4]))
+        for r in bundle.get("filing_calc", [])
+        if r[0] in acc
+    ]
+
+
+def read_calc(source, accessions: Iterable[str]) -> list[CalcArc]:
+    """The cited filings' calculation arcs from a source that can read them ([] otherwise: no calc match)."""
+    read = getattr(source, "filing_calc", None)
+    return list(read(accessions) or []) if read is not None else []
 
 
 def sql_filing_facts(
@@ -635,7 +714,7 @@ class AutoCheck:
     data_point: str
     fiscal_year: str
     outcome: str  # AUTO_MATCH | AUTO_MISMATCH | NEEDS_READ
-    method: str  # family | label | parts | identity (a formula, or the identity web) | text | per_share | sign | debt | none
+    method: str  # family | label | parts | identity (a formula, or the identity web) | calc | claim | text | per_share | sign | debt | none
     filing_value: Decimal | None
     detail: str
     # the one filing fact that decided a single-element cell (AUTO_MATCH or AUTO_MISMATCH); the three-source
@@ -652,8 +731,8 @@ def _days(a: str, b: str) -> int:
 
 
 def _qtrs(dp: str) -> int:
-    """0 for a balance (instant), 4 for an annual flow: the checker's own grain list (INSTANT)."""
-    return 0 if dp in INSTANT else 4
+    """0 for a balance (instant), 4 for an annual flow: the registry's period type (is_instant)."""
+    return 0 if is_instant(dp) else 4
 
 
 class Filing:
@@ -661,12 +740,48 @@ class Filing:
     then the finest decimals (a filer can tag a face figure and a rounded note duplicate: WMT FY2023 372M / 400M).
     Only USD facts are kept (a fact in another currency is never the shown figure: CB DPS 2024 in CHF)."""
 
-    def __init__(self, facts: list[FilingFact], lines: list[FilingLine]):
+    def __init__(
+        self,
+        facts: list[FilingFact],
+        lines: list[FilingLine],
+        calc: Iterable[CalcArc] = (),
+    ):
         self.facts = [f for f in facts if usd_unit(f.uom)]
         self.lines = lines
         self._printed: dict[tuple[str, str], list[FilingLine]] = {}
         for ln in lines:
             self._printed.setdefault((ln.accession, ln.tag), []).append(ln)
+        self._calc: dict[tuple[str, str], dict[int, list[CalcArc]]] = {}
+        for a in calc:
+            self._calc.setdefault((a.accession, a.parent), {}).setdefault(
+                a.grp, []
+            ).append(a)
+
+    def calc_total(
+        self, acc: str, dp: str, tag: str, period_end: str
+    ) -> tuple[FilingFact, list[tuple[int, FilingFact]]] | None:
+        """(total, [(weight, child fact)]) when the filing's calculation of `tag` holds at the period: every child
+        has an undimensioned fact, their weighted sum equals the total's fact, one child is an element of the data
+        point's family (the data point's own line is inside the total) and no child is excluded for the data point
+        (CALC_CHILD_EXCLUDE). None otherwise."""
+        q = _qtrs(dp)
+        total = self.fact(acc, tag, period_end, q)
+        if total is None:
+            return None
+        family = {t for tags in FAMILIES.get(dp, ()) for t in tags}
+        excl = CALC_CHILD_EXCLUDE.get(dp)
+        for _g, arcs in sorted(self._calc.get((acc, tag), {}).items()):
+            found = [(a.weight, self.fact(acc, a.child, period_end, q)) for a in arcs]
+            kids = [(w, f) for w, f in found if f is not None]
+            if len(kids) != len(found):
+                continue
+            if not any(a.child in family for a in arcs):
+                continue
+            if excl is not None and any(excl.search(a.child) for a in arcs):
+                continue
+            if sum((w * f.value for w, f in kids), Decimal(0)) == total.value:
+                return total, kids
+        return None
 
     def fact(
         self, acc: str, tag: str, period_end: str, qtrs: int, dims: str = ""
@@ -1173,6 +1288,8 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
                     + f"company-level member {_fmt(f)}",
                     f,
                 )
+        if (cl := _claimed_element(c, fl, shown)) is not None:
+            return cl
         return AutoCheck(
             dp,
             fy,
@@ -1203,6 +1320,8 @@ def check_cell(c: Cell, fl: Filing) -> AutoCheck:
                     f"tier {tier + 1}: {_fmt(f)}, shown {shown} rounds to it at the fact's decimals",
                     f,
                 )
+    if (ct := _calc_total(c, fl, shown)) is not None:
+        return ct
     if dp == "operating_expenses" and (ox := _opex_identity(c, fl, shown)):
         return ox
     # Precision: the shown value equals a coarser duplicate of the same figure, not the finest one.
@@ -1248,6 +1367,56 @@ def _cited_tag(c: Cell) -> str:
     """The export's tag for a single-element cell (its tag column, or its one part)."""
     t = c.tag or (c.parts[0].tag if len(c.parts) == 1 else "")
     return t.strip().split(":")[-1]
+
+
+def _calc_total(c: Cell, fl: Filing, shown: Decimal) -> AutoCheck | None:
+    """A printed total the cell cites whose calculation children sum to the shown value (Filing.calc_total) matches on
+    the total, not on the one family child it contains (C 2021: cash, due from banks and deposits with banks 262,033 =
+    CashAndDueFromBanks 27,515 + InterestBearingDepositsInBanks 234,518)."""
+    t = _cited_tag(c)
+    if not t or not fl.printed(c.accession, t):
+        return None
+    got = fl.calc_total(c.accession, c.data_point, t, c.period_end)
+    if got is None or not _shown_matches(c.data_point, shown, got[0].value)[0]:
+        return None
+    total, kids = got
+    return AutoCheck(
+        c.data_point,
+        c.fiscal_year,
+        AUTO_MATCH,
+        "calc",
+        total.value,
+        f"printed total {_fmt(total)} = "
+        + " ".join(("-" if w < 0 else "+") + _fmt(f) for w, f in kids),
+        total,
+    )
+
+
+def _claimed_element(c: Cell, fl: Filing, shown: Decimal) -> AutoCheck | None:
+    """No family fact: the element the cell's claim names (the resolver/FSN structural mapping, a filer extension
+    such as qcom_Interestpaidnetofinterestreceived) matches when its undimensioned fact at the period holds the shown
+    value. Only reached when the filing tags no admitted fact of the family, so a family fact still decides when
+    present; a family element its gate refused (LABEL_GATED, FACE_ONLY, continuing EPS) is never readmitted here."""
+    t = _cited_tag(c)
+    if not t:
+        return None
+    family = {x for tags in FAMILIES.get(c.data_point, ()) for x in tags}
+    names = [t] + ([t.split("_", 1)[1]] if "_" in t else [])
+    for name in names:
+        if name in family:
+            continue
+        f = fl.fact(c.accession, name, c.period_end, _qtrs(c.data_point))
+        if f is not None and _shown_matches(c.data_point, shown, f.value)[0]:
+            return AutoCheck(
+                c.data_point,
+                c.fiscal_year,
+                AUTO_MATCH,
+                "claim",
+                f.value,
+                f"no {c.data_point} family fact; the claimed element {_fmt(f)} holds the shown value",
+                f,
+            )
+    return None
 
 
 def _printed_elsewhere(
@@ -1562,9 +1731,12 @@ def _other_income(c: Cell, fl: Filing, shown: Decimal) -> AutoCheck:
 
 
 def check_draw(
-    sample: list[Cell], facts: list[FilingFact], lines: list[FilingLine]
+    sample: list[Cell],
+    facts: list[FilingFact],
+    lines: list[FilingLine],
+    calc: Iterable[CalcArc] = (),
 ) -> list[AutoCheck]:
-    fl = Filing(facts, lines)
+    fl = Filing(facts, lines, calc)
     return [check_cell(c, fl) for c in sample]
 
 

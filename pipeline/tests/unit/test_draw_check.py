@@ -366,9 +366,27 @@ def _two(tmp_path):
 def test_certify_sends_only_unsettled_cells_to_a_read_and_the_certificate_says_who_verified(
     tmp_path,
 ):
-    cov = _two(tmp_path)
-    # revenue AUTO_MATCH; R&D tagged with a custom element the checker has no family for -> NEEDS_READ
-    facts = [ff("Revenues", "100"), ff("abc_RandD", "7")]
+    # revenue AUTO_MATCH; interest income on a label-gated family element the filing does not print with an
+    # interest-income label -> NEEDS_READ. (A custom element the claim names that holds the shown value is an
+    # AUTO_MATCH since draw_check@4: test_claimed_custom_element_matches_when_the_family_is_silent.)
+    cov = _cov(
+        tmp_path,
+        [
+            ["revenue", "2023", PE, "100", ACC, "R4", "Revenues", "", dc.SHOWN],
+            [
+                "interest_income",
+                "2023",
+                PE,
+                "7",
+                ACC,
+                "R4",
+                "InvestmentIncomeNet",
+                "",
+                dc.SHOWN,
+            ],
+        ],
+    )
+    facts = [ff("Revenues", "100"), ff("InvestmentIncomeNet", "7")]
     run = dc.certify("T", "1", cov, Src(facts))
     assert dck.counts(run.auto) == {
         dck.AUTO_MATCH: 1,
@@ -376,11 +394,11 @@ def test_certify_sends_only_unsettled_cells_to_a_read_and_the_certificate_says_w
         dck.NEEDS_READ: 1,
     }
     assert run.verdict == "REVIEW" and [a.data_point for a in run.pending_reads] == [
-        "research_and_development"
+        "interest_income"
     ]
     reads = tmp_path / "reads.csv"
     reads.write_text(
-        "data_point,fiscal_year,verdict,reader,evidence\nresearch_and_development,2023,MATCH,agent-7,R4 line 9 prints 7\n"
+        "data_point,fiscal_year,verdict,reader,evidence\ninterest_income,2023,MATCH,agent-7,R4 line 9 prints 7\n"
     )
     done = dc.certify("T", "1", cov, Src(facts), reads=dck.load_reads(reads))
     assert done.verdict == "PASS" and not done.pending_reads
@@ -389,7 +407,7 @@ def test_certify_sends_only_unsettled_cells_to_a_read_and_the_certificate_says_w
     )
     _check_schema(cert, json.loads(dc.CERTIFICATE_SCHEMA_PATH.read_text()))
     by = {c["data_point"]: c["verified_by"] for c in cert["cells"]}
-    assert by == {"revenue": "machine", "research_and_development": "read:agent-7"}
+    assert by == {"revenue": "machine", "interest_income": "read:agent-7"}
     blk = cert["draw_check"]
     assert (blk["auto_matched"], blk["auto_mismatched"], blk["needs_read"]) == (1, 0, 1)
     assert (
@@ -1910,3 +1928,152 @@ def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path)
     )
     t = dc.certify("T", "1", tagged, Src(facts), reads=dck.load_reads(reads))
     assert [s.result for s in t.shown] == ["LOCATOR"] and t.verdict == "REVIEW"
+
+
+# ---------------------------------------------------------------- draw_check@4: 2026-11-29 cohort reads (approver fixes)
+C_TOTAL = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"
+
+
+def _c_cash(
+    children=(
+        ("CashAndDueFromBanks", "27515"),
+        ("InterestBearingDepositsInBanks", "234518"),
+    ),
+):
+    facts = [ff(C_TOTAL, "262033", qtrs=0)] + [ff(t, v, qtrs=0) for t, v in children]
+    lines = [
+        ln("CashAndDueFromBanks", "Cash and due from banks"),
+        ln(
+            C_TOTAL,
+            "Cash, due from banks and deposits with banks at end of period",
+            stmt="CF",
+        ),
+    ]
+    calc = [dck.CalcArc(ACC, 10, C_TOTAL, t, 1) for t, _v in children]
+    return facts, lines, calc
+
+
+def test_printed_total_whose_calc_children_sum_to_the_shown_value_matches_on_the_total():
+    # C FY2021 (0000831001-22-000036 R9): "Cash, due from banks and deposits with banks" 262,033 = cash and due from
+    # banks 27,515 + deposits with banks 234,518. The family's CashAndDueFromBanks alone is 27,515.
+    c = cell(dp="cash_and_equivalents", value="262033", tag=C_TOTAL)
+    facts, lines, calc = _c_cash()
+    a = dck.check_cell(c, dck.Filing(facts, lines, calc))
+    assert (a.outcome, a.method, a.filing_value) == (dck.AUTO_MATCH, "calc", D(262033))
+    assert (
+        "CashAndDueFromBanks" in a.detail
+        and "InterestBearingDepositsInBanks" in a.detail
+    )
+    assert a.fact is not None and a.fact.tag == C_TOTAL
+    # without the filing's calculation the old false mismatch on the 27,515 child returns
+    assert dck.check_cell(c, dck.Filing(facts, lines)).outcome == dck.AUTO_MISMATCH
+    # children that do not sum to the total prove nothing
+    f2, l2, k2 = _c_cash(
+        (("CashAndDueFromBanks", "27515"), ("InterestBearingDepositsInBanks", "1"))
+    )
+    assert dck.check_cell(c, dck.Filing(f2, l2, k2)).outcome == dck.AUTO_MISMATCH
+    # a restricted-cash child makes the total wider than cash: it stays a mismatch (cash excludes restricted cash)
+    f3, l3, k3 = _c_cash(
+        (("CashAndDueFromBanks", "27515"), ("RestrictedCash", "234518"))
+    )
+    assert dck.check_cell(c, dck.Filing(f3, l3, k3)).outcome == dck.AUTO_MISMATCH
+    # the data point's own family line must be inside the total
+    f4, l4, k4 = _c_cash(
+        (("OtherAssetsA", "27515"), ("InterestBearingDepositsInBanks", "234518"))
+    )
+    assert dck.check_cell(c, dck.Filing(f4, l4, k4)).outcome != dck.AUTO_MATCH
+    # the bundle carries the arcs offline
+    b = {
+        "filing_calc": [[x.accession, x.grp, x.parent, x.child, x.weight] for x in calc]
+    }
+    assert dc.BundleFactSource(b).filing_calc([ACC]) == calc
+    assert dck.read_calc(dc.BundleFactSource(b), [ACC]) == calc
+
+
+def test_instant_data_points_take_the_registry_period_type_in_the_claim_check():
+    # AXP FY2017 (0000004962-18-000032 R5) "Customer deposits" 64,452, us-gaap:Deposits, an instant: the claim check
+    # looked for a 12-month value and said NOT_FOUND.
+    c = dc.Cell(
+        "deposits",
+        "2017",
+        "2017-12-31",
+        dc.SHOWN,
+        D("64452000000"),
+        ACC,
+        "R5",
+        "Deposits",
+    )
+    assert c.qtrs == 0
+    fact = dc.Fact(ACC, "Deposits", "2017-12-31", 0, "", D("64452000000"), ("R5",), -6)
+    assert dc.check_cell(c, [fact]).result == "MATCH"
+    # every balance-sheet data point of the registry is an instant, every other one a duration
+    for dp in dck.registry_instant():
+        assert dck.is_instant(dp) and dp in dc.INSTANT_DPS
+    assert {"deposits", "loans_net"} <= dc.INSTANT_DPS
+    assert (
+        not dck.is_instant("cash_paid_for_interest")
+        and dc.Cell(
+            "cash_paid_for_interest",
+            "2018",
+            PE,
+            dc.SHOWN,
+            D(1),
+            ACC,
+            "R4",
+            "InterestPaidNet",
+        ).qtrs
+        == 4
+    )
+
+
+def test_claimed_custom_element_matches_when_the_family_is_silent():
+    # QCOM FY2018 (0001728949-18-000095 R63): interest paid 662 only as qcom_Interestpaidnetofinterestreceived
+    pe = "2018-09-30"
+    facts = [ff("Interestpaidnetofinterestreceived", "662000000", ddate=pe)]
+    for tag in (
+        "Interestpaidnetofinterestreceived",
+        "qcom_Interestpaidnetofinterestreceived",
+    ):
+        c = cell(dp="cash_paid_for_interest", value="662000000", tag=tag, pe=pe)
+        a = chk(c, facts)
+        assert (a.outcome, a.method, a.filing_value) == (
+            dck.AUTO_MATCH,
+            "claim",
+            D(662000000),
+        )
+        assert a.fact is not None and a.fact.tag == "Interestpaidnetofinterestreceived"
+    c = cell(
+        dp="cash_paid_for_interest",
+        value="662000000",
+        tag="Interestpaidnetofinterestreceived",
+        pe=pe,
+    )
+    # a family fact, when the filing tags one, still decides (a resolver that picked the wrong element is caught)
+    assert (
+        chk(c, [*facts, ff("InterestPaidNet", "700000000", ddate=pe)]).outcome
+        == dck.AUTO_MISMATCH
+    )
+    # the claimed element holding another value proves nothing: a read
+    assert (
+        chk(c, [ff("Interestpaidnetofinterestreceived", "1", ddate=pe)]).outcome
+        == dck.NEEDS_READ
+    )
+    # a dimensioned claimed fact is not the company figure
+    assert (
+        chk(
+            c,
+            [
+                ff(
+                    "Interestpaidnetofinterestreceived",
+                    "662000000",
+                    ddate=pe,
+                    dims="X=Y",
+                )
+            ],
+        ).outcome
+        == dck.NEEDS_READ
+    )
+
+
+def test_checker_version_is_bumped_for_the_2026_11_29_fixes():
+    assert dck.CHECKER_VERSION == "draw_check@4"

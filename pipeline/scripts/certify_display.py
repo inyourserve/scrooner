@@ -705,12 +705,13 @@ def draw_check_all(
                 [c for c in p.cells if c.display == dc.SHOWN] if all_shown else p.sample
             )
             got = source.filing_facts(*dck.needs(sample)) if sample else ([], [])
+            calc = dck.read_calc(source, dck.needs(sample)[0]) if sample else []
             three: dict = {}
             if store is not None and sample:
                 cik = (cik_of or (lambda i: _company_cik(source.conn, int(i))))(cid)
             if conn_cm is not None:
                 source.conn.rollback()
-            checks = dck.check_draw(sample, *got) if sample else []
+            checks = dck.check_draw(sample, *got, calc) if sample else []
             if store is not None and sample:
                 three = {
                     s.key: s for s in dck.three_source(sample, checks, *got, store, cik)
