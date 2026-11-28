@@ -1,5 +1,5 @@
 {
- "built": "2026-11-29",
+ "built": "2026-11-28",
  "resolver_version": "resolver-all110-.94",
  "rows": 28015,
  "rows_with_usage": 578,
@@ -10,8 +10,8 @@
  "coverage_pct": 64.6,
  "pattern_hits": {
   "P01": {
-   "companies": 32,
-   "cells": 97
+   "companies": 31,
+   "cells": 95
   },
   "P02": {
    "companies": 0,

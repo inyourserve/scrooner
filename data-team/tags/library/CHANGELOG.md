@@ -2109,3 +2109,25 @@
 - ~ OtherNonoperatingIncome: served_cells
 - ~ OtherNonoperatingIncomeExpense: served_cells
 - ~ PaymentsOfDividends: rule_id, served_cells
+
+## 2026-11-28 (resolver-all110-.94): 20 element changes, 28015 rows, coverage 64.6%
+- ~ CapitalLeaseObligations: served_cells
+- ~ CapitalLeaseObligationsCurrent: served_cells
+- ~ CapitalLeaseObligationsNoncurrent: served_cells
+- ~ DividendsPreferredStock: data_point, served_cells
+- ~ IncomeLossFromContinuingOperationsIncludingNoncontrollingInterestBeforeIncomeTaxesExtraordinaryItems: served_cells
+- ~ IncreaseDecreaseInAccountsReceivable: served_cells
+- ~ IncreaseDecreaseInAccountsReceivableExcludingAcquisitionRelated: served_cells
+- ~ InterestAndOtherIncome: served_cells
+- ~ InterestDividendAndInvestmentIncome: served_cells
+- ~ InterestIncomeAndOther: served_cells
+- ~ LongTermDebtNoncurrent: served_cells
+- ~ NetIncomeLoss: rule_id
+- ~ NonoperatingIncomeExpense: served_cells
+- ~ OtherNonoperatingIncome: served_cells
+- ~ OtherNonoperatingIncomeExpense: served_cells
+- ~ PaymentsOfDividends: rule_id, served_cells
+- ~ PaymentsforRepurchaseofCommonStockintheOpenMarket: served_cells
+- ~ ProfitLoss: rule_id
+- ~ RevenuesNetOfInterestExpenseBeforeProvisionForLoanLoss: rule_id, served_cells
+- ~ WeightedAverageNumberOfDilutedSharesOutstanding: served_cells
