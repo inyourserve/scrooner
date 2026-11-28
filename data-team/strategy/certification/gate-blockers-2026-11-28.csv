@@ -1,0 +1,95 @@
+rank,ticker,company_id,failing_check,cells,open_shown,pageless_shown,parts_blank_shown,top_cause,top_data_points
+38,PM,5761,open_cells,1,1,0,0,HELD:conflicting_values_in_filing x1,other_income_expense_net x1
+51,CRWD,2726,open_cells,1,1,0,0,BLANK:not_presented_but_row_shown x1,interest_income x1
+75,PFE,1030,open_cells,1,1,0,0,DISAGREE:shown_is_not_the_authoritative_copy x1,revenue x1
+1,NVDA,2733,open_cells,2,2,0,0,HELD:component_missing_for_period x1; BLANK:docmap_component_sum_not_loaded x1,total_debt x2
+46,TMO,1105,open_cells,2,2,0,0,DISAGREE:shown_is_not_the_authoritative_copy x2,total_debt x2
+62,ADI,128,open_cells,2,2,0,0,REASON:line_presented_combined x1; BLANK:not_presented_but_row_shown x1,cf_ap_change x1; total_liabilities x1
+84,BA,207,pageless_shown,2,0,2,0,,
+13,WMT,1134,open_cells,3,3,0,0,BLANK:not_presented_but_row_shown x3,shares_outstanding x3
+31,MRK,1182,open_cells,3,3,0,0,DISAGREE:shown_is_not_the_authoritative_copy x2; UNCHECKED:proof_is_for_another_value x1,amortization_of_intangibles x3
+49,GEV,4015,open_cells,6,6,0,0,REASON:line_presented_combined x1; PROVEN:no_registry_step x1,sbc x2; accounts_payable x1
+64,SNDK,4227,open_cells,6,6,0,0,PROVEN:no_registry_step x2; BLANK:not_presented_but_row_shown x2,accounts_payable x2; amortization_of_intangibles x2
+87,STX,3886,open_cells,6,6,0,0,BLANK:not_presented_but_row_shown x3; UNCHECKED:proof_is_for_another_value x2,gross_profit x3; cash_paid_for_income_taxes x1
+83,ETN,2852,open_cells,7,7,0,0,PROVEN:no_registry_step x6; UNCHECKED:no_proof_row x1,sbc x6; interest_expense x1
+50,AMGN,1207,open_cells,8,8,0,0,DISAGREE:split_parts_do_not_sum_to_combined_line x5; REASON:line_presented_combined x1,interest_expense x2; interest_income x2
+56,IBM,644,open_cells,8,8,0,0,PROVEN:no_registry_step x5; DISAGREE:shown_is_not_the_authoritative_copy x3,other_income_expense_net x5; total_debt x3
+66,ABT,76,open_cells,8,8,0,0,UNCHECKED:no_proof_row x7; BLANK:not_presented_but_row_shown x1,dividends_per_share x7; gross_profit x1
+76,SCCO,2124,open_cells,8,8,0,0,HELD:proof_disagree x5; HELD:component_missing_for_period x2,gross_profit x5; total_debt x2
+82,SCHW,1204,open_cells,8,8,0,0,REASON:line_presented_combined x8,dividends_paid x8
+96,SPGI,684,open_cells,8,8,0,0,BLANK:not_presented_but_row_shown x6; DISAGREE:shown_is_not_the_authoritative_copy x2,gross_profit x6; cost_of_revenue x1
+37,AMAT,134,open_cells,9,9,0,0,REASON:line_presented_combined x7; BLANK:not_presented_but_row_shown x2,other_income_expense_net x7; amortization_of_intangibles x2
+72,UNP,1117,open_cells+pageless_shown+parts_blank_shown,9,3,2,4,BLANK:no_authoritative_fact x2; PROVEN:no_registry_step x1,cash_paid_for_income_taxes x3
+6,META,5050,open_cells+pageless_shown+parts_blank_shown,10,5,1,4,REASON:open_period x2; BLANK:not_presented_but_row_shown x2,cash_paid_for_interest x2; gross_profit x2
+8,TSLA,4945,open_cells,10,10,0,0,BLANK:not_presented_but_row_shown x8; BLANK:no_authoritative_fact x2,amortization_of_intangibles x6; goodwill x2
+21,ABBV,2848,open_cells,10,10,0,0,DISAGREE:filer_arithmetic_fails x6; UNCHECKED:no_proof_row x3,cost_of_revenue x6; accounts_receivable x2
+94,VRTX,1700,open_cells,11,11,0,0,BLANK:not_presented_but_row_shown x10; HELD:opex_tie_needs_gross_profit_and_operating_income_of_the_filing x1,amortization_of_intangibles x8; gross_profit x2
+10,LLY,666,open_cells,12,12,0,0,UNCHECKED:proof_is_for_another_value x12,cash_flow_financing x2; cash_flow_investing x2
+32,BAC,716,open_cells,12,12,0,0,REASON:structural_not_presented x11; REASON:open_period x1,capex x11; revenue x1
+42,MS,1807,open_cells,12,12,0,0,BLANK:not_presented_but_row_shown x10; REASON:line_presented_combined x2,ppe_net x10; cf_ap_change x2
+4,MSFT,4,open_cells+parts_blank_shown,13,12,0,1,REASON:line_presented_combined x12,other_income_expense_net x12
+5,AMZN,2328,open_cells+pageless_shown,13,7,6,0,BLANK:not_presented_but_row_shown x3; UNCHECKED:proof_is_for_another_value x2,gross_profit x2; total_debt x2
+12,MU,1321,open_cells,13,13,0,0,REASON:structural_not_presented x7; HELD:opex_components_do_not_tie_gross_profit_to_operating_income x2,dividends_per_share x6; operating_expenses x2
+26,CSCO,1649,open_cells,13,13,0,0,UNCHECKED:no_proof_row x11; BLANK:era_unmapped x1,amortization_of_intangibles x12; cash_paid_for_interest x1
+86,NOW,5480,open_cells,13,13,0,0,BLANK:not_presented_but_row_shown x7; REASON:line_presented_combined x6,other_income_expense_net x6; cash_paid_for_interest x4
+34,CAT,251,open_cells+pageless_shown,14,4,10,0,BLANK:not_presented_but_row_shown x3; BLANK:era_unmapped x1,gross_profit x3; cash_and_equivalents x1
+58,AXP,108,open_cells+pageless_shown,14,12,2,0,UNCHECKED:no_proof_row x6; BLANK:era_unmapped x3,cash_and_equivalents x6; loans_net x3
+92,VLO,2529,open_cells+pageless_shown,14,8,6,0,BLANK:not_presented_but_row_shown x5; DISAGREE:shown_is_not_the_authoritative_copy x1,goodwill x2; gross_profit x2
+99,FTNT,4447,open_cells,14,14,0,0,BLANK:not_presented_but_row_shown x10; UNCHECKED:proof_is_for_another_value x2,cash_paid_for_interest x6; interest_expense x4
+41,DELL,3083,open_cells,15,15,0,0,BLANK:era_unmapped x7; PROVEN:no_registry_step x2,weighted_diluted_shares x3; basic_eps x2
+48,TXN,1104,open_cells+pageless_shown+parts_blank_shown,15,11,2,2,BLANK:not_presented_but_row_shown x11,interest_income x9; amortization_of_intangibles x2
+93,LMT,1975,open_cells+parts_blank_shown,15,14,0,1,HELD:opex_components_do_not_tie_gross_profit_to_operating_income x9; DISAGREE:identity_break x2,operating_expenses x11; cash_and_equivalents x1
+22,INTC,643,open_cells,16,16,0,0,UNCHECKED:no_proof_row x9; REASON:line_presented_combined x3,dividends_per_share x8; other_income_expense_net x3
+79,TJX,1158,open_cells,16,16,0,0,BLANK:not_presented_but_row_shown x9; HELD:component_missing_for_period x4,operating_expenses x5; total_debt x5
+91,MPC,2376,open_cells+parts_blank_shown,16,7,0,9,UNCHECKED:proof_is_for_another_value x3; REASON:line_presented_combined x2,cf_ap_change x2; cf_ar_change x1
+88,UBER,2787,open_cells+parts_blank_shown,17,4,0,13,UNCHECKED:no_proof_row x3; HELD:component_missing_for_period x1,depreciation_and_amortization x2; goodwill x1
+95,PGR,1043,open_cells,17,17,0,0,REASON:line_presented_combined x11; REASON:structural_not_presented x2,accounts_payable x11; amortization_of_intangibles x2
+57,C,1586,open_cells,18,18,0,0,UNCHECKED:no_proof_row x11; BLANK:not_presented_but_row_shown x6,dividends_per_share x11; ppe_net x6
+67,QCOM,1516,open_cells,18,18,0,0,HELD:opex_components_do_not_tie_gross_profit_to_operating_income x7; DISAGREE:shown_is_not_the_authoritative_copy x4,operating_expenses x10; cf_inventory_change x3
+73,MCD,683,open_cells+parts_blank_shown,18,17,0,1,BLANK:not_presented_but_row_shown x4; HELD:filer_scale_error x4,gross_profit x3; weighted_basic_shares x3
+80,DHR,1190,open_cells+pageless_shown,18,7,11,0,PROVEN:no_registry_step x3; UNCHECKED:no_proof_row x2,other_income_expense_net x3; cash_and_equivalents x2
+89,ACN,5943,open_cells+pageless_shown,18,6,12,0,BLANK:not_presented_but_row_shown x4; UNCHECKED:proof_is_for_another_value x1,gross_profit x2; accounts_receivable x1
+17,V,5718,open_cells,19,19,0,0,HELD:components_without_single_calc_parent x11; REASON:line_presented_combined x5,sga_expense x11; interest_expense x5
+30,UNH,1354,open_cells,19,19,0,0,REASON:line_presented_combined x12; REASON:structural_not_presented x6,interest_income x11; other_income_expense_net x7
+43,PANW,5058,open_cells+pageless_shown+parts_blank_shown,19,17,1,1,UNCHECKED:proof_is_for_another_value x13; BLANK:not_presented_but_row_shown x3,total_liabilities x4; accounts_payable x1
+45,GS,1767,open_cells+pageless_shown,19,12,7,0,BLANK:not_in_template_but_in_template x6; REASON:line_presented_combined x3,accounts_receivable x11; operating_expenses x1
+70,BLK,4123,open_cells,19,19,0,0,UNCHECKED:reason_refused_comparative_presented x8; REASON:line_presented_combined x7,sga_expense x10; dividends_per_share x2
+25,COST,1857,open_cells,20,20,0,0,REASON:line_presented_combined x11; UNCHECKED:proof_unchecked x3,interest_income x12; total_debt x7
+28,ORCL,5203,open_cells+pageless_shown+parts_blank_shown,20,9,9,2,UNCHECKED:no_proof_row x2; DERIVED:no_registry_step x2,comprehensive_income x2; gross_profit x2
+53,ANET,3418,open_cells+pageless_shown+parts_blank_shown,20,15,2,3,BLANK:not_presented_but_row_shown x11; UNCHECKED:proof_is_for_another_value x3,interest_expense x5; amortization_of_intangibles x3
+14,JPM,1,open_cells,21,21,0,0,REASON:line_presented_combined x14; BLANK:not_presented_but_row_shown x7,accounts_payable x11; amortization_of_intangibles x7
+24,PLTR,4969,open_cells+pageless_shown,23,19,4,0,BLANK:not_presented_but_row_shown x10; UNCHECKED:proof_is_for_another_value x2,goodwill x4; amortization_of_intangibles x3
+27,KO,279,open_cells,23,23,0,0,PROVEN:no_registry_step x9; BLANK:era_unmapped x9,shares_outstanding x11; other_income_expense_net x9
+39,HD,1236,open_cells,23,23,0,0,REASON:line_presented_combined x13; BLANK:not_presented_but_row_shown x8,other_income_expense_net x12; amortization_of_intangibles x8
+44,RTX,1123,open_cells,23,23,0,0,DISAGREE:identity_break x6; DISAGREE:shown_is_not_the_authoritative_copy x6,operating_income x6; revenue x6
+78,WELL,1421,open_cells,24,24,0,0,DERIVED:no_registry_step x7; BLANK:era_unmapped x5,gross_profit x9; accounts_receivable x8
+7,AVGO,5116,open_cells+pageless_shown,25,18,7,0,PROVEN:no_registry_step x6; DISAGREE:shown_differs_from_printed_line x4,other_income_expense_net x6; amortization_of_intangibles x2
+15,AMD,85,open_cells+parts_blank_shown,25,16,0,9,DISAGREE:shown_is_not_the_authoritative_copy x8; BLANK:not_presented_but_row_shown x3,accounts_payable x6; amortization_of_intangibles x4
+36,GE,608,open_cells+pageless_shown,25,10,15,0,REASON:line_presented_combined x6; UNCHECKED:proof_is_for_another_value x4,ppe_net x4; cash_paid_for_income_taxes x2
+40,NFLX,3007,open_cells+pageless_shown,26,19,7,0,REASON:line_presented_combined x9; BLANK:not_presented_but_row_shown x5,other_income_expense_net x9; accounts_receivable x3
+68,PEP,1028,open_cells,27,27,0,0,REASON:line_presented_combined x22; HELD:fsn_value_not_on_face_line x2,interest_income x11; other_income_expense_net x11
+85,ISRG,2540,open_cells,27,27,0,0,REASON:structural_not_presented x20; REASON:line_presented_combined x4,cash_paid_for_interest x11; dividends_paid x11
+74,TMUS,4630,open_cells,28,28,0,0,BLANK:era_unmapped x10; PROVEN:no_registry_step x7,accounts_receivable x7; cost_of_revenue x5
+2,AAPL,3,open_cells,29,29,0,0,BLANK:not_presented_but_row_shown x23; UNCHECKED:no_proof_row x2,goodwill x9; amortization_of_intangibles x6
+77,NEE,1400,open_cells,31,31,0,0,BLANK:not_presented_but_row_shown x17; UNCHECKED:proof_is_for_another_value x5,cf_inventory_change x10; interest_income x6
+47,WFC,1010,open_cells+pageless_shown,33,30,3,0,REASON:line_presented_combined x16; UNCHECKED:proof_is_for_another_value x4,accounts_payable x11; cash_and_equivalents x7
+81,T,1359,open_cells+pageless_shown,34,18,16,0,DISAGREE:shown_is_not_the_authoritative_copy x9; BLANK:not_presented_but_row_shown x4,stockholders_equity x9; interest_income x4
+90,CB,1813,open_cells+pageless_shown,36,22,14,0,REASON:line_presented_combined x8; DISAGREE:filer_arithmetic_fails x6,interest_income x8; sbc x6
+23,CVX,1086,open_cells+pageless_shown,40,26,14,0,PROVEN:no_registry_step x11; BLANK:era_unmapped x5,sbc x11; shares_outstanding x4
+69,COP,4056,open_cells,43,43,0,0,PROVEN:no_registry_step x19; REASON:line_presented_combined x11,capex x11; accounts_payable x10
+63,DIS,5261,open_cells+pageless_shown+parts_blank_shown,45,27,12,6,REASON:line_presented_combined x9; BLANK:not_presented_but_row_shown x4,sga_expense x9; shares_outstanding x8
+65,VZ,1358,open_cells+pageless_shown,46,23,23,0,DISAGREE:shown_is_not_the_authoritative_copy x11; BLANK:G1_printed_line x7,stockholders_equity x11; cost_of_revenue x7
+71,DE,1196,open_cells+pageless_shown,46,44,2,0,REASON:line_presented_combined x10; BLANK:not_in_template_but_in_template x6,accounts_payable x10; operating_expenses x10
+55,KLAC,1213,open_cells,49,49,0,0,BLANK:era_unmapped x26; REASON:docmap_not_presented x14,operating_expenses x12; operating_income x12
+16,XOM,5351,open_cells+pageless_shown,56,36,20,0,REASON:line_presented_combined x33; HELD:conflicting_values_in_filing x2,accounts_receivable x11; cf_ap_change x11
+3,GOOG,9,open_cells+pageless_shown+parts_blank_shown,57,27,7,23,BLANK:not_presented_but_row_shown x11; REASON:structural_not_presented x11,cf_inventory_change x11; cash_paid_for_interest x7
+29,PG,1042,open_cells,57,57,0,0,BLANK:not_presented_but_row_shown x34; DISAGREE:shown_is_not_the_authoritative_copy x10,shares_outstanding x11; stockholders_equity x7
+54,SHOP,3398,open_cells+pageless_shown,57,28,29,0,REASON:structural_not_presented x11; BLANK:not_presented_but_row_shown x10,share_buybacks x11; cash_paid_for_income_taxes x5
+52,LIN,4841,open_cells+pageless_shown,59,45,14,0,UNCHECKED:proof_unchecked x39; UNCHECKED:no_proof_row x3,other_income_expense_net x2; shares_outstanding x2
+60,CRM,3569,open_cells+pageless_shown+parts_blank_shown,67,61,3,3,UNCHECKED:proof_unchecked x35; REASON:structural_not_presented x10,dividends_per_share x12; accounts_payable x7
+98,NEM,4077,open_cells+pageless_shown+parts_blank_shown,76,23,48,5,REASON:line_presented_combined x10; PROVEN:no_registry_step x7,operating_expenses x7; interest_expense x6
+59,MRVL,2683,open_cells+pageless_shown+parts_blank_shown,79,52,24,3,UNCHECKED:proof_unchecked x43; DISAGREE:shown_is_not_the_authoritative_copy x4,total_debt x5; other_income_expense_net x3
+9,AKTX,2781,no_shown_cells,0,0,0,0,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: ADS ratio (true $0.016B)),
+11,TBLA,2766,no_shown_cells,0,0,0,0,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: filer diluted shares 1000x (true $0.93B)),
+18,SPCX,4257,no_shown_cells,0,0,0,0,"TEMPLATE_UNAVAILABLE (excluded: keep: mcap UNDERSTATED (true ~$1.92T, ~rank 6))",
+33,RPAY,5007,no_shown_cells,0,0,0,0,TEMPLATE_UNAVAILABLE (excluded: wrong mcap: filer diluted shares 1000x (true $0.37B)),

@@ -1834,3 +1834,49 @@ def test_certificate_and_draw_check_all_record_source_agreement(tmp_path):
             cik_of=lambda i: CIK,
         )
         assert len(_rows(tmp_path / "o2" / "draw-check-d.csv")) == n
+
+
+def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path):
+    """BMY accounts_receivable FY2020/22/25 (2026-11-28): a text-stated cell (badge printed, no tag, no parts) is LOCATOR
+    in the claim check and NEEDS_READ in the draw checker; its MATCH read settled the draw checker but the LOCATOR kept
+    the company REVIEW forever. Mutation: the verdict ignoring settled_by_read stays REVIEW and fails this test."""
+    def badged(name, rows):
+        p = tmp_path / name
+        with open(p, "w", newline="") as fh:
+            w = csv.writer(fh)
+            w.writerow(["data_point", "fiscal_year", "period_end", "shown_value", "accession", "r_page", "tag",
+                        "parts", "display", "badge"])
+            w.writerows([r + ["as_printed"] for r in rows])
+        return p
+
+    cov = badged(
+        "cov.csv",
+        [
+            ["revenue", "2023", PE, "100", ACC, "R4", "Revenues", "", dc.SHOWN],
+            ["accounts_receivable", "2023", PE, "7", ACC, "R4", "", "", dc.SHOWN],
+        ],
+    )
+    facts = [ff("Revenues", "100")]
+    run = dc.certify("T", "1", cov, Src(facts))
+    assert run.verdict == "REVIEW"
+    assert [s.result for s in run.shown if s.cell.data_point == "accounts_receivable"] == ["LOCATOR"]
+
+    def with_read(verdict):
+        reads = tmp_path / f"reads-{verdict}.csv"
+        reads.write_text(
+            f"data_point,fiscal_year,verdict,reader,evidence\naccounts_receivable,2023,{verdict},agent-7,R81 prints 7\n"
+        )
+        return dc.certify("T", "1", cov, Src(facts), reads=dck.load_reads(reads))
+
+    assert with_read("MATCH").verdict == "PASS"
+    wrong = with_read("MISMATCH")
+    assert wrong.verdict == "FAIL" and wrong.errors == 1
+    # a read never settles a tagged cell's LOCATOR (value found off the cited page): the approver still looks
+    tagged = badged(
+        "tagged.csv",
+        [["revenue", "2023", PE, "100", ACC, "R9", "Revenues", "", dc.SHOWN]],
+    )
+    reads = tmp_path / "reads-tagged.csv"
+    reads.write_text("data_point,fiscal_year,verdict,reader,evidence\nrevenue,2023,MATCH,agent-7,R4 prints 100\n")
+    t = dc.certify("T", "1", tagged, Src(facts), reads=dck.load_reads(reads))
+    assert [s.result for s in t.shown] == ["LOCATOR"] and t.verdict == "REVIEW"

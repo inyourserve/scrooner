@@ -1536,6 +1536,17 @@ class Run:
             r for k, r in self.reads.items() if k in drawn and r.verdict == "MISMATCH"
         ]
 
+    def settled_by_read(self, s: "CellCheck") -> bool:
+        """A drawn text-stated cell (untagged, no parts: check_cell can only say LOCATOR) is settled by the filing read
+        the draw checker sent it to (NEEDS_READ), when that read is a MATCH with reader and evidence (BMY
+        accounts_receivable 2026-11-28: read MATCH, yet the company stayed REVIEW forever). A tagged cell's LOCATOR
+        (value found, page differs) and every NOT_FOUND stay for the approver."""
+        if s.result != "LOCATOR" or s.cell.tag or s.cell.parts:
+            return False
+        routed = {a.key for a in self.auto or () if a.outcome == dck.NEEDS_READ}
+        r = self.reads.get(s.cell.key)
+        return s.cell.key in routed and r is not None and r.verdict == "MATCH"
+
     @property
     def errors(self) -> int:
         wrong = {s.cell.key for s in self.shown if s.result == "MISMATCH"}
@@ -1552,7 +1563,10 @@ class Run:
         ):
             return "FAIL"
         if (
-            any(s.result in ("LOCATOR", "NOT_FOUND") for s in self.shown)
+            any(
+                s.result in ("LOCATOR", "NOT_FOUND") and not self.settled_by_read(s)
+                for s in self.shown
+            )
             or self.pending_reads
             or any(d.result == "REVIEW" for d in self.debt)
             or any(d.result in ("LOCATOR", "NOT_FOUND") for d in self.derived)
