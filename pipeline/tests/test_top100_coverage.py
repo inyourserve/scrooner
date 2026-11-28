@@ -326,7 +326,8 @@ def test_derived_counts_only_with_proven_inputs_of_one_filing():
     assert out[0]["DERIVED"] == 1 and out[0]["pct_proven_plus_reason"] == "50.0"
 
 
-def test_locator_index_fetch_is_keyed_by_accession():
+def test_locator_index_fetch_is_keyed_by_accession(monkeypatch):
+    monkeypatch.setenv("SCROONER_FSN_CACHE", "0")  # this test pins the DB query shape
     from scrooner_pipeline.mapper.top100_coverage import _locator_index
 
     class Conn:

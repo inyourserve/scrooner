@@ -223,14 +223,27 @@ def _neg(acc: str) -> tuple[int, ...]:
     return tuple(-ord(c) for c in acc)
 
 
-def load_face_indexes(conn: Any, company_ids: list[int]) -> dict[int, FaceIndex]:
-    """company_id -> FaceIndex, two indexed reads (fsn.line/fsn.value of the companies; the map's NOTE claims).
-    A company with no FSN filing has an empty index (nothing is judged)."""
-    out: dict[int, FaceIndex] = {c: FaceIndex() for c in company_ids}
-    if not company_ids:
-        return out
-    if conn.execute("select to_regclass('fsn.line')").fetchone()[0] is not None:
-        rows = conn.execute(
+def _face_rows(conn: Any, company_ids: list[int]) -> list[tuple]:
+    """The face line/value rows of the companies, per company from the local cache (common/fsn_read_cache) while the
+    company's fsn.filing source hashes are unchanged; the missing companies are read in ONE batched query."""
+    from scrooner_pipeline.common import fsn_read_cache as rc
+
+    company_ids = list(dict.fromkeys(company_ids))
+    shas = rc.company_shas(conn, company_ids) if rc.enabled() else {}
+    key_tail = "|".join(FACE_STMTS)
+    per: dict[int, list[tuple]] = {}
+    miss: list[int] = []
+    for cid in company_ids:
+        got = (
+            rc.get("face", f"{cid}|{key_tail}", shas[cid]) if shas.get(cid) else None
+        )
+        if got is None:
+            miss.append(cid)
+        else:
+            per[cid] = got
+    if miss:
+        fetched: dict[int, list[tuple]] = {c: [] for c in miss}
+        for row in conn.execute(
             """
             select f.company_id, f.accession, f.form, f.period, f.filed, f.accepted, t.tag, l.stmt,
                    v.ddate, v.qtrs
@@ -241,8 +254,24 @@ def load_face_indexes(conn: Any, company_ids: list[int]) -> dict[int, FaceIndex]
                                   and v.coreg = '' and v.iprx = 0 and v.value is not null
             where f.company_id = any(%s)
             """,
-            (list(FACE_STMTS), company_ids),
-        ).fetchall()
+            (list(FACE_STMTS), miss),
+        ).fetchall():
+            fetched[row[0]].append(row)
+        for cid, rws in fetched.items():
+            if shas.get(cid):
+                rc.put("face", f"{cid}|{key_tail}", shas[cid], rws)
+        per.update(fetched)
+    return [r for cid in company_ids for r in per.get(cid, [])]
+
+
+def load_face_indexes(conn: Any, company_ids: list[int]) -> dict[int, FaceIndex]:
+    """company_id -> FaceIndex, two indexed reads (fsn.line/fsn.value of the companies; the map's NOTE claims).
+    A company with no FSN filing has an empty index (nothing is judged)."""
+    out: dict[int, FaceIndex] = {c: FaceIndex() for c in company_ids}
+    if not company_ids:
+        return out
+    if conn.execute("select to_regclass('fsn.line')").fetchone()[0] is not None:
+        rows = _face_rows(conn, company_ids)
         seen: set[tuple[int, str, str, str, date, int]] = set()
         for cid, acc, form, por, filed, accepted, tag, stmt, ddate, qtrs in rows:
             ix = out[cid]
