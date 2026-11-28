@@ -80,7 +80,8 @@ def test_every_data_points_badge_is_accepted_on_a_shown_cell(db):
         ("SHOWN_VALUE", "printed", None),  # not a kind
         ("SHOWN_VALUE", "combined:", None),  # a kind with nothing named
         ("SHOWN_VALUE", "derived:  ", None),
-        ("SHOWN_VALUE", "as_printed:x", None),
+        ("SHOWN_VALUE", "as_printed: ", None),  # as_printed:<source> needs the source named (as_printed:note is valid)
+        ("SHOWN_VALUE", "printed:x", None),  # an unknown kind with text
         ("OPEN", "as_printed", None),  # a badge only on a shown cell
         ("HIDDEN_ROW", "as_printed", "structural_not_presented"),
     ],

@@ -182,7 +182,9 @@ DATA_POINT_STATEMENTS = {"income_statement", "balance_sheet", "cash_flow"}
 # (applies = no), not_disclosed (no filing prints the figure or its inputs) and included_in:<dp>
 # (one printed line holds two template data points: it serves the one its label names first; the
 # other cell is a filter-exclusion reason, never a blank or zero; Dhairya 2026-11-22).
-BADGE_KINDS = ("as_printed", "combined:", "derived:", "perimeter:")
+# "as_printed:" = a printed figure from a named source other than the statement line (resolver .90: as_printed:note,
+# sbc fallback 3). It is a kind here, not a special case in _badge_ok, so the DB badge CHECK admits it too.
+BADGE_KINDS = ("as_printed", "as_printed:", "combined:", "derived:", "perimeter:")
 CELL_STATES = ("not_applicable", "not_disclosed", "included_in:")
 
 
@@ -456,14 +458,10 @@ class DataPointDefinition:
 
 
 def _badge_ok(b: str) -> bool:
-    if b == "as_printed":
+    if b in BADGE_KINDS and not b.endswith(":"):
         return True
     kind, sep, what = b.partition(":")
-    if kind == "as_printed":
-        # a printed figure from a named source other than the statement line (resolver .90: as_printed:note, sbc
-        # fallback 3, the note's stated pre-tax expense)
-        return bool(sep) and bool(what.strip())
-    return bool(sep) and f"{kind}:" in BADGE_KINDS[1:] and bool(what.strip())
+    return bool(sep) and f"{kind}:" in BADGE_KINDS and bool(what.strip())
 
 
 def load_data_points(
