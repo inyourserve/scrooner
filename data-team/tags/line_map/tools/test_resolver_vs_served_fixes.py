@@ -1169,3 +1169,13 @@ def test_line_continuity_follows_a_retagged_line():
 
 def test_net_interest_revenue_element_is_an_interest_part_never_interest_income():
     assert resolve_all.PURE_II.match('InterestRevenueExpenseNet') and resolve_all.NET_II.match('InterestRevenueExpenseNet')
+
+
+def test_class_sum_leaves_out_a_member_that_totals_named_classes():
+    import collections, resolve_bs
+    c = lambda m, v: (f'ClassOfStock={m}', (D(v), 'R4.htm:14'))
+    cls = collections.OrderedDict([c('CommonClassA', 1728), c('CommonClassB1', 2), c('CommonClassB2', 0), c('CommonClassB3', 61), c('CommonClassB1B2AndB3', 63), c('CommonClassC', 9)])
+    out = resolve_bs.drop_combined_members(cls)
+    assert sum(v for v, _ in out.values()) == D(1800) and 'ClassOfStock=CommonClassB1B2AndB3' not in out   # V FY2026
+    cls['ClassOfStock=CommonClassB1B2AndB3'] = (D(64), 'R4.htm:14')   # not the parts' sum: kept
+    assert 'ClassOfStock=CommonClassB1B2AndB3' in resolve_bs.drop_combined_members(cls)

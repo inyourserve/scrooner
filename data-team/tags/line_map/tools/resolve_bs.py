@@ -164,6 +164,20 @@ NON_ECONOMIC = _non_economic()
 DERIVE_SHARES = os.environ.get('DERIVE_SHARES', '1') == '1'   # issued - treasury (X67): ON since the founder's approval (doc 02, 2026-11-17 item 5) and the loader's DERIVED_DIRECT path
 
 
+def drop_combined_members(cls):
+    """X138 (V FY2026): the parenthetical prints 'Common Class B-1, B-2 And B-3' (member CommonClassB1B2AndB3, 63) beside the B-1, B-2 and B-3
+    members (2 + 0 + 61): a member whose name joins other classes with 'And', and whose value equals the sum of the members it names,
+    is their total. It is left out so the classes are counted once."""
+    sfx = lambda k: re.sub(r'^\w*?Class', '', k.split('=', 1)[1])
+    out = collections.OrderedDict(cls)
+    for k, (v, _) in list(cls.items()):
+        name = sfx(k)
+        if 'And' not in name: continue
+        parts = [o for o in cls if o != k and 'And' not in sfx(o) and sfx(o) and sfx(o) in name.replace('And', '')]   # 'A' is not in 'B1B2AndB3'
+        if len(parts) >= 2 and sum(cls[o][0] for o in parts) == v: out.pop(k, None)
+    return out
+
+
 def shares(f, notes, bsby):
     und = notes.get('CommonStockSharesOutstanding')
     if und is not None:
@@ -214,6 +228,7 @@ def shares(f, notes, bsby):
                             + (f"; non-economic class(es) left out: {', '.join(left)} (rules/non_economic_share_classes.csv)" if left else ''),
                         rule='derived_issued_less_treasury')
     cls = collections.OrderedDict((k, v) for k, v in cls.items() if k.split('=', 1)[1] not in noneco)
+    cls = drop_combined_members(cls)
     if cls:
         return dict(status='component_sum' if len(cls) > 1 else 'mapped', value=sum(v for v, _ in cls.values()),
                     nodes='; '.join(f"CommonStockSharesOutstanding[{k}]={v} [{r}]" for k, (v, r) in cls.items()),
