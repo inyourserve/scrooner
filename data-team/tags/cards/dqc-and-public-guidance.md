@@ -134,10 +134,10 @@ Precedence (Dhairya 2026-11-12): where a DQC rule conflicts with a card, the DQC
 | DQC_0213 | Missing Calculation Children for Key Balance Sheet Items | Final | October 15, 2025 | Assets;AssetsCurrent;Liabilities;LiabilitiesCurrent;StockholdersEquity | https://raw.githubusercontent.com/DataQualityCommittee/dqc_us_rules/master/docs/DQC_US_0213/DQC_0213.md |
 | DQC_0214 | Missing Equity Concepts in Balance Sheet Calculation | Final | October 15, 2025 | TreasuryStockValue | https://raw.githubusercontent.com/DataQualityCommittee/dqc_us_rules/master/docs/DQC_US_0214/DQC_0214.md |
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 71 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 71 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
@@ -183,7 +183,7 @@ Resolver resolver-all110-.93. 71 elements named in this card have library knowle
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
-- **Rules:** X77; C29; resolver functions resolve
+- **Rules:** X77; X140; C29; resolver functions resolve
 - **Evidence:** 105 companies, 1212 served, 28185 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
@@ -222,7 +222,7 @@ Resolver resolver-all110-.93. 71 elements named in this card have library knowle
 - **Meaning:** Intangible Asset, Finite-Lived, Amortization Expense (us-gaap, duration, debit). Amount of amortization expense for finite-lived intangible asset. Excludes goodwill and capitalized cost for software to be sold, leased, or marketed.
 - **Data point definition:** amortization_of_intangibles: Amortization of acquired finite-lived intangible assets for the period (face line, cash-flow line or note).; depreciation_and_amortization: Depreciation and amortization add-back on the cash-flow statement (incl. depletion for extractive filers). (+1 more)
 - **Data point:** amortization_of_intangibles; depreciation_and_amortization; operating_expenses; polarity amortization_of_intangibles:positive; depreciation_and_amortization:positive; role depreciation_and_amortization:primary-part#1; depreciation_and_amortization:primary-part#2; depreciation_and_amortization:primary-part#3; depreciation_and_amortization:primary-part#8 (+1 more)
-- **Rules:** I51; I52; I53; I54; I43; I44; I45; I46; I47; I48; I49; I50; family resolve_all.NARROW[amortization_of_intangibles]
+- **Rules:** I43; I44; I45; I46; I47; I48; I49; I50; I51; I52; I53; I54; family resolve_all.NARROW[amortization_of_intangibles]
 - **Evidence:** 92 companies, 1180 served, 2150 proven, 103 certified cells; last verified 2026-11-15
 - **Known problems:** FSN dropped fact 0001413329-23-000025 (fsn_dropped_facts.csv); FSN dropped fact 0001413329-24-000013 (fsn_dropped_facts.csv); pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. ISRG amortization_of_intangibles 2025-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
@@ -405,7 +405,7 @@ Resolver resolver-all110-.93. 71 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
 - **Data point:** total_debt; total_liabilities
 - **Rules:** D14; resolver functions run
-- **Evidence:** 61 companies, 750 served, 203 proven, 3 certified cells; last verified 2026-11-15
+- **Evidence:** 61 companies, 751 served, 203 proven, 3 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces NonRecourseDebt@2022

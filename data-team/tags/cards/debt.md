@@ -141,10 +141,10 @@ The FSN-era total-debt rule is the release-prep lane (era_detect → assemble_fs
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 32 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
@@ -171,7 +171,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
 - **Data point:** total_debt; total_liabilities
 - **Rules:** D14; resolver functions run
-- **Evidence:** 61 companies, 750 served, 203 proven, 3 certified cells; last verified 2026-11-15
+- **Evidence:** 61 companies, 751 served, 203 proven, 3 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces NonRecourseDebt@2022
@@ -285,7 +285,7 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
 - **Data point:** total_debt
 - **Rules:** none
-- **Evidence:** 8 companies, 28 served, 0 proven, 0 certified cells; last verified -
+- **Evidence:** 9 companies, 29 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreaseCurrentMaturitiesOfCapitalLeaseObligations@2021; PostconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021; PreconfirmationCurrentMaturitiesOfCapitalLeaseObligations@2021
@@ -345,15 +345,6 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaces FreshStartAdjustmentIncreaseDecreasePostconfirmationCreditFacility@2021; LineOfCreditFacilityAmountOutstanding@2014; PostconfirmationPostconfirmationCreditFacility@2021; PreconfirmationPostconfirmationCreditFacility@2021
 
-### `CapitalLeaseObligations`
-- **Meaning:** Capital Lease Obligations (Deprecated 2026) (us-gaap, instant, credit). Amount equal to the present value (the principal) at the beginning of the lease term of minimum lease payments during the lease term (excluding that portion of the payments representing executory costs such as insurance, maintenance, and ta...
-- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
-- **Data point:** total_debt
-- **Rules:** X57; D13; resolver functions run
-- **Evidence:** 3 companies, 10 served, 0 proven, 0 certified cells; last verified -
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
 ### `LongTermNotesAndLoans`
 - **Meaning:** Notes and Loans, Noncurrent (us-gaap, instant, credit). Carrying value as of the balance sheet date of all notes and loans payable (with maturities initially due after one year or beyond the operating cycle if longer), excluding current portion.
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
@@ -398,6 +389,15 @@ Resolver resolver-all110-.93. 32 elements named in this card have library knowle
 - **Data point:** total_debt
 - **Rules:** none
 - **Evidence:** 2 companies, 6 served, 0 proven, 0 certified cells; last verified 2026-11-02
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
+### `CapitalLeaseObligations`
+- **Meaning:** Capital Lease Obligations (Deprecated 2026) (us-gaap, instant, credit). Amount equal to the present value (the principal) at the beginning of the lease term of minimum lease payments during the lease term (excluding that portion of the payments representing executory costs such as insurance, maintenance, and ta...
+- **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest.
+- **Data point:** total_debt
+- **Rules:** X57; D13; resolver functions run
+- **Evidence:** 1 companies, 5 served, 0 proven, 0 certified cells; last verified -
 - **Known problems:** none recorded
 - **Pattern hits:** none
 

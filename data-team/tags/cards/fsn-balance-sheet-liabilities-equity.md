@@ -434,10 +434,10 @@ No disagreement found on: Liabilities and LiabilitiesCurrent as the total keys; 
 - `PreferredStockSharesOutstanding`: open one filing.
 - Catalogue: `noncontrolling_interest`, `preferred_equity`, `accounts_payable_resolved` and `deferred_tax_liabilities` are proposals only.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 35 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 35 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LiabilitiesCurrent`
 - **Meaning:** Liabilities, Current (us-gaap, instant, credit). Total obligations incurred as part of normal operations that are expected to be paid during the following twelve months or within one business cycle, if longer.
@@ -493,7 +493,7 @@ Resolver resolver-all110-.93. 35 elements named in this card have library knowle
 - **Data point definition:** total_debt: Total debt: short- and long-term borrowings incl. current portion, commercial paper, finance and capital leases (face or notes), financing obligations and failed sale-leasebacks;  excludes operating leases and accrued interest. (+1 more)
 - **Data point:** total_debt; total_liabilities
 - **Rules:** D14; resolver functions run
-- **Evidence:** 61 companies, 750 served, 203 proven, 3 certified cells; last verified 2026-11-15
+- **Evidence:** 61 companies, 751 served, 203 proven, 3 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces NonRecourseDebt@2022

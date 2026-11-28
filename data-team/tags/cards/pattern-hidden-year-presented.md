@@ -15,10 +15,10 @@ Doc 02 says a year a filing prints is never hidden: a printed value or dash must
 
 **Examples.** WMT shares_outstanding FY2024 (P05), ORCL cost_of_revenue FY2015-16 (P06, CostOfServices), MSFT interest_income FY2018 (P06, InvestmentIncomeNet: check whether the line is combined).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 2 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 2 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `CostOfServices`
 - **Meaning:** Cost of Services (Deprecated 2018-01-31) (us-gaap, duration, debit). Total costs related to services rendered by an entity during the reporting period.

@@ -71,16 +71,16 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 ## 11. Annual DPS from printed quarters (Dhairya ruling 2026-11-12)
 - When a 10-K prints only quarterly DPS, annual DPS = the sum of the FOUR quarterly facts printed in that same filing (declared, or paid if only paid is printed), served with the note "sum of printed quarterly dividends". Conditions: all four quarters in the one filing; one basis; each fact on its own 3-month or dated-payment context (a quarterly rate on a 12-month context, as at CFG, V, NVDA, is not a quarterly fact); no special dividend unless printed as such. Otherwise not_presented. Cases: C 2.32 (0.56 + 0.56 + 0.60 + 0.60), COF, CRM 1.664 (4 × 0.416), DIS (dated payments in the fiscal year). DPS is additive; EPS is never derived.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 23 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `NetIncomeLoss`
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
-- **Rules:** X77; C29; resolver functions resolve
+- **Rules:** X77; X140; C29; resolver functions resolve
 - **Evidence:** 105 companies, 1212 served, 28185 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
@@ -145,8 +145,8 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Meaning:** Payments of Dividends (us-gaap, duration, credit). Cash outflow in the form of capital distributions and dividends to common shareholders, preferred shareholders and noncontrolling interests.
 - **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
 - **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
-- **Rules:** K17; K18; K19; K20; K21; K22; K23
-- **Evidence:** 50 companies, 455 served, 11139 proven, 74 certified cells; last verified 2026-11-15
+- **Rules:** X141; K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 50 companies, 491 served, 11139 proven, 74 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
@@ -240,7 +240,7 @@ Resolver resolver-all110-.93. 23 elements named in this card have library knowle
 - **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income
-- **Rules:** X77; F03; F04; resolver functions run
+- **Rules:** X77; X140; F03; F04; resolver functions run
 - **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none

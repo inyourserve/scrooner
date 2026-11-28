@@ -61,10 +61,10 @@ The tags rarely share a period (they replace each other). Where they do, they ag
 - Keep `LoansReceivableNet` in the set for 2015-2020 periods only (removed element; 143 companies until 2020-03-31, DATA-INFERRED). CORRECTED before publishing: my first draft said to remove it because it is absent from the 2025/2026 schemas; the tag library shows it is historical. Never use an `AllowanceForLoanAndLeaseLosses*` roll-forward component as the allowance balance.
 - Verified by: Tag Expert (me), 2026-10-22. Not an approval; route to the Tag Mapper (coexistence already run above) and the Standardization Lead (era rule and the face guard).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 3 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 3 elements named in this card have library knowledge. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `LoansAndLeasesReceivableNetReportedAmount`
 - **Meaning:** Loans and Leases Receivable, Net Amount (us-gaap, instant, debit). Amount after allowance and deduction of deferred interest and fees, unamortized costs and premiums and discounts from face amounts, of loans and leases held in portfolio, including but not limited to, commercial and consumer loans. Excludes...

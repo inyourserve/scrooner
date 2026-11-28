@@ -65,6 +65,12 @@ def _deprecated():
     return {r['element'] for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
 
 
+def _us_gaap_elements():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'taxonomy', 'elements.csv')
+    return {r['name'] for r in csv.DictReader(open(p))} if os.path.exists(p) else set()
+
+
+US_GAAP_ELEMENTS = _us_gaap_elements()   # every US-GAAP taxonomy element 2014-2026 (taxonomy/elements.csv); an element outside it is a filer extension
 DEPRECATED = _deprecated()   # FASB deprecations (taxonomy/deprecations.csv): an element a later filing no longer uses because the taxonomy retired it
 LP_NODE = re.compile(r'(-?)(\w+)(\[[^\]]*\])?=(-?[\d.]+) \[([^\]@]*)(?:@[^\]]*)?\]')
 LP_SKIP = re.compile(r'^$')   # nothing skipped: Dhairya 2026-11-17 definition: per-share figures, share counts and total_debt follow one vintage too (split-adjusted history)
@@ -298,7 +304,13 @@ def apply_latest_print(rows, compfacts, filings=()):
                 total_of_parts = (dp == 'amortization_of_intangibles' and b['status'] == 'mapped' and r['status'] == 'component_sum' and len(lt) == 1 and lt <= ot)
                 # one face line renamed (AMZN FY2015 capex: own net PaymentsToAcquirePropertyPlantAndEquipment 4,589 no longer reported for the year;
                 # the latest print's line is gross PaymentsToAcquireProductiveAssets 5,387): the cell follows the latest print's line
-                line_renamed = (dp == 'capex' and b['status'] == r['status'] == 'mapped' and face and len(ot) == len(lt) == 1 and set(gone) == ot)
+                # X140 (.94, BAC FY2017 revenue, ORCL FY2017 pretax): the same holds for any data point whose single face line a later
+                # filing re-tagged under another element (often a filer extension: bac:RevenuesNetOfInterestExpenseBeforeProvisionForLoanLoss,
+                # orcl:IncomeLoss...BeforeIncomeTaxes...): the own element is gone from the latest print's column for the year and the
+                # later line is a filer extension (not in the US-GAAP taxonomy); another standard element is another concept (AVGO
+                # ProfitLoss for NetIncomeLoss), never a re-tag
+                line_renamed = (b['status'] == r['status'] == 'mapped' and face and len(ot) == len(lt) == 1 and set(gone) == ot
+                                and (dp == 'capex' or not (lt & US_GAAP_ELEMENTS)))
                 if not (renamed or c1 or one_renamed or total_of_parts or line_renamed): continue
                 if any(len(facts.get(t, ())) != 1 for _, t, _, _ in parts): continue
                 sgn, how = 1, f"the way it resolves {dp}"
@@ -1009,11 +1021,32 @@ def apply_face_label_overrides(rows, filings, notefacts):
 WEIGHTED_CLASS = {'weighted_basic_shares': 'WeightedAverageNumberOfSharesOutstandingBasic', 'weighted_diluted_shares': 'WeightedAverageNumberOfDilutedSharesOutstanding'}
 
 
+def _diluted_class_total(diluted, facts):
+    """X139: (total, kept classes, dropped classes) for weighted diluted shares reported only by class, or None. Every class with a
+    diluted count needs one basic count; a class X is a converting class when another class Y's diluted count exceeds its basic count
+    by basic(X) to 1.05 x basic(X) (Y's diluted count includes X's one-for-one conversion). At least two classes must remain and at least one is dropped."""
+    basic = collections.defaultdict(set)
+    for x in facts:
+        q = x.split('|')
+        if len(q) == 4 and q[0] == WEIGHTED_CLASS['weighted_basic_shares'] and q[1] == '4':
+            m = re.fullmatch(r'(\w*ClassOfStock)=([^;=]+);', q[3])
+            if m: basic[m.group(2)].add(D(q[2]))
+    if set(basic) != set(diluted) or any(len(v) != 1 for v in basic.values()): return None
+    b = {k: next(iter(v)) for k, v in basic.items()}
+    # the converting class converts one-for-one: Y's increment over its basic count is X's basic count plus at most 5% (Y's own
+    # dilutive awards); a class converting at another ratio (V Class B/C into Class A) proves nothing and the cell stays open
+    dropped = sorted(x for x in diluted if any(y != x and b[x] > 0 and b[x] <= diluted[y] - b[y] <= b[x] * D('1.05') for y in diluted))
+    kept = sorted(k for k in diluted if k not in dropped)
+    if not dropped or len(kept) < 2 or any(diluted[k] < b[k] for k in kept): return None
+    return sum(diluted[k] for k in kept), kept, dropped
+
+
 def apply_weighted_class(rows, memberfacts):
     """Dhairya ruling 2026-11-16 (GOOG): weighted shares reported ONLY by share class (EPS note, no undimensioned fact).
     Basic: the classes are disjoint, so the class sum is the total (flag class_sum; the 11-13 multi-class ruling (c)). FY2019 A 299,402,000
-    + B 46,527,000 + C 346,667,000 = 692,596,000. Diluted: open, flag reported_per_class, never absent (Class A diluted includes the
-    conversion of Class B, so classes are not additive)."""
+    + B 46,527,000 + C 346,667,000 = 692,596,000. Diluted (X139, .94): a class converting into another class (Class B into Class A)
+    is left out and the other classes' diluted counts are summed (Class A diluted + Class C diluted); otherwise open, flag
+    reported_per_class, never absent (Class A diluted includes the conversion of Class B, so classes are not additive)."""
     for r in rows:
         dp = r['data_point']
         if dp not in WEIGHTED_CLASS or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
@@ -1031,6 +1064,17 @@ def apply_weighted_class(rows, memberfacts):
                      nodes='; '.join(f'{p}={standard_inputs._plain(v)} [NOTE]' for p, v in parts),
                      why='weighted basic shares are reported only by share class; the classes are disjoint, so their sum is the total (ruling 2026-11-16)')
             r['flags'] = ';'.join(x for x in ((r.get('flags') or ''), 'class_sum') if x)
+        elif (conv := _diluted_class_total(mem, (memberfacts.get(r['accession']) or '').split('~'))) is not None:
+            # X139 (.94, GOOG ruling: multi-class diluted = Class A diluted + Class C diluted): a class whose basic count sits inside
+            # another class's diluted count (diluted(Y) - basic(Y) >= basic(X): Class B converts into Class A) is left out; the
+            # other classes' diluted counts are disjoint, so their sum is the total. FY2019 A 346,342,000 + C 352,214,000 = 698,556,000.
+            total, kept, dropped = conv
+            parts = [(f'{WEIGHTED_CLASS[dp]}[ClassOfStock={k}]', mem[k]) for k in kept]
+            r.update(status='component_sum', value=total, tags='+'.join(p for p, _ in parts), r_page='NOTE',
+                     nodes='; '.join(f'{p}={standard_inputs._plain(v)} [NOTE]' for p, v in parts),
+                     why=('weighted diluted shares are reported only by share class; ' + ', '.join(dropped)
+                          + ' converts into another class whose diluted count includes it, so the total is the sum of the other classes (X139)'))
+            r['flags'] = ';'.join(x for x in ((r.get('flags') or '').replace('never_reported', ''), 'class_sum', 'converted_class_excluded') if x).replace(';;', ';').strip(';')
         else:
             r['why'] = ('reported per class (' + ', '.join(f'{k} {standard_inputs._plain(v)}' for k, v in sorted(mem.items()))
                         + '); Class A diluted includes conversion of Class B, so classes are not additive')

@@ -284,10 +284,10 @@ Sources: Mac Ritwik `origin/work/tag-library/ranks-1-50` @ aea0cf4 (`data-team/4
 - Labels named only from FSN (BALL, TFX, BIO, FE, AFL, EQT, RTX, LIN, WFC, CBOE, SNEX, AES, SRE, WELL) are DATA-INFERRED.
 - Values were not compared with companyfacts. That is the mapping step ("SEC FOR MAPPING").
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
@@ -299,6 +299,16 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaces IncomeTaxExpenseBenefitContinuingOperations@2013; RestatementOfPriorYearIncomeTaxEffects@2020
 
+### `WeightedAverageNumberOfDilutedSharesOutstanding`
+- **Meaning:** Weighted Average Number of Shares Outstanding, Diluted (us-gaap, duration). The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.
+- **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
+- **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
+- **Rules:** none
+- **Evidence:** 108 companies, 1244 served, 4539 proven, 139 certified cells; last verified 2026-11-15
+- **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
+- **Pattern hits:** P03 (5); P04 (3)
+- **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
+
 ### `EarningsPerShareBasic`
 - **Meaning:** Earnings Per Share, Basic (us-gaap, duration). The amount of net income (loss) for the period per each share of common stock or unit outstanding during the reporting period.
 - **Data point definition:** basic_eps: Basic EPS per common share as printed (latest print = split-adjusted history, X92).
@@ -308,16 +318,6 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemAdjustmentAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemPreviouslyReportedAmount@2012; CumulativeEffectOfChangeInAccountingPrincipleTabularPresentationByFinancialStatementLineItemRestatedAmount@2012; EarningsPerShareBasicAndDiluted@2022 (+5 more)
-
-### `WeightedAverageNumberOfDilutedSharesOutstanding`
-- **Meaning:** Weighted Average Number of Shares Outstanding, Diluted (us-gaap, duration). The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.
-- **Data point definition:** weighted_diluted_shares: Weighted average diluted common shares as printed.
-- **Data point:** weighted_diluted_shares; role weighted_diluted_shares:primary#1
-- **Rules:** none
-- **Evidence:** 108 companies, 1234 served, 4539 proven, 139 certified cells; last verified 2026-11-15
-- **Known problems:** filer XBRL error 0000063908-24-000072: MCD FY2023 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 732.3;  the XBRL fact is 732.3 shares (scal; filer XBRL error 0000063908-25-000012: MCD FY2024 10-K consolidated statement of income ($ in millions, shares in millions): weighted-average diluted shares 721.9;  the XBRL fact is 721.9 shares (scal (+4 more)
-- **Pattern hits:** P03 (5); P04 (3)
-- **Deprecation:** replaces WeightedAverageNumberOfShareOutstandingBasicAndDiluted@2022
 
 ### `EarningsPerShareDiluted`
 - **Meaning:** Earnings Per Share, Diluted (us-gaap, duration). The amount of net income (loss) for the period available to each share of common stock or common unit outstanding during the reporting period and to each share or unit that would have been outstanding assuming the issuance of common shares ...
@@ -333,7 +333,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Meaning:** Net Income (Loss) Attributable to Parent (us-gaap, duration, credit). The portion of profit or loss for the period, net of income taxes, which is attributable to the parent.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income; role net_income:primary#1
-- **Rules:** X77; C29; resolver functions resolve
+- **Rules:** X77; X140; C29; resolver functions resolve
 - **Evidence:** 105 companies, 1212 served, 28185 proven, 129 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
@@ -417,6 +417,15 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Pattern hits:** none
 - **Deprecation:** replaces InitialFranchiseFees@2026; PropertyManagementFeeRevenue@2026; RevenueRecognitionMilestoneMethodRevenueRecognized@2026
 
+### `OtherNonoperatingIncomeExpense`
+- **Meaning:** Other Nonoperating Income (Expense) (us-gaap, duration, credit). Amount of income (expense) related to nonoperating activities, classified as other.
+- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. (+1 more)
+- **Data point:** other_income_expense_net; interest_income; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#2
+- **Rules:** X59; I28; I29; I30; I31; I32; I33; I34; I35; resolver functions COMBINED_YIELDS_TO
+- **Evidence:** 67 companies, 618 served, 1993 proven, 47 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `InvestmentIncomeInterest`
 - **Meaning:** Investment Income, Interest (us-gaap, duration, credit). Amount before accretion (amortization) of purchase discount (premium) of interest income on nonoperating securities.
 - **Data point definition:** interest_income: Consolidated interest income for the period (X94).; other_income_expense_net: All non-operating, non-interest income and expense between operating income and pretax income (ruling 2026-11-21 d).
@@ -425,15 +434,6 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Evidence:** 50 companies, 616 served, 1444 proven, 71 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P05 comparative_only_year_hidden: 4 open hit(s) at 3 companies, e.g. AMGN interest_income 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 5 open hit(s) at 1 companies, e.g. CRM interest_income 2015-01-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (5); P05 (4)
-
-### `OtherNonoperatingIncomeExpense`
-- **Meaning:** Other Nonoperating Income (Expense) (us-gaap, duration, credit). Amount of income (expense) related to nonoperating activities, classified as other.
-- **Data point definition:** interest_income: Consolidated interest income for the period (X94).; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income. (+1 more)
-- **Data point:** other_income_expense_net; interest_income; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#2
-- **Rules:** X59; I28; I29; I30; I31; I32; I33; I34; I35; resolver functions COMBINED_YIELDS_TO
-- **Evidence:** 67 companies, 607 served, 1993 proven, 47 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
 
 ### `GrossProfit`
 - **Meaning:** Gross Profit (us-gaap, duration, credit). Aggregate revenue less cost of goods and services sold or operating expenses directly attributable to the revenue generation activity.
@@ -478,7 +478,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
 - **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
 - **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Evidence:** 28 companies, 218 served, 242 proven, 14 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -561,7 +561,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income
-- **Rules:** X77; F03; F04; resolver functions run
+- **Rules:** X77; X140; F03; F04; resolver functions run
 - **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none

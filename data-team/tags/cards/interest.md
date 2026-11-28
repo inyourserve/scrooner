@@ -143,10 +143,10 @@ Relayed lessons processed this run (FILING-CHECKED by the named role unless mark
 - **Cash interest paid**: XBRL US DQC_0065 "Interest Paid Net (Operating) Not on Cash Flow" (final, released 2017-10-04, rule v5; github.com/DataQualityCommittee/dqc_us_rules docs/DQC_US_0065/DQC_0065.md) — the codification requires indirect-method filers to report interest paid net of capitalized interest; `InterestPaidNet` is that element; `InterestPaid` includes the capitalized component. So `InterestPaidNet` wins; `InterestPaid` only when the net element is not reported. This CORRECTS my earlier "InterestPaid wins" rule (shareholder-returns.md §9 and the library), which the readers' keys (41 of 43 on the net tag) had already contradicted.
 - **2024 interest elements**: XBRL US DQC_0181 "Interest Expense Operating and Nonoperating" (final, released 2024-06-27, effective 2024-08-31; docs/DQC_US_0181/DQC_0181.md) — the 2024 US-GAAP taxonomy added `InterestExpenseNonoperating` and `InterestExpenseOperating`, and `InterestExpense` now means both together; filers are asked to replace `InterestExpense` with the specific element. Component 10180: InterestExpense/InterestExpenseOperating must not be calc descendants of `NonoperatingIncomeExpense`; 10181: InterestExpense/InterestExpenseNonoperating must not be descendants of `InterestIncomeExpenseNet` (operating net interest, the bank NII line); 10182: InterestExpense/InterestExpenseNonoperating must not sit under `OperatingExpenses`. Use: a 2024+ switch from InterestExpense to InterestExpenseNonoperating on the same face line is an era change, not a meaning change; an `InterestExpenseOperating` line is operating (bank or opex block).
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 31 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `OperatingIncomeLoss`
 - **Meaning:** Operating Income (Loss) (us-gaap, duration, credit). The net result for the period of deducting operating expenses from operating revenues.
@@ -203,6 +203,15 @@ Resolver resolver-all110-.93. 31 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
+### `NonoperatingIncomeExpense`
+- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
+- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
+- **Evidence:** 28 companies, 218 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `NoninterestExpense`
 - **Meaning:** Noninterest Expense (us-gaap, duration, debit). Total aggregate amount of all noninterest expense.
 - **Data point definition:** noninterest_expense: Total noninterest expense as printed. [not applicable: general,insurer,equity_reit,utility,bdc]; operating_expenses: Operating expenses excluding cost of revenue: SG&A, R&D, D&A and other operating lines between gross profit (or revenue) and operating income.
@@ -212,15 +221,6 @@ Resolver resolver-all110-.93. 31 elements named in this card have library knowle
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces NoninterestExpenseMember@2013
-
-### `NonoperatingIncomeExpense`
-- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
-- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
-- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
-- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
 
 ### `InterestAndDividendIncomeOperating`
 - **Meaning:** Interest and Dividend Income, Operating (us-gaap, duration, credit). Represents the total of interest and dividend income, including any amortization and accretion (as applicable) of discounts and premiums, earned from (1) loans and leases whether held-for-sale or held-in-portfolio; (2) investment securities...

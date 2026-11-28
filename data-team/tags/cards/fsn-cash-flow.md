@@ -320,10 +320,10 @@ Libraries read: the Mac library `origin/work/tag-library/ranks-1-50` at aea0cf4 
 - Calc-parent counts cover two sampled 10-Ks per company, not every filing.
 - The FSN store's 2015-2016 coverage (about 517 companies) limits era statements before 2018.
 
-<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.93). Do not edit by hand: the next build rewrites this block. -->
+<!-- BEGIN GENERATED: tag library rows (build_library.py from library.csv, resolver-all110-.94). Do not edit by hand: the next build rewrites this block. -->
 ## From the tag library (generated)
 
-Resolver resolver-all110-.93. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
+Resolver resolver-all110-.94. 33 elements named in this card have library knowledge; the 30 most served are below. Every element: `data-team/tags/library/library.csv` or `browser.html`.
 
 ### `IncomeTaxExpenseBenefit`
 - **Meaning:** Income Tax Expense (Benefit) (us-gaap, duration, debit). Amount of current income tax expense (benefit) and deferred income tax expense (benefit) pertaining to continuing operations.
@@ -430,7 +430,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Data point definition:** cf_ar_change: Cash-flow change in accounts receivable, raw XBRL sign.
 - **Data point:** cf_ar_change; polarity cf_ar_change:raw; role cf_ar_change:primary#1
 - **Rules:** K30; family resolve_cf.WC[cf_ar_change]; resolve_all.NARROW[cf_ar_change]
-- **Evidence:** 65 companies, 736 served, 2643 proven, 91 certified cells; last verified 2026-11-15
+- **Evidence:** 65 companies, 735 served, 2643 proven, 91 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P06 own_10k_year_hidden: 1 open hit(s) at 1 companies, e.g. NEE cf_ar_change 2015-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (1)
 
@@ -465,8 +465,8 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Meaning:** Payments of Dividends (us-gaap, duration, credit). Cash outflow in the form of capital distributions and dividends to common shareholders, preferred shareholders and noncontrolling interests.
 - **Data point definition:** dividends_paid: Cash dividends paid to common shareholders.
 - **Data point:** dividends_paid; polarity dividends_paid:positive; role dividends_paid:primary#2
-- **Rules:** K17; K18; K19; K20; K21; K22; K23
-- **Evidence:** 50 companies, 455 served, 11139 proven, 74 certified cells; last verified 2026-11-15
+- **Rules:** X141; K17; K18; K19; K20; K21; K22; K23
+- **Evidence:** 50 companies, 491 served, 11139 proven, 74 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendPaymentRestrictionsScheduleAmountsPaid@2013
@@ -489,21 +489,21 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Known problems:** pattern P05 comparative_only_year_hidden: 2 open hit(s) at 1 companies, e.g. GOOG depreciation_and_amortization 2021-12-31 (export) (pattern_hits.csv); pattern P06 own_10k_year_hidden: 26 open hit(s) at 3 companies, e.g. ACN depreciation_and_amortization 2020-08-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P06 (26); P05 (2)
 
+### `NonoperatingIncomeExpense`
+- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
+- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
+- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
+- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
+- **Evidence:** 28 companies, 218 served, 242 proven, 14 certified cells; last verified 2026-11-15
+- **Known problems:** none recorded
+- **Pattern hits:** none
+
 ### `PaymentsToAcquireProductiveAssets`
 - **Meaning:** Payments to Acquire Productive Assets (us-gaap, duration, credit). The cash outflow for purchases of and capital improvements on property, plant and equipment (capital expenditures), software, and other intangible assets.
 - **Data point definition:** capex: Payments for property, plant and equipment incl. capitalized software, leased fleets, turnarounds, construction in progress and REIT tenant improvements;  excludes oil and gas property and acreage acquisitions (founder 2026-11-04). [not applicable: insurer,bdc]
 - **Data point:** capex; polarity capex:positive; role capex:primary#2
 - **Rules:** K40; K03; K04; K05; K06; K07; K08; K09; family resolve_cf.CAPEX
 - **Evidence:** 26 companies, 207 served, 3309 proven, 19 certified cells; last verified 2026-11-15
-- **Known problems:** none recorded
-- **Pattern hits:** none
-
-### `NonoperatingIncomeExpense`
-- **Meaning:** Nonoperating Income (Expense) (us-gaap, duration, credit). The aggregate amount of income or expense from ancillary business-related activities (that is to say, excluding major activities considered part of the normal operations of the business).
-- **Data point definition:** interest_expense: Total interest expense as printed on the income statement or stated in MD&A, incl. finance-lease and financing-obligation interest (matches the total_debt perimeter).; interest_income: Consolidated interest income for the period (X94). (+2 more)
-- **Data point:** other_income_expense_net; interest_income; interest_expense; operating_expenses; polarity other_income_expense_net:signed; role other_income_expense_net:primary#1
-- **Rules:** I29; I28; I30; I31; I32; I33; I34; I35; resolver functions resolve_band
-- **Evidence:** 28 companies, 183 served, 242 proven, 14 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none
 
@@ -568,7 +568,7 @@ Resolver resolver-all110-.93. 33 elements named in this card have library knowle
 - **Meaning:** Net Income (Loss), Including Portion Attributable to Noncontrolling Interest (us-gaap, duration, credit). The consolidated profit or loss for the period, net of income taxes, including the portion attributable to the noncontrolling interest.
 - **Data point definition:** net_income: Net income attributable to the parent (common and preferred holders) as printed.
 - **Data point:** net_income
-- **Rules:** X77; F03; F04; resolver functions run
+- **Rules:** X77; X140; F03; F04; resolver functions run
 - **Evidence:** 3 companies, 23 served, 1314 proven, 11 certified cells; last verified 2026-11-15
 - **Known problems:** none recorded
 - **Pattern hits:** none

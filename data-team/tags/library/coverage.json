@@ -1,12 +1,12 @@
 {
- "built": "2026-11-28",
- "resolver_version": "resolver-all110-.93",
+ "built": "2026-11-29",
+ "resolver_version": "resolver-all110-.94",
  "rows": 28015,
- "rows_with_usage": 579,
+ "rows_with_usage": 578,
  "rows_full": 116,
  "taxonomy_elements": 22756,
- "served_cells": 56465,
- "served_cells_all_elements_full": 36459,
+ "served_cells": 56540,
+ "served_cells_all_elements_full": 36542,
  "coverage_pct": 64.6,
  "pattern_hits": {
   "P01": {
