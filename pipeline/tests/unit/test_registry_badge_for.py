@@ -390,3 +390,24 @@ def test_related_party_sums_take_the_registry_sum_step(sector, dp, flag, badge):
     # the printed single line and the combined line keep their own steps
     assert reg.badge_for(dp, sector, {"decision": "mapped", "flags": "bs_family", "nodes": "X=1 [R5.htm:20]"}) == "as_printed"
     assert reg.badge_for(dp, sector, _row("combined", label="Accounts payable and other liabilities")).startswith("combined:")
+
+
+@pytest.mark.parametrize("sector", ["general", "bank", "lender", "broker_am", "insurer", "equity_reit", "utility", "bdc"])
+@pytest.mark.parametrize(
+    "dp,flag,badge",
+    [
+        # filing-cited goldens (2026-11-29): CVX FY2022 0000093410-23-000009 note 1,013 + 60; ETN FY2024 0001551182-25-000006
+        # pre-tax 11 + 23 + 74 = 108; CB FY2017 0000896159-18-000002 pre-tax 41 + 259 = 300
+        ("sbc", "award_type_sum", "derived:sum(printed award type expenses)"),
+        ("sbc", "award_type_member_sum", "derived:sum(printed award type expenses)"),
+        # UNP FY2025 0000100885-26-000037 R8: federal 543 + state and local 321 + foreign 13 = 877
+        ("cash_paid_for_income_taxes", "tax_jurisdiction_sum", "derived:sum(printed income taxes paid lines)"),
+    ],
+)
+def test_award_type_and_jurisdiction_sums_take_their_registry_step(sector, dp, flag, badge):
+    """A proven additive sum of printed parts (award types / tax jurisdictions) carries the data point's one additive step,
+    not an open no_registry_step cell (CVX, ETN, CB sbc; UNP cash taxes: 'component_sum ... 0 matching steps')."""
+    row = {"decision": "component_sum", "flags": f"{flag};cf_family", "nodes": "A=1 [R8.htm:3]; B=2 [R8.htm:4]"}
+    assert reg.badge_for(dp, sector, row) == badge
+    # the printed line keeps its own step
+    assert reg.badge_for(dp, sector, {"decision": "mapped", "flags": "cf_family", "nodes": "X=1 [R8.htm:3]"}) == "as_printed"
