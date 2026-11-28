@@ -144,3 +144,24 @@ def test_every_heavy_workflow_waits_for_the_write_before_any_other_job():
         assert "wait-for-fsn-write" in jobs, name
         roots = [j for j, b in jobs.items() if j != "wait-for-fsn-write" and "\n    needs:" not in "\n" + b]
         assert not roots, (name, roots)
+
+
+def test_wait_for_idle_passes_when_nothing_runs_and_ignores_queued(tmp_path):
+    assert guard(tmp_path, "wait-for-idle", "5", "top100-flow.yml").returncode == 0
+    r = guard(tmp_path / "q", "wait-for-idle", "5", "top100-flow.yml", seqs={("top100-flow.yml", "queued"): ["9 queued https://x"]})
+    assert r.returncode == 0, r.stdout  # a queued run waits behind us: two waiting guards must never block each other
+
+
+def test_wait_for_idle_waits_for_in_progress_then_passes(tmp_path):
+    r = guard(tmp_path, "wait-for-idle", "5", "top100-flow.yml", "pipeline-refresh.yml",
+              seqs={("pipeline-refresh.yml", "in_progress"): [RUN, "NONE"]})
+    assert r.returncode == 0 and r.stdout.count("waiting for idle") == 1
+
+
+def test_wait_for_idle_is_bounded_and_fails_closed(tmp_path):
+    assert guard(tmp_path, "wait-for-idle", "0", "top100-flow.yml", seqs={("top100-flow.yml", "in_progress"): [RUN]}).returncode == 1
+    r = guard(tmp_path / "f", "wait-for-idle", "0", "top100-flow.yml", seqs={("top100-flow.yml", "in_progress"): ["FAIL"]})
+    assert r.returncode == 1 and "possibly in progress" in r.stdout
+    # a workflow does not wait for itself
+    assert guard(tmp_path / "s", "wait-for-idle", "0", "top100-flow.yml", seqs={("top100-flow.yml", "in_progress"): [RUN]},
+                 self_workflow="top100-flow.yml").returncode == 0

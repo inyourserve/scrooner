@@ -1,0 +1,266 @@
+name: Pipeline orchestrator (events -> planner -> sharded workers -> certify requests)
+
+# PIPELINE.md section 3 / merge step M4 (founder 2026-11-29: "everything is approve ... once pipeline will build and working then
+# easily we can certify n number of companies"). ONE automatic run takes every company of a rank set from "something changed"
+# (a new filing, a rule or resolver change, a rank change, the daily catch-up sweep) to a filed certify request, with no hand
+# dispatch. It reuses the existing steps unchanged: stage 1 `scrooner-fsn nightly/load`, stages 3-4 scripts/top100_flow.sh,
+# stage 5 top100_open_shown.py + top100_gate.py. State is in ops.pipeline_event / work_item / work_item_stage / work_dead_letter /
+# company_served_version / certify_request (migration 0136) and the exceptions queue (0135).
+#   plan     read-only producers + planner + daily sweep (python -m scrooner_pipeline.orchestrator plan)
+#   ingest   ONE job, ONE process, stage 1 only, SCROONER_EDGAR_MAX_RPS=1 (this workflow's whole SEC budget; 2/s is the total for everyone)
+#   work     matrix of company-disjoint shards: one company at a time through stages 2-6, checkpoint per stage, up to 3 retries
+#            of a transient error, then a dead letter (and an exceptions-queue row). Stage 5 only FILES a request.
+#   publish  contents: write, no DB secret: commits open-shown, coverage rows and the certify request files (named paths only)
+#   report   exceptions queue refresh + queue, dead-letter and served-lag numbers in the job summary
+# The approver alone records verdicts, registry rows and certificates (Ritwik's rule); nothing here does.
+# Connections (doc 02, founder 2026-11-13): shards are company-disjoint and top100_flow.sh waits while pg_stat_activity > 80; the
+# default is 8 shards (each holds one or two connections), at most 20. Switch: the scheduled and push runs happen only when the repo
+# variable ORCHESTRATOR_ON is "true" (a dispatch always runs). dry_run=true plans and runs the stages without any write flag.
+on:
+  schedule:
+    - cron: "37 6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "data-team/tags/line_map/resolver/*.csv"
+      - "data-team/tags/line_map/*.csv"
+      - "data-team/tags/line_map/rules/*"
+      - "pipeline/src/scrooner_pipeline/proof/prove.py"
+  workflow_dispatch:
+    inputs:
+      ranks:
+        description: "Rank set, e.g. 1-100 (default) or 101-500. 1-100 is the only set top100_coverage exports today"
+        default: "1-100"
+      shards:
+        description: "Worker shards, 1..20"
+        default: "8"
+      dry_run:
+        description: "true = plan and run stages without write flags; nothing is served or filed"
+        type: boolean
+        default: false
+      wall_clock_minutes:
+        description: "Per worker wall-clock cap in minutes (items left over stay queued for the next run)"
+        default: "300"
+
+permissions:
+  contents: read
+  actions: read
+
+# Own queue: never cancels another workflow's run. Beside top100-flow / the refresh it waits (guard step below).
+concurrency:
+  group: pipeline-orchestrator
+  cancel-in-progress: false
+
+env:
+  RANKS: ${{ inputs.ranks || '1-100' }}
+  SHARDS_IN: ${{ inputs.shards || '8' }}
+  DRY: ${{ inputs.dry_run && '--dry-run' || '' }}
+  WALL: ${{ inputs.wall_clock_minutes || '300' }}
+
+jobs:
+  wait-for-fsn-write:
+    name: Main only; wait for FSN writes and other heavy runs
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.ORCHESTRATOR_ON == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts/ci
+      - name: Validate inputs
+        run: |
+          set -eu
+          printf '%s' "$RANKS" | grep -Eq '^[0-9]{1,4}-[0-9]{1,4}$' || { echo "::error::ranks must look like 1-100"; exit 1; }
+          case "$SHARDS_IN" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
+          [ "$SHARDS_IN" -ge 1 ] && [ "$SHARDS_IN" -le 20 ] || { echo "::error::shards must be 1..20"; exit 1; }
+          case "$WALL" in ''|*[!0-9]*) echo "::error::wall_clock_minutes must be a number"; exit 1;; esac
+          [ "$WALL" -le 330 ] || { echo "::error::wall_clock_minutes at most 330"; exit 1; }
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          HEAVY_GUARD_SELF: pipeline-orchestrator.yml
+        run: |
+          scripts/ci/heavy_job_guard.sh wait-for-write 330
+          scripts/ci/heavy_job_guard.sh wait-for-idle 330 top100-flow.yml pipeline-refresh.yml pipeline-recompute.yml pipeline-cells-load.yml pipeline-cells-proof.yml
+
+  plan:
+    name: Events, planner, daily sweep
+    needs: wait-for-fsn-write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      pending: ${{ steps.p.outputs.pending }}
+      shards: ${{ steps.p.outputs.shards }}
+      matrix: ${{ steps.p.outputs.matrix }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      HEAD_SHA: ${{ github.sha }}
+      BEFORE_SHA: ${{ github.event.before }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - id: p
+        run: |
+          set -eu
+          # diff base for rule events: the head of the last successful run of this workflow (a replaced run is covered by the next)
+          BASE=$(gh run list --repo "$REPO" --workflow pipeline-orchestrator.yml --status success --limit 1 --json headSha --jq '.[0].headSha // ""' || true)
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE="${BEFORE_SHA:-}"; fi
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE=""; fi
+          HEAD=$(git rev-parse HEAD)
+          OUT=$(PYTHONPATH=pipeline/src uv run --project pipeline python -m scrooner_pipeline.orchestrator plan --ranks "$RANKS" --shards "$SHARDS_IN" ${BASE:+--base $BASE --head $HEAD} $DRY | tail -1)
+          echo "$OUT"
+          echo "pending=$(echo "$OUT" | jq -r .pending_items)" >> "$GITHUB_OUTPUT"
+          echo "shards=$(echo "$OUT" | jq -r '.matrix.shard | length')" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(echo "$OUT" | jq -c .matrix)" >> "$GITHUB_OUTPUT"
+          { echo '### Orchestrator plan'; echo '```json'; echo "$OUT" | jq .; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  ingest:
+    name: Stage 1 ingest (one process, 1 SEC request/second)
+    needs: plan
+    if: needs.plan.outputs.pending != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      SCROONER_EDGAR_MAX_RPS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Stage 1 for the companies still waiting for it (ONE SEC-limited process, 1 request/second)
+        run: |
+          PYTHONPATH=pipeline/src uv run --project pipeline python -m scrooner_pipeline.orchestrator ingest \
+            --ranks "$RANKS" --wall-clock $((WALL * 60)) $DRY
+
+  work:
+    name: shard ${{ matrix.shard }}
+    needs: [plan, ingest]
+    # a failed ingest of one company must not stop the others: stage 1 failures are dead letters, not job failures
+    if: always() && needs.plan.outputs.pending != '0' && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      SCROONER_EDGAR_MAX_RPS: "1"
+      TOP100_CI: "1"
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Restore the FSN read cache (validated inside by fsn.filing.src_sha256)
+        uses: actions/cache@v4
+        with:
+          path: pipeline/.cache/fsn_reads
+          key: ${{ runner.os }}-fsn-reads-v1-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-fsn-reads-v1-
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ensure zsh and zstd
+        run: |
+          if ! command -v zsh >/dev/null || ! command -v zstd >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq zsh zstd
+          fi
+      - run: uv sync --project pipeline --locked
+      - name: Work this shard (stages 2-6 per company; stage 5 only files the request)
+        run: |
+          PYTHONPATH=pipeline/src uv run --project pipeline python -m scrooner_pipeline.orchestrator work \
+            --ranks "$RANKS" --shard ${{ matrix.shard }} --shards ${{ needs.plan.outputs.shards }} --wall-clock $((WALL * 60)) $DRY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: orch-shard-${{ matrix.shard }}
+          include-hidden-files: true
+          path: |
+            .runs/top100_flow/run_c*/coverage/
+            .runs/top100_flow/run_c*/coverage_held/
+            .runs/top100_flow/publish_c*/
+            .runs/top100_flow/flow_results.tsv
+            .runs/orchestrator/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  publish:
+    name: Publish open-shown, coverage rows and certify requests
+    needs: [plan, work]
+    if: always() && needs.plan.result == 'success' && needs.plan.outputs.pending != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: orch-shard-*
+          path: parts
+      - name: Commit the named files (push retry loop inside)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 -I scripts/ci/orchestrator_publish.py parts --repo . --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+  report:
+    name: Exceptions queue refresh and run report
+    needs: [plan, work, publish]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Refresh the exceptions queue from the committed files (idempotent) and report
+        run: |
+          export PYTHONPATH=pipeline/src
+          uv run --project pipeline python -m scrooner_pipeline.certification.exception_queue load --apply --db-url "$DATABASE_URL" | head -8
+          { echo '### Orchestrator state'; echo '```'; uv run --project pipeline python -m scrooner_pipeline.orchestrator report; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

@@ -30,6 +30,7 @@ HEAVY_WORKFLOWS=(
   pipeline-fsn-load-bulk.yml
   onboard-company-identity.yml
   onboard-company-filings.yml
+  pipeline-orchestrator.yml
 )
 # FSN-write marker: wait-for-write waits on every workflow listed here. pipeline-fsn-load-filings.yml
 # (the filing loader, fsn.* only) is one, so the top-100 flow and the nightly jobs wait for it. A workflow
@@ -109,8 +110,32 @@ wait_for_write() {
   done
 }
 
+wait_for_idle() {
+  # wait-for-idle max_minutes workflow...: wait while any listed workflow (other than HEAVY_GUARD_SELF) has a run IN PROGRESS.
+  # Only in_progress counts (a queued run waits behind us, so two waiting guards can never block each other). Fails CLOSED on an
+  # API error, bounded like wait_for_write. The orchestrator uses it so it never runs beside top100-flow or the refresh.
+  local max_minutes=$1 start=$SECONDS workflow runs out waited; shift
+  while :; do
+    waited=$((SECONDS - start)); out=""; local ok=1
+    for workflow in "$@"; do
+      [ "$workflow" = "${HEAVY_GUARD_SELF:-}" ] && continue
+      if ! runs=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$workflow" --status in_progress --limit 20 \
+            --json databaseId,status,url --jq '.[] | "\(.databaseId) \(.status) \(.url)"'); then ok=0; break; fi
+      out+="$runs"
+    done
+    if [ "$ok" -eq 1 ] && [ -z "$out" ]; then echo "none of $* is in progress"; return 0; fi
+    [ "$ok" -eq 1 ] || echo "::warning::could not list runs; treating a heavy run as possibly in progress"
+    if [ "$waited" -ge $((max_minutes * 60)) ]; then
+      echo "::error::after ${max_minutes} minutes a heavy run is still in progress or unknown: $out"; exit 1
+    fi
+    echo "waiting for idle (${waited}s so far): $out"
+    sleep "$POLL_SECONDS"
+  done
+}
+
 case "${1:-}" in
+  wait-for-idle) shift; wait_for_idle "$@" ;;
   refuse-if-heavy) refuse_if_heavy ;;
   wait-for-write) shift; wait_for_write "$@" ;;
-  *) echo "usage: $0 refuse-if-heavy | wait-for-write [max_minutes]" >&2; exit 2 ;;
+  *) echo "usage: $0 refuse-if-heavy | wait-for-write [max_minutes] | wait-for-idle max_minutes workflow..." >&2; exit 2 ;;
 esac
