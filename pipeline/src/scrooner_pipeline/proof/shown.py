@@ -956,33 +956,29 @@ def load_shown(
                     scale_by.get(accession or ""),
                 ):
                     disagreeing = [(acc_w, str(total_w))]
-        elif len(tags) > 1:
+        elif len(tags) > 1 and (parts := tag_sum_parts(srcs, shown_value)) is not None:
             # rule authority_tag_sum: several source tags and no component claim: judged as a sum of the cell's own
-            # signed source tags, never one tag's copy against the total (TMO total_debt Dec-2018: DebtCurrent 1,271)
-            parts = tag_sum_parts(srcs, shown_value)
+            # signed source tags, never one tag's copy against the total (TMO total_debt Dec-2018: DebtCurrent 1,271).
+            # v2: only when the source tags DO sum to the shown value; a cell whose tags are alternatives (MSFT SG&A,
+            # shown = one tag's value) is no sum and keeps the per-copy judgement and its disagreement history
             disagreeing = []
             auth_accs = set()
-            if parts is not None:
-                win = component_sum_authority(
-                    authority_pool(
-                        [c for c in all_copies if c[2] in tags], check_failed
-                    ),
-                    parts,
-                    filed_by,
-                    sf,
-                )
-                if win is not None:
-                    acc_w, total_w = win
-                    auth_accs = {acc_w}
-                    if not _same_number(
-                        total_w, shown_value, scale
-                    ) and not rounding_equal(
-                        total_w,
-                        shown_value,
-                        scale_by.get(acc_w),
-                        scale_by.get(accession or ""),
-                    ):
-                        disagreeing = [(acc_w, str(total_w))]
+            win = component_sum_authority(
+                authority_pool([c for c in all_copies if c[2] in tags], check_failed),
+                parts,
+                filed_by,
+                sf,
+            )
+            if win is not None:
+                acc_w, total_w = win
+                auth_accs = {acc_w}
+                if not _same_number(total_w, shown_value, scale) and not rounding_equal(
+                    total_w,
+                    shown_value,
+                    scale_by.get(acc_w),
+                    scale_by.get(accession or ""),
+                ):
+                    disagreeing = [(acc_w, str(total_w))]
         # rule authority_copy_role: a coarser print, a filer-scale per-share copy or a part line is no authority
         disagreeing, skips = authority_skips(
             disagreeing, shown_value, name, all_copies, copy_parents

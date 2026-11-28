@@ -154,7 +154,7 @@ RULES: dict[str, Rule] = {
         ),
         Rule(
             "resolver_beats_combined",
-            3,
+            4,
             legacy_version=0,
             applies=_has_splits,
             owners=(
@@ -167,18 +167,21 @@ RULES: dict[str, Rule] = {
             "stated_zero/text_stated/printed_zero values (no map claim row), so such a cell gets a proof row instead of "
             "surfacing as UNCHECKED no_proof_row (GILD interest_income FY2024); existing verdicts do not change. v3 "
             "(2026-11-23, resolver .90): load_shown calls the authority_tag_sum and authority_copy_role helpers; the cells "
-            "whose verdict can change are selected by those two rules",
+            "whose verdict can change are selected by those two rules. v4 (2026-11-28): load_shown applies rule "
+            "authority_tag_sum only when the source tags sum to the shown value (authority_tag_sum v2 selects the cells)",
         ),
         # close-out 2026-11-23 (resolver .90): cells decided by a filing read but left open by the proof
         Rule(
             "authority_tag_sum",
-            1,
+            2,
             legacy_version=0,
             applies=_tag_sum,
             owners=("proof/shown.py:tag_sum_parts",),
             note="v1: a cell served from several tags without a component claim is judged as the signed sum of its own "
             "source tags in the latest filing printing every part, never one tag's copy against the total (TMO total_debt "
-            "FY2018/2020 judged against DebtCurrent alone, IBM FY2019-21 against ShortTermBorrowings)",
+            "FY2018/2020 judged against DebtCurrent alone, IBM FY2019-21 against ShortTermBorrowings). v2 (2026-11-28): only when the "
+            "source tags DO sum to the shown value; tags that are alternatives (shown = one tag's value, MSFT SG&A) are no "
+            "sum and keep the per-copy authority and disagreement history (v1 dropped both: test_cell_proof_same_filing_db)",
         ),
         Rule(
             "authority_copy_role",
