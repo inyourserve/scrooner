@@ -92,6 +92,7 @@ def _patch_facts(monkeypatch):
         facts_mod, "upsert_concepts", lambda c, pairs: {p: i for i, p in enumerate(sorted(pairs), 1)}
     )
     monkeypatch.setattr(facts_mod, "canonicalize_unit", lambda u: u)
+    monkeypatch.setattr(facts_mod, "write_fact_rows", lambda c, rows: c.rows.extend(rows))
 
 
 def test_facts_before_floor_are_not_written_and_straddling_is_kept(monkeypatch):

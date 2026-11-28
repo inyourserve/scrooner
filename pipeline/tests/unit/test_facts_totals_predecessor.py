@@ -20,8 +20,10 @@ def test_totals_skip_missing_counts_of_a_predecessor_cik(monkeypatch):
         },
     }
     monkeypatch.setattr(F, "SupabaseStorageClient", lambda: nullcontext(None))
+    monkeypatch.setattr(F, "_load_unit_lookup", lambda c: {})
+    monkeypatch.setattr(F, "_load_concept_lookup", lambda c: {})
     monkeypatch.setattr(
-        F, "normalize_facts_for_cik", lambda storage, conn, cik: results[cik]
+        F, "normalize_facts_for_cik", lambda storage, conn, cik, **kw: results[cik]
     )
     out = F.normalize_facts(None, set(results))
     assert out["errored"] == []
