@@ -54,7 +54,8 @@ def run_drills(tmp, intake_text=None):
     if intake_text is not None:
         intake.write_text(intake_text)
     r = subprocess.run([sys.executable, '-I', os.path.join(HERE, 'pattern_intake.py'), '--drills', str(tmp / 'drills'),
-                        '--intake', str(intake), '--accuracy', str(tmp / 'acc.csv'), '--today', '2026-11-23'],
+                        '--intake', str(intake), '--accuracy', str(tmp / 'acc.csv'), '--inbox', str(tmp / 'inbox'),
+                        '--eligible', str(tmp / 'eligible.csv'), '--today', '2026-11-23'],
                        capture_output=True, text=True, check=True)
     return r.stdout, list(csv.DictReader(open(intake))), list(csv.DictReader(open(tmp / 'acc.csv')))
 
@@ -130,3 +131,68 @@ def test_class_accuracy_latest_day_wins_and_graduation_bar(tmp_path):
     assert sga['data_gap_excluded'] == '5'
     assert cogs['fc_accuracy'] == '0.9900' and float(cogs['fc_cp_upper_error_95']) > 0.015 and cogs['graduated'] == 'no'
     assert '1 graduated' in out
+
+
+def test_every_rule_gap_miss_class_opens_one_deduped_inbox_proposal_linked_to_evidence(tmp_path):
+    d = tmp_path / 'drills'
+    d.mkdir()
+    sga = 'SellingGeneralAndAdministrativeExpense'
+    (d / '2026-11-21.csv').write_text(
+        DRILL_HDR + miss('2026-11-21', 'rule_gap', 'proof_disagree', 'AA', 'sga_expense', '2024-12-31', sga)
+        + miss('2026-11-21', 'rule_gap', 'proof_disagree', 'BB', 'sga_expense', '2024-12-31', sga)
+        + miss('2026-11-21', 'rule_gap', 'no_role', 'AA', 'net_income', '2024-12-31')       # one company: still proposed
+        + miss('2026-11-21', 'data_gap', 'proof_disagree', 'AA', 'goodwill', '2019-03-31', '', 'proof 0001-19-1 Goodwill=5'))
+    inbox = tmp_path / 'inbox'
+    inbox.mkdir()
+    (inbox / 'STATUS.csv').write_text('proposal_file,rule_id,status,backtest_delta,date,note\nold.csv,r1,accepted v1,,2026-11-13,n\n')
+    out, intake, _ = run_drills(tmp_path)
+    props = list(csv.DictReader(open(inbox / 'drill-auto.csv')))
+    assert len(props) == 2 and '2 rules/inbox proposal(s) (2 new)' in out         # data_gap is not a rule: no proposal
+    by = {r['data_point']: r for r in props}
+    p = by['sga_expense']
+    assert p['kind'] == 'proposal_open' and p['proposed_by'] == 'daily-drill-auto' and p['when'] == '' and p['scope'] == 'all'
+    assert 'drills:data-team/tags/drills/2026-11-21.csv' in p['evidence']              # linked to the drill file
+    iid = next(r['intake_id'] for r in intake if r['data_point'] == 'sga_expense')
+    assert p['finding'].startswith(iid) and 'AA sga_expense 2024-12-31' in p['finding'] and 'companies=2' in p['note']
+    st = list(csv.DictReader(open(inbox / 'STATUS.csv')))
+    assert st[0]['rule_id'] == 'r1' and st[0]['status'] == 'accepted v1'              # existing status rows untouched
+    assert {r['rule_id'] for r in st[1:]} == {r['rule_id'] for r in props} and {r['status'] for r in st[1:]} == {'open'}
+    # a later day adds a company to the same pattern and a new pattern: same rule_id, one new proposal, tag expert edits kept
+    rows = list(csv.DictReader(open(inbox / 'drill-auto.csv')))
+    for r in rows:
+        if r['data_point'] == 'sga_expense':
+            r.update(kind='override', when='{"x":1}', then='{"y":2}')
+    with open(inbox / 'drill-auto.csv', 'w', newline='') as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]), lineterminator='\n')
+        w.writeheader()
+        w.writerows(rows)
+    (d / '2026-11-22.csv').write_text(
+        DRILL_HDR + miss('2026-11-22', 'rule_gap', 'proof_disagree', 'CC', 'sga_expense', '2023-12-31', sga)
+        + miss('2026-11-22', 'rule_gap', 'proof_disagree', 'CC', 'goodwill', '2023-12-31', 'Goodwill'))
+    out, _, _ = run_drills(tmp_path)
+    props2 = {r['rule_id']: r for r in csv.DictReader(open(inbox / 'drill-auto.csv'))}
+    assert len(props2) == 3 and '(1 new)' in out and p['rule_id'] in props2
+    assert props2[p['rule_id']]['kind'] == 'override' and props2[p['rule_id']]['when'] == '{"x":1}'
+    assert len(list(csv.DictReader(open(inbox / 'STATUS.csv')))) == 4
+    out, _, _ = run_drills(tmp_path)                                                    # idempotent rerun
+    assert '(0 new)' in out and len(list(csv.DictReader(open(inbox / 'STATUS.csv')))) == 4
+
+
+def test_graduated_class_is_marked_auto_map_eligible_and_revoked_when_it_drops(tmp_path):
+    d = tmp_path / 'drills'
+    d.mkdir()
+    (d / '2026-11-22.csv').write_text(DRILL_HDR)
+    good = ATT_HDR + ''.join(f'2026-11-22,T{i},revenue,docmap,FILING-CHECKED,1,1,0,0,0\n' for i in range(200))
+    good += ''.join(f'2026-11-22,T{i},sga_expense,proof,DATA-INFERRED,1,1,0,0,0\n' for i in range(300))   # proof keys never graduate
+    (d / '2026-11-22-attempts.csv').write_text(good)
+    out, _, _ = run_drills(tmp_path)
+    el = list(csv.DictReader(open(tmp_path / 'eligible.csv')))
+    assert [(r['class'], r['status'], r['graduated_on'], r['fc_companies']) for r in el] == [('revenue', 'auto-map-eligible', '2026-11-23', '200')]
+    assert '1 auto-map-eligible' in out
+    # five wrong filing-checked rows on a later day: the bar fails, the class is revoked (kept, not deleted)
+    bad = ATT_HDR + ''.join(f'2026-11-24,T{i},revenue,docmap,FILING-CHECKED,1,{0 if i < 5 else 1},{1 if i < 5 else 0},0,0\n' for i in range(200))
+    (d / '2026-11-24.csv').write_text(DRILL_HDR)
+    (d / '2026-11-24-attempts.csv').write_text(bad)
+    out, _, _ = run_drills(tmp_path)
+    el = list(csv.DictReader(open(tmp_path / 'eligible.csv')))
+    assert [(r['class'], r['status'], r['graduated_on']) for r in el] == [('revenue', 'revoked', '2026-11-23')]

@@ -51,6 +51,13 @@ EXPERT_FIELDS = ('opened', 'owner', 'status', 'pattern_id', 'resolution')
 ACC_COLUMNS = ['class', 'attempts', 'correct', 'accuracy', 'companies', 'cp_upper_error_95', 'fc_attempts', 'fc_correct',
                'fc_accuracy', 'fc_companies', 'fc_cp_upper_error_95', 'data_gap_excluded', 'filer_error_excluded', 'days',
                'graduated']
+RULES_DIR = os.path.join(ROOT, 'data-team', 'tags', 'rules', 'inbox')
+PROPOSAL_COLUMNS = ['rule_id', 'version', 'namespace', 'data_point', 'scope', 'era', 'kind', 'when', 'then', 'precedence',
+                    'evidence', 'author', 'date', 'note', 'proposed_by', 'finding']
+STATUS_COLUMNS = ['proposal_file', 'rule_id', 'status', 'backtest_delta', 'date', 'note']
+PROPOSAL_FILE = 'drill-auto.csv'
+PROPOSER = 'daily-drill-auto'
+ELIGIBLE_COLUMNS = ['class', 'graduated_on', 'fc_attempts', 'fc_companies', 'fc_accuracy', 'fc_cp_upper_error_95', 'status']
 GRAD_MIN_COMPANIES = 200
 GRAD_MIN_ACCURACY = 0.99
 GRAD_MAX_UPPER_ERROR = 0.015
@@ -150,6 +157,76 @@ def drill_rows(groups, today):
             'last_seen': days[-1], 'examples': ' ; '.join(g['examples']), 'flag': flag_of(mc, len(cos)),
         })
     return out
+
+
+def proposal_rows(intake_rows, today):
+    """One rules/inbox proposal per rule_gap miss class (class x data point x element), linked to the drill evidence.
+
+    A rule_gap is the only miss class a predictor/resolver rule can fix (data_gap = missing filing, filer_error = the filer's
+    own inconsistency). The rule body (when/then) is not guessed: kind = proposal_open, the tag expert fills it in and
+    accepts only through the backtest (rules/inbox/README.md). rule_id is a pure function of the pattern, so reruns dedupe."""
+    out = []
+    for r in intake_rows:
+        if r.get('source') != 'drill' or not (r.get('miss_class') or '').startswith('rule_gap|'):
+            continue
+        kind = r['miss_class'].split('|', 1)[1]
+        rid = 'drill.%s.%s' % (r['data_point'] or kind, hashlib.sha256(r['registry_key'].encode()).hexdigest()[:8])
+        out.append({
+            'rule_id': rid, 'version': '', 'namespace': 'drill', 'data_point': r['data_point'], 'scope': 'all', 'era': '',
+            'kind': 'proposal_open', 'when': '', 'then': '', 'precedence': '',
+            'evidence': r['evidence'], 'author': PROPOSER, 'date': r['first_seen'] or today,
+            'note': f"{r['miss_class']} element={r['element']} companies={r['companies']} cells={r['cells']} days={r['days']} "
+                    f"last_seen={r['last_seen']} flag={r['flag']}; intake {r['intake_id']}; rule body not yet written",
+            'proposed_by': PROPOSER, 'finding': f"{r['intake_id']}: {r['examples']}"})
+    return out
+
+
+def write_proposals(rows, inbox_dir, today):
+    """Upsert drill-auto.csv (rows keyed by rule_id; a row the tag expert already edited past kind=proposal_open is kept
+    except for its evidence and finding) and append an open row to STATUS.csv for each new rule_id. Returns (new, total)."""
+    os.makedirs(inbox_dir, exist_ok=True)
+    path = os.path.join(inbox_dir, PROPOSAL_FILE)
+    old = {}
+    if os.path.exists(path):
+        with open(path, newline='') as fh:
+            old = {r['rule_id']: r for r in csv.DictReader(fh)}
+    new = [r for r in rows if r['rule_id'] not in old]
+    for r in rows:
+        o = old.get(r['rule_id'])
+        if o is None or o['kind'] == 'proposal_open':
+            old[r['rule_id']] = r
+        else:
+            o.update({k: r[k] for k in ('evidence', 'finding')})
+    write_csv(path, PROPOSAL_COLUMNS, [old[k] for k in sorted(old)])
+    # STATUS.csv is hand-edited (some rows carry unquoted commas): never re-parse and rewrite it, only append new rows
+    sp = os.path.join(inbox_dir, 'STATUS.csv')
+    text = open(sp, newline='').read() if os.path.exists(sp) else ','.join(STATUS_COLUMNS) + '\n'
+    fresh = [r for r in new if f'{PROPOSAL_FILE},{r["rule_id"]},' not in text]
+    if fresh:
+        with open(sp, 'w', newline='') as fh:
+            fh.write(text if text.endswith('\n') else text + '\n')
+            w = csv.writer(fh, lineterminator='\n')
+            for r in fresh:
+                w.writerow([PROPOSAL_FILE, r['rule_id'], 'open', '', today, 'auto-opened from a daily-drill rule_gap miss class'])
+    return len(new), len(old)
+
+
+def eligible_rows(acc, old, today):
+    """Auto-map eligibility from the graduation bar (graduated = yes). A class stays eligible while it passes; one that
+    drops below the bar is kept with status revoked (never silently deleted)."""
+    prev = {r['class']: r for r in old}
+    out = {}
+    for a in acc:
+        if a['graduated'] == 'yes':
+            o = prev.get(a['class'])
+            out[a['class']] = {'class': a['class'], 'graduated_on': (o or {}).get('graduated_on') or today,
+                               'fc_attempts': a['fc_attempts'], 'fc_companies': a['fc_companies'],
+                               'fc_accuracy': a['fc_accuracy'], 'fc_cp_upper_error_95': a['fc_cp_upper_error_95'],
+                               'status': 'auto-map-eligible'}
+    for c, o in prev.items():
+        if c not in out:
+            out[c] = dict(o, status='revoked')
+    return [out[k] for k in sorted(out)]
 
 
 def cp_upper(n, k, conf=0.95):
@@ -261,9 +338,17 @@ def run_drills(a):
     write_csv(a.intake, COLUMNS, rows)
     acc = class_accuracy(a.drills)
     write_csv(a.accuracy, ACC_COLUMNS, acc)
+    n_new, n_prop = write_proposals(proposal_rows(rows, a.today), a.inbox, a.today)
+    old_el = []
+    if os.path.exists(a.eligible):
+        with open(a.eligible, newline='') as fh:
+            old_el = list(csv.DictReader(fh))
+    el = eligible_rows(acc, old_el, a.today)
+    write_csv(a.eligible, ELIGIBLE_COLUMNS, el)
     props = sum(1 for r in rows if r['source'] == 'drill' and r['flag'] == 'rule_proposal')
     print(f'drill intake: {added} new, {updated} updated miss class(es) from {len(drill_days(a.drills))} drill day(s); '
-          f'{props} rule_proposal; {len(acc)} accuracy class(es), {sum(r["graduated"] == "yes" for r in acc)} graduated')
+          f'{props} rule_proposal; {n_prop} rules/inbox proposal(s) ({n_new} new); {len(acc)} accuracy class(es), {sum(r["graduated"] == "yes" for r in acc)} graduated; '
+          f'{sum(r["status"] == "auto-map-eligible" for r in el)} auto-map-eligible')
     return 0
 
 
@@ -274,6 +359,8 @@ def main(argv=None):
     ap.add_argument('--approvals', default=APPROVALS)
     ap.add_argument('--drills', help='directory of daily drill files (<date>.csv, <date>-attempts.csv); switches to the drill source')
     ap.add_argument('--accuracy', default=os.path.join(HERE, 'drill-class-accuracy.csv'))
+    ap.add_argument('--inbox', default=RULES_DIR, help='rules/inbox dir: drill-auto.csv proposals and STATUS.csv rows (drill source)')
+    ap.add_argument('--eligible', default=os.path.join(HERE, 'auto-map-eligible.csv'))
     ap.add_argument('--today', default=dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%d'))
     a = ap.parse_args(argv)
     if a.drills:

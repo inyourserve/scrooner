@@ -139,6 +139,9 @@ def test_drill_workflow_feeds_pattern_intake_on_main_with_30_tries():
     assert "pattern_intake.py\" --drills" in step and "git archive origin/drills data-team/tags/drills" in step
     assert "seq 1 30" in step and "git push -q origin HEAD:main" in step
     assert "pattern-intake.csv" in step and "drill-class-accuracy.csv" in step
+    # the loop is committed by the same step: proposals, their status rows and the eligibility file are staged and allowed
+    for f in ('auto-map-eligible.csv', '$R/drill-auto.csv', '$R/STATUS.csv'):
+        assert step.count(f) >= 2, f
     assert "vars.DAILY_DRILL == 'true'" in wf   # the founder's switch is untouched
 
 

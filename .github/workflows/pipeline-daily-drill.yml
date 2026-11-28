@@ -12,9 +12,10 @@ name: Daily blind drill (20 companies outside the certified set; read-only on th
 #            pauses while pg_stat_activity > 80), contents: read.  No SEC access.
 #   resolve  SEC_USER_AGENT only (instance evidence for total_debt, <= 2 requests a second, sec.gov only), no DB secret, contents: read.
 #   commit   contents: write, no secrets. Pushes ONLY data-team/tags/drills/ to the data branch `drills`; then, from all drill
-#            days on that branch, writes ONLY data-team/tags/library/pattern-intake.csv (source=drill rows: one per miss
+#            days on that branch, writes ONLY library/pattern-intake.csv (source=drill rows: one per miss
 #            class, deduped across days, flag rule_proposal at >= 2 companies) and drill-class-accuracy.csv (per-class
-#            accuracy and the 99% graduation bar) to main (data-team/tags/library/pattern_intake.py --drills; SYSTEMS.md #7).
+#            accuracy and the 99% graduation bar), library/auto-map-eligible.csv (classes past the bar) and rules/inbox/drill-auto.csv + STATUS.csv
+#            (one open rule proposal per rule_gap miss class, linked to the drill evidence) to main (data-team/tags/library/pattern_intake.py --drills; SYSTEMS.md #7).
 # Why a branch: main is protected by CI and shared by many sessions; a daily bot commit there would race every session's push and
 # trigger CI each day. The branch costs nothing, keeps main history clean, and the Tag Expert reads `git fetch origin drills`.
 #
@@ -232,8 +233,10 @@ jobs:
             git archive origin/drills data-team/tags/drills | tar -x -C "$RUNNER_TEMP/drills-all"
             python3 -I "$L/pattern_intake.py" --drills "$RUNNER_TEMP/drills-all/data-team/tags/drills" | tee "$RUNNER_TEMP/intake.txt" \
               || { echo "::error::pattern_intake --drills failed"; exit 1; }
-            git add "$L/pattern-intake.csv" "$L/drill-class-accuracy.csv"
-            other=$(git diff --cached --name-only | grep -v -e "^$L/pattern-intake.csv$" -e "^$L/drill-class-accuracy.csv$" || true)
+            R=data-team/tags/rules/inbox
+            git add "$L/pattern-intake.csv" "$L/drill-class-accuracy.csv" "$L/auto-map-eligible.csv" "$R/drill-auto.csv" "$R/STATUS.csv"
+            other=$(git diff --cached --name-only | grep -v -e "^$L/pattern-intake.csv$" -e "^$L/drill-class-accuracy.csv$" \
+              -e "^$L/auto-map-eligible.csv$" -e "^$R/drill-auto.csv$" -e "^$R/STATUS.csv$" || true)
             [ -z "$other" ] || { echo "::error::staged files outside the intake and accuracy files: $other"; exit 1; }
             if git diff --cached --quiet; then echo "intake and accuracy unchanged"; exit 0; fi
             git commit -q -m "Drill intake $DAY: $(head -1 "$RUNNER_TEMP/intake.txt" | cut -c1-140) (daily-drill run $GITHUB_RUN_ID)"
