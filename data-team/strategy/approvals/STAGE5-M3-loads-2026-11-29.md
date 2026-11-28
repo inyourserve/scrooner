@@ -8,3 +8,5 @@ Authority quoted: founder, session scrooner-36, 2026-11-28: "everything is appro
    - BMY-1eafcef0c57f: loader refuses (drawn cell accounts_receivable 2020-12-31 result LOCATOR, PASS needs MATCH). Skipped per coordinator; Ritwik to resolve.
    - Status read-back (display_cell_certificate_status): GILD 504 valid/2 invalidated; MA 504/2; LRCX 550/2; MO 475/5; BMY no rows.
 2. LLY (company 666) tagmap-authority dry run: demote 0, promote precision 0, restated 0, held 61 -> 61. Expected 18 rounded->precise swaps not present (fix 5e0036679 apparently already applied). NOT applied.
+
+3. BMY-1eafcef0c57f (Ritwik regenerated, 229f381ba): matches registry PASS; dry run would insert 506; APPLIED, inserted 506 rows. Status read-back: 504 valid, 2 invalidated.
