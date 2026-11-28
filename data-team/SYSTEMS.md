@@ -4,6 +4,32 @@ Founder order 2026-11-22: one resource file of every system, so nobody builds a 
 
 **Chain:** SEC filing → (1) SEC access/collector raw → (3) normalizer core.fact (standard-tag values) + (4) FSN store/standard extract → (5,6) tag knowledge + tag library → (7) predictor → (8) line_map resolver ← (9) filing reads → (10) structural loader → analytics.canonical_fact → (11) proof → (12) templates + (13) coverage/display state → (14,15) verifier + display certificate → (16) metric registry/calculators → (17) screener + (18) AI query → (19) apps/app pages. Cross-cutting: (20) flow + CI, (21) nightly refresh, (22) migrations, (23) mind, (24) agent roles. (25) lists legacy systems.
 
+## Target architecture: one pipeline, six stages (founder-approved 2026-11-28)
+Founder, 2026-11-28: "yes approved". This is the target every session builds toward. The 25 blocks below stay as the detailed inventory, and each one now belongs to exactly one stage. **No work outside these six stages and two support layers.** Every brief and commit names its stage.
+
+```
+new filing or rule-version change
+ 1 INGEST   -> 2 KNOW -> 3 RESOLVE -> 4 PROVE -> 5 CERTIFY -> 6 SERVE
+```
+
+| Stage | Job | Blocks | Target change |
+|---|---|---|---|
+| 1 Ingest | one store: raw filing, its own structure, SEC API standard-tag values | 1, 2, 3, 4 | 3 stays only as the standard-tag value source; the old normalize+map chain is retired for the 1,000 |
+| 2 Know | **one rule store** (the tag library); cards are generated from it | 5, 6, 7, 9 | predictor, resolver and filing reads read and write the same store; drill and verifier misses become rule proposals automatically |
+| 3 Resolve | the resolver is the only writer | 8, 10 | the loader is the resolver's write step, not a separate system; docmap/tagmap/era layers retired |
+| 4 Prove | every cell gets exactly one state: PROVEN, HIDDEN with a reason, or OPEN | 11, 12, 13 | display state becomes proof's output (`common/cell_rules.py`); templates are an input data file |
+| 5 Certify | sampled check against the filing, plus the certificate (approver is not the preparer) | 14, 15 | verifier and certificate merged into one registry; weekly re-check of certified companies scheduled |
+| 6 Serve | metric registry, screener, AI query, pages, reading PROVEN cells only | 16, 17, 18, 19 | calculators read only proven inputs; every exclusion and hide has a reason |
+| Orchestrator | one event-driven per-company run | 20, 21 | nightly refresh and top100-flow merged; new filing, rank change or rule version starts the run; no hand dispatch |
+| Team ops | not product systems | 22, 23, 24 | unchanged |
+| Retire | learning only | 25 | plus the old nightly reprocess for the 1,000, coverage-matrix and tag-candidate steps |
+
+**Operating rule: exceptions only.** Every company runs the same path with no hand step. People and agents work only the OPEN and DISAGREE queue and the sampled verifier draws. Every exception becomes a rule in the one store, which fixes the class for every company. A class graduates to auto-map at 99% blind accuracy on at least 200 rows (block 7).
+
+**Two numbers, daily, per cohort (top 100, 101-1,000):** filing acceptance to certified company (hours), and the size of the exceptions queue. Ranks 101-1,000 enter when the top-100 queue is close to zero.
+
+**Merge order:** (M1) FSN path in the nightly run (`FSN_NIGHTLY_STAGE` load, then write) and retire the old reprocess for the 1,000; still gated on the 155 top-100 DISAGREE cells and the founder's typed words. (M2) one rule store for predictor, resolver and filing reads. (M3) blocks 13-15 merged into the cell state plus a sampled certificate. (M4) hand links replaced by events (rank change to onboarding, new filing to company run, OPEN cell to an owned queue).
+
 Paths: bare module paths are under `pipeline/src/scrooner_pipeline/`; `line_map/`, `exam/`, `rules/`, `library/` are under `data-team/tags/`. Format: **Entry** scripts/modules · **Owns** data files/tables · **Runs** workflows · **Tests** · **Doc**. Maturity 1 (sketch) to 5 (world class, measured, self-correcting).
 
 ## 1. SEC access: collector + rate limiter
