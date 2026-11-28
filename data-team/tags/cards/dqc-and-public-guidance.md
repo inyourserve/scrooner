@@ -395,7 +395,7 @@ Resolver resolver-all110-.93. 71 elements named in this card have library knowle
 - **Data point definition:** dividends_per_share: Dividends declared per common share for the fiscal year.
 - **Data point:** dividends_per_share; polarity dividends_per_share:positive; role dividends_per_share:primary#1
 - **Rules:** none
-- **Evidence:** 81 companies, 767 served, 2489 proven, 119 certified cells; last verified 2026-11-15
+- **Evidence:** 81 companies, 765 served, 2489 proven, 119 certified cells; last verified 2026-11-15
 - **Known problems:** filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm consolidated statements of shareholders' equity: Dividends to shareholders ($ 2.80 per ordinary share);  the XBRL facts are 10^6; filer XBRL error 0001137789-24-000068: STX FY2024 10-K stx-20240628.htm R9 consolidated statements of shareholders' equity, FY2022 column: Dividends to shareholders ($ 2.77 per ordinary share);  the X (+1 more)
 - **Pattern hits:** none
 - **Deprecation:** replaces DividendDeclaredMember@2025

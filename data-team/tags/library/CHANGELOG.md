@@ -2085,3 +2085,6 @@
 - ~ IncreaseDecreaseInInventoriesAndPropertySubjectToOrAvailableForOperatingLease: served_cells
 - ~ IncreaseDecreaseInInventoriesPrepaidExpensesAndOtherCurrentAssets: served_cells
 - ~ IncreaseDecreaseInOtherOperatingAssets: served_cells
+
+## 2026-11-28 (resolver-all110-.93): 1 element changes, 28015 rows, coverage 64.6%
+- ~ CommonStockDividendsPerShareDeclared: served_cells
