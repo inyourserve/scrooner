@@ -237,6 +237,92 @@ def _write_snapshot_with_retry(
     )
 
 
+# Why a company's snapshot row can never match a filter (SYSTEMS.md #17,
+# 2026-11-28). Per-metric reasons stay in missing_reasons.py; these are the
+# whole-company reasons, stored on the row so no excluded company is silent.
+EXCLUDED_INACTIVE = "inactive_company"
+EXCLUDED_NO_METRIC_VALUES = "no_metric_values"
+# Counter key only (never stored): a company with no value and no reason.
+UNEXPLAINED = "__unexplained__"
+
+_EXCLUSION_COLUMN_SQL = """
+    select exists (
+        select 1 from information_schema.columns
+        where table_schema = 'analytics'
+          and table_name = 'company_screening_snapshot'
+          and column_name = 'exclusion_reason')
+"""
+
+
+def exclusion_reason(status: str | None, metric_value_count: int) -> str | None:
+    """None when the company can be screened; otherwise the one reason it
+    cannot. An inactive company is out of the default screen (query.py keeps
+    it behind include_inactive); an active one with no resolved metric value
+    at all can match no value filter, and that is our gap, never a quiet
+    blank."""
+    if status != "active":
+        return EXCLUDED_INACTIVE
+    if metric_value_count == 0:
+        return EXCLUDED_NO_METRIC_VALUES
+    return None
+
+
+def _has_exclusion_column(conn: psycopg.Connection) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(_EXCLUSION_COLUMN_SQL)
+        (present,) = cur.fetchone()
+    return bool(present)
+
+
+def _company_rows(
+    identity: dict[int, dict],
+    metrics_by_company: dict[int, dict[str, dict]],
+    metric_names: list[str],
+    dataset_version: int,
+    with_exclusion_reason: bool,
+) -> tuple[list[tuple], dict[str | None, int]]:
+    """Snapshot rows plus a count of every exclusion reason (key None =
+    companies with no reason, i.e. screenable). The reason column goes right
+    after `ticker`, before `dataset_version`, matching build_snapshot's column
+    order."""
+    rows = []
+    reasons: dict[str | None, int] = {}
+    for company_id, info in identity.items():
+        company_metrics = metrics_by_company.get(company_id, {})
+        reason = exclusion_reason(info["status"], len(company_metrics))
+        reasons[reason] = reasons.get(reason, 0) + 1
+        if reason is None and not company_metrics:
+            reasons[UNEXPLAINED] = reasons.get(UNEXPLAINED, 0) + 1
+        row = [
+            company_id,
+            info["cik"],
+            info["company_name"],
+            info["sic_code"],
+            info["sic_description"],
+            info["sector"],
+            info["status"],
+            info["ticker"],
+        ]
+        if with_exclusion_reason:
+            row.append(reason)
+        row.append(dataset_version)
+        for name in metric_names:
+            data = company_metrics.get(name)
+            if data is None:
+                row.extend([None, None, None, None])
+            else:
+                row.extend(
+                    [
+                        data["value"],
+                        data["period_label"],
+                        data["period_end"],
+                        data["formula_version"],
+                    ]
+                )
+        rows.append(tuple(row))
+    return rows, reasons
+
+
 def build_snapshot(conn: psycopg.Connection) -> dict:
     id_to_name = _load_all_metric_definitions(conn)
     metric_names = sorted(id_to_name.values())
@@ -259,8 +345,13 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
         sql.Identifier("sector"),
         sql.Identifier("status"),
         sql.Identifier("ticker"),
-        sql.Identifier("dataset_version"),
     ]
+    # The column arrives with a migration (pipeline/db/pending/DRAFT_*); until
+    # it is applied the reasons are still counted and logged, just not stored.
+    with_reason = _has_exclusion_column(conn)
+    if with_reason:
+        identity_columns.append(sql.Identifier("exclusion_reason"))
+    identity_columns.append(sql.Identifier("dataset_version"))
     metric_column_list: list[sql.Identifier] = []
     for name in metric_names:
         metric_column_list.extend(_metric_columns(name))
@@ -271,34 +362,9 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
         "insert into analytics.company_screening_snapshot ({}) values ({})"
     ).format(sql.SQL(", ").join(all_columns), placeholders)
 
-    rows = []
-    for company_id, info in identity.items():
-        row = [
-            company_id,
-            info["cik"],
-            info["company_name"],
-            info["sic_code"],
-            info["sic_description"],
-            info["sector"],
-            info["status"],
-            info["ticker"],
-            dataset_version,
-        ]
-        company_metrics = metrics_by_company.get(company_id, {})
-        for name in metric_names:
-            data = company_metrics.get(name)
-            if data is None:
-                row.extend([None, None, None, None])
-            else:
-                row.extend(
-                    [
-                        data["value"],
-                        data["period_label"],
-                        data["period_end"],
-                        data["formula_version"],
-                    ]
-                )
-        rows.append(tuple(row))
+    rows, reasons = _company_rows(
+        identity, metrics_by_company, metric_names, dataset_version, with_reason
+    )
 
     pruned = _write_snapshot_with_retry(conn, rows, insert_statement, dataset_version)
 
@@ -308,11 +374,21 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
         row_count=len(rows),
         dataset_version=dataset_version,
         pruned_rows=pruned,
+        exclusion_reasons={str(k): v for k, v in reasons.items()},
+        unexplained_exclusions=reasons.get(UNEXPLAINED, 0),
+        exclusion_reason_stored=with_reason,
     )
     return {
         "dataset_version": dataset_version,
         "row_count": len(rows),
         "metric_count": len(id_to_name),
+        # every company that cannot be screened, by reason (SYSTEMS #17);
+        # unexplained = no value and no reason, must stay 0.
+        "excluded_by_reason": {
+            k: v for k, v in reasons.items() if k not in (None, UNEXPLAINED)
+        },
+        "unexplained_exclusions": reasons.get(UNEXPLAINED, 0),
+        "exclusion_reason_stored": with_reason,
     }
 
 

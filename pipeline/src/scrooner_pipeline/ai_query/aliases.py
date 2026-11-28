@@ -32,6 +32,8 @@ broader phrases that had no match before, so doc 15's already-verified
 test queries can't regress.
 """
 
+import re
+
 METRIC_ALIASES: dict[str, str] = {
     "roe": "roe",
     "return on equity": "roe",
@@ -179,6 +181,7 @@ METRIC_ALIASES: dict[str, str] = {
     "profitable streak": "profitable_streak_years",
     "years profitable": "profitable_streak_years",
     "consecutive profitable years": "profitable_streak_years",
+    "profitable for": "profitable_streak_years",
     "margin expanding": "margin_expanding_3yr",
     "expanding margins": "margin_expanding_3yr",
     "fcf greater than net income": "fcf_gt_net_income",
@@ -267,3 +270,97 @@ OPERATOR_ALIASES: dict[str, str] = {
     ">": ">",
     "<": "<",
 }
+
+
+# ---------------------------------------------------------------------------
+# Registry-generated vocabulary (SYSTEMS.md #18, 2026-11-28). The display label
+# of every registry metric is something a user can copy off the product and
+# type back, so the label forms are derived from the registry, never hand-kept:
+# "Return on equity (ROE)", "Price / book", "Revenue growth (3Y CAGR)". The
+# curated METRIC_ALIASES above always win; a derived phrase that two metrics
+# would claim (for example "revenue growth", the bare form of every growth
+# variant) is dropped, never resolved by guessing.
+# ---------------------------------------------------------------------------
+_PAREN_RE = re.compile(r"\(([^()]*)\)")
+_NOT_ACRONYMS = {"yoy", "ttm", "cagr"}
+# Two-way: a user may type either form of the same words.
+_EXPANSIONS = (
+    ("fcf", "free cash flow"),
+    ("r&d", "research and development"),
+    ("capex", "capital expenditure"),
+)
+
+# Internal reconciliation diagnostics: no investor phrase names them and they
+# are never offered to a model or reachable by a label (2026-08-31).
+DIAGNOSTIC_METRICS = frozenset(
+    {
+        "ap_change_reconciliation_gap",
+        "ar_change_reconciliation_gap",
+        "inventory_change_reconciliation_gap",
+        "effective_tax_rate_gap",
+        "eps_dilution_spread",
+    }
+)
+
+
+def _label_forms(label: str) -> set[str]:
+    base = re.sub(r"\s+", " ", label.strip().lower())
+    forms = {base}
+    parens = _PAREN_RE.findall(base)
+    if parens:
+        # "revenue growth (3y cagr)" -> "revenue growth 3y cagr"
+        forms.add(re.sub(r"\s+", " ", _PAREN_RE.sub(r" \1 ", base)).strip())
+        # "return on equity (roe)" -> "return on equity" and "roe"
+        forms.add(re.sub(r"\s+", " ", _PAREN_RE.sub(" ", base)).strip())
+        for inner in parens:
+            if re.fullmatch(r"[a-z]{2,6}", inner.strip()) and (
+                inner.strip() not in _NOT_ACRONYMS
+            ):
+                forms.add(inner.strip())
+    for form in list(forms):
+        forms.add(re.sub(r"\s*/\s*", "/", form))  # "price / book" -> "price/book"
+        forms.add(form.replace("-", " "))  # "dividend-growth streak"
+        forms.add(form.replace("%", "percent"))  # "as % of revenue"
+    for form in list(forms):
+        for short, long in _EXPANSIONS:
+            for src, dst in ((short, long), (long, short)):
+                if re.search(rf"\b{re.escape(src)}\b", form):
+                    forms.add(re.sub(rf"\b{re.escape(src)}\b", dst, form))
+    return {re.sub(r"\s+", " ", f).strip() for f in forms if f.strip()}
+
+
+def registry_label_aliases(
+    labels: dict[str, str], taken: dict[str, str]
+) -> dict[str, str]:
+    """{phrase: metric_id} derived from `{metric_id: display label}`.
+
+    `taken` holds the curated aliases (kept as they are) and the ambiguous
+    phrases (never claimed). A phrase claimed by two different metrics is
+    dropped from both."""
+    claims: dict[str, set[str]] = {}
+    for metric_id, label in labels.items():
+        for form in _label_forms(label):
+            claims.setdefault(form, set()).add(metric_id)
+    return {
+        phrase: next(iter(ids))
+        for phrase, ids in claims.items()
+        if len(ids) == 1 and phrase not in taken
+    }
+
+
+def _build_label_aliases() -> dict[str, str]:
+    from scrooner_pipeline.metrics.registry import get_registry
+
+    labels = {
+        m.metric_id: m.label
+        for m in get_registry().values()
+        if m.metric_id not in DIAGNOSTIC_METRICS
+    }
+    taken = {**METRIC_ALIASES, **{p: "" for p in AMBIGUOUS_METRIC_PHRASES}}
+    return registry_label_aliases(labels, taken)
+
+
+REGISTRY_LABEL_ALIASES: dict[str, str] = _build_label_aliases()
+
+# Every phrase the rule interpreter resolves to a metric (curated first).
+ALL_METRIC_ALIASES: dict[str, str] = {**REGISTRY_LABEL_ALIASES, **METRIC_ALIASES}

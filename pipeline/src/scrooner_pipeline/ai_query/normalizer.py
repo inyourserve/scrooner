@@ -47,8 +47,11 @@ _REVIEWED_REPLACEMENTS: tuple[tuple[str, str, str], ...] = (
     (r"\bhigher\s+then\b", "higher than", "operator_spelling"),
     (r"\bless\s+then\b", "less than", "operator_spelling"),
     (r"\blower\s+then\b", "lower than", "operator_spelling"),
-    (r"\bper\s*cent\b", "%", "unit_form"),
-    (r"\bpercentage\b", "%", "unit_form"),
+    # "percent"/"percentage" is a unit only right after a number ("20 percent").
+    # Elsewhere it is part of a metric name ("capex percent of revenue", "sg&a
+    # percentage"), and rewriting it there made those curated aliases
+    # unreachable (eval 2026-11-22).
+    (r"(?<=\d)\s*(?:per\s*cent|percentage|percent)\b", "%", "unit_form"),
 )
 
 

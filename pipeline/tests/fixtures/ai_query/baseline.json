@@ -1,7 +1,7 @@
 {
-  "measured": "2026-11-22",
+  "measured": "2026-11-28",
   "interpreter": "scrooner_pipeline.ai_query.rules.interpret",
-  "hits": 257,
-  "total": 338,
-  "note": "Raise when the deterministic interpreter improves; never lower it to get green. Adding asks changes total: re-measure and update both numbers in the same commit."
+  "hits": 349,
+  "total": 349,
+  "note": "Raise when the deterministic interpreter improves; never lower it to get green. Adding asks changes total: re-measure and update both numbers in the same commit. 2026-11-22: 257/338. 2026-11-28: 338/338 on the old asks plus 11 asks written before the fixes (8/11 on first run; 3 further root causes fixed), 349/349."
 }

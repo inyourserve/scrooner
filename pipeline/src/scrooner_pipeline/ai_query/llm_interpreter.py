@@ -25,6 +25,7 @@ from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
+from scrooner_pipeline.ai_query.aliases import DIAGNOSTIC_METRICS as _DIAGNOSTIC_METRICS
 from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, InterpretationResult
 from scrooner_pipeline.screener.schema import (
     CategoricalPredicate,
@@ -332,17 +333,8 @@ def validate_model_interpretation(
     )
 
 
-# Internal reconciliation diagnostics: no investor phrase names them and they
-# are never offered to a model (aliases.py docstring, 2026-08-31).
-DIAGNOSTIC_METRICS = frozenset(
-    {
-        "ap_change_reconciliation_gap",
-        "ar_change_reconciliation_gap",
-        "inventory_change_reconciliation_gap",
-        "effective_tax_rate_gap",
-        "eps_dilution_spread",
-    }
-)
+# Internal reconciliation diagnostics: defined once in aliases.py.
+DIAGNOSTIC_METRICS = _DIAGNOSTIC_METRICS
 
 
 def registry_candidates() -> list[MetricCandidate]:

@@ -39,8 +39,8 @@ import re
 from decimal import Decimal
 
 from scrooner_pipeline.ai_query.aliases import (
+    ALL_METRIC_ALIASES as METRIC_ALIASES,
     AMBIGUOUS_METRIC_PHRASES,
-    METRIC_ALIASES,
     OPERATOR_ALIASES,
     SECTOR_ALIASES,
     SECTOR_BUCKET_ALIASES,
@@ -110,6 +110,38 @@ NEGATION_RE = re.compile(
 # need to ask the user about anyway.
 OR_SPLIT_RE = re.compile(r"\s+or\s+", re.IGNORECASE)
 AND_SPLIT_RE = re.compile(r"\s+and\s+", re.IGNORECASE)
+
+
+# "from 10 to 20" is the same range as "between 10 and 20".
+FROM_TO_RE = re.compile(
+    rf"^(.*?)\s+from\s+{NUMBER_RE}(%)?\s+to\s+{NUMBER_RE}(%)?$", re.IGNORECASE
+)
+_AND_MARK = "\x00"
+_AND_PHRASES = sorted(
+    (a for a in METRIC_ALIASES if " and " in a), key=len, reverse=True
+)
+
+
+def _protect_and(text: str) -> str:
+    """Hide the word "and" where it is not a clause joiner: inside a metric
+    name ("research and development intensity") and inside "between X and Y"."""
+    for phrase in _AND_PHRASES:
+        text = re.sub(
+            re.escape(phrase),
+            lambda m: m.group(0).replace(" and ", f" {_AND_MARK}and{_AND_MARK} "),
+            text,
+            flags=re.IGNORECASE,
+        )
+    return re.sub(
+        rf"(\bbetween\s+{NUMBER_RE}(?:%)?)\s+and\s+",
+        lambda m: m.group(1) + f" {_AND_MARK}and{_AND_MARK} ",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+
+def _restore_and(text: str) -> str:
+    return text.replace(f"{_AND_MARK}and{_AND_MARK}", "and")
 
 
 def _parse_value(number_str: str, magnitude: str | None, has_percent: bool) -> Decimal:
@@ -233,6 +265,8 @@ def _lookup_metric(phrase: str) -> tuple[str | None, list[str] | None]:
     on a known ambiguous OR near-miss phrase, or (None, None) if nothing
     matched or resembled anything at all."""
     normalized = _strip_filler(phrase)
+    if normalized.endswith(" of") and normalized[:-3] in METRIC_ALIASES:
+        normalized = normalized[:-3]  # "piotroski score of at least 8"
     if normalized in AMBIGUOUS_METRIC_PHRASES:
         return None, AMBIGUOUS_METRIC_PHRASES[normalized]
     if normalized in METRIC_ALIASES:
@@ -258,7 +292,7 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
     # screening-flow.md's own worked example ("Show US technology
     # companies...").
     normalized = re.sub(r"^u\.?s\.?\s+", "", normalized)
-    normalized = re.sub(r"\s+companies$", "", normalized)
+    normalized = re.sub(r"\s+(?:companies|stocks)$", "", normalized)
 
     sic_hit = SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(
         normalized + " companies"
@@ -295,7 +329,58 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
 _CATEGORY_METRIC_SPLIT_RE = re.compile(r"\s+(?:with|having)\s+", re.IGNORECASE)
 
 
+# Natural ranking: "the 10 largest companies by market cap", "10 cheapest stocks
+# by pe", "top 5 tech companies by market cap". Direction words have one
+# meaning each; "cheapest" only means lowest for a valuation multiple.
+_RANK_RE = re.compile(
+    r"^(?:the\s+)?(?:(top|bottom)\s+(\d+)|(\d+)\s+"
+    r"(largest|biggest|highest|smallest|lowest|cheapest|most expensive))"
+    r"\s+(?:(.+?)\s+)?by\s+(.+)$",
+    re.IGNORECASE,
+)
+_RANK_WORD_DIRECTION = {
+    "largest": "top",
+    "biggest": "top",
+    "highest": "top",
+    "smallest": "bottom",
+    "lowest": "bottom",
+    "cheapest": "bottom",
+    "most expensive": "top",
+}
+_VALUATION_MULTIPLES = {
+    "trailing_pe",
+    "price_to_book",
+    "price_to_sales",
+    "peg_ratio",
+    "ev_ebitda",
+    "ev_sales",
+}
+
+
+def _rewrite_ranking(clause: str) -> list[str] | None:
+    match = _RANK_RE.match(clause)
+    if not match:
+        return None
+    direction, n, word_n, word, subject, metric_phrase = match.groups()
+    if word:
+        direction, n = _RANK_WORD_DIRECTION[word.lower()], word_n
+        if word.lower() in ("cheapest", "most expensive"):
+            metric_name, _ = _lookup_metric(metric_phrase)
+            if metric_name not in _VALUATION_MULTIPLES:
+                return None
+    ranked = f"{direction.lower()} {n} by {metric_phrase.strip()}"
+    subject = (subject or "").strip().lower()
+    if subject in ("", "companies", "stocks"):
+        return [ranked]
+    if _lookup_sector(subject) is not None:
+        return [subject, ranked]
+    return None
+
+
 def _split_category_prefix(clause: str) -> list[str]:
+    ranking = _rewrite_ranking(clause)
+    if ranking is not None:
+        return ranking
     match = _CATEGORY_METRIC_SPLIT_RE.search(clause)
     if not match:
         return [clause]
@@ -324,21 +409,61 @@ def _try_extract_exclusion(text: str) -> tuple[str, CategoricalPredicate | None]
     )
 
 
+def _resolves_exactly(phrase: str) -> bool:
+    normalized = _strip_filler(phrase)
+    if normalized.endswith(" of") and normalized[:-3] in METRIC_ALIASES:
+        normalized = normalized[:-3]
+    return normalized in AMBIGUOUS_METRIC_PHRASES or normalized in METRIC_ALIASES
+
+
 def _find_operator(clause: str) -> tuple[str, str, str] | None:
-    """Finds the longest operator phrase present in the clause; returns
-    (metric_phrase, operator, value_phrase), or None if no known operator
-    phrase is present at all."""
-    best = None
+    """Splits a clause into (metric_phrase, operator, value_phrase), or None
+    if no known operator phrase is present.
+
+    Every split point is considered. A split whose left side is a known metric
+    phrase and whose right side is a value wins (longest metric phrase first),
+    so a metric name that itself contains an operator word ("fcf greater than
+    net income equals 1") is not cut in the middle. With no such split, the
+    longest operator phrase decides, as before."""
+    lowered = clause.lower()
+    splits = []
     for phrase, op in OPERATOR_ALIASES.items():
-        idx = clause.lower().find(f" {phrase} ")
-        if idx != -1 and (best is None or len(phrase) > len(best[0])):
-            best = (phrase, op, idx)
-    if best is None:
+        start = 0
+        while (idx := lowered.find(f" {phrase} ", start)) != -1:
+            splits.append((phrase, op, idx))
+            start = idx + 1
+    if not splits:
         return None
-    phrase, op, idx = best
-    metric_part = clause[:idx].strip()
-    value_part = clause[idx + len(phrase) + 2 :].strip()
+
+    def parts(split):
+        phrase, op, idx = split
+        return clause[:idx].strip(), op, clause[idx + len(phrase) + 2 :].strip(), phrase
+
+    exact = [
+        parts(sp)
+        for sp in splits
+        if _resolves_exactly(clause[: sp[2]]) and VALUE_RE.match(parts(sp)[2])
+    ]
+    if exact:
+        metric_part, op, value_part, _ = max(exact, key=lambda t: len(t[0]))
+        return metric_part, op, value_part
+    best = max(splits, key=lambda sp: len(sp[0]))
+    metric_part, op, value_part, _ = parts(best)
     return metric_part, op, value_part
+
+
+def _flag_phrase_metric(clause: str) -> str | None:
+    """A bare phrase naming a yes/no metric ("debt free companies", "companies
+    with expanding margins") asks for the flag to be true. Only registry
+    metrics whose unit is a 0/1 flag qualify; nothing else is read as a flag."""
+    from scrooner_pipeline.metrics.registry import get_registry
+
+    phrase = _strip_filler(clause)
+    phrase = re.sub(r"\s+(?:companies|stocks)$", "", phrase)
+    metric_name = METRIC_ALIASES.get(phrase)
+    if metric_name and get_registry()[metric_name].unit == "flag_0_1":
+        return metric_name
+    return None
 
 
 def _parse_clause(
@@ -379,6 +504,37 @@ def _parse_clause(
             None,
         )
 
+    for range_re in (BETWEEN_RE, FROM_TO_RE):
+        range_match = range_re.match(clause)
+        if range_match:
+            phrase, low_s, low_m, low_p, high_s, high_m, high_p = range_match.groups()
+            metric_name, candidates = _lookup_metric(phrase)
+            if candidates:
+                return None, None, None, AmbiguityNote(phrase.strip(), candidates)
+            if metric_name is None:
+                return None, None, clause, None
+            low = _parse_value(low_s, low_m, bool(low_p))
+            high = _parse_value(high_s, high_m, bool(high_p))
+            return (
+                MetricPredicate(
+                    metric_name=metric_name,
+                    operator="between",
+                    value_range=(low, high),
+                ),
+                None,
+                None,
+                None,
+            )
+
+    flag_metric = _flag_phrase_metric(clause)
+    if flag_metric:
+        return (
+            MetricPredicate(metric_name=flag_metric, operator="=", value=Decimal(1)),
+            None,
+            None,
+            None,
+        )
+
     found_op = _find_operator(clause)
     if found_op:
         metric_phrase, op, value_phrase = found_op
@@ -387,6 +543,14 @@ def _parse_clause(
             return None, None, None, AmbiguityNote(metric_phrase, candidates)
         if metric_name is None:
             return None, None, clause, None
+        if re.search(r"\s+years?$", value_phrase, re.IGNORECASE):
+            from scrooner_pipeline.metrics.registry import get_registry
+
+            # "profitable for at least 10 years": the unit word is the metric's own.
+            if get_registry()[metric_name].unit == "years":
+                value_phrase = re.sub(
+                    r"\s+years?$", "", value_phrase, flags=re.IGNORECASE
+                )
         m = VALUE_RE.match(value_phrase)
         if not m:
             return None, None, clause, None
@@ -483,14 +647,70 @@ def interpret(text: str) -> InterpretationResult:
     return result
 
 
+# Growth phrased with a period: "eps growth over 3 years" is the 3-year CAGR
+# metric, "revenue grew more than 10% last year" the year-over-year one. Only
+# rewritten when the resulting phrase is a known metric; the period must be a
+# horizon the registry has ("3y", "5y", "10y").
+_GROWTH_OVER_YEARS_RE = re.compile(
+    r"\b([a-z][a-z ]*?\bgrowth)\s+over\s+(?:the\s+)?(?:last\s+|past\s+)?(\d+)\s+years?"
+    r"(?P<rest>.*?)(?:\s+(?:a|per|each)\s+year|\s+annually)?$",
+    re.IGNORECASE,
+)
+_GREW_LAST_YEAR_RE = re.compile(
+    r"^(.+?)\s+grew\s+(.+?)\s+(?:last\s+year|year[- ]over[- ]year|yoy)$",
+    re.IGNORECASE,
+)
+
+
+def _rewrite_growth_period(text: str) -> str:
+    m = _GROWTH_OVER_YEARS_RE.search(text)
+    if m:
+        phrase = f"{m.group(1).strip().lower()} {m.group(2)}y cagr"
+        if phrase in METRIC_ALIASES:
+            return f"{text[: m.start()]}{phrase}{m.group('rest')}".strip()
+    m = _GREW_LAST_YEAR_RE.match(text)
+    if m:
+        phrase = f"{m.group(1).strip().lower()} growth yoy"
+        if phrase in METRIC_ALIASES:
+            return f"{phrase} {m.group(2).strip()}"
+    return text
+
+
+# "..., including companies with no roe" / "keep companies with missing roe":
+# the user asks for companies lacking the metric to stay in the result, which
+# is `include_missing` on that metric's predicate.
+_INCLUDE_MISSING_RE = re.compile(
+    r",?\s+(?:and\s+)?(?:including|include|keep|plus)\s+(?:the\s+)?(?:companies\s+)?"
+    r"(?:with\s+|that\s+have\s+)?(?:no|missing)\s+(.+)$",
+    re.IGNORECASE,
+)
+
+
+def _extract_include_missing(text: str) -> tuple[str, str | None]:
+    match = _INCLUDE_MISSING_RE.search(text)
+    if not match:
+        return text, None
+    metric_name, _ = _lookup_metric(match.group(1))
+    if metric_name is None:
+        return text, None
+    return text[: match.start()].strip(), metric_name
+
+
 def _interpret_normalized(text: str) -> InterpretationResult:
     text = _strip_leading_query_filler(text.strip())
+    text = _rewrite_growth_period(text)
+    text, include_missing_metric = _extract_include_missing(text)
     if not text:
         return InterpretationResult(
             query=None, explanation="Empty query.", unrecognized=[""]
         )
 
     between_match = BETWEEN_RE.match(text)
+    if between_match and (
+        AND_SPLIT_RE.search(_protect_and(between_match.group(1)))
+        or OR_SPLIT_RE.search(between_match.group(1))
+    ):
+        between_match = None  # several clauses: handled clause by clause below
     if between_match:
         metric_phrase, low_str, low_mag, low_pct, high_str, high_mag, high_pct = (
             between_match.groups()
@@ -527,6 +747,7 @@ def _interpret_normalized(text: str) -> InterpretationResult:
             unrecognized=[text],
         )
 
+    text = _protect_and(text)
     has_and = AND_SPLIT_RE.search(text) is not None
     has_or = OR_SPLIT_RE.search(text) is not None
     if has_and and has_or:
@@ -540,7 +761,7 @@ def _interpret_normalized(text: str) -> InterpretationResult:
         piece
         for c in (OR_SPLIT_RE if has_or else AND_SPLIT_RE).split(text)
         if c.strip()
-        for piece in _split_category_prefix(c.strip())
+        for piece in _split_category_prefix(_restore_and(c.strip()))
     ]
 
     metric_predicates: list[MetricPredicate] = []
@@ -558,6 +779,25 @@ def _interpret_normalized(text: str) -> InterpretationResult:
             ambiguous.append(amb)
         elif unrec is not None:
             unrecognized.append(unrec)
+
+    if include_missing_metric is not None:
+        targets = [
+            p
+            for p in metric_predicates
+            if p.metric_name == include_missing_metric
+            and p.operator not in RANKED_OPERATORS
+        ]
+        if not targets:
+            return InterpretationResult(
+                query=None,
+                explanation=(
+                    f"'include companies with no {include_missing_metric}' needs a "
+                    f"condition on {include_missing_metric} in the same query."
+                ),
+                unrecognized=[text],
+            )
+        for p in targets:
+            p.include_missing = True
 
     ranked_predicates = [p for p in metric_predicates if p.operator in RANKED_OPERATORS]
     if combine_op == "or" and ranked_predicates:
