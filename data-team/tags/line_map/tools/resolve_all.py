@@ -2158,7 +2158,7 @@ def apply_combined_working_capital_change(rows):
     return rows
 
 
-# X138 (Stage 3 Resolve, 2026-11-29; registry data_points.csv other_income_expense_net fallback 3 and dividends_paid fallback 2,
+# X141 (Stage 3 Resolve, 2026-11-29; registry data_points.csv other_income_expense_net fallback 3 and dividends_paid fallback 2,
 # founder standard 2026-11-22: a printed combined line is a VALUE with a badge). The reviewed full-10-K reads served these lines
 # year by year (AMAT-2026-11-22 other income FY2017-20, SCHW-2026-11-22 dividends FY2022-24); the same printed line in the other
 # years stayed a combined-reason open cell (AMAT FY2015-16/2021-25, SCHW FY2015-21/2025, NFLX, NOW, MRVL). Read 2026-11-29:
@@ -2211,7 +2211,7 @@ def apply_combined_band_and_dividends(rows):
         badge = _combined_badge(dp, label)
         r.update(status='mapped', value=v, tags=tag, nodes=f"{tag}={standard_inputs._plain(v)} [{page}]",
                  why=f"the only printed line holding {dp} is the combined line '{label}' ({tag}); served as that line with the badge "
-                     f"{badge} (registry {step}, founder standard 2026-11-22, X138)")
+                     f"{badge} (registry {step}, founder standard 2026-11-22, X141)")
         r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';')
                                if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')] + [badge])
     return rows
@@ -2739,7 +2739,7 @@ if __name__ == '__main__':
     rows = apply_combined_ap_change(rows)   # X133 (.92)
     rows = apply_combined_working_capital_change(rows)   # X137 (.94)
     rows = apply_other_income_band(rows, filings)   # X134 (.93)
-    rows = apply_combined_band_and_dividends(rows)   # X138: after X134 (a band it can split is split first)
+    rows = apply_combined_band_and_dividends(rows)   # X141: after X134 (a band it can split is split first)
     rows = apply_cash_less_restricted(rows, notefacts, filings)   # X135 (.93)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
