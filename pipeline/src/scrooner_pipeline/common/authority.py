@@ -234,9 +234,7 @@ def _face_rows(conn: Any, company_ids: list[int]) -> list[tuple]:
     per: dict[int, list[tuple]] = {}
     miss: list[int] = []
     for cid in company_ids:
-        got = (
-            rc.get("face", f"{cid}|{key_tail}", shas[cid]) if shas.get(cid) else None
-        )
+        got = rc.get("face", f"{cid}|{key_tail}", shas[cid]) if shas.get(cid) else None
         if got is None:
             miss.append(cid)
         else:

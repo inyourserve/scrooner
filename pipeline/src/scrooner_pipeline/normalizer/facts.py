@@ -183,7 +183,13 @@ def upsert_concepts(
 
 _FACT_KEY = "company_id, concept_id, unit_id, period_id, filing_id"
 _FACT_STAGE_COLS = (
-    "company_id", "concept_id", "unit_id", "period_id", "filing_id", "value", "raw_object_id",
+    "company_id",
+    "concept_id",
+    "unit_id",
+    "period_id",
+    "filing_id",
+    "value",
+    "raw_object_id",
 )
 
 
@@ -274,14 +280,25 @@ def normalize_facts_for_cik(
     result: dict[str, Any] = {"cik": cik, "status": "ok"}
     if company_id is not None:
         result = normalize_payload(
-            conn, company_id, cik, payload, raw_object_id,
-            concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+            conn,
+            company_id,
+            cik,
+            payload,
+            raw_object_id,
+            concept_by_pair=concept_by_pair,
+            unit_by_name=unit_by_name,
         )
     # Predecessor windows: the same payload, attributed to each successor company.
     result["predecessor_routes"] = [
         normalize_payload(
-            conn, r.company_id, cik, payload, raw_object_id, window=r,
-            concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+            conn,
+            r.company_id,
+            cik,
+            payload,
+            raw_object_id,
+            window=r,
+            concept_by_pair=concept_by_pair,
+            unit_by_name=unit_by_name,
         )
         for r in routes
     ]
@@ -445,8 +462,11 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
         for cik in sorted(target_ciks):
             try:
                 result = normalize_facts_for_cik(
-                    storage, conn, cik,
-                    concept_by_pair=concept_by_pair, unit_by_name=unit_by_name,
+                    storage,
+                    conn,
+                    cik,
+                    concept_by_pair=concept_by_pair,
+                    unit_by_name=unit_by_name,
                 )
             except Exception as exc:
                 errored.append(cik)
