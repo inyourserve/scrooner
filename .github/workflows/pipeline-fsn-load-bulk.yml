@@ -1,0 +1,147 @@
+name: FSN load from the SEC bulk sets (universe_5000.csv rank range, insert-only)
+
+# Manual only, main only. Loads fsn.* for the companies of universe_5000.csv ranks [rank_from, rank_to] that have NO row in
+# fsn.company_load yet (insert-only: a loaded company is never touched). Source: SEC's Financial Statement and Notes
+# bulk sets as mirrored in the fsn-notes storage bucket (no SEC requests): `scrooner-fsn shard` (bucket -> company
+# directories, reads core.company and history sources) then `scrooner-fsn load` (one transaction per company, idempotent
+# on input sha + loader commit). No pilot, no map, no select, no canonical_fact. Filings newer than the latest bulk set
+# come from the nightly EDGAR load stage.
+#   apply=false (default): shards and runs `load --dry-run` (read-only transaction), writes nothing to the database.
+#   apply=true: PRODUCTION WRITE to fsn.* (founder order 2026-11-29: load the FSN store for the top 5,000).
+# Disk pacing (coordinator rule): max_db_gb refuses to start when pg_database_size is already above it; dispatch one
+# range per window (about 20 MB a company measured at the 1,000 cohort) and read pg_database_size after each.
+on:
+  workflow_dispatch:
+    inputs:
+      rank_from:
+        description: "First universe_5000.csv rank"
+        required: true
+      rank_to:
+        description: "Last universe_5000.csv rank"
+        required: true
+      shards:
+        description: "Company-disjoint shards, one runner and 2 connections each (1-4)"
+        default: "2"
+      max_db_gb:
+        description: "Refuse to start when pg_database_size is above this many GB"
+        default: "90"
+      apply:
+        description: "true = load into fsn.* (production write); false = shard and dry-run"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: manual-db-jobs
+  cancel-in-progress: false
+
+env:
+  MAX_BACKENDS: "60"
+
+jobs:
+  plan:
+    name: Main only; wait for FSN writes; plan the shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    outputs:
+      shards: ${{ steps.s.outputs.shards }}
+      todo: ${{ steps.s.outputs.todo }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      RANK_FROM: ${{ inputs.rank_from }}
+      RANK_TO: ${{ inputs.rank_to }}
+      SHARDS: ${{ inputs.shards }}
+      MAX_DB_GB: ${{ inputs.max_db_gb }}
+    steps:
+      - name: Refuse anything but a dispatch on main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ] || [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ]; then
+            echo "::error::runs only from workflow_dispatch on main"; exit 1
+          fi
+          for v in "$RANK_FROM" "$RANK_TO" "$SHARDS" "$MAX_DB_GB"; do printf '%s' "$v" | grep -Eq '^[0-9]{1,4}$' || { echo "::error::numeric inputs only"; exit 1; }; done
+          [ "$SHARDS" -ge 1 ] && [ "$SHARDS" -le 4 ] || { echo "::error::shards 1-4"; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          HEAVY_GUARD_SELF: pipeline-fsn-load-bulk.yml
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+      - name: Disk and connection gate
+        run: |
+          set -eu
+          gb=$(psql "$DATABASE_URL" -tAc "select round(pg_database_size(current_database())/1e9)")
+          used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")
+          echo "database $gb GB (limit $MAX_DB_GB); client backends $used"
+          [ "$gb" -le "$MAX_DB_GB" ] || { echo "::error::database $gb GB above max_db_gb $MAX_DB_GB"; exit 1; }
+          [ $((used + 2 * SHARDS)) -le "$MAX_BACKENDS" ] || { echo "::error::backends $used + $((2 * SHARDS)) above $MAX_BACKENDS"; exit 1; }
+      - id: s
+        run: |
+          set -eu
+          psql "$DATABASE_URL" -tAc "select cik from fsn.company_load" > loaded.txt
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import csv, json, os
+          loaded = {l.strip().zfill(10) for l in open("loaded.txt") if l.strip()}
+          lo, hi, n = int(os.environ["RANK_FROM"]), int(os.environ["RANK_TO"]), int(os.environ["SHARDS"])
+          rows = [r for r in csv.DictReader(open("doc/data-moat/team/top1000/universe_5000.csv"))
+                  if lo <= int(r["rank"]) <= hi and r["cik"].zfill(10) not in loaded and not r["excluded"]]
+          ciks = [r["cik"].zfill(10) for r in rows]
+          n = max(1, min(n, len(ciks)))
+          print("todo=%d" % len(ciks))
+          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n)] if ciks else []))
+          EOF
+
+  load:
+    name: shard and load ${{ matrix.shard.i }}
+    needs: plan
+    if: needs.plan.outputs.todo != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CIKS: ${{ matrix.shard.ciks }}
+      APPLY: ${{ inputs.apply }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Shard from the fsn-notes bucket (no SEC requests)
+        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3
+      - name: Dry run (read-only transaction)
+        if: ${{ !inputs.apply }}
+        run: |
+          mkdir -p out
+          uv run --project pipeline scrooner-fsn load --companies companies --dry-run --report out/load-plan.json
+      - name: Load fsn.* (PRODUCTION WRITE, one transaction per company)
+        if: ${{ inputs.apply }}
+        run: |
+          mkdir -p out
+          uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
+      - name: Database size after
+        if: always()
+        run: psql "$DATABASE_URL" -tAc "select 'db_gb_after', round(pg_database_size(current_database())/1e9,2)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fsn-load-bulk-${{ github.run_id }}-${{ matrix.shard.i }}
+          path: out/
+          if-no-files-found: ignore
+          retention-days: 30
