@@ -335,6 +335,32 @@ def era_component_parts(
     return tuple(seen) or None
 
 
+def renamed_part_printed(
+    face: Any,
+    map_rows: list[MapRow],
+    name: str,
+    own_part_tags: set[str],
+    accession: str,
+    start: date | None,
+    end: date,
+    period_type: str,
+) -> bool:
+    """Rule absent_part_renamed (proof close-out 2026-11-29, IBM total_debt FY2019-21, TMO FY2018/2020): a part tag absent
+    from a filing's column is no zero when that column prints the line under ANOTHER tag the company's map names a
+    component of the same concept in some era (IBM's Q3-2020 10-Q prints Dec-2019 long-term debt as LongTermDebtNoncurrent,
+    the cell's part being LongTermDebtAndCapitalLeaseObligations; the calc parent ties because the renamed line fills it).
+    Such a filing does not print every part under the cell's tags and is not the authority; the older filing that prints
+    every part is."""
+    alts = {
+        str(r[3])
+        for r in map_rows
+        if r[1] == "component" and r[5] == name and r[3]
+    } - own_part_tags
+    return any(
+        face.prints_column(accession, t, start, end, period_type) for t in sorted(alts)
+    )
+
+
 def component_sum_authority_by_era(
     copies: list[tuple[str, Decimal, str]],
     own_parts: tuple[tuple[int, str], ...],
@@ -937,11 +963,14 @@ def load_shown(
                 },
                 filed_by,
                 sf,
-                zero_ok=lambda a, t, _s=start, _e=end, _p=ptype: (
+                zero_ok=lambda a, t, _s=start, _e=end, _p=ptype, _n=name, _parts=claim.parts: (
                     absent_part_is_zero(
                         face, ties, a, t, part_parents.get(t), _s, _e, _p
                     )
                     is not None
+                    and not renamed_part_printed(
+                        face, map_rows, _n, {pt for _sg, pt in _parts}, a, _s, _e, _p
+                    )
                 ),
             )
             disagreeing = []

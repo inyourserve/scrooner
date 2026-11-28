@@ -142,19 +142,22 @@ RULES: dict[str, Rule] = {
         # v22 (2026-11-16): the FIRST rule-scoped changes
         Rule(
             "component_sum_authority",
-            2,
+            3,
             legacy_version=1,
             applies=_component_sum,
             owners=(
                 "proof/shown.py:component_sum_authority_by_era",
                 "proof/shown.py:component_sum_authority",
+                "proof/shown.py:renamed_part_printed",
             ),
             note="v2: a filing's column is read with the cell's own parts when the filing's era part is not printed "
-            "there (TMO total_debt Dec-2020)",
+            "there (TMO total_debt Dec-2020). v3 (2026-11-29): a part absent from a filing's column is no zero when the "
+            "column prints the line under another tag the map names a component of the concept in some era (IBM Q3-2020 "
+            "10-Q prints Dec-2019 long-term debt as LongTermDebtNoncurrent; its 8,797M ST borrowings was judged the total)",
         ),
         Rule(
             "resolver_beats_combined",
-            4,
+            5,
             legacy_version=0,
             applies=_has_splits,
             owners=(
@@ -168,7 +171,8 @@ RULES: dict[str, Rule] = {
             "surfacing as UNCHECKED no_proof_row (GILD interest_income FY2024); existing verdicts do not change. v3 "
             "(2026-11-23, resolver .90): load_shown calls the authority_tag_sum and authority_copy_role helpers; the cells "
             "whose verdict can change are selected by those two rules. v4 (2026-11-28): load_shown applies rule "
-            "authority_tag_sum only when the source tags sum to the shown value (authority_tag_sum v2 selects the cells)",
+            "authority_tag_sum only when the source tags sum to the shown value (authority_tag_sum v2 selects the cells). v5 (2026-11-29): load_shown vetoes an absent-part zero when the "
+            "column prints the part's line under a renamed component tag (component_sum_authority v3 selects the cells)",
         ),
         # close-out 2026-11-23 (resolver .90): cells decided by a filing read but left open by the proof
         Rule(
