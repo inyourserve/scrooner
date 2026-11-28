@@ -65,6 +65,12 @@ def _r(rule_id: str, rf: str, lane: str, what: str, dry_run: bool = False) -> Ru
 RULES: dict[str, Rule] = {
     r.rule_id: r
     for r in (
+        _r(
+            "serve.shown_cell_path@1",
+            "-",
+            "serve",
+            "metric calculators read only SHOWN and PROVEN cells (analytics.shown_cell, draft 0135); an unproven input gives a reasoned null (one-display-path plan step 5; needs 0130/0133/0135 applied)",
+        ),
         # ---- lane 1: authority, identity, state
         _r(
             "source.periodic_form_only@1",

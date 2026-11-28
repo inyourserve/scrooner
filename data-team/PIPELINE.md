@@ -119,6 +119,7 @@ The SEC budget isn't the constraint. **The constraints are the exceptions rate a
 | M1 | FSN path in the nightly run (`FSN_NIGHTLY_STAGE` load, then write); retire the old reprocess for the 1,000 | 155 top-100 DISAGREE cleared + the founder's typed words |
 | M2 | one rule store for predictor, resolver and filing reads; drill and verifier misses become proposals automatically | tests mutation-checked |
 | M3 | blocks 13-15 merged into one cell state + sampled certificate; calculators read PROVEN cells only | migrations 0130/0133 applied (founder) |
+| M3 progress (2026-11-28) | calculators behind rule `serve.shown_cell_path@1` (default off, `common/rule_flags.py`): SWITCHED `mapper/calculate.py` (flag on reads `shown_inputs.load_shown_cells`; unproven input gives null `input_not_served:<concept>`). REMAINING: `ttm.py:199`, `expanded_metrics.py:459`, `price_metrics.py:123/146/244`. Flag on needs 0130/0133/0135 applied (founder); shown view is FY and instant only, so quarter rows are not produced with the flag on | one file per commit |
 | M4 | event log + planner + resumable workers replace `top100_flow.sh` dispatch and the nightly reprocess | migration claim + the founder's typed words |
 | M5 | one exceptions queue table; all lanes work from it | migration claim |
 | M6 | cohort ladder: 101-1,000 enter through the same path | top-100 queue close to 0 |

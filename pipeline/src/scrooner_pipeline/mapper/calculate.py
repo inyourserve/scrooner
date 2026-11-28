@@ -72,7 +72,7 @@ from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper import bs_anchor, rule_flags
 from scrooner_pipeline.mapper.rule_flags import DECISIONS, GuardDecision
 from scrooner_pipeline.common.rule_flags import rule_enabled
-from scrooner_pipeline.mapper import quick_ratio_evidence
+from scrooner_pipeline.mapper import quick_ratio_evidence, shown_inputs
 from scrooner_pipeline.mapper.calculate_shapes import (
     CONCEPT_MATERIALITY_FLOORS,
     compute as _compute,
@@ -235,6 +235,9 @@ FORMULA_SHAPES = formula_shapes()
 # net_cash_per_share (total_debt_resolved) and fcf_margin (capex) were
 # explicitly left out here too -- flagged as "ambiguous, needs its own
 # verification" in that same finding, not assumed safe by analogy.
+SHOWN_CELL_PATH_RULE = "serve.shown_cell_path@1"
+
+
 ZERO_WHEN_ABSENT_CONCEPTS: dict[str, frozenset[str]] = (
     zero_when_absent_concepts()
 )  # registry null_rules
@@ -312,6 +315,14 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
     }
 
 
+def _load_facts(conn: psycopg.Connection, company_id: int) -> dict:
+    """Flag off (default): every canonical_fact row, as before. Flag serve.shown_cell_path@1 on: SHOWN and PROVEN
+    cells only (analytics.shown_cell, one batched read per company); an unproven input is simply absent."""
+    if rule_enabled(SHOWN_CELL_PATH_RULE):
+        return shown_inputs.load_shown_cells(conn, company_id)
+    return _load_canonical_facts(conn, company_id)
+
+
 def _record_w10_dry_run(
     company_id: int,
     metric_name: str,
@@ -347,7 +358,8 @@ def _record_w10_dry_run(
 def calculate_for_company(
     conn: psycopg.Connection, company_id: int, targets: list[dict]
 ) -> dict:
-    facts = _load_canonical_facts(conn, company_id)
+    shown_path = rule_enabled(SHOWN_CELL_PATH_RULE)
+    facts = _load_facts(conn, company_id)
     by_period_id, by_end_date, periods = (
         facts["by_period_id"],
         facts["by_end_date"],
@@ -441,7 +453,7 @@ def calculate_for_company(
                     value, fact_ids = hit
                     values_by_role.setdefault(role, []).append(value)
                     found_concepts_by_role.setdefault(role, set()).add(concept_id)
-                    source_fact_ids.extend(fact_ids)
+                    source_fact_ids.extend(fact_ids or [])
 
             for _concept_name, concept_id, role, is_instant in instant_inputs:
                 # Matched by END DATE against the anchor period's end, not
@@ -451,7 +463,7 @@ def calculate_for_company(
                     value, fact_ids = hit
                     values_by_role.setdefault(role, []).append(value)
                     found_concepts_by_role.setdefault(role, set()).add(concept_id)
-                    source_fact_ids.extend(fact_ids)
+                    source_fact_ids.extend(fact_ids or [])
 
             # Drop any role where not every expected concept resolved --
             # a partial summand list must null the whole metric, never
@@ -469,6 +481,11 @@ def calculate_for_company(
                 if missing and not missing <= zero_when_absent_ids:
                     incomplete_role = role
                     values_by_role.pop(role, None)
+                    if shown_path:
+                        # reasoned null: name the inputs that are not shown-and-proven, never a fallback
+                        evidence_reason = "input_not_served:" + ",".join(
+                            sorted(concept_id_to_name[c] for c in missing)
+                        )
                     break
                 if missing and inventory_rule_on:
                     # a missing inventory is a zero only where the filing says the line is not presented
