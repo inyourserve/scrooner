@@ -2173,6 +2173,65 @@ def apply_combined_working_capital_change(rows):
     return rows
 
 
+# X141 (Stage 3 Resolve, 2026-11-29; registry data_points.csv other_income_expense_net fallback 3 and dividends_paid fallback 2,
+# founder standard 2026-11-22: a printed combined line is a VALUE with a badge). The reviewed full-10-K reads served these lines
+# year by year (AMAT-2026-11-22 other income FY2017-20, SCHW-2026-11-22 dividends FY2022-24); the same printed line in the other
+# years stayed a combined-reason open cell (AMAT FY2015-16/2021-25, SCHW FY2015-21/2025, NFLX, NOW, MRVL). Read 2026-11-29:
+# AMAT FY2023 10-K R3 'Interest and other income (expense), net' 300 is the only band line besides 'Interest expense'; NFLX
+# FY2019 10-K R2 'Interest and other income (expense)' 84,000 likewise; SCHW FY2019 10-K R6 one financing line 'Dividends paid'
+# (1,060) while the IS reports preferred dividends of 178.
+#   other_income_expense_net: a combined row whose ONLY node is the band line (one element, one R page) and whose label names
+#     both interest and other items is served as that line, raw sign (other income positive). One printed line, one data point
+#     (X130): never when the same filing's interest_income row serves that element.
+#   dividends_paid: a combined row flagged dividends_incl_preferred whose first node is the printed PaymentsOfDividends financing
+#     line is served as that line (the preferred node is evidence only).
+# The only_combined flags are dropped and the registry's combined step is the flag (other income: 'combined:interest income';
+# dividends: combined:<printed label>).
+_OI_BAND_LB = re.compile(r'\binterest\b.*\bother\b|\bother\b.*\binterest\b', re.I)
+_ONE_LINE = re.compile(r'^(-?)(\w+)=(-?[\d.]+) \[(R\d+\.htm(?::\d+)?)\]$')
+
+
+def _combined_badge(dp, label):
+    """The registry's combined step of `dp` (general template): a fixed step ('combined:interest income') is the badge itself; a
+    step with a <placeholder> is filled with the printed label (encoded as the flag grammar needs)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'pipeline', 'src'))
+    from scrooner_pipeline.metrics import registry
+    steps = [b for b in registry.load_data_points()[(dp, 'general')].badges if b.startswith('combined:')]
+    if len(steps) != 1: raise ValueError(f"registry: {dp} has {len(steps)} combined steps")
+    if '<' not in steps[0]: return steps[0]
+    return 'combined:' + label.replace('%', '%25').replace(';', '%3B').replace(',', '%2C')
+
+
+def apply_combined_band_and_dividends(rows):
+    served_ii = {(r['accession'], r.get('column') or 'own', t) for r in rows
+                 if r['data_point'] == 'interest_income' and r.get('status') in ('mapped', 'component_sum')
+                 for t in re.findall(r'(?:^|; )-?(\w+)(?:\[[^\]]*\])?=', (r.get('nodes') or '').split(' | why')[0])}
+    for r in rows:
+        dp = r['data_point']
+        if r.get('status') != 'combined' or dp not in ('other_income_expense_net', 'dividends_paid'): continue
+        left = (r.get('nodes') or '').split(' | why')[0].strip()
+        nodes = [n.strip() for n in left.split('; ') if n.strip()]
+        label = _combined_line_label(r)
+        if not nodes or not label: continue
+        m = _ONE_LINE.match(nodes[0])
+        if not m or m.group(1): continue
+        tag, v, page = m.group(2), D(m.group(3)), m.group(4)
+        if dp == 'other_income_expense_net':
+            if len(nodes) != 1 or not _OI_BAND_LB.search(label) or (r['accession'], r.get('column') or 'own', tag) in served_ii: continue
+            step = 'other_income_expense_net fallback 3'
+        else:
+            flags = (r.get('flags') or '').split(';')
+            if 'dividends_incl_preferred' not in flags or tag != 'PaymentsOfDividends' or len(nodes) > 2: continue
+            step = 'dividends_paid fallback 2'
+        badge = _combined_badge(dp, label)
+        r.update(status='mapped', value=v, tags=tag, nodes=f"{tag}={standard_inputs._plain(v)} [{page}]",
+                 why=f"the only printed line holding {dp} is the combined line '{label}' ({tag}); served as that line with the badge "
+                     f"{badge} (registry {step}, founder standard 2026-11-22, X141)")
+        r['flags'] = ';'.join([x for x in (r.get('flags') or '').split(';')
+                               if x and x not in ('label_beyond', 'only_combined', 'only_combined_years', 'only_combined_row')] + [badge])
+    return rows
+
+
 # X134 (.93, Dhairya ruling 2026-11-21 (d), confirmed by the draw-check reads cbe7a9da1): other_income_expense_net = every printed
 # income-statement line between operating income and pretax that is not interest income or interest expense (equity-method income,
 # debt extinguishment, pension, FX, gains included). Computed as pretax - operating income - the effect of the printed interest lines
@@ -2695,6 +2754,7 @@ if __name__ == '__main__':
     rows = apply_combined_ap_change(rows)   # X133 (.92)
     rows = apply_combined_working_capital_change(rows)   # X137 (.94)
     rows = apply_other_income_band(rows, filings)   # X134 (.93)
+    rows = apply_combined_band_and_dividends(rows)   # X141: after X134 (a band it can split is split first)
     rows = apply_cash_less_restricted(rows, notefacts, filings)   # X135 (.93)
     import filing_reads   # reviewed full-10-K reads (rules/filing_read_cells.csv): last, the resolver's own agreeing XBRL node always stays (X109)
     _frl = []
