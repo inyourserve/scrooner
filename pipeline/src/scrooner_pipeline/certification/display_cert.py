@@ -2341,6 +2341,14 @@ def certificate(
     for c in run.cells:
         if c.key in drawn:
             ev, res, why = "drawn", drawn[c.key].result, drawn[c.key].evidence
+            if run.settled_by_read(drawn[c.key]):
+                # the verdict counts a text-stated cell its MATCH read settled; the certificate must say MATCH too,
+                # or display_cert_load refuses the PASS (BMY accounts_receivable FY2020/22/25, 2026-11-28)
+                r = run.reads[c.key]
+                res, why = (
+                    "MATCH",
+                    f"settled by filing read ({r.reader}): {r.evidence}; claim check: {why}",
+                )
         elif c.key in debt:
             ev, res, why = "census", debt[c.key].result, debt[c.key].evidence
         elif c.display in (HIDDEN_ROW, HIDDEN_YEAR):

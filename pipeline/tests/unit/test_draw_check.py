@@ -1840,12 +1840,25 @@ def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path)
     """BMY accounts_receivable FY2020/22/25 (2026-11-28): a text-stated cell (badge printed, no tag, no parts) is LOCATOR
     in the claim check and NEEDS_READ in the draw checker; its MATCH read settled the draw checker but the LOCATOR kept
     the company REVIEW forever. Mutation: the verdict ignoring settled_by_read stays REVIEW and fails this test."""
+
     def badged(name, rows):
         p = tmp_path / name
         with open(p, "w", newline="") as fh:
             w = csv.writer(fh)
-            w.writerow(["data_point", "fiscal_year", "period_end", "shown_value", "accession", "r_page", "tag",
-                        "parts", "display", "badge"])
+            w.writerow(
+                [
+                    "data_point",
+                    "fiscal_year",
+                    "period_end",
+                    "shown_value",
+                    "accession",
+                    "r_page",
+                    "tag",
+                    "parts",
+                    "display",
+                    "badge",
+                ]
+            )
             w.writerows([r + ["as_printed"] for r in rows])
         return p
 
@@ -1859,7 +1872,9 @@ def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path)
     facts = [ff("Revenues", "100")]
     run = dc.certify("T", "1", cov, Src(facts))
     assert run.verdict == "REVIEW"
-    assert [s.result for s in run.shown if s.cell.data_point == "accounts_receivable"] == ["LOCATOR"]
+    assert [
+        s.result for s in run.shown if s.cell.data_point == "accounts_receivable"
+    ] == ["LOCATOR"]
 
     def with_read(verdict):
         reads = tmp_path / f"reads-{verdict}.csv"
@@ -1869,6 +1884,19 @@ def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path)
         return dc.certify("T", "1", cov, Src(facts), reads=dck.load_reads(reads))
 
     assert with_read("MATCH").verdict == "PASS"
+    # the certificate agrees with the verdict: display_cert_load refuses a PASS whose drawn cell is not MATCH
+    cert = json.loads(
+        json.dumps(
+            dc.certificate(with_read("MATCH"), None, "2026-11-28", "Ritwik (cloud)")
+        )
+    )
+    (ar,) = [c for c in cert["cells"] if c["data_point"] == "accounts_receivable"]
+    assert (ar["evidence"], ar["result"], ar["verified_by"]) == (
+        "drawn",
+        "MATCH",
+        "read:agent-7",
+    )
+    assert "settled by filing read (agent-7)" in ar["detail"]
     wrong = with_read("MISMATCH")
     assert wrong.verdict == "FAIL" and wrong.errors == 1
     # a read never settles a tagged cell's LOCATOR (value found off the cited page): the approver still looks
@@ -1877,6 +1905,8 @@ def test_a_text_stated_drawn_cell_is_settled_only_by_its_matching_read(tmp_path)
         [["revenue", "2023", PE, "100", ACC, "R9", "Revenues", "", dc.SHOWN]],
     )
     reads = tmp_path / "reads-tagged.csv"
-    reads.write_text("data_point,fiscal_year,verdict,reader,evidence\nrevenue,2023,MATCH,agent-7,R4 prints 100\n")
+    reads.write_text(
+        "data_point,fiscal_year,verdict,reader,evidence\nrevenue,2023,MATCH,agent-7,R4 prints 100\n"
+    )
     t = dc.certify("T", "1", tagged, Src(facts), reads=dck.load_reads(reads))
     assert [s.result for s in t.shown] == ["LOCATOR"] and t.verdict == "REVIEW"
