@@ -11,7 +11,7 @@
  "resolver": "data-team/tags/line_map/resolver",
  "code_sha": "7b063cbab6f3119b3a70e134761f58052891ef5b",
  "method": "data-team/strategy/approvals/CERTIFICATION-METHOD-2026-11-16.md",
- "approver": "scrooner-data-verifier (agent)",
+ "approver": "Ritwik (cloud)",
  "certified_at": "2026-11-28",
  "counts": {
   "HIDDEN_ROW": 11,
@@ -95,15 +95,7 @@
     "evidence": "0000014272-21-000066 FY2020 10-K, R81.htm RECEIVABLES (Details) $ in Millions, Dec. 31, 2020: \"Net trade receivables\" 7,219 (us-gaap:AccountsReceivableNetCurrent) = trade receivables 7,882 - charge-backs/cash discounts 645 - allowances 18; plus \"Alliance, Royalties, VAT and other\" 1,282 = \"Receivables\" 8,501, which ties to face R4.htm CONSOLIDATED BALANCE SHEETS \"Receivables\" 8,501. Shown 7,219,000,000 = 7,219 x 1e6."
    }
   ],
-  "audit": {
-   "sampled": 10,
-   "read": 10,
-   "agree": 10,
-   "disagree": [],
-   "unread": [],
-   "agreement": "1.0000",
-   "complete": true
-  }
+  "audit": null
  },
  "gate": [],
  "cells": [

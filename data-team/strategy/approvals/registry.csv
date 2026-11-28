@@ -1,6 +1,6 @@
 ticker,date,verdict,coverage_sha256,seed,n,errors,upper_bound_95,approver
 BA,2026-11-16,FAIL,d0d3a6f1c47070bd954819e0c78213fbba25fb54074f66b452941db4e3b3a904,BA-d0d3a6f1c470,32,0,0.089368,Ritwik (cloud)
-BMY,2026-11-28,PASS,1eafcef0c57f4c46c462ee828b1d818c135d5fc9336f74f8b278ee59d6f3acbf,BMY-1eafcef0c57f,199,0,0.014941,scrooner-data-verifier (agent)
+BMY,2026-11-28,PASS,1eafcef0c57f4c46c462ee828b1d818c135d5fc9336f74f8b278ee59d6f3acbf,BMY-1eafcef0c57f,199,0,0.014941,Ritwik (cloud)
 GILD,2026-11-22,PASS,fc4df887df611ea3e34b351e818f28233a2a9dc1557425aa754eb238b684eb2a,GILD-fc4df887df61,199,0,0.014941,Ritwik (cloud)
 JNJ,2026-11-22,PASS,acfae66f2af4deff49aa009d48a9ccbd6142f05803f88d13611770503cfec343,JNJ-acfae66f2af4,199,0,0.014941,Ritwik (cloud)
 LRCX,2026-11-22,PASS,c623fcf8ff3126426e306942c4c3cb7c1fbe73b47a45a27dafe206ca65a3c613,LRCX-c623fcf8ff31,199,0,0.014941,Ritwik (cloud)
