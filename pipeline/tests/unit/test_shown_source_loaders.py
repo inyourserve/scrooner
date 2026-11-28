@@ -81,3 +81,47 @@ def test_ttm_flag_on_reads_the_shown_view_and_unproven_is_absent(monkeypatch):
         None,
         [],
     )  # null; callers write their incomplete:* reason
+
+
+class SeqConn(FakeConn):
+    """Rows per execute call: the first query's fetchone row, then the second query's fetchall rows."""
+
+    def __init__(self, first, second):
+        super().__init__([])
+        self.first, self.second = first, second
+
+    def fetchone(self):
+        return self.first
+
+    def fetchall(self):
+        return list(self.second)
+
+
+NOW = (D("1000"), [7], date(2024, 12, 31))
+YEAR_AGO = (D("900"), date(2023, 12, 31))
+
+
+@pytest.mark.unit
+def test_expanded_shares_1y_ago_flag_off_is_canonical_fact_and_unchanged():
+    conn = SeqConn(NOW, [YEAR_AGO])
+    assert expanded_metrics._shares_outstanding_now_and_1y_ago(conn, 1, 9) == (
+        D("1000"),
+        D("900"),
+    )
+    assert (
+        "analytics.canonical_fact cf" in conn.sql[1] and "shown_cell" not in conn.sql[1]
+    )
+
+
+@pytest.mark.unit
+def test_expanded_shares_1y_ago_flag_on_reads_shown_and_unproven_is_null(monkeypatch):
+    _on(monkeypatch)
+    conn = SeqConn(
+        NOW, []
+    )  # the prior-year cell is not shown/proven, so absent from the view
+    assert expanded_metrics._shares_outstanding_now_and_1y_ago(conn, 1, 9) == (
+        D("1000"),
+        None,
+    )
+    assert "analytics.shown_cell cf" in conn.sql[1]
+    assert "cf.cell_state = 'value'" in conn.sql[1]

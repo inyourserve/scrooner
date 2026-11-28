@@ -37,7 +37,7 @@ import structlog
 
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.errors import log_error, safe_rollback
-from scrooner_pipeline.mapper import rule_flags, ttm_guards
+from scrooner_pipeline.mapper import rule_flags, shown_source, ttm_guards
 from scrooner_pipeline.mapper.reason_store import (
     BlankReason,
     NullReasonSink,
@@ -454,11 +454,11 @@ def _shares_outstanding_now_and_1y_ago(
 
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             select cf.value, p.end_date
-            from analytics.canonical_fact cf
+            from {shown_source.fact_relation()} cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s and p.end_date <= %s
+            where cf.company_id = %s and cf.canonical_concept_id = %s{shown_source.value_filter()} and p.end_date <= %s
             order by p.end_date desc
             """,
             (
