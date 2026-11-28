@@ -46,8 +46,12 @@ def healthy_snapshot() -> OperationalSnapshot:
     return OperationalSnapshot(
         generated_at=NOW,
         freshness=(
-            FreshnessReading("filing_index", NOW - timedelta(hours=1), 100, timedelta(hours=72)),
-            FreshnessReading("market_prices", NOW - timedelta(hours=12), 10, timedelta(hours=96)),
+            FreshnessReading(
+                "filing_index", NOW - timedelta(hours=1), 100, timedelta(hours=72)
+            ),
+            FreshnessReading(
+                "market_prices", NOW - timedelta(hours=12), 10, timedelta(hours=96)
+            ),
         ),
         dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
         recent_runs=(run(1),),
@@ -68,12 +72,19 @@ def test_missing_stale_dead_letter_failed_and_stuck_states_are_visible() -> None
         generated_at=NOW,
         freshness=(
             FreshnessReading("missing_source", None, 0, timedelta(hours=1)),
-            FreshnessReading("stale_source", NOW - timedelta(hours=2), 10, timedelta(hours=1)),
+            FreshnessReading(
+                "stale_source", NOW - timedelta(hours=2), 10, timedelta(hours=1)
+            ),
         ),
         dead_letters={"collector": 0, "normalizer": 2, "mapper": 3},
         recent_runs=(
             run(2, status="failed"),
-            run(3, status="running", started_at=NOW - timedelta(hours=4), heartbeat_at=NOW - timedelta(hours=3)),
+            run(
+                3,
+                status="running",
+                started_at=NOW - timedelta(hours=4),
+                heartbeat_at=NOW - timedelta(hours=3),
+            ),
         ),
     )
 
@@ -106,7 +117,11 @@ def test_expected_misses_never_reach_evaluate_alerts() -> None:
     # alerts and status "ok".
     snapshot = OperationalSnapshot(
         generated_at=NOW,
-        freshness=(FreshnessReading("filing_index", NOW - timedelta(hours=1), 100, timedelta(hours=72)),),
+        freshness=(
+            FreshnessReading(
+                "filing_index", NOW - timedelta(hours=1), 100, timedelta(hours=72)
+            ),
+        ),
         dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
         recent_runs=(run(1),),
         expected_misses={"collector_not_in_bulk_archive": 15},
@@ -130,8 +145,18 @@ def test_row_count_anomaly_compares_only_same_successful_job_and_scope() -> None
     runs = (
         run(4, started_at=NOW - timedelta(minutes=5), stats={"filings_inserted": 20}),
         run(3, started_at=NOW - timedelta(hours=1), stats={"filings_inserted": 100}),
-        run(2, started_at=NOW - timedelta(hours=2), stats={"filings_inserted": 100}, params_key="other"),
-        run(1, status="failed", started_at=NOW - timedelta(hours=3), stats={"filings_inserted": 1}),
+        run(
+            2,
+            started_at=NOW - timedelta(hours=2),
+            stats={"filings_inserted": 100},
+            params_key="other",
+        ),
+        run(
+            1,
+            status="failed",
+            started_at=NOW - timedelta(hours=3),
+            stats={"filings_inserted": 1},
+        ),
     )
 
     assert row_count_anomalies(runs) == [
@@ -145,7 +170,11 @@ def test_later_success_for_identical_job_and_scope_closes_failure_alert() -> Non
         freshness=healthy_snapshot().freshness,
         dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
         recent_runs=(
-            run(13, started_at=NOW - timedelta(minutes=5), finished_at=NOW - timedelta(minutes=4)),
+            run(
+                13,
+                started_at=NOW - timedelta(minutes=5),
+                finished_at=NOW - timedelta(minutes=4),
+            ),
             run(
                 12,
                 status="failed",
@@ -187,34 +216,85 @@ def test_success_for_different_scope_does_not_hide_failure() -> None:
 # same companies as run 308 (the same SEC day indexed twice) and every one was
 # byte-identical, so storing 0 was correct; the old pair then re-alerted every
 # night because nothing newer shared its scope.
-COMPANYFACTS = {"job": "companyfacts", "params_key": "ciks=0000002098,0000002230|limit=None"}
+COMPANYFACTS = {
+    "job": "companyfacts",
+    "params_key": "ciks=0000002098,0000002230|limit=None",
+}
 
 
 def test_a_drop_fully_explained_by_unchanged_skips_is_not_an_anomaly() -> None:
     runs = (
-        run(311, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
-            stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 0, "not_in_archive": 18}),
-        run(308, started_at=NOW - timedelta(days=2), **COMPANYFACTS,
-            stats={"considered": 1051, "stored": 214, "unchanged_skipped": 837, "errors": 0, "not_in_archive": 18}),
+        run(
+            311,
+            started_at=NOW - timedelta(hours=1),
+            **COMPANYFACTS,
+            stats={
+                "considered": 1051,
+                "stored": 0,
+                "unchanged_skipped": 1051,
+                "errors": 0,
+                "not_in_archive": 18,
+            },
+        ),
+        run(
+            308,
+            started_at=NOW - timedelta(days=2),
+            **COMPANYFACTS,
+            stats={
+                "considered": 1051,
+                "stored": 214,
+                "unchanged_skipped": 837,
+                "errors": 0,
+                "not_in_archive": 18,
+            },
+        ),
     )
 
     assert row_count_anomalies(runs, now=NOW) == []
 
 
 def test_a_drop_with_errors_or_unaccounted_items_still_alerts() -> None:
-    previous = run(308, started_at=NOW - timedelta(days=2), **COMPANYFACTS,
-                   stats={"considered": 1051, "stored": 214, "unchanged_skipped": 837, "errors": 0})
-    broken = run(311, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
-                 stats={"considered": 1051, "stored": 0, "unchanged_skipped": 900, "errors": 151})
-    vanished = run(312, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
-                   stats={"considered": 1051, "stored": 0, "unchanged_skipped": 0, "errors": 0})
+    previous = run(
+        308,
+        started_at=NOW - timedelta(days=2),
+        **COMPANYFACTS,
+        stats={
+            "considered": 1051,
+            "stored": 214,
+            "unchanged_skipped": 837,
+            "errors": 0,
+        },
+    )
+    broken = run(
+        311,
+        started_at=NOW - timedelta(hours=1),
+        **COMPANYFACTS,
+        stats={
+            "considered": 1051,
+            "stored": 0,
+            "unchanged_skipped": 900,
+            "errors": 151,
+        },
+    )
+    vanished = run(
+        312,
+        started_at=NOW - timedelta(hours=1),
+        **COMPANYFACTS,
+        stats={"considered": 1051, "stored": 0, "unchanged_skipped": 0, "errors": 0},
+    )
 
     # Every item accounted for as unchanged, but the run also had errors: the
     # errors == 0 guard must keep this alerting.
-    accounted_but_errored = run(313, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
-                                stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 5})
+    accounted_but_errored = run(
+        313,
+        started_at=NOW - timedelta(hours=1),
+        **COMPANYFACTS,
+        stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 5},
+    )
 
-    expected = [f"row_count_anomaly:companyfacts:{COMPANYFACTS['params_key']}:stored:214->0"]
+    expected = [
+        f"row_count_anomaly:companyfacts:{COMPANYFACTS['params_key']}:stored:214->0"
+    ]
     assert row_count_anomalies((broken, previous), now=NOW) == expected
     assert row_count_anomalies((vanished, previous), now=NOW) == expected
     assert row_count_anomalies((accounted_but_errored, previous), now=NOW) == expected
@@ -261,10 +341,52 @@ def test_mapper_gate_query_excludes_only_transient_probe_http_errors() -> None:
 
 
 def test_fsn_lag_alerts_only_when_flag_on_and_always_says_it_proves_nothing() -> None:
-    fsn = {"available": True, "cohort_companies": 3, "companies_behind": 2, "max_lag_days": 9, "note": "does not yet prove the FSN path"}
+    fsn = {
+        "available": True,
+        "cohort_companies": 3,
+        "companies_behind": 2,
+        "max_lag_days": 9,
+        "note": "does not yet prove the FSN path",
+    }
     base = healthy_snapshot()
     off = OperationalSnapshot(**{**base.__dict__, "fsn_freshness": fsn})
-    on = OperationalSnapshot(**{**base.__dict__, "fsn_freshness": fsn, "fsn_alert_enabled": True})
+    on = OperationalSnapshot(
+        **{**base.__dict__, "fsn_freshness": fsn, "fsn_alert_enabled": True}
+    )
     assert evaluate_alerts(off) == []
     assert snapshot_as_dict(off)["fsn_freshness"]["note"]
     assert evaluate_alerts(on) == ["fsn_behind_core:2:max_lag_days=9"]
+
+
+def test_fsn_age_buckets_are_exact_at_the_edges() -> None:
+    from scrooner_pipeline.operations import age_bucket, bucket_missing_filings
+
+    assert [age_bucket(d) for d in (0, 1, 2, 30, 31, 90, 91)] == [
+        "le_1d",
+        "le_1d",
+        "d2_30",
+        "d2_30",
+        "d31_90",
+        "d31_90",
+        "gt_90",
+    ]
+    rows = [(1, "a", "10-Q", None, None, d) for d in (1, 2, 30, 31, 90, 91, 5000)]
+    assert bucket_missing_filings(rows) == {
+        "le_1d": 1,
+        "d2_30": 2,
+        "d31_90": 2,
+        "gt_90": 2,
+    }
+
+
+def test_fsn_cohort_is_the_ranked_rows_minus_excluded(tmp_path) -> None:
+    from scrooner_pipeline.operations import SHARDS_CSV, load_fsn_cohort_ids
+
+    f = tmp_path / "s.csv"
+    f.write_text(
+        "shard,rank,company_id,excluded\nS1,1,10,\nS1,2,11,foreign private issuer\nS1,3,12,\n"
+    )
+    assert load_fsn_cohort_ids(f) == [10, 12]
+    assert (
+        len(load_fsn_cohort_ids(SHARDS_CSV)) == 986
+    )  # the real cohort file: 1,000 ranked less 14 excluded

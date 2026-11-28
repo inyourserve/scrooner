@@ -10,7 +10,10 @@ without ad-hoc SQL and can exit non-zero for an external scheduler/alert.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+import csv
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from typing import Iterable
 from numbers import Number
 
 import psycopg
@@ -159,40 +162,141 @@ EXPECTED_MISS_QUERIES = {
 
 
 # FSN freshness (report-only unless the alert flag is on; the FSN nightly stage is still off,
-# so a green run proves only the old path). Cohort = companies with any fsn.filing row.
+# so a green run proves only the old path). Cohort = the ranked top-1,000 minus the excluded rows
+# of doc/data-moat/team/top1000/shards.csv (the cohort source the certifier and fsn loader use).
+# The measure is MISSING FILINGS: core.filing 10-K/10-Q filed since FSN_FRESHNESS_SINCE with no
+# fsn.filing of the same accession, by age since filing (one missing filing is one, not "a company").
+# Filings whose period lies in a company's 'exclude' history window are another entity's and never
+# count. Predecessor-CIK filings are not counted (they are owned through core.company_history_source).
+FSN_FRESHNESS_SINCE = date(2015, 1, 1)
+FSN_FRESHNESS_STATEMENT_TIMEOUT = "30s"
+SHARDS_CSV = (
+    Path(__file__).resolve().parents[3] / "doc/data-moat/team/top1000/shards.csv"
+)
+FSN_AGE_BUCKETS = ("le_1d", "d2_30", "d31_90", "gt_90")
+
+FSN_MISSING_FILINGS_SQL = """
+select f.company_id, f.accession_number, f.form, f.period_of_report, f.filing_date,
+       (%(today)s::date - f.filing_date) as age_days
+from core.filing f
+where f.company_id = any(%(ids)s)
+  and f.form in ('10-K', '10-Q')
+  and f.filing_date >= %(since)s
+  and not exists (select 1 from fsn.filing x where x.accession = f.accession_number)
+  and not exists (select 1 from core.company_history_source h
+                  where h.company_id = f.company_id and h.relation = 'exclude'
+                    and f.period_of_report between h.valid_from and h.valid_to)
+order by f.company_id, f.filing_date, f.accession_number
+"""
+
 FSN_FRESHNESS_SQL = """
-with cohort as (select company_id, max(filed) as fsn_newest
-                from fsn.filing where company_id is not null and form in ('10-K', '10-Q')
-                group by company_id),
+with cohort as (select unnest(%(ids)s::bigint[]) as company_id),
+fsn_newest as (select x.company_id, max(x.filed) as fsn_newest
+               from fsn.filing x where x.company_id = any(%(ids)s) and x.form in ('10-K', '10-Q')
+               group by x.company_id),
 core_newest as (select f.company_id, max(f.filing_date) as core_newest
-                from core.filing f join cohort c on c.company_id = f.company_id
-                where f.form in ('10-K', '10-Q') group by f.company_id)
-select count(*),
-       count(*) filter (where n.core_newest > c.fsn_newest),
-       max(n.core_newest - c.fsn_newest) filter (where n.core_newest > c.fsn_newest)
-from cohort c join core_newest n using (company_id)
+                from core.filing f where f.company_id = any(%(ids)s) and f.form in ('10-K', '10-Q')
+                group by f.company_id)
+select (select count(*) from cohort),
+       count(*) filter (where n.core_newest > coalesce(x.fsn_newest, date '1900-01-01')),
+       max(n.core_newest - x.fsn_newest) filter (where n.core_newest > x.fsn_newest)
+from core_newest n left join fsn_newest x using (company_id)
 """
 FSN_FRESHNESS_NOTE = (
     "FSN freshness is report-only unless --fsn-freshness-alert is set. The FSN nightly stage "
-    "is still off (founder gate), so a green run does not yet prove the FSN path."
+    "is still off (founder gate), so a green run does not yet prove the FSN path. Cohort is the "
+    "ranked top-1,000 (shards.csv, excluded rows removed); missing_filings counts core 10-K/10-Q "
+    "filings since 2015-01-01 with no fsn.filing accession, by age since filing."
 )
 
 
-def load_fsn_freshness(conn: psycopg.Connection) -> dict:
+def load_fsn_cohort_ids(path: Path = SHARDS_CSV) -> list[int]:
+    """company_ids of the ranked cohort: shards.csv rows with a blank `excluded` column."""
+    with path.open(newline="") as fh:
+        return sorted(
+            {
+                int(r["company_id"])
+                for r in csv.DictReader(fh)
+                if r.get("company_id") and not (r.get("excluded") or "").strip()
+            }
+        )
+
+
+def age_bucket(age_days: int) -> str:
+    if age_days <= 1:
+        return "le_1d"
+    if age_days <= 30:
+        return "d2_30"
+    if age_days <= 90:
+        return "d31_90"
+    return "gt_90"
+
+
+def bucket_missing_filings(rows: Iterable[tuple]) -> dict[str, int]:
+    """rows: (company_id, accession, form, period, filed, age_days) -> counts by FSN_AGE_BUCKETS."""
+    counts = dict.fromkeys(FSN_AGE_BUCKETS, 0)
+    for r in rows:
+        counts[age_bucket(int(r[5]))] += 1
+    return counts
+
+
+def fetch_fsn_missing_filings(
+    conn: psycopg.Connection, cohort_ids: list[int], today: date | None = None
+) -> list[tuple]:
+    """One batched, read-only query: every missing cohort filing, oldest first per company."""
+    with conn.cursor() as cur:
+        cur.execute(f"set statement_timeout = '{FSN_FRESHNESS_STATEMENT_TIMEOUT}'")
+        try:
+            cur.execute(
+                FSN_MISSING_FILINGS_SQL,
+                {
+                    "ids": cohort_ids,
+                    "since": FSN_FRESHNESS_SINCE,
+                    "today": today or date.today(),
+                },
+            )
+            return cur.fetchall()
+        finally:
+            cur.execute("reset statement_timeout")
+
+
+def load_fsn_freshness(
+    conn: psycopg.Connection,
+    cohort_ids: list[int] | None = None,
+    today: date | None = None,
+) -> dict:
     if _scalar(conn, "select to_regclass('fsn.filing')") is None:
         return {
             "available": False,
             "reason": "fsn.filing does not exist",
             "note": FSN_FRESHNESS_NOTE,
         }
+    if cohort_ids is None:
+        try:
+            cohort_ids = load_fsn_cohort_ids()
+        except OSError as exc:
+            return {
+                "available": False,
+                "reason": f"cohort source unreadable: {exc}",
+                "note": FSN_FRESHNESS_NOTE,
+            }
     with conn.cursor() as cur:
-        cur.execute(FSN_FRESHNESS_SQL)
-        cohort, behind, lag = cur.fetchone()
+        cur.execute(f"set statement_timeout = '{FSN_FRESHNESS_STATEMENT_TIMEOUT}'")
+        try:
+            cur.execute(FSN_FRESHNESS_SQL, {"ids": cohort_ids})
+            cohort, behind, lag = cur.fetchone()
+        finally:
+            cur.execute("reset statement_timeout")
+    missing = fetch_fsn_missing_filings(conn, cohort_ids, today)
+    buckets = bucket_missing_filings(missing)
     return {
         "available": True,
         "cohort_companies": int(cohort or 0),
         "companies_behind": int(behind or 0),
         "max_lag_days": int(lag) if lag is not None else 0,
+        "missing_filings": len(missing),
+        "missing_filings_by_age": buckets,
+        "companies_with_missing": len({r[0] for r in missing}),
         "note": FSN_FRESHNESS_NOTE,
     }
 
@@ -246,6 +350,7 @@ def load_operational_snapshot(
     now: datetime | None = None,
     run_limit: int = 50,
     fsn_alert_enabled: bool = False,
+    fsn_cohort_ids: list[int] | None = None,
 ) -> OperationalSnapshot:
     generated_at = now or datetime.now(timezone.utc)
     freshness = tuple(
@@ -271,7 +376,7 @@ def load_operational_snapshot(
         dead_letters=dead_letters,
         recent_runs=tuple(get_recent_runs(conn, limit=run_limit)),
         expected_misses=expected_misses,
-        fsn_freshness=load_fsn_freshness(conn),
+        fsn_freshness=load_fsn_freshness(conn, fsn_cohort_ids),
         fsn_alert_enabled=fsn_alert_enabled,
     )
 
