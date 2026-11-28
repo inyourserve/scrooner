@@ -1,4 +1,4 @@
 work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-held,1,NVDA,2733,total_debt,2018,2018-01-28,HELD,component_missing_for_period,held by the tag-map mapper: component_missing_for_period,,0001045810-18-000010,R4.htm,
 blank,1,NVDA,2733,total_debt,2019,2019-01-27,BLANK,docmap_component_sum_not_loaded,,,0001045810-19-000023,R4.htm,
+verifier_check,1,NVDA,2733,total_debt,2018,2018-01-28,PROVEN,,verifier self-check gate: part CapitalLeaseObligationsCurrent has no accession or R page,2005000000,0001045810-18-000010,R4.htm,ConvertibleDebtCurrent=15000000@0001045810-18-000010#R4;LongTermDebt=1985000000@0001045810-18-000010#R4;CapitalLeaseObligationsCurrent=5000000@0001045810-18-000010#
 verifier_check,1,NVDA,2733,cash_paid_for_interest,2026,2026-01-25,REASON,open_period,verifier self-check hidden_year: not-disclosed search evidence does not cover every presenting filing: CIK 1045810 | not printed in this filing,,0001045810-26-000021,R9.htm of 0001045810-26-000021,

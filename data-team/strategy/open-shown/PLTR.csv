@@ -15,7 +15,6 @@ gap_fill,24,PLTR,4969,interest_expense,2024,2024-12-31,REASON,not_presented_read
 gap_fill,24,PLTR,4969,interest_expense,2025,2025-12-31,REASON,not_presented_read_verified,FY0 2025-12-31: read: not_presented_read_verified,,0001321655-26-000011,R5.htm,
 proof,24,PLTR,4969,operating_income,2022,2022-12-31,DISAGREE,only_a_component_line_presented,every candidate operating_income_resolved line on the IS is a component of another candidate,-161201000,0001321655-23-000011,R5.htm,
 proof,24,PLTR,4969,operating_income,2023,2023-12-31,DISAGREE,only_a_component_line_presented,every candidate operating_income_resolved line on the IS is a component of another candidate,119966000,0001321655-24-000022,R5.htm,
-proof,24,PLTR,4969,other_income_expense_net,2018,2018-12-31,PROVEN,no_registry_step,shown value fits no registry step: derived:sum badge without parts,-2638000,0001193125-21-060650,R4.htm,
 held,24,PLTR,4969,stockholders_equity,2019,2019-12-31,HELD,proof_disagree,held by the tag-map mapper: proof_disagree,,,,
 held,24,PLTR,4969,total_liabilities,2019,2019-12-31,HELD,proof_disagree,held by the tag-map mapper: proof_disagree,,,,
 verifier_check,24,PLTR,4969,amortization_of_intangibles,2022,2022-12-31,PROVEN,,verifier self-check gate: shown cell has no accession or R page,0,0001321655-24-000022,,

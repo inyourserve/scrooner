@@ -1,3 +1,0 @@
-work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-verifier_check,84,BA,207,dividends_per_share,2020,2020-12-31,PROVEN,,verifier self-check gate: shown cell has no accession or R page,0,0000012927-21-000011,,
-verifier_check,84,BA,207,dividends_per_share,2021,2021-12-31,PROVEN,,verifier self-check gate: shown cell has no accession or R page,0,0000012927-22-000010,,
