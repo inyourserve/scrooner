@@ -93,7 +93,13 @@ jobs:
           for migration in pipeline/db/migrations/*.sql; do
             psql --set ON_ERROR_STOP=1 --file "$migration"
           done
+      # Storage read for the tests that need an archived >5 MB file (tag library.csv, common/repo_archive.py). conftest
+      # pins SUPABASE_* to placeholders; only the archived_repo_file fixture reads these. Unset (fork PR): those tests
+      # skip with the reason; set but the download fails: they fail.
       - name: Pipeline tests
+        env:
+          SCROONER_TEST_STORAGE_URL: ${{ secrets.SUPABASE_URL }}
+          SCROONER_TEST_STORAGE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: uv run --project pipeline pytest pipeline/tests -rs
       # The structural resolver and tag library (data-team/tags) decide served values; their tests gate main too
       # (Ritwik measurement 2026-11-17: 184 resolver tests ran only in tag-library-learn, which had never run)

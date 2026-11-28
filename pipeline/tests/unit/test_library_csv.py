@@ -3,8 +3,6 @@ knowledge (SYSTEMS.md #6, 2026-11-22). These pin the reader and the committed li
 
 import csv
 
-import pytest
-
 from scrooner_pipeline.common.polarity import POLARITY_CSV
 from scrooner_pipeline.mapper import library_csv as L
 
@@ -54,7 +52,7 @@ def test_mapping_status_and_sec_tag_library_rows(tmp_path):
     )  # an extension joins by tag name to non-us-gaap concepts
 
 
-def test_committed_library_carries_the_polarity_class_of_every_polarity_rule():
+def test_committed_library_carries_the_polarity_class_of_every_polarity_rule(archived_repo_file):
     """library.csv's polarity is the class the DB columns expect (positive/signed/raw), for every data point in
     rules/polarity.csv: the rebuild no longer reads polarity.csv itself."""
     with POLARITY_CSV.open(newline="", encoding="utf-8") as fh:
@@ -68,12 +66,7 @@ def test_committed_library_carries_the_polarity_class_of_every_polarity_rule():
                 if sign == "raw"
                 else "signed"
             )
-    if (
-        L.library_path() is None
-    ):  # out of git and no storage credentials here (repo_archive, >5 MB rule)
-        pytest.skip(
-            "library.csv is not in the repo and the storage manifest version is not fetchable"
-        )
+    archived_repo_file("data-team/tags/library/library.csv")  # skips only when Storage is not configured
     k = L.knowledge(L.load())
     assert {dp: k.polarity.get(dp) for dp in want} == want
     assert len(k.deprecations) > 1000 and any(v[1] for v in k.deprecations.values())

@@ -70,3 +70,44 @@ def test_hide_audit_reads_the_library_from_the_manifest(tmp_path, monkeypatch):
     monkeypatch.setattr(ha, "library_primary_tags", lambda rows: {"revenue": {r["element"] for r in rows}})
     v = ha.build_vocab(resolver_dir=tmp_path / "no-resolver")
     assert seen == [RP] and "ZzArchiveOnlyTag" in v.tags["revenue"]
+
+
+def _archived_only(tmp_path, body=b"element\nA\n"):
+    """A manifest row for RP with no repo copy and no cache: resolving it needs a Storage download."""
+    man = tmp_path / "manifest.csv"
+    digest = hashlib.sha256(body).hexdigest()
+    man.write_text(",".join(ra.COLUMNS) + f"\n{RP},repo-archive/2026-11-22/{digest[:12]}/{RP},{digest},{len(body)},2026-11-22\n")
+    return {"root": tmp_path / "repo", "manifest": man}
+
+
+def test_archived_file_skips_when_test_storage_is_not_configured(tmp_path, monkeypatch, archived_repo_file):
+    # conftest's placeholder SUPABASE_* (https://scrooner-test.invalid) must not count as configured Storage
+    monkeypatch.delenv("SCROONER_TEST_STORAGE_URL", raising=False)
+    monkeypatch.delenv("SCROONER_TEST_STORAGE_KEY", raising=False)
+    monkeypatch.setenv("SUPABASE_URL", "https://scrooner-test.invalid")
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "test-only-not-a-secret")
+    with pytest.raises(pytest.skip.Exception, match="Storage is not configured"):
+        archived_repo_file(RP, **_archived_only(tmp_path))
+
+
+def test_archived_file_fails_loudly_when_test_storage_is_configured_but_unreachable(
+    tmp_path, monkeypatch, archived_repo_file
+):
+    monkeypatch.setenv("SCROONER_TEST_STORAGE_URL", "https://scrooner-test.invalid")
+    monkeypatch.setenv("SCROONER_TEST_STORAGE_KEY", "k")
+    monkeypatch.setattr(ra, "_get", lambda p: (_ for _ in ()).throw(OSError("Name or service not known")))
+    with pytest.raises(RuntimeError, match="download of .* failed"):
+        try:
+            archived_repo_file(RP, **_archived_only(tmp_path))
+        except pytest.skip.Exception as e:  # a skip here would hide a real Storage failure
+            pytest.fail(f"configured Storage must fail loudly, not skip: {e}")
+
+
+def test_archived_file_is_downloaded_with_the_test_storage_credentials(tmp_path, monkeypatch, archived_repo_file):
+    monkeypatch.setenv("SCROONER_TEST_STORAGE_URL", "https://storage.example")
+    monkeypatch.setenv("SCROONER_TEST_STORAGE_KEY", "read-key")
+    seen = []
+    monkeypatch.setattr(ra, "_get", lambda p: seen.append(ra._creds()) or b"element\nA\n")
+    got = archived_repo_file(RP, **_archived_only(tmp_path))
+    assert got.read_bytes() == b"element\nA\n"
+    assert seen == [("https://storage.example/storage/v1/object/", "read-key")]

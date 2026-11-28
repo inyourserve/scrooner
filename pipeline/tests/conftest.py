@@ -207,3 +207,41 @@ def isolated_database_url() -> Iterator[str]:
                     sql.Identifier(clone)
                 )
             )
+
+
+# Large generated files (tag library.csv) live in Supabase Storage, not git (common/repo_archive.py, >5 MB rule).
+# The placeholder SUPABASE_* above must never count as "Storage configured": a test that needs such a file reads
+# real read credentials only from these explicit test variables (CI passes them from repository secrets).
+STORAGE_TEST_ENV = ("SCROONER_TEST_STORAGE_URL", "SCROONER_TEST_STORAGE_KEY")
+
+
+@pytest.fixture
+def archived_repo_file(monkeypatch):
+    """require(repo_path) -> local Path of the storage-manifest version of an archived repo file.
+
+    Storage not configured (no SCROONER_TEST_STORAGE_URL/KEY): skips with the reason, unless the file is already
+    available locally (repo copy or verified cache). Storage configured: the download must succeed; any failure
+    (unreachable host, bad key, sha256 mismatch) raises and fails the test, never skips.
+    """
+    from scrooner_pipeline.common import repo_archive
+
+    def require(repo_path: str, **kw) -> Path:
+        url, key = (os.environ.get(n, "").strip() for n in STORAGE_TEST_ENV)
+        configured = bool(url and key)
+        if configured:
+            monkeypatch.setenv("SUPABASE_URL", url)
+            monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", key)
+        else:
+            monkeypatch.delenv("SUPABASE_URL", raising=False)
+            monkeypatch.delenv("SUPABASE_SERVICE_ROLE_KEY", raising=False)
+        path = repo_archive.resolve(repo_path, **kw)
+        if path is None:
+            if configured:
+                pytest.fail(f"{repo_path}: Storage is configured but resolve returned nothing")
+            pytest.skip(
+                f"{repo_path} is archived in Supabase Storage and Storage is not configured for tests "
+                f"(set {' and '.join(STORAGE_TEST_ENV)} to run this test)"
+            )
+        return path
+
+    return require

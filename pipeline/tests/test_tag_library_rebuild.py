@@ -294,16 +294,11 @@ def test_apply_refused_off_main():
         t.rebuild(object(), apply=True, github_ref="refs/heads/work/x")
 
 
-def test_repo_files_parse_and_cover_every_resolver_decision():
+def test_repo_files_parse_and_cover_every_resolver_decision(archived_repo_file):
     """The committed sources load: newest resolver file, rules, and the library's polarity (catches a format change)."""
     rows, rejects = t.parse_resolver(t.newest_resolver_file())
     assert rows and not rejects
-    if (
-        t.library_csv.library_path() is None
-    ):  # out of git and no storage credentials here (repo_archive)
-        pytest.skip(
-            "library.csv is not in the repo and the storage manifest version is not fetchable"
-        )
+    archived_repo_file("data-team/tags/library/library.csv")  # skips only when Storage is not configured
     src = t.library_sources()
     assert src.rules and src.polarity and src.deprecations
 
