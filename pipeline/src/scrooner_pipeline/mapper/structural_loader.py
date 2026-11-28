@@ -26,7 +26,8 @@ fiscal year (the filing's OWN column; a later filing is never carried back):
 PRECEDENCE, per (company, concept, period), kind-merged as docmap-load does (a value competes with values, a
 reason with reasons, a combined line with both):
   1. hand fix rows (company_tag_map.docmap_fix@1) win their cells; every structural cell they cover is listed in the
-     exceptions report (agreeing or not);
+     exceptions report (agreeing or not). A fix naming a strict subset of a component_sum claim's parts (one printed
+     line of the sum) does not win: it is cut around the era and listed as `superseded` (sum_supersedes_fix);
   2. structural clips docmap@1, era_extend@1 and predictor/guard rows around its eras (the other years stay);
   3. library rows follow the docmap merge rule: same decision and tags -> the library row stands; different -> the
      structural row wins (it cites a filing page) and the library row is cut around the era; a library `combined`
@@ -42,6 +43,7 @@ import csv
 import itertools
 import re
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
@@ -1128,6 +1130,19 @@ def is_hand_fix(r: dict) -> bool:
     return hand_fix_wins(r["rule_id"], r.get("serve_note"))
 
 
+def sum_supersedes_fix(fix_tags: Iterable[str | None], claim: Claim | None) -> bool:
+    """THE predicate (loader and direct serving): the resolver's claim of the cell is a component_sum of two or more
+    parts, and the hand fix names a strict subset of those parts. The fix then read ONE printed line of a sum the
+    filing's own structure adds (KO other_income_expense_net FY2015: the 2026-11-13 reader fix maps
+    OtherNonoperatingIncomeExpense 631M, the IS band between operating income and pretax holds that line AND equity
+    income 489M, resolver 1,120M), so the fix does not win: the claim serves the sum with its parts. A fix naming a tag
+    outside the claim's parts is a different reading and still wins. Pure."""
+    if claim is None or claim.decision != "component_sum" or len(claim.parts) < 2:
+        return False
+    fix = {base_tag(t) for t in fix_tags if t}
+    return bool(fix) and fix < {base_tag(g) for _s, _t, g in claim.parts}
+
+
 def plan_company(
     existing: list[dict],
     cells: list[tuple[Claim, date, date | None, list[dict]]],
@@ -1150,6 +1165,9 @@ def plan_company(
     ]
     spans: dict[str, list[tuple[Any, date, date]]] = {"value": [], "reason": []}
     new_rows: list[dict] = []
+    superseded_fixes: list[
+        dict
+    ] = []  # hand fix rows a component_sum claim supersedes (sum_supersedes_fix)
     for claim, a, b, rows in sorted(cells, key=lambda x: (_key(x[3][0]), x[1])):
         k = _key(rows[0])
         dp_name = names_by_id.get(k or 0, "")
@@ -1180,6 +1198,27 @@ def plan_company(
             for g in _groups([r for r in fixes if _key(r) == k])
             if _overlap(a, b, g[0]["era_from"], g[0]["era_to"])
         ]
+        superseded = [
+            g for g in fix_hit if sum_supersedes_fix((r["tag"] for r in g), claim)
+        ]
+        fix_hit = [g for g in fix_hit if not any(g is x for x in superseded)]
+        for g in superseded:
+            # the fix read one part of the claim's printed sum: cut around the structural era like a library row
+            plan.exceptions.append(
+                info(
+                    {
+                        "agrees": "superseded",
+                        "fix_decision": g[0]["decision"],
+                        "fix_tags": _tags_of(g),
+                        "fix_era_from": g[0]["era_from"].isoformat(),
+                        "fix_era_to": g[0]["era_to"].isoformat()
+                        if g[0]["era_to"]
+                        else "",
+                        "fix_accession": g[0]["evidence_adsh"],
+                    }
+                )
+            )
+            superseded_fixes.extend(g)
         for g in fix_hit:
             plan.exceptions.append(
                 info(
@@ -1300,7 +1339,11 @@ def plan_company(
             else:
                 spans[kind].append((k, p_a, p_b or date.max))
     # clip the machine and disagreeing library rows around the final structural eras (never delete other years)
-    clippable = machine + [r for r in library if _key(r) is not None]
+    clippable = (
+        machine
+        + [r for r in library if _key(r) is not None]
+        + [r for r in fixes if any(r is x for x in superseded_fixes)]
+    )
     kept_other = [r for r in rest if r not in clippable]
     out_rows: list[dict] = []
     for knd in ("value", "reason"):

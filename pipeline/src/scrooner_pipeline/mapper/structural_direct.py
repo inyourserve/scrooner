@@ -308,14 +308,21 @@ def pick_claim(
     return next(c for c in claims if c.accession == best)
 
 
-def _fix_covers(rows, concept_id: int, end: date) -> bool:
-    return any(
-        sl.hand_fix_wins(r.rule_id, r.serve_note)
+def _fix_covers(
+    rows, concept_id: int, end: date, claim: sl.Claim | None = None
+) -> bool:
+    """A hand fix row covers the cell and wins it. It does not win when `claim` (the cell's picked resolver claim) is a
+    component_sum whose parts strictly contain every covering fix's tags (sl.sum_supersedes_fix: the fix read one
+    printed line of the sum, KO other_income_expense_net FY2015-25)."""
+    fixes = [
+        r
+        for r in rows
+        if sl.hand_fix_wins(r.rule_id, r.serve_note)
         and r.decision != "excluded"
         and concept_id in (r.canonical_concept_id, r.parent_concept_id)
         and era_holds(r.era_from, r.era_to, end)
-        for r in rows
-    )
+    ]
+    return bool(fixes) and not sl.sum_supersedes_fix((r.tag for r in fixes), claim)
 
 
 # a map row that says the company's filing prints this line as part of a combined line, or that the concept is not in
@@ -939,7 +946,9 @@ def direct_cells(
             )
             continue
         pid, te = located
-        if _fix_covers(rows, cid, te):
+        live = [c for c in cs if sl.quarantined(c) is None]
+        picked = pick_claim(live, meta, te, periods[pid][2]) if live else None
+        if _fix_covers(rows, cid, te, picked):
             stats["fix_won"] += 1
             stats["fix_won_cells"].append(
                 {"concept": name, "period_end": te.isoformat()}
@@ -949,11 +958,9 @@ def direct_cells(
         if forbid:
             reject(forbid)
             continue
-        live = [c for c in cs if sl.quarantined(c) is None]
         if not live:
             reject("every claim's filing is quarantined (its own calc check failed)")
             continue
-        picked = pick_claim(live, meta, te, periods[pid][2])
         if picked is None:
             reject("no filing that prints the column as a face column")
             continue
