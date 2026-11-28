@@ -115,3 +115,15 @@ if __name__ == '__main__':
     for k, v in list(globals().items()):
         if k.startswith('test_'): v(); n += 1
     print(n, 'tests passed')
+
+
+def test_member_face_fact_rewrite_binds_the_member_on_a_balance_sheet_parenthetical_node():
+    # WMT FY2026 (0000104169-26-000055) shares_outstanding: the only own-period CommonStockSharesOutstanding fact carries
+    # EquityComponents=CommonStock; the node was '[BSP]' and kept no member, so the loader found no stored fact
+    got = RA.member_face_nodes('CommonStockSharesOutstanding=7969000000 [BSP] | why: w', 'EquityComponents=CommonStock')
+    assert got == 'CommonStockSharesOutstanding[EquityComponents=CommonStock]=7969000000 [SE] | why: w', got
+    # a NOTE locator is rewritten as before, cited at the face position when one is known
+    assert RA.member_face_nodes('AccountsReceivableNetCurrent=5 [NOTE]', 'BalanceSheetLocation=Other', 'R4.htm:9') == \
+        'AccountsReceivableNetCurrent[BalanceSheetLocation=Other]=5 [R4.htm:9]'
+    # a node already on a statement page is left alone
+    assert RA.member_face_nodes('X=5 [R4.htm:3]', 'EquityComponents=CommonStock') == 'X=5 [R4.htm:3]'
