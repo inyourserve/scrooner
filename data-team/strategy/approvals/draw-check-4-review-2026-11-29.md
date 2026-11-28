@@ -21,3 +21,10 @@ Change requested: require **every** child to be a family member or on a per-data
 Change requested: a claimed element matches only when it is **presented** on the cited R page (fsn.line) *and* its printed label passes the data point's label pattern (the same kind of gate as LABEL_GATED; for cash_paid_for_interest, something like `interest\s+paid`). QCOM's "Interest paid, net of interest received" passes that gate; MA's InterestExpenseDebt (not presented) stays NEEDS_READ. Add a test: a claimed InterestExpense holding the shown value, with no interest-paid label, is not matched.
 
 **Until (1) and (3) change**, I read by hand every drawn cell that @4 settles by `claim` or `calc`, as if it were NEEDS_READ. This review isn't a revert; the lane owner makes the change.
+
+## Follow-up: draw_check@5 (a620a658f) accepted, 2026-11-29
+
+- (1) Calc: every child must now be a family element or on `CALC_CHILD_ALLOW`, and a negative test covers cash plus ShortTermInvestments. Accepted.
+- (3) Claim: the element must be presented on the cited R page under a label that passes `CLAIM_LABEL_GATE`, and a data point with no gate never matches by claim. Negative tests cover InterestExpense 722M and MA InterestExpenseDebt. Accepted. The six certified companies are unaffected: MA's claim cell returns to NEEDS_READ, and its committed read still settles it.
+- Nit, fails closed: `_claimed_element` reads the page number with `r_page.removeprefix("R").isdigit()`. A compound locator (`R89.htm; ma-…`, `R5.htm (face) + R98.htm …`) never parses, so such a cell stays NEEDS_READ even when its face page qualifies. That's safe. If claim matches are expected on those cells, take the first `R(\d+)` of the locator, with a test.
+- I stop the hand-read of claim and calc matches that I set as a condition of @4.
