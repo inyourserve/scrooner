@@ -41,7 +41,11 @@ def formula_fingerprint(m: Metric) -> str:
             "id": m.metric_id,
             "version": m.version,
             "expression": m.expression,
-            "status": m.expression_status,
+            # described -> expr_wired changes no computed value (the live calculator is unchanged), so it is not a
+            # formula change: the two share a fingerprint and existing cell proofs stay current.
+            "status": "described"
+            if m.expression_status == "expr_wired"
+            else m.expression_status,
             "seed_inputs": list(m.seed_inputs),
             "period_rule": m.period_rule,
             "ttm_rows": m.ttm_rows,

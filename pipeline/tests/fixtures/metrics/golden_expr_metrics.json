@@ -1,0 +1,650 @@
+{
+ "_comment": "Golden values for the expr_wired metrics (2026-11-28). Inputs are filing-printed values (FILING-CHECKED): MSFT FY2026 10-K 0001193125-26-323660 (R2/R4/R5/R6/R7/R79; the prior-year columns of the same filing), MSFT FY2023 10-K 0000950170-23-035122 R6 and FY2021 10-K 0001564590-21-039151 R6 for the FCF lags, PLD FY2025 10-K 0001193125-26-051453. A fiscal year stands as its own TTM window. Stored in USD, not millions. FCF = cash from operations less additions to property and equipment (decision 2026-11-04.3). Price is not a filing value: where a metric needs one, a round stated price is the input (ASSUMED) and the expected value is arithmetic on it. Expected values are hand arithmetic (independent Fraction/Decimal code, rounded to 6 dp), not read from any metric table or the engine. effective_tax_rate_reported is the printed rate (0.194 for 19.40%).",
+ "cases": [
+  {
+   "company": "MSFT",
+   "expected_6dp": "9.019389",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    }
+   },
+   "metric": "fcf_per_share"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.022548",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    }
+   },
+   "metric": "fcf_yield",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "-0.064571",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    }
+   },
+   "lags": {
+    "fcf|1": {
+     "inputs": {
+      "capex": {
+       "accession": "0001193125-26-323660",
+       "label": "Additions to property and equipment, FY2025 column",
+       "printed": "(64,551)",
+       "r_page": "R6.htm",
+       "value": "64551000000"
+      },
+      "cfo": {
+       "accession": "0001193125-26-323660",
+       "label": "Net cash from operations, FY2025 column",
+       "printed": "136,162",
+       "r_page": "R6.htm",
+       "value": "136162000000"
+      }
+     }
+    }
+   },
+   "metric": "fcf_growth_yoy"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.040444",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    }
+   },
+   "lags": {
+    "fcf|3": {
+     "inputs": {
+      "capex": {
+       "accession": "0000950170-23-035122",
+       "label": "Additions to property and equipment, FY2023 column",
+       "printed": "(28,107)",
+       "r_page": "R6.htm",
+       "value": "28107000000"
+      },
+      "cfo": {
+       "accession": "0000950170-23-035122",
+       "label": "Net cash from operations, FY2023 column",
+       "printed": "87,582",
+       "r_page": "R6.htm",
+       "value": "87582000000"
+      }
+     }
+    }
+   },
+   "metric": "fcf_growth_3y_cagr"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.036043",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    }
+   },
+   "lags": {
+    "fcf|5": {
+     "inputs": {
+      "capex": {
+       "accession": "0001564590-21-039151",
+       "label": "Additions to property and equipment, FY2021 column",
+       "printed": "(20,622)",
+       "r_page": "R6.htm",
+       "value": "20622000000"
+      },
+      "cfo": {
+       "accession": "0001564590-21-039151",
+       "label": "Net cash from operations, FY2021 column",
+       "printed": "76,740",
+       "r_page": "R6.htm",
+       "value": "76740000000"
+      }
+     }
+    }
+   },
+   "metric": "fcf_growth_5y_cagr"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "22.284123",
+   "inputs": {
+    "diluted_eps": {
+     "accession": "0001193125-26-323660",
+     "label": "Diluted",
+     "printed": "17.95",
+     "r_page": "R2.htm",
+     "value": "17.95"
+    }
+   },
+   "metric": "trailing_pe",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.705233",
+   "inputs": {
+    "diluted_eps": {
+     "accession": "0001193125-26-323660",
+     "label": "Diluted",
+     "printed": "17.95",
+     "r_page": "R2.htm",
+     "value": "17.95"
+    }
+   },
+   "lags": {
+    "diluted_eps|1": {
+     "inputs": {
+      "diluted_eps": {
+       "accession": "0001193125-26-323660",
+       "label": "Diluted, FY2025 column",
+       "printed": "13.64",
+       "r_page": "R2.htm",
+       "value": "13.64"
+      }
+     }
+    }
+   },
+   "metric": "peg_ratio",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.009100",
+   "inputs": {
+    "dividends_per_share": {
+     "accession": "0001193125-26-323660",
+     "label": "Cash dividends declared per common share",
+     "printed": "3.64",
+     "r_page": "R7.htm",
+     "value": "3.64"
+    }
+   },
+   "metric": "dividend_yield",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.007497",
+   "inputs": {
+    "share_buybacks": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock repurchased",
+     "printed": "(22,271)",
+     "r_page": "R6.htm",
+     "value": "22271000000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    }
+   },
+   "metric": "buyback_yield",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.332467",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    },
+    "share_buybacks": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock repurchased",
+     "printed": "(22,271)",
+     "r_page": "R6.htm",
+     "value": "22271000000"
+    }
+   },
+   "metric": "share_repurchases_pct_fcf"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.394778",
+   "inputs": {
+    "capex": {
+     "accession": "0001193125-26-323660",
+     "label": "Additions to property and equipment",
+     "printed": "(115,948)",
+     "r_page": "R6.htm",
+     "value": "115948000000"
+    },
+    "cfo": {
+     "accession": "0001193125-26-323660",
+     "label": "Net cash from operations",
+     "printed": "182,935",
+     "r_page": "R6.htm",
+     "value": "182935000000"
+    },
+    "dividends_paid": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock cash dividends paid",
+     "printed": "(26,445)",
+     "r_page": "R6.htm",
+     "value": "26445000000"
+    }
+   },
+   "metric": "dividends_pct_fcf"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "2970800000000.000000",
+   "inputs": {
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    }
+   },
+   "metric": "market_cap",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "8.952534",
+   "inputs": {
+    "revenue": {
+     "accession": "0001193125-26-323660",
+     "label": "Revenue",
+     "printed": "331,839",
+     "r_page": "R2.htm",
+     "value": "331839000000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    }
+   },
+   "metric": "price_to_sales",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "6.715387",
+   "inputs": {
+    "shares_outstanding": {
+     "accession": "0001193125-26-323660",
+     "label": "Common stock, outstanding",
+     "printed": "7,427",
+     "r_page": "R5.htm",
+     "value": "7427000000"
+    },
+    "stockholders_equity": {
+     "accession": "0001193125-26-323660",
+     "label": "Total stockholders equity",
+     "printed": "442,387",
+     "r_page": "R4.htm",
+     "value": "442387000000"
+    }
+   },
+   "metric": "price_to_book",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "400"
+   }
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "-51.790049",
+   "inputs": {
+    "accounts_payable": {
+     "accession": "0001193125-26-323660",
+     "label": "Accounts payable",
+     "printed": "42,416",
+     "r_page": "R4.htm",
+     "value": "42416000000"
+    },
+    "accounts_receivable": {
+     "accession": "0001193125-26-323660",
+     "label": "Accounts receivable, net",
+     "printed": "80,876",
+     "r_page": "R4.htm",
+     "value": "80876000000"
+    },
+    "cost_of_revenue": {
+     "accession": "0001193125-26-323660",
+     "label": "Cost of revenue",
+     "printed": "106,374",
+     "r_page": "R2.htm",
+     "value": "106374000000"
+    },
+    "inventory": {
+     "accession": "0001193125-26-323660",
+     "label": "Inventories",
+     "printed": "1,397",
+     "r_page": "R4.htm",
+     "value": "1397000000"
+    },
+    "revenue": {
+     "accession": "0001193125-26-323660",
+     "label": "Revenue",
+     "printed": "331,839",
+     "r_page": "R2.htm",
+     "value": "331839000000"
+    }
+   },
+   "metric": "cash_conversion_cycle"
+  },
+  {
+   "company": "MSFT",
+   "expected_6dp": "0.000037",
+   "inputs": {
+    "effective_tax_rate_reported": {
+     "accession": "0001193125-26-323660",
+     "label": "Effective rate (FY2026 column)",
+     "printed": "19.40%",
+     "r_page": "R79.htm",
+     "value": "0.194"
+    },
+    "income_before_tax": {
+     "accession": "0001193125-26-323660",
+     "label": "Income before income taxes",
+     "printed": "165,934",
+     "r_page": "R2.htm",
+     "value": "165934000000"
+    },
+    "income_tax_expense": {
+     "accession": "0001193125-26-323660",
+     "label": "Provision for income taxes",
+     "printed": "32,185",
+     "r_page": "R2.htm",
+     "value": "32185000000"
+    }
+   },
+   "metric": "effective_tax_rate_gap"
+  },
+  {
+   "company": "PLD",
+   "expected_6dp": "0.794515",
+   "inputs": {
+    "depreciation_and_amortization_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Depreciation and amortization",
+     "printed": "2626028000",
+     "r_page": "R8.htm",
+     "value": "2626028000"
+    },
+    "operating_income_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Operating income",
+     "printed": "4357864000",
+     "r_page": "R4.htm",
+     "value": "4357864000"
+    },
+    "revenue": {
+     "accession": "0001193125-26-051453",
+     "label": "Total revenues",
+     "printed": "8790127000",
+     "r_page": "R4.htm",
+     "value": "8790127000"
+    }
+   },
+   "metric": "ebitda_margin"
+  },
+  {
+   "company": "PLD",
+   "expected_6dp": "5.016841",
+   "inputs": {
+    "depreciation_and_amortization_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Depreciation and amortization",
+     "printed": "2626028000",
+     "r_page": "R8.htm",
+     "value": "2626028000"
+    },
+    "operating_income_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Operating income",
+     "printed": "4357864000",
+     "r_page": "R4.htm",
+     "value": "4357864000"
+    },
+    "total_debt_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Debt",
+     "printed": "35037073000",
+     "r_page": "R2.htm",
+     "value": "35037073000"
+    }
+   },
+   "metric": "debt_to_ebitda"
+  },
+  {
+   "company": "PLD",
+   "expected_6dp": "4.852799",
+   "inputs": {
+    "cash_and_equivalents": {
+     "accession": "0001193125-26-051453",
+     "label": "Cash and cash equivalents",
+     "printed": "1145647000",
+     "r_page": "R2.htm",
+     "value": "1145647000"
+    },
+    "depreciation_and_amortization_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Depreciation and amortization",
+     "printed": "2626028000",
+     "r_page": "R8.htm",
+     "value": "2626028000"
+    },
+    "operating_income_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Operating income",
+     "printed": "4357864000",
+     "r_page": "R4.htm",
+     "value": "4357864000"
+    },
+    "total_debt_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Debt",
+     "printed": "35037073000",
+     "r_page": "R2.htm",
+     "value": "35037073000"
+    }
+   },
+   "metric": "net_debt_ebitda"
+  },
+  {
+   "company": "PLD",
+   "expected_6dp": "12.835337",
+   "inputs": {
+    "cash_and_equivalents": {
+     "accession": "0001193125-26-051453",
+     "label": "Cash and cash equivalents",
+     "printed": "1145647000",
+     "r_page": "R2.htm",
+     "value": "1145647000"
+    },
+    "depreciation_and_amortization_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Depreciation and amortization",
+     "printed": "2626028000",
+     "r_page": "R8.htm",
+     "value": "2626028000"
+    },
+    "operating_income_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Operating income",
+     "printed": "4357864000",
+     "r_page": "R4.htm",
+     "value": "4357864000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-051453",
+     "label": "Common stock, shares outstanding",
+     "printed": "929153000",
+     "r_page": "R3.htm",
+     "value": "929153000"
+    },
+    "total_debt_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Debt",
+     "printed": "35037073000",
+     "r_page": "R2.htm",
+     "value": "35037073000"
+    }
+   },
+   "metric": "ev_ebitda",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "60"
+   }
+  },
+  {
+   "company": "PLD",
+   "expected_6dp": "10.197874",
+   "inputs": {
+    "cash_and_equivalents": {
+     "accession": "0001193125-26-051453",
+     "label": "Cash and cash equivalents",
+     "printed": "1145647000",
+     "r_page": "R2.htm",
+     "value": "1145647000"
+    },
+    "revenue": {
+     "accession": "0001193125-26-051453",
+     "label": "Total revenues",
+     "printed": "8790127000",
+     "r_page": "R4.htm",
+     "value": "8790127000"
+    },
+    "shares_outstanding": {
+     "accession": "0001193125-26-051453",
+     "label": "Common stock, shares outstanding",
+     "printed": "929153000",
+     "r_page": "R3.htm",
+     "value": "929153000"
+    },
+    "total_debt_resolved": {
+     "accession": "0001193125-26-051453",
+     "label": "Debt",
+     "printed": "35037073000",
+     "r_page": "R2.htm",
+     "value": "35037073000"
+    }
+   },
+   "metric": "ev_sales",
+   "price": {
+    "evidence": "ASSUMED stated test price, not a filing value",
+    "value": "60"
+   }
+  }
+ ]
+}

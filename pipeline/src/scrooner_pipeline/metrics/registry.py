@@ -26,7 +26,19 @@ from scrooner_pipeline.metrics import expr
 
 REGISTRY_DIR = Path(__file__).parent / "registry"
 TIERS = {"v1_locked", "expanded", "planned"}
-STATUSES = {"engine_wired", "growth_wired", "described", "procedural", "planned"}
+# expr_wired: the engine (engine.evaluate) evaluates the registry expression itself (ttm/annual/lag/avg/price
+# operators, metric inputs); the live calculator named in `calculator` still writes the served value until the
+# shown-cell path lands (data-team/strategy/one-display-path-plan-2026-11-22.md step 5). A golden value from filing
+# inputs (tests/fixtures/metrics/golden_expr_metrics.json) is required for every expr_wired metric.
+# described: an expression is written but no golden pins it yet (none left at 2026-11-28).
+STATUSES = {
+    "engine_wired",
+    "growth_wired",
+    "expr_wired",
+    "described",
+    "procedural",
+    "planned",
+}
 APPLIES_TO = {"all", "corporate", "bank", "insurer", "bank,lender"}
 VALUE_TYPES = {"percentage", "currency", "multiple", "number"}
 COLUMNS = [
