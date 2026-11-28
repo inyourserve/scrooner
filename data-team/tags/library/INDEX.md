@@ -1,4 +1,4 @@
-# Tag library index (generated 2026-11-22, resolver-all110-.93)
+# Tag library index (generated 2026-11-28, resolver-all110-.93)
 
 28015 rows (579 with resolver usage, 22756 taxonomy elements); coverage 64.6% of 56418 resolver-served cells have a full row for every element they use.
 

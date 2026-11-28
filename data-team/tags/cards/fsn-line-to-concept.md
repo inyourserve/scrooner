@@ -456,7 +456,7 @@ Resolver resolver-all110-.93. 133 elements named in this card have library knowl
 - **Data point definition:** shares_outstanding: Common shares outstanding at period end (all economic classes).
 - **Data point:** shares_outstanding; role shares_outstanding:primary#1
 - **Rules:** X67; X111; B23; B24; B29; resolver functions DERIVED_YIELDS_TO; comparative_fill; fill_printed_zero_and_comparative; shares
-- **Evidence:** 83 companies, 992 served, 2408 proven, 80 certified cells; last verified 2026-11-15
+- **Evidence:** 83 companies, 989 served, 2408 proven, 80 certified cells; last verified 2026-11-15
 - **Known problems:** pattern P04 round_share_count: 3 open hit(s) at 3 companies, e.g. CVS shares_outstanding 2022-12-31 (resolver) (pattern_hits.csv); pattern P05 comparative_only_year_hidden: 1 open hit(s) at 1 companies, e.g. WFC shares_outstanding 2023-12-31 (export) (pattern_hits.csv)
 - **Pattern hits:** P04 (3); P05 (1)
 

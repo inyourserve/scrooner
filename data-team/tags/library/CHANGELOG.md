@@ -2073,3 +2073,6 @@
 ## 2026-11-22 (resolver-all110-.93): 2 element changes, 28015 rows, coverage 64.6%
 - ~ CommonStockSharesIssued: served_cells
 - ~ TreasuryStockShares: served_cells
+
+## 2026-11-28 (resolver-all110-.93): 1 element changes, 28015 rows, coverage 64.6%
+- ~ CommonStockSharesOutstanding: served_cells
