@@ -180,6 +180,20 @@ NOT_PRESENTED_BUT_SHOWN = "not_presented_but_row_shown"
 WORK_TYPES = ("combined_split", "gap_fill", "proof", "reprove", "blank", "held")
 
 
+def is_template_cell(dp: str, dm: dict[str, Any], sector: str) -> bool:
+    """A docmap data point is a cell of the company's template unless the docmap marks it OUT or the registry's sector
+    template does not apply it to the company's sector (metrics/registry/data_points.csv applies = no, read through
+    sector_templates.data_point_applies; founder 2026-11-01 'fields outside a sector template are not shown', approved
+    SECTOR-TEMPLATES s8.1). Such a cell could never be shown: display_cert.check_badges fails any shown value of a data point
+    not applicable to the sector ('a shown value is wrong'), so it was an OPEN cell nothing could close (JPM and WFC
+    accounts_payable FY2015-25, WELL gross_profit). It is not a hide: the cell is not in the template. Pure."""
+    from scrooner_pipeline.mapper.sector_templates import data_point_applies
+
+    if dm.get("status") == "OUT":
+        return False
+    return data_point_applies(dp, sector)
+
+
 def candidates(dp: str) -> list[str]:
     return SPECIAL_CANDIDATES.get(dp, [f"{dp}_resolved", dp])
 
@@ -1144,8 +1158,9 @@ def build_rows(
         years = sorted({fy for (cid, fy, _t) in periods if cid == c.company_id})
         if not years:
             continue
+        sector = sectors.get(c.company_id, "general")
         for dp, dm in sorted(templates[c.company_id].items()):
-            if dm["status"] == "OUT":
+            if not is_template_cell(dp, dm, sector):
                 continue
             ptype = "instant" if dp in INSTANT_DPS else "duration"
             for fy in years:

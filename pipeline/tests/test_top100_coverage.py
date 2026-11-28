@@ -997,3 +997,19 @@ def test_included_in_hidden_cell_counts_as_printed_inside_its_shown_target():
         {**c, "evidence": "reported only combined: X"},
         {(1134, "operating_expenses", "2020")},
     )
+
+
+def test_a_data_point_outside_the_sector_template_is_not_a_cell():
+    """JPM / WFC accounts_payable FY2015-25 and WELL gross_profit were OPEN cells that nothing could close: the registry says
+    the data point does not apply to the sector (bank AP, equity-REIT gross profit), and display_cert.check_badges fails any
+    shown value there. The sector template (registry applies) decides which docmap rows are cells; the docmap's OUT still does.
+    Mutation: return True for every non-OUT row and the bank / REIT rows come back."""
+    from scrooner_pipeline.mapper.top100_coverage import is_template_cell
+
+    inn = {"status": "MAPPED"}
+    assert is_template_cell("accounts_payable", inn, "general")
+    assert not is_template_cell("accounts_payable", inn, "bank")
+    assert not is_template_cell("gross_profit", inn, "equity_reit")
+    assert is_template_cell("gross_profit", inn, "general")
+    assert not is_template_cell("accounts_payable", {"status": "OUT"}, "general")
+    assert is_template_cell("revenue", inn, "bank")
