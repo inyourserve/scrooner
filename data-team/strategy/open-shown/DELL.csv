@@ -1,6 +1,6 @@
 work,rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,accession,r_page,parts
-proof,41,DELL,3083,accounts_payable,2024,2024-02-02,PROVEN,no_registry_step,"shown value fits no registry step: badge_undecided: accounts_payable/general component_sum ['ap_related_sum', 'bs_family']: 0 matching steps []",19226000000,0001571996-25-000034,R3.htm,
-proof,41,DELL,3083,accounts_receivable,2024,2024-02-02,PROVEN,no_registry_step,"shown value fits no registry step: badge_undecided: accounts_receivable/general component_sum ['ar_related_sum', 'bs_family']: 0 matching steps []",9343000000,0001571996-24-000062,R2.htm,
+proof,41,DELL,3083,accounts_payable,2024,2024-02-02,PROVEN,no_registry_step,shown value fits no registry step: derived:sum badge without parts,19226000000,0001571996-25-000034,R3.htm,
+proof,41,DELL,3083,accounts_receivable,2024,2024-02-02,PROVEN,no_registry_step,shown value fits no registry step: derived:sum badge without parts,9343000000,0001571996-24-000062,R2.htm,
 blank,41,DELL,3083,basic_eps,2015,2015-01-30,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
 blank,41,DELL,3083,basic_eps,2016,2016-01-29,BLANK,era_unmapped,no filing-checked mapping covers this period (era_unmapped),,,,
 proof,41,DELL,3083,capex,2018,2018-02-02,DISAGREE,shown_differs_from_printed_line,"production shows 1308000000 (PaymentsToAcquireOtherPropertyPlantAndEquipment,PaymentsToAcquirePropertyPlantAndEquipment), the printed PaymentsToAcquirePropertyPlantAndEquipment line reads 1212000000.0000 (slack 1500000.0)",1308000000,0001571996-18-000004,R7.htm,
